@@ -37,7 +37,7 @@ export default {
 		{
 			if (emittedAction?.SupportForm)
 			{
-				let options = { isPopup: emittedAction.IsPopupForm }
+				const options = { isPopup: emittedAction.IsPopupForm }
 				this.navigateToForm(emittedAction.SupportForm, 'SHOW', emittedAction.Identifier, options)
 			}
 		},
@@ -57,7 +57,7 @@ export default {
 			if (!Array.isArray(propertyPath) || propertyPath.length === 0)
 				return
 
-			let length = propertyPath.length
+			const length = propertyPath.length
 
 			// Start with reference to the table model object
 			let ref = listConf
@@ -82,9 +82,9 @@ export default {
 		 */
 		setArraySubPropWhere(listConf, arrayName, propertyName, propertyValue, key, value, otherValue)
 		{
-			for (let idx in listConf[arrayName])
+			for (const idx in listConf[arrayName])
 			{
-				let elem = listConf[arrayName][idx]
+				const elem = listConf[arrayName][idx]
 				if (elem[propertyName] === propertyValue)
 					listConf[arrayName][idx][key] = value
 				else if (otherValue !== undefined && otherValue !== null)
@@ -99,7 +99,7 @@ export default {
 		 */
 		onTableListRowGroupAction(listConf, eObj)
 		{
-			let params = {}
+			const params = {}
 
 			// Set selected ids
 			Reflect.set(params, 'ids', Object.keys(eObj.rowsSelected))
@@ -126,7 +126,7 @@ export default {
 							eObj.action.params.action(listConf, eObj.action, listFunctions.getRowByKeyPath(listConf.rows, params.ids[0]))
 						},
 						undefined,
-						{ params },
+						undefined,
 						this.navigationId)
 				case 'form':
 					return netAPI.postData(
@@ -140,14 +140,14 @@ export default {
 							// Go to follow-up form
 							if (params.ids.length > 0)
 							{
-								let routeOptions = {}
+								const routeOptions = {}
 								if (Number.isInteger(eObj.action.params.goBack))
 									Reflect.set(routeOptions, 'goBack', eObj.action.params.goBack)
 								this.navigateToForm(eObj.action.params.formName, eObj.action.params.mode, params.ids[0], routeOptions)
 							}
 						},
 						undefined,
-						{ params },
+						undefined,
 						this.navigationId)
 				case 'routine':
 					// Call routine
@@ -164,7 +164,7 @@ export default {
 						// Go to follow-up report
 						() => this.navigateToReport(eObj.action.params.baseArea, eObj.action.name, { allSelected: params.allSelected }),
 						undefined,
-						{ params },
+						undefined,
 						this.navigationId)
 				default:
 					if (typeof eObj.action.params.action === 'function')
@@ -271,7 +271,7 @@ export default {
 			}
 
 			// Find row by row key path
-			let row = listFunctions.getRowByKeyPath(listConf.rows, rowKeyPath),
+			const row = listFunctions.getRowByKeyPath(listConf.rows, rowKeyPath),
 				historyEntries = []
 
 			if (listConf.type !== 'TreeList')
@@ -292,9 +292,9 @@ export default {
 				return
 
 			// Check if the action is a row-specific action
-			let crudAction = _find(listConf.config.crudActions, (act) => act.id === actionId)
-			let insertAction = _find(listConf.config.generalActions, (act) => act.id === actionId && act.id === 'insert')
-			let rowSpecificAction = crudAction || insertAction
+			const crudAction = _find(listConf.config.crudActions, (act) => act.id === actionId)
+			const insertAction = _find(listConf.config.generalActions, (act) => act.id === actionId && act.id === 'insert')
+			const rowSpecificAction = crudAction || insertAction
 
 			if (listConf.type === 'TreeList')
 			{
@@ -387,7 +387,7 @@ export default {
 				return
 
 			// Whether or not the current context is a form.
-			let isForm = typeof this.formInfo === 'object' && typeof this.isEditable === 'boolean'
+			const isForm = typeof this.formInfo === 'object' && typeof this.isEditable === 'boolean'
 
 			let formModes = ''
 			if (actionCfg.params.restrictedModes) // Until access modes change from DBs to each Form
@@ -409,9 +409,8 @@ export default {
 				}
 			}
 
-			let formName = actionCfg.params.formName,
+			const formName = actionCfg.params.formName,
 				mode = actionCfg.params.mode,
-				id = null,
 				formDef = listConf.config.formsDefinition[formName],
 				options = {
 					isPopup: formDef.isPopup,
@@ -421,6 +420,7 @@ export default {
 				},
 				query = {},
 				prefillValues = actionCfg.params.prefillValues || {}
+			let id = null
 
 			// Apply history limits that cannot be applied at the form level.
 			// (See description in the formHandlers prop)
@@ -438,13 +438,13 @@ export default {
 			// Other options
 			if (actionCfg.params.otherOptions)
 			{
-				for (let prop in actionCfg.params.otherOptions)
+				for (const prop in actionCfg.params.otherOptions)
 					if (Object.prototype.hasOwnProperty.call(actionCfg.params.otherOptions, prop))
 						Reflect.set(options, prop, actionCfg.params.otherOptions[prop])
 			}
 
-			let tableName = listConf.controller[0] + listConf.controller.substring(1).toLowerCase()
-			let tableViewModelName = listConf.action + '_ViewModel'
+			const tableName = listConf.controller[0] + listConf.controller.substring(1).toLowerCase()
+			const tableViewModelName = listConf.action + '_ViewModel'
 			this.setEntryValue({ navigationId: this.navigationId, key: 'TableName', value: tableName })
 			this.setEntryValue({ navigationId: this.navigationId, key: 'TableViewModelName', value: tableViewModelName })
 
@@ -481,12 +481,12 @@ export default {
 			if (actionCfg.params.type !== 'menu')
 				return
 
-			var params = {}
+			const params = {}
 
 			if (!_isEmpty(actionCfg.params.limits))
 			{
 				_foreach(actionCfg.params.limits, (limit) => {
-					let limitValue = limit.fnValueSelector(row.Fields)
+					const limitValue = limit.fnValueSelector(row.Fields)
 					Reflect.set(params, limit.identifier, limitValue)
 					this.setEntryValue({ navigationId: this.navigationId, key: limit.identifier, value: limitValue })
 				})
@@ -509,7 +509,7 @@ export default {
 			if (!_isEmpty(actionCfg.params.limits))
 			{
 				_foreach(actionCfg.params.limits, (limit) => {
-					let limitValue = limit.fnValueSelector(row.Fields)
+					const limitValue = limit.fnValueSelector(row.Fields)
 					Reflect.set(actionCfg.params, limit.identifier, limitValue)
 					this.setEntryValue({ navigationId: this.navigationId, key: limit.identifier, value: limitValue })
 				})
@@ -532,7 +532,7 @@ export default {
 			if (actionCfg.params.type !== 'routine')
 				return
 
-			let params = {}
+			const params = {}
 
 			if (!_isEmpty(actionCfg.params.limits))
 			{
@@ -556,7 +556,7 @@ export default {
 			if (actionCfg.params.type !== 'qsign')
 				return
 
-			let params = {
+			const params = {
 				id: _get(row, 'rowKey', null)
 			}
 

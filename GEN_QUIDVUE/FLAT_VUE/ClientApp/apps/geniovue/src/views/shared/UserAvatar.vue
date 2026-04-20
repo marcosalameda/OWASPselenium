@@ -5,28 +5,23 @@
 				v-if="userIsLoggedIn && $app.appAlerts.length > 0"
 				id="sidebar-collapse"
 				class="nav-link n-menu__aside-link"
-				role="button"
-				href="#"
 				aria-haspopup="true"
 				aria-expanded="true"
-				:aria-label="texts.options"
 				:tabindex="$attrs.tabindex"
-				@click.stop.prevent="openAlert">
+				@click.stop.prevent="toggleAlert">
 				<span
 					data-toggle="tooltip"
 					data-placement="left"
 					:title="texts.alerts">
 					<q-icon icon="notifications" />
 				</span>
-
 				<span
 					class="e-badge e-badge--highlight"
 					aria-hidden="true">
 					{{ notifications.length }}
 				</span>
-
 				<span class="hidden-elem">
-					{{ texts.options }}
+					{{ texts.alerts }}
 				</span>
 			</q-button>
 
@@ -38,7 +33,6 @@
 				data-table-action-selected="false"
 				aria-haspopup="true"
 				:aria-expanded="showUserOptionsMenu"
-				:title="texts.userAvatar"
 				:tabindex="$attrs.tabindex">
 				<img
 					class="avatar"
@@ -48,6 +42,9 @@
 					:src="avatarSrc"
 					:alt="texts.userAvatar"
 					:title="userData.name" />
+				<span class="hidden-elem">
+					{{ texts.user }}
+				</span>
 			</q-button>
 
 			<q-popover
@@ -272,11 +269,11 @@
 			logOff,
 
 			/**
-			 * Emits an event to open the alerts tab.
+			 * Emits an event to toggle the alerts tab.
 			 */
-			openAlert()
+			toggleAlert()
 			{
-				this.$eventHub.emit('open-sidebar-on-tab', 'alerts-tab')
+				this.$eventHub.emit('toggle-sidebar-on-tab', 'alerts-tab')
 			},
 
 			/**

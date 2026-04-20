@@ -95,7 +95,7 @@ export function loadResources(vm, resourcesIds)
 	const i18n = vm.$__i18n,
 		locale = i18n.global.locale.value
 
-	let promises = []
+	const promises = []
 
 	_forEach(resourcesIds, (resourceId) => {
 		const resourceName = `${resourceId}.${locale}`

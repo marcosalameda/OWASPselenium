@@ -73,6 +73,7 @@ export default class ViewModel extends FormViewModelBase
 			field: 'FAMILY',
 			maxLength: 50,
 			description: computed(() => this.Resources.EQUIPMENT_FAMILY41883),
+			ignoreFldSubmit: true,
 		}).cloneFrom(values?.TableFamilFamily))
 		this.stopWatchers.push(watch(() => this.TableFamilFamily.value, (newValue, oldValue) => this.onUpdate('famil.family', this.TableFamilFamily, newValue, oldValue)))
 

@@ -15,7 +15,6 @@ using Microsoft.Extensions.Options;
 // Setup the GenioServer services
 //---------------------------------
 CSGenio.GenioDIDefault.Use();
-CSGenio.business.ElasticsearchQueriesExtra.Use();
 
 //---------------------------------
 // Setup the WebServer services
@@ -67,6 +66,9 @@ builder.Services.AddControllers(options =>
 builder.Services.AddHttpClient();
 builder.Services.AddScoped<IChatbotService, ChatbotService>();
 builder.Services.AddSingleton<IToolRepo>(McpToolFactory.AllGenioTools());
+
+// Menu loader — singleton since it caches the XML on first access
+builder.Services.AddSingleton<GenioMVC.Helpers.Menus.IMenuLoader, GenioMVC.Helpers.Menus.XmlMenuLoaderService>();
 
 // Any controller that needs User information it can add UserContextService to its constructor
 builder.Services.AddHttpContextAccessor();

@@ -6,7 +6,7 @@ async function getPlatform() {
 }
 
 export default async function openQSign(controller, action, params, fnCallback) {
-	var intervalId = null
+	let intervalId = null
 
 	return new Promise((resolve) => {
 		const protocol = window.location.protocol
@@ -20,7 +20,7 @@ export default async function openQSign(controller, action, params, fnCallback) 
 			},
 			async (data) => {
 				if (data.success === true) {
-					let platform = await getPlatform(),
+					const platform = await getPlatform(),
 						appUrl = data.rec.replace('http:', protocol)
 
 					if (platform.toLocaleLowerCase().indexOf('win') >= 0)

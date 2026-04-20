@@ -47,7 +47,7 @@ namespace CSGenio.business
 			Qfield = new Field(info.Alias, "codprogr", FieldType.KEY_GUID);
 			Qfield.FieldDescription = "";
 			Qfield.FieldSize =  36;
-			Qfield.CavDesignation = "";
+			Qfield.VisivelCav = CavVisibilityType.Nunca;
 
 			Qfield.Dupmsg = "";
 			info.RegisterFieldDB(Qfield);
@@ -56,7 +56,7 @@ namespace CSGenio.business
 			Qfield = new Field(info.Alias, "codpesso", FieldType.KEY_GUID);
 			Qfield.FieldDescription = ">PERSON";
 			Qfield.FieldSize =  36;
-			Qfield.CavDesignation = "_PERSON28337";
+			Qfield.VisivelCav = CavVisibilityType.Nunca;
 
 			Qfield.Dupmsg = "";
 			info.RegisterFieldDB(Qfield);
@@ -65,7 +65,7 @@ namespace CSGenio.business
 			Qfield = new Field(info.Alias, "codcateg", FieldType.KEY_GUID);
 			Qfield.FieldDescription = ">CATEGORy";
 			Qfield.FieldSize =  36;
-			Qfield.CavDesignation = "_CATEGORY37591";
+			Qfield.VisivelCav = CavVisibilityType.Nunca;
 
 			Qfield.Dupmsg = "";
 			info.RegisterFieldDB(Qfield);
@@ -164,10 +164,10 @@ namespace CSGenio.business
 			info.Pathways = new Dictionary<string, string>(7);
 			info.Pathways.Add("cate1","cate1");
 			info.Pathways.Add("pesso","pesso");
-			info.Pathways.Add("categ","pesso");
 			info.Pathways.Add("cntry","pesso");
-			info.Pathways.Add("cmpny","pesso");
+			info.Pathways.Add("categ","pesso");
 			info.Pathways.Add("pais1","pesso");
+			info.Pathways.Add("cmpny","pesso");
 			info.Pathways.Add("regi1","pesso");
 		}
 
@@ -190,6 +190,7 @@ namespace CSGenio.business
 				null,
 
 	"today", true));
+
 
 
 			info.InternalOperationFields = new string[] {

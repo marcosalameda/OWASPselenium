@@ -210,8 +210,8 @@
 					<p>{{ texts.twoFactorAuthFirstStep }}</p>
 					<div>
 						<q-badge
-							color="primary"
-							v-if="model.Current2FA">
+							v-if="model.Current2FA"
+							color="primary">
 							{{ model.Current2FA }}
 						</q-badge>
 					</div>

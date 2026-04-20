@@ -7,6 +7,7 @@ using GenioMVC.Models.Navigation;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Quidgest.Persistence;
 using Quidgest.Persistence.GenericQuery;
+
 using System.Collections;
 using System.Collections.Concurrent;
 using System.Collections.Specialized;
@@ -39,6 +40,7 @@ namespace GenioMVC.ViewModels.Produ
 		public string ValCodlocat { get; set; }
 
 		#endregion
+
 		/// <summary>
 		/// Title: "Product" | Type: "C"
 		/// </summary>
@@ -73,8 +75,6 @@ namespace GenioMVC.ViewModels.Produ
 		/// </summary>
 		[ValidateSetAccess]
 		public TableDBEdit<GenioMVC.Models.Lcext> TableLcextGlnext { get; set; }
-
-
 
 		#region Navigations
 		#endregion
@@ -257,12 +257,7 @@ namespace GenioMVC.ViewModels.Produ
 			}
 		}
 
-		/// <summary>
-		/// Sets the value of a single property of the view model based on the provided table and field names.
-		/// </summary>
-		/// <param name="fullFieldName">The full field name in the format "table.field".</param>
-		/// <param name="value">The field value.</param>
-		/// <exception cref="ArgumentNullException">Thrown if <paramref name="fullFieldName"/> is null.</exception>
+		/// <inheritdoc />
 		public override void SetViewModelValue(string fullFieldName, object value)
 		{
 			try
@@ -409,6 +404,7 @@ namespace GenioMVC.ViewModels.Produ
 
 			Load_Produsimlocatgln_____(qs, lazyLoad);
 			Load_Produsimlcextglnext__(qs, lazyLoad);
+
 // USE /[MANUAL GQT VIEWMODEL_LOADPARTIAL PRODUSIM]/
 		}
 
@@ -484,10 +480,7 @@ namespace GenioMVC.ViewModels.Produ
 				}
 			}
 
-			TableLocatGln = new TableDBEdit<Models.Locat>
-			{
-				IsLazyLoad = lazyLoad
-			};
+			TableLocatGln = new TableDBEdit<Models.Locat>();
 
 			if (lazyLoad)
 			{
@@ -678,10 +671,7 @@ namespace GenioMVC.ViewModels.Produ
 			// Area limit
 			produsimlcextglnext__DoLoad &= AddCriteriaAreaLimit(produsimlcextglnext__Conds, CSGenio.business.CSGenioAlocat.FldCodlocat, "locat", this.ValCodlocat, true);
 
-			TableLcextGlnext = new TableDBEdit<Models.Lcext>
-			{
-				IsLazyLoad = lazyLoad
-			};
+			TableLcextGlnext = new TableDBEdit<Models.Lcext>();
 
 			if (lazyLoad)
 			{

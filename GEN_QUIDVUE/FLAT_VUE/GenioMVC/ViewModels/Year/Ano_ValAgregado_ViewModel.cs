@@ -186,11 +186,12 @@ namespace GenioMVC.ViewModels.Year
 			crs.SubSets.Add(subfilters);
 
 			// Form field filters
-			if (tableConfig.FieldFilters != null)
-				crs.SubSets.Add(ProcessFieldFilters(tableConfig.FieldFilters));
+			crs.SubSets.Add(ProcessFieldFilters(tableConfig.GlobalFilters));
 
 			if (this.YearValCodyear != null)
 				crs.Equal(CSGenioAagreg.FldCodyear, this.YearValCodyear);
+			else
+				tableReload = false;
 
 
 			crs.SubSets.Add(GetCustomizedStaticLimits(StaticLimits));
@@ -312,12 +313,11 @@ namespace GenioMVC.ViewModels.Year
 
 			FieldRef[] fields = new FieldRef[] { CSGenioAagreg.FldCodaggre, CSGenioAagreg.FldZzstate, CSGenioAagreg.FldValue };
 
-
-			// Totalizers
-			List<FieldRef> fieldsWithTotalizers = fields.Where(field => tableConfig.TotalizerColumns.Contains(field.FullName)).ToList();
+			// List of column names that should display totalized (aggregated) values.
+			List<string> totalizerColumns = [];
+			List<FieldRef> fieldsWithTotalizers = [.. fields.Where(field => totalizerColumns.Contains(field.FullName))];
 
 			FieldRef firstVisibleColumn = null;
-
 			if (sorts.Count == 0)
 			{
 				firstVisibleColumn = tableConfig?.GetFirstVisibleColumn(TableAlias);

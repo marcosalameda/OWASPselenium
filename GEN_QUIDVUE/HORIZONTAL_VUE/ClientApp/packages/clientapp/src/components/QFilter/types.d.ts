@@ -7,7 +7,7 @@ import type { QFieldSize } from '@quidgest/ui/components'
  * Radio (Radio group)
  * Text (Open text field)
  */
-type FilterViewMode = 'checkbox' | 'dropdown' | 'radio' | 'text'
+type FilterViewMode = 'checkbox' | 'dropdown' | 'radio' | 'text' | 'date'
 
 export type FilterType = string | boolean | number
 
@@ -30,6 +30,9 @@ type FilterGroup = {
 	title: string
 }
 
+/**
+ * Base props for all filter types.
+ */
 export type QFilterBaseProps = {
 	/**
 	 * Custom set of classes to apply to the component.
@@ -39,14 +42,23 @@ export type QFilterBaseProps = {
 	/**
 	 * True if the filter is in a read-only state, false otherwise.
 	 */
-	readonly: boolean
+	readonly?: boolean
+
+	/**
+	 * The label of the filter.
+	 */
+	label?: string
 }
 
 /**
  * Props for all filter modes.
  * Needed for QFilter to transmit all necessary props to the computed component.
  */
-export type QFilterGenericProps = QFilterGroupProps & QFilterDropdownProps & QFilterTextProps & {
+export type QFilterGenericProps =
+	QFilterDateProps &
+	QFilterDropdownProps &
+	QFilterGroupProps &
+	QFilterTextProps & {
 	/**
 	 * Control identifier.
 	 */
@@ -55,7 +67,7 @@ export type QFilterGenericProps = QFilterGroupProps & QFilterDropdownProps & QFi
 	/**
 	 * True if the filter is in a loading state, false otherwise.
 	 */
-	loading: boolean
+	loading?: boolean
 
 	/**
 	 * Control texts.
@@ -115,7 +127,7 @@ export type QFilterDropdownProps = QFilterBaseProps & {
 }
 
 /**
- * Props for dropdown filter modes (comboboxes).
+ * Props for text filter modes.
  */
 export type QFilterTextProps = QFilterBaseProps & {
 	/**
@@ -127,4 +139,24 @@ export type QFilterTextProps = QFilterBaseProps & {
 	 * The size category of the field.
 	 */
 	size?: QFieldSize
+}
+
+/**
+ * Props for date filter modes.
+ */
+export type QFilterDateProps = QFilterBaseProps & {
+	/**
+	 * If set to true, the clear button will be available.
+	 */
+	clearable?: boolean
+
+	/**
+	 * The size category of the field.
+	 */
+	size?: QFieldSize
+
+	/**
+	 * Enable selecting a range of two dates.
+	 */
+	range?: boolean
 }

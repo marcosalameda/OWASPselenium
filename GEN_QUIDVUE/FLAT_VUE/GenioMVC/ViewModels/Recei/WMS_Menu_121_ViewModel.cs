@@ -210,37 +210,29 @@ namespace GenioMVC.ViewModels.Recei
 
 			if (!tableConfig.GroupFilters.ContainsKey("filter_WMS_Menu_121_VERIFICATI"))
 			{
-				string defaultValue = "1";
+				string defaultValue = "";
 				tableConfig.Filters.Add(new GroupFilter { Key = "filter_WMS_Menu_121_VERIFICATI", Value = defaultValue });
 			}
 
 			{
 				var groupFilters = CriteriaSet.Or();
-				bool filter_WMS_Menu_121_VERIFICATI_1 = false;
-				if (tableConfig.GroupFilters.ContainsKey("filter_WMS_Menu_121_VERIFICATI"))
-					filter_WMS_Menu_121_VERIFICATI_1 = tableConfig.GroupFilters["filter_WMS_Menu_121_VERIFICATI"].Contains("1");
-				else if (!tableConfig.GroupFilters.ContainsKey("filter_WMS_Menu_121_VERIFICATI"))
-					filter_WMS_Menu_121_VERIFICATI_1 = true;
-				if (filter_WMS_Menu_121_VERIFICATI_1)
-				{
-					groupFilters.Equal(CSGenioArecei.FldTocheck, 1);
+				subfilters.SubSets.Add(groupFilters);
+			}
+			if (!tableConfig.GroupFilters.ContainsKey("filter_WMS_Menu_121_VERIFICATI"))
+			{
+				string defaultValue = "";
+				tableConfig.Filters.Add(new GroupFilter { Key = "filter_WMS_Menu_121_VERIFICATI", Value = defaultValue });
+			}
 
-				}
-
-				bool filter_WMS_Menu_121_VERIFICATI_2 = false;
-				if (tableConfig.GroupFilters.ContainsKey("filter_WMS_Menu_121_VERIFICATI"))
-					filter_WMS_Menu_121_VERIFICATI_2 = tableConfig.GroupFilters["filter_WMS_Menu_121_VERIFICATI"].Contains("2");
-				if (filter_WMS_Menu_121_VERIFICATI_2)
-				{
-					groupFilters.Equal(CSGenioArecei.FldChecked, 1);
-
-				}
-
+			{
+				var groupFilters = CriteriaSet.Or();
 				subfilters.SubSets.Add(groupFilters);
 			}
 
 			crs.SubSets.Add(subfilters);
 
+			// Form field filters
+			crs.SubSets.Add(ProcessFieldFilters(tableConfig.GlobalFilters));
 
 			crs.SubSets.Add(GetCustomizedStaticLimits(StaticLimits));
 
@@ -369,12 +361,11 @@ namespace GenioMVC.ViewModels.Recei
 
 			FieldRef[] fields = new FieldRef[] { CSGenioArecei.FldCodrecei, CSGenioArecei.FldZzstate, CSGenioArecei.FldNumber, CSGenioArecei.FldDtreceip, CSGenioArecei.FldCodentit, CSGenioAentit.FldCodentit, CSGenioAentit.FldName, CSGenioArecei.FldDtcheck, CSGenioArecei.FldChecked, CSGenioArecei.FldTocheck, CSGenioArecei.FldDtstorag };
 
-
-			// Totalizers
-			List<FieldRef> fieldsWithTotalizers = fields.Where(field => tableConfig.TotalizerColumns.Contains(field.FullName)).ToList();
+			// List of column names that should display totalized (aggregated) values.
+			List<string> totalizerColumns = [];
+			List<FieldRef> fieldsWithTotalizers = [.. fields.Where(field => totalizerColumns.Contains(field.FullName))];
 
 			FieldRef firstVisibleColumn = null;
-
 			if (sorts.Count == 0)
 			{
 				firstVisibleColumn = tableConfig?.GetFirstVisibleColumn(TableAlias);

@@ -5,11 +5,10 @@ import QActionList from './QActionList.vue'
 import type {
 	QActionListProps,
 	QActionListGroup,
-	QActionListOptions,
 	QActionListItem
 } from './types'
 
 // Export components
 export { QActionList }
 
-export type { QActionListProps, QActionListGroup, QActionListOptions, QActionListItem }
+export type { QActionListProps, QActionListGroup, QActionListItem }

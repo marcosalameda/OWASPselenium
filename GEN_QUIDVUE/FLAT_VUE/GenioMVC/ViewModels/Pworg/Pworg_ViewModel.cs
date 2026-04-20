@@ -1,20 +1,20 @@
-﻿using JsonIgnoreAttribute = System.Text.Json.Serialization.JsonIgnoreAttribute;
+﻿using CSGenio.business;
+using CSGenio.framework;
+using CSGenio.persistence;
+using GenioMVC.Helpers;
+using GenioMVC.Models.Exception;
+using GenioMVC.Models.Navigation;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Quidgest.Persistence;
+using Quidgest.Persistence.GenericQuery;
+
 using System.Collections;
 using System.Collections.Concurrent;
 using System.Collections.Specialized;
 using System.ComponentModel.DataAnnotations;
 using System.Data;
 using System.Globalization;
-
-using CSGenio.business;
-using CSGenio.framework;
-using CSGenio.persistence;
-using GenioMVC.Helpers;
-using GenioMVC.Models.Exception;
-using GenioMVC.Models.Navigation;
-using Quidgest.Persistence;
-using Quidgest.Persistence.GenericQuery;
+using System.Text.Json.Serialization;
 
 namespace GenioMVC.ViewModels.Pworg
 {
@@ -40,6 +40,7 @@ namespace GenioMVC.ViewModels.Pworg
 		public string ValCodpsw { get; set; }
 
 		#endregion
+
 		/// <summary>
 		/// Title: "Name" | Type: "C"
 		/// </summary>
@@ -50,8 +51,6 @@ namespace GenioMVC.ViewModels.Pworg
 		/// </summary>
 		[ValidateSetAccess]
 		public TableDBEdit<GenioMVC.Models.Organ> TableOrganOrganiza { get; set; }
-
-
 
 		#region Navigations
 		#endregion
@@ -222,12 +221,7 @@ namespace GenioMVC.ViewModels.Pworg
 			}
 		}
 
-		/// <summary>
-		/// Sets the value of a single property of the view model based on the provided table and field names.
-		/// </summary>
-		/// <param name="fullFieldName">The full field name in the format "table.field".</param>
-		/// <param name="value">The field value.</param>
-		/// <exception cref="ArgumentNullException">Thrown if <paramref name="fullFieldName"/> is null.</exception>
+		/// <inheritdoc />
 		public override void SetViewModelValue(string fullFieldName, object value)
 		{
 			try
@@ -356,6 +350,7 @@ namespace GenioMVC.ViewModels.Pworg
 
 			Load_Pworg___psw__nome____(qs, lazyLoad);
 			Load_Pworg___organorganiza(qs, lazyLoad);
+
 // USE /[MANUAL GQT VIEWMODEL_LOADPARTIAL PWORG]/
 		}
 
@@ -425,10 +420,7 @@ namespace GenioMVC.ViewModels.Pworg
 				}
 			}
 
-			TablePswNome = new TableDBEdit<Models.Psw>
-			{
-				IsLazyLoad = lazyLoad
-			};
+			TablePswNome = new TableDBEdit<Models.Psw>();
 
 			if (lazyLoad)
 			{
@@ -472,7 +464,7 @@ namespace GenioMVC.ViewModels.Pworg
 				int numberItems = CSGenio.framework.Configuration.NrRegDBedit;
 				int offset = (page - 1) * numberItems;
 
-				FieldRef[] fields = new FieldRef[] { CSGenioApsw.FldCodpsw, CSGenioApsw.FldNome, CSGenioApsw.FldZzstate };
+				FieldRef[] fields = [CSGenioApsw.FldCodpsw, CSGenioApsw.FldNome, CSGenioApsw.FldZzstate];
 
 // USE /[MANUAL GQT OVERRQ PWORG_PSWNOME]/
 
@@ -615,10 +607,7 @@ namespace GenioMVC.ViewModels.Pworg
 				}
 			}
 
-			TableOrganOrganiza = new TableDBEdit<Models.Organ>
-			{
-				IsLazyLoad = lazyLoad
-			};
+			TableOrganOrganiza = new TableDBEdit<Models.Organ>();
 
 			if (lazyLoad)
 			{
@@ -662,7 +651,7 @@ namespace GenioMVC.ViewModels.Pworg
 				int numberItems = CSGenio.framework.Configuration.NrRegDBedit;
 				int offset = (page - 1) * numberItems;
 
-				FieldRef[] fields = new FieldRef[] { CSGenioAorgan.FldCodorgan, CSGenioAorgan.FldOrganiza, CSGenioAorgan.FldZzstate };
+				FieldRef[] fields = [CSGenioAorgan.FldCodorgan, CSGenioAorgan.FldOrganiza, CSGenioAorgan.FldZzstate];
 
 // USE /[MANUAL GQT OVERRQ PWORG_ORGANORGANIZA]/
 

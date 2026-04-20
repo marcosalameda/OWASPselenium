@@ -5,7 +5,13 @@
 		<q-row>
 			<q-table
 				v-bind="listCtrl"
-				v-on="listCtrl.handlers" />
+				v-on="listCtrl.handlers">
+				<template #header>
+					<q-table-config
+						:table-ctrl="listCtrl"
+						v-on="listCtrl.handlers" />
+				</template>
+			</q-table>
 		</q-row>
 	</teleport>
 </template>
@@ -223,44 +229,6 @@
 								scrollData: 50,
 								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
-							new listColumnTypes.ArrayColumn({
-								order: 2,
-								name: 'ValDecimalplaces',
-								area: 'PARAM',
-								field: 'DECIMALPLACES',
-								label: computed(() => this.Resources.DECIMAL_PLACES62575),
-								scrollData: 1,
-								maxDigits: 1,
-								decimalPlaces: 0,
-								export: 1,
-								array: computed(() => new qProjArrays.QArrayDecplace(vm.$getResource).elements),
-								arrayType: qProjArrays.QArrayDecplace.type,
-								arrayDisplayMode: 'D',
-							}, computed(() => vm.model), computed(() => vm.internalEvents)),
-							new listColumnTypes.TextColumn({
-								order: 3,
-								name: 'Kinde.ValDesignat',
-								area: 'KINDE',
-								field: 'DESIGNAT',
-								label: computed(() => this.Resources.KIND_OF_EQUIPMENT22928),
-								dataLength: 85,
-								scrollData: 30,
-								export: 1,
-								pkColumn: 'ValCodkinde',
-							}, computed(() => vm.model), computed(() => vm.internalEvents)),
-							new listColumnTypes.ArrayColumn({
-								order: 4,
-								name: 'ValDatatype',
-								area: 'PARAM',
-								field: 'DATATYPE',
-								label: computed(() => this.Resources.DATA_TYPE47159),
-								dataLength: 1,
-								scrollData: 1,
-								export: 1,
-								array: computed(() => new qProjArrays.QArrayDatatype(vm.$getResource).elements),
-								arrayType: qProjArrays.QArrayDatatype.type,
-								arrayDisplayMode: 'D',
-							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 						],
 						config: {
 							name: 'Asspa_ParamValParameter',
@@ -276,7 +244,6 @@
 							searchBarConfig: {
 								visibility: true
 							},
-							filtersVisible: true,
 							allowColumnFilters: true,
 							allowColumnSort: true,
 							generalCustomActions: [
@@ -293,14 +260,14 @@
 							},
 							formsDefinition: {
 							},
-							defaultSearchColumnName: 'Kinde.ValDesignat',
-							defaultSearchColumnNameOriginal: 'Kinde.ValDesignat',
+							defaultSearchColumnName: '',
+							defaultSearchColumnNameOriginal: '',
 							defaultColumnSorting: {
 								columnName: 'ValParameter',
 								sortOrder: 'asc'
 							}
 						},
-						globalEvents: ['changed-PARAM', 'changed-KINDE'],
+						globalEvents: ['changed-KINDE', 'changed-PARAM'],
 						uuid: 'Asspa_Asspa_ParamValParameter',
 						allSelectedRows: 'false',
 						handlers: {

@@ -1,20 +1,20 @@
-﻿using JsonIgnoreAttribute = System.Text.Json.Serialization.JsonIgnoreAttribute;
+﻿using CSGenio.business;
+using CSGenio.framework;
+using CSGenio.persistence;
+using GenioMVC.Helpers;
+using GenioMVC.Models.Exception;
+using GenioMVC.Models.Navigation;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Quidgest.Persistence;
+using Quidgest.Persistence.GenericQuery;
+
 using System.Collections;
 using System.Collections.Concurrent;
 using System.Collections.Specialized;
 using System.ComponentModel.DataAnnotations;
 using System.Data;
 using System.Globalization;
-
-using CSGenio.business;
-using CSGenio.framework;
-using CSGenio.persistence;
-using GenioMVC.Helpers;
-using GenioMVC.Models.Exception;
-using GenioMVC.Models.Navigation;
-using Quidgest.Persistence;
-using Quidgest.Persistence.GenericQuery;
+using System.Text.Json.Serialization;
 
 namespace GenioMVC.ViewModels.Ldent
 {
@@ -44,6 +44,7 @@ namespace GenioMVC.ViewModels.Ldent
 		public string ValCodwareh { get; set; }
 
 		#endregion
+
 		/// <summary>
 		/// Title: "" | Type: "N"
 		/// </summary>
@@ -75,7 +76,7 @@ namespace GenioMVC.ViewModels.Ldent
 		/// Title: "" | Type: "CE"
 		/// </summary>
 		[ValidateSetAccess]
-		public string IndocValCodwareh 
+		public string IndocValCodwareh
 		{
 			get
 			{
@@ -88,8 +89,6 @@ namespace GenioMVC.ViewModels.Ldent
 		public Func<string> funcIndocValCodwareh { get; set; }
 
 		private string _auxIndocValCodwareh { get; set; }
-
-
 
 		#region Navigations
 		#endregion
@@ -277,12 +276,7 @@ namespace GenioMVC.ViewModels.Ldent
 			}
 		}
 
-		/// <summary>
-		/// Sets the value of a single property of the view model based on the provided table and field names.
-		/// </summary>
-		/// <param name="fullFieldName">The full field name in the format "table.field".</param>
-		/// <param name="value">The field value.</param>
-		/// <exception cref="ArgumentNullException">Thrown if <paramref name="fullFieldName"/> is null.</exception>
+		/// <inheritdoc />
 		public override void SetViewModelValue(string fullFieldName, object value)
 		{
 			try
@@ -424,6 +418,7 @@ namespace GenioMVC.ViewModels.Ldent
 			Load_Ldent___indocdocumenr(qs, lazyLoad);
 			Load_Ldent___warehwarehdes(qs, lazyLoad);
 			Load_Ldent___item_itemdes_(qs, lazyLoad);
+
 // USE /[MANUAL GQT VIEWMODEL_LOADPARTIAL LDENT]/
 		}
 
@@ -493,10 +488,7 @@ namespace GenioMVC.ViewModels.Ldent
 				}
 			}
 
-			TableIndocDocumenr = new TableDBEdit<Models.Indoc>
-			{
-				IsLazyLoad = lazyLoad
-			};
+			TableIndocDocumenr = new TableDBEdit<Models.Indoc>();
 
 			if (lazyLoad)
 			{
@@ -540,7 +532,7 @@ namespace GenioMVC.ViewModels.Ldent
 				int numberItems = CSGenio.framework.Configuration.NrRegDBedit;
 				int offset = (page - 1) * numberItems;
 
-				FieldRef[] fields = new FieldRef[] { CSGenioAindoc.FldCoddentr, CSGenioAindoc.FldDocumenr, CSGenioAindoc.FldDhdocume, CSGenioAindoc.FldZzstate };
+				FieldRef[] fields = [CSGenioAindoc.FldCoddentr, CSGenioAindoc.FldDocumenr, CSGenioAindoc.FldDhdocume, CSGenioAindoc.FldZzstate];
 
 // USE /[MANUAL GQT OVERRQ LDENT_INDOCDOCUMENR]/
 
@@ -684,10 +676,7 @@ namespace GenioMVC.ViewModels.Ldent
 				}
 			}
 
-			TableWarehWarehdes = new TableDBEdit<Models.Wareh>
-			{
-				IsLazyLoad = lazyLoad
-			};
+			TableWarehWarehdes = new TableDBEdit<Models.Wareh>();
 
 			if (lazyLoad)
 			{
@@ -731,7 +720,7 @@ namespace GenioMVC.ViewModels.Ldent
 				int numberItems = CSGenio.framework.Configuration.NrRegDBedit;
 				int offset = (page - 1) * numberItems;
 
-				FieldRef[] fields = new FieldRef[] { CSGenioAwareh.FldCodwareh, CSGenioAwareh.FldWarehdes, CSGenioAwareh.FldZzstate };
+				FieldRef[] fields = [CSGenioAwareh.FldCodwareh, CSGenioAwareh.FldWarehdes, CSGenioAwareh.FldZzstate];
 
 // USE /[MANUAL GQT OVERRQ LDENT_WAREHWAREHDES]/
 
@@ -878,10 +867,7 @@ namespace GenioMVC.ViewModels.Ldent
 			// Area limit
 			ldent___item_itemdes_DoLoad &= AddCriteriaAreaLimit(ldent___item_itemdes_Conds, CSGenio.business.CSGenioAwareh.FldCodwareh, "wareh", this.ValCodwareh, true);
 
-			TableItemItemdes = new TableDBEdit<Models.Item>
-			{
-				IsLazyLoad = lazyLoad
-			};
+			TableItemItemdes = new TableDBEdit<Models.Item>();
 
 			if (lazyLoad)
 			{
@@ -928,7 +914,7 @@ namespace GenioMVC.ViewModels.Ldent
 				int numberItems = CSGenio.framework.Configuration.NrRegDBedit;
 				int offset = (page - 1) * numberItems;
 
-				FieldRef[] fields = new FieldRef[] { CSGenioAitem.FldCoditem, CSGenioAitem.FldItemdes, CSGenioAitem.FldItemcod, CSGenioAitem.FldValid, CSGenioAitem.FldItemtype, CSGenioAitem.FldZzstate };
+				FieldRef[] fields = [CSGenioAitem.FldCoditem, CSGenioAitem.FldItemdes, CSGenioAitem.FldItemcod, CSGenioAitem.FldValid, CSGenioAitem.FldItemtype, CSGenioAitem.FldZzstate];
 
 // USE /[MANUAL GQT OVERRQ LDENT_ITEMITEMDES]/
 

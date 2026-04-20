@@ -3,22 +3,23 @@
 		v-if="menuModalIsReady"
 		:to="`#${uiContainersId.body}`"
 		:disabled="!menuInfo.isPopup">
-		<form
+		<div
 			class="form-horizontal"
 			@submit.prevent>
 			<q-row-container>
 				<q-table
 					v-bind="controls.menu"
 					v-on="controls.menu.handlers">
+					<template #header>
+						<q-table-config
+							:table-ctrl="controls.menu"
+							v-on="controls.menu.handlers">
+						</q-table-config>
+					</template>
 					<!-- USE /[MANUAL GQT CUSTOM_TABLE WMS_Menu_111]/ -->
 				</q-table>
-
-				<q-table-extra-extension
-					:list-ctrl="controls.menu"
-					:filter-operators="controls.menu.filterOperators"
-					v-on="controls.menu.handlers" />
 			</q-row-container>
-		</form>
+		</div>
 	</teleport>
 
 	<teleport
@@ -155,6 +156,7 @@
 								scrollData: 10,
 								maxDigits: 10,
 								decimalPlaces: 0,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.DateColumn({
 								order: 2,
@@ -164,6 +166,7 @@
 								label: computed(() => this.Resources.RECEIPT_DATE00996),
 								scrollData: 16,
 								dateTimeType: 'dateTime',
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 3,
@@ -173,6 +176,7 @@
 								label: computed(() => this.Resources.LEGAL_NAME42902),
 								dataLength: 85,
 								scrollData: 30,
+								export: 1,
 								pkColumn: 'ValCodentit',
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.DateColumn({
@@ -183,6 +187,7 @@
 								label: computed(() => this.Resources.RECEIPT_VERIFICATION62328),
 								scrollData: 16,
 								dateTimeType: 'dateTime',
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.BooleanColumn({
 								order: 5,
@@ -191,6 +196,7 @@
 								field: 'CHECKED',
 								label: computed(() => this.Resources.CHECKED31708),
 								scrollData: 1,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.BooleanColumn({
 								order: 6,
@@ -199,6 +205,7 @@
 								field: 'TOCHECK',
 								label: computed(() => this.Resources.TO_CHECK57511),
 								scrollData: 1,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.DateColumn({
 								order: 7,
@@ -208,6 +215,7 @@
 								label: computed(() => this.Resources.STORAGE_DATE59954),
 								scrollData: 16,
 								dateTimeType: 'dateTime',
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 						],
 						config: {
@@ -225,7 +233,6 @@
 							searchBarConfig: {
 								visibility: true
 							},
-							filtersVisible: true,
 							allowColumnFilters: true,
 							allowColumnSort: true,
 							crudActions: [
@@ -299,9 +306,7 @@
 									id: 'insert',
 									name: 'insert',
 									title: computed(() => this.Resources.INSERIR43365),
-									icon: {
-										icon: 'add'
-									},
+									icon: { icon: 'add' },
 									isInReadOnly: true,
 									params: {
 										action: vm.openFormAction,

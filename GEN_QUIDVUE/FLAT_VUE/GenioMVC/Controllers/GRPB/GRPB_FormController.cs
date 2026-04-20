@@ -358,8 +358,15 @@ namespace GenioMVC.Controllers
 				PersistentSupport sp = UserContext.Current.PersistentSupport;
 				try
 				{
-					GenioMVC.Models.Grpb model = new(UserContext.Current);
-					model.klass.QPrimaryKey = Navigation.GetStrValue("grpb");
+					var recordKey = Navigation.GetStrValue("grpb");
+					var model = GenioMVC.Models.Grpb.Find(recordKey, UserContext.Current);
+					if (model.ValZzstate == 0)
+					{
+						Navigation.ClearValue("grpb");
+						string errorMessage = Resources.Resources.ESTE_REGISTO_JA_FOI_02595;
+						Log.Error($"${errorMessage} ID: ${recordKey}");
+						return JsonOK(new { Success = true, currentNavigationLevel = Navigation.CurrentLevel.Level, Warning = errorMessage });
+					}
 
 // USE /[MANUAL GQT BEFORE_CANCEL GRPB]/
 
@@ -428,6 +435,7 @@ namespace GenioMVC.Controllers
 			Grpb_ValTblb_ViewModel model = new(m_userContext, parentCtx);
 
 			CSGenio.core.framework.table.TableConfiguration tableConfig = requestModel.TableConfiguration ?? new();
+			tableConfig.RowsPerPage = -1; // The grid control must load all records.
 
 			model.setModes(Request.Query["m"].ToString());
 			model.Load(tableConfig, requestValues, Request.IsAjaxRequest());

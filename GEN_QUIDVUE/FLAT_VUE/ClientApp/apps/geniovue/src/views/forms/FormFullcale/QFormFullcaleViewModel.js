@@ -98,17 +98,6 @@ export default class ViewModel extends FormViewModelBase
 		}).cloneFrom(values?.ValCodpess1))
 		this.stopWatchers.push(watch(() => this.ValCodpess1.value, (newValue, oldValue) => this.onUpdate('equip.codpess1', this.ValCodpess1, newValue, oldValue)))
 
-		this.ValCodempre = reactive(new modelFieldType.ForeignKey({
-			id: 'ValCodempre',
-			originId: 'ValCodempre',
-			area: 'EQUIP',
-			field: 'CODEMPRE',
-			relatedArea: 'CMPNY',
-			isFixed: true,
-			description: computed(() => this.Resources._COMPANY02087),
-		}).cloneFrom(values?.ValCodempre))
-		this.stopWatchers.push(watch(() => this.ValCodempre.value, (newValue, oldValue) => this.onUpdate('equip.codempre', this.ValCodempre, newValue, oldValue)))
-
 		this.ValCodwareh = reactive(new modelFieldType.ForeignKey({
 			id: 'ValCodwareh',
 			originId: 'ValCodwareh',
@@ -131,6 +120,17 @@ export default class ViewModel extends FormViewModelBase
 		}).cloneFrom(values?.ValCoditem))
 		this.stopWatchers.push(watch(() => this.ValCoditem.value, (newValue, oldValue) => this.onUpdate('equip.coditem', this.ValCoditem, newValue, oldValue)))
 
+		this.ValCodempre = reactive(new modelFieldType.ForeignKey({
+			id: 'ValCodempre',
+			originId: 'ValCodempre',
+			area: 'EQUIP',
+			field: 'CODEMPRE',
+			relatedArea: 'CMPNY',
+			isFixed: true,
+			description: computed(() => this.Resources._COMPANY02087),
+		}).cloneFrom(values?.ValCodempre))
+		this.stopWatchers.push(watch(() => this.ValCodempre.value, (newValue, oldValue) => this.onUpdate('equip.codempre', this.ValCodempre, newValue, oldValue)))
+
 		/** The form fields used only in formulas. */
 		this.ValRegistnr = reactive(new modelFieldType.String({
 			id: 'ValRegistnr',
@@ -144,14 +144,8 @@ export default class ViewModel extends FormViewModelBase
 				// eslint-disable-next-line @typescript-eslint/no-unused-vars
 				fnFormula(params)
 				{
-					return netAPI.postData(
-						'Equip',
-						'FULLCALE_EQUIP_REGISTNR_Formula',
-						this.serverObjModel,
-						undefined,
-						undefined,
-						undefined,
-						this.navigationId)
+					// Formula: RIGHT("000000"+NumericToString([EQUIP->SEQUENNR],0),6)
+					return qApi.RIGHT("000000"+qApi.NumericToString(this.ValSequennr.value,0),6)
 				},
 				dependencyEvents: ['fieldChange:equip.sequennr'],
 				isServerRecalc: false,
@@ -160,6 +154,18 @@ export default class ViewModel extends FormViewModelBase
 			description: computed(() => this.Resources.NO__REGISTER04207),
 		}).cloneFrom(values?.ValRegistnr))
 		this.stopWatchers.push(watch(() => this.ValRegistnr.value, (newValue, oldValue) => this.onUpdate('equip.registnr', this.ValRegistnr, newValue, oldValue)))
+
+		this.ValSequennr = reactive(new modelFieldType.Number({
+			id: 'ValSequennr',
+			originId: 'ValSequennr',
+			area: 'EQUIP',
+			field: 'SEQUENNR',
+			maxDigits: 6,
+			decimalDigits: 0,
+			isFixed: true,
+			description: computed(() => this.Resources.SEQUENTIAL_NO_38590),
+		}).cloneFrom(values?.ValSequennr))
+		this.stopWatchers.push(watch(() => this.ValSequennr.value, (newValue, oldValue) => this.onUpdate('equip.sequennr', this.ValSequennr, newValue, oldValue)))
 	}
 
 	/**

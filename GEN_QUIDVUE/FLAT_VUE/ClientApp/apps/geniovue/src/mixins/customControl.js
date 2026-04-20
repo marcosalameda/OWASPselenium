@@ -30,7 +30,7 @@ const customControlMixin = {
 	{
 		const viewModes = this.viewModes ?? []
 
-		for (let viewMode of viewModes)
+		for (const viewMode of viewModes)
 		{
 			const type = viewMode.type
 			const control = getCustomControl(type, this, viewMode.order)
@@ -45,7 +45,7 @@ const customControlMixin = {
 	 */
 	addCustomTexts()
 	{
-		for (let i in this.customControls)
+		for (const i in this.customControls)
 		{
 			const customTexts = this.customControls[i].texts
 
@@ -55,7 +55,7 @@ const customControlMixin = {
 			if (_isEmpty(this.texts))
 				this.texts = {}
 
-			for (let j in customTexts)
+			for (const j in customTexts)
 				if (!this.texts[j])
 					this.texts[j] = customTexts[j]
 		}
@@ -81,7 +81,7 @@ const customControlMixin = {
 			if (_isEmpty(additionalHandlers))
 				continue
 
-			for (let i in additionalHandlers)
+			for (const i in additionalHandlers)
 				control.addHandler(i, additionalHandlers[i])
 		}
 	},
@@ -117,7 +117,7 @@ const customControlMixin = {
 	{
 		const viewModes = this.viewModes ?? []
 
-		for (let viewMode of viewModes)
+		for (const viewMode of viewModes)
 		{
 			const control = this.customControls[viewMode.type]
 			if (!_isEmpty(control) && typeof control.hydrateValues === 'function')
@@ -133,12 +133,12 @@ const customControlMixin = {
 	{
 		const res = []
 
-		for (let groupType in viewMode.groups)
+		for (const groupType in viewMode.groups)
 		{
 			const groupsOfType = viewMode.groups[groupType]
 
-			for (let group of groupsOfType)
-				for (let i in group)
+			for (const group of groupsOfType)
+				for (const i in group)
 					res.push(group[i])
 		}
 
@@ -154,13 +154,13 @@ const customControlMixin = {
 		const viewModes = this.viewModes ?? []
 		const fieldId = field ? `${field.area}.${field.field}` : ''
 
-		for (let viewMode of viewModes)
+		for (const viewMode of viewModes)
 		{
-			for (let i in viewMode.styleVariables)
+			for (const i in viewMode.styleVariables)
 				this.hydrateStyleVariable(viewMode.styleVariables[i], field)
 
 			const groupedStyleVariables = this.flatGroupedVariables(viewMode).filter((v) => v.type === 'STYLE')
-			for (let variable of groupedStyleVariables)
+			for (const variable of groupedStyleVariables)
 				this.hydrateStyleVariable(variable, field)
 
 			// Some variable types might need further hydration in some controls
@@ -211,16 +211,16 @@ const customControlMixin = {
 				dependencyEvents.push(`fieldChange:${variable.source.toLowerCase()}`)
 		}
 
-		for (let viewMode of viewModes)
+		for (const viewMode of viewModes)
 		{
-			for (let i in viewMode.styleVariables)
+			for (const i in viewMode.styleVariables)
 			{
 				const variable = viewMode.styleVariables[i]
 				addDependency(variable)
 			}
 
 			const groupedStyleVariables = this.flatGroupedVariables(viewMode).filter((v) => v.type === 'STYLE')
-			for (let variable of groupedStyleVariables)
+			for (const variable of groupedStyleVariables)
 				addDependency(variable)
 		}
 
@@ -252,7 +252,7 @@ const customControlMixin = {
 
 			const globId = `val${fieldId.replace('_', '').toLowerCase()}`
 
-			for (let i in tGlob)
+			for (const i in tGlob)
 			{
 				if (globId === i.toLowerCase())
 				{
@@ -270,7 +270,7 @@ const customControlMixin = {
 			if (typeof model !== 'object')
 				return undefined
 
-			for (let i in model)
+			for (const i in model)
 			{
 				if (model[i].area === areaName && model[i].field === fieldId)
 				{
@@ -392,7 +392,7 @@ export default function getSpecialRenderingControls(BaseControl, TableListContro
 			if (Array.isArray(viewModes) && !_isEmpty(viewModes))
 				this.viewModes = cloneDeep(viewModes)
 
-			for (let viewMode of this.viewModes)
+			for (const viewMode of this.viewModes)
 				this.initViewMode(viewMode, false)
 
 			if (typeof this.onDependencyChange !== 'function')
@@ -416,7 +416,7 @@ export default function getSpecialRenderingControls(BaseControl, TableListContro
 			}
 
 			this.onDependencyChange()
-			this.onStyleDependencyChange()
+			this.hydrateStyleVariables()
 		}
 
 		/**
@@ -443,7 +443,7 @@ export default function getSpecialRenderingControls(BaseControl, TableListContro
 
 			const viewModes = this.viewModes ?? []
 
-			for (let viewMode of viewModes)
+			for (const viewMode of viewModes)
 			{
 				const variables = viewMode.mappingVariables
 				const implicitVar = viewMode.implicitVariable
@@ -458,7 +458,7 @@ export default function getSpecialRenderingControls(BaseControl, TableListContro
 				const modelValue = this.getModelValue(`${currentField.area}.${currentField.field}`)
 				mappedValues[implicitVar] = viewMode.implicitIsMultiple ? [modelValue] : modelValue
 
-				for (let i in variables)
+				for (const i in variables)
 				{
 					const variable = variables[i]
 
@@ -468,7 +468,7 @@ export default function getSpecialRenderingControls(BaseControl, TableListContro
 					if (variable.allowsMultiple)
 					{
 						const values = []
-						for (let source of variable.sources)
+						for (const source of variable.sources)
 							values.push(this.getModelValue(source))
 						mappedValues[i] = values
 					}
@@ -493,20 +493,20 @@ export default function getSpecialRenderingControls(BaseControl, TableListContro
 			const addDependency = (variable) => {
 				const sources = variable.sources
 
-				for (let source of sources)
+				for (const source of sources)
 					if (!_isEmpty(source) && !dependencyEvents.includes(source))
 						dependencyEvents.push(`fieldChange:${source.toLowerCase()}`)
 			}
 
-			for (let viewMode of viewModes)
+			for (const viewMode of viewModes)
 			{
 				const variables = viewMode.mappingVariables
 
-				for (let i in variables)
+				for (const i in variables)
 					addDependency(variables[i])
 
 				const groupedMappingVariables = this.flatGroupedVariables(viewMode).filter((v) => v.type === 'MAP')
-				for (let variable of groupedMappingVariables)
+				for (const variable of groupedMappingVariables)
 					addDependency(variable)
 			}
 
@@ -558,7 +558,7 @@ export default function getSpecialRenderingControls(BaseControl, TableListContro
 			if (Array.isArray(viewModes) && !_isEmpty(viewModes))
 				this.viewModes = cloneDeep(viewModes)
 
-			for (let viewMode of this.viewModes)
+			for (const viewMode of this.viewModes)
 				this.initViewMode(viewMode, true)
 
 			if (typeof this.onDependencyChange !== 'function')
@@ -570,9 +570,9 @@ export default function getSpecialRenderingControls(BaseControl, TableListContro
 					if (!Array.isArray(viewModes))
 						return
 
-					for (let viewMode of viewModes)
+					for (const viewMode of viewModes)
 					{
-						let mode = this.viewModes.find((v) => v.id === viewMode.id)
+						const mode = this.viewModes.find((v) => v.id === viewMode.id)
 						mode.order = viewMode.order
 						mode.visible = viewMode.visible
 					}
@@ -594,7 +594,7 @@ export default function getSpecialRenderingControls(BaseControl, TableListContro
 			}
 
 			this.onViewModeChange(this.viewModes)
-			this.onStyleDependencyChange()
+			this.hydrateStyleVariables()
 		}
 
 		/**
@@ -623,7 +623,7 @@ export default function getSpecialRenderingControls(BaseControl, TableListContro
 		{
 			const viewModes = this.viewModes ?? []
 
-			for (let viewMode of viewModes)
+			for (const viewMode of viewModes)
 			{
 				// Nothing to do for the list
 				if (viewMode.id === 'LIST')

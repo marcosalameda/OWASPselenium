@@ -7,6 +7,7 @@ using GenioMVC.Models.Navigation;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Quidgest.Persistence;
 using Quidgest.Persistence.GenericQuery;
+
 using System.Collections;
 using System.Collections.Concurrent;
 using System.Collections.Specialized;
@@ -39,6 +40,7 @@ namespace GenioMVC.ViewModels.Messa
 		public string ValCodperso { get; set; }
 
 		#endregion
+
 		/// <summary>
 		/// Title: "Notification ID" | Type: "C"
 		/// </summary>
@@ -91,8 +93,6 @@ namespace GenioMVC.ViewModels.Messa
 		/// </summary>
 		[ValidateSetAccess]
 		public DateTime? ValCreatdat { get; set; }
-
-
 
 		#region Navigations
 		#endregion
@@ -291,12 +291,7 @@ namespace GenioMVC.ViewModels.Messa
 			}
 		}
 
-		/// <summary>
-		/// Sets the value of a single property of the view model based on the provided table and field names.
-		/// </summary>
-		/// <param name="fullFieldName">The full field name in the format "table.field".</param>
-		/// <param name="value">The field value.</param>
-		/// <exception cref="ArgumentNullException">Thrown if <paramref name="fullFieldName"/> is null.</exception>
+		/// <inheritdoc />
 		public override void SetViewModelValue(string fullFieldName, object value)
 		{
 			try
@@ -449,6 +444,7 @@ namespace GenioMVC.ViewModels.Messa
 
 			Load_Messa___entitname____(qs, lazyLoad);
 			Load_Messa___personame____(qs, lazyLoad);
+
 // USE /[MANUAL GQT VIEWMODEL_LOADPARTIAL MESSA]/
 		}
 
@@ -523,10 +519,7 @@ namespace GenioMVC.ViewModels.Messa
 				}
 			}
 
-			TableEntitName = new TableDBEdit<Models.Entit>
-			{
-				IsLazyLoad = lazyLoad
-			};
+			TableEntitName = new TableDBEdit<Models.Entit>();
 
 			if (lazyLoad)
 			{
@@ -713,10 +706,7 @@ namespace GenioMVC.ViewModels.Messa
 				}
 			}
 
-			TablePersoName = new TableDBEdit<Models.Perso>
-			{
-				IsLazyLoad = lazyLoad
-			};
+			TablePersoName = new TableDBEdit<Models.Perso>();
 
 			if (lazyLoad)
 			{

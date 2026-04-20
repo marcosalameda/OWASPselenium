@@ -66,34 +66,16 @@
 						title: computed(() => this.Resources.DASHBOARD51597),
 						groups: [
 							{
-								id: 'BOOKMARKS',
-								order: 14,
-								hideGroup: false,
-								title: computed(() => vm.Resources.FAVORITOS12992),
-							},
-							{
 								id: '_GROUP02',
 								hideGroup: false,
 								order: 2,
 								title: computed(() => vm.Resources.LISTS54900),
 							},
 							{
-								id: '_MENUS',
-								hideGroup: false,
-								order: 13,
-								title: computed(() => vm.Resources.MENUS09526),
-							},
-							{
 								id: '_GROUP01',
 								hideGroup: false,
 								order: 1,
 								title: computed(() => vm.Resources.GRAPHS20473),
-							},
-							{
-								id: '_ALERTS',
-								hideGroup: false,
-								order: 6,
-								title: computed(() => vm.Resources.ALERTS30407),
 							},
 						],
 					}, this)

@@ -9,12 +9,13 @@
 			<div
 				v-if="showFormHeader"
 				class="c-action-bar">
-				<h1
+				<component
 					v-if="formControl.uiComponents.header && formInfo.designation"
+					:is="topHeadingTag"
 					:id="formTitleId"
 					class="form-header">
 					{{ formInfo.designation }}
-				</h1>
+				</component>
 
 				<div class="c-action-bar__menu">
 					<template
@@ -40,13 +41,10 @@
 									@click="btn.action">
 									<template v-if="btn.icon">
 										<q-badge-indicator
-											v-if="btn.badge && btn.badge.isVisible"
-											:color="btn.badge.color">
+											:enabled="btn.badge?.isVisible ?? false"
+											:color="btn.badge?.color">
 											<q-icon v-bind="btn.icon" />
 										</q-badge-indicator>
-										<q-icon
-											v-else
-											v-bind="btn.icon" />
 									</template>
 								</q-toggle-group-item>
 							</template>
@@ -97,6 +95,7 @@
 		<q-container
 			fluid
 			data-key="AGENT01"
+			:data-identifier="primaryKeyValue"
 			:data-loading="!formInitialDataLoaded || !isActiveForm">
 			<template v-if="formControl.initialized && showFormBody">
 				<q-row v-if="controls.AGENT01_AGENTPHOTO___.isVisible">
@@ -106,7 +105,8 @@
 						<base-input-structure
 							v-if="controls.AGENT01_AGENTPHOTO___.isVisible"
 							class="q-image"
-							v-bind="controls.AGENT01_AGENTPHOTO___"
+							v-bind="controls.AGENT01_AGENTPHOTO___.wrapperProps"
+							:id="getControlId(controls.AGENT01_AGENTPHOTO___)"
 							v-on="controls.AGENT01_AGENTPHOTO___.handlers"
 							:loading="controls.AGENT01_AGENTPHOTO___.props.loading"
 							:reporting-mode-on="reportingModeCAV"
@@ -114,6 +114,7 @@
 							<q-image
 								v-if="controls.AGENT01_AGENTPHOTO___.isVisible"
 								v-bind="controls.AGENT01_AGENTPHOTO___.props"
+								:id="getControlId(controls.AGENT01_AGENTPHOTO___)"
 								v-on="controls.AGENT01_AGENTPHOTO___.handlers" />
 						</base-input-structure>
 					</q-col>
@@ -125,20 +126,23 @@
 						<base-input-structure
 							v-if="controls.AGENT01_AGENTNAME____.isVisible"
 							class="i-text"
-							v-bind="controls.AGENT01_AGENTNAME____"
+							v-bind="controls.AGENT01_AGENTNAME____.wrapperProps"
+							:id="getControlId(controls.AGENT01_AGENTNAME____)"
 							v-on="controls.AGENT01_AGENTNAME____.handlers"
 							:loading="controls.AGENT01_AGENTNAME____.props.loading"
 							:reporting-mode-on="reportingModeCAV"
 							:suggestion-mode-on="suggestionModeOn">
 							<q-text-field
 								v-bind="controls.AGENT01_AGENTNAME____.props"
+								:id="getControlId(controls.AGENT01_AGENTNAME____)"
 								@blur="onBlur(controls.AGENT01_AGENTNAME____, model.ValName.value)"
 								@change="model.ValName.fnUpdateValueOnChange" />
 						</base-input-structure>
 						<base-input-structure
 							v-if="controls.AGENT01_AGENTBIRTHDAT.isVisible"
 							class="i-text"
-							v-bind="controls.AGENT01_AGENTBIRTHDAT"
+							v-bind="controls.AGENT01_AGENTBIRTHDAT.wrapperProps"
+							:id="getControlId(controls.AGENT01_AGENTBIRTHDAT)"
 							v-on="controls.AGENT01_AGENTBIRTHDAT.handlers"
 							:loading="controls.AGENT01_AGENTBIRTHDAT.props.loading"
 							:reporting-mode-on="reportingModeCAV"
@@ -146,6 +150,7 @@
 							<q-date-time-picker
 								v-if="controls.AGENT01_AGENTBIRTHDAT.isVisible"
 								v-bind="controls.AGENT01_AGENTBIRTHDAT.props"
+								:id="getControlId(controls.AGENT01_AGENTBIRTHDAT)"
 								:model-value="model.ValBirthdat.value"
 								@reset-icon-click="model.ValBirthdat.fnUpdateValue(model.ValBirthdat.originalValue ?? new Date())"
 								@update:model-value="model.ValBirthdat.fnUpdateValue($event ?? '')" />
@@ -159,14 +164,16 @@
 						<base-input-structure
 							v-if="controls.AGENT01_AGENTEMAIL___.isVisible"
 							class="i-text"
-							v-bind="controls.AGENT01_AGENTEMAIL___"
+							v-bind="controls.AGENT01_AGENTEMAIL___.wrapperProps"
+							:id="getControlId(controls.AGENT01_AGENTEMAIL___)"
 							v-on="controls.AGENT01_AGENTEMAIL___.handlers"
 							:loading="controls.AGENT01_AGENTEMAIL___.props.loading"
 							:reporting-mode-on="reportingModeCAV"
 							:suggestion-mode-on="suggestionModeOn">
 							<q-mask
 								v-if="controls.AGENT01_AGENTEMAIL___.isVisible"
-								v-bind="controls.AGENT01_AGENTEMAIL___"
+								v-bind="controls.AGENT01_AGENTEMAIL___.props"
+								:id="getControlId(controls.AGENT01_AGENTEMAIL___)"
 								:model-value="model.ValEmail.value"
 								@change="model.ValEmail.fnUpdateValueOnChange" />
 						</base-input-structure>
@@ -176,7 +183,7 @@
 		</q-container>
 	</teleport>
 
-	<hr v-if="!isPopup && showFormFooter" />
+	<q-divider v-if="!isPopup && showFormFooter" />
 
 	<teleport
 		v-if="formModalIsReady && showFormFooter"
@@ -954,7 +961,6 @@
 
 				this.afterControlUpdate(controlField, fieldValue)
 			},
-
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
 // USE /[MANUAL GQT FUNCTIONS_JS AGENT01]/
 // eslint-disable-next-line

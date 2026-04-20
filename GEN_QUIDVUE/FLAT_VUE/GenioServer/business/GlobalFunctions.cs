@@ -202,11 +202,35 @@ namespace CSGenio.business
                         {
                             checkFunctionArgs(obj, 2);
 
+                            string arg0 = obj[0];
+                            string arg1 = obj[1];
+                            return carga_Manuals(arg0, arg1);
+                        }
+                    case 9:
+                        {
+                            checkFunctionArgs(obj, 2);
+
+                            string arg0 = obj[0];
+                            string arg1 = obj[1];
+                            return carga_Parameters(arg0, arg1);
+                        }
+                    case 10:
+                        {
+                            checkFunctionArgs(obj, 2);
+
+                            string arg0 = obj[0];
+                            string arg1 = obj[1];
+                            return carga_CONJUNTO(arg0, arg1);
+                        }
+                    case 11:
+                        {
+                            checkFunctionArgs(obj, 2);
+
                             DateTime arg0 = Conversion.dateString2DateTime(obj[0]);
                             DateTime arg1 = Conversion.dateString2DateTime(obj[1]);
                             return Idade_X(arg0, arg1);
                         }
-                    case 9:
+                    case 12:
                         {
                             checkFunctionArgs(obj, 2);
 
@@ -214,19 +238,19 @@ namespace CSGenio.business
                             DateTime arg1 = Conversion.dateString2DateTime(obj[1]);
                             return Idade(arg0, arg1);
                         }
-                    case 10:
+                    case 13:
                         {
                             checkFunctionArgs(obj, 1);
 
                             DateTime arg0 = Conversion.dateString2DateTime(obj[0]);
                             return DayOfWeek(arg0);
                         }
-                    case 11:
+                    case 14:
                         {
 
                             return TimeNow();
                         }
-                    case 12:
+                    case 15:
                         {
                             checkFunctionArgs(obj, 2);
 
@@ -397,35 +421,28 @@ namespace CSGenio.business
 
                 if (User.Codpsw == codpsw || User.IsAdminInAnyModule())
                 {
-                    var uf = new UserFactory(sp, User);
-                    sp.openConnection();
-                    var psw = uf.GetUser(User.Name);
-                    uf.ChangePassword(psw, newPass, newPassRepetition, oldPass);
-                    sp.closeConnection();
-
-                    sp.openTransaction();
-                    psw.update(sp);
-                    sp.closeTransaction();
+                    // Change the user's password
+                    foreach (var identityProvider in SecurityFactory.IdentityProviderList)
+                        if (identityProvider.HasUsernameAuth())
+                            SecurityFactory.StoreCredential(identityProvider.Id, user, oldPass, newPass);
                 }
                 return true;
             }
             catch (GenioException ex)
             {
-                sp.rollbackTransaction();
                 if (ex.ExceptionSite == "GlobalFunctions.password_alterar")
                     throw;
                 if (ex.UserMessage == null)
-                    throw new BusinessException("Erro na verificação da password antiga.", "GlobalFunctions.password_alterar", "Error verifying old password: " + ex.Message, ex);
+                    throw new BusinessException("A mudança de password falhou. Por favor corrija os erros e tente de novo", "GlobalFunctions.password_alterar", "Error changing password: " + ex.Message, ex);
                 else
-                    throw new BusinessException("Erro na verificação da password antiga: " + ex.UserMessage, "GlobalFunctions.password_alterar", "Error verifying old password: " + ex.Message, ex);
+                    throw new BusinessException("Erro na alteração da password: " + ex.UserMessage, "GlobalFunctions.password_alterar", "Error changing password: " + ex.Message, ex);
             }
             catch (Exception ex)
             {
                 // [RC] 06/06/2017 We must rollback in every error situation
                 //if (ex is PersistenceException)
                     //sp.rollbackTransaction();
-                sp.rollbackTransaction();
-                throw new BusinessException("Erro na verificação da password antiga.", "GlobalFunctions.password_alterar", "Error verifying old password: " + ex.Message, ex);
+                throw new BusinessException("A mudança de password falhou. Por favor corrija os erros e tente de novo", "GlobalFunctions.password_alterar", "Error changing password: " + ex.Message, ex);
             }
         }
 
@@ -1387,7 +1404,42 @@ namespace CSGenio.business
             else
                 return "";
         }
+        public StatusMessage carga_Manuals(string idsrc, string iddst)
+        {
+            StatusMessage result = null;
+            User u = User;
+            PersistentSupport sp = PersistentSupport.getPersistentSupport(u.Year);
+            CSGenioAasset tabledst = CSGenioAasset.search(sp, iddst, u);
+            sp.openConnection();
+            result = tabledst.carga_Manuals(idsrc, sp, u);
+            sp.closeConnection();
 
+            return result;
+        }
+        public StatusMessage carga_Parameters(string idsrc, string iddst)
+        {
+            StatusMessage result = null;
+            User u = User;
+            PersistentSupport sp = PersistentSupport.getPersistentSupport(u.Year);
+            CSGenioAasset tabledst = CSGenioAasset.search(sp, iddst, u);
+            sp.openConnection();
+            result = tabledst.carga_Parameters(idsrc, sp, u);
+            sp.closeConnection();
+
+            return result;
+        }
+        public StatusMessage carga_CONJUNTO(string idsrc, string iddst)
+        {
+            StatusMessage result = null;
+            User u = User;
+            PersistentSupport sp = PersistentSupport.getPersistentSupport(u.Year);
+            CSGenioAlnhpd tabledst = CSGenioAlnhpd.search(sp, iddst, u);
+            sp.openConnection();
+            result = tabledst.carga_CONJUNTO(idsrc, sp, u);
+            sp.closeConnection();
+
+            return result;
+        }
 
 
         /// <summary>
@@ -1642,8 +1694,6 @@ namespace CSGenio.business
                     return 1;
                 case "MAL":
                     return 1;
-                case "AI":
-                    return 1;
                 case "NOGER":
                     return 1;
                 default :
@@ -1681,7 +1731,7 @@ namespace CSGenio.business
             { "$save-icon", "floppy-disk" },
             { "$compactstyle", "true" },
             { "$border-radius", "0.25rem" },
-            { "$table-striped", "true" },
+            { "$table-striped", "false" },
             { "$table-head-inverse", "false" },
             { "$table-vertical-border", "true" },
             { "$enable-table-wrap", "true" },
@@ -1751,7 +1801,7 @@ namespace CSGenio.business
             { "$font-size-base", "0.9rem" },
             { "$font-family-sans-serif", "\"Lato\", Roboto, \"Helvetica Neue\", Arial, sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\"" },
             { "$font-headings", "$font-family-sans-serif" },
-            { "$headings-text-transform", "none" },
+            { "$headings-text-transform", "uppercase" },
             { "$primary", "#008ad2" },
             { "$secondary", "#001d31" },
             { "$highlight", "#ff8241" },

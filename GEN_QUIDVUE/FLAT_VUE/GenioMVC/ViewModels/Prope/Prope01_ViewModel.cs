@@ -1,20 +1,20 @@
-﻿using JsonIgnoreAttribute = System.Text.Json.Serialization.JsonIgnoreAttribute;
+﻿using CSGenio.business;
+using CSGenio.framework;
+using CSGenio.persistence;
+using GenioMVC.Helpers;
+using GenioMVC.Models.Exception;
+using GenioMVC.Models.Navigation;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Quidgest.Persistence;
+using Quidgest.Persistence.GenericQuery;
+
 using System.Collections;
 using System.Collections.Concurrent;
 using System.Collections.Specialized;
 using System.ComponentModel.DataAnnotations;
 using System.Data;
 using System.Globalization;
-
-using CSGenio.business;
-using CSGenio.framework;
-using CSGenio.persistence;
-using GenioMVC.Helpers;
-using GenioMVC.Models.Exception;
-using GenioMVC.Models.Navigation;
-using Quidgest.Persistence;
-using Quidgest.Persistence.GenericQuery;
+using System.Text.Json.Serialization;
 
 namespace GenioMVC.ViewModels.Prope
 {
@@ -41,6 +41,7 @@ namespace GenioMVC.ViewModels.Prope
 		public string ValCodcity { get; set; }
 
 		#endregion
+
 		/// <summary>
 		/// Title: "Foto principal" | Type: "IJ"
 		/// </summary>
@@ -59,8 +60,6 @@ namespace GenioMVC.ViewModels.Prope
 		/// </summary>
 		[ValidateSetAccess]
 		public TableDBEdit<GenioMVC.Models.Agent> TableAgentName { get; set; }
-
-
 
 		#region Navigations
 		#endregion
@@ -246,12 +245,7 @@ namespace GenioMVC.ViewModels.Prope
 			}
 		}
 
-		/// <summary>
-		/// Sets the value of a single property of the view model based on the provided table and field names.
-		/// </summary>
-		/// <param name="fullFieldName">The full field name in the format "table.field".</param>
-		/// <param name="value">The field value.</param>
-		/// <exception cref="ArgumentNullException">Thrown if <paramref name="fullFieldName"/> is null.</exception>
+		/// <inheritdoc />
 		public override void SetViewModelValue(string fullFieldName, object value)
 		{
 			try
@@ -385,6 +379,7 @@ namespace GenioMVC.ViewModels.Prope
 			Characs = new List<string>();
 
 			Load_Prope01_agentname____(qs, lazyLoad);
+
 // USE /[MANUAL GQT VIEWMODEL_LOADPARTIAL PROPE01]/
 		}
 
@@ -455,10 +450,7 @@ namespace GenioMVC.ViewModels.Prope
 				}
 			}
 
-			TableAgentName = new TableDBEdit<Models.Agent>
-			{
-				IsLazyLoad = lazyLoad
-			};
+			TableAgentName = new TableDBEdit<Models.Agent>();
 
 			if (lazyLoad)
 			{
@@ -502,7 +494,7 @@ namespace GenioMVC.ViewModels.Prope
 				int numberItems = CSGenio.framework.Configuration.NrRegDBedit;
 				int offset = (page - 1) * numberItems;
 
-				FieldRef[] fields = new FieldRef[] { CSGenioAagent.FldCodagent, CSGenioAagent.FldName, CSGenioAagent.FldZzstate };
+				FieldRef[] fields = [CSGenioAagent.FldCodagent, CSGenioAagent.FldName, CSGenioAagent.FldZzstate];
 
 // USE /[MANUAL GQT OVERRQ PROPE01_AGENTNAME]/
 

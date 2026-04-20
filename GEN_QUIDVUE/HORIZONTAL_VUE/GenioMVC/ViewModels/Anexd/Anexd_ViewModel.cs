@@ -7,6 +7,7 @@ using GenioMVC.Models.Navigation;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Quidgest.Persistence;
 using Quidgest.Persistence.GenericQuery;
+
 using System.Collections;
 using System.Collections.Concurrent;
 using System.Collections.Specialized;
@@ -39,6 +40,7 @@ namespace GenioMVC.ViewModels.Anexd
 		public string ValCodlang { get; set; }
 
 		#endregion
+
 		/// <summary>
 		/// Title: "No. register" | Type: "C"
 		/// </summary>
@@ -80,8 +82,6 @@ namespace GenioMVC.ViewModels.Anexd
 		/// </summary>
 		public DocumsProperties_ViewModel ValDocumentPropertiesVM { get; set; }
 
-
-
 		#region Navigations
 		#endregion
 
@@ -99,15 +99,6 @@ namespace GenioMVC.ViewModels.Anexd
 
 		#region Fields for formulas
 
-		// Field for formula
-		/// <summary>Used only for lazy loading of the EquipValCodequip field</summary>
-		[JsonIgnore]
-		[ValidateSetAccess]
-		public Func<string> funcEquipValCodequip { get; set; }
-		private string _auxEquipValCodequip { get; set; }
-		/// <summary>Field: "" Tipo: "+"</summary>
-		[ValidateSetAccess]
-		public string EquipValCodequip { get { return funcEquipValCodequip != null ? funcEquipValCodequip() : _auxEquipValCodequip; } private set { funcEquipValCodequip = () => value; } }
 
 		#endregion
 
@@ -229,7 +220,6 @@ namespace GenioMVC.ViewModels.Anexd
 				ValTittradu = ViewModelConversion.ToString(m.ValTittradu);
 				ValDocument = ViewModelConversion.ToString(m.ValDocument);
 				ValDocumentfk = ViewModelConversion.ToString(m.ValDocumentfk);
-				funcEquipValCodequip = () => ViewModelConversion.ToString(m.Equip.ValCodequip);
 				ValCodanexd = ViewModelConversion.ToString(m.ValCodanexd);
 			}
 			catch (Exception)
@@ -281,12 +271,7 @@ namespace GenioMVC.ViewModels.Anexd
 			}
 		}
 
-		/// <summary>
-		/// Sets the value of a single property of the view model based on the provided table and field names.
-		/// </summary>
-		/// <param name="fullFieldName">The full field name in the format "table.field".</param>
-		/// <param name="value">The field value.</param>
-		/// <exception cref="ArgumentNullException">Thrown if <paramref name="fullFieldName"/> is null.</exception>
+		/// <inheritdoc />
 		public override void SetViewModelValue(string fullFieldName, object value)
 		{
 			try
@@ -435,6 +420,7 @@ namespace GenioMVC.ViewModels.Anexd
 
 			Load_Anexd___equipregistnr(qs, lazyLoad);
 			Load_Anexd___langulangua__(qs, lazyLoad);
+
 // USE /[MANUAL GQT VIEWMODEL_LOADPARTIAL ANEXD]/
 		}
 
@@ -507,10 +493,7 @@ namespace GenioMVC.ViewModels.Anexd
 				}
 			}
 
-			TableEquipRegistnr = new TableDBEdit<Models.Equip>
-			{
-				IsLazyLoad = lazyLoad
-			};
+			TableEquipRegistnr = new TableDBEdit<Models.Equip>();
 
 			if (lazyLoad)
 			{
@@ -645,7 +628,6 @@ namespace GenioMVC.ViewModels.Anexd
 			var row = GetDependant_AnexdTableEquipRegistnr(this.ValCodequip);
 			try
 			{
-				this.funcEquipValCodequip = () => (string)row["equip.codequip"];
 
 				// Fill List fields
 				this.ValCodequip = ViewModelConversion.ToString(row["equip.codequip"]);
@@ -698,10 +680,7 @@ namespace GenioMVC.ViewModels.Anexd
 				}
 			}
 
-			TableLanguLangua = new TableDBEdit<Models.Langu>
-			{
-				IsLazyLoad = lazyLoad
-			};
+			TableLanguLangua = new TableDBEdit<Models.Langu>();
 
 			if (lazyLoad)
 			{
@@ -881,8 +860,8 @@ namespace GenioMVC.ViewModels.Anexd
 				"anexd.title" => ViewModelConversion.ToString(modelValue),
 				"anexd.tittradu" => ViewModelConversion.ToString(modelValue),
 				"anexd.document" => ViewModelConversion.ToString(modelValue),
-				"equip.codequip" => ViewModelConversion.ToString(modelValue),
 				"anexd.codanexd" => ViewModelConversion.ToString(modelValue),
+				"equip.codequip" => ViewModelConversion.ToString(modelValue),
 				"equip.registnr" => ViewModelConversion.ToString(modelValue),
 				"langu.codlang" => ViewModelConversion.ToString(modelValue),
 				"langu.langua" => ViewModelConversion.ToString(modelValue),

@@ -53,6 +53,11 @@ namespace CSGenio.framework
         public QCacheInstance AdminReindexation { get; private set; }
 
         /// <summary>
+        /// Instance for storing frequently accessed information during async processes
+        /// </summary>
+        public QCacheInstance AsyncProcesses { get; private set; }
+
+        /// <summary>
         /// General-purpose instance for usage in manual code.
         /// </summary>
         /// <remarks>
@@ -76,6 +81,7 @@ namespace CSGenio.framework
             Dashboard = new QCacheInstance();
             Array = new QCacheInstance();
             AdminReindexation = new QCacheInstance();
+            AsyncProcesses = new QCacheInstance();
             ManualCode = new QCacheInstance();
         }
     }

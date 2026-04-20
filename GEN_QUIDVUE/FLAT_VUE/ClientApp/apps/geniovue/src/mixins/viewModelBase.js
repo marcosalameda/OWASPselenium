@@ -41,6 +41,13 @@ export default class ViewModelBase
 			enumerable: false
 		})
 
+		// The internal version of the view model.
+		Object.defineProperty(this, 'version', {
+			value: 1,
+			enumerable: false,
+			writable: true
+		})
+
 		// Internal events for the formulas.
 		Object.defineProperty(this, 'internalEvents', {
 			value: markRaw(new QEventEmitter()),
@@ -114,7 +121,7 @@ export default class ViewModelBase
 		if (this.serverWarningMessages.length > 0)
 			return true
 
-		for (let modelField in this)
+		for (const modelField in this)
 			if (this[modelField].hasServerWarningMessages)
 				return true
 		return false
@@ -129,7 +136,7 @@ export default class ViewModelBase
 		if (this.serverErrorMessages.length > 0)
 			return true
 
-		for (let modelField in this)
+		for (const modelField in this)
 			if (this[modelField].hasServerErrorMessages)
 				return true
 		return false
@@ -144,13 +151,11 @@ export default class ViewModelBase
 			canSaveWithWarnings: this.canSaveWithWarnings
 		}
 
-		for (let modelField in this)
+		for (const modelField in this)
 		{
 			const fieldObj = this[modelField]
 
-			if (fieldObj instanceof Base &&
-				fieldObj.type !== 'Lookup' &&
-				fieldObj.ignoreFldSubmit !== true)
+			if (fieldObj instanceof Base && !fieldObj.ignoreFldSubmit)
 			{
 				const value = fieldObj.serverValue
 				viewModel[modelField] = value
@@ -170,7 +175,7 @@ export default class ViewModelBase
 		if (!(otherModel instanceof ViewModelBase))
 			return false
 
-		for (let modelField in this)
+		for (const modelField in this)
 		{
 			const fieldObj = this[modelField]
 
@@ -196,7 +201,7 @@ export default class ViewModelBase
 	 */
 	hydrate(rawData)
 	{
-		for (let modelField in this)
+		for (const modelField in this)
 			if (this[modelField] instanceof Base)
 				this.hydrateField(modelField, rawData)
 
@@ -218,13 +223,15 @@ export default class ViewModelBase
 	{
 		const fieldObj = this[modelField]
 
-		if (!(fieldObj instanceof Base) || fieldObj.isReady || !_has(rawData, modelField))
+		if (!(fieldObj instanceof Base) || !_has(rawData, modelField))
 			return
 
-		let rawDataFieldValue = rawData[modelField]
+		const fieldData = rawData[modelField]
 
-		if (typeof fieldObj.hydrate === 'function')
-			fieldObj.hydrate(rawDataFieldValue)
+		if (fieldData instanceof Base)
+			fieldObj.cloneFrom(fieldData)
+		else
+			fieldObj.hydrate(fieldData)
 	}
 
 	/**
@@ -327,7 +334,7 @@ export default class ViewModelBase
 	clearServerErrorMessages()
 	{
 		this.serverErrorMessages.splice(0)
-		for (let modelField in this)
+		for (const modelField in this)
 			this[modelField].clearServerErrorMessages()
 	}
 
@@ -363,7 +370,7 @@ export default class ViewModelBase
 	clearServerWarningMessages()
 	{
 		this.serverWarningMessages.splice(0)
-		for (let modelField in this)
+		for (const modelField in this)
 			this[modelField].clearServerErrorMessages()
 	}
 
@@ -373,6 +380,11 @@ export default class ViewModelBase
 	unbindEvents()
 	{
 		this.internalEvents?.removeAllListeners()
+
+		this.stopWatchers?.forEach((stopWatcher) => {
+			stopWatcher()
+		})
+		this.stopWatchers?.splice(0)
 	}
 
 	/**
@@ -381,15 +393,11 @@ export default class ViewModelBase
 	destroy()
 	{
 		this.unbindEvents()
-		this.stopWatchers.forEach(stopWatcher => {
-			stopWatcher()
-		})
-		this.stopWatchers.splice(0)
 
 		this.externalCallbacks = null
 		delete this.externalCallbacks
 
-		for (let modelField in this)
+		for (const modelField in this)
 		{
 			if (this[modelField] instanceof Base)
 				this[modelField].destroy()

@@ -34,6 +34,23 @@
 						</q-button>
 
 						<q-toggle
+							v-if="$app.isNotesAvailable && userIsLoggedIn"
+							id="q-notes-open"
+							:model-value="isActive('notes-tab')"
+							:title="texts.notes"
+							:disabled="disableButtons"
+							@click="toggleSidebarTab('notes-tab')">
+							<q-badge-indicator
+								v-if="notesCount > 0"
+								color="highlight">
+								<q-icon icon="note-text" />
+							</q-badge-indicator>
+							<q-icon
+								v-else
+								icon="note-text" />
+						</q-toggle>
+
+						<q-toggle
 							v-if="$app.isCavAvailable && !suggestionModeOn"
 							:model-value="reportingModeCAV"
 							id="advanced-report-mode-toggle"
@@ -71,13 +88,10 @@
 							:disabled="disableButtons"
 							@click="toggleSidebarTab('alerts-tab')">
 							<q-badge-indicator
-								v-if="notifications.length > 0"
+								:enabled="notifications.length > 0"
 								color="highlight">
 								<q-icon icon="notifications" />
 							</q-badge-indicator>
-							<q-icon
-								v-else
-								icon="notifications" />
 						</q-toggle>
 
 						<q-toggle
@@ -155,7 +169,8 @@
 					<div
 						v-if="$app.isChatBotAvailable"
 						v-show="extendedTab === 'chatbot-tab'"
-						id="chatbot-tab">
+						id="chatbot-tab"
+						ref="chatbotTab">
 						<q-chat-bot
 							:username="userData.name"
 							:project-path="$app.applicationName"
@@ -167,8 +182,18 @@
 							@apply-fields="applyFields" />
 					</div>
 
+					<div
+						v-if="$app.isNotesAvailable && userIsLoggedIn"
+						v-show="extendedTab === 'notes-tab'"
+						id="notes">
+						<q-notes
+							:notes="notes"
+							@fetch-notes="fetchNotes"
+							@delete-note="deleteNote" />
+					</div>
+
 					<div v-show="extendedTab === 'widgets-panel'">
-						<div id="widgets-panel"></div>
+						<div id="widgets-panel" />
 					</div>
 				</div>
 			</div>
@@ -177,15 +202,17 @@
 </template>
 
 <script>
-	import { computed, defineAsyncComponent } from 'vue'
+	import { computed, defineAsyncComponent, nextTick } from 'vue'
 	import { mapState, mapActions } from 'pinia'
 
 	import { useGenericDataStore } from '@quidgest/clientapp/stores'
 	import { useAiDataStore } from '@quidgest/clientapp/stores'
+	import { useNotesStore } from '@quidgest/clientapp/stores'
 
 	import hardcodedTexts from '@/hardcodedTexts.js'
 	import LayoutHandlers from '@/mixins/layoutHandlers.js'
 	import AlertHandlers from '@/mixins/alertHandlers.js'
+	import NotesHandlers from '@/mixins/notesHandlers.js'
 
 	export default {
 		name: 'QSidebar',
@@ -199,12 +226,14 @@
 			QAnchorContainerVertical: defineAsyncComponent(() => import('@/components/containers/QAnchorContainerVertical.vue')),
 			FormActionButtons: defineAsyncComponent(() => import('./FormActionButtons.vue')),
 			Alerts: defineAsyncComponent(() => import('./Alerts.vue')),
-			QChatBot: defineAsyncComponent(() => import('@quidgest/chatbot'))
+			QChatBot: defineAsyncComponent(() => import('@quidgest/chatbot')),
+			QNotes: defineAsyncComponent(() => import('./QNotes.vue'))
 		},
 
 		mixins: [
 			AlertHandlers,
-			LayoutHandlers
+			LayoutHandlers,
+			NotesHandlers
 		],
 
 		expose: [],
@@ -230,7 +259,8 @@
 					suggest: computed(() => this.Resources[hardcodedTexts.suggest]),
 					suggestions: computed(() => this.Resources[hardcodedTexts.suggestions]),
 					closeSuggestions: computed(() => this.Resources[hardcodedTexts.closeSuggestions]),
-					formAreas: computed(() => this.Resources[hardcodedTexts.formAreas])
+					formAreas: computed(() => this.Resources[hardcodedTexts.formAreas]),
+					notes: computed(() => this.Resources[hardcodedTexts.notes]),
 				}
 			}
 		},
@@ -260,7 +290,7 @@
 				this.openSidebar()
 				this.toggleSidebarTab(tabId)
 			})
-			
+
 			this.$eventHub.on('toggle-sidebar-on-tab', (tabId) => {
 				this.toggleSidebarTab(tabId)
 			})
@@ -309,6 +339,10 @@
 				'chatbotProxyUrl',
 				'currentAgent',
 				'availableAgents'
+			]),
+
+			...mapState(useNotesStore, [
+				'notes'
 			]),
 
 			/**
@@ -380,6 +414,7 @@
 			isSidebarEmpty()
 			{
 				return !this.showFormActions &&
+					!this.$app.isNotesAvailable &&
 					!this.$app.isCavAvailable &&
 					!this.$app.isSuggestionsAvailable &&
 					!this.$app.isChatBotAvailable &&
@@ -422,6 +457,10 @@
 				'setCurrentAgent'
 			]),
 
+			...mapActions(useNotesStore, [
+				'loadNotes'
+			]),
+
 			onSidebarWidthChange()
 			{
 				if (this.userIsLoggedIn && !this.isSidebarEmpty)
@@ -430,12 +469,24 @@
 					this.$emit('changed-sidebar-width', 0)
 			},
 
-			toggleChatBot()
+			async toggleChatBot()
 			{
 				this.toggleSidebarTab('chatbot-tab')
 				this.setCurrentAgent({ id: '' })
 
-				return this.extendedTab === 'chatbot-tab'
+				const isOpen = this.extendedTab === 'chatbot-tab'
+
+				// Scroll to bottom of chat, if opening
+				if (isOpen)
+				{
+					// Wait until content has fully opened
+					await nextTick()
+					const chatbotMessages = this.$refs.chatbotTab.querySelector('.q-chatbot__messages-container')
+					if(chatbotMessages)
+						chatbotMessages.scrollTop = chatbotMessages.scrollHeight
+				}
+
+				return isOpen
 			},
 
 			applyFields(fields)

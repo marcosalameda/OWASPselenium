@@ -9,12 +9,13 @@
 			<div
 				v-if="showFormHeader"
 				class="c-action-bar">
-				<h1
+				<component
 					v-if="formControl.uiComponents.header && formInfo.designation"
+					:is="topHeadingTag"
 					:id="formTitleId"
 					class="form-header">
 					{{ formInfo.designation }}
-				</h1>
+				</component>
 
 				<div class="c-action-bar__menu">
 					<template
@@ -40,13 +41,10 @@
 									@click="btn.action">
 									<template v-if="btn.icon">
 										<q-badge-indicator
-											v-if="btn.badge && btn.badge.isVisible"
-											:color="btn.badge.color">
+											:enabled="btn.badge?.isVisible ?? false"
+											:color="btn.badge?.color">
 											<q-icon v-bind="btn.icon" />
 										</q-badge-indicator>
-										<q-icon
-											v-else
-											v-bind="btn.icon" />
 									</template>
 								</q-toggle-group-item>
 							</template>
@@ -97,6 +95,7 @@
 		<q-container
 			fluid
 			data-key="PROPRALL"
+			:data-identifier="primaryKeyValue"
 			:data-loading="!formInitialDataLoaded || !isActiveForm">
 			<template v-if="formControl.initialized && showFormBody">
 				<q-row v-if="controls.PROPRALLPSEUDNOVOGR03.isVisible">
@@ -105,9 +104,9 @@
 						cols="auto">
 						<q-group-box-container
 							v-if="controls.PROPRALLPSEUDNOVOGR03.isVisible"
-							id="PROPRALLPSEUDNOVOGR03"
 							v-bind="controls.PROPRALLPSEUDNOVOGR03"
-							:is-visible="controls.PROPRALLPSEUDNOVOGR03.isVisible">
+							:id="getControlId(controls.PROPRALLPSEUDNOVOGR03)"
+							:no-border="controls.PROPRALLPSEUDNOVOGR03.borderless">
 							<!-- Start PROPRALLPSEUDNOVOGR03 -->
 							<q-row v-if="controls.PROPRALLPROPRPHOTOGRA.isVisible">
 								<q-col
@@ -116,7 +115,8 @@
 									<base-input-structure
 										v-if="controls.PROPRALLPROPRPHOTOGRA.isVisible"
 										class="q-image"
-										v-bind="controls.PROPRALLPROPRPHOTOGRA"
+										v-bind="controls.PROPRALLPROPRPHOTOGRA.wrapperProps"
+										:id="getControlId(controls.PROPRALLPROPRPHOTOGRA)"
 										v-on="controls.PROPRALLPROPRPHOTOGRA.handlers"
 										:loading="controls.PROPRALLPROPRPHOTOGRA.props.loading"
 										:reporting-mode-on="reportingModeCAV"
@@ -124,6 +124,7 @@
 										<q-image
 											v-if="controls.PROPRALLPROPRPHOTOGRA.isVisible"
 											v-bind="controls.PROPRALLPROPRPHOTOGRA.props"
+											:id="getControlId(controls.PROPRALLPROPRPHOTOGRA)"
 											v-on="controls.PROPRALLPROPRPHOTOGRA.handlers" />
 									</base-input-structure>
 								</q-col>
@@ -136,9 +137,9 @@
 					<q-col v-if="controls.PROPRALLPSEUDNOVOGR02.isVisible">
 						<q-group-box-container
 							v-if="controls.PROPRALLPSEUDNOVOGR02.isVisible"
-							id="PROPRALLPSEUDNOVOGR02"
 							v-bind="controls.PROPRALLPSEUDNOVOGR02"
-							:is-visible="controls.PROPRALLPSEUDNOVOGR02.isVisible">
+							:id="getControlId(controls.PROPRALLPSEUDNOVOGR02)"
+							:no-border="controls.PROPRALLPSEUDNOVOGR02.borderless">
 							<!-- Start PROPRALLPSEUDNOVOGR02 -->
 							<q-row v-if="controls.PROPRALLPROPRNAME____.isVisible || controls.PROPRALLPROPRPRECOEST.isVisible || controls.PROPRALLTPPROTPPROPRI.isVisible || controls.PROPRALLPROPRMOBILADA.isVisible">
 								<q-col
@@ -147,13 +148,15 @@
 									<base-input-structure
 										v-if="controls.PROPRALLPROPRNAME____.isVisible"
 										class="i-text"
-										v-bind="controls.PROPRALLPROPRNAME____"
+										v-bind="controls.PROPRALLPROPRNAME____.wrapperProps"
+										:id="getControlId(controls.PROPRALLPROPRNAME____)"
 										v-on="controls.PROPRALLPROPRNAME____.handlers"
 										:loading="controls.PROPRALLPROPRNAME____.props.loading"
 										:reporting-mode-on="reportingModeCAV"
 										:suggestion-mode-on="suggestionModeOn">
 										<q-text-field
 											v-bind="controls.PROPRALLPROPRNAME____.props"
+											:id="getControlId(controls.PROPRALLPROPRNAME____)"
 											@blur="onBlur(controls.PROPRALLPROPRNAME____, model.ValName.value)"
 											@change="model.ValName.fnUpdateValueOnChange" />
 									</base-input-structure>
@@ -164,7 +167,8 @@
 									<base-input-structure
 										v-if="controls.PROPRALLPROPRPRECOEST.isVisible"
 										class="i-text"
-										v-bind="controls.PROPRALLPROPRPRECOEST"
+										v-bind="controls.PROPRALLPROPRPRECOEST.wrapperProps"
+										:id="getControlId(controls.PROPRALLPROPRPRECOEST)"
 										v-on="controls.PROPRALLPROPRPRECOEST.handlers"
 										:loading="controls.PROPRALLPROPRPRECOEST.props.loading"
 										:reporting-mode-on="reportingModeCAV"
@@ -172,12 +176,14 @@
 										<q-numeric-input
 											v-if="controls.PROPRALLPROPRPRECOEST.isVisible"
 											v-bind="controls.PROPRALLPROPRPRECOEST.props"
+											:id="getControlId(controls.PROPRALLPROPRPRECOEST)"
 											@update:model-value="model.ValPrecoest.fnUpdateValue" />
 									</base-input-structure>
 									<base-input-structure
 										v-if="controls.PROPRALLTPPROTPPROPRI.isVisible"
 										class="i-text"
-										v-bind="controls.PROPRALLTPPROTPPROPRI"
+										v-bind="controls.PROPRALLTPPROTPPROPRI.wrapperProps"
+										:id="getControlId(controls.PROPRALLTPPROTPPROPRI)"
 										v-on="controls.PROPRALLTPPROTPPROPRI.handlers"
 										:loading="controls.PROPRALLTPPROTPPROPRI.props.loading"
 										:reporting-mode-on="reportingModeCAV"
@@ -185,6 +191,7 @@
 										<q-lookup
 											v-if="controls.PROPRALLTPPROTPPROPRI.isVisible"
 											v-bind="controls.PROPRALLTPPROTPPROPRI.props"
+											:id="getControlId(controls.PROPRALLTPPROTPPROPRI)"
 											v-on="controls.PROPRALLTPPROTPPROPRI.handlers" />
 										<q-see-more-propralltpprotppropri
 											v-if="controls.PROPRALLTPPROTPPROPRI.seeMoreIsVisible"
@@ -197,8 +204,9 @@
 									cols="auto">
 									<base-input-structure
 										v-if="controls.PROPRALLPROPRMOBILADA.isVisible"
-										class="i-checkbox"
-										v-bind="controls.PROPRALLPROPRMOBILADA"
+										class="i-text"
+										v-bind="controls.PROPRALLPROPRMOBILADA.wrapperProps"
+										:id="getControlId(controls.PROPRALLPROPRMOBILADA)"
 										v-on="controls.PROPRALLPROPRMOBILADA.handlers"
 										:loading="controls.PROPRALLPROPRMOBILADA.props.loading"
 										:reporting-mode-on="reportingModeCAV"
@@ -207,6 +215,7 @@
 											<q-checkbox
 												v-if="controls.PROPRALLPROPRMOBILADA.isVisible"
 												v-bind="controls.PROPRALLPROPRMOBILADA.props"
+												:id="getControlId(controls.PROPRALLPROPRMOBILADA)"
 												v-on="controls.PROPRALLPROPRMOBILADA.handlers" />
 										</template>
 									</base-input-structure>
@@ -219,7 +228,8 @@
 									<base-input-structure
 										v-if="controls.PROPRALLPROPRQTD_WC__.isVisible"
 										class="i-text"
-										v-bind="controls.PROPRALLPROPRQTD_WC__"
+										v-bind="controls.PROPRALLPROPRQTD_WC__.wrapperProps"
+										:id="getControlId(controls.PROPRALLPROPRQTD_WC__)"
 										v-on="controls.PROPRALLPROPRQTD_WC__.handlers"
 										:loading="controls.PROPRALLPROPRQTD_WC__.props.loading"
 										:reporting-mode-on="reportingModeCAV"
@@ -227,6 +237,7 @@
 										<q-numeric-input
 											v-if="controls.PROPRALLPROPRQTD_WC__.isVisible"
 											v-bind="controls.PROPRALLPROPRQTD_WC__.props"
+											:id="getControlId(controls.PROPRALLPROPRQTD_WC__)"
 											@update:model-value="model.ValQtd_wc.fnUpdateValue" />
 									</base-input-structure>
 								</q-col>
@@ -236,7 +247,8 @@
 									<base-input-structure
 										v-if="controls.PROPRALLPROPRQTDQUART.isVisible"
 										class="i-text"
-										v-bind="controls.PROPRALLPROPRQTDQUART"
+										v-bind="controls.PROPRALLPROPRQTDQUART.wrapperProps"
+										:id="getControlId(controls.PROPRALLPROPRQTDQUART)"
 										v-on="controls.PROPRALLPROPRQTDQUART.handlers"
 										:loading="controls.PROPRALLPROPRQTDQUART.props.loading"
 										:reporting-mode-on="reportingModeCAV"
@@ -244,6 +256,7 @@
 										<q-numeric-input
 											v-if="controls.PROPRALLPROPRQTDQUART.isVisible"
 											v-bind="controls.PROPRALLPROPRQTDQUART.props"
+											:id="getControlId(controls.PROPRALLPROPRQTDQUART)"
 											@update:model-value="model.ValQtdquart.fnUpdateValue" />
 									</base-input-structure>
 								</q-col>
@@ -253,7 +266,8 @@
 									<base-input-structure
 										v-if="controls.PROPRALLPROPRM2______.isVisible"
 										class="i-text"
-										v-bind="controls.PROPRALLPROPRM2______"
+										v-bind="controls.PROPRALLPROPRM2______.wrapperProps"
+										:id="getControlId(controls.PROPRALLPROPRM2______)"
 										v-on="controls.PROPRALLPROPRM2______.handlers"
 										:loading="controls.PROPRALLPROPRM2______.props.loading"
 										:reporting-mode-on="reportingModeCAV"
@@ -261,6 +275,7 @@
 										<q-numeric-input
 											v-if="controls.PROPRALLPROPRM2______.isVisible"
 											v-bind="controls.PROPRALLPROPRM2______.props"
+											:id="getControlId(controls.PROPRALLPROPRM2______)"
 											@update:model-value="model.ValM2.fnUpdateValue" />
 									</base-input-structure>
 								</q-col>
@@ -270,7 +285,8 @@
 									<base-input-structure
 										v-if="controls.PROPRALLPROPRDTDISPON.isVisible"
 										class="i-text"
-										v-bind="controls.PROPRALLPROPRDTDISPON"
+										v-bind="controls.PROPRALLPROPRDTDISPON.wrapperProps"
+										:id="getControlId(controls.PROPRALLPROPRDTDISPON)"
 										v-on="controls.PROPRALLPROPRDTDISPON.handlers"
 										:loading="controls.PROPRALLPROPRDTDISPON.props.loading"
 										:reporting-mode-on="reportingModeCAV"
@@ -278,6 +294,7 @@
 										<q-date-time-picker
 											v-if="controls.PROPRALLPROPRDTDISPON.isVisible"
 											v-bind="controls.PROPRALLPROPRDTDISPON.props"
+											:id="getControlId(controls.PROPRALLPROPRDTDISPON)"
 											:model-value="model.ValDtdispon.value"
 											@reset-icon-click="model.ValDtdispon.fnUpdateValue(model.ValDtdispon.originalValue ?? new Date())"
 											@update:model-value="model.ValDtdispon.fnUpdateValue($event ?? '')" />
@@ -291,7 +308,8 @@
 									<base-input-structure
 										v-if="controls.PROPRALLPROPRDESCRIPT.isVisible"
 										class="i-text"
-										v-bind="controls.PROPRALLPROPRDESCRIPT"
+										v-bind="controls.PROPRALLPROPRDESCRIPT.wrapperProps"
+										:id="getControlId(controls.PROPRALLPROPRDESCRIPT)"
 										v-on="controls.PROPRALLPROPRDESCRIPT.handlers"
 										:loading="controls.PROPRALLPROPRDESCRIPT.props.loading"
 										:reporting-mode-on="reportingModeCAV"
@@ -299,6 +317,7 @@
 										<q-text-editor
 											v-if="controls.PROPRALLPROPRDESCRIPT.isVisible"
 											v-bind="controls.PROPRALLPROPRDESCRIPT.props"
+											:id="getControlId(controls.PROPRALLPROPRDESCRIPT)"
 											v-on="controls.PROPRALLPROPRDESCRIPT.handlers" />
 									</base-input-structure>
 								</q-col>
@@ -310,7 +329,8 @@
 									<base-input-structure
 										v-if="controls.PROPRALLPESSONAME____.isVisible"
 										class="i-text"
-										v-bind="controls.PROPRALLPESSONAME____"
+										v-bind="controls.PROPRALLPESSONAME____.wrapperProps"
+										:id="getControlId(controls.PROPRALLPESSONAME____)"
 										v-on="controls.PROPRALLPESSONAME____.handlers"
 										:loading="controls.PROPRALLPESSONAME____.props.loading"
 										:reporting-mode-on="reportingModeCAV"
@@ -318,6 +338,7 @@
 										<q-lookup
 											v-if="controls.PROPRALLPESSONAME____.isVisible"
 											v-bind="controls.PROPRALLPESSONAME____.props"
+											:id="getControlId(controls.PROPRALLPESSONAME____)"
 											v-on="controls.PROPRALLPESSONAME____.handlers" />
 										<q-see-more-proprallpessoname
 											v-if="controls.PROPRALLPESSONAME____.seeMoreIsVisible"
@@ -334,9 +355,9 @@
 					<q-col v-if="controls.PROPRALLPSEUDNOVOGR01.isVisible">
 						<q-group-box-container
 							v-if="controls.PROPRALLPSEUDNOVOGR01.isVisible"
-							id="PROPRALLPSEUDNOVOGR01"
 							v-bind="controls.PROPRALLPSEUDNOVOGR01"
-							:is-visible="controls.PROPRALLPSEUDNOVOGR01.isVisible">
+							:id="getControlId(controls.PROPRALLPSEUDNOVOGR01)"
+							:no-border="controls.PROPRALLPSEUDNOVOGR01.borderless">
 							<!-- Start PROPRALLPSEUDNOVOGR01 -->
 							<q-row v-if="controls.PROPRALLCNTRYCOUNTRY_.isVisible">
 								<q-col
@@ -345,7 +366,8 @@
 									<base-input-structure
 										v-if="controls.PROPRALLCNTRYCOUNTRY_.isVisible"
 										class="i-text"
-										v-bind="controls.PROPRALLCNTRYCOUNTRY_"
+										v-bind="controls.PROPRALLCNTRYCOUNTRY_.wrapperProps"
+										:id="getControlId(controls.PROPRALLCNTRYCOUNTRY_)"
 										v-on="controls.PROPRALLCNTRYCOUNTRY_.handlers"
 										:loading="controls.PROPRALLCNTRYCOUNTRY_.props.loading"
 										:reporting-mode-on="reportingModeCAV"
@@ -353,6 +375,7 @@
 										<q-lookup
 											v-if="controls.PROPRALLCNTRYCOUNTRY_.isVisible"
 											v-bind="controls.PROPRALLCNTRYCOUNTRY_.props"
+											:id="getControlId(controls.PROPRALLCNTRYCOUNTRY_)"
 											v-on="controls.PROPRALLCNTRYCOUNTRY_.handlers" />
 										<q-see-more-proprallcntrycountry
 											v-if="controls.PROPRALLCNTRYCOUNTRY_.seeMoreIsVisible"
@@ -368,7 +391,8 @@
 									<base-input-structure
 										v-if="controls.PROPRALLREGIOREGIAO__.isVisible"
 										class="i-text"
-										v-bind="controls.PROPRALLREGIOREGIAO__"
+										v-bind="controls.PROPRALLREGIOREGIAO__.wrapperProps"
+										:id="getControlId(controls.PROPRALLREGIOREGIAO__)"
 										v-on="controls.PROPRALLREGIOREGIAO__.handlers"
 										:loading="controls.PROPRALLREGIOREGIAO__.props.loading"
 										:reporting-mode-on="reportingModeCAV"
@@ -376,6 +400,7 @@
 										<q-lookup
 											v-if="controls.PROPRALLREGIOREGIAO__.isVisible"
 											v-bind="controls.PROPRALLREGIOREGIAO__.props"
+											:id="getControlId(controls.PROPRALLREGIOREGIAO__)"
 											v-on="controls.PROPRALLREGIOREGIAO__.handlers" />
 										<q-see-more-proprallregioregiao
 											v-if="controls.PROPRALLREGIOREGIAO__.seeMoreIsVisible"
@@ -389,7 +414,8 @@
 									<base-input-structure
 										v-if="controls.PROPRALLPROPRENDERECO.isVisible"
 										class="i-textarea"
-										v-bind="controls.PROPRALLPROPRENDERECO"
+										v-bind="controls.PROPRALLPROPRENDERECO.wrapperProps"
+										:id="getControlId(controls.PROPRALLPROPRENDERECO)"
 										v-on="controls.PROPRALLPROPRENDERECO.handlers"
 										:loading="controls.PROPRALLPROPRENDERECO.props.loading"
 										:reporting-mode-on="reportingModeCAV"
@@ -397,6 +423,7 @@
 										<q-text-area
 											v-if="controls.PROPRALLPROPRENDERECO.isVisible"
 											v-bind="controls.PROPRALLPROPRENDERECO.props"
+											:id="getControlId(controls.PROPRALLPROPRENDERECO)"
 											v-on="controls.PROPRALLPROPRENDERECO.handlers" />
 									</base-input-structure>
 								</q-col>
@@ -408,13 +435,15 @@
 									<base-input-structure
 										v-if="controls.PROPRALLPROPRLOCALIDA.isVisible"
 										class="i-text"
-										v-bind="controls.PROPRALLPROPRLOCALIDA"
+										v-bind="controls.PROPRALLPROPRLOCALIDA.wrapperProps"
+										:id="getControlId(controls.PROPRALLPROPRLOCALIDA)"
 										v-on="controls.PROPRALLPROPRLOCALIDA.handlers"
 										:loading="controls.PROPRALLPROPRLOCALIDA.props.loading"
 										:reporting-mode-on="reportingModeCAV"
 										:suggestion-mode-on="suggestionModeOn">
 										<q-text-field
 											v-bind="controls.PROPRALLPROPRLOCALIDA.props"
+											:id="getControlId(controls.PROPRALLPROPRLOCALIDA)"
 											@blur="onBlur(controls.PROPRALLPROPRLOCALIDA, model.ValLocalida.value)"
 											@change="model.ValLocalida.fnUpdateValueOnChange" />
 									</base-input-structure>
@@ -427,13 +456,15 @@
 									<base-input-structure
 										v-if="controls.PROPRALLPROPRPOSTALCO.isVisible"
 										class="i-text"
-										v-bind="controls.PROPRALLPROPRPOSTALCO"
+										v-bind="controls.PROPRALLPROPRPOSTALCO.wrapperProps"
+										:id="getControlId(controls.PROPRALLPROPRPOSTALCO)"
 										v-on="controls.PROPRALLPROPRPOSTALCO.handlers"
 										:loading="controls.PROPRALLPROPRPOSTALCO.props.loading"
 										:reporting-mode-on="reportingModeCAV"
 										:suggestion-mode-on="suggestionModeOn">
 										<q-text-field
 											v-bind="controls.PROPRALLPROPRPOSTALCO.props"
+											:id="getControlId(controls.PROPRALLPROPRPOSTALCO)"
 											@blur="onBlur(controls.PROPRALLPROPRPOSTALCO, model.ValPostalco.value)"
 											@change="model.ValPostalco.fnUpdateValueOnChange" />
 									</base-input-structure>
@@ -444,13 +475,15 @@
 									<base-input-structure
 										v-if="controls.PROPRALLPROPRPOSTALLO.isVisible"
 										class="i-text"
-										v-bind="controls.PROPRALLPROPRPOSTALLO"
+										v-bind="controls.PROPRALLPROPRPOSTALLO.wrapperProps"
+										:id="getControlId(controls.PROPRALLPROPRPOSTALLO)"
 										v-on="controls.PROPRALLPROPRPOSTALLO.handlers"
 										:loading="controls.PROPRALLPROPRPOSTALLO.props.loading"
 										:reporting-mode-on="reportingModeCAV"
 										:suggestion-mode-on="suggestionModeOn">
 										<q-text-field
 											v-bind="controls.PROPRALLPROPRPOSTALLO.props"
+											:id="getControlId(controls.PROPRALLPROPRPOSTALLO)"
 											@blur="onBlur(controls.PROPRALLPROPRPOSTALLO, model.ValPostallo.value)"
 											@change="model.ValPostallo.fnUpdateValueOnChange" />
 									</base-input-structure>
@@ -467,13 +500,15 @@
 						<base-input-structure
 							v-if="controls.PROPRALLPROPRCOORDGEO.isVisible"
 							class="i-text"
-							v-bind="controls.PROPRALLPROPRCOORDGEO"
+							v-bind="controls.PROPRALLPROPRCOORDGEO.wrapperProps"
+							:id="getControlId(controls.PROPRALLPROPRCOORDGEO)"
 							v-on="controls.PROPRALLPROPRCOORDGEO.handlers"
 							:loading="controls.PROPRALLPROPRCOORDGEO.props.loading"
 							:reporting-mode-on="reportingModeCAV"
 							:suggestion-mode-on="suggestionModeOn">
 							<q-text-field
 								v-bind="controls.PROPRALLPROPRCOORDGEO.props"
+								:id="getControlId(controls.PROPRALLPROPRCOORDGEO)"
 								@blur="onBlur(controls.PROPRALLPROPRCOORDGEO, model.ValCoordgeo.value)"
 								@change="model.ValCoordgeo.fnUpdateValueOnChange" />
 						</base-input-structure>
@@ -483,7 +518,7 @@
 		</q-container>
 	</teleport>
 
-	<hr v-if="!isPopup && showFormFooter" />
+	<q-divider v-if="!isPopup && showFormFooter" />
 
 	<teleport
 		v-if="formModalIsReady && showFormFooter"
@@ -836,6 +871,7 @@
 						label: computed(() => this.Resources.PHOTO51874),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
+						borderless: false,
 						isCollapsible: false,
 						anchored: false,
 						directChildren: ['PROPRALLPROPRPHOTOGRA'],
@@ -865,6 +901,7 @@
 						label: computed(() => this.Resources.IDENTIFICATION37731),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
+						borderless: false,
 						isCollapsible: false,
 						anchored: false,
 						directChildren: ['PROPRALLPROPRNAME____', 'PROPRALLPROPRPRECOEST', 'PROPRALLTPPROTPPROPRI', 'PROPRALLPROPRMOBILADA', 'PROPRALLPROPRQTD_WC__', 'PROPRALLPROPRQTDQUART', 'PROPRALLPROPRM2______', 'PROPRALLPROPRDTDISPON', 'PROPRALLPROPRDESCRIPT', 'PROPRALLPESSONAME____'],
@@ -938,6 +975,7 @@
 						label: computed(() => this.Resources.LOCALIZATION34148),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
+						borderless: false,
 						isCollapsible: false,
 						anchored: false,
 						directChildren: ['PROPRALLCNTRYCOUNTRY_', 'PROPRALLREGIOREGIAO__', 'PROPRALLPROPRENDERECO', 'PROPRALLPROPRLOCALIDA', 'PROPRALLPROPRPOSTALCO', 'PROPRALLPROPRPOSTALLO'],
@@ -1642,7 +1680,6 @@
 
 				this.afterControlUpdate(controlField, fieldValue)
 			},
-
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
 // USE /[MANUAL GQT FUNCTIONS_JS PROPRALL]/
 // eslint-disable-next-line

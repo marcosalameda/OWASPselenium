@@ -1,6 +1,7 @@
 ﻿<template>
 	<q-numeric-input
 		:id="`${tableName}_${rowIndex}_${columnName}`"
+		:data-testid="$attrs['data-testid']"
 		:size="size"
 		:classes="classes"
 		:thousands-separator="options.numberFormat?.groupSeparator"
@@ -13,7 +14,7 @@
 		:model-value="Number(value)"
 		data-table-action-selected="false"
 		tabindex="-1"
-		:aria-label="options?.label"
+		:aria-label="options.label"
 		@update:model-value="onUpdateModelValue" />
 </template>
 
@@ -79,6 +80,7 @@
 			 */
 			size: {
 				type: String,
+				default: inputSize.mini,
 				validator: (value) => _isEmpty(value) || Reflect.has(inputSize, value)
 			},
 
@@ -88,7 +90,7 @@
 			classes: {
 				type: Array,
 				default: () => []
-			},
+			}
 		},
 
 		expose: [],

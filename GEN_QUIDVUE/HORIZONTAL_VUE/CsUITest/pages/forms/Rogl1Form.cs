@@ -10,8 +10,8 @@ public class Rogl1Form : Form
 	/// <summary>
 	/// Title
 	/// </summary>
-	public BaseInputControl Rogl1Title => new BaseInputControl(driver, ContainerLocator, "container-ROGL1___ROGL1TITLE___", "#ROGL1___ROGL1TITLE___");
+	public BaseInputControl Rogl1Title => new BaseInputControl(driver, ContainerLocator, "container-ROGL1___ROGL1TITLE___" + IdSuffix, "#ROGL1___ROGL1TITLE___" + IdSuffix);
 
-	public Rogl1Form(IWebDriver driver, FORM_MODE mode, By? containerLocator = null)
-		: base(driver, mode, "ROGL1", containerLocator: containerLocator) { }
+	public Rogl1Form(IWebDriver driver, FORM_MODE mode, By? containerLocator = null, bool usePkInId = false)
+		: base(driver, mode, "ROGL1", containerLocator: containerLocator, usePkInId: usePkInId) { }
 }

@@ -3,22 +3,23 @@
 		v-if="menuModalIsReady"
 		:to="`#${uiContainersId.body}`"
 		:disabled="!menuInfo.isPopup">
-		<form
+		<div
 			class="form-horizontal"
 			@submit.prevent>
 			<q-row-container>
 				<q-table
 					v-bind="controls.menu"
 					v-on="controls.menu.handlers">
+					<template #header>
+						<q-table-config
+							:table-ctrl="controls.menu"
+							v-on="controls.menu.handlers">
+						</q-table-config>
+					</template>
 					<!-- USE /[MANUAL GQT CUSTOM_TABLE PTN_Menu_LIST_DB_MC_F]/ -->
 				</q-table>
-
-				<q-table-extra-extension
-					:list-ctrl="controls.menu"
-					:filter-operators="controls.menu.filterOperators"
-					v-on="controls.menu.handlers" />
 			</q-row-container>
-		</form>
+		</div>
 	</teleport>
 
 	<teleport
@@ -178,7 +179,6 @@
 								scrollData: 1,
 								export: 1,
 								array: computed(() => new qProjArrays.QArrayDsiponib(vm.$getResource).elements),
-								arrayType: qProjArrays.QArrayDsiponib.type,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.BooleanColumn({
 								order: 4,
@@ -210,7 +210,6 @@
 							searchBarConfig: {
 								visibility: true
 							},
-							filtersVisible: true,
 							allowColumnFilters: true,
 							allowColumnSort: true,
 							generalCustomActions: [
@@ -282,7 +281,7 @@
 								sortOrder: 'asc'
 							}
 						},
-						globalEvents: ['changed-WAREH', 'changed-ITEM', 'changed-GITEM'],
+						globalEvents: ['changed-GITEM', 'changed-ITEM', 'changed-WAREH'],
 						uuid: '0095f644-60e2-4281-9381-45308492694e',
 						allSelectedRows: 'false',
 						headerLevel: 1,

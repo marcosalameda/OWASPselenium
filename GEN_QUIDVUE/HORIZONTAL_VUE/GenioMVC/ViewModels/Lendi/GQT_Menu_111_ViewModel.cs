@@ -234,45 +234,39 @@ namespace GenioMVC.ViewModels.Lendi
 
 			if (!tableConfig.GroupFilters.ContainsKey("filter_GQT_Menu_111_DEVOLUCAO"))
 			{
-				string defaultValue = "1";
+				string defaultValue = "";
 				tableConfig.Filters.Add(new GroupFilter { Key = "filter_GQT_Menu_111_DEVOLUCAO", Value = defaultValue });
 			}
 
 			{
 				var groupFilters = CriteriaSet.Or();
-				bool filter_GQT_Menu_111_DEVOLUCAO_1 = false;
-				if (tableConfig.GroupFilters.ContainsKey("filter_GQT_Menu_111_DEVOLUCAO"))
-					filter_GQT_Menu_111_DEVOLUCAO_1 = tableConfig.GroupFilters["filter_GQT_Menu_111_DEVOLUCAO"].Contains("1");
-				else if (!tableConfig.GroupFilters.ContainsKey("filter_GQT_Menu_111_DEVOLUCAO"))
-					filter_GQT_Menu_111_DEVOLUCAO_1 = true;
-				if (filter_GQT_Menu_111_DEVOLUCAO_1)
-				{
-					groupFilters.Equal(CSGenioAlendi.FldReturned, 0);
+				subfilters.SubSets.Add(groupFilters);
+			}
+			if (!tableConfig.GroupFilters.ContainsKey("filter_GQT_Menu_111_DEVOLUCAO"))
+			{
+				string defaultValue = "";
+				tableConfig.Filters.Add(new GroupFilter { Key = "filter_GQT_Menu_111_DEVOLUCAO", Value = defaultValue });
+			}
 
-				}
+			{
+				var groupFilters = CriteriaSet.Or();
+				subfilters.SubSets.Add(groupFilters);
+			}
+			if (!tableConfig.GroupFilters.ContainsKey("filter_GQT_Menu_111_DEVOLUCAO"))
+			{
+				string defaultValue = "";
+				tableConfig.Filters.Add(new GroupFilter { Key = "filter_GQT_Menu_111_DEVOLUCAO", Value = defaultValue });
+			}
 
-				bool filter_GQT_Menu_111_DEVOLUCAO_2 = false;
-				if (tableConfig.GroupFilters.ContainsKey("filter_GQT_Menu_111_DEVOLUCAO"))
-					filter_GQT_Menu_111_DEVOLUCAO_2 = tableConfig.GroupFilters["filter_GQT_Menu_111_DEVOLUCAO"].Contains("2");
-				if (filter_GQT_Menu_111_DEVOLUCAO_2)
-				{
-					groupFilters.Equal(CSGenioAlendi.FldReturned, 1);
-
-				}
-
-				bool filter_GQT_Menu_111_DEVOLUCAO_3 = false;
-				if (tableConfig.GroupFilters.ContainsKey("filter_GQT_Menu_111_DEVOLUCAO"))
-					filter_GQT_Menu_111_DEVOLUCAO_3 = tableConfig.GroupFilters["filter_GQT_Menu_111_DEVOLUCAO"].Contains("3");
-				if (filter_GQT_Menu_111_DEVOLUCAO_3)
-				{
-
-				}
-
+			{
+				var groupFilters = CriteriaSet.Or();
 				subfilters.SubSets.Add(groupFilters);
 			}
 
 			crs.SubSets.Add(subfilters);
 
+			// Form field filters
+			crs.SubSets.Add(ProcessFieldFilters(tableConfig.GlobalFilters));
 
 			crs.SubSets.Add(GetCustomizedStaticLimits(StaticLimits));
 
@@ -407,12 +401,11 @@ namespace GenioMVC.ViewModels.Lendi
 
 			FieldRef[] fields = new FieldRef[] { CSGenioAlendi.FldCodlendi, CSGenioAlendi.FldZzstate, CSGenioAlendi.FldCodpess1, CSGenioApess1.FldCodpesso, CSGenioApess1.FldName, CSGenioAlendi.FldCodequip, CSGenioAequip.FldCodequip, CSGenioAequip.FldRegistnr, CSGenioAlendi.FldCodpess2, CSGenioApess2.FldCodpesso, CSGenioApess2.FldName, CSGenioAlendi.FldLendinnr, CSGenioAlendi.FldStart, CSGenioAequip.FldFrequenc, CSGenioAlendi.FldWarndt, CSGenioAlendi.FldEnd, CSGenioAlendi.FldObservat, CSGenioAlendi.FldReturndt, CSGenioAlendi.FldReturned, CSGenioAlendi.FldDayslimi };
 
-
-			// Totalizers
-			List<FieldRef> fieldsWithTotalizers = fields.Where(field => tableConfig.TotalizerColumns.Contains(field.FullName)).ToList();
+			// List of column names that should display totalized (aggregated) values.
+			List<string> totalizerColumns = [];
+			List<FieldRef> fieldsWithTotalizers = [.. fields.Where(field => totalizerColumns.Contains(field.FullName))];
 
 			FieldRef firstVisibleColumn = null;
-
 			if (sorts.Count == 0)
 			{
 				firstVisibleColumn = tableConfig?.GetFirstVisibleColumn(TableAlias);

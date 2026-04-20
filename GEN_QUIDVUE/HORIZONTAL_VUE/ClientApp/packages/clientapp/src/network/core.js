@@ -70,7 +70,7 @@ export function fetchData(
 		return
 	}
 
-	let url = apiActionURL(controller, action),
+	const url = apiActionURL(controller, action),
 		tokenElements = document.getElementsByName('__RequestVerificationToken'),
 		antiForgeryToken = tokenElements.length > 0 ? tokenElements[0].value : null,
 		axiosOptions = {
@@ -129,7 +129,7 @@ export function postData(
 		return
 	}
 
-	let url = apiActionURL(controller, action),
+	const url = apiActionURL(controller, action),
 		tokenElements = document.getElementsByName('__RequestVerificationToken'),
 		antiForgeryToken = tokenElements.length > 0 ? tokenElements[0].value : null,
 		axiosOptions = {
@@ -195,7 +195,7 @@ async function processRequest(response, _fnCallback, fnResolve) {
 			const navDataStore = useNavDataStore()
 			const genericDataStore = useGenericDataStore()
 
-			let responseData = response.data ?? {},
+			const responseData = response.data ?? {},
 				data = responseData.Data ?? null,
 				statusCode = responseData.statusCode ?? 200,
 				srvHistory = responseData.NavigationData ?? {},
@@ -392,7 +392,7 @@ export function getFile(baseArea, ticket, viewType, navigationId = MAIN_HISTORY_
  */
 async function handleNonOkResponse(response, fnResolve, _fnCallback, fnReject, error) {
 	if (response) {
-		let responseData = response.data ?? {},
+		const responseData = response.data ?? {},
 			data = responseData.Data ?? null,
 			statusCode = responseData.statusCode ?? response.status
 

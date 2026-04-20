@@ -367,29 +367,6 @@ export default class ViewModel extends FormViewModelBase
 			description: computed(() => this.Resources.RADIO_BTN20980),
 		}).cloneFrom(values?.ValRadiob))
 		this.stopWatchers.push(watch(() => this.ValRadiob.value, (newValue, oldValue) => this.onUpdate('flds.radiob', this.ValRadiob, newValue, oldValue)))
-
-		/** The form fields used only in formulas. */
-		this.ValTblcond = reactive(new modelFieldType.Boolean({
-			id: 'ValTblcond',
-			originId: 'ValTblcond',
-			area: 'FLDS',
-			field: 'TBLCOND',
-			isFixed: true,
-			description: computed(() => this.Resources.ENFORCE_TABLE_CONDIT17491),
-		}).cloneFrom(values?.ValTblcond))
-		this.stopWatchers.push(watch(() => this.ValTblcond.value, (newValue, oldValue) => this.onUpdate('flds.tblcond', this.ValTblcond, newValue, oldValue)))
-
-		this.ValCond = reactive(new modelFieldType.String({
-			id: 'ValCond',
-			originId: 'ValCond',
-			area: 'FLDS',
-			field: 'COND',
-			maxLength: 8,
-			isFixed: true,
-			arrayOptions: computed(() => new qProjArrays.QArrayAcondtst(vm.$getResource).elements),
-			description: computed(() => this.Resources.FIELD_STATE03599),
-		}).cloneFrom(values?.ValCond))
-		this.stopWatchers.push(watch(() => this.ValCond.value, (newValue, oldValue) => this.onUpdate('flds.cond', this.ValCond, newValue, oldValue)))
 	}
 
 	/**

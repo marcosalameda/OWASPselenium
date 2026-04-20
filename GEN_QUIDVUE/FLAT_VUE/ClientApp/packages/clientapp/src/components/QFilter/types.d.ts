@@ -1,10 +1,13 @@
+import type { QFieldSize } from '@quidgest/ui/components'
+
 /**
  * Implemented filter viewmode codes:
  * Dropdown (Default, enumeration)
  * Checkbox (Checkbox group for arrays)
  * Radio (Radio group)
+ * Text (Open text field)
  */
-type FilterViewMode = 'dropdown' | 'checkbox' | 'radio'
+type FilterViewMode = 'checkbox' | 'dropdown' | 'radio' | 'text' | 'date'
 
 export type FilterType = string | boolean | number
 
@@ -27,6 +30,9 @@ type FilterGroup = {
 	title: string
 }
 
+/**
+ * Base props for all filter types.
+ */
 export type QFilterBaseProps = {
 	/**
 	 * Custom set of classes to apply to the component.
@@ -34,42 +40,45 @@ export type QFilterBaseProps = {
 	class?: string | unknown[]
 
 	/**
-	 * Array of filter options.
-	 */
-	items?: Array<FilterItem>
-
-	/**
 	 * True if the filter is in a read-only state, false otherwise.
 	 */
-	readonly: boolean
+	readonly?: boolean
+
+	/**
+	 * The label of the filter.
+	 */
+	label?: string
 }
 
 /**
  * Props for all filter modes.
  * Needed for QFilter to transmit all necessary props to the computed component.
  */
-export type QFilterGenericProps = QFilterGroupProps &
-	QFilterDropdownProps & {
-		/**
-		 * Control identifier.
-		 */
-		id: string
+export type QFilterGenericProps =
+	QFilterDateProps &
+	QFilterDropdownProps &
+	QFilterGroupProps &
+	QFilterTextProps & {
+	/**
+	 * Control identifier.
+	 */
+	id: string
 
-		/**
-		 * True if the filter is in a loading state, false otherwise.
-		 */
-		loading: boolean
+	/**
+	 * True if the filter is in a loading state, false otherwise.
+	 */
+	loading?: boolean
 
-		/**
-		 * Control texts.
-		 */
-		texts?: Record<string, string>
+	/**
+	 * Control texts.
+	 */
+	texts?: Record<string, string>
 
-		/**
-		 * Filter viewmode.
-		 */
-		viewMode: FilterViewMode
-	}
+	/**
+	 * Filter viewmode.
+	 */
+	viewMode: FilterViewMode
+}
 
 /**
  * Props for group filter modes (radio and checkbox filters).
@@ -79,6 +88,11 @@ export type QFilterGroupProps = QFilterBaseProps & {
 	 * Number of columns to divide the radio/checkbox options into.
 	 */
 	columns: number
+
+	/**
+	 * Array of filter options.
+	 */
+	items?: Array<FilterItem>
 
 	/**
 	 * The orientation of the radio/checkbox options shown.
@@ -97,12 +111,52 @@ export type QFilterDropdownProps = QFilterBaseProps & {
 	clearable?: boolean
 
 	/**
+	 * Array of filter options.
+	 */
+	items?: Array<FilterItem>
+
+	/**
 	 * Array item groups.
 	 */
 	groups?: Array<FilterGroup>
 
 	/**
-	 * Control size - aplicable only in enumeration filters ('en').
+	 * The size category of the field.
 	 */
-	size?: 'mini' | 'small' | 'medium' | 'large' | 'xlarge' | 'xxlarge' | 'block'
+	size?: QFieldSize
+}
+
+/**
+ * Props for text filter modes.
+ */
+export type QFilterTextProps = QFilterBaseProps & {
+	/**
+	 * If set to true, the clear button will be available.
+	 */
+	clearable?: boolean
+
+	/**
+	 * The size category of the field.
+	 */
+	size?: QFieldSize
+}
+
+/**
+ * Props for date filter modes.
+ */
+export type QFilterDateProps = QFilterBaseProps & {
+	/**
+	 * If set to true, the clear button will be available.
+	 */
+	clearable?: boolean
+
+	/**
+	 * The size category of the field.
+	 */
+	size?: QFieldSize
+
+	/**
+	 * Enable selecting a range of two dates.
+	 */
+	range?: boolean
 }

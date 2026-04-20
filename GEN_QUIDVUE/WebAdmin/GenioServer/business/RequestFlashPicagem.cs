@@ -227,13 +227,13 @@ namespace CSGenio.business
             }
             catch (GenioException ex)
 			{
-				if (ex.ExceptionSite == "PedidoFlash${campo.Tgrafico}${campo.Form.ToUpper()}${campo.Fdbf.ToUpper()}${campo.Fcampo.ToUpper()}.processRequest")
+				if (ex.ExceptionSite == "RequestFlashAttendance.processRequest")
 					throw;
-				throw new BusinessException(ex.UserMessage, "PedidoFlash${campo.Tgrafico}${campo.Form.ToUpper()}${campo.Fdbf.ToUpper()}${campo.Fcampo.ToUpper()}.processRequest", "Error processing Flash request: " + ex.Message, ex);
+				throw new BusinessException(ex.UserMessage, "RequestFlashAttendance.processRequest", "Error processing Flash request: " + ex.Message, ex);
 			}
             catch (Exception ex)
             {
-                throw new BusinessException(null, "PedidoFlash${campo.Tgrafico}${campo.Form.ToUpper()}${campo.Fdbf.ToUpper()}${campo.Fcampo.ToUpper()}.processRequest", "Error processing Flash request: " + ex.Message, ex);
+                throw new BusinessException(null, "RequestFlashAttendance.processRequest", "Error processing Flash request: " + ex.Message, ex);
             }
         }    
 

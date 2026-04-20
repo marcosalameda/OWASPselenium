@@ -150,21 +150,6 @@ namespace GenioServer.framework
                 area.insertPseud(sp);
                 rows.Add(area.ValCodua, area.ValModulo, area.ValNivel, area.ValCodpsw);
             }
-            if (!modules.ContainsKey("UIS"))
-            {
-                // must create a user authorization level
-                if (Log.IsDebugEnabled) Log.Debug("Processa pedido INS. [id] APPAUTHORIZATIONLIST [aplicacao] pswuserauthlevels");
-
-                //instanciação da area base
-                CSGenioApswuserauthlevels area = Area.createArea("pswuserauthlevels", user, list.Module) as CSGenioApswuserauthlevels;
-                area.ValNivel = 0;
-                area.ValModulo = "UIS";
-                area.ValSistema = "GQT";
-                // Value da key PSW
-                area.ValCodpsw = condition.SubSets[0].Criterias[0].RightTerm.ToString();
-                area.insertPseud(sp);
-                rows.Add(area.ValCodua, area.ValModulo, area.ValNivel, area.ValCodpsw);
-            }
             if (!modules.ContainsKey("GQT"))
             {
                 // must create a user authorization level
@@ -174,21 +159,6 @@ namespace GenioServer.framework
                 CSGenioApswuserauthlevels area = Area.createArea("pswuserauthlevels", user, list.Module) as CSGenioApswuserauthlevels;
                 area.ValNivel = 0;
                 area.ValModulo = "GQT";
-                area.ValSistema = "GQT";
-                // Value da key PSW
-                area.ValCodpsw = condition.SubSets[0].Criterias[0].RightTerm.ToString();
-                area.insertPseud(sp);
-                rows.Add(area.ValCodua, area.ValModulo, area.ValNivel, area.ValCodpsw);
-            }
-            if (!modules.ContainsKey("XRS"))
-            {
-                // must create a user authorization level
-                if (Log.IsDebugEnabled) Log.Debug("Processa pedido INS. [id] APPAUTHORIZATIONLIST [aplicacao] pswuserauthlevels");
-
-                //instanciação da area base
-                CSGenioApswuserauthlevels area = Area.createArea("pswuserauthlevels", user, list.Module) as CSGenioApswuserauthlevels;
-                area.ValNivel = 0;
-                area.ValModulo = "XRS";
                 area.ValSistema = "GQT";
                 // Value da key PSW
                 area.ValCodpsw = condition.SubSets[0].Criterias[0].RightTerm.ToString();

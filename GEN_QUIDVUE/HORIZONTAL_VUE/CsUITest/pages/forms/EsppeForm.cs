@@ -10,15 +10,15 @@ public class EsppeForm : Form
 	/// <summary>
 	/// Name
 	/// </summary>
-	public LookupControl PessoName => new LookupControl(driver, ContainerLocator, "container-ESPPE___PESSONAME____");
-	public SeeMorePage PessoNameSeeMorePage => new SeeMorePage(driver, "ESPPE", "ESPPE___PESSONAME____");
+	public LookupControl PessoName => new LookupControl(driver, ContainerLocator, "container-ESPPE___PESSONAME____" + IdSuffix);
+	public SeeMorePage PessoNameSeeMorePage => new SeeMorePage(driver, "ESPPE", "ESPPE___PESSONAME____" + IdSuffix);
 
 	/// <summary>
 	/// Specialty
 	/// </summary>
-	public LookupControl SpeciEspecial => new LookupControl(driver, ContainerLocator, "container-ESPPE___SPECIESPECIAL");
-	public SeeMorePage SpeciEspecialSeeMorePage => new SeeMorePage(driver, "ESPPE", "ESPPE___SPECIESPECIAL");
+	public LookupControl SpeciEspecial => new LookupControl(driver, ContainerLocator, "container-ESPPE___SPECIESPECIAL" + IdSuffix);
+	public SeeMorePage SpeciEspecialSeeMorePage => new SeeMorePage(driver, "ESPPE", "ESPPE___SPECIESPECIAL" + IdSuffix);
 
-	public EsppeForm(IWebDriver driver, FORM_MODE mode, By? containerLocator = null)
-		: base(driver, mode, "ESPPE", containerLocator: containerLocator) { }
+	public EsppeForm(IWebDriver driver, FORM_MODE mode, By? containerLocator = null, bool usePkInId = false)
+		: base(driver, mode, "ESPPE", containerLocator: containerLocator, usePkInId: usePkInId) { }
 }

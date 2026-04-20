@@ -9,12 +9,13 @@
 			<div
 				v-if="showFormHeader"
 				class="c-action-bar">
-				<h1
+				<component
 					v-if="formControl.uiComponents.header && formInfo.designation"
+					:is="topHeadingTag"
 					:id="formTitleId"
 					class="form-header">
 					{{ formInfo.designation }}
-				</h1>
+				</component>
 
 				<div class="c-action-bar__menu">
 					<template
@@ -40,13 +41,10 @@
 									@click="btn.action">
 									<template v-if="btn.icon">
 										<q-badge-indicator
-											v-if="btn.badge && btn.badge.isVisible"
-											:color="btn.badge.color">
+											:enabled="btn.badge?.isVisible ?? false"
+											:color="btn.badge?.color">
 											<q-icon v-bind="btn.icon" />
 										</q-badge-indicator>
-										<q-icon
-											v-else
-											v-bind="btn.icon" />
 									</template>
 								</q-toggle-group-item>
 							</template>
@@ -97,6 +95,7 @@
 		<q-container
 			fluid
 			data-key="PESSPOP"
+			:data-identifier="primaryKeyValue"
 			:data-loading="!formInitialDataLoaded || !isActiveForm">
 			<template v-if="formControl.initialized && showFormBody">
 				<q-row v-if="controls.PESSPOP_WPESSNFUNC___.isVisible">
@@ -106,7 +105,8 @@
 						<base-input-structure
 							v-if="controls.PESSPOP_WPESSNFUNC___.isVisible"
 							class="i-text"
-							v-bind="controls.PESSPOP_WPESSNFUNC___"
+							v-bind="controls.PESSPOP_WPESSNFUNC___.wrapperProps"
+							:id="getControlId(controls.PESSPOP_WPESSNFUNC___)"
 							v-on="controls.PESSPOP_WPESSNFUNC___.handlers"
 							:loading="controls.PESSPOP_WPESSNFUNC___.props.loading"
 							:reporting-mode-on="reportingModeCAV"
@@ -114,6 +114,7 @@
 							<q-numeric-input
 								v-if="controls.PESSPOP_WPESSNFUNC___.isVisible"
 								v-bind="controls.PESSPOP_WPESSNFUNC___.props"
+								:id="getControlId(controls.PESSPOP_WPESSNFUNC___)"
 								@update:model-value="model.ValNfunc.fnUpdateValue" />
 						</base-input-structure>
 					</q-col>
@@ -125,7 +126,8 @@
 						<base-input-structure
 							v-if="controls.PESSPOP_WPESSPFOTO___.isVisible"
 							class="q-image"
-							v-bind="controls.PESSPOP_WPESSPFOTO___"
+							v-bind="controls.PESSPOP_WPESSPFOTO___.wrapperProps"
+							:id="getControlId(controls.PESSPOP_WPESSPFOTO___)"
 							v-on="controls.PESSPOP_WPESSPFOTO___.handlers"
 							:loading="controls.PESSPOP_WPESSPFOTO___.props.loading"
 							:reporting-mode-on="reportingModeCAV"
@@ -133,6 +135,7 @@
 							<q-image
 								v-if="controls.PESSPOP_WPESSPFOTO___.isVisible"
 								v-bind="controls.PESSPOP_WPESSPFOTO___.props"
+								:id="getControlId(controls.PESSPOP_WPESSPFOTO___)"
 								v-on="controls.PESSPOP_WPESSPFOTO___.handlers" />
 						</base-input-structure>
 					</q-col>
@@ -144,13 +147,15 @@
 						<base-input-structure
 							v-if="controls.PESSPOP_WPESSNAME____.isVisible"
 							class="i-text"
-							v-bind="controls.PESSPOP_WPESSNAME____"
+							v-bind="controls.PESSPOP_WPESSNAME____.wrapperProps"
+							:id="getControlId(controls.PESSPOP_WPESSNAME____)"
 							v-on="controls.PESSPOP_WPESSNAME____.handlers"
 							:loading="controls.PESSPOP_WPESSNAME____.props.loading"
 							:reporting-mode-on="reportingModeCAV"
 							:suggestion-mode-on="suggestionModeOn">
 							<q-text-field
 								v-bind="controls.PESSPOP_WPESSNAME____.props"
+								:id="getControlId(controls.PESSPOP_WPESSNAME____)"
 								@blur="onBlur(controls.PESSPOP_WPESSNAME____, model.ValName.value)"
 								@change="model.ValName.fnUpdateValueOnChange" />
 						</base-input-structure>
@@ -161,7 +166,8 @@
 						<base-input-structure
 							v-if="controls.PESSPOP_WPESSDATE____.isVisible"
 							class="i-text"
-							v-bind="controls.PESSPOP_WPESSDATE____"
+							v-bind="controls.PESSPOP_WPESSDATE____.wrapperProps"
+							:id="getControlId(controls.PESSPOP_WPESSDATE____)"
 							v-on="controls.PESSPOP_WPESSDATE____.handlers"
 							:loading="controls.PESSPOP_WPESSDATE____.props.loading"
 							:reporting-mode-on="reportingModeCAV"
@@ -169,6 +175,7 @@
 							<q-date-time-picker
 								v-if="controls.PESSPOP_WPESSDATE____.isVisible"
 								v-bind="controls.PESSPOP_WPESSDATE____.props"
+								:id="getControlId(controls.PESSPOP_WPESSDATE____)"
 								:model-value="model.ValDate.value"
 								@reset-icon-click="model.ValDate.fnUpdateValue(model.ValDate.originalValue ?? new Date())"
 								@update:model-value="model.ValDate.fnUpdateValue($event ?? '')" />
@@ -180,7 +187,8 @@
 						<base-input-structure
 							v-if="controls.PESSPOP_WPESSSEX_____.isVisible"
 							class="i-text"
-							v-bind="controls.PESSPOP_WPESSSEX_____"
+							v-bind="controls.PESSPOP_WPESSSEX_____.wrapperProps"
+							:id="getControlId(controls.PESSPOP_WPESSSEX_____)"
 							v-on="controls.PESSPOP_WPESSSEX_____.handlers"
 							:loading="controls.PESSPOP_WPESSSEX_____.props.loading"
 							:reporting-mode-on="reportingModeCAV"
@@ -188,6 +196,7 @@
 							<q-select
 								v-if="controls.PESSPOP_WPESSSEX_____.isVisible"
 								v-bind="controls.PESSPOP_WPESSSEX_____.props"
+								:id="getControlId(controls.PESSPOP_WPESSSEX_____)"
 								@update:model-value="model.ValSex.fnUpdateValue" />
 						</base-input-structure>
 					</q-col>
@@ -199,13 +208,15 @@
 						<base-input-structure
 							v-if="controls.PESSPOP_WPESSNATURALI.isVisible"
 							class="i-text"
-							v-bind="controls.PESSPOP_WPESSNATURALI"
+							v-bind="controls.PESSPOP_WPESSNATURALI.wrapperProps"
+							:id="getControlId(controls.PESSPOP_WPESSNATURALI)"
 							v-on="controls.PESSPOP_WPESSNATURALI.handlers"
 							:loading="controls.PESSPOP_WPESSNATURALI.props.loading"
 							:reporting-mode-on="reportingModeCAV"
 							:suggestion-mode-on="suggestionModeOn">
 							<q-text-field
 								v-bind="controls.PESSPOP_WPESSNATURALI.props"
+								:id="getControlId(controls.PESSPOP_WPESSNATURALI)"
 								@blur="onBlur(controls.PESSPOP_WPESSNATURALI, model.ValNaturali.value)"
 								@change="model.ValNaturali.fnUpdateValueOnChange" />
 						</base-input-structure>
@@ -218,13 +229,15 @@
 						<base-input-structure
 							v-if="controls.PESSPOP_WPESSNACIONAL.isVisible"
 							class="i-text"
-							v-bind="controls.PESSPOP_WPESSNACIONAL"
+							v-bind="controls.PESSPOP_WPESSNACIONAL.wrapperProps"
+							:id="getControlId(controls.PESSPOP_WPESSNACIONAL)"
 							v-on="controls.PESSPOP_WPESSNACIONAL.handlers"
 							:loading="controls.PESSPOP_WPESSNACIONAL.props.loading"
 							:reporting-mode-on="reportingModeCAV"
 							:suggestion-mode-on="suggestionModeOn">
 							<q-text-field
 								v-bind="controls.PESSPOP_WPESSNACIONAL.props"
+								:id="getControlId(controls.PESSPOP_WPESSNACIONAL)"
 								@blur="onBlur(controls.PESSPOP_WPESSNACIONAL, model.ValNacional.value)"
 								@change="model.ValNacional.fnUpdateValueOnChange" />
 						</base-input-structure>
@@ -237,13 +250,15 @@
 						<base-input-structure
 							v-if="controls.PESSPOP_WPESSADRESS__.isVisible"
 							class="i-text"
-							v-bind="controls.PESSPOP_WPESSADRESS__"
+							v-bind="controls.PESSPOP_WPESSADRESS__.wrapperProps"
+							:id="getControlId(controls.PESSPOP_WPESSADRESS__)"
 							v-on="controls.PESSPOP_WPESSADRESS__.handlers"
 							:loading="controls.PESSPOP_WPESSADRESS__.props.loading"
 							:reporting-mode-on="reportingModeCAV"
 							:suggestion-mode-on="suggestionModeOn">
 							<q-text-field
 								v-bind="controls.PESSPOP_WPESSADRESS__.props"
+								:id="getControlId(controls.PESSPOP_WPESSADRESS__)"
 								@blur="onBlur(controls.PESSPOP_WPESSADRESS__, model.ValAdress.value)"
 								@change="model.ValAdress.fnUpdateValueOnChange" />
 						</base-input-structure>
@@ -254,14 +269,16 @@
 						<base-input-structure
 							v-if="controls.PESSPOP_WPESSZIPCODE_.isVisible"
 							class="i-text"
-							v-bind="controls.PESSPOP_WPESSZIPCODE_"
+							v-bind="controls.PESSPOP_WPESSZIPCODE_.wrapperProps"
+							:id="getControlId(controls.PESSPOP_WPESSZIPCODE_)"
 							v-on="controls.PESSPOP_WPESSZIPCODE_.handlers"
 							:loading="controls.PESSPOP_WPESSZIPCODE_.props.loading"
 							:reporting-mode-on="reportingModeCAV"
 							:suggestion-mode-on="suggestionModeOn">
 							<q-mask
 								v-if="controls.PESSPOP_WPESSZIPCODE_.isVisible"
-								v-bind="controls.PESSPOP_WPESSZIPCODE_"
+								v-bind="controls.PESSPOP_WPESSZIPCODE_.props"
+								:id="getControlId(controls.PESSPOP_WPESSZIPCODE_)"
 								:model-value="model.ValZipcode.value"
 								@change="model.ValZipcode.fnUpdateValueOnChange" />
 						</base-input-structure>
@@ -274,13 +291,15 @@
 						<base-input-structure
 							v-if="controls.PESSPOP_WPESSCOUNTRY_.isVisible"
 							class="i-text"
-							v-bind="controls.PESSPOP_WPESSCOUNTRY_"
+							v-bind="controls.PESSPOP_WPESSCOUNTRY_.wrapperProps"
+							:id="getControlId(controls.PESSPOP_WPESSCOUNTRY_)"
 							v-on="controls.PESSPOP_WPESSCOUNTRY_.handlers"
 							:loading="controls.PESSPOP_WPESSCOUNTRY_.props.loading"
 							:reporting-mode-on="reportingModeCAV"
 							:suggestion-mode-on="suggestionModeOn">
 							<q-text-field
 								v-bind="controls.PESSPOP_WPESSCOUNTRY_.props"
+								:id="getControlId(controls.PESSPOP_WPESSCOUNTRY_)"
 								@blur="onBlur(controls.PESSPOP_WPESSCOUNTRY_, model.ValCountry.value)"
 								@change="model.ValCountry.fnUpdateValueOnChange" />
 						</base-input-structure>
@@ -293,14 +312,16 @@
 						<base-input-structure
 							v-if="controls.PESSPOP_WPESSEMAIL___.isVisible"
 							class="i-text"
-							v-bind="controls.PESSPOP_WPESSEMAIL___"
+							v-bind="controls.PESSPOP_WPESSEMAIL___.wrapperProps"
+							:id="getControlId(controls.PESSPOP_WPESSEMAIL___)"
 							v-on="controls.PESSPOP_WPESSEMAIL___.handlers"
 							:loading="controls.PESSPOP_WPESSEMAIL___.props.loading"
 							:reporting-mode-on="reportingModeCAV"
 							:suggestion-mode-on="suggestionModeOn">
 							<q-mask
 								v-if="controls.PESSPOP_WPESSEMAIL___.isVisible"
-								v-bind="controls.PESSPOP_WPESSEMAIL___"
+								v-bind="controls.PESSPOP_WPESSEMAIL___.props"
+								:id="getControlId(controls.PESSPOP_WPESSEMAIL___)"
 								:model-value="model.ValEmail.value"
 								@change="model.ValEmail.fnUpdateValueOnChange" />
 						</base-input-structure>
@@ -313,7 +334,8 @@
 						<base-input-structure
 							v-if="controls.PESSPOP_WPESSCELLPHON.isVisible"
 							class="i-text"
-							v-bind="controls.PESSPOP_WPESSCELLPHON"
+							v-bind="controls.PESSPOP_WPESSCELLPHON.wrapperProps"
+							:id="getControlId(controls.PESSPOP_WPESSCELLPHON)"
 							v-on="controls.PESSPOP_WPESSCELLPHON.handlers"
 							:loading="controls.PESSPOP_WPESSCELLPHON.props.loading"
 							:reporting-mode-on="reportingModeCAV"
@@ -321,6 +343,7 @@
 							<q-numeric-input
 								v-if="controls.PESSPOP_WPESSCELLPHON.isVisible"
 								v-bind="controls.PESSPOP_WPESSCELLPHON.props"
+								:id="getControlId(controls.PESSPOP_WPESSCELLPHON)"
 								@update:model-value="model.ValCellphon.fnUpdateValue" />
 						</base-input-structure>
 					</q-col>
@@ -332,7 +355,8 @@
 						<base-input-structure
 							v-if="controls.PESSPOP_WAREHWAREHDES.isVisible"
 							class="i-text"
-							v-bind="controls.PESSPOP_WAREHWAREHDES"
+							v-bind="controls.PESSPOP_WAREHWAREHDES.wrapperProps"
+							:id="getControlId(controls.PESSPOP_WAREHWAREHDES)"
 							v-on="controls.PESSPOP_WAREHWAREHDES.handlers"
 							:loading="controls.PESSPOP_WAREHWAREHDES.props.loading"
 							:reporting-mode-on="reportingModeCAV"
@@ -340,6 +364,7 @@
 							<q-lookup
 								v-if="controls.PESSPOP_WAREHWAREHDES.isVisible"
 								v-bind="controls.PESSPOP_WAREHWAREHDES.props"
+								:id="getControlId(controls.PESSPOP_WAREHWAREHDES)"
 								v-on="controls.PESSPOP_WAREHWAREHDES.handlers" />
 							<q-see-more-pesspop-warehwarehdes
 								v-if="controls.PESSPOP_WAREHWAREHDES.seeMoreIsVisible"
@@ -352,7 +377,7 @@
 		</q-container>
 	</teleport>
 
-	<hr v-if="!isPopup && showFormFooter" />
+	<q-divider v-if="!isPopup && showFormFooter" />
 
 	<teleport
 		v-if="formModalIsReady && showFormFooter"
@@ -761,8 +786,8 @@
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						maxLength: 9,
 						arrayName: 'SEXO',
-						helpShortItem: '',
-						helpDetailedItem: '',
+						helpShortItem: 'None',
+						helpDetailedItem: 'None',
 						controlLimits: [
 						],
 					}, this),
@@ -1290,7 +1315,6 @@
 
 				this.afterControlUpdate(controlField, fieldValue)
 			},
-
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
 // USE /[MANUAL GQT FUNCTIONS_JS PESSPOP]/
 // eslint-disable-next-line

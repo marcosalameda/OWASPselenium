@@ -11,152 +11,150 @@
 							:selected-tab="tabContainer.selectedTab"
 							:tabs-list="tabContainer.tabs"
 							@tab-changed="changeTab">
-							<template #tab-panel>
-								<section v-show="tabContainer.selectedTab === 1">
-									<q-row-container>
-										<q-control-wrapper class="control-join-group">
-											<q-multi-check-boxes-input
-												v-model="selectedTypes"
-												:options="eventOptions" />
-										</q-control-wrapper>
-										<q-control-wrapper class="control-join-group float-right">
-											<q-button
-												label="Copy to Clipboard"
-												title="Copy to Clipboard"
-												@click="dumpEvents">
-												<q-icon icon="copy" />
-											</q-button>
-										</q-control-wrapper>
-									</q-row-container>
-									<q-row-container>
-										<q-control-wrapper>
-											<table class="c-table">
-												<thead class="c-table__head">
-													<tr>
-														<th></th>
-														<th>Timestamp</th>
-														<th>Type</th>
-														<th>Origin</th>
-														<th>Message</th>
-														<th>Info</th>
+							<section v-show="tabContainer.selectedTab === 1">
+								<q-row-container>
+									<q-control-wrapper class="control-join-group">
+										<q-multi-check-boxes-input
+											v-model="selectedTypes"
+											:options="eventOptions" />
+									</q-control-wrapper>
+									<q-control-wrapper class="control-join-group float-right">
+										<q-button
+											label="Copy to Clipboard"
+											title="Copy to Clipboard"
+											@click="dumpEvents">
+											<q-icon icon="copy" />
+										</q-button>
+									</q-control-wrapper>
+								</q-row-container>
+								<q-row-container>
+									<q-control-wrapper>
+										<table class="c-table">
+											<thead class="c-table__head">
+												<tr>
+													<th></th>
+													<th>Timestamp</th>
+													<th>Type</th>
+													<th>Origin</th>
+													<th>Message</th>
+													<th>Info</th>
+												</tr>
+											</thead>
+											<tbody class="c-table__body">
+												<template
+													v-for="traceEvent in filteredEvents"
+													:key="traceEvent.uid">
+													<tr
+														@click.stop.prevent="toggleDetails(traceEvent.uid)"
+														class="c-table__row">
+														<td>
+															<button
+																type="button"
+																class="btn-popover"
+																title="Print to Console"
+																@click.stop.prevent="showFullEventData(traceEvent)">
+																<q-icon icon="help" />
+															</button>
+														</td>
+														<td>{{ formatTimestamp(traceEvent.timestamp) }}</td>
+														<td>{{ traceEvent.type }}</td>
+														<td>{{ traceEvent.origin }}</td>
+														<td>{{ truncateString(traceEvent.message, 50) }}</td>
+														<td>{{ getEventInfo(traceEvent) }}</td>
 													</tr>
-												</thead>
-												<tbody class="c-table__body">
-													<template
-														v-for="traceEvent in filteredEvents"
-														:key="traceEvent.uid">
-														<tr
-															@click.stop.prevent="toggleDetails(traceEvent.uid)"
-															class="c-table__row">
-															<td>
-																<button
-																	type="button"
-																	class="btn-popover"
-																	title="Print to Console"
-																	@click.stop.prevent="showFullEventData(traceEvent)">
-																	<q-icon icon="help" />
-																</button>
-															</td>
-															<td>{{ formatTimestamp(traceEvent.timestamp) }}</td>
-															<td>{{ traceEvent.type }}</td>
-															<td>{{ traceEvent.origin }}</td>
-															<td>{{ truncateString(traceEvent.message, 50) }}</td>
-															<td>{{ getEventInfo(traceEvent) }}</td>
-														</tr>
-														<tr
-															class="c-table__row"
-															v-if="detailsIsVisible(traceEvent.uid)">
-															<td colspan="6">
-																<q-control-wrapper class="debug-window__event--details">
-																	<table class="c-table">
-																		<tbody class="c-table__body">
+													<tr
+														class="c-table__row"
+														v-if="detailsIsVisible(traceEvent.uid)">
+														<td colspan="6">
+															<q-control-wrapper class="debug-window__event--details">
+																<table class="c-table">
+																	<tbody class="c-table__body">
+																		<tr class="c-table__row">
+																			<td>Message:</td>
+																			<td>{{ traceEvent.message }}</td>
+																		</tr>
+																		<template
+																			v-if="
+																				traceEvent.type === TraceEventType.REQUEST ||
+																					traceEvent.type === TraceEventType.RESPONSE
+																			">
 																			<tr class="c-table__row">
-																				<td>Message:</td>
-																				<td>{{ traceEvent.message }}</td>
-																			</tr>
-																			<template
-																				v-if="
-																					traceEvent.type === TraceEventType.REQUEST ||
-																						traceEvent.type === TraceEventType.RESPONSE
-																				">
-																				<tr class="c-table__row">
-																					<td>Request type:</td>
-																					<td>{{ traceEvent.requestType }}</td>
-																				</tr>
-																				<tr class="c-table__row">
-																					<td>Request URL:</td>
-																					<td>{{ traceEvent.requestUrl }}</td>
-																				</tr>
-																				<tr class="c-table__row">
-																					<td>Request params:</td>
-																					<td>{{ traceEvent.requestParams }}</td>
-																				</tr>
-																				<tr class="c-table__row">
-																					<td>Request data:</td>
-																					<td>{{ traceEvent.requestData }}</td>
-																				</tr>
-																			</template>
-																			<template v-if="traceEvent.type === TraceEventType.RESPONSE">
-																				<tr class="c-table__row">
-																					<td>Response status:</td>
-																					<td>{{ traceEvent.responseStatus }}</td>
-																				</tr>
-																				<tr class="c-table__row">
-																					<td>Response data:</td>
-																					<td>{{ traceEvent.responseData }}</td>
-																				</tr>
-																				<tr class="c-table__row">
-																					<td>Time:</td>
-																					<td>{{ traceEvent.time }} ms</td>
-																				</tr>
-																			</template>
-																			<tr class="c-table__row">
-																				<td>Context data:</td>
-																				<td>{{ traceEvent.contextData }}</td>
+																				<td>Request type:</td>
+																				<td>{{ traceEvent.requestType }}</td>
 																			</tr>
 																			<tr class="c-table__row">
-																				<td>Call Stack:</td>
-																				<td>{{ traceEvent.callStack }}</td>
+																				<td>Request URL:</td>
+																				<td>{{ traceEvent.requestUrl }}</td>
 																			</tr>
-																		</tbody>
-																	</table>
-																</q-control-wrapper>
-															</td>
-														</tr>
-													</template>
-												</tbody>
-											</table>
-										</q-control-wrapper>
-									</q-row-container>
-								</section>
-								<section v-show="tabContainer.selectedTab === 2">
-									<q-row-container v-if="!_isEmpty(eventGroups)">
-										<q-control-wrapper>
-											<q-button
-												label="Copy to Clipboard"
-												title="Copy to Clipboard"
-												@click="dumpEventGroups">
-												<q-icon icon="copy" />
-											</q-button>
-										</q-control-wrapper>
-									</q-row-container>
-									<q-row-container
-										v-for="(traceEventGroup, groupId) in eventGroups"
-										:key="groupId">
-										<q-control-wrapper>
-											<button
-												type="button"
-												class="btn-popover"
-												title="Print to Console"
-												@click.stop.prevent="showFullEventData(traceEventGroup)">
-												<q-icon icon="help" />
-											</button>
-											{{ joinEventsMessage(traceEventGroup) }}
-											<hr />
-										</q-control-wrapper>
-									</q-row-container>
-								</section>
-							</template>
+																			<tr class="c-table__row">
+																				<td>Request params:</td>
+																				<td>{{ traceEvent.requestParams }}</td>
+																			</tr>
+																			<tr class="c-table__row">
+																				<td>Request data:</td>
+																				<td>{{ traceEvent.requestData }}</td>
+																			</tr>
+																		</template>
+																		<template v-if="traceEvent.type === TraceEventType.RESPONSE">
+																			<tr class="c-table__row">
+																				<td>Response status:</td>
+																				<td>{{ traceEvent.responseStatus }}</td>
+																			</tr>
+																			<tr class="c-table__row">
+																				<td>Response data:</td>
+																				<td>{{ traceEvent.responseData }}</td>
+																			</tr>
+																			<tr class="c-table__row">
+																				<td>Time:</td>
+																				<td>{{ traceEvent.time }} ms</td>
+																			</tr>
+																		</template>
+																		<tr class="c-table__row">
+																			<td>Context data:</td>
+																			<td>{{ traceEvent.contextData }}</td>
+																		</tr>
+																		<tr class="c-table__row">
+																			<td>Call Stack:</td>
+																			<td>{{ traceEvent.callStack }}</td>
+																		</tr>
+																	</tbody>
+																</table>
+															</q-control-wrapper>
+														</td>
+													</tr>
+												</template>
+											</tbody>
+										</table>
+									</q-control-wrapper>
+								</q-row-container>
+							</section>
+							<section v-show="tabContainer.selectedTab === 2">
+								<q-row-container v-if="!_isEmpty(eventGroups)">
+									<q-control-wrapper>
+										<q-button
+											label="Copy to Clipboard"
+											title="Copy to Clipboard"
+											@click="dumpEventGroups">
+											<q-icon icon="copy" />
+										</q-button>
+									</q-control-wrapper>
+								</q-row-container>
+								<q-row-container
+									v-for="(traceEventGroup, groupId) in eventGroups"
+									:key="groupId">
+									<q-control-wrapper>
+										<button
+											type="button"
+											class="btn-popover"
+											title="Print to Console"
+											@click.stop.prevent="showFullEventData(traceEventGroup)">
+											<q-icon icon="help" />
+										</button>
+										{{ joinEventsMessage(traceEventGroup) }}
+										<hr />
+									</q-control-wrapper>
+								</q-row-container>
+							</section>
 						</q-tab-container>
 					</base-input-structure>
 				</q-control-wrapper>

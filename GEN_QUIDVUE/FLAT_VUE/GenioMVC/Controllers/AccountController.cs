@@ -49,6 +49,8 @@ namespace GenioMVC.Controllers
 
 				model.AuthRedirectMethods.Add(method);
 			}
+			model.AuthMode = SecurityFactory.AuthenticationMode;
+
 			return JsonOK(model);
 		}
 
@@ -97,7 +99,7 @@ namespace GenioMVC.Controllers
 			if (user.Auth2FATp == "WebAuth")
 				provider = SecurityFactory.IdentityProviderList.First(x => x.Is2FA && SecurityFactory.GetCredentialType(x) == "WebAuthCredential");
 
-			//generate the challenge for this provider            
+			//generate the challenge for this provider
 			if (provider is null)
 				return JsonERROR();
 			var challenge = provider.AuthenticateChallenge(user.Name);
@@ -188,7 +190,7 @@ namespace GenioMVC.Controllers
 		[AllowAnonymous]
 		public ActionResult AuthenticationWebauth([FromBody] WebAuthLoginRequest model, string returnUrl)
 		{
-			return IdentityProviderLoginGeneric(model.ProviderId, 
+			return IdentityProviderLoginGeneric(model.ProviderId,
 				(ip, token) => new WebAuthCredential()
 				{
 					Assertion = model.Assertion,
@@ -298,7 +300,7 @@ namespace GenioMVC.Controllers
 				{
 					//Store the id in session for later use
 					HttpContext.Session.SetString("userId", resource.Name);
-					return RedirectToVuePage("RecoverPasswordChange");
+					return RedirectToVuePage("RecoverPasswordChange", includeCulture: true, includeSystemAndModule: true);
 				}
 
 				return RedirectToVuePage("ErrorTicketConfirm");
@@ -422,10 +424,21 @@ namespace GenioMVC.Controllers
 
 				//find the identity provide and collect the credentials from the interface
 				var ip = SecurityFactory.IdentityProviderList.First(i => i.Id == providerId);
-				var credential = createCredential(ip, token);
 
-				//Authenticate the user
-				User? user = SecurityFactory.Authenticate(credential, providerId);
+				Credential credential = createCredential(ip, token);
+				User? user = null;
+
+				if (
+					ip.HasUsernameAuth() &&
+					SecurityFactory.AuthenticationMode.Equals(AuthenticationMode.AcceptOnFirstSucess)
+				)
+				{
+					user = SecurityFactory.Authenticate(credential);
+				}
+				else
+				{
+					user = SecurityFactory.Authenticate(credential, providerId);
+				}
 
 				//validate the authentication state
 				string loginError = ValidateLoginState(user, token);
@@ -439,10 +452,10 @@ namespace GenioMVC.Controllers
 					});
 					throw new BusinessException(loginError, "IdentityProviderLoginGeneric", loginError);
 				}
-				
+
 				//set the new authentication state and direct the user to the adequate page
 				var reply = finalizeAuthentication(user, returnUrl, token);
-				return isCallback 
+				return isCallback
 					? RedirectToVuePage("")
 					: reply;
 			}
@@ -625,136 +638,10 @@ namespace GenioMVC.Controllers
 		{
 			return id switch
 			{
-				"75f89df6-5f63-4719-b81a-43a2c304c7c2" => JsonOK(Regis_GetViewModel(null, null)),
 				_ => JsonERROR("Unknown registration form id")
 			};
 		}
 
-
-
-		private ViewModels.RegisterViewModel Regis_GetViewModel(ViewModels.Regis.Regis_ViewModel formData, ViewModels.Psw.Defaultpsw_ViewModel pswData)
-		{
-			return new ViewModels.RegisterViewModel()
-			{
-				partialView = "Regis_Support",
-				partialViewJS = "REGIS",
-				redirect = "Regis_Register",
-				DivID = "Regis_well",
-				FormDataOrdem = 2,
-				FormData = formData ?? Regis_New(true),
-
-				PswpartialView = "Defaultpsw_Support",
-				Pswredirect = "Defaultpsw_Register",
-				PswDivID = "Defaultpsw_well",
-				FormPswOrdem = 1,
-				FormPswData = pswData ?? new ViewModels.Psw.Defaultpsw_ViewModel(UserContext.Current)
-			};
-		}
-
-		private ViewModels.Regis.Regis_ViewModel Regis_New(bool isNewInitialization = false)
-		{
-			PersistentSupport sp = UserContext.Current.PersistentSupport;
-			sp.openConnection();
-			ViewModels.Regis.Regis_ViewModel model = new(UserContext.Current, true);
-			model.NewLoad();
-			sp.closeConnection();
-			return model;
-		}
-
-		public class Regis_RegisterRequestModel
-		{
-			public ViewModels.Regis.Regis_ViewModel FormData { get; set; }
-			public ViewModels.Psw.Defaultpsw_ViewModel FormPswData { get; set; }
-			public VueCaptchaModel CaptchaData { get; set; }
-		}
-
-		// POST: /Account/Register
-		[HttpPost]
-		[AllowAnonymous]
-		public ActionResult Regis_Register([FromBody] Regis_RegisterRequestModel requestModel)
-		{
-			var formData = requestModel.FormData;
-			var formPswData = requestModel.FormPswData;
-			var captchaData = requestModel.CaptchaData;
-			formData.Init(UserContext.Current);
-			formPswData.Init(UserContext.Current);
-			
-			//reusable error formatter function
-			ActionResult ReturnError(string errorMessage)
-			{
-				ModelState.AddModelError("Erro", errorMessage);
-				ViewModels.RegisterViewModel returnModel = Regis_GetViewModel(formData, formPswData);
-				formData.LoadPartial(Request.QueryNameValues());
-				formData.MapFromModel();
-
-				return JsonERROR(errorMessage, new { Form = "Form_Regis", model = returnModel });
-			}
-
-			// execute the captcha validation
-			bool isValidCaptcha = QCaptcha.Validate(captchaData.UserEnteredCaptchaCode, captchaData.CaptchaId, HttpContext.Session);
-			QCaptcha.SetCaptcha(captchaData.CaptchaId, null, HttpContext.Session);
-			if (!isValidCaptcha)
-				return ReturnError(Resources.Resources.INVALID_CAPTCHA29660);
-
-			// check for model validity
-			if (!ModelState.IsValid)
-				return ReturnError(Resources.Resources.PEDIMOS_DESCULPA__OC63848);
-
-			try
-			{
-				string userName = formPswData.ValNome;
-				string passwordText = formPswData.ValPassword;
-				string confirmPassword = formPswData.ConfirmValPassword;
-
-				//The session user during registration is a guest, we need to create internal admin user that
-				//has enough permissions to insert the psw and business tables
-				User adminUser = SecurityFactory.ElevateUserToAdmin(m_userContext.User);
-				adminUser.Name = userName;
-
-				//Parse the viewmodels into a psw and a business class
-				CSGenioApsw userRecord = new(adminUser);
-				Psw pswModel = new(m_userContext, userRecord);
-				formPswData.MapToModel(pswModel);
-
-				CSGenioAregis area = new(adminUser);
-				Regis areaModel = new(m_userContext, area);
-				formData.MapToModel(areaModel);
-
-				//Parse the secret from the UI (currently only supports password)
-				// CredentialSecret secret = MapSecretFromModel(formPswData);
-				CredentialSecret secret = new PasswordSecret()
-				{
-					Username = userName,
-					NewPass = passwordText,
-					ConfirmPass = confirmPassword
-				};
-
-// USE /[MANUAL GQT USER_CREATION_CONTROLLER]/
-
-				//Create the user through through the current provider
-				UserRegistrationRegisto userRegisterService = new();
-				User newUser = userRegisterService.Register(userRecord, area, secret);
-
-				//send email
-				UserFactory.MailSender(userRecord, Url.Action("ConfirmEmail", "Account", new { ticket = "fldTicket" }, Request.Scheme), m_userContext.User.Language);
-
-				//send response
-				return JsonOK(new { Success = true, Message = Resources.Resources.REGISTO_CRIADO_COM_S18746 });
-			}
-			catch (GenioException e)
-			{
-				if (e.ErrorStack != null)
-					foreach (var error in e.ErrorStack)
-						ModelState.AddModelError("Erro", error);
-				return ReturnError(e.Message);
-			}
-			catch (Exception e)
-			{
-				Log.Error(e.Message);
-				return ReturnError(Resources.Resources.PEDIMOS_DESCULPA__OC63848);
-			}
-
-		}
 
 
 		// GET: /Account/ConfirmEmail

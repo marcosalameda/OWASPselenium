@@ -9,12 +9,13 @@
 			<div
 				v-if="showFormHeader"
 				class="c-action-bar">
-				<h1
+				<component
 					v-if="formControl.uiComponents.header && formInfo.designation"
+					:is="topHeadingTag"
 					:id="formTitleId"
 					class="form-header">
 					{{ formInfo.designation }}
-				</h1>
+				</component>
 
 				<div class="c-action-bar__menu">
 					<template
@@ -40,13 +41,10 @@
 									@click="btn.action">
 									<template v-if="btn.icon">
 										<q-badge-indicator
-											v-if="btn.badge && btn.badge.isVisible"
-											:color="btn.badge.color">
+											:enabled="btn.badge?.isVisible ?? false"
+											:color="btn.badge?.color">
 											<q-icon v-bind="btn.icon" />
 										</q-badge-indicator>
-										<q-icon
-											v-else
-											v-bind="btn.icon" />
 									</template>
 								</q-toggle-group-item>
 							</template>
@@ -97,6 +95,7 @@
 		<q-container
 			fluid
 			data-key="TPCAT"
+			:data-identifier="primaryKeyValue"
 			:data-loading="!formInitialDataLoaded || !isActiveForm">
 			<template v-if="formControl.initialized && showFormBody">
 				<q-row v-if="controls.TPCAT___CATTPTPCATEGO.isVisible">
@@ -106,13 +105,15 @@
 						<base-input-structure
 							v-if="controls.TPCAT___CATTPTPCATEGO.isVisible"
 							class="i-text"
-							v-bind="controls.TPCAT___CATTPTPCATEGO"
+							v-bind="controls.TPCAT___CATTPTPCATEGO.wrapperProps"
+							:id="getControlId(controls.TPCAT___CATTPTPCATEGO)"
 							v-on="controls.TPCAT___CATTPTPCATEGO.handlers"
 							:loading="controls.TPCAT___CATTPTPCATEGO.props.loading"
 							:reporting-mode-on="reportingModeCAV"
 							:suggestion-mode-on="suggestionModeOn">
 							<q-text-field
 								v-bind="controls.TPCAT___CATTPTPCATEGO.props"
+								:id="getControlId(controls.TPCAT___CATTPTPCATEGO)"
 								@blur="onBlur(controls.TPCAT___CATTPTPCATEGO, model.ValTpcatego.value)"
 								@change="model.ValTpcatego.fnUpdateValueOnChange" />
 						</base-input-structure>
@@ -125,7 +126,8 @@
 						<base-input-structure
 							v-if="controls.TPCAT___SBCATSUBCATEG.isVisible"
 							class="i-text"
-							v-bind="controls.TPCAT___SBCATSUBCATEG"
+							v-bind="controls.TPCAT___SBCATSUBCATEG.wrapperProps"
+							:id="getControlId(controls.TPCAT___SBCATSUBCATEG)"
 							v-on="controls.TPCAT___SBCATSUBCATEG.handlers"
 							:loading="controls.TPCAT___SBCATSUBCATEG.props.loading"
 							:reporting-mode-on="reportingModeCAV"
@@ -133,6 +135,7 @@
 							<q-lookup
 								v-if="controls.TPCAT___SBCATSUBCATEG.isVisible"
 								v-bind="controls.TPCAT___SBCATSUBCATEG.props"
+								:id="getControlId(controls.TPCAT___SBCATSUBCATEG)"
 								v-on="controls.TPCAT___SBCATSUBCATEG.handlers" />
 							<q-see-more-tpcat-sbcatsubcateg
 								v-if="controls.TPCAT___SBCATSUBCATEG.seeMoreIsVisible"
@@ -145,7 +148,7 @@
 		</q-container>
 	</teleport>
 
-	<hr v-if="!isPopup && showFormFooter" />
+	<q-divider v-if="!isPopup && showFormFooter" />
 
 	<teleport
 		v-if="formModalIsReady && showFormFooter"
@@ -913,7 +916,6 @@
 
 				this.afterControlUpdate(controlField, fieldValue)
 			},
-
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
 // USE /[MANUAL GQT FUNCTIONS_JS TPCAT]/
 // eslint-disable-next-line

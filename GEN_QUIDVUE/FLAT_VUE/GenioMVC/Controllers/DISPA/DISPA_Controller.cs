@@ -80,14 +80,6 @@ namespace GenioMVC.Controllers
 			{
 				switch (string.IsNullOrEmpty(Identifier) ? "" : Identifier)
 				{
-					case "DISPA___DISSTSTATUS__":	// Field (DB)
-						{
-							var model = new Dispa_ViewModel(UserContext.Current) { editable = false };
-							model.MapFromModel(row);
-							model.Load_Dispa___disststatus__(qs);
-							result = model.TableDisstStatus;
-						}
-						break;
 					case "DISPA___ENTITNAME____":	// Field (DB)
 						{
 							var model = new Dispa_ViewModel(UserContext.Current) { editable = false };
@@ -114,7 +106,7 @@ namespace GenioMVC.Controllers
 			}
 
 			if (result != null)
-				return JsonOK(new { List = result.List, TotalRows = result.Pagination.TotalRows, Selected = result.Selected, Value = result.Value });
+				return JsonOK(result);
 			return JsonERROR("Not found any valid result");
 		}
 
@@ -137,9 +129,6 @@ namespace GenioMVC.Controllers
 				UserContext.Current.PersistentSupport.openConnection();
 				switch (string.IsNullOrEmpty(Identifier) ? "" : Identifier)
 				{
-					case "DISPA___DISSTSTATUS__":	// Field (DB)
-						values = new Dispa_ViewModel(UserContext.Current).GetDependant_DispaTableDisstStatus(Selected);
-						break;
 					case "DISPA___ENTITNAME____":	// Field (DB)
 						values = new Dispa_ViewModel(UserContext.Current).GetDependant_DispaTableEntitName(Selected);
 						break;

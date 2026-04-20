@@ -9,12 +9,13 @@
 			<div
 				v-if="showFormHeader"
 				class="c-action-bar">
-				<h1
+				<component
 					v-if="formControl.uiComponents.header && formInfo.designation"
+					:is="topHeadingTag"
 					:id="formTitleId"
 					class="form-header">
 					{{ formInfo.designation }}
-				</h1>
+				</component>
 
 				<div class="c-action-bar__menu">
 					<template
@@ -40,13 +41,10 @@
 									@click="btn.action">
 									<template v-if="btn.icon">
 										<q-badge-indicator
-											v-if="btn.badge && btn.badge.isVisible"
-											:color="btn.badge.color">
+											:enabled="btn.badge?.isVisible ?? false"
+											:color="btn.badge?.color">
 											<q-icon v-bind="btn.icon" />
 										</q-badge-indicator>
-										<q-icon
-											v-else
-											v-bind="btn.icon" />
 									</template>
 								</q-toggle-group-item>
 							</template>
@@ -97,23 +95,24 @@
 		<q-container
 			fluid
 			data-key="EQUIGROU"
+			:data-identifier="primaryKeyValue"
 			:data-loading="!formInitialDataLoaded || !isActiveForm">
 			<template v-if="formControl.initialized && showFormBody">
 				<q-row v-if="controls.EQUIGROUPSEUDNEWGRP19.isVisible">
 					<q-col v-if="controls.EQUIGROUPSEUDNEWGRP19.isVisible">
 						<q-group-box-container
 							v-if="controls.EQUIGROUPSEUDNEWGRP19.isVisible"
-							id="EQUIGROUPSEUDNEWGRP19"
 							v-bind="controls.EQUIGROUPSEUDNEWGRP19"
-							:is-visible="controls.EQUIGROUPSEUDNEWGRP19.isVisible">
+							:id="getControlId(controls.EQUIGROUPSEUDNEWGRP19)"
+							:no-border="controls.EQUIGROUPSEUDNEWGRP19.borderless">
 							<!-- Start EQUIGROUPSEUDNEWGRP19 -->
 							<q-row v-if="controls.EQUIGROUPSEUDNEWGRP13.isVisible">
 								<q-col v-if="controls.EQUIGROUPSEUDNEWGRP13.isVisible">
 									<q-group-box-container
 										v-if="controls.EQUIGROUPSEUDNEWGRP13.isVisible"
-										id="EQUIGROUPSEUDNEWGRP13"
 										v-bind="controls.EQUIGROUPSEUDNEWGRP13"
-										:is-visible="controls.EQUIGROUPSEUDNEWGRP13.isVisible">
+										:id="getControlId(controls.EQUIGROUPSEUDNEWGRP13)"
+										:no-border="controls.EQUIGROUPSEUDNEWGRP13.borderless">
 										<!-- Start EQUIGROUPSEUDNEWGRP13 -->
 										<q-row v-if="controls.EQUIGROUPESS1PHOTOGRA.isVisible || controls.EQUIGROUPESS1NAME____.isVisible || controls.EQUIGROUPESS1GENDER__.isVisible">
 											<q-col
@@ -122,7 +121,8 @@
 												<base-input-structure
 													v-if="controls.EQUIGROUPESS1PHOTOGRA.isVisible"
 													class="q-image"
-													v-bind="controls.EQUIGROUPESS1PHOTOGRA"
+													v-bind="controls.EQUIGROUPESS1PHOTOGRA.wrapperProps"
+													:id="getControlId(controls.EQUIGROUPESS1PHOTOGRA)"
 													v-on="controls.EQUIGROUPESS1PHOTOGRA.handlers"
 													:loading="controls.EQUIGROUPESS1PHOTOGRA.props.loading"
 													:reporting-mode-on="reportingModeCAV"
@@ -130,6 +130,7 @@
 													<q-image
 														v-if="controls.EQUIGROUPESS1PHOTOGRA.isVisible"
 														v-bind="controls.EQUIGROUPESS1PHOTOGRA.props"
+														:id="getControlId(controls.EQUIGROUPESS1PHOTOGRA)"
 														v-on="controls.EQUIGROUPESS1PHOTOGRA.handlers" />
 												</base-input-structure>
 											</q-col>
@@ -139,7 +140,8 @@
 												<base-input-structure
 													v-if="controls.EQUIGROUPESS1NAME____.isVisible"
 													class="i-text"
-													v-bind="controls.EQUIGROUPESS1NAME____"
+													v-bind="controls.EQUIGROUPESS1NAME____.wrapperProps"
+													:id="getControlId(controls.EQUIGROUPESS1NAME____)"
 													v-on="controls.EQUIGROUPESS1NAME____.handlers"
 													:loading="controls.EQUIGROUPESS1NAME____.props.loading"
 													:reporting-mode-on="reportingModeCAV"
@@ -147,6 +149,7 @@
 													<q-lookup
 														v-if="controls.EQUIGROUPESS1NAME____.isVisible"
 														v-bind="controls.EQUIGROUPESS1NAME____.props"
+														:id="getControlId(controls.EQUIGROUPESS1NAME____)"
 														v-on="controls.EQUIGROUPESS1NAME____.handlers" />
 													<q-see-more-equigroupess1name
 														v-if="controls.EQUIGROUPESS1NAME____.seeMoreIsVisible"
@@ -160,14 +163,16 @@
 												<base-input-structure
 													v-if="controls.EQUIGROUPESS1GENDER__.isVisible"
 													class="i-text"
-													v-bind="controls.EQUIGROUPESS1GENDER__"
+													v-bind="controls.EQUIGROUPESS1GENDER__.wrapperProps"
+													:id="getControlId(controls.EQUIGROUPESS1GENDER__)"
 													v-on="controls.EQUIGROUPESS1GENDER__.handlers"
 													:loading="controls.EQUIGROUPESS1GENDER__.props.loading"
 													:reporting-mode-on="reportingModeCAV"
 													:suggestion-mode-on="suggestionModeOn">
 													<q-select
 														v-if="controls.EQUIGROUPESS1GENDER__.isVisible"
-														v-bind="controls.EQUIGROUPESS1GENDER__.props" />
+														v-bind="controls.EQUIGROUPESS1GENDER__.props"
+														:id="getControlId(controls.EQUIGROUPESS1GENDER__)" />
 												</base-input-structure>
 											</q-col>
 										</q-row>
@@ -175,9 +180,9 @@
 											<q-col v-if="controls.EQUIGROUPSEUDNEWGRP14.isVisible">
 												<q-group-box-container
 													v-if="controls.EQUIGROUPSEUDNEWGRP14.isVisible"
-													id="EQUIGROUPSEUDNEWGRP14"
 													v-bind="controls.EQUIGROUPSEUDNEWGRP14"
-													:is-visible="controls.EQUIGROUPSEUDNEWGRP14.isVisible">
+													:id="getControlId(controls.EQUIGROUPSEUDNEWGRP14)"
+													:no-border="controls.EQUIGROUPSEUDNEWGRP14.borderless">
 													<!-- Start EQUIGROUPSEUDNEWGRP14 -->
 													<q-row v-if="controls.EQUIGROUPESS1DTNASCIM.isVisible || controls.EQUIGROUPESS1IDADE___.isVisible">
 														<q-col
@@ -186,7 +191,8 @@
 															<base-input-structure
 																v-if="controls.EQUIGROUPESS1DTNASCIM.isVisible"
 																class="i-text"
-																v-bind="controls.EQUIGROUPESS1DTNASCIM"
+																v-bind="controls.EQUIGROUPESS1DTNASCIM.wrapperProps"
+																:id="getControlId(controls.EQUIGROUPESS1DTNASCIM)"
 																v-on="controls.EQUIGROUPESS1DTNASCIM.handlers"
 																:loading="controls.EQUIGROUPESS1DTNASCIM.props.loading"
 																:reporting-mode-on="reportingModeCAV"
@@ -194,6 +200,7 @@
 																<q-date-time-picker
 																	v-if="controls.EQUIGROUPESS1DTNASCIM.isVisible"
 																	v-bind="controls.EQUIGROUPESS1DTNASCIM.props"
+																	:id="getControlId(controls.EQUIGROUPESS1DTNASCIM)"
 																	:model-value="model.Pess1ValDtnascim.value"
 																	@reset-icon-click="model.Pess1ValDtnascim.fnUpdateValue(model.Pess1ValDtnascim.originalValue ?? new Date())"
 																	@update:model-value="model.Pess1ValDtnascim.fnUpdateValue($event ?? '')" />
@@ -205,7 +212,8 @@
 															<base-input-structure
 																v-if="controls.EQUIGROUPESS1IDADE___.isVisible"
 																class="i-text"
-																v-bind="controls.EQUIGROUPESS1IDADE___"
+																v-bind="controls.EQUIGROUPESS1IDADE___.wrapperProps"
+																:id="getControlId(controls.EQUIGROUPESS1IDADE___)"
 																v-on="controls.EQUIGROUPESS1IDADE___.handlers"
 																:loading="controls.EQUIGROUPESS1IDADE___.props.loading"
 																:reporting-mode-on="reportingModeCAV"
@@ -213,6 +221,7 @@
 																<q-numeric-input
 																	v-if="controls.EQUIGROUPESS1IDADE___.isVisible"
 																	v-bind="controls.EQUIGROUPESS1IDADE___.props"
+																	:id="getControlId(controls.EQUIGROUPESS1IDADE___)"
 																	@update:model-value="model.Pess1ValIdade.fnUpdateValue" />
 															</base-input-structure>
 														</q-col>
@@ -225,12 +234,12 @@
 											<q-col v-if="controls.EQUIGROUPSEUDNEWGRP17.isVisible">
 												<q-accordion
 													v-if="controls.EQUIGROUPSEUDNEWGRP17.isVisible"
-													id="EQUIGROUPSEUDNEWGRP17"
+													:id="getControlId(controls.EQUIGROUPSEUDNEWGRP17)"
 													v-model="controls.EQUIGROUPSEUDNEWGRP17.openChild">
 													<!-- Start EQUIGROUPSEUDNEWGRP17 -->
 													<q-accordion-item
 														v-if="controls.EQUIGROUPSEUDNEWGRP15.isVisible"
-														id="EQUIGROUPSEUDNEWGRP15-container"
+														:id="getControlId(controls.EQUIGROUPSEUDNEWGRP15) + '-container'"
 														value="EQUIGROUPSEUDNEWGRP15"
 														:title="controls.EQUIGROUPSEUDNEWGRP15.label">
 														<!-- Start EQUIGROUPSEUDNEWGRP15 -->
@@ -241,7 +250,8 @@
 																<base-input-structure
 																	v-if="controls.EQUIGROUPESS1IDFUNCIO.isVisible"
 																	class="i-text"
-																	v-bind="controls.EQUIGROUPESS1IDFUNCIO"
+																	v-bind="controls.EQUIGROUPESS1IDFUNCIO.wrapperProps"
+																	:id="getControlId(controls.EQUIGROUPESS1IDFUNCIO)"
 																	v-on="controls.EQUIGROUPESS1IDFUNCIO.handlers"
 																	:loading="controls.EQUIGROUPESS1IDFUNCIO.props.loading"
 																	:reporting-mode-on="reportingModeCAV"
@@ -249,6 +259,7 @@
 																	<q-numeric-input
 																		v-if="controls.EQUIGROUPESS1IDFUNCIO.isVisible"
 																		v-bind="controls.EQUIGROUPESS1IDFUNCIO.props"
+																		:id="getControlId(controls.EQUIGROUPESS1IDFUNCIO)"
 																		@update:model-value="model.Pess1ValIdfuncio.fnUpdateValue" />
 																</base-input-structure>
 															</q-col>
@@ -258,13 +269,15 @@
 																<base-input-structure
 																	v-if="controls.EQUIGROUPESS1TELEPHON.isVisible"
 																	class="i-text"
-																	v-bind="controls.EQUIGROUPESS1TELEPHON"
+																	v-bind="controls.EQUIGROUPESS1TELEPHON.wrapperProps"
+																	:id="getControlId(controls.EQUIGROUPESS1TELEPHON)"
 																	v-on="controls.EQUIGROUPESS1TELEPHON.handlers"
 																	:loading="controls.EQUIGROUPESS1TELEPHON.props.loading"
 																	:reporting-mode-on="reportingModeCAV"
 																	:suggestion-mode-on="suggestionModeOn">
 																	<q-text-field
 																		v-bind="controls.EQUIGROUPESS1TELEPHON.props"
+																		:id="getControlId(controls.EQUIGROUPESS1TELEPHON)"
 																		@blur="onBlur(controls.EQUIGROUPESS1TELEPHON, model.Pess1ValTelephon.value)"
 																		@change="model.Pess1ValTelephon.fnUpdateValueOnChange" />
 																</base-input-structure>
@@ -274,7 +287,7 @@
 													</q-accordion-item>
 													<q-accordion-item
 														v-if="controls.EQUIGROUPSEUDNEWGRP16.isVisible"
-														id="EQUIGROUPSEUDNEWGRP16-container"
+														:id="getControlId(controls.EQUIGROUPSEUDNEWGRP16) + '-container'"
 														value="EQUIGROUPSEUDNEWGRP16"
 														:title="controls.EQUIGROUPSEUDNEWGRP16.label">
 														<!-- Start EQUIGROUPSEUDNEWGRP16 -->
@@ -285,13 +298,15 @@
 																<base-input-structure
 																	v-if="controls.EQUIGROUPESS1EMAIL___.isVisible"
 																	class="i-text"
-																	v-bind="controls.EQUIGROUPESS1EMAIL___"
+																	v-bind="controls.EQUIGROUPESS1EMAIL___.wrapperProps"
+																	:id="getControlId(controls.EQUIGROUPESS1EMAIL___)"
 																	v-on="controls.EQUIGROUPESS1EMAIL___.handlers"
 																	:loading="controls.EQUIGROUPESS1EMAIL___.props.loading"
 																	:reporting-mode-on="reportingModeCAV"
 																	:suggestion-mode-on="suggestionModeOn">
 																	<q-text-field
 																		v-bind="controls.EQUIGROUPESS1EMAIL___.props"
+																		:id="getControlId(controls.EQUIGROUPESS1EMAIL___)"
 																		@blur="onBlur(controls.EQUIGROUPESS1EMAIL___, model.Pess1ValEmail.value)"
 																		@change="model.Pess1ValEmail.fnUpdateValueOnChange" />
 																</base-input-structure>
@@ -302,13 +317,15 @@
 																<base-input-structure
 																	v-if="controls.EQUIGROUPESS1EMAIL2__.isVisible"
 																	class="i-text"
-																	v-bind="controls.EQUIGROUPESS1EMAIL2__"
+																	v-bind="controls.EQUIGROUPESS1EMAIL2__.wrapperProps"
+																	:id="getControlId(controls.EQUIGROUPESS1EMAIL2__)"
 																	v-on="controls.EQUIGROUPESS1EMAIL2__.handlers"
 																	:loading="controls.EQUIGROUPESS1EMAIL2__.props.loading"
 																	:reporting-mode-on="reportingModeCAV"
 																	:suggestion-mode-on="suggestionModeOn">
 																	<q-text-field
 																		v-bind="controls.EQUIGROUPESS1EMAIL2__.props"
+																		:id="getControlId(controls.EQUIGROUPESS1EMAIL2__)"
 																		@blur="onBlur(controls.EQUIGROUPESS1EMAIL2__, model.Pess1ValEmail2.value)"
 																		@change="model.Pess1ValEmail2.fnUpdateValueOnChange" />
 																</base-input-structure>
@@ -332,9 +349,9 @@
 					<q-col v-if="controls.EQUIGROUPSEUDNEWGRP18.isVisible">
 						<q-group-box-container
 							v-if="controls.EQUIGROUPSEUDNEWGRP18.isVisible"
-							id="EQUIGROUPSEUDNEWGRP18"
 							v-bind="controls.EQUIGROUPSEUDNEWGRP18"
-							:is-visible="controls.EQUIGROUPSEUDNEWGRP18.isVisible">
+							:id="getControlId(controls.EQUIGROUPSEUDNEWGRP18)"
+							:no-border="controls.EQUIGROUPSEUDNEWGRP18.borderless">
 							<!-- Start EQUIGROUPSEUDNEWGRP18 -->
 							<q-row v-if="controls.EQUIGROUPSEUDFIELD001.isVisible">
 								<q-col
@@ -343,14 +360,15 @@
 									<base-input-structure
 										v-if="controls.EQUIGROUPSEUDFIELD001.isVisible"
 										class="i-static-text"
-										v-bind="controls.EQUIGROUPSEUDFIELD001"
+										v-bind="controls.EQUIGROUPSEUDFIELD001.wrapperProps"
+										:id="getControlId(controls.EQUIGROUPSEUDFIELD001)"
 										v-on="controls.EQUIGROUPSEUDFIELD001.handlers"
 										:loading="controls.EQUIGROUPSEUDFIELD001.props.loading"
 										:reporting-mode-on="reportingModeCAV"
 										:suggestion-mode-on="suggestionModeOn">
 										<q-static-text
 											v-if="controls.EQUIGROUPSEUDFIELD001.isVisible"
-											id="EQUIGROUPSEUDFIELD001"
+											:id="getControlId(controls.EQUIGROUPSEUDFIELD001)"
 											:size="controls.EQUIGROUPSEUDFIELD001.size"
 											:text="controls.EQUIGROUPSEUDFIELD001.label"
 											supports-html />
@@ -361,19 +379,19 @@
 								<q-col v-if="controls.EQUIGROUPSEUDNEWGRP01.isVisible">
 									<q-group-box-container
 										v-if="controls.EQUIGROUPSEUDNEWGRP01.isVisible"
-										id="EQUIGROUPSEUDNEWGRP01"
 										class="c-groupbox--title-background"
 										v-bind="controls.EQUIGROUPSEUDNEWGRP01"
-										:is-visible="controls.EQUIGROUPSEUDNEWGRP01.isVisible">
+										:id="getControlId(controls.EQUIGROUPSEUDNEWGRP01)"
+										:no-border="controls.EQUIGROUPSEUDNEWGRP01.borderless">
 										<!-- Start EQUIGROUPSEUDNEWGRP01 -->
 										<q-row v-if="controls.EQUIGROUPSEUDNEWGRP02.isVisible">
 											<q-col v-if="controls.EQUIGROUPSEUDNEWGRP02.isVisible">
 												<q-group-box-container
 													v-if="controls.EQUIGROUPSEUDNEWGRP02.isVisible"
-													id="EQUIGROUPSEUDNEWGRP02"
 													class="c-groupbox--minor"
 													v-bind="controls.EQUIGROUPSEUDNEWGRP02"
-													:is-visible="controls.EQUIGROUPSEUDNEWGRP02.isVisible">
+													:id="getControlId(controls.EQUIGROUPSEUDNEWGRP02)"
+													:no-border="controls.EQUIGROUPSEUDNEWGRP02.borderless">
 													<!-- Start EQUIGROUPSEUDNEWGRP02 -->
 													<q-row v-if="controls.EQUIGROUCMPNYLOGO____.isVisible">
 														<q-col
@@ -382,7 +400,8 @@
 															<base-input-structure
 																v-if="controls.EQUIGROUCMPNYLOGO____.isVisible"
 																class="q-image"
-																v-bind="controls.EQUIGROUCMPNYLOGO____"
+																v-bind="controls.EQUIGROUCMPNYLOGO____.wrapperProps"
+																:id="getControlId(controls.EQUIGROUCMPNYLOGO____)"
 																v-on="controls.EQUIGROUCMPNYLOGO____.handlers"
 																:loading="controls.EQUIGROUCMPNYLOGO____.props.loading"
 																:reporting-mode-on="reportingModeCAV"
@@ -390,6 +409,7 @@
 																<q-image
 																	v-if="controls.EQUIGROUCMPNYLOGO____.isVisible"
 																	v-bind="controls.EQUIGROUCMPNYLOGO____.props"
+																	:id="getControlId(controls.EQUIGROUCMPNYLOGO____)"
 																	v-on="controls.EQUIGROUCMPNYLOGO____.handlers" />
 															</base-input-structure>
 														</q-col>
@@ -401,13 +421,15 @@
 															<base-input-structure
 																v-if="controls.EQUIGROUCMPNYDESIGNAT.isVisible"
 																class="i-text"
-																v-bind="controls.EQUIGROUCMPNYDESIGNAT"
+																v-bind="controls.EQUIGROUCMPNYDESIGNAT.wrapperProps"
+																:id="getControlId(controls.EQUIGROUCMPNYDESIGNAT)"
 																v-on="controls.EQUIGROUCMPNYDESIGNAT.handlers"
 																:loading="controls.EQUIGROUCMPNYDESIGNAT.props.loading"
 																:reporting-mode-on="reportingModeCAV"
 																:suggestion-mode-on="suggestionModeOn">
 																<q-text-field
 																	v-bind="controls.EQUIGROUCMPNYDESIGNAT.props"
+																	:id="getControlId(controls.EQUIGROUCMPNYDESIGNAT)"
 																	@blur="onBlur(controls.EQUIGROUCMPNYDESIGNAT, model.CmpnyValDesignat.value)"
 																	@change="model.CmpnyValDesignat.fnUpdateValueOnChange" />
 															</base-input-structure>
@@ -418,13 +440,15 @@
 															<base-input-structure
 																v-if="controls.EQUIGROUCMPNYACRONYM_.isVisible"
 																class="i-text"
-																v-bind="controls.EQUIGROUCMPNYACRONYM_"
+																v-bind="controls.EQUIGROUCMPNYACRONYM_.wrapperProps"
+																:id="getControlId(controls.EQUIGROUCMPNYACRONYM_)"
 																v-on="controls.EQUIGROUCMPNYACRONYM_.handlers"
 																:loading="controls.EQUIGROUCMPNYACRONYM_.props.loading"
 																:reporting-mode-on="reportingModeCAV"
 																:suggestion-mode-on="suggestionModeOn">
 																<q-text-field
 																	v-bind="controls.EQUIGROUCMPNYACRONYM_.props"
+																	:id="getControlId(controls.EQUIGROUCMPNYACRONYM_)"
 																	@blur="onBlur(controls.EQUIGROUCMPNYACRONYM_, model.CmpnyValAcronym.value)"
 																	@change="model.CmpnyValAcronym.fnUpdateValueOnChange" />
 															</base-input-structure>
@@ -435,13 +459,15 @@
 															<base-input-structure
 																v-if="controls.EQUIGROUCMPNYNIF_____.isVisible"
 																class="i-text"
-																v-bind="controls.EQUIGROUCMPNYNIF_____"
+																v-bind="controls.EQUIGROUCMPNYNIF_____.wrapperProps"
+																:id="getControlId(controls.EQUIGROUCMPNYNIF_____)"
 																v-on="controls.EQUIGROUCMPNYNIF_____.handlers"
 																:loading="controls.EQUIGROUCMPNYNIF_____.props.loading"
 																:reporting-mode-on="reportingModeCAV"
 																:suggestion-mode-on="suggestionModeOn">
 																<q-text-field
 																	v-bind="controls.EQUIGROUCMPNYNIF_____.props"
+																	:id="getControlId(controls.EQUIGROUCMPNYNIF_____)"
 																	@blur="onBlur(controls.EQUIGROUCMPNYNIF_____, model.CmpnyValNif.value)"
 																	@change="model.CmpnyValNif.fnUpdateValueOnChange" />
 															</base-input-structure>
@@ -455,10 +481,10 @@
 											<q-col v-if="controls.EQUIGROUPSEUDNEWGRP03.isVisible">
 												<q-group-box-container
 													v-if="controls.EQUIGROUPSEUDNEWGRP03.isVisible"
-													id="EQUIGROUPSEUDNEWGRP03"
 													class="c-groupbox--background"
 													v-bind="controls.EQUIGROUPSEUDNEWGRP03"
-													:is-visible="controls.EQUIGROUPSEUDNEWGRP03.isVisible">
+													:id="getControlId(controls.EQUIGROUPSEUDNEWGRP03)"
+													:no-border="controls.EQUIGROUPSEUDNEWGRP03.borderless">
 													<!-- Start EQUIGROUPSEUDNEWGRP03 -->
 													<q-row v-if="controls.EQUIGROUCMPNYTELEPHON.isVisible || controls.EQUIGROUCMPNYEMAIL___.isVisible">
 														<q-col
@@ -467,13 +493,15 @@
 															<base-input-structure
 																v-if="controls.EQUIGROUCMPNYTELEPHON.isVisible"
 																class="i-text"
-																v-bind="controls.EQUIGROUCMPNYTELEPHON"
+																v-bind="controls.EQUIGROUCMPNYTELEPHON.wrapperProps"
+																:id="getControlId(controls.EQUIGROUCMPNYTELEPHON)"
 																v-on="controls.EQUIGROUCMPNYTELEPHON.handlers"
 																:loading="controls.EQUIGROUCMPNYTELEPHON.props.loading"
 																:reporting-mode-on="reportingModeCAV"
 																:suggestion-mode-on="suggestionModeOn">
 																<q-text-field
 																	v-bind="controls.EQUIGROUCMPNYTELEPHON.props"
+																	:id="getControlId(controls.EQUIGROUCMPNYTELEPHON)"
 																	@blur="onBlur(controls.EQUIGROUCMPNYTELEPHON, model.CmpnyValTelephon.value)"
 																	@change="model.CmpnyValTelephon.fnUpdateValueOnChange" />
 															</base-input-structure>
@@ -484,13 +512,15 @@
 															<base-input-structure
 																v-if="controls.EQUIGROUCMPNYEMAIL___.isVisible"
 																class="i-text"
-																v-bind="controls.EQUIGROUCMPNYEMAIL___"
+																v-bind="controls.EQUIGROUCMPNYEMAIL___.wrapperProps"
+																:id="getControlId(controls.EQUIGROUCMPNYEMAIL___)"
 																v-on="controls.EQUIGROUCMPNYEMAIL___.handlers"
 																:loading="controls.EQUIGROUCMPNYEMAIL___.props.loading"
 																:reporting-mode-on="reportingModeCAV"
 																:suggestion-mode-on="suggestionModeOn">
 																<q-text-field
 																	v-bind="controls.EQUIGROUCMPNYEMAIL___.props"
+																	:id="getControlId(controls.EQUIGROUCMPNYEMAIL___)"
 																	@blur="onBlur(controls.EQUIGROUCMPNYEMAIL___, model.CmpnyValEmail.value)"
 																	@change="model.CmpnyValEmail.fnUpdateValueOnChange" />
 															</base-input-structure>
@@ -512,17 +542,17 @@
 					<q-col v-if="controls.EQUIGROUPSEUDNEWGRP21.isVisible">
 						<q-group-box-container
 							v-if="controls.EQUIGROUPSEUDNEWGRP21.isVisible"
-							id="EQUIGROUPSEUDNEWGRP21"
 							v-bind="controls.EQUIGROUPSEUDNEWGRP21"
-							:is-visible="controls.EQUIGROUPSEUDNEWGRP21.isVisible">
+							:id="getControlId(controls.EQUIGROUPSEUDNEWGRP21)"
+							:no-border="controls.EQUIGROUPSEUDNEWGRP21.borderless">
 							<!-- Start EQUIGROUPSEUDNEWGRP21 -->
 							<q-row v-if="controls.EQUIGROUPSEUDNEWGRP08.isVisible">
 								<q-col v-if="controls.EQUIGROUPSEUDNEWGRP08.isVisible">
 									<q-group-collapsible
 										v-if="controls.EQUIGROUPSEUDNEWGRP08.isVisible"
-										id="EQUIGROUPSEUDNEWGRP08"
 										class="q-group-collapsible--audit"
 										v-bind="controls.EQUIGROUPSEUDNEWGRP08"
+										:id="getControlId(controls.EQUIGROUPSEUDNEWGRP08)"
 										v-on="controls.EQUIGROUPSEUDNEWGRP08.handlers">
 										<!-- Start EQUIGROUPSEUDNEWGRP08 -->
 										<q-row v-if="controls.EQUIGROUEQUIPQTDMOVIM.isVisible || controls.EQUIGROUEQUIPDTAQUISI.isVisible">
@@ -532,7 +562,8 @@
 												<base-input-structure
 													v-if="controls.EQUIGROUEQUIPQTDMOVIM.isVisible"
 													class="i-text"
-													v-bind="controls.EQUIGROUEQUIPQTDMOVIM"
+													v-bind="controls.EQUIGROUEQUIPQTDMOVIM.wrapperProps"
+													:id="getControlId(controls.EQUIGROUEQUIPQTDMOVIM)"
 													v-on="controls.EQUIGROUEQUIPQTDMOVIM.handlers"
 													:loading="controls.EQUIGROUEQUIPQTDMOVIM.props.loading"
 													:reporting-mode-on="reportingModeCAV"
@@ -540,6 +571,7 @@
 													<q-numeric-input
 														v-if="controls.EQUIGROUEQUIPQTDMOVIM.isVisible"
 														v-bind="controls.EQUIGROUEQUIPQTDMOVIM.props"
+														:id="getControlId(controls.EQUIGROUEQUIPQTDMOVIM)"
 														@update:model-value="model.ValQtdmovim.fnUpdateValue" />
 												</base-input-structure>
 											</q-col>
@@ -549,7 +581,8 @@
 												<base-input-structure
 													v-if="controls.EQUIGROUEQUIPDTAQUISI.isVisible"
 													class="i-text"
-													v-bind="controls.EQUIGROUEQUIPDTAQUISI"
+													v-bind="controls.EQUIGROUEQUIPDTAQUISI.wrapperProps"
+													:id="getControlId(controls.EQUIGROUEQUIPDTAQUISI)"
 													v-on="controls.EQUIGROUEQUIPDTAQUISI.handlers"
 													:loading="controls.EQUIGROUEQUIPDTAQUISI.props.loading"
 													:reporting-mode-on="reportingModeCAV"
@@ -557,6 +590,7 @@
 													<q-date-time-picker
 														v-if="controls.EQUIGROUEQUIPDTAQUISI.isVisible"
 														v-bind="controls.EQUIGROUEQUIPDTAQUISI.props"
+														:id="getControlId(controls.EQUIGROUEQUIPDTAQUISI)"
 														:model-value="model.ValDtaquisi.value"
 														@reset-icon-click="model.ValDtaquisi.fnUpdateValue(model.ValDtaquisi.originalValue ?? new Date())"
 														@update:model-value="model.ValDtaquisi.fnUpdateValue($event ?? '')" />
@@ -575,27 +609,27 @@
 					<q-col v-if="controls.EQUIGROUPSEUDNEWGRP23.isVisible">
 						<q-group-box-container
 							v-if="controls.EQUIGROUPSEUDNEWGRP23.isVisible"
-							id="EQUIGROUPSEUDNEWGRP23"
 							v-bind="controls.EQUIGROUPSEUDNEWGRP23"
-							:is-visible="controls.EQUIGROUPSEUDNEWGRP23.isVisible">
+							:id="getControlId(controls.EQUIGROUPSEUDNEWGRP23)"
+							:no-border="controls.EQUIGROUPSEUDNEWGRP23.borderless">
 							<!-- Start EQUIGROUPSEUDNEWGRP23 -->
 							<q-row v-if="controls.EQUIGROUPSEUDNEWGRP09.isVisible">
 								<q-col v-if="controls.EQUIGROUPSEUDNEWGRP09.isVisible">
 									<q-group-box-container
 										v-if="controls.EQUIGROUPSEUDNEWGRP09.isVisible"
-										id="EQUIGROUPSEUDNEWGRP09"
 										class="c-groupbox--title-background"
 										v-bind="controls.EQUIGROUPSEUDNEWGRP09"
-										:is-visible="controls.EQUIGROUPSEUDNEWGRP09.isVisible">
+										:id="getControlId(controls.EQUIGROUPSEUDNEWGRP09)"
+										:no-border="controls.EQUIGROUPSEUDNEWGRP09.borderless">
 										<!-- Start EQUIGROUPSEUDNEWGRP09 -->
 										<q-row v-if="controls.EQUIGROUPSEUDNEWGRP10.isVisible">
 											<q-col v-if="controls.EQUIGROUPSEUDNEWGRP10.isVisible">
 												<q-group-box-container
 													v-if="controls.EQUIGROUPSEUDNEWGRP10.isVisible"
-													id="EQUIGROUPSEUDNEWGRP10"
 													class="c-groupbox--title-background"
 													v-bind="controls.EQUIGROUPSEUDNEWGRP10"
-													:is-visible="controls.EQUIGROUPSEUDNEWGRP10.isVisible">
+													:id="getControlId(controls.EQUIGROUPSEUDNEWGRP10)"
+													:no-border="controls.EQUIGROUPSEUDNEWGRP10.borderless">
 													<!-- Start EQUIGROUPSEUDNEWGRP10 -->
 													<q-row v-if="controls.EQUIGROUTPEQUTIPOEQUI.isVisible">
 														<q-col
@@ -604,7 +638,8 @@
 															<base-input-structure
 																v-if="controls.EQUIGROUTPEQUTIPOEQUI.isVisible"
 																class="i-text"
-																v-bind="controls.EQUIGROUTPEQUTIPOEQUI"
+																v-bind="controls.EQUIGROUTPEQUTIPOEQUI.wrapperProps"
+																:id="getControlId(controls.EQUIGROUTPEQUTIPOEQUI)"
 																v-on="controls.EQUIGROUTPEQUTIPOEQUI.handlers"
 																:loading="controls.EQUIGROUTPEQUTIPOEQUI.props.loading"
 																:reporting-mode-on="reportingModeCAV"
@@ -612,6 +647,7 @@
 																<q-lookup
 																	v-if="controls.EQUIGROUTPEQUTIPOEQUI.isVisible"
 																	v-bind="controls.EQUIGROUTPEQUTIPOEQUI.props"
+																	:id="getControlId(controls.EQUIGROUTPEQUTIPOEQUI)"
 																	v-on="controls.EQUIGROUTPEQUTIPOEQUI.handlers" />
 																<q-see-more-equigroutpequtipoequi
 																	v-if="controls.EQUIGROUTPEQUTIPOEQUI.seeMoreIsVisible"
@@ -627,13 +663,15 @@
 															<base-input-structure
 																v-if="controls.EQUIGROUTPEQUTPEQUCOD.isVisible"
 																class="i-text"
-																v-bind="controls.EQUIGROUTPEQUTPEQUCOD"
+																v-bind="controls.EQUIGROUTPEQUTPEQUCOD.wrapperProps"
+																:id="getControlId(controls.EQUIGROUTPEQUTPEQUCOD)"
 																v-on="controls.EQUIGROUTPEQUTPEQUCOD.handlers"
 																:loading="controls.EQUIGROUTPEQUTPEQUCOD.props.loading"
 																:reporting-mode-on="reportingModeCAV"
 																:suggestion-mode-on="suggestionModeOn">
 																<q-text-field
 																	v-bind="controls.EQUIGROUTPEQUTPEQUCOD.props"
+																	:id="getControlId(controls.EQUIGROUTPEQUTPEQUCOD)"
 																	@blur="onBlur(controls.EQUIGROUTPEQUTPEQUCOD, model.TpequValTpequcod.value)"
 																	@change="model.TpequValTpequcod.fnUpdateValueOnChange" />
 															</base-input-structure>
@@ -644,7 +682,8 @@
 															<base-input-structure
 																v-if="controls.EQUIGROUTPEQUPRECOMAX.isVisible"
 																class="i-text"
-																v-bind="controls.EQUIGROUTPEQUPRECOMAX"
+																v-bind="controls.EQUIGROUTPEQUPRECOMAX.wrapperProps"
+																:id="getControlId(controls.EQUIGROUTPEQUPRECOMAX)"
 																v-on="controls.EQUIGROUTPEQUPRECOMAX.handlers"
 																:loading="controls.EQUIGROUTPEQUPRECOMAX.props.loading"
 																:reporting-mode-on="reportingModeCAV"
@@ -652,6 +691,7 @@
 																<q-numeric-input
 																	v-if="controls.EQUIGROUTPEQUPRECOMAX.isVisible"
 																	v-bind="controls.EQUIGROUTPEQUPRECOMAX.props"
+																	:id="getControlId(controls.EQUIGROUTPEQUPRECOMAX)"
 																	@update:model-value="model.TpequValPrecomax.fnUpdateValue" />
 															</base-input-structure>
 														</q-col>
@@ -660,9 +700,9 @@
 														<q-col v-if="controls.EQUIGROUPSEUDNEWGRP11.isVisible">
 															<q-group-box-container
 																v-if="controls.EQUIGROUPSEUDNEWGRP11.isVisible"
-																id="EQUIGROUPSEUDNEWGRP11"
 																v-bind="controls.EQUIGROUPSEUDNEWGRP11"
-																:is-visible="controls.EQUIGROUPSEUDNEWGRP11.isVisible">
+																:id="getControlId(controls.EQUIGROUPSEUDNEWGRP11)"
+																:no-border="controls.EQUIGROUPSEUDNEWGRP11.borderless">
 																<!-- Start EQUIGROUPSEUDNEWGRP11 -->
 																<q-row v-if="controls.EQUIGROUTPEQUTPEQUPAI.isVisible || controls.EQUIGROUTPEQUNIVEL___.isVisible">
 																	<q-col
@@ -671,13 +711,15 @@
 																		<base-input-structure
 																			v-if="controls.EQUIGROUTPEQUTPEQUPAI.isVisible"
 																			class="i-text"
-																			v-bind="controls.EQUIGROUTPEQUTPEQUPAI"
+																			v-bind="controls.EQUIGROUTPEQUTPEQUPAI.wrapperProps"
+																			:id="getControlId(controls.EQUIGROUTPEQUTPEQUPAI)"
 																			v-on="controls.EQUIGROUTPEQUTPEQUPAI.handlers"
 																			:loading="controls.EQUIGROUTPEQUTPEQUPAI.props.loading"
 																			:reporting-mode-on="reportingModeCAV"
 																			:suggestion-mode-on="suggestionModeOn">
 																			<q-text-field
 																				v-bind="controls.EQUIGROUTPEQUTPEQUPAI.props"
+																				:id="getControlId(controls.EQUIGROUTPEQUTPEQUPAI)"
 																				@blur="onBlur(controls.EQUIGROUTPEQUTPEQUPAI, model.TpequValTpequpai.value)"
 																				@change="model.TpequValTpequpai.fnUpdateValueOnChange" />
 																		</base-input-structure>
@@ -688,7 +730,8 @@
 																		<base-input-structure
 																			v-if="controls.EQUIGROUTPEQUNIVEL___.isVisible"
 																			class="i-text"
-																			v-bind="controls.EQUIGROUTPEQUNIVEL___"
+																			v-bind="controls.EQUIGROUTPEQUNIVEL___.wrapperProps"
+																			:id="getControlId(controls.EQUIGROUTPEQUNIVEL___)"
 																			v-on="controls.EQUIGROUTPEQUNIVEL___.handlers"
 																			:loading="controls.EQUIGROUTPEQUNIVEL___.props.loading"
 																			:reporting-mode-on="reportingModeCAV"
@@ -696,6 +739,7 @@
 																			<q-numeric-input
 																				v-if="controls.EQUIGROUTPEQUNIVEL___.isVisible"
 																				v-bind="controls.EQUIGROUTPEQUNIVEL___.props"
+																				:id="getControlId(controls.EQUIGROUTPEQUNIVEL___)"
 																				@update:model-value="model.TpequValNivel.fnUpdateValue" />
 																		</base-input-structure>
 																	</q-col>
@@ -704,9 +748,9 @@
 																	<q-col v-if="controls.EQUIGROUPSEUDNEWGRP12.isVisible">
 																		<q-group-box-container
 																			v-if="controls.EQUIGROUPSEUDNEWGRP12.isVisible"
-																			id="EQUIGROUPSEUDNEWGRP12"
 																			v-bind="controls.EQUIGROUPSEUDNEWGRP12"
-																			:is-visible="controls.EQUIGROUPSEUDNEWGRP12.isVisible">
+																			:id="getControlId(controls.EQUIGROUPSEUDNEWGRP12)"
+																			:no-border="controls.EQUIGROUPSEUDNEWGRP12.borderless">
 																			<!-- Start EQUIGROUPSEUDNEWGRP12 -->
 																			<q-row v-if="controls.EQUIGROUTPEQUBACKCOLO.isVisible || controls.EQUIGROUTPEQUCORLETRA.isVisible">
 																				<q-col
@@ -715,13 +759,15 @@
 																					<base-input-structure
 																						v-if="controls.EQUIGROUTPEQUBACKCOLO.isVisible"
 																						class="i-text"
-																						v-bind="controls.EQUIGROUTPEQUBACKCOLO"
+																						v-bind="controls.EQUIGROUTPEQUBACKCOLO.wrapperProps"
+																						:id="getControlId(controls.EQUIGROUTPEQUBACKCOLO)"
 																						v-on="controls.EQUIGROUTPEQUBACKCOLO.handlers"
 																						:loading="controls.EQUIGROUTPEQUBACKCOLO.props.loading"
 																						:reporting-mode-on="reportingModeCAV"
 																						:suggestion-mode-on="suggestionModeOn">
 																						<q-text-field
 																							v-bind="controls.EQUIGROUTPEQUBACKCOLO.props"
+																							:id="getControlId(controls.EQUIGROUTPEQUBACKCOLO)"
 																							@blur="onBlur(controls.EQUIGROUTPEQUBACKCOLO, model.TpequValBackcolo.value)"
 																							@change="model.TpequValBackcolo.fnUpdateValueOnChange" />
 																					</base-input-structure>
@@ -732,13 +778,15 @@
 																					<base-input-structure
 																						v-if="controls.EQUIGROUTPEQUCORLETRA.isVisible"
 																						class="i-text"
-																						v-bind="controls.EQUIGROUTPEQUCORLETRA"
+																						v-bind="controls.EQUIGROUTPEQUCORLETRA.wrapperProps"
+																						:id="getControlId(controls.EQUIGROUTPEQUCORLETRA)"
 																						v-on="controls.EQUIGROUTPEQUCORLETRA.handlers"
 																						:loading="controls.EQUIGROUTPEQUCORLETRA.props.loading"
 																						:reporting-mode-on="reportingModeCAV"
 																						:suggestion-mode-on="suggestionModeOn">
 																						<q-text-field
 																							v-bind="controls.EQUIGROUTPEQUCORLETRA.props"
+																							:id="getControlId(controls.EQUIGROUTPEQUCORLETRA)"
 																							@blur="onBlur(controls.EQUIGROUTPEQUCORLETRA, model.TpequValCorletra.value)"
 																							@change="model.TpequValCorletra.fnUpdateValueOnChange" />
 																					</base-input-structure>
@@ -764,10 +812,10 @@
 								<q-col v-if="controls.EQUIGROUPSEUDNEWGRP07.isVisible">
 									<q-group-box-container
 										v-if="controls.EQUIGROUPSEUDNEWGRP07.isVisible"
-										id="EQUIGROUPSEUDNEWGRP07"
 										class="c-groupbox--minor"
 										v-bind="controls.EQUIGROUPSEUDNEWGRP07"
-										:is-visible="controls.EQUIGROUPSEUDNEWGRP07.isVisible">
+										:id="getControlId(controls.EQUIGROUPSEUDNEWGRP07)"
+										:no-border="controls.EQUIGROUPSEUDNEWGRP07.borderless">
 										<!-- Start EQUIGROUPSEUDNEWGRP07 -->
 										<q-row v-if="controls.EQUIGROUEQUIPSEQUENNR.isVisible || controls.EQUIGROUEQUIPREGISTNR.isVisible || controls.EQUIGROUEQUIPVALORTOT.isVisible">
 											<q-col
@@ -776,7 +824,8 @@
 												<base-input-structure
 													v-if="controls.EQUIGROUEQUIPSEQUENNR.isVisible"
 													class="i-text"
-													v-bind="controls.EQUIGROUEQUIPSEQUENNR"
+													v-bind="controls.EQUIGROUEQUIPSEQUENNR.wrapperProps"
+													:id="getControlId(controls.EQUIGROUEQUIPSEQUENNR)"
 													v-on="controls.EQUIGROUEQUIPSEQUENNR.handlers"
 													:loading="controls.EQUIGROUEQUIPSEQUENNR.props.loading"
 													:reporting-mode-on="reportingModeCAV"
@@ -784,6 +833,7 @@
 													<q-numeric-input
 														v-if="controls.EQUIGROUEQUIPSEQUENNR.isVisible"
 														v-bind="controls.EQUIGROUEQUIPSEQUENNR.props"
+														:id="getControlId(controls.EQUIGROUEQUIPSEQUENNR)"
 														@update:model-value="model.ValSequennr.fnUpdateValue" />
 												</base-input-structure>
 											</q-col>
@@ -793,13 +843,15 @@
 												<base-input-structure
 													v-if="controls.EQUIGROUEQUIPREGISTNR.isVisible"
 													class="i-text"
-													v-bind="controls.EQUIGROUEQUIPREGISTNR"
+													v-bind="controls.EQUIGROUEQUIPREGISTNR.wrapperProps"
+													:id="getControlId(controls.EQUIGROUEQUIPREGISTNR)"
 													v-on="controls.EQUIGROUEQUIPREGISTNR.handlers"
 													:loading="controls.EQUIGROUEQUIPREGISTNR.props.loading"
 													:reporting-mode-on="reportingModeCAV"
 													:suggestion-mode-on="suggestionModeOn">
 													<q-text-field
 														v-bind="controls.EQUIGROUEQUIPREGISTNR.props"
+														:id="getControlId(controls.EQUIGROUEQUIPREGISTNR)"
 														@blur="onBlur(controls.EQUIGROUEQUIPREGISTNR, model.ValRegistnr.value)"
 														@change="model.ValRegistnr.fnUpdateValueOnChange" />
 												</base-input-structure>
@@ -810,7 +862,8 @@
 												<base-input-structure
 													v-if="controls.EQUIGROUEQUIPVALORTOT.isVisible"
 													class="i-text"
-													v-bind="controls.EQUIGROUEQUIPVALORTOT"
+													v-bind="controls.EQUIGROUEQUIPVALORTOT.wrapperProps"
+													:id="getControlId(controls.EQUIGROUEQUIPVALORTOT)"
 													v-on="controls.EQUIGROUEQUIPVALORTOT.handlers"
 													:loading="controls.EQUIGROUEQUIPVALORTOT.props.loading"
 													:reporting-mode-on="reportingModeCAV"
@@ -818,6 +871,7 @@
 													<q-numeric-input
 														v-if="controls.EQUIGROUEQUIPVALORTOT.isVisible"
 														v-bind="controls.EQUIGROUEQUIPVALORTOT.props"
+														:id="getControlId(controls.EQUIGROUEQUIPVALORTOT)"
 														@update:model-value="model.ValValortot.fnUpdateValue" />
 												</base-input-structure>
 											</q-col>
@@ -826,10 +880,10 @@
 											<q-col v-if="controls.EQUIGROUPSEUDNEWGRP05.isVisible">
 												<q-group-box-container
 													v-if="controls.EQUIGROUPSEUDNEWGRP05.isVisible"
-													id="EQUIGROUPSEUDNEWGRP05"
 													class="c-groupbox--minor"
 													v-bind="controls.EQUIGROUPSEUDNEWGRP05"
-													:is-visible="controls.EQUIGROUPSEUDNEWGRP05.isVisible">
+													:id="getControlId(controls.EQUIGROUPSEUDNEWGRP05)"
+													:no-border="controls.EQUIGROUPSEUDNEWGRP05.borderless">
 													<!-- Start EQUIGROUPSEUDNEWGRP05 -->
 													<q-row v-if="controls.EQUIGROUEQUIPFREQUENC.isVisible || controls.EQUIGROUEQUIPBOUGHT__.isVisible || controls.EQUIGROUEQUIPDTREFERE.isVisible || controls.EQUIGROUEQUIPFIRST___.isVisible">
 														<q-col
@@ -838,7 +892,8 @@
 															<base-input-structure
 																v-if="controls.EQUIGROUEQUIPFREQUENC.isVisible"
 																class="i-text"
-																v-bind="controls.EQUIGROUEQUIPFREQUENC"
+																v-bind="controls.EQUIGROUEQUIPFREQUENC.wrapperProps"
+																:id="getControlId(controls.EQUIGROUEQUIPFREQUENC)"
 																v-on="controls.EQUIGROUEQUIPFREQUENC.handlers"
 																:loading="controls.EQUIGROUEQUIPFREQUENC.props.loading"
 																:reporting-mode-on="reportingModeCAV"
@@ -846,6 +901,7 @@
 																<q-select
 																	v-if="controls.EQUIGROUEQUIPFREQUENC.isVisible"
 																	v-bind="controls.EQUIGROUEQUIPFREQUENC.props"
+																	:id="getControlId(controls.EQUIGROUEQUIPFREQUENC)"
 																	@update:model-value="model.ValFrequenc.fnUpdateValue" />
 															</base-input-structure>
 														</q-col>
@@ -854,8 +910,9 @@
 															cols="auto">
 															<base-input-structure
 																v-if="controls.EQUIGROUEQUIPBOUGHT__.isVisible"
-																class="i-checkbox"
-																v-bind="controls.EQUIGROUEQUIPBOUGHT__"
+																class="i-text"
+																v-bind="controls.EQUIGROUEQUIPBOUGHT__.wrapperProps"
+																:id="getControlId(controls.EQUIGROUEQUIPBOUGHT__)"
 																v-on="controls.EQUIGROUEQUIPBOUGHT__.handlers"
 																:loading="controls.EQUIGROUEQUIPBOUGHT__.props.loading"
 																:reporting-mode-on="reportingModeCAV"
@@ -864,6 +921,7 @@
 																	<q-checkbox
 																		v-if="controls.EQUIGROUEQUIPBOUGHT__.isVisible"
 																		v-bind="controls.EQUIGROUEQUIPBOUGHT__.props"
+																		:id="getControlId(controls.EQUIGROUEQUIPBOUGHT__)"
 																		v-on="controls.EQUIGROUEQUIPBOUGHT__.handlers" />
 																</template>
 															</base-input-structure>
@@ -874,7 +932,8 @@
 															<base-input-structure
 																v-if="controls.EQUIGROUEQUIPDTREFERE.isVisible"
 																class="i-text"
-																v-bind="controls.EQUIGROUEQUIPDTREFERE"
+																v-bind="controls.EQUIGROUEQUIPDTREFERE.wrapperProps"
+																:id="getControlId(controls.EQUIGROUEQUIPDTREFERE)"
 																v-on="controls.EQUIGROUEQUIPDTREFERE.handlers"
 																:loading="controls.EQUIGROUEQUIPDTREFERE.props.loading"
 																:reporting-mode-on="reportingModeCAV"
@@ -882,6 +941,7 @@
 																<q-date-time-picker
 																	v-if="controls.EQUIGROUEQUIPDTREFERE.isVisible"
 																	v-bind="controls.EQUIGROUEQUIPDTREFERE.props"
+																	:id="getControlId(controls.EQUIGROUEQUIPDTREFERE)"
 																	:model-value="model.ValDtrefere.value"
 																	@reset-icon-click="model.ValDtrefere.fnUpdateValue(model.ValDtrefere.originalValue ?? new Date())"
 																	@update:model-value="model.ValDtrefere.fnUpdateValue($event ?? '')" />
@@ -893,13 +953,15 @@
 															<base-input-structure
 																v-if="controls.EQUIGROUEQUIPFIRST___.isVisible"
 																class="i-text"
-																v-bind="controls.EQUIGROUEQUIPFIRST___"
+																v-bind="controls.EQUIGROUEQUIPFIRST___.wrapperProps"
+																:id="getControlId(controls.EQUIGROUEQUIPFIRST___)"
 																v-on="controls.EQUIGROUEQUIPFIRST___.handlers"
 																:loading="controls.EQUIGROUEQUIPFIRST___.props.loading"
 																:reporting-mode-on="reportingModeCAV"
 																:suggestion-mode-on="suggestionModeOn">
 																<q-text-field
 																	v-bind="controls.EQUIGROUEQUIPFIRST___.props"
+																	:id="getControlId(controls.EQUIGROUEQUIPFIRST___)"
 																	@blur="onBlur(controls.EQUIGROUEQUIPFIRST___, model.ValFirst.value)"
 																	@change="model.ValFirst.fnUpdateValueOnChange" />
 															</base-input-structure>
@@ -917,10 +979,10 @@
 								<q-col v-if="controls.EQUIGROUPSEUDNEWGRP04.isVisible">
 									<q-group-box-container
 										v-if="controls.EQUIGROUPSEUDNEWGRP04.isVisible"
-										id="EQUIGROUPSEUDNEWGRP04"
 										class="c-groupbox--minor-border-top"
 										v-bind="controls.EQUIGROUPSEUDNEWGRP04"
-										:is-visible="controls.EQUIGROUPSEUDNEWGRP04.isVisible">
+										:id="getControlId(controls.EQUIGROUPSEUDNEWGRP04)"
+										:no-border="controls.EQUIGROUPSEUDNEWGRP04.borderless">
 										<!-- Start EQUIGROUPSEUDNEWGRP04 -->
 										<q-row v-if="controls.EQUIGROUEQUIPPHOTOGRA.isVisible">
 											<q-col
@@ -929,7 +991,8 @@
 												<base-input-structure
 													v-if="controls.EQUIGROUEQUIPPHOTOGRA.isVisible"
 													class="q-image"
-													v-bind="controls.EQUIGROUEQUIPPHOTOGRA"
+													v-bind="controls.EQUIGROUEQUIPPHOTOGRA.wrapperProps"
+													:id="getControlId(controls.EQUIGROUEQUIPPHOTOGRA)"
 													v-on="controls.EQUIGROUEQUIPPHOTOGRA.handlers"
 													:loading="controls.EQUIGROUEQUIPPHOTOGRA.props.loading"
 													:reporting-mode-on="reportingModeCAV"
@@ -937,6 +1000,7 @@
 													<q-image
 														v-if="controls.EQUIGROUEQUIPPHOTOGRA.isVisible"
 														v-bind="controls.EQUIGROUEQUIPPHOTOGRA.props"
+														:id="getControlId(controls.EQUIGROUEQUIPPHOTOGRA)"
 														v-on="controls.EQUIGROUEQUIPPHOTOGRA.handlers" />
 												</base-input-structure>
 											</q-col>
@@ -945,10 +1009,10 @@
 											<q-col v-if="controls.EQUIGROUPSEUDNEWGRP06.isVisible">
 												<q-group-box-container
 													v-if="controls.EQUIGROUPSEUDNEWGRP06.isVisible"
-													id="EQUIGROUPSEUDNEWGRP06"
 													class="c-groupbox--minor-border-top"
 													v-bind="controls.EQUIGROUPSEUDNEWGRP06"
-													:is-visible="controls.EQUIGROUPSEUDNEWGRP06.isVisible">
+													:id="getControlId(controls.EQUIGROUPSEUDNEWGRP06)"
+													:no-border="controls.EQUIGROUPSEUDNEWGRP06.borderless">
 													<!-- Start EQUIGROUPSEUDNEWGRP06 -->
 													<q-row v-if="controls.EQUIGROUEQUIPDESIGNAT.isVisible">
 														<q-col
@@ -957,13 +1021,15 @@
 															<base-input-structure
 																v-if="controls.EQUIGROUEQUIPDESIGNAT.isVisible"
 																class="i-text"
-																v-bind="controls.EQUIGROUEQUIPDESIGNAT"
+																v-bind="controls.EQUIGROUEQUIPDESIGNAT.wrapperProps"
+																:id="getControlId(controls.EQUIGROUEQUIPDESIGNAT)"
 																v-on="controls.EQUIGROUEQUIPDESIGNAT.handlers"
 																:loading="controls.EQUIGROUEQUIPDESIGNAT.props.loading"
 																:reporting-mode-on="reportingModeCAV"
 																:suggestion-mode-on="suggestionModeOn">
 																<q-text-field
 																	v-bind="controls.EQUIGROUEQUIPDESIGNAT.props"
+																	:id="getControlId(controls.EQUIGROUEQUIPDESIGNAT)"
 																	@blur="onBlur(controls.EQUIGROUEQUIPDESIGNAT, model.ValDesignat.value)"
 																	@change="model.ValDesignat.fnUpdateValueOnChange" />
 															</base-input-structure>
@@ -985,7 +1051,7 @@
 		</q-container>
 	</teleport>
 
-	<hr v-if="!isPopup && showFormFooter" />
+	<q-divider v-if="!isPopup && showFormFooter" />
 
 	<teleport
 		v-if="formModalIsReady && showFormFooter"
@@ -1336,6 +1402,7 @@
 						label: computed(() => this.Resources.DEFAULT_STYLE62523),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
+						borderless: false,
 						isCollapsible: false,
 						anchored: true,
 						directChildren: ['EQUIGROUPSEUDNEWGRP13'],
@@ -1350,6 +1417,7 @@
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'EQUIGROUPSEUDNEWGRP19',
+						borderless: false,
 						isCollapsible: false,
 						anchored: false,
 						directChildren: ['EQUIGROUPESS1PHOTOGRA', 'EQUIGROUPESS1NAME____', 'EQUIGROUPESS1GENDER__', 'EQUIGROUPSEUDNEWGRP14', 'EQUIGROUPSEUDNEWGRP17'],
@@ -1441,8 +1509,8 @@
 						container: 'EQUIGROUPSEUDNEWGRP13',
 						maxLength: 1,
 						arrayName: 'Genero',
-						helpShortItem: '',
-						helpDetailedItem: '',
+						helpShortItem: 'None',
+						helpDetailedItem: 'None',
 						controlLimits: [
 						],
 					}, this),
@@ -1454,6 +1522,7 @@
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'EQUIGROUPSEUDNEWGRP13',
+						borderless: false,
 						isCollapsible: false,
 						anchored: false,
 						directChildren: ['EQUIGROUPESS1DTNASCIM', 'EQUIGROUPESS1IDADE___'],
@@ -1516,6 +1585,7 @@
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'EQUIGROUPSEUDNEWGRP17',
 						isInAccordion: true,
+						borderless: false,
 						isCollapsible: true,
 						anchored: false,
 						directChildren: ['EQUIGROUPESS1IDFUNCIO', 'EQUIGROUPESS1TELEPHON'],
@@ -1565,6 +1635,7 @@
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'EQUIGROUPSEUDNEWGRP17',
 						isInAccordion: true,
+						borderless: false,
 						isCollapsible: true,
 						anchored: false,
 						directChildren: ['EQUIGROUPESS1EMAIL___', 'EQUIGROUPESS1EMAIL2__'],
@@ -1610,6 +1681,7 @@
 						label: computed(() => this.Resources.MIXED_STYLE48721),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
+						borderless: false,
 						isCollapsible: false,
 						anchored: true,
 						directChildren: ['EQUIGROUPSEUDFIELD001', 'EQUIGROUPSEUDNEWGRP01'],
@@ -1637,6 +1709,7 @@
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'EQUIGROUPSEUDNEWGRP18',
+						borderless: false,
 						isCollapsible: false,
 						anchored: false,
 						directChildren: ['EQUIGROUPSEUDNEWGRP02', 'EQUIGROUPSEUDNEWGRP03'],
@@ -1651,6 +1724,7 @@
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'EQUIGROUPSEUDNEWGRP01',
+						borderless: false,
 						isCollapsible: false,
 						anchored: false,
 						directChildren: ['EQUIGROUCMPNYLOGO____', 'EQUIGROUCMPNYDESIGNAT', 'EQUIGROUCMPNYACRONYM_', 'EQUIGROUCMPNYNIF_____'],
@@ -1733,6 +1807,7 @@
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'EQUIGROUPSEUDNEWGRP01',
+						borderless: false,
 						isCollapsible: false,
 						anchored: false,
 						directChildren: ['EQUIGROUCMPNYTELEPHON', 'EQUIGROUCMPNYEMAIL___'],
@@ -1778,6 +1853,7 @@
 						label: computed(() => this.Resources.COLLAPSIBLE_STYLE24579),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
+						borderless: false,
 						isCollapsible: false,
 						anchored: true,
 						directChildren: ['EQUIGROUPSEUDNEWGRP08'],
@@ -1836,6 +1912,7 @@
 						label: computed(() => this.Resources.GROUPBOX_STYLES47434),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
+						borderless: false,
 						isCollapsible: false,
 						anchored: true,
 						directChildren: ['EQUIGROUPSEUDNEWGRP09', 'EQUIGROUPSEUDNEWGRP07', 'EQUIGROUPSEUDNEWGRP04'],
@@ -1850,6 +1927,7 @@
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'EQUIGROUPSEUDNEWGRP23',
+						borderless: false,
 						isCollapsible: false,
 						anchored: false,
 						directChildren: ['EQUIGROUPSEUDNEWGRP10'],
@@ -1864,6 +1942,7 @@
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'EQUIGROUPSEUDNEWGRP09',
+						borderless: false,
 						isCollapsible: false,
 						anchored: false,
 						directChildren: ['EQUIGROUTPEQUTIPOEQUI', 'EQUIGROUTPEQUTPEQUCOD', 'EQUIGROUTPEQUPRECOMAX', 'EQUIGROUPSEUDNEWGRP11'],
@@ -1946,6 +2025,7 @@
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'EQUIGROUPSEUDNEWGRP10',
+						borderless: false,
 						isCollapsible: false,
 						anchored: false,
 						directChildren: ['EQUIGROUTPEQUTPEQUPAI', 'EQUIGROUTPEQUNIVEL___', 'EQUIGROUPSEUDNEWGRP12'],
@@ -1993,6 +2073,7 @@
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'EQUIGROUPSEUDNEWGRP11',
+						borderless: false,
 						isCollapsible: false,
 						anchored: false,
 						directChildren: ['EQUIGROUTPEQUBACKCOLO', 'EQUIGROUTPEQUCORLETRA'],
@@ -2039,6 +2120,7 @@
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'EQUIGROUPSEUDNEWGRP23',
+						borderless: false,
 						isCollapsible: false,
 						anchored: false,
 						directChildren: ['EQUIGROUEQUIPSEQUENNR', 'EQUIGROUEQUIPREGISTNR', 'EQUIGROUEQUIPVALORTOT', 'EQUIGROUPSEUDNEWGRP05'],
@@ -2100,6 +2182,7 @@
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'EQUIGROUPSEUDNEWGRP07',
+						borderless: false,
 						isCollapsible: false,
 						anchored: false,
 						directChildren: ['EQUIGROUEQUIPFREQUENC', 'EQUIGROUEQUIPBOUGHT__', 'EQUIGROUEQUIPDTREFERE', 'EQUIGROUEQUIPFIRST___'],
@@ -2114,7 +2197,7 @@
 						size: 'mini',
 						helpControl: {
 							shortHelp: {
-								type: 'Tooltip',
+								type: 'subtext',
 								text: computed(() => this.Resources.___1438719),
 							},
 						},
@@ -2125,8 +2208,8 @@
 						maxIntegers: 2,
 						maxDecimals: 0,
 						arrayName: 'FreqEmpr',
-						helpShortItem: '',
-						helpDetailedItem: '',
+						helpShortItem: 'None',
+						helpDetailedItem: 'None',
 						controlLimits: [
 						],
 					}, this),
@@ -2181,6 +2264,7 @@
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'EQUIGROUPSEUDNEWGRP23',
+						borderless: false,
 						isCollapsible: false,
 						anchored: false,
 						directChildren: ['EQUIGROUEQUIPPHOTOGRA', 'EQUIGROUPSEUDNEWGRP06'],
@@ -2213,6 +2297,7 @@
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'EQUIGROUPSEUDNEWGRP04',
+						borderless: false,
 						isCollapsible: false,
 						anchored: false,
 						directChildren: ['EQUIGROUEQUIPDESIGNAT'],
@@ -2730,7 +2815,6 @@
 
 				this.afterControlUpdate(controlField, fieldValue)
 			},
-
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
 // USE /[MANUAL GQT FUNCTIONS_JS EQUIGROU]/
 // eslint-disable-next-line

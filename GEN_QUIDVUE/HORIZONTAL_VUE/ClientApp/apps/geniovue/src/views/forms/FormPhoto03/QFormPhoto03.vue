@@ -9,12 +9,13 @@
 			<div
 				v-if="showFormHeader"
 				class="c-action-bar">
-				<h1
+				<component
 					v-if="formControl.uiComponents.header && formInfo.designation"
+					:is="topHeadingTag"
 					:id="formTitleId"
 					class="form-header">
 					{{ formInfo.designation }}
-				</h1>
+				</component>
 
 				<div class="c-action-bar__menu">
 					<template
@@ -40,13 +41,10 @@
 									@click="btn.action">
 									<template v-if="btn.icon">
 										<q-badge-indicator
-											v-if="btn.badge && btn.badge.isVisible"
-											:color="btn.badge.color">
+											:enabled="btn.badge?.isVisible ?? false"
+											:color="btn.badge?.color">
 											<q-icon v-bind="btn.icon" />
 										</q-badge-indicator>
-										<q-icon
-											v-else
-											v-bind="btn.icon" />
 									</template>
 								</q-toggle-group-item>
 							</template>
@@ -97,6 +95,7 @@
 		<q-container
 			fluid
 			data-key="PHOTO03"
+			:data-identifier="primaryKeyValue"
 			:data-loading="!formInitialDataLoaded || !isActiveForm">
 			<template v-if="formControl.initialized && showFormBody">
 				<q-row v-if="controls.PHOTO03_PROPHPHOTO___.isVisible || controls.PHOTO03_PROPHTITLE___.isVisible || controls.PHOTO03_PROPETITLE___.isVisible">
@@ -106,7 +105,8 @@
 						<base-input-structure
 							v-if="controls.PHOTO03_PROPHPHOTO___.isVisible"
 							class="q-image"
-							v-bind="controls.PHOTO03_PROPHPHOTO___"
+							v-bind="controls.PHOTO03_PROPHPHOTO___.wrapperProps"
+							:id="getControlId(controls.PHOTO03_PROPHPHOTO___)"
 							v-on="controls.PHOTO03_PROPHPHOTO___.handlers"
 							:loading="controls.PHOTO03_PROPHPHOTO___.props.loading"
 							:reporting-mode-on="reportingModeCAV"
@@ -114,6 +114,7 @@
 							<q-image
 								v-if="controls.PHOTO03_PROPHPHOTO___.isVisible"
 								v-bind="controls.PHOTO03_PROPHPHOTO___.props"
+								:id="getControlId(controls.PHOTO03_PROPHPHOTO___)"
 								v-on="controls.PHOTO03_PROPHPHOTO___.handlers" />
 						</base-input-structure>
 					</q-col>
@@ -123,13 +124,15 @@
 						<base-input-structure
 							v-if="controls.PHOTO03_PROPHTITLE___.isVisible"
 							class="i-text"
-							v-bind="controls.PHOTO03_PROPHTITLE___"
+							v-bind="controls.PHOTO03_PROPHTITLE___.wrapperProps"
+							:id="getControlId(controls.PHOTO03_PROPHTITLE___)"
 							v-on="controls.PHOTO03_PROPHTITLE___.handlers"
 							:loading="controls.PHOTO03_PROPHTITLE___.props.loading"
 							:reporting-mode-on="reportingModeCAV"
 							:suggestion-mode-on="suggestionModeOn">
 							<q-text-field
 								v-bind="controls.PHOTO03_PROPHTITLE___.props"
+								:id="getControlId(controls.PHOTO03_PROPHTITLE___)"
 								@blur="onBlur(controls.PHOTO03_PROPHTITLE___, model.ValTitle.value)"
 								@change="model.ValTitle.fnUpdateValueOnChange" />
 						</base-input-structure>
@@ -140,7 +143,8 @@
 						<base-input-structure
 							v-if="controls.PHOTO03_PROPETITLE___.isVisible"
 							class="i-text"
-							v-bind="controls.PHOTO03_PROPETITLE___"
+							v-bind="controls.PHOTO03_PROPETITLE___.wrapperProps"
+							:id="getControlId(controls.PHOTO03_PROPETITLE___)"
 							v-on="controls.PHOTO03_PROPETITLE___.handlers"
 							:loading="controls.PHOTO03_PROPETITLE___.props.loading"
 							:reporting-mode-on="reportingModeCAV"
@@ -148,6 +152,7 @@
 							<q-lookup
 								v-if="controls.PHOTO03_PROPETITLE___.isVisible"
 								v-bind="controls.PHOTO03_PROPETITLE___.props"
+								:id="getControlId(controls.PHOTO03_PROPETITLE___)"
 								v-on="controls.PHOTO03_PROPETITLE___.handlers" />
 							<q-see-more-photo03-propetitle
 								v-if="controls.PHOTO03_PROPETITLE___.seeMoreIsVisible"
@@ -160,7 +165,7 @@
 		</q-container>
 	</teleport>
 
-	<hr v-if="!isPopup && showFormFooter" />
+	<q-divider v-if="!isPopup && showFormFooter" />
 
 	<teleport
 		v-if="formModalIsReady && showFormFooter"
@@ -943,7 +948,6 @@
 
 				this.afterControlUpdate(controlField, fieldValue)
 			},
-
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
 // USE /[MANUAL GQT FUNCTIONS_JS PHOTO03]/
 // eslint-disable-next-line

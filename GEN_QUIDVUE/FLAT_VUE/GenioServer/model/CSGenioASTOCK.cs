@@ -47,7 +47,7 @@ namespace CSGenio.business
 			Qfield = new Field(info.Alias, "codstock", FieldType.KEY_GUID);
 			Qfield.FieldDescription = "";
 			Qfield.FieldSize =  36;
-			Qfield.CavDesignation = "";
+			Qfield.VisivelCav = CavVisibilityType.Nunca;
 
 			Qfield.Dupmsg = "";
 			info.RegisterFieldDB(Qfield);
@@ -88,7 +88,7 @@ namespace CSGenio.business
 			Qfield.FieldDescription = ">>PRODUCT";
 			Qfield.FieldSize =  36;
 			Qfield.MQueue = false;
-			Qfield.CavDesignation = "__PRODUCT04710";
+			Qfield.VisivelCav = CavVisibilityType.Nunca;
 
 			Qfield.Dupmsg = "";
 			info.RegisterFieldDB(Qfield);
@@ -98,7 +98,7 @@ namespace CSGenio.business
 			Qfield.FieldDescription = ">>RECEIPT";
 			Qfield.FieldSize =  36;
 			Qfield.MQueue = false;
-			Qfield.CavDesignation = "__RECEIPT04632";
+			Qfield.VisivelCav = CavVisibilityType.Nunca;
 
 			Qfield.Dupmsg = "";
 			info.RegisterFieldDB(Qfield);
@@ -108,7 +108,7 @@ namespace CSGenio.business
 			Qfield.FieldDescription = ">>DISPATCH";
 			Qfield.FieldSize =  36;
 			Qfield.MQueue = false;
-			Qfield.CavDesignation = "__DISPATCH53890";
+			Qfield.VisivelCav = CavVisibilityType.Nunca;
 
 			Qfield.Dupmsg = "";
 			info.RegisterFieldDB(Qfield);
@@ -175,20 +175,18 @@ namespace CSGenio.business
 		{
 			// Pathways
 			//------------------------------
-			info.Pathways = new Dictionary<string, string>(13);
+			info.Pathways = new Dictionary<string, string>(11);
 			info.Pathways.Add("recei","recei");
 			info.Pathways.Add("dispa","dispa");
 			info.Pathways.Add("produ","produ");
 			info.Pathways.Add("entit","recei");
-			info.Pathways.Add("faci1","recei");
 			info.Pathways.Add("faci2","recei");
+			info.Pathways.Add("faci1","recei");
 			info.Pathways.Add("perso","dispa");
-			info.Pathways.Add("disst","dispa");
 			info.Pathways.Add("locat","produ");
 			info.Pathways.Add("lcext","produ");
 			info.Pathways.Add("facil","produ");
 			info.Pathways.Add("facty","produ");
-			info.Pathways.Add("cntry","produ");
 		}
 
 		/// <summary>

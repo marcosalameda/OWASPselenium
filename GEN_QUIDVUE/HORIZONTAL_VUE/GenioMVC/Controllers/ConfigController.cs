@@ -1,15 +1,16 @@
-﻿using Microsoft.AspNetCore.Antiforgery;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 using CSGenio.core.logger;
 using CSGenio.framework;
+using GenioMVC.Helpers.Menus;
 
 namespace GenioMVC.Controllers
 {
 	public class ConfigController : ControllerExtension
 	{
 		private readonly bool enableOtlpTracing;
+
 		public ConfigController(UserContextService userContextService, IConfiguration config) : base(userContextService)
 		{
 			var telemetryConfig = config.GetSection("TelemetryConfig").Get<TelemetryConfiguration>();
@@ -37,11 +38,11 @@ namespace GenioMVC.Controllers
 
 		private object getConfig()
 		{
-			// User
-			var user = UserContext.Current.User;
+			User user = m_userContext.User;
 
-			var defaultSystem = Configuration.DefaultYear;
-			var years = Configuration.Years;
+			string defaultSystem = Configuration.DefaultYear;
+			List<string> years = Configuration.Years;
+
 			/*
 				When the user is already authenticated, we need to validate whether the year
 					in which the request was made is among the years to which they have permission.
@@ -60,7 +61,7 @@ namespace GenioMVC.Controllers
 			}
 
 			// Modules
-			var availableModulesMenus = Helpers.Menus.Menus.AvailableModules(UserContext.Current);
+			List<MenuEntry> availableModulesMenus = Menus.AvailableModules(m_userContext);
 			var availableModules = availableModulesMenus.Select(m => new {
 				id = m.ID,
 				title = m.Title,
@@ -69,20 +70,21 @@ namespace GenioMVC.Controllers
 				image = m.ImageVUE
 			}).ToDictionary(m => m.id, m => m);
 
-			var defaultModule = availableModules.FirstOrDefault().Key ?? "Public";
-			var currentModule = user.CurrentModule;
+			string defaultModule = availableModules.FirstOrDefault().Key ?? "Public";
+			string currentModule = user.CurrentModule;
 			if (currentModule == null || !availableModules.ContainsKey(currentModule))
 				currentModule = defaultModule;
 
 			// Number format
-			var numberFormat = new
+			object numberFormat = new
 			{
-				DecimalSeparator = Configuration.NumberFormat.DecimalSeparator,
-				GroupSeparator = Configuration.NumberFormat.GroupSeparator
+				Configuration.NumberFormat.DecimalSeparator,
+				Configuration.NumberFormat.GroupSeparator,
+				Configuration.NumberFormat.NegativeFormat
 			};
 
 			// DateTime format's
-			var dateFormat = new
+			object dateFormat = new
 			{
 				time = Configuration.DateFormat.Time,
 				date = Configuration.DateFormat.Date,
@@ -91,19 +93,19 @@ namespace GenioMVC.Controllers
 			};
 
 			// Full Calendar license
-			var schedulerLicense = Configuration.ExistsProperty("SchedulerLicense") ? Configuration.GetProperty("SchedulerLicense") : null;
+			string schedulerLicense = Configuration.ExistsProperty("SchedulerLicense") ? Configuration.GetProperty("SchedulerLicense") : null;
 
 			// Home page
-			var isGuestUser = user.IsGuest();
-			var homePages = new ViewModels.Home.HomePage_ViewModel(UserContext.Current, isGuestUser);
+			bool isGuestUser = user.IsGuest();
+			ViewModels.Home.HomePage_ViewModel homePages = new(m_userContext, isGuestUser);
 
 			// Password Recover
-			var hasPasswordRecovery = GenioServer.security.SecurityFactory.HasPasswordManagement() && !String.IsNullOrEmpty(Configuration.PasswordRecoveryEmail);
+			bool hasPasswordRecovery = GenioServer.security.SecurityFactory.HasPasswordManagement() && !string.IsNullOrEmpty(Configuration.PasswordRecoveryEmail);
 
 			// Authentification
-			var hasUsernameAuth = GenioServer.security.SecurityFactory.HasUsernameAuth();
+			bool hasUsernameAuth = GenioServer.security.SecurityFactory.HasUsernameAuth();
 
-			var conf = new
+			return new
 			{
 				availableModules,
 				defaultModule,
@@ -123,15 +125,13 @@ namespace GenioMVC.Controllers
 				enableTracing = enableOtlpTracing,
 				versionInfo = getVersionInfo()
 			};
-			return conf;
 		}
 
 		[HttpGet]
 		[AllowAnonymous]
 		public JsonResult GetConfig()
 		{
-			var conf = getConfig();
-
+			object conf = getConfig();
 			return JsonOK(conf);
 		}
 

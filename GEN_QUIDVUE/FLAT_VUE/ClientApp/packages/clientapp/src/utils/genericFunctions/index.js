@@ -72,6 +72,7 @@ export function normalizeDataInNavigationParams(obj) {
 export function normalizeRouteForSaveNavigation(routeData) {
 	const routeBranch = routeData.meta.order
 	const args = {
+		routeType: routeData.meta.routeType,
 		location: routeData.name,
 		params: routeData.params,
 		properties: {
@@ -103,7 +104,7 @@ export function saveNavigation(routeData, updateHistory) {
 export function getLayoutVariables(layoutConfig) {
 	const layoutVariables = {}
 
-	for (let i in layoutConfig) {
+	for (const i in layoutConfig) {
 		const chosenValue = layoutConfig[i].chosen
 		const defaultValue = layoutConfig[i].default
 		const possibleValues = layoutConfig[i].values
@@ -126,14 +127,15 @@ export function getLayoutVariables(layoutConfig) {
  * @param {string} title The title of the message (optional)
  * @param {object} buttons The available buttons (optional)
  * @param {object} options Additional supported options (optional)
+ * @param {object} handlers Event handlers (optional)
  */
-export function displayMessage(text, icon, title, buttons, options) {
+export function displayMessage(text, icon, title, buttons, options, handlers) {
 	const { addDialog } = useDialog()
 
 	// Set object in store
-	const messageBox = new MessageBoxModel(text, icon, title, buttons, options)
+	const messageBox = new MessageBoxModel(text, icon, title, buttons, options, handlers)
 
-	addDialog(messageBox.props)
+	addDialog(messageBox.props, undefined, undefined, messageBox.handlers)
 }
 
 /**
@@ -231,7 +233,7 @@ export function focusElementBySelector(selector)
 	const el = document.querySelector(selector)
 
 	if (typeof el?.focus !== 'function') return
-	
+
 	el.focus()
 }
 
@@ -348,7 +350,7 @@ export function stringToDate(value, dateFormat) {
 	// Date used to fill in missing pieces of parsed date
 	const emptyDate = new Date(0, 0, 1, 0, 0, 0, 0)
 
-	let date = parse(value, dateFormat, emptyDate)
+	const date = parse(value, dateFormat, emptyDate)
 
 	// If not a valid date
 	if (isNaN(date.getTime())) return null
@@ -422,7 +424,7 @@ export async function computeColorPlaceholder(src) {
 	if (_isEmpty(src)) return null
 
 	return new Promise((resolve, reject) => {
-		var img = new Image()
+		let img = new Image()
 
 		img.onload = () => {
 			const canvas = document.createElement('canvas')
@@ -520,10 +522,56 @@ export function textDisplay(value, options) {
 }
 
 /**
+ * Determine if a number is negative.
+ * @param {string|number} value - The number
+ * @returns {boolean} Whether the number is negative or not
+ */
+export function isNegative(value) {
+	if (typeof value === 'number')
+		return value < 0
+
+	if (typeof value === 'string' && value?.length > 0)
+		return value.at(0) === '-' || (value.at(0) === '(' && value.at(0) === ')')
+
+	return false
+}
+
+/**
+ * Formats a number's negative display.
+ * @param {string|number} value - The number to format
+ * @param {string} negativeFormat - The format to use for negative numbers (e.g., '-')
+ * @param {boolean} makeNegative - Whether to make the number negative
+ * @returns {string} The formatted number as a string
+ */
+export function numericNegativeDisplay(value, negativeFormat, makeNegative) {
+	let strValue = value ? value.toString() : ''
+
+	if (makeNegative || isNegative(value))
+	{
+		// Remove negative symbols since they will be added based on the parameter
+		strValue = strValue.replace(/-/g, '').replace(/\(/g, '').replace(/\)/g, '')
+
+		switch(negativeFormat)
+		{
+			case '()':
+				strValue = '(' + strValue + ')'
+				break
+			case '-':
+			default:
+				strValue = '-' + strValue
+				break
+		}
+	}
+
+	return strValue
+}
+
+/**
  * Formats a number with custom thousands and decimal separators.
  * @param {string|number} value - The number to format
  * @param {string} decimalSep - The character to use as decimal separator (e.g., ',')
  * @param {string} groupSep - The character to use as thousands separator (e.g., '.')
+ * @param {string} negativeFormat - The format to use for negative numbers (e.g., '-')
  * @param {object} numberFormatOptions - Extra formatting options
  * @returns {string} The formatted number as a string
  *
@@ -531,7 +579,7 @@ export function textDisplay(value, options) {
  * numericDisplay(5453.04, '.', ',') // "5.453,04"
  * numericDisplay(5000000, '.', ',') // "5.000.000"
  */
-export function numericDisplay(value, decimalSep, groupSep, numberFormatOptions) {
+export function numericDisplay(value, decimalSep, groupSep, negativeFormat, numberFormatOptions) {
 	let strValue = ''
 
 	if (numberFormatOptions !== undefined)
@@ -541,6 +589,8 @@ export function numericDisplay(value, decimalSep, groupSep, numberFormatOptions)
 	strValue = strValue.replace(/,/g, ';').replace('.', ':')
 	strValue = strValue.replace(':', decimalSep ?? '.').replace(/;/g, groupSep ?? ',')
 
+	strValue = numericNegativeDisplay(strValue, negativeFormat)
+
 	return strValue
 }
 
@@ -549,6 +599,7 @@ export function numericDisplay(value, decimalSep, groupSep, numberFormatOptions)
  * @param value {string}
  * @param decimalSep {string}
  * @param groupSep {string}
+ * @param negativeFormat {string}
  * @param decimalPlaces {Number}
  * @param currencyCode {string}
  * @param lcidCode {string}
@@ -559,35 +610,42 @@ export function currencyDisplay(
 	value,
 	decimalSep,
 	groupSep,
+	negativeFormat,
 	decimalPlaces,
 	currencyCode,
 	lcidCode,
 	symbolType
 ) {
 	// Optional symbol type: "symbol", "narrowSymbol", "code", "name"
-	var symbolTypeUse = 'symbol'
+	let symbolTypeUse = 'symbol'
 	if (symbolType !== undefined) symbolTypeUse = symbolType
 
+	const valueIsNegative = isNegative(value)
+	const valueAbsolute = Math.abs(parseFloat(value))
+
 	// Get number formatted according to location code without currency symbol
-	var strNumber = new Intl.NumberFormat(lcidCode, {
+	const strNumber = new Intl.NumberFormat(lcidCode, {
 		minimumFractionDigits: decimalPlaces,
 		maximumFractionDigits: decimalPlaces
-	}).format(value)
+	}).format(valueAbsolute)
 	// Get number formatted according to location code with currency symbol
-	var strCurrency = new Intl.NumberFormat(lcidCode, {
+	const strCurrency = new Intl.NumberFormat(lcidCode, {
 		minimumFractionDigits: decimalPlaces,
 		maximumFractionDigits: decimalPlaces,
 		style: 'currency',
 		currency: currencyCode.toUpperCase(),
 		currencyDisplay: symbolTypeUse
-	}).format(value)
+	}).format(valueAbsolute)
 	// Get number formatted according to application configuration
-	var strNumberDisplay = numericDisplay(value, decimalSep, groupSep, {
+	const strNumberDisplay = numericDisplay(valueAbsolute, decimalSep, groupSep, negativeFormat, {
 		minimumFractionDigits: decimalPlaces,
 		maximumFractionDigits: decimalPlaces
 	})
+
 	// In number formatted according to location code with currency symbol, replace number with number formatted according to application configuration
-	var strValue = strCurrency.replace(strNumber, strNumberDisplay)
+	let strValue = strCurrency.replace(strNumber, strNumberDisplay)
+	if (valueIsNegative)
+		strValue = numericNegativeDisplay(strValue, negativeFormat, true)
 
 	return strValue
 }
@@ -647,7 +705,7 @@ export function imageDisplay(value) {
  * @returns String || Object
  */
 export function documentDisplay(value, options) {
-	let rtnValue = cloneDeep(value)
+	const rtnValue = cloneDeep(value)
 
 	if (_isEmpty(rtnValue)) return null
 
@@ -844,7 +902,7 @@ export function getDefaultFormModesForMode(mode) {
  * @returns {Object} - The created Model structure object.
  */
 export function getModelStructureObj(row, objectStructure) {
-	let obj = {}
+	const obj = {}
 	_forEach(objectStructure, (fnValueSelector, modelPath) =>
 		_set(obj, modelPath, fnValueSelector(row))
 	)
@@ -859,6 +917,134 @@ export function getModelStructureObj(row, objectStructure) {
  */
 export function formatColumnIdentifier(columnArea, columnField) {
 	return `${columnArea.toLowerCase()}.${columnField.toLowerCase()}`
+}
+
+/**
+ * Creates a debounced version of an async function that also deduplicates in-flight calls with the same arguments.
+ * @param {Function} fn - The async function to debounce and dedupe
+ * @param {Object} options - Configuration options
+ * @param {Function} [options.getKey] - Function to generate a key from arguments for dedupe, default is JSON.stringify
+ * @param {number} [options.wait=500] - Debounce wait time in milliseconds
+ * @param {boolean} [options.leading=false] - If true, execute on the leading edge (lodash default: false)
+ * @param {boolean} [options.trailing=true] - If true, execute on the trailing edge (lodash default: true)
+ * @returns {Function} A debounced async function that returns a Promise.
+ *
+ * Usage:
+ * const fetchUserDeduped = dedupe(fetchUser, { wait: 500 })
+ * await fetchUserDeduped(1) // fires after 500ms of inactivity, deduped if same args are in-flight
+ */
+export function dedupe(
+	fn,
+	{
+		getKey = (...args) => JSON.stringify(args),
+		wait = 500,
+		leading = false,
+		trailing = true
+	} = {}
+) {
+	// Map to track in-flight Promises for dedupe
+	const inFlight = new Map()
+
+	// Timer for scheduling trailing calls
+	let timer = null
+
+	// Last arguments and context for trailing call
+	let lastArgs = null
+	let lastContext = null
+
+	// Timestamp of last execution
+	let lastCallTime = 0
+
+	// Queue of resolve/reject for Promises waiting on the next execution
+	let pendingPromises = []
+
+	// Executes the async function with dedupe
+	async function execute(args, context) {
+		const key = getKey(...args)
+
+		// If a request with the same key is in-flight, reuse it
+		if (inFlight.has(key)) {
+			return inFlight.get(key)
+		}
+
+		// Execute the function and track it in-flight
+		const promise = (async () => {
+			try {
+				return await fn.apply(context, args)
+			} finally {
+				inFlight.delete(key)
+			}
+		})()
+
+		inFlight.set(key, promise)
+		return promise
+	}
+
+	// Runs all queued promises with the current args/context
+	function flush(args, context) {
+		// Copy and clear queue
+		const promises = pendingPromises.slice()
+		pendingPromises = []
+
+		// Execute function and resolve all queued Promises
+		const result = execute(args, context)
+		promises.forEach(({ resolve, reject }) => {
+			result.then(resolve).catch(reject)
+		})
+	}
+
+	return function (...args) {
+		lastArgs = args
+		lastContext = this
+
+		return new Promise((resolve, reject) => {
+			// Queue this call's resolve/reject
+			pendingPromises.push({ resolve, reject })
+
+			const now = Date.now()
+			const elapsed = now - lastCallTime
+
+			// Determine if we should call on the leading edge
+			const callLeading = leading && elapsed >= wait
+
+			// Leading call executes immediately if enough time has passed
+			if (callLeading) {
+				lastCallTime = now
+				flush(lastArgs, lastContext)
+				return
+			}
+
+			// Clear previous trailing timer if any
+			if (timer) {
+				clearTimeout(timer)
+			}
+
+			// Schedule trailing call if enabled
+			if (trailing) {
+				// Remaining time until trailing call
+				const remaining = Math.max(wait - elapsed, 0)
+
+				timer = setTimeout(() => {
+					lastCallTime = Date.now()
+					timer = null
+
+					// Execute the trailing call
+					flush(lastArgs, lastContext)
+				}, remaining)
+			}
+		})
+	}
+}
+
+/**
+ * Get the name of a heading tag based on a level.
+ * @param {string} level The level.
+ * @returns The tag name
+ */
+export function getHeadingTagNameByLevel(level) {
+	// Heading tags go up to 6
+	// For levels above 6 (very unlikely), a div element is used
+	return level > 6 ? 'div' : 'h' + level
 }
 
 export default {
@@ -886,6 +1072,8 @@ export default {
 	computeColorPlaceholder,
 	formatValueToDisplay,
 	textDisplay,
+	isNegative,
+	numericNegativeDisplay,
 	numericDisplay,
 	currencyDisplay,
 	dateDisplay,
@@ -904,5 +1092,7 @@ export default {
 	formatColumnIdentifier,
 	focusElement,
 	focusElementBySelector,
-	getDefaultFormModesForMode
+	getDefaultFormModesForMode,
+	dedupe,
+	getHeadingTagNameByLevel
 }

@@ -9,12 +9,13 @@
 			<div
 				v-if="showFormHeader"
 				class="c-action-bar">
-				<h1
+				<component
 					v-if="formControl.uiComponents.header && formInfo.designation"
+					:is="topHeadingTag"
 					:id="formTitleId"
 					class="form-header">
 					{{ formInfo.designation }}
-				</h1>
+				</component>
 
 				<div class="c-action-bar__menu">
 					<template
@@ -40,13 +41,10 @@
 									@click="btn.action">
 									<template v-if="btn.icon">
 										<q-badge-indicator
-											v-if="btn.badge && btn.badge.isVisible"
-											:color="btn.badge.color">
+											:enabled="btn.badge?.isVisible ?? false"
+											:color="btn.badge?.color">
 											<q-icon v-bind="btn.icon" />
 										</q-badge-indicator>
-										<q-icon
-											v-else
-											v-bind="btn.icon" />
 									</template>
 								</q-toggle-group-item>
 							</template>
@@ -97,6 +95,7 @@
 		<q-container
 			fluid
 			data-key="ADDRE"
+			:data-identifier="primaryKeyValue"
 			:data-loading="!formInitialDataLoaded || !isActiveForm">
 			<template v-if="formControl.initialized && showFormBody">
 				<q-row v-if="controls.ADDRE___ADDREADDRUSE_.isVisible || controls.ADDRE___ADDREADDRTYPE.isVisible">
@@ -106,7 +105,8 @@
 						<base-input-structure
 							v-if="controls.ADDRE___ADDREADDRUSE_.isVisible"
 							class="i-text"
-							v-bind="controls.ADDRE___ADDREADDRUSE_"
+							v-bind="controls.ADDRE___ADDREADDRUSE_.wrapperProps"
+							:id="getControlId(controls.ADDRE___ADDREADDRUSE_)"
 							v-on="controls.ADDRE___ADDREADDRUSE_.handlers"
 							:loading="controls.ADDRE___ADDREADDRUSE_.props.loading"
 							:reporting-mode-on="reportingModeCAV"
@@ -114,6 +114,7 @@
 							<q-select
 								v-if="controls.ADDRE___ADDREADDRUSE_.isVisible"
 								v-bind="controls.ADDRE___ADDREADDRUSE_.props"
+								:id="getControlId(controls.ADDRE___ADDREADDRUSE_)"
 								@update:model-value="model.ValAddressuse.fnUpdateValue" />
 						</base-input-structure>
 					</q-col>
@@ -123,7 +124,8 @@
 						<base-input-structure
 							v-if="controls.ADDRE___ADDREADDRTYPE.isVisible"
 							class="i-text"
-							v-bind="controls.ADDRE___ADDREADDRTYPE"
+							v-bind="controls.ADDRE___ADDREADDRTYPE.wrapperProps"
+							:id="getControlId(controls.ADDRE___ADDREADDRTYPE)"
 							v-on="controls.ADDRE___ADDREADDRTYPE.handlers"
 							:loading="controls.ADDRE___ADDREADDRTYPE.props.loading"
 							:reporting-mode-on="reportingModeCAV"
@@ -131,6 +133,7 @@
 							<q-select
 								v-if="controls.ADDRE___ADDREADDRTYPE.isVisible"
 								v-bind="controls.ADDRE___ADDREADDRTYPE.props"
+								:id="getControlId(controls.ADDRE___ADDREADDRTYPE)"
 								@update:model-value="model.ValAddresstype.fnUpdateValue" />
 						</base-input-structure>
 					</q-col>
@@ -142,7 +145,8 @@
 						<base-input-structure
 							v-if="controls.ADDRE___ADDREADDRTEXT.isVisible"
 							class="i-textarea"
-							v-bind="controls.ADDRE___ADDREADDRTEXT"
+							v-bind="controls.ADDRE___ADDREADDRTEXT.wrapperProps"
+							:id="getControlId(controls.ADDRE___ADDREADDRTEXT)"
 							v-on="controls.ADDRE___ADDREADDRTEXT.handlers"
 							:loading="controls.ADDRE___ADDREADDRTEXT.props.loading"
 							:reporting-mode-on="reportingModeCAV"
@@ -150,6 +154,7 @@
 							<q-text-area
 								v-if="controls.ADDRE___ADDREADDRTEXT.isVisible"
 								v-bind="controls.ADDRE___ADDREADDRTEXT.props"
+								:id="getControlId(controls.ADDRE___ADDREADDRTEXT)"
 								v-on="controls.ADDRE___ADDREADDRTEXT.handlers" />
 						</base-input-structure>
 					</q-col>
@@ -161,13 +166,15 @@
 						<base-input-structure
 							v-if="controls.ADDRE___ADDREADDRCITY.isVisible"
 							class="i-text"
-							v-bind="controls.ADDRE___ADDREADDRCITY"
+							v-bind="controls.ADDRE___ADDREADDRCITY.wrapperProps"
+							:id="getControlId(controls.ADDRE___ADDREADDRCITY)"
 							v-on="controls.ADDRE___ADDREADDRCITY.handlers"
 							:loading="controls.ADDRE___ADDREADDRCITY.props.loading"
 							:reporting-mode-on="reportingModeCAV"
 							:suggestion-mode-on="suggestionModeOn">
 							<q-text-field
 								v-bind="controls.ADDRE___ADDREADDRCITY.props"
+								:id="getControlId(controls.ADDRE___ADDREADDRCITY)"
 								@blur="onBlur(controls.ADDRE___ADDREADDRCITY, model.ValAddresscity.value)"
 								@change="model.ValAddresscity.fnUpdateValueOnChange" />
 						</base-input-structure>
@@ -177,7 +184,7 @@
 		</q-container>
 	</teleport>
 
-	<hr v-if="!isPopup && showFormFooter" />
+	<q-divider v-if="!isPopup && showFormFooter" />
 
 	<teleport
 		v-if="formModalIsReady && showFormFooter"
@@ -527,7 +534,7 @@
 						size: 'medium',
 						helpControl: {
 							shortHelp: {
-								type: 'Subtext',
+								type: 'subtext',
 								text: computed(() => this.Resources._109631536),
 							},
 						},
@@ -536,8 +543,8 @@
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						maxLength: 7,
 						arrayName: 'AddressU',
-						helpShortItem: '',
-						helpDetailedItem: '',
+						helpShortItem: 'None',
+						helpDetailedItem: 'None',
 						controlLimits: [
 						],
 					}, this),
@@ -549,7 +556,7 @@
 						size: 'medium',
 						helpControl: {
 							shortHelp: {
-								type: 'Subtext',
+								type: 'subtext',
 								text: computed(() => this.Resources._109732431),
 							},
 						},
@@ -558,8 +565,8 @@
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						maxLength: 8,
 						arrayName: 'AddressT',
-						helpShortItem: '',
-						helpDetailedItem: '',
+						helpShortItem: 'None',
+						helpDetailedItem: 'None',
 						controlLimits: [
 						],
 					}, this),
@@ -571,7 +578,7 @@
 						size: 'xxlarge',
 						helpControl: {
 							shortHelp: {
-								type: 'Subtext',
+								type: 'subtext',
 								text: computed(() => this.Resources._109840190),
 							},
 						},
@@ -591,7 +598,7 @@
 						size: 'xlarge',
 						helpControl: {
 							shortHelp: {
-								type: 'Subtext',
+								type: 'subtext',
 								text: computed(() => this.Resources._109937997),
 							},
 						},
@@ -986,7 +993,6 @@
 
 				this.afterControlUpdate(controlField, fieldValue)
 			},
-
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
 // USE /[MANUAL GQT FUNCTIONS_JS ADDRE]/
 // eslint-disable-next-line

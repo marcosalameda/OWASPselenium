@@ -9,12 +9,13 @@
 			<div
 				v-if="showFormHeader"
 				class="c-action-bar">
-				<h1
+				<component
 					v-if="formControl.uiComponents.header && formInfo.designation"
+					:is="topHeadingTag"
 					:id="formTitleId"
 					class="form-header">
 					{{ formInfo.designation }}
-				</h1>
+				</component>
 
 				<div class="c-action-bar__menu">
 					<template
@@ -40,13 +41,10 @@
 									@click="btn.action">
 									<template v-if="btn.icon">
 										<q-badge-indicator
-											v-if="btn.badge && btn.badge.isVisible"
-											:color="btn.badge.color">
+											:enabled="btn.badge?.isVisible ?? false"
+											:color="btn.badge?.color">
 											<q-icon v-bind="btn.icon" />
 										</q-badge-indicator>
-										<q-icon
-											v-else
-											v-bind="btn.icon" />
 									</template>
 								</q-toggle-group-item>
 							</template>
@@ -97,6 +95,7 @@
 		<q-container
 			fluid
 			data-key="UICOM"
+			:data-identifier="primaryKeyValue"
 			:data-loading="!formInitialDataLoaded || !isActiveForm">
 			<template v-if="formControl.initialized && showFormBody">
 				<q-row v-if="controls.UICOM___UICOMTHUMBNAI.isVisible">
@@ -106,7 +105,8 @@
 						<base-input-structure
 							v-if="controls.UICOM___UICOMTHUMBNAI.isVisible"
 							class="q-image"
-							v-bind="controls.UICOM___UICOMTHUMBNAI"
+							v-bind="controls.UICOM___UICOMTHUMBNAI.wrapperProps"
+							:id="getControlId(controls.UICOM___UICOMTHUMBNAI)"
 							v-on="controls.UICOM___UICOMTHUMBNAI.handlers"
 							:loading="controls.UICOM___UICOMTHUMBNAI.props.loading"
 							:reporting-mode-on="reportingModeCAV"
@@ -114,6 +114,7 @@
 							<q-image
 								v-if="controls.UICOM___UICOMTHUMBNAI.isVisible"
 								v-bind="controls.UICOM___UICOMTHUMBNAI.props"
+								:id="getControlId(controls.UICOM___UICOMTHUMBNAI)"
 								v-on="controls.UICOM___UICOMTHUMBNAI.handlers" />
 						</base-input-structure>
 					</q-col>
@@ -125,26 +126,30 @@
 						<base-input-structure
 							v-if="controls.UICOM___UICOMNAME____.isVisible"
 							class="i-text"
-							v-bind="controls.UICOM___UICOMNAME____"
+							v-bind="controls.UICOM___UICOMNAME____.wrapperProps"
+							:id="getControlId(controls.UICOM___UICOMNAME____)"
 							v-on="controls.UICOM___UICOMNAME____.handlers"
 							:loading="controls.UICOM___UICOMNAME____.props.loading"
 							:reporting-mode-on="reportingModeCAV"
 							:suggestion-mode-on="suggestionModeOn">
 							<q-text-field
 								v-bind="controls.UICOM___UICOMNAME____.props"
+								:id="getControlId(controls.UICOM___UICOMNAME____)"
 								@blur="onBlur(controls.UICOM___UICOMNAME____, model.ValName.value)"
 								@change="model.ValName.fnUpdateValueOnChange" />
 						</base-input-structure>
 						<base-input-structure
 							v-if="controls.UICOM___UICOMCATEGORY.isVisible"
 							class="i-text"
-							v-bind="controls.UICOM___UICOMCATEGORY"
+							v-bind="controls.UICOM___UICOMCATEGORY.wrapperProps"
+							:id="getControlId(controls.UICOM___UICOMCATEGORY)"
 							v-on="controls.UICOM___UICOMCATEGORY.handlers"
 							:loading="controls.UICOM___UICOMCATEGORY.props.loading"
 							:reporting-mode-on="reportingModeCAV"
 							:suggestion-mode-on="suggestionModeOn">
 							<q-text-field
 								v-bind="controls.UICOM___UICOMCATEGORY.props"
+								:id="getControlId(controls.UICOM___UICOMCATEGORY)"
 								@blur="onBlur(controls.UICOM___UICOMCATEGORY, model.ValCategory.value)"
 								@change="model.ValCategory.fnUpdateValueOnChange" />
 						</base-input-structure>
@@ -157,13 +162,15 @@
 						<base-input-structure
 							v-if="controls.UICOM___UICOMMENUID__.isVisible"
 							class="i-text"
-							v-bind="controls.UICOM___UICOMMENUID__"
+							v-bind="controls.UICOM___UICOMMENUID__.wrapperProps"
+							:id="getControlId(controls.UICOM___UICOMMENUID__)"
 							v-on="controls.UICOM___UICOMMENUID__.handlers"
 							:loading="controls.UICOM___UICOMMENUID__.props.loading"
 							:reporting-mode-on="reportingModeCAV"
 							:suggestion-mode-on="suggestionModeOn">
 							<q-text-field
 								v-bind="controls.UICOM___UICOMMENUID__.props"
+								:id="getControlId(controls.UICOM___UICOMMENUID__)"
 								@blur="onBlur(controls.UICOM___UICOMMENUID__, model.ValMenuid.value)"
 								@change="model.ValMenuid.fnUpdateValueOnChange" />
 						</base-input-structure>
@@ -173,7 +180,7 @@
 		</q-container>
 	</teleport>
 
-	<hr v-if="!isPopup && showFormFooter" />
+	<q-divider v-if="!isPopup && showFormFooter" />
 
 	<teleport
 		v-if="formModalIsReady && showFormFooter"
@@ -949,7 +956,6 @@
 
 				this.afterControlUpdate(controlField, fieldValue)
 			},
-
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
 // USE /[MANUAL GQT FUNCTIONS_JS UICOM]/
 // eslint-disable-next-line

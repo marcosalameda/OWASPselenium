@@ -9,12 +9,13 @@
 			<div
 				v-if="showFormHeader"
 				class="c-action-bar">
-				<h1
+				<component
 					v-if="formControl.uiComponents.header && formInfo.designation"
+					:is="topHeadingTag"
 					:id="formTitleId"
 					class="form-header">
 					{{ formInfo.designation }}
-				</h1>
+				</component>
 
 				<div class="c-action-bar__menu">
 					<template
@@ -40,13 +41,10 @@
 									@click="btn.action">
 									<template v-if="btn.icon">
 										<q-badge-indicator
-											v-if="btn.badge && btn.badge.isVisible"
-											:color="btn.badge.color">
+											:enabled="btn.badge?.isVisible ?? false"
+											:color="btn.badge?.color">
 											<q-icon v-bind="btn.icon" />
 										</q-badge-indicator>
-										<q-icon
-											v-else
-											v-bind="btn.icon" />
 									</template>
 								</q-toggle-group-item>
 							</template>
@@ -97,6 +95,7 @@
 		<q-container
 			fluid
 			data-key="MESSA"
+			:data-identifier="primaryKeyValue"
 			:data-loading="!formInitialDataLoaded || !isActiveForm">
 			<template v-if="formControl.initialized && showFormBody">
 				<q-row v-if="controls.MESSA___MESSAIDNOTIF_.isVisible">
@@ -106,13 +105,15 @@
 						<base-input-structure
 							v-if="controls.MESSA___MESSAIDNOTIF_.isVisible"
 							class="i-text"
-							v-bind="controls.MESSA___MESSAIDNOTIF_"
+							v-bind="controls.MESSA___MESSAIDNOTIF_.wrapperProps"
+							:id="getControlId(controls.MESSA___MESSAIDNOTIF_)"
 							v-on="controls.MESSA___MESSAIDNOTIF_.handlers"
 							:loading="controls.MESSA___MESSAIDNOTIF_.props.loading"
 							:reporting-mode-on="reportingModeCAV"
 							:suggestion-mode-on="suggestionModeOn">
 							<q-text-field
 								v-bind="controls.MESSA___MESSAIDNOTIF_.props"
+								:id="getControlId(controls.MESSA___MESSAIDNOTIF_)"
 								@blur="onBlur(controls.MESSA___MESSAIDNOTIF_, model.ValIdnotif.value)"
 								@change="model.ValIdnotif.fnUpdateValueOnChange" />
 						</base-input-structure>
@@ -125,13 +126,15 @@
 						<base-input-structure
 							v-if="controls.MESSA___MESSAIDMSG___.isVisible"
 							class="i-text"
-							v-bind="controls.MESSA___MESSAIDMSG___"
+							v-bind="controls.MESSA___MESSAIDMSG___.wrapperProps"
+							:id="getControlId(controls.MESSA___MESSAIDMSG___)"
 							v-on="controls.MESSA___MESSAIDMSG___.handlers"
 							:loading="controls.MESSA___MESSAIDMSG___.props.loading"
 							:reporting-mode-on="reportingModeCAV"
 							:suggestion-mode-on="suggestionModeOn">
 							<q-text-field
 								v-bind="controls.MESSA___MESSAIDMSG___.props"
+								:id="getControlId(controls.MESSA___MESSAIDMSG___)"
 								@blur="onBlur(controls.MESSA___MESSAIDMSG___, model.ValIdmsg.value)"
 								@change="model.ValIdmsg.fnUpdateValueOnChange" />
 						</base-input-structure>
@@ -143,8 +146,9 @@
 						cols="auto">
 						<base-input-structure
 							v-if="controls.MESSA___MESSAMAILSENT.isVisible"
-							class="i-checkbox"
-							v-bind="controls.MESSA___MESSAMAILSENT"
+							class="i-text"
+							v-bind="controls.MESSA___MESSAMAILSENT.wrapperProps"
+							:id="getControlId(controls.MESSA___MESSAMAILSENT)"
 							v-on="controls.MESSA___MESSAMAILSENT.handlers"
 							:loading="controls.MESSA___MESSAMAILSENT.props.loading"
 							:reporting-mode-on="reportingModeCAV"
@@ -153,6 +157,7 @@
 								<q-checkbox
 									v-if="controls.MESSA___MESSAMAILSENT.isVisible"
 									v-bind="controls.MESSA___MESSAMAILSENT.props"
+									:id="getControlId(controls.MESSA___MESSAMAILSENT)"
 									v-on="controls.MESSA___MESSAMAILSENT.handlers" />
 							</template>
 						</base-input-structure>
@@ -165,13 +170,15 @@
 						<base-input-structure
 							v-if="controls.MESSA___MESSAMAILERR_.isVisible"
 							class="i-text"
-							v-bind="controls.MESSA___MESSAMAILERR_"
+							v-bind="controls.MESSA___MESSAMAILERR_.wrapperProps"
+							:id="getControlId(controls.MESSA___MESSAMAILERR_)"
 							v-on="controls.MESSA___MESSAMAILERR_.handlers"
 							:loading="controls.MESSA___MESSAMAILERR_.props.loading"
 							:reporting-mode-on="reportingModeCAV"
 							:suggestion-mode-on="suggestionModeOn">
 							<q-text-field
 								v-bind="controls.MESSA___MESSAMAILERR_.props"
+								:id="getControlId(controls.MESSA___MESSAMAILERR_)"
 								@blur="onBlur(controls.MESSA___MESSAMAILERR_, model.ValMailerr.value)"
 								@change="model.ValMailerr.fnUpdateValueOnChange" />
 						</base-input-structure>
@@ -184,7 +191,8 @@
 						<base-input-structure
 							v-if="controls.MESSA___ENTITNAME____.isVisible"
 							class="i-text"
-							v-bind="controls.MESSA___ENTITNAME____"
+							v-bind="controls.MESSA___ENTITNAME____.wrapperProps"
+							:id="getControlId(controls.MESSA___ENTITNAME____)"
 							v-on="controls.MESSA___ENTITNAME____.handlers"
 							:loading="controls.MESSA___ENTITNAME____.props.loading"
 							:reporting-mode-on="reportingModeCAV"
@@ -192,6 +200,7 @@
 							<q-lookup
 								v-if="controls.MESSA___ENTITNAME____.isVisible"
 								v-bind="controls.MESSA___ENTITNAME____.props"
+								:id="getControlId(controls.MESSA___ENTITNAME____)"
 								v-on="controls.MESSA___ENTITNAME____.handlers" />
 							<q-see-more-messa-entitname
 								v-if="controls.MESSA___ENTITNAME____.seeMoreIsVisible"
@@ -207,7 +216,8 @@
 						<base-input-structure
 							v-if="controls.MESSA___PERSONAME____.isVisible"
 							class="i-text"
-							v-bind="controls.MESSA___PERSONAME____"
+							v-bind="controls.MESSA___PERSONAME____.wrapperProps"
+							:id="getControlId(controls.MESSA___PERSONAME____)"
 							v-on="controls.MESSA___PERSONAME____.handlers"
 							:loading="controls.MESSA___PERSONAME____.props.loading"
 							:reporting-mode-on="reportingModeCAV"
@@ -215,6 +225,7 @@
 							<q-lookup
 								v-if="controls.MESSA___PERSONAME____.isVisible"
 								v-bind="controls.MESSA___PERSONAME____.props"
+								:id="getControlId(controls.MESSA___PERSONAME____)"
 								v-on="controls.MESSA___PERSONAME____.handlers" />
 							<q-see-more-messa-personame
 								v-if="controls.MESSA___PERSONAME____.seeMoreIsVisible"
@@ -230,7 +241,8 @@
 						<base-input-structure
 							v-if="controls.MESSA___MESSADOCUM_NR.isVisible"
 							class="i-text"
-							v-bind="controls.MESSA___MESSADOCUM_NR"
+							v-bind="controls.MESSA___MESSADOCUM_NR.wrapperProps"
+							:id="getControlId(controls.MESSA___MESSADOCUM_NR)"
 							v-on="controls.MESSA___MESSADOCUM_NR.handlers"
 							:loading="controls.MESSA___MESSADOCUM_NR.props.loading"
 							:reporting-mode-on="reportingModeCAV"
@@ -238,6 +250,7 @@
 							<q-numeric-input
 								v-if="controls.MESSA___MESSADOCUM_NR.isVisible"
 								v-bind="controls.MESSA___MESSADOCUM_NR.props"
+								:id="getControlId(controls.MESSA___MESSADOCUM_NR)"
 								@update:model-value="model.ValDocum_nr.fnUpdateValue" />
 						</base-input-structure>
 					</q-col>
@@ -247,13 +260,15 @@
 						<base-input-structure
 							v-if="controls.MESSA___MESSADESIGNAT.isVisible"
 							class="i-text"
-							v-bind="controls.MESSA___MESSADESIGNAT"
+							v-bind="controls.MESSA___MESSADESIGNAT.wrapperProps"
+							:id="getControlId(controls.MESSA___MESSADESIGNAT)"
 							v-on="controls.MESSA___MESSADESIGNAT.handlers"
 							:loading="controls.MESSA___MESSADESIGNAT.props.loading"
 							:reporting-mode-on="reportingModeCAV"
 							:suggestion-mode-on="suggestionModeOn">
 							<q-text-field
 								v-bind="controls.MESSA___MESSADESIGNAT.props"
+								:id="getControlId(controls.MESSA___MESSADESIGNAT)"
 								@blur="onBlur(controls.MESSA___MESSADESIGNAT, model.ValDesignat.value)"
 								@change="model.ValDesignat.fnUpdateValueOnChange" />
 						</base-input-structure>
@@ -264,13 +279,15 @@
 						<base-input-structure
 							v-if="controls.MESSA___MESSAEMAIL___.isVisible"
 							class="i-text"
-							v-bind="controls.MESSA___MESSAEMAIL___"
+							v-bind="controls.MESSA___MESSAEMAIL___.wrapperProps"
+							:id="getControlId(controls.MESSA___MESSAEMAIL___)"
 							v-on="controls.MESSA___MESSAEMAIL___.handlers"
 							:loading="controls.MESSA___MESSAEMAIL___.props.loading"
 							:reporting-mode-on="reportingModeCAV"
 							:suggestion-mode-on="suggestionModeOn">
 							<q-text-field
 								v-bind="controls.MESSA___MESSAEMAIL___.props"
+								:id="getControlId(controls.MESSA___MESSAEMAIL___)"
 								@blur="onBlur(controls.MESSA___MESSAEMAIL___, model.ValEmail.value)"
 								@change="model.ValEmail.fnUpdateValueOnChange" />
 						</base-input-structure>
@@ -283,7 +300,8 @@
 						<base-input-structure
 							v-if="controls.MESSA___MESSAMESSAGE_.isVisible"
 							class="i-textarea"
-							v-bind="controls.MESSA___MESSAMESSAGE_"
+							v-bind="controls.MESSA___MESSAMESSAGE_.wrapperProps"
+							:id="getControlId(controls.MESSA___MESSAMESSAGE_)"
 							v-on="controls.MESSA___MESSAMESSAGE_.handlers"
 							:loading="controls.MESSA___MESSAMESSAGE_.props.loading"
 							:reporting-mode-on="reportingModeCAV"
@@ -291,6 +309,7 @@
 							<q-text-area
 								v-if="controls.MESSA___MESSAMESSAGE_.isVisible"
 								v-bind="controls.MESSA___MESSAMESSAGE_.props"
+								:id="getControlId(controls.MESSA___MESSAMESSAGE_)"
 								v-on="controls.MESSA___MESSAMESSAGE_.handlers" />
 						</base-input-structure>
 					</q-col>
@@ -302,13 +321,15 @@
 						<base-input-structure
 							v-if="controls.MESSA___MESSACREATOPE.isVisible"
 							class="i-text"
-							v-bind="controls.MESSA___MESSACREATOPE"
+							v-bind="controls.MESSA___MESSACREATOPE.wrapperProps"
+							:id="getControlId(controls.MESSA___MESSACREATOPE)"
 							v-on="controls.MESSA___MESSACREATOPE.handlers"
 							:loading="controls.MESSA___MESSACREATOPE.props.loading"
 							:reporting-mode-on="reportingModeCAV"
 							:suggestion-mode-on="suggestionModeOn">
 							<q-text-field
 								v-bind="controls.MESSA___MESSACREATOPE.props"
+								:id="getControlId(controls.MESSA___MESSACREATOPE)"
 								@blur="onBlur(controls.MESSA___MESSACREATOPE, model.ValCreatope.value)"
 								@change="model.ValCreatope.fnUpdateValueOnChange" />
 						</base-input-structure>
@@ -319,7 +340,8 @@
 						<base-input-structure
 							v-if="controls.MESSA___MESSACREATDAT.isVisible"
 							class="i-text"
-							v-bind="controls.MESSA___MESSACREATDAT"
+							v-bind="controls.MESSA___MESSACREATDAT.wrapperProps"
+							:id="getControlId(controls.MESSA___MESSACREATDAT)"
 							v-on="controls.MESSA___MESSACREATDAT.handlers"
 							:loading="controls.MESSA___MESSACREATDAT.props.loading"
 							:reporting-mode-on="reportingModeCAV"
@@ -327,6 +349,7 @@
 							<q-date-time-picker
 								v-if="controls.MESSA___MESSACREATDAT.isVisible"
 								v-bind="controls.MESSA___MESSACREATDAT.props"
+								:id="getControlId(controls.MESSA___MESSACREATDAT)"
 								:model-value="model.ValCreatdat.value"
 								@reset-icon-click="model.ValCreatdat.fnUpdateValue(model.ValCreatdat.originalValue ?? new Date())"
 								@update:model-value="model.ValCreatdat.fnUpdateValue($event ?? '')" />
@@ -337,7 +360,7 @@
 		</q-container>
 	</teleport>
 
-	<hr v-if="!isPopup && showFormFooter" />
+	<q-divider v-if="!isPopup && showFormFooter" />
 
 	<teleport
 		v-if="formModalIsReady && showFormFooter"
@@ -1276,7 +1299,6 @@
 
 				this.afterControlUpdate(controlField, fieldValue)
 			},
-
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
 // USE /[MANUAL GQT FUNCTIONS_JS MESSA]/
 // eslint-disable-next-line

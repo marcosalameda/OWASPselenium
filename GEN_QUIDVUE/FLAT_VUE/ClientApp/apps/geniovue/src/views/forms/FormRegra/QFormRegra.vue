@@ -9,12 +9,13 @@
 			<div
 				v-if="showFormHeader"
 				class="c-action-bar">
-				<h1
+				<component
 					v-if="formControl.uiComponents.header && formInfo.designation"
+					:is="topHeadingTag"
 					:id="formTitleId"
 					class="form-header">
 					{{ formInfo.designation }}
-				</h1>
+				</component>
 
 				<div class="c-action-bar__menu">
 					<template
@@ -40,13 +41,10 @@
 									@click="btn.action">
 									<template v-if="btn.icon">
 										<q-badge-indicator
-											v-if="btn.badge && btn.badge.isVisible"
-											:color="btn.badge.color">
+											:enabled="btn.badge?.isVisible ?? false"
+											:color="btn.badge?.color">
 											<q-icon v-bind="btn.icon" />
 										</q-badge-indicator>
-										<q-icon
-											v-else
-											v-bind="btn.icon" />
 									</template>
 								</q-toggle-group-item>
 							</template>
@@ -97,6 +95,7 @@
 		<q-container
 			fluid
 			data-key="REGRA"
+			:data-identifier="primaryKeyValue"
 			:data-loading="!formInitialDataLoaded || !isActiveForm">
 			<template v-if="formControl.initialized && showFormBody">
 				<q-row v-if="controls.REGRA___RULESTIPOCOND.isVisible || controls.REGRA___RULESDESCRIPT.isVisible || controls.REGRA___RULESLOCAL___.isVisible">
@@ -106,7 +105,8 @@
 						<base-input-structure
 							v-if="controls.REGRA___RULESTIPOCOND.isVisible"
 							class="i-text"
-							v-bind="controls.REGRA___RULESTIPOCOND"
+							v-bind="controls.REGRA___RULESTIPOCOND.wrapperProps"
+							:id="getControlId(controls.REGRA___RULESTIPOCOND)"
 							v-on="controls.REGRA___RULESTIPOCOND.handlers"
 							:loading="controls.REGRA___RULESTIPOCOND.props.loading"
 							:reporting-mode-on="reportingModeCAV"
@@ -114,6 +114,7 @@
 							<q-select
 								v-if="controls.REGRA___RULESTIPOCOND.isVisible"
 								v-bind="controls.REGRA___RULESTIPOCOND.props"
+								:id="getControlId(controls.REGRA___RULESTIPOCOND)"
 								@update:model-value="model.ValTipocond.fnUpdateValue" />
 						</base-input-structure>
 					</q-col>
@@ -123,13 +124,15 @@
 						<base-input-structure
 							v-if="controls.REGRA___RULESDESCRIPT.isVisible"
 							class="i-text"
-							v-bind="controls.REGRA___RULESDESCRIPT"
+							v-bind="controls.REGRA___RULESDESCRIPT.wrapperProps"
+							:id="getControlId(controls.REGRA___RULESDESCRIPT)"
 							v-on="controls.REGRA___RULESDESCRIPT.handlers"
 							:loading="controls.REGRA___RULESDESCRIPT.props.loading"
 							:reporting-mode-on="reportingModeCAV"
 							:suggestion-mode-on="suggestionModeOn">
 							<q-text-field
 								v-bind="controls.REGRA___RULESDESCRIPT.props"
+								:id="getControlId(controls.REGRA___RULESDESCRIPT)"
 								@blur="onBlur(controls.REGRA___RULESDESCRIPT, model.ValDescript.value)"
 								@change="model.ValDescript.fnUpdateValueOnChange" />
 						</base-input-structure>
@@ -140,7 +143,8 @@
 						<base-input-structure
 							v-if="controls.REGRA___RULESLOCAL___.isVisible"
 							class="i-text"
-							v-bind="controls.REGRA___RULESLOCAL___"
+							v-bind="controls.REGRA___RULESLOCAL___.wrapperProps"
+							:id="getControlId(controls.REGRA___RULESLOCAL___)"
 							v-on="controls.REGRA___RULESLOCAL___.handlers"
 							:loading="controls.REGRA___RULESLOCAL___.props.loading"
 							:reporting-mode-on="reportingModeCAV"
@@ -148,6 +152,7 @@
 							<q-select
 								v-if="controls.REGRA___RULESLOCAL___.isVisible"
 								v-bind="controls.REGRA___RULESLOCAL___.props"
+								:id="getControlId(controls.REGRA___RULESLOCAL___)"
 								@update:model-value="model.ValLocal.fnUpdateValue" />
 						</base-input-structure>
 					</q-col>
@@ -156,7 +161,7 @@
 		</q-container>
 	</teleport>
 
-	<hr v-if="!isPopup && showFormFooter" />
+	<q-divider v-if="!isPopup && showFormFooter" />
 
 	<teleport
 		v-if="formModalIsReady && showFormFooter"
@@ -509,8 +514,8 @@
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						maxLength: 1,
 						arrayName: 'tipoCond',
-						helpShortItem: '',
-						helpDetailedItem: '',
+						helpShortItem: 'None',
+						helpDetailedItem: 'None',
 						controlLimits: [
 						],
 					}, this),
@@ -556,8 +561,8 @@
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						maxLength: 1,
 						arrayName: 'aLocRegr',
-						helpShortItem: '',
-						helpDetailedItem: '',
+						helpShortItem: 'None',
+						helpDetailedItem: 'None',
 						controlLimits: [
 						],
 					}, this),
@@ -939,7 +944,6 @@
 
 				this.afterControlUpdate(controlField, fieldValue)
 			},
-
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
 // USE /[MANUAL GQT FUNCTIONS_JS REGRA]/
 // eslint-disable-next-line

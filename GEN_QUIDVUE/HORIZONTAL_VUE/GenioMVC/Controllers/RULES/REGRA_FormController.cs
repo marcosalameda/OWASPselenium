@@ -358,8 +358,15 @@ namespace GenioMVC.Controllers
 				PersistentSupport sp = UserContext.Current.PersistentSupport;
 				try
 				{
-					GenioMVC.Models.Rules model = new(UserContext.Current);
-					model.klass.QPrimaryKey = Navigation.GetStrValue("rules");
+					var recordKey = Navigation.GetStrValue("rules");
+					var model = GenioMVC.Models.Rules.Find(recordKey, UserContext.Current);
+					if (model.ValZzstate == 0)
+					{
+						Navigation.ClearValue("rules");
+						string errorMessage = Resources.Resources.ESTE_REGISTO_JA_FOI_02595;
+						Log.Error($"${errorMessage} ID: ${recordKey}");
+						return JsonOK(new { Success = true, currentNavigationLevel = Navigation.CurrentLevel.Level, Warning = errorMessage });
+					}
 
 // USE /[MANUAL GQT BEFORE_CANCEL REGRA]/
 
@@ -391,51 +398,6 @@ namespace GenioMVC.Controllers
 
 		#endregion
 
-
-		public class Regra_Up_rulesValDescriptModel : RequestLookupModel
-		{
-			public Regra_ViewModel Model { get; set; }
-		}
-
-		//
-		// GET: /Rules/Regra_Up_rulesValDescript
-		// POST: /Rules/Regra_Up_rulesValDescript
-		[ActionName("Regra_Up_rulesValDescript")]
-		public ActionResult Regra_Up_rulesValDescript([FromBody] Regra_Up_rulesValDescriptModel requestModel)
-		{
-			var queryParams = requestModel.QueryParams;
-
-			// If there was a recent operation on this table then force the primary persistence server to be called and ignore the read only feature
-			if (string.IsNullOrEmpty(Navigation.GetStrValue("ForcePrimaryRead_up_rules")))
-				UserContext.Current.SetPersistenceReadOnly(true);
-			else
-			{
-				Navigation.DestroyEntry("ForcePrimaryRead_up_rules");
-				UserContext.Current.SetPersistenceReadOnly(false);
-			}
-
-			NameValueCollection requestValues = [];
-			if (queryParams != null)
-			{
-				// Add to request values
-				foreach (var kv in queryParams)
-					requestValues.Add(kv.Key, kv.Value);
-			}
-
-			IsStateReadonly = true;
-
-			Models.Rules parentCtx = requestModel.Model == null ? null : new(m_userContext);
-			requestModel.Model?.Init(m_userContext);
-			requestModel.Model?.MapToModel(parentCtx);
-			Regra_Up_rulesValDescript_ViewModel model = new(m_userContext, parentCtx);
-
-			CSGenio.core.framework.table.TableConfiguration tableConfig = model.GetTableConfig(requestModel.TableConfiguration);
-
-			model.setModes(Request.Query["m"].ToString());
-			model.Load(tableConfig, requestValues, Request.IsAjaxRequest());
-
-			return JsonOK(model);
-		}
 
 		// POST: /Rules/Regra_SaveEdit
 		[HttpPost]

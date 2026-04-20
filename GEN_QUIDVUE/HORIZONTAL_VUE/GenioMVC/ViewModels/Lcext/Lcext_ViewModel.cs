@@ -7,6 +7,7 @@ using GenioMVC.Models.Navigation;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Quidgest.Persistence;
 using Quidgest.Persistence.GenericQuery;
+
 using System.Collections;
 using System.Collections.Concurrent;
 using System.Collections.Specialized;
@@ -35,6 +36,7 @@ namespace GenioMVC.ViewModels.Lcext
 		public string ValCodlocat { get; set; }
 
 		#endregion
+
 		/// <summary>
 		/// Title: "Global Location Number" | Type: "C"
 		/// </summary>
@@ -49,16 +51,9 @@ namespace GenioMVC.ViewModels.Lcext
 		/// </summary>
 		public string ValSpacetyp { get; set; }
 		/// <summary>
-		/// Title: "" | Type: "PSEUD"
-		/// </summary>
-		[JsonIgnore]
-		public SelectList List_ValSpacetyp { get; set; }
-		/// <summary>
 		/// Title: "Space" | Type: "C"
 		/// </summary>
 		public string ValSpaceobs { get; set; }
-
-
 
 		#region Navigations
 		#endregion
@@ -233,12 +228,7 @@ namespace GenioMVC.ViewModels.Lcext
 			}
 		}
 
-		/// <summary>
-		/// Sets the value of a single property of the view model based on the provided table and field names.
-		/// </summary>
-		/// <param name="fullFieldName">The full field name in the format "table.field".</param>
-		/// <param name="value">The field value.</param>
-		/// <exception cref="ArgumentNullException">Thrown if <paramref name="fullFieldName"/> is null.</exception>
+		/// <inheritdoc />
 		public override void SetViewModelValue(string fullFieldName, object value)
 		{
 			try
@@ -372,6 +362,7 @@ namespace GenioMVC.ViewModels.Lcext
 			Characs = new List<string>();
 
 			Load_Lcext___locatgln_____(qs, lazyLoad);
+
 // USE /[MANUAL GQT VIEWMODEL_LOADPARTIAL LCEXT]/
 		}
 
@@ -443,10 +434,7 @@ namespace GenioMVC.ViewModels.Lcext
 				}
 			}
 
-			TableLocatGln = new TableDBEdit<Models.Locat>
-			{
-				IsLazyLoad = lazyLoad
-			};
+			TableLocatGln = new TableDBEdit<Models.Locat>();
 
 			if (lazyLoad)
 			{

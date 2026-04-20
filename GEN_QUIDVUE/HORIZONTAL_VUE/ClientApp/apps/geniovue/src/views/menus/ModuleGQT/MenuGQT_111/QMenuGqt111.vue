@@ -3,22 +3,23 @@
 		v-if="menuModalIsReady"
 		:to="`#${uiContainersId.body}`"
 		:disabled="!menuInfo.isPopup">
-		<form
+		<div
 			class="form-horizontal"
 			@submit.prevent>
 			<q-row-container>
 				<q-table
 					v-bind="controls.menu"
 					v-on="controls.menu.handlers">
+					<template #header>
+						<q-table-config
+							:table-ctrl="controls.menu"
+							v-on="controls.menu.handlers">
+						</q-table-config>
+					</template>
 					<!-- USE /[MANUAL GQT CUSTOM_TABLE GQT_Menu_111]/ -->
 				</q-table>
-
-				<q-table-extra-extension
-					:list-ctrl="controls.menu"
-					:filter-operators="controls.menu.filterOperators"
-					v-on="controls.menu.handlers" />
 			</q-row-container>
-		</form>
+		</div>
 	</teleport>
 
 	<teleport
@@ -211,7 +212,6 @@
 								decimalPlaces: 0,
 								export: 1,
 								array: computed(() => new qProjArrays.QArrayFreqempr(vm.$getResource).elements),
-								arrayType: qProjArrays.QArrayFreqempr.type,
 								arrayDisplayMode: 'ID',
 								pkColumn: 'ValCodequip',
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
@@ -291,7 +291,6 @@
 							searchBarConfig: {
 								visibility: true
 							},
-							filtersVisible: true,
 							allowColumnFilters: true,
 							allowColumnSort: true,
 							crudActions: [
@@ -365,9 +364,7 @@
 									id: 'insert',
 									name: 'insert',
 									title: computed(() => this.Resources.INSERIR43365),
-									icon: {
-										icon: 'add'
-									},
+									icon: { icon: 'add' },
 									isInReadOnly: true,
 									params: {
 										action: vm.openFormAction,
@@ -423,27 +420,28 @@
 								id: 'filter_GQT_Menu_111_DEVOLUCAO',
 								isMultiple: false,
 								items: [
-									{
-										id: 'filter_GQT_Menu_111_DEVOLUCAO_1',
-										value: computed(() => this.Resources.FOR_RETURNING61907),
-										key: '1'
-									},
-									{
-										id: 'filter_GQT_Menu_111_DEVOLUCAO_2',
-										value: computed(() => this.Resources.RETURNED01606),
-										key: '2'
-									},
-									{
-										id: 'filter_GQT_Menu_111_DEVOLUCAO_3',
-										value: computed(() => this.Resources.ALL38603),
-										key: '3'
-									},
 								],
-								selected: '1',
-								default: '1'
+								selected: undefined,
+								default: undefined
+							},
+							{
+								id: 'filter_GQT_Menu_111_DEVOLUCAO',
+								isMultiple: false,
+								items: [
+								],
+								selected: undefined,
+								default: undefined
+							},
+							{
+								id: 'filter_GQT_Menu_111_DEVOLUCAO',
+								isMultiple: false,
+								items: [
+								],
+								selected: undefined,
+								default: undefined
 							},
 						],
-						globalEvents: ['changed-PESS2', 'changed-LENDI', 'changed-PESS1', 'changed-EQUIP'],
+						globalEvents: ['changed-PESS1', 'changed-LENDI', 'changed-EQUIP', 'changed-PESS2'],
 						uuid: 'd8250c34-a862-4c8d-8eed-1e2a4fabb9a0',
 						allSelectedRows: 'false',
 						headerLevel: 1,

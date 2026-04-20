@@ -3,12 +3,12 @@
 		:id="controlId"
 		ref="mainWrapper"
 		v-bind="wrapperAttrs"
-		:class="[{ draggable: reportingModeOn }, classObject.labelPosition]"
+		:class="[{ draggable: reportingModeOn }, labelPositionClass]"
 		:data-draggable="reportingModeOn"
 		:data-loading="loading">
 		<div
 			v-if="hasLabelContainer"
-			:class="[classObject.labelContainerFlex, ...classes]">
+			:class="['label-container', ...classes]">
 			<slot
 				v-if="labelPosition !== labelAlignment.left"
 				name="label" />
@@ -19,7 +19,7 @@
 				v-bind="labelAttrs"
 				:for="id"
 				:data-val-required="isRequired && !(readonly || disabled)"
-				:class="[{ disabled: disabled }, ...(classObject.labelClass || [])]">
+				:class="{ disabled: disabled }">
 				{{ label }}
 			</label>
 
@@ -176,14 +176,6 @@
 			},
 
 			/**
-			 * Set flexbox to display inline if true.
-			 */
-			dFlexInline: {
-				type: Boolean,
-				default: false
-			},
-
-			/**
 			 * An array of additional CSS classes to apply to the component.
 			 */
 			classes: {
@@ -258,14 +250,6 @@
 
 				controlId: `container-${props.id ?? 'undefined'}`,
 
-				classObject: {
-					labelPosition:
-						_isEmpty(props.label) || _isEmpty(props.labelPosition)
-							? ''
-							: `label${props.labelPosition}`,
-					labelContainerFlex: props.dFlexInline ? 'label-container--inline' : 'label-container'
-				},
-
 				wrapperAttrs: {
 					class: ctx.attrs.class ?? ''
 				},
@@ -293,6 +277,16 @@
 			labelId()
 			{
 				return `label_${this.id}`
+			},
+
+			/**
+			 * The class that determines the label position.
+			 */
+			labelPositionClass()
+			{
+				return _isEmpty(this.label) || _isEmpty(this.labelPosition)
+					? ''
+					: `label${this.labelPosition}`
 			},
 
 			/**
@@ -331,7 +325,7 @@
 			},
 
 			hasLabelSlot() {
-				return !!this.$slots.label;
+				return !!this.$slots.label
 			},
 
 			hasLabelContainer() {

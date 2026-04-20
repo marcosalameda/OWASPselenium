@@ -405,7 +405,6 @@ public class TestTableConfiguration
 		tableConfig.Name = "TestConfig";
 		tableConfig.Version = 5;
 		tableConfig.Uuid = "test-uuid-123";
-		tableConfig.FieldFilters = new Dictionary<string, object> { { "key", "value" } };
 
 		// Act
 		string result = tableConfig.SerializeAsJson();
@@ -413,7 +412,6 @@ public class TestTableConfiguration
 		// Assert
 		Assert.That(result, Does.Not.Contain("Version"));
 		Assert.That(result, Does.Not.Contain("Uuid"));
-		Assert.That(result, Does.Not.Contain("FieldFilters"));
 	}
 
 	#endregion

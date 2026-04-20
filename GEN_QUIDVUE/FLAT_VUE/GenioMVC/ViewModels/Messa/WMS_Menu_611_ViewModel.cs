@@ -216,6 +216,8 @@ namespace GenioMVC.ViewModels.Messa
 
 			crs.SubSets.Add(subfilters);
 
+			// Form field filters
+			crs.SubSets.Add(ProcessFieldFilters(tableConfig.GlobalFilters));
 
 			crs.SubSets.Add(GetCustomizedStaticLimits(StaticLimits));
 
@@ -344,12 +346,11 @@ namespace GenioMVC.ViewModels.Messa
 
 			FieldRef[] fields = new FieldRef[] { CSGenioAmessa.FldCodmessa, CSGenioAmessa.FldZzstate, CSGenioAmessa.FldIdnotif, CSGenioAmessa.FldIdmsg, CSGenioAmessa.FldDesignat, CSGenioAmessa.FldEmail, CSGenioAmessa.FldMessage, CSGenioAmessa.FldMailsent, CSGenioAmessa.FldMailerr, CSGenioAmessa.FldCreatope, CSGenioAmessa.FldCreatdat, CSGenioAmessa.FldCodentit, CSGenioAentit.FldCodentit, CSGenioAentit.FldName, CSGenioAmessa.FldCodperso, CSGenioAperso.FldCodperso, CSGenioAperso.FldName, CSGenioAmessa.FldDocum_nr };
 
-
-			// Totalizers
-			List<FieldRef> fieldsWithTotalizers = fields.Where(field => tableConfig.TotalizerColumns.Contains(field.FullName)).ToList();
+			// List of column names that should display totalized (aggregated) values.
+			List<string> totalizerColumns = [];
+			List<FieldRef> fieldsWithTotalizers = [.. fields.Where(field => totalizerColumns.Contains(field.FullName))];
 
 			FieldRef firstVisibleColumn = null;
-
 			if (sorts.Count == 0)
 			{
 				firstVisibleColumn = tableConfig?.GetFirstVisibleColumn(TableAlias);

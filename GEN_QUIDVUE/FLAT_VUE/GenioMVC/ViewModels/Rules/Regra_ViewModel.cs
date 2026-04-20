@@ -1,20 +1,20 @@
-﻿using JsonIgnoreAttribute = System.Text.Json.Serialization.JsonIgnoreAttribute;
+﻿using CSGenio.business;
+using CSGenio.framework;
+using CSGenio.persistence;
+using GenioMVC.Helpers;
+using GenioMVC.Models.Exception;
+using GenioMVC.Models.Navigation;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Quidgest.Persistence;
+using Quidgest.Persistence.GenericQuery;
+
 using System.Collections;
 using System.Collections.Concurrent;
 using System.Collections.Specialized;
 using System.ComponentModel.DataAnnotations;
 using System.Data;
 using System.Globalization;
-
-using CSGenio.business;
-using CSGenio.framework;
-using CSGenio.persistence;
-using GenioMVC.Helpers;
-using GenioMVC.Models.Exception;
-using GenioMVC.Models.Navigation;
-using Quidgest.Persistence;
-using Quidgest.Persistence.GenericQuery;
+using System.Text.Json.Serialization;
 
 namespace GenioMVC.ViewModels.Rules
 {
@@ -32,15 +32,11 @@ namespace GenioMVC.ViewModels.Rules
 		#region Foreign keys
 
 		#endregion
+
 		/// <summary>
 		/// Title: "Condition type" | Type: "AC"
 		/// </summary>
 		public string ValTipocond { get; set; }
-		/// <summary>
-		/// Title: "" | Type: "PSEUD"
-		/// </summary>
-		[JsonIgnore]
-		public SelectList List_ValTipocond { get; set; }
 		/// <summary>
 		/// Title: "Description" | Type: "C"
 		/// </summary>
@@ -49,13 +45,6 @@ namespace GenioMVC.ViewModels.Rules
 		/// Title: "Local onde executa" | Type: "AC"
 		/// </summary>
 		public string ValLocal { get; set; }
-		/// <summary>
-		/// Title: "" | Type: "PSEUD"
-		/// </summary>
-		[JsonIgnore]
-		public SelectList List_ValLocal { get; set; }
-
-
 
 		#region Navigations
 		#endregion
@@ -339,12 +328,7 @@ namespace GenioMVC.ViewModels.Rules
 			}
 		}
 
-		/// <summary>
-		/// Sets the value of a single property of the view model based on the provided table and field names.
-		/// </summary>
-		/// <param name="fullFieldName">The full field name in the format "table.field".</param>
-		/// <param name="value">The field value.</param>
-		/// <exception cref="ArgumentNullException">Thrown if <paramref name="fullFieldName"/> is null.</exception>
+		/// <inheritdoc />
 		public override void SetViewModelValue(string fullFieldName, object value)
 		{
 			try
@@ -473,6 +457,7 @@ namespace GenioMVC.ViewModels.Rules
 			}
 			// Add characteristics
 			Characs = new List<string>();
+
 
 // USE /[MANUAL GQT VIEWMODEL_LOADPARTIAL REGRA]/
 		}

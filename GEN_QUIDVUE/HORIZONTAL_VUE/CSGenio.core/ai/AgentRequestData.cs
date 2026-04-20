@@ -11,10 +11,19 @@ public class AgentRequestData
     public string SystemPrompt { get; set; }
     public string Project { get; set; }
     public List<DBFile> Files { get; set; }
+    public string McpUrl { get; set; }
 
     public AgentContextData AgentContextData { get; set; }
 
-    public AgentRequestData(object jsonSchema, string prompt, string systemPrompt, string project, List<DBFile> files, AgentContextData agentContextData)
+    public AgentRequestData(
+        object jsonSchema,
+        string prompt,
+        string systemPrompt,
+        string project,
+        List<DBFile> files,
+        AgentContextData agentContextData,
+        string mcpUrl
+    )
     {
         JsonSchema = jsonSchema;
         Prompt = prompt;
@@ -22,6 +31,7 @@ public class AgentRequestData
         Project = project;
         Files = files;
         AgentContextData = agentContextData;
+        McpUrl = mcpUrl;
     }
 
     /// <summary>

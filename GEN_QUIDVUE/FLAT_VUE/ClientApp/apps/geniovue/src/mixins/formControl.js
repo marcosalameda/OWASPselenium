@@ -238,7 +238,7 @@ export class FormControl
 	 */
 	initListOnDBChangeEvent()
 	{
-		for (let tableName of this.vueContext.tableFields ?? [])
+		for (const tableName of this.vueContext.tableFields ?? [])
 		{
 			const table = this.vueContext.controls[tableName]
 			if (_isEmpty(table))
@@ -270,7 +270,7 @@ export class FormControl
 	 */
 	removeListOnDBChangeEvent()
 	{
-		for (let tableName of this.vueContext.tableFields ?? [])
+		for (const tableName of this.vueContext.tableFields ?? [])
 		{
 			const table = this.vueContext.controls[tableName]
 			if (!_isEmpty(table))

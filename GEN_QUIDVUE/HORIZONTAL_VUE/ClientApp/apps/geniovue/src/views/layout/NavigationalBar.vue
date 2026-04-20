@@ -40,6 +40,7 @@
 				size="fit-content"
 				:items="availableSystems"
 				:groups="availableSystemsGroups"
+				:aria-label="texts.systemYears"
 				@update:model-value="selectSystem">
 				<template #prepend>
 					<q-icon icon="system-choice" />
@@ -96,7 +97,7 @@
 			</div>
 
 			<div
-				v-if="!mobileLayoutActive && $app.layout.LogonPlacement === 'in_navmenu'"
+				v-if="(!mobileLayoutActive && $app.layout.LogonPlacement === 'in_navmenu') || !$app.layout.HeaderEnable"
 				class="navmenu__container">
 				<embedded-menu />
 			</div>

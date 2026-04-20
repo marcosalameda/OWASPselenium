@@ -83,6 +83,7 @@ export default class ViewModel extends FormViewModelBase
 			field: 'YEAR',
 			maxLength: 4,
 			description: computed(() => this.Resources.YEAR61794),
+			ignoreFldSubmit: true,
 		}).cloneFrom(values?.TableYear1Year))
 		this.stopWatchers.push(watch(() => this.TableYear1Year.value, (newValue, oldValue) => this.onUpdate('year1.year', this.TableYear1Year, newValue, oldValue)))
 

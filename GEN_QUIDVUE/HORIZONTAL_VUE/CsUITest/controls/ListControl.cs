@@ -1,4 +1,3 @@
-using quidgest.uitests.pages.common;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -19,17 +18,12 @@ public class ListControl : ControlObject
     /// <summary>
     /// Column elements
     /// </summary>
-	private IList<IWebElement> columns => m_control.FindElements(By.CssSelector("thead th"));
-
-    /// <summary>
-    /// Ordering column name
-    /// </summary>
-    private string orderingColumnName => m_control.FindElement(By.CssSelector(".thead-order"))?.GetAttribute("data-column-name");
+    private IList<IWebElement> columns => m_control.FindElements(By.CssSelector("thead th"));
 
     /// <summary>
     /// Insert button
     /// </summary>
-    private IWebElement insertBtn => m_control.FindElement(By.CssSelector("[data-testid=table-action][data-action-key='insert']"));
+    private IWebElement insertBtn => GetElement(m_control, By.CssSelector("[data-key='insert']"));
 
     /// <summary>
     /// Loading state
@@ -44,17 +38,17 @@ public class ListControl : ControlObject
     /// <summary>
     /// Table configuration menu button and items
     /// </summary>
-    private IWebElement configBtn => GetElement(m_control, ByData.Testid("table-config"));
+    private IWebElement configBtn => GetElement(m_control, ByData.Testid("table-config-details"));
 
     /// <summary>
     /// Column config button
     /// </summary>
-    private IWebElement columnConfigBtn => GetElement(m_control, By.CssSelector("[data-action-key='column-config']"));
+    private IWebElement columnConfigBtn => GetElement(driver, By.CssSelector("li[data-key='columns']"));
 
     /// <summary>
     /// Column config button
     /// </summary>
-    private IWebElement filtersBtn => GetElement(m_control, By.CssSelector("[data-action-key='advanced-filters']"));
+    private IWebElement filtersBtn => GetElement(driver, By.CssSelector("li[data-key='filters']"));
 
     /// <summary>
     /// Table row reorder mode toggle button
@@ -72,8 +66,8 @@ public class ListControl : ControlObject
     public bool CanInsert => insertBtn.Enabled;
 
     /// <summary>
-	/// Row count
-	/// </summary>
+    /// Row count
+    /// </summary>
     public int RowCount
     {
         get
@@ -142,22 +136,6 @@ public class ListControl : ControlObject
             column_locator = CapFirst(parts[0]) + ".Val" + CapFirst(parts[1]);
 
         return columns.FindIndex(h => h.GetAttribute("data-column-name") == column_locator);
-    }
-
-    /// <summary>
-    /// Get a column's header element from it's name
-    /// </summary>
-    /// <param name="fieldRef">Column's name</param>
-    /// <returns>Column element</returns>
-    private IWebElement GetColumnHeader(string fieldRef)
-    {
-        int index = GetRawColumnIndex(fieldRef);
-
-        // Bounds checking
-        if (index < 0 || index >= columns.Count)
-            return null;
-
-        return columns[index];
     }
 
     /// <summary>
@@ -317,7 +295,7 @@ public class ListControl : ControlObject
             if (dropdownButton.Count() > 0)
                 dropdownButton[0].Click();
 
-            var actionButton = driver.FindElement(By.CssSelector("[role=listbox] [role=option][data-key='" + action + "']"));
+            var actionButton = GetElement(driver, By.CssSelector("[role=listbox] [role=option][data-key='" + action + "']"));
 
             actionButton.Click();
         }
@@ -375,7 +353,7 @@ public class ListControl : ControlObject
     {
         // OpenDropdown waits for loading
         OpenDropdown(rowIndex);
-        var actionButtons = driver.FindElement(ByData.Testid("dropdown-content")).FindElements(By.CssSelector("[role=listbox] [role=option]"));
+        var actionButtons = GetElement(driver, ByData.Testid("dropdown-content")).FindElements(By.CssSelector("[role=listbox] [role=option]"));
 
         return actionButtons.Count;
     }
@@ -389,11 +367,10 @@ public class ListControl : ControlObject
     {
         // The element index starts at 0, it's always 1 less than the column order value
         int newOrderValue = newIndex + 1;
-
-        // Get the input for the column order field and change it's value
-        string inputId = $"{id}_{currentIndex}_{orderingColumnName}";
+        // Get the row identifier
         string rowId = $"{id}_row-{currentIndex}";
-        BaseInputControl rowOrderInput = new BaseInputControl(driver, By.Id($"{rowId}"), $"{rowId}", $"#{inputId}");
+
+        BaseInputControl rowOrderInput = new BaseInputControl(driver, By.Id(rowId), rowId, "[data-testid='column-config-order']");
         rowOrderInput.SetValue(newOrderValue.ToString());
 
         // Confirm the value
@@ -421,7 +398,7 @@ public class ListControl : ControlObject
     public void SortTable(int index)
     {
         WaitForLoading();
-        var header = m_control.FindElement(By.CssSelector("thead tr"));
+        var header = GetElement(m_control, By.CssSelector("thead tr"));
         var cells = header.FindElements(By.CssSelector("th"));
 
         cells[index].Click();
@@ -451,12 +428,12 @@ public class ListControl : ControlObject
     }
 
     /// <summary>
-	/// Add a filter
-	/// </summary>
+    /// Add a filter
+    /// </summary>
     /// <param name="columnName">Column's name</param>
     /// <param name="operation">Operator</param>
     /// <param name="value">Value</param>
-	public void AddFilter(string columnName, string operation, string value)
+    public void AddFilter(string columnName, string operation, string value)
     {
         configBtn?.Click();
 
@@ -474,7 +451,18 @@ public class ListControl : ControlObject
         filterPopup.Operation.SetValue(operation);
         filterPopup.Value.SetValue(value);
 
-        filterPopup.Save.Click();
+        try
+        {
+            // For certain field types (like dates), SetValue triggers an implicit Enter key
+            // press, which immediately submits the filters. When that happens, the Save button
+            // is no longer present in the DOM, so attempting to click it would throw an exception.
+            // We safely ignore that case because the filter has already been submitted.
+            filterPopup.Save.Click();
+        }
+        catch { }
+
+        // Wait until the configuration popup closes.
+        wait.Until(driver => GetElement(driver, By.CssSelector(".q-table-config")) == null);
     }
 
     /// <summary>
@@ -483,7 +471,7 @@ public class ListControl : ControlObject
     public void ClearFilters()
     {
         WaitForLoading();
-        var clearFilters = m_container.FindElements(By.CssSelector("[data-testid='clear-filters']"));
+        var clearFilters = m_container.FindElements(ByData.Testid("clear-filters"));
         if (clearFilters.Count > 0)
         {
             TestContext.WriteLine($"Clearing filters in list {id}");

@@ -17,7 +17,6 @@ using GenioMVC.Models;
 using GenioMVC.Models.Exception;
 using GenioMVC.Models.Navigation;
 using GenioMVC.Resources;
-using GenioMVC.ViewModels.Asspa;
 using Quidgest.Persistence.GenericQuery;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -28,82 +27,6 @@ namespace GenioMVC.Controllers
 {
 	public partial class AsspaController : ControllerBase
 	{
-		private static readonly NavigationLocation ACTION_TBS_MENU_1B1 = new NavigationLocation("ASSET_PARAMETERS20615", "TBS_Menu_1B1", "Asspa") { vueRouteName = "menu-TBS_1B1" };
-
-
-		//
-		// GET: /Asspa/TBS_Menu_1B1
-		[ActionName("TBS_Menu_1B1")]
-		[HttpPost]
-		public ActionResult TBS_Menu_1B1([FromBody] RequestMenuModel requestModel)
-		{
-			var queryParams = requestModel.QueryParams;
-
-			TBS_Menu_1B1_ViewModel model = new(m_userContext);
-
-			CSGenio.core.framework.table.TableConfiguration tableConfig = model.GetTableConfig(
-				requestModel.TableConfiguration,
-				requestModel.UserTableConfigName,
-				requestModel.LoadDefaultView);
-
-			// Determine rows per page
-			tableConfig.RowsPerPage = tableConfig.DetermineRowsPerPage(CSGenio.framework.Configuration.NrRegDBedit, "");
-
-			// Determine what columns have totalizers
-			tableConfig.TotalizerColumns = requestModel.TotalizerColumns;
-
-			// For tables with multiple selection enabled, determine currently selected rows
-			tableConfig.SelectedRows = requestModel.SelectedRows;
-
-			// Add form field filters to the table configuration
-			tableConfig.FieldFilters = requestModel.RelatedFilterValues;
-
-			bool isHomePage = RouteData.Values.ContainsKey("isHomePage") ? (bool)RouteData.Values["isHomePage"] : false;
-			if (isHomePage)
-				Navigation.SetValue("HomePage", "TBS_Menu_1B1");
-
-			//If there was a recent operation on this table then force the primary persistence server to be called and ignore the read only feature
-			if (string.IsNullOrEmpty(Navigation.GetStrValue("ForcePrimaryRead_asspa")))
-				UserContext.Current.SetPersistenceReadOnly(true);
-			else
-			{
-				Navigation.DestroyEntry("ForcePrimaryRead_asspa");
-				UserContext.Current.SetPersistenceReadOnly(false);
-			}
-			CSGenio.framework.StatusMessage result = model.CheckPermissions(FormMode.List);
-			if (result.Status.Equals(CSGenio.framework.Status.E))
-				return PermissionError(result.Message);
-
-			NameValueCollection querystring = [];
-			if (queryParams != null && queryParams.Count > 0)
-				querystring.AddRange(queryParams);
-
-			if (!isHomePage &&
-				(Navigation.CurrentLevel == null || !ACTION_TBS_MENU_1B1.IsSameAction(Navigation.CurrentLevel.Location)) &&
-				Navigation.CurrentLevel.Location.Action != ACTION_TBS_MENU_1B1.Action)
-				CSGenio.framework.Audit.registAction(UserContext.Current.User, Resources.Resources.MENU01948 + " " + Navigation.CurrentLevel.Location.ShortDescription());
-			else if (isHomePage)
-			{
-				CSGenio.framework.Audit.registAction(UserContext.Current.User, Resources.Resources.MENU01948 + " " + ACTION_TBS_MENU_1B1.ShortDescription());
-				Navigation.SetValue("HomePageContainsList", true);
-			}
-
-
-
-// USE /[MANUAL TBS MENU_GET 1B1]/
-
-			try
-			{
-				model.Load(tableConfig, querystring, Request.IsAjaxRequest());
-			}
-			catch (Exception e)
-			{
-				return JsonERROR(HandleException(e), model);
-			}
-
-
-			return JsonOK(model);
-		}
 
 
 

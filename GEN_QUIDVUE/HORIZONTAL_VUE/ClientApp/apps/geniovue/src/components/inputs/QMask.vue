@@ -158,13 +158,26 @@
 
 		mounted()
 		{
-			this.maskaInstance = create(this.$refs.field?.inputRef, this.getTokens())
+			const input = this.$refs.field?.inputRef
+
+			this.maskaInstance = create(input, this.getTokens())
+
+			if (this.maskType === 'UP' || this.maskType === 'LO') {
+				input.addEventListener('input', this.handleTransformInput)
+			}
 		},
 
 		beforeUnmount()
 		{
-			if(typeof this.maskaInstance?.destroy === 'function')
+			const input = this.$refs.field?.inputRef
+
+			if (this.maskType === 'UP' || this.maskType === 'LO') {
+				input?.removeEventListener('input', this.handleTransformInput)
+			}
+
+			if (typeof this.maskaInstance?.destroy === 'function')
 				this.maskaInstance.destroy()
+
 			this.maskaInstance = null
 		},
 
@@ -185,6 +198,33 @@
 		},
 
 		methods: {
+			/**
+			 * Transforms input value to upper/lower case based on maskType ('UP' | 'LO'),
+			 * preserving cursor position and syncing the value via v-model.
+			 *
+			 * @param {InputEvent} e
+			 * @emits update:modelValue
+ 			*/
+			handleTransformInput(e) {
+				const el = e.target
+				const start = el.selectionStart
+				const end = el.selectionEnd
+
+				let val = el.value
+
+				if (this.maskType === 'UP') val = val.toUpperCase()
+				if (this.maskType === 'LO') val = val.toLowerCase()
+
+				if (el.value !== val) {
+					el.value = val
+					el.setSelectionRange(start, end)
+				}
+
+				if (this.modelValue !== val) {
+					this.$emit('update:modelValue', val)
+				}
+			},
+
 			/**
 			 * Determines the configuration for input masking based on the maskType.
 			 * @returns {Object} Configuration object for 'maska' input mask.
@@ -267,7 +307,7 @@
 						customConfig = {
 							mask: 'A*',
 							tokens: {
-								A: { pattern: /.*/, uppercase: true },
+								A: { pattern: /.*/},
 								'*': { repeat: true }
 							}
 						}
@@ -276,7 +316,7 @@
 						customConfig = {
 							mask: 'a*',
 							tokens: {
-								a: { pattern: /.*/, lowercase: true },
+								a: { pattern: /.*/},
 								'*': { repeat: true }
 							}
 						}

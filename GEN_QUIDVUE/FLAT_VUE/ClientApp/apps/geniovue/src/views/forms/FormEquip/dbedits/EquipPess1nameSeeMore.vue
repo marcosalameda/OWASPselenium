@@ -7,7 +7,7 @@
 				v-if="!isTreeMode"
 				v-bind="listCtrl"
 				v-on="listCtrl.handlers">
-				<template #tableTitle>
+				<template #title>
 					<q-toggle-group
 						v-model="currentMode"
 						required
@@ -20,12 +20,17 @@
 						</q-toggle-group-item>
 					</q-toggle-group>
 				</template>
+				<template #header>
+					<q-table-config
+						:table-ctrl="listCtrl"
+						v-on="listCtrl.handlers" />
+				</template>
 			</q-table>
 			<q-table
 				v-else
 				v-bind="treeListCtrl"
 				v-on="treeListCtrl.handlers">
-				<template #tableTitle>
+				<template #title>
 					<q-toggle-group
 						v-model="currentMode"
 						required
@@ -37,6 +42,11 @@
 							<q-icon icon="view-options" />
 						</q-toggle-group-item>
 					</q-toggle-group>
+				</template>
+				<template #header>
+					<q-table-config
+						:table-ctrl="treeListCtrl"
+						v-on="treeListCtrl.handlers" />
 				</template>
 			</q-table>
 		</q-row>
@@ -148,13 +158,8 @@
 					action: 'GetTreeSeeMore',
 					config: {
 						actionsPlacement: 'left',
-						generalActionsPlacement: 'below',
 						showFooter: true,
-						filtersVisible: false,
 						allowColumnSort: false,
-						globalSearch: {
-							visibility: false
-						},
 						rowClickActionInternal: null
 					}
 				}), this)
@@ -313,6 +318,7 @@
 								label: computed(() => this.Resources.NAME31974),
 								dataLength: 85,
 								scrollData: 85,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 						],
 						config: {
@@ -330,7 +336,6 @@
 							searchBarConfig: {
 								visibility: true
 							},
-							filtersVisible: true,
 							allowColumnFilters: true,
 							allowColumnSort: true,
 							generalCustomActions: [
@@ -369,27 +374,17 @@
 						},
 						groupFilters: [
 							{
-								id: 'filter_Equip_Pess1ValName_FILTER1',
-								isMultiple: true,
+								id: 'filter_Equip_Pess1ValName_',
+								isMultiple: false,
 								items: [
-									{
-										id: 'filter_Equip_Pess1ValName_FILTER1_1',
-										value: computed(() => this.Resources.FEMALE46107),
-										key: '1'
-									},
 								],
 								selected: undefined,
 								default: undefined
 							},
 							{
-								id: 'filter_Equip_Pess1ValName_FILTER2',
-								isMultiple: true,
+								id: 'filter_Equip_Pess1ValName_',
+								isMultiple: false,
 								items: [
-									{
-										id: 'filter_Equip_Pess1ValName_FILTER2_1',
-										value: computed(() => this.Resources.MALE32397),
-										key: '1'
-									},
 								],
 								selected: undefined,
 								default: undefined

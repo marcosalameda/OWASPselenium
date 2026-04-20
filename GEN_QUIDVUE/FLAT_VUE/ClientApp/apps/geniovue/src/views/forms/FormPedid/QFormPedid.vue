@@ -9,12 +9,13 @@
 			<div
 				v-if="showFormHeader"
 				class="c-action-bar">
-				<h1
+				<component
 					v-if="formControl.uiComponents.header && formInfo.designation"
+					:is="topHeadingTag"
 					:id="formTitleId"
 					class="form-header">
 					{{ formInfo.designation }}
-				</h1>
+				</component>
 
 				<div class="c-action-bar__menu">
 					<template
@@ -40,13 +41,10 @@
 									@click="btn.action">
 									<template v-if="btn.icon">
 										<q-badge-indicator
-											v-if="btn.badge && btn.badge.isVisible"
-											:color="btn.badge.color">
+											:enabled="btn.badge?.isVisible ?? false"
+											:color="btn.badge?.color">
 											<q-icon v-bind="btn.icon" />
 										</q-badge-indicator>
-										<q-icon
-											v-else
-											v-bind="btn.icon" />
 									</template>
 								</q-toggle-group-item>
 							</template>
@@ -97,6 +95,7 @@
 		<q-container
 			fluid
 			data-key="PEDID"
+			:data-identifier="primaryKeyValue"
 			:data-loading="!formInitialDataLoaded || !isActiveForm">
 			<template v-if="formControl.initialized && showFormBody">
 				<q-row v-if="controls.PEDID___PEDIDDTPEDIDO.isVisible || controls.PEDID___PEDIDNRPEDIDO.isVisible">
@@ -106,7 +105,8 @@
 						<base-input-structure
 							v-if="controls.PEDID___PEDIDDTPEDIDO.isVisible"
 							class="i-text"
-							v-bind="controls.PEDID___PEDIDDTPEDIDO"
+							v-bind="controls.PEDID___PEDIDDTPEDIDO.wrapperProps"
+							:id="getControlId(controls.PEDID___PEDIDDTPEDIDO)"
 							v-on="controls.PEDID___PEDIDDTPEDIDO.handlers"
 							:loading="controls.PEDID___PEDIDDTPEDIDO.props.loading"
 							:reporting-mode-on="reportingModeCAV"
@@ -114,6 +114,7 @@
 							<q-date-time-picker
 								v-if="controls.PEDID___PEDIDDTPEDIDO.isVisible"
 								v-bind="controls.PEDID___PEDIDDTPEDIDO.props"
+								:id="getControlId(controls.PEDID___PEDIDDTPEDIDO)"
 								:model-value="model.ValDtpedido.value"
 								@reset-icon-click="model.ValDtpedido.fnUpdateValue(model.ValDtpedido.originalValue ?? new Date())"
 								@update:model-value="model.ValDtpedido.fnUpdateValue($event ?? '')" />
@@ -121,7 +122,8 @@
 						<base-input-structure
 							v-if="controls.PEDID___PEDIDNRPEDIDO.isVisible"
 							class="i-text"
-							v-bind="controls.PEDID___PEDIDNRPEDIDO"
+							v-bind="controls.PEDID___PEDIDNRPEDIDO.wrapperProps"
+							:id="getControlId(controls.PEDID___PEDIDNRPEDIDO)"
 							v-on="controls.PEDID___PEDIDNRPEDIDO.handlers"
 							:loading="controls.PEDID___PEDIDNRPEDIDO.props.loading"
 							:reporting-mode-on="reportingModeCAV"
@@ -129,6 +131,7 @@
 							<q-numeric-input
 								v-if="controls.PEDID___PEDIDNRPEDIDO.isVisible"
 								v-bind="controls.PEDID___PEDIDNRPEDIDO.props"
+								:id="getControlId(controls.PEDID___PEDIDNRPEDIDO)"
 								@update:model-value="model.ValNrpedido.fnUpdateValue" />
 						</base-input-structure>
 					</q-col>
@@ -140,7 +143,8 @@
 						<base-input-structure
 							v-if="controls.PEDID___PEDIDMOTIVO__.isVisible"
 							class="i-textarea"
-							v-bind="controls.PEDID___PEDIDMOTIVO__"
+							v-bind="controls.PEDID___PEDIDMOTIVO__.wrapperProps"
+							:id="getControlId(controls.PEDID___PEDIDMOTIVO__)"
 							v-on="controls.PEDID___PEDIDMOTIVO__.handlers"
 							:loading="controls.PEDID___PEDIDMOTIVO__.props.loading"
 							:reporting-mode-on="reportingModeCAV"
@@ -148,6 +152,7 @@
 							<q-text-area
 								v-if="controls.PEDID___PEDIDMOTIVO__.isVisible"
 								v-bind="controls.PEDID___PEDIDMOTIVO__.props"
+								:id="getControlId(controls.PEDID___PEDIDMOTIVO__)"
 								v-on="controls.PEDID___PEDIDMOTIVO__.handlers" />
 						</base-input-structure>
 					</q-col>
@@ -159,12 +164,13 @@
 						<q-table
 							v-if="controls.PEDID___PSEUDLINHAS__.isVisible"
 							v-bind="controls.PEDID___PSEUDLINHAS__"
+							:id="getControlId(controls.PEDID___PSEUDLINHAS__)"
 							v-on="controls.PEDID___PSEUDLINHAS__.handlers">
-						<q-table-extra-extension
-							v-if="controls.PEDID___PSEUDLINHAS__.isVisible"
-							:list-ctrl="controls.PEDID___PSEUDLINHAS__"
-							:filter-operators="controls.PEDID___PSEUDLINHAS__.filterOperators"
-							v-on="controls.PEDID___PSEUDLINHAS__.handlers" />
+							<template #header>
+								<q-table-config
+									:table-ctrl="controls.PEDID___PSEUDLINHAS__"
+									v-on="controls.PEDID___PSEUDLINHAS__.handlers" />
+							</template>
 							<!-- USE /[MANUAL GQT CUSTOM_TABLE PEDID___PSEUDLINHAS__]/ -->
 						</q-table>
 					</q-col>
@@ -176,12 +182,13 @@
 						<q-table
 							v-if="controls.PEDID___PSEUDDESAGREG.isVisible"
 							v-bind="controls.PEDID___PSEUDDESAGREG"
+							:id="getControlId(controls.PEDID___PSEUDDESAGREG)"
 							v-on="controls.PEDID___PSEUDDESAGREG.handlers">
-						<q-table-extra-extension
-							v-if="controls.PEDID___PSEUDDESAGREG.isVisible"
-							:list-ctrl="controls.PEDID___PSEUDDESAGREG"
-							:filter-operators="controls.PEDID___PSEUDDESAGREG.filterOperators"
-							v-on="controls.PEDID___PSEUDDESAGREG.handlers" />
+							<template #header>
+								<q-table-config
+									:table-ctrl="controls.PEDID___PSEUDDESAGREG"
+									v-on="controls.PEDID___PSEUDDESAGREG.handlers" />
+							</template>
 							<!-- USE /[MANUAL GQT CUSTOM_TABLE PEDID___PSEUDDESAGREG]/ -->
 						</q-table>
 					</q-col>
@@ -193,12 +200,13 @@
 						<q-table
 							v-if="controls.PEDID___PSEUDAGRUPAME.isVisible"
 							v-bind="controls.PEDID___PSEUDAGRUPAME"
+							:id="getControlId(controls.PEDID___PSEUDAGRUPAME)"
 							v-on="controls.PEDID___PSEUDAGRUPAME.handlers">
-						<q-table-extra-extension
-							v-if="controls.PEDID___PSEUDAGRUPAME.isVisible"
-							:list-ctrl="controls.PEDID___PSEUDAGRUPAME"
-							:filter-operators="controls.PEDID___PSEUDAGRUPAME.filterOperators"
-							v-on="controls.PEDID___PSEUDAGRUPAME.handlers" />
+							<template #header>
+								<q-table-config
+									:table-ctrl="controls.PEDID___PSEUDAGRUPAME"
+									v-on="controls.PEDID___PSEUDAGRUPAME.handlers" />
+							</template>
 							<!-- USE /[MANUAL GQT CUSTOM_TABLE PEDID___PSEUDAGRUPAME]/ -->
 						</q-table>
 					</q-col>
@@ -207,7 +215,7 @@
 		</q-container>
 	</teleport>
 
-	<hr v-if="!isPopup && showFormFooter" />
+	<q-divider v-if="!isPopup && showFormFooter" />
 
 	<teleport
 		v-if="formModalIsReady && showFormFooter"
@@ -595,10 +603,11 @@
 					PEDID___PSEUDLINHAS__: new fieldControlClass.TableListControl({
 						id: 'PEDID___PSEUDLINHAS__',
 						name: 'LINHAS',
-						size: '',
+						size: 'small',
 						label: computed(() => this.Resources.LINES35526),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
+						headerLevel: computed(() => this.baseHeadingLevel + 1),
 						controller: 'PEDID',
 						action: 'Pedid_ValLinhas',
 						hasDependencies: false,
@@ -613,6 +622,7 @@
 								scrollData: 3,
 								maxDigits: 3,
 								decimalPlaces: 0,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.NumericColumn({
 								order: 2,
@@ -623,6 +633,7 @@
 								scrollData: 3,
 								maxDigits: 3,
 								decimalPlaces: 0,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 						],
 						config: {
@@ -640,7 +651,6 @@
 							searchBarConfig: {
 								visibility: false
 							},
-							filtersVisible: false,
 							allowColumnFilters: false,
 							allowColumnSort: true,
 							crudActions: [
@@ -714,9 +724,7 @@
 									id: 'insert',
 									name: 'insert',
 									title: computed(() => this.Resources.INSERIR43365),
-									icon: {
-										icon: 'add'
-									},
+									icon: { icon: 'add' },
 									isInReadOnly: false,
 									params: {
 										action: vm.openFormAction,
@@ -763,7 +771,7 @@
 								sortOrder: 'asc'
 							}
 						},
-						globalEvents: ['changed-LNHPD', 'changed-PEDID', 'changed-TPEQU'],
+						globalEvents: ['changed-PEDID', 'changed-LNHPD', 'changed-TPEQU'],
 						uuid: 'Pedid_ValLinhas',
 						allSelectedRows: 'false',
 						controlLimits: [
@@ -778,20 +786,21 @@
 					PEDID___PSEUDDESAGREG: new fieldControlClass.TableListControl({
 						id: 'PEDID___PSEUDDESAGREG',
 						name: 'DESAGREG',
-						size: '',
+						size: 'xxlarge',
 						helpControl: {
 							shortHelp: {
-								type: '',
+								type: 'Subtitle',
 								text: computed(() => this.Resources._110050187),
 							},
 							detailedHelp: {
-								type: '',
+								type: 'Popover',
 								text: computed(() => this.Resources._1100_VERBOSE38633),
 							}
 						},
 						label: computed(() => this.Resources.BREAKDOWN_60448),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
+						headerLevel: computed(() => this.baseHeadingLevel + 1),
 						controller: 'PEDID',
 						action: 'Pedid_ValDesagreg',
 						hasDependencies: false,
@@ -806,6 +815,7 @@
 								scrollData: 3,
 								maxDigits: 3,
 								decimalPlaces: 0,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 2,
@@ -815,6 +825,7 @@
 								label: computed(() => this.Resources.TYPE_OF_EQUIPMENT18080),
 								dataLength: 50,
 								scrollData: 50,
+								export: 1,
 								pkColumn: 'ValCodtpequ',
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.NumericColumn({
@@ -826,6 +837,7 @@
 								scrollData: 3,
 								maxDigits: 3,
 								decimalPlaces: 0,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 						],
 						config: {
@@ -843,7 +855,6 @@
 							searchBarConfig: {
 								visibility: false
 							},
-							filtersVisible: false,
 							allowColumnFilters: false,
 							allowColumnSort: true,
 							crudActions: [
@@ -917,9 +928,7 @@
 									id: 'insert',
 									name: 'insert',
 									title: computed(() => this.Resources.INSERIR43365),
-									icon: {
-										icon: 'add'
-									},
+									icon: { icon: 'add' },
 									isInReadOnly: false,
 									params: {
 										action: vm.openFormAction,
@@ -966,7 +975,7 @@
 								sortOrder: 'asc'
 							}
 						},
-						globalEvents: ['changed-LNHDE', 'changed-TPEQ1', 'changed-LNHPD', 'changed-PEDID', 'changed-LNHAG'],
+						globalEvents: ['changed-LNHDE', 'changed-TPEQ1', 'changed-PEDID', 'changed-LNHAG', 'changed-LNHPD'],
 						uuid: 'Pedid_ValDesagreg',
 						allSelectedRows: 'false',
 						controlLimits: [
@@ -981,10 +990,11 @@
 					PEDID___PSEUDAGRUPAME: new fieldControlClass.TableListControl({
 						id: 'PEDID___PSEUDAGRUPAME',
 						name: 'AGRUPAME',
-						size: '',
+						size: 'xxlarge',
 						label: computed(() => this.Resources.GROUPING_OF_EQUIPMEN34190),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
+						headerLevel: computed(() => this.baseHeadingLevel + 1),
 						controller: 'PEDID',
 						action: 'Pedid_ValAgrupame',
 						hasDependencies: false,
@@ -998,6 +1008,7 @@
 								label: computed(() => this.Resources.TYPE_OF_EQUIPMENT18080),
 								dataLength: 50,
 								scrollData: 50,
+								export: 1,
 								pkColumn: 'ValCodtpequ',
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.NumericColumn({
@@ -1009,6 +1020,7 @@
 								scrollData: 6,
 								maxDigits: 6,
 								decimalPlaces: 0,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 						],
 						config: {
@@ -1026,7 +1038,6 @@
 							searchBarConfig: {
 								visibility: false
 							},
-							filtersVisible: false,
 							allowColumnFilters: false,
 							allowColumnSort: true,
 							crudActions: [
@@ -1100,9 +1111,7 @@
 									id: 'insert',
 									name: 'insert',
 									title: computed(() => this.Resources.INSERIR43365),
-									icon: {
-										icon: 'add'
-									},
+									icon: { icon: 'add' },
 									isInReadOnly: false,
 									params: {
 										action: vm.openFormAction,
@@ -1542,7 +1551,6 @@
 
 				this.afterControlUpdate(controlField, fieldValue)
 			},
-
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
 // USE /[MANUAL GQT FUNCTIONS_JS PEDID]/
 // eslint-disable-next-line

@@ -1,30 +1,28 @@
 <template>
 	<q-dialog
 		v-model="model"
-		class="q-document__popup"
-		:title="texts?.uploadDocVersionHeader"
-		:buttons="buttons"
 		dismissible
-		size="large">
+		class="q-document__popup"
+		size="large"
+		:title="texts?.uploadDocVersionHeader"
+		:buttons="buttons">
 		<template #body>
-			<q-container
-				class="q-document__popup-container"
-				fluid>
-				<q-row>
+			<q-row>
+				<q-col>
 					<q-table
 						:rows="tableRows"
 						:columns="tableColumns"
 						:config="tableConfig"
 						@row-action="findVersionToDownload($event)" />
-				</q-row>
-			</q-container>
+				</q-col>
+			</q-row>
 		</template>
 	</q-dialog>
 </template>
 
 <script setup lang="ts">
 	// Components
-	import { QDialog, QContainer, QRow } from '@quidgest/ui/components'
+	import { QCol, QDialog, QRow } from '@quidgest/ui/components'
 
 	// Utils
 	import { computed } from 'vue'
@@ -149,9 +147,6 @@
 				isInReadOnly: true
 			}
 		],
-		globalSearch: {
-			visibility: false
-		},
 		rowValidation: {
 			// eslint-disable-next-line @typescript-eslint/no-explicit-any
 			fnValidate: (row: any) => row.rowKey?.length > 0,
@@ -161,7 +156,7 @@
 	}
 
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any
-	const findVersionToDownload = (rowData: any) => {
+	const findVersionToDownload = (rowData: any): void => {
 		if (typeof rowData?.rowKey !== 'string') return
 
 		props.versionsInfo.forEach((version) => {

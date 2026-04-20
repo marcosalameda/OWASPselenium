@@ -174,7 +174,7 @@ namespace GenioMVC.ViewModels.Entit
 				new Exports.QColumn(CSGenioAfaci2.FldName, FieldType.TEXT, Resources.Resources.FACILITY_NAME19514, 30, 0, false),
 				new Exports.QColumn(CSGenioAentit.FldLanguage, FieldType.TEXT, Resources.Resources.LANGUAGE16872, 2, 0, false),
 				new Exports.QColumn(CSGenioAentit.FldCurrency, FieldType.TEXT, Resources.Resources.CURRENCY13881, 3, 0, false),
-				new Exports.QColumn(CSGenioAentit.FldOwner, FieldType.TEXT, Resources.Resources.OWNER09558, 30, 0, true),
+				new Exports.QColumn(CSGenioAentit.FldOwner, FieldType.LOGIC, Resources.Resources.OWNER09558, 1, 0, true),
 				new Exports.QColumn(CSGenioAentit.FldCarrier, FieldType.LOGIC, Resources.Resources.CARRIER64855, 1, 0, true),
 				new Exports.QColumn(CSGenioAentit.FldSupplier, FieldType.LOGIC, Resources.Resources.SUPPLIER17230, 1, 0, true),
 			];
@@ -232,6 +232,8 @@ namespace GenioMVC.ViewModels.Entit
 
 			crs.SubSets.Add(subfilters);
 
+			// Form field filters
+			crs.SubSets.Add(ProcessFieldFilters(tableConfig.GlobalFilters));
 
 			crs.SubSets.Add(GetCustomizedStaticLimits(StaticLimits));
 
@@ -360,12 +362,11 @@ namespace GenioMVC.ViewModels.Entit
 
 			FieldRef[] fields = new FieldRef[] { CSGenioAentit.FldCodentit, CSGenioAentit.FldZzstate, CSGenioAentit.FldName, CSGenioAentit.FldInitials, CSGenioAentit.FldRegistra, CSGenioAentit.FldTaxnumbe, CSGenioAentit.FldEmail, CSGenioAentit.FldPhonenum, CSGenioAentit.FldWebsite, CSGenioAentit.FldPerson, CSGenioAentit.FldIban, CSGenioAentit.FldBuilding, CSGenioAentit.FldStreet, CSGenioAentit.FldTown, CSGenioAentit.FldCounty, CSGenioAentit.FldState, CSGenioAentit.FldPobox, CSGenioAentit.FldPostalco, CSGenioAentit.FldTelephon, CSGenioAentit.FldFax, CSGenioAentit.FldContact, CSGenioAentit.FldManufact, CSGenioAentit.FldFounded, CSGenioAentit.FldFirstfacilitie, CSGenioAfaci1.FldCodfacil, CSGenioAfaci1.FldName, CSGenioAentit.FldLastfacilitie, CSGenioAfaci2.FldCodfacil, CSGenioAfaci2.FldName, CSGenioAentit.FldLanguage, CSGenioAentit.FldCurrency, CSGenioAentit.FldOwner, CSGenioAentit.FldCarrier, CSGenioAentit.FldSupplier };
 
-
-			// Totalizers
-			List<FieldRef> fieldsWithTotalizers = fields.Where(field => tableConfig.TotalizerColumns.Contains(field.FullName)).ToList();
+			// List of column names that should display totalized (aggregated) values.
+			List<string> totalizerColumns = [];
+			List<FieldRef> fieldsWithTotalizers = [.. fields.Where(field => totalizerColumns.Contains(field.FullName))];
 
 			FieldRef firstVisibleColumn = null;
-
 			if (sorts.Count == 0)
 			{
 				firstVisibleColumn = tableConfig?.GetFirstVisibleColumn(TableAlias);
@@ -589,7 +590,7 @@ namespace GenioMVC.ViewModels.Entit
 			new TableSearchColumn("Faci2_ValName", CSGenioAfaci2.FldName, typeof(string), visible : false),
 			new TableSearchColumn("ValLanguage", CSGenioAentit.FldLanguage, typeof(string), visible : false),
 			new TableSearchColumn("ValCurrency", CSGenioAentit.FldCurrency, typeof(string), visible : false),
-			new TableSearchColumn("ValOwner", CSGenioAentit.FldOwner, typeof(string)),
+			new TableSearchColumn("ValOwner", CSGenioAentit.FldOwner, typeof(bool)),
 			new TableSearchColumn("ValCarrier", CSGenioAentit.FldCarrier, typeof(bool)),
 			new TableSearchColumn("ValSupplier", CSGenioAentit.FldSupplier, typeof(bool)),
 		];

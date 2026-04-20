@@ -69,7 +69,7 @@ namespace CSGenio.framework
         /// <summary>
         /// Modules
         /// </summary>
-        public static readonly List<string> Modules = ["TBS","WMS","IMO","TRN","STY","PTN","REG","UIS","GQT","XRS"];
+        public static readonly List<string> Modules = ["TBS","WMS","IMO","TRN","STY","PTN","REG","GQT"];
 
         /// <summary>
         /// Currency
@@ -200,15 +200,6 @@ namespace CSGenio.framework
         /// Path for managing the reports
         /// </summary>
         public static string PathReports { get; private set; }
-
-        /// <summary>
-        /// Elasticsearch service configuration
-        /// </summary>
-        public static ElasticsearchXml ElasticsearchXml
-        {
-            get { return elasticsearch; }
-        }
-        private static ElasticsearchXml elasticsearch;
 
         //----------------------------------------------
         // Email configuration
@@ -445,7 +436,6 @@ namespace CSGenio.framework
             Domain = readXML.dominio;
             SSRSServer = readXML.ssrsServer;
 
-            elasticsearch = readXML.Elasticsearch;
             maisPropriedades = readXML.maisPropriedades;
 
             NrRegDBedit = readXML.defaultDBeditRows;

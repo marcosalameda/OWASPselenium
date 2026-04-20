@@ -10,18 +10,18 @@ public class KindeForm : Form
 	/// <summary>
 	/// Kind of equipment
 	/// </summary>
-	public BaseInputControl KindeDesignat => new BaseInputControl(driver, ContainerLocator, "container-KINDE___KINDEDESIGNAT", "#KINDE___KINDEDESIGNAT");
+	public BaseInputControl KindeDesignat => new BaseInputControl(driver, ContainerLocator, "container-KINDE___KINDEDESIGNAT" + IdSuffix, "#KINDE___KINDEDESIGNAT" + IdSuffix);
 
 	/// <summary>
 	/// Parameters
 	/// </summary>
-	public ListControl PseudParamete => new ListControl(driver, ContainerLocator, "#KINDE___PSEUDPARAMETE");
+	public ListControl PseudParamete => new ListControl(driver, ContainerLocator, "#KINDE___PSEUDPARAMETE" + IdSuffix);
 
 	/// <summary>
 	/// Manuals
 	/// </summary>
-	public ListControl PseudManuals => new ListControl(driver, ContainerLocator, "#KINDE___PSEUDMANUALS_");
+	public ListControl PseudManuals => new ListControl(driver, ContainerLocator, "#KINDE___PSEUDMANUALS_" + IdSuffix);
 
-	public KindeForm(IWebDriver driver, FORM_MODE mode, By? containerLocator = null)
-		: base(driver, mode, "KINDE", containerLocator: containerLocator) { }
+	public KindeForm(IWebDriver driver, FORM_MODE mode, By? containerLocator = null, bool usePkInId = false)
+		: base(driver, mode, "KINDE", containerLocator: containerLocator, usePkInId: usePkInId) { }
 }

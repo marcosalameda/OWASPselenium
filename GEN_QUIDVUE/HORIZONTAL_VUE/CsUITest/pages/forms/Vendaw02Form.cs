@@ -10,33 +10,33 @@ public class Vendaw02Form : Form
 	/// <summary>
 	/// Qualification
 	/// </summary>
-	public CollapsibleZoneControl PseudNovogr02 => new CollapsibleZoneControl(driver, ContainerLocator, "#VENDAW02PSEUDNOVOGR02-container");
+	public CollapsibleZoneControl PseudNovogr02 => new CollapsibleZoneControl(driver, ContainerLocator, "#VENDAW02PSEUDNOVOGR02" + IdSuffix + "-container");
 
 	/// <summary>
 	/// Interested
 	/// </summary>
-	public CheckboxInputControl SaleInteress => new CheckboxInputControl(driver, ContainerLocator, "#container-VENDAW02SALE_INTERESS");
+	public CheckboxInputControl SaleInteress => new CheckboxInputControl(driver, ContainerLocator, "#container-VENDAW02SALE_INTERESS" + IdSuffix);
 
 	/// <summary>
 	/// No financial resources
 	/// </summary>
-	public CheckboxInputControl SaleSemrfina => new CheckboxInputControl(driver, ContainerLocator, "#container-VENDAW02SALE_SEMRFINA");
+	public CheckboxInputControl SaleSemrfina => new CheckboxInputControl(driver, ContainerLocator, "#container-VENDAW02SALE_SEMRFINA" + IdSuffix);
 
 	/// <summary>
 	/// No decision-making capacity
 	/// </summary>
-	public CheckboxInputControl SaleSemcapac => new CheckboxInputControl(driver, ContainerLocator, "#container-VENDAW02SALE_SEMCAPAC");
+	public CheckboxInputControl SaleSemcapac => new CheckboxInputControl(driver, ContainerLocator, "#container-VENDAW02SALE_SEMCAPAC" + IdSuffix);
 
 	/// <summary>
 	/// Qualification
 	/// </summary>
-	public DateInputControl SaleDtqualif => new DateInputControl(driver, ContainerLocator, "#VENDAW02SALE_DTQUALIF", "dd/MM/yyyy HH:mm");
+	public DateInputControl SaleDtqualif => new DateInputControl(driver, ContainerLocator, "#VENDAW02SALE_DTQUALIF" + IdSuffix, "dd/MM/yyyy HH:mm");
 
 	/// <summary>
 	/// Qualification carried out
 	/// </summary>
-	public CheckboxInputControl SaleQualific => new CheckboxInputControl(driver, ContainerLocator, "#container-VENDAW02SALE_QUALIFIC");
+	public CheckboxInputControl SaleQualific => new CheckboxInputControl(driver, ContainerLocator, "#container-VENDAW02SALE_QUALIFIC" + IdSuffix);
 
-	public Vendaw02Form(IWebDriver driver, FORM_MODE mode, By? containerLocator = null)
-		: base(driver, mode, "VENDAW02", containerLocator: containerLocator) { }
+	public Vendaw02Form(IWebDriver driver, FORM_MODE mode, By? containerLocator = null, bool usePkInId = false)
+		: base(driver, mode, "VENDAW02", containerLocator: containerLocator, usePkInId: usePkInId) { }
 }

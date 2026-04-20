@@ -8,7 +8,7 @@
 					<img
 						:src="`${$app.resourcesPath}f-login__brand.png?v=${$app.genio.buildVersion}`"
 						alt="" />
-					<p>{{ texts.appName }}</p>
+					<h1>{{ texts.appName }}</h1>
 				</div>
 
 				<p class="q-logon-text">{{ texts.changePassword }}</p>
@@ -18,6 +18,7 @@
 						v-bind="controls.NewPassword"
 						:model-value="model.NewPassword.value"
 						:placeholder="texts.newPassword"
+						:show-password-label="texts.showPassword"
 						:classes="{ error: newPasswordError && showError }"
 						size="block"
 						@update:model-value="updateNewPasswordValue">
@@ -38,6 +39,7 @@
 					<q-password-input
 						v-bind="controls.ConfirmPassword"
 						:placeholder="texts.confirmPassword"
+						:show-password-label="texts.showPassword"
 						:classes="{ error: confirmPasswordError && showError }"
 						size="block"
 						:model-value="model.ConfirmPassword.value"
@@ -167,6 +169,7 @@
 					reset: computed(() => this.Resources[hardcodedTexts.reset]),
 					newPassword: computed(() => this.Resources[hardcodedTexts.newPassword]),
 					confirmPassword: computed(() => this.Resources[hardcodedTexts.confirmPassword]),
+					showPassword: computed(() => this.Resources[hardcodedTexts.showPassword])
 				}
 			}
 		},

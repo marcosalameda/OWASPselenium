@@ -190,7 +190,6 @@ namespace CSGenio.persistence
 	manualQueries.Add("SR_ARTIGO____",new Q_sr_artigo());
 	manualQueries.Add("STOCK________",new Q_stock());
 	manualQueries.Add("DISPATCHALERT",new Q_dispatchalert());
-	manualQueries.Add("EMPTYSEARCHCOUNTRY",new Q_emptysearchcountry());
 
         }
 

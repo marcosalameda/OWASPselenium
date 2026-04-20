@@ -18,6 +18,8 @@ namespace GenioMVC.Controllers.Tblcfg;
 /// <param name="userContextService">Service providing user context information for the current session.</param>
 public class TblcfgController(UserContextService userContextService) : ControllerBase(userContextService)
 {
+	#region Models
+
 	/// <summary>
 	/// Base request model containing the fundamental identifiers needed for table configuration operations.
 	/// </summary>
@@ -80,26 +82,108 @@ public class TblcfgController(UserContextService userContextService) : Controlle
 	{
 		/// <summary>
 		/// Gets or sets the name of the existing configuration to copy from.
-		/// This configuration will serve as the template for the new configuration.
+		/// This configuration will serve as a template for creating the new configuration.
 		/// </summary>
 		public string CopyFromName { get; set; }
 	}
 
 	/// <summary>
+	/// Represents a single configuration entry in a batch configuration operation.
+	/// Used to manage multiple configurations in a single request (create, update, delete, copy, rename).
+	/// </summary>
+	public class RequestConfigEntryModel
+	{
+		/// <summary>
+		/// Gets or sets the new or current name of the configuration.
+		/// </summary>
+		public string Name { get; set; }
+
+		/// <summary>
+		/// Gets or sets the original name of the configuration (if being renamed).
+		/// </summary>
+		/// <remarks>
+		/// When populated, indicates this configuration already exists and may be renamed or have its default status updated.
+		/// When empty, combined with <see cref="BasedOn"/>, indicates a new configuration being created via copy.
+		/// </remarks>
+		public string OldName { get; set; }
+
+		/// <summary>
+		/// Gets or sets whether this configuration should be marked as default.
+		/// Values: 1 = set as default, 0 = not default, -1 = no change to default status.
+		/// </summary>
+		public int IsSelected { get; set; } = -1;
+
+		/// <summary>
+		/// Gets or sets the name of the source configuration to copy from.
+		/// </summary>
+		/// <remarks>
+		/// This configuration entry represents a copy operation where a new configuration with the name
+		/// specified in <see cref="Name"/> will be created by copying this source configuration.
+		/// </remarks>
+		public string BasedOn { get; set; }
+
+		/// <summary>
+		/// Gets or sets a flag indicating whether this configuration should be deleted.
+		/// </summary>
+		/// <remarks>
+		/// Deletions are processed after all other operations to ensure that configurations
+		/// are not deleted while they are being referenced by other operations in the same batch.
+		/// </remarks>
+		public bool Deleted { get; set; }
+	}
+
+	/// <summary>
+	/// Request model for batch saving of multiple table configurations.
+	/// Allows create, update, rename, copy, and delete operations in a single request.
+	/// </summary>
+	/// <remarks>
+	/// <para>
+	/// This model enables efficient batch operations on multiple configurations. The processing order is:
+	/// <list type="number">
+	/// <item><description>Rename existing configurations (where Name differs from OldName)</description></item>
+	/// <item><description>Update default status for existing configurations</description></item>
+	/// <item><description>Copy configurations to create new ones</description></item>
+	/// <item><description>Delete configurations marked for deletion</description></item>
+	/// </list>
+	/// </para>
+	/// <para>
+	/// This order ensures that configurations are not accidentally deleted before being referenced as
+	/// sources for copy operations or before their new names are used.
+	/// </para>
+	/// </remarks>
+	public class RequestSaveConfigListModel
+	{
+		/// <summary>
+		/// Gets or sets the unique identifier of the table whose configurations are being managed.
+		/// All configuration entries in <see cref="ConfigList"/> apply to this table.
+		/// </summary>
+		public string Uuid { get; set; }
+
+		/// <summary>
+		/// Gets or sets the list of configuration entries to process.
+		/// Each entry represents a configuration to be created, updated, renamed, copied, or deleted.
+		/// </summary>
+		public List<RequestConfigEntryModel> ConfigList { get; set; } = [];
+	}
+
+	#endregion
+
+	/// <summary>
 	/// Handles exceptions by extracting appropriate error messages and returning JSON error responses.
 	/// </summary>
 	/// <param name="e">The exception that occurred during the operation.</param>
+	/// <param name="data">Additional data about the error.</param>
 	/// <returns>A JSON error response containing the user-friendly error message.</returns>
 	/// <remarks>
 	/// Business exceptions are handled specially to extract user-friendly messages,
 	/// while other exceptions use their standard message property.
 	/// </remarks>
-	private JsonResult HandleException(Exception e)
+	private JsonResult HandleException(Exception e, object data = null)
 	{
 		string message = e is BusinessException
 			? (e as BusinessException).UserMessage
 			: e.Message;
-		return JsonERROR(message);
+		return JsonERROR(message, data);
 	}
 
 	/// <summary>
@@ -163,6 +247,118 @@ public class TblcfgController(UserContextService userContextService) : Controlle
 	}
 
 	/// <summary>
+	/// Saves or updates multiple table configurations in a single batch operation.
+	/// Efficiently handles create, rename, copy, delete, and default-view flag changes.
+	/// </summary>
+	/// <param name="requestModel">The request model containing the table UUID and list of configuration entries to process.</param>
+	/// <returns>
+	/// A JSON success response if all operations completed successfully,
+	/// or a JSON error response if any operation failed.
+	/// </returns>
+	/// <remarks>
+	/// This endpoint is optimized for scenarios where multiple configuration changes need to be applied together,
+	/// reducing the number of round trips to the server.
+	/// <para>
+	/// Processing sequence (to avoid conflicts):
+	/// <list type="number">
+	/// <item><description>Rename operations: Updates configuration names where <see cref="RequestConfigEntryModel.Name"/> != <see cref="RequestConfigEntryModel.OldName"/></description></item>
+	/// <item><description>Default selection updates: For renamed configs where only default status changed</description></item>
+	/// <item><description>Copy operations: Creates new configurations based on <see cref="RequestConfigEntryModel.BasedOn"/></description></item>
+	/// <item><description>Deletion operations: Deletes all configurations marked with <see cref="RequestConfigEntryModel.Deleted"/> = true</description></item>
+	/// </list>
+	/// </para>
+	/// </remarks>
+	[HttpPost]
+	public ActionResult SaveConfigList([FromBody] RequestSaveConfigListModel requestModel)
+	{
+		List<string> errors = [];
+		User user = m_userContext.User;
+
+		try
+		{
+			// Before starting, clear the default view (necessary when the default is set to the base table)
+			TableConfigurationManager.SelectConfig(user, requestModel.Uuid, "");
+		}
+		catch (Exception e)
+		{
+			string message = e is BusinessException
+				? (e as BusinessException).UserMessage
+				: e.Message;
+			errors.Add(message);
+		}
+
+		// Start by processing the creation of new configurations
+		foreach (RequestConfigEntryModel config in requestModel.ConfigList)
+		{
+			try
+			{
+				// Configurations without an OldName are newly created ones
+				if (!string.IsNullOrWhiteSpace(config.Name) && string.IsNullOrWhiteSpace(config.OldName))
+					TableConfigurationManager.CopyConfig(user, requestModel.Uuid, config.Name, config.IsSelected, config.BasedOn);
+			}
+			catch (Exception e)
+			{
+				string message = e is BusinessException
+					? (e as BusinessException).UserMessage
+					: e.Message;
+				errors.Add(message);
+			}
+		}
+
+		// Process rename and update operations for existing configurations
+		foreach (RequestConfigEntryModel config in requestModel.ConfigList)
+		{
+			// Skip entries with empty names (there should never be any though)
+			if (string.IsNullOrWhiteSpace(config.Name))
+				continue;
+
+			try
+			{
+				// Handle existing configurations (those with an OldName)
+				if (!string.IsNullOrWhiteSpace(config.OldName))
+				{
+					// If names differ, rename the configuration and set the default status in the same operation
+					if (config.Name != config.OldName)
+						TableConfigurationManager.RenameConfig(user, requestModel.Uuid, config.Name, config.IsSelected, config.OldName);
+					// If names are the same but IsSelected is 1, update just the default status
+					else if (config.IsSelected == 1)
+						TableConfigurationManager.SelectConfig(user, requestModel.Uuid, config.Name);
+				}
+			}
+			catch (Exception e)
+			{
+				string message = e is BusinessException
+					? (e as BusinessException).UserMessage
+					: e.Message;
+				errors.Add(message);
+			}
+		}
+
+		// Process deletions only after all other operations, to avoid conflicts with them
+		foreach (RequestConfigEntryModel config in requestModel.ConfigList)
+		{
+			try
+			{
+				if (!string.IsNullOrWhiteSpace(config.Name) && config.Deleted)
+					TableConfigurationManager.DeleteConfig(user, requestModel.Uuid, config.Name);
+			}
+			catch (Exception e)
+			{
+				string message = e is BusinessException
+					? (e as BusinessException).UserMessage
+					: e.Message;
+				errors.Add(message);
+			}
+		}
+
+		return errors.Count == 0
+			? JsonOK()
+			: errors.Count == 1
+				? JsonERROR(errors[0])
+				: JsonERROR(Translations.Get("Ocorreram alguns erros a gravar as vistas:", user.Language), errors);
+	}
+
+	/// <summary>
 	/// Selects a table configuration as the default for the current user,
 	/// or clears the default selection if no configuration name is provided.
 	/// </summary>
@@ -199,13 +395,11 @@ public class TblcfgController(UserContextService userContextService) : Controlle
 	/// </summary>
 	/// <param name="requestModel">The request model containing the table UUID and configuration name to delete.</param>
 	/// <returns>
-	/// A JSON success response with information about whether the deleted configuration was the default,
+	/// A JSON success response if the deletion was successful,
 	/// or a JSON error response if the operation failed.
 	/// </returns>
 	/// <remarks>
 	/// This endpoint permanently removes the specified configuration from the database.
-	/// The response includes a flag indicating whether the deleted configuration was marked as default,
-	/// which can be useful for client-side UI updates.
 	/// The system must not be in maintenance mode for this operation to succeed.
 	/// </remarks>
 	[HttpPost]
@@ -213,11 +407,11 @@ public class TblcfgController(UserContextService userContextService) : Controlle
 	{
 		try
 		{
-			bool deletedDefaultView = TableConfigurationManager.DeleteConfig(
+			TableConfigurationManager.DeleteConfig(
 				m_userContext.User,
 				requestModel.Uuid,
 				requestModel.ConfigName);
-			return JsonOK(new { deletedDefaultView });
+			return JsonOK();
 		}
 		catch (Exception e)
 		{

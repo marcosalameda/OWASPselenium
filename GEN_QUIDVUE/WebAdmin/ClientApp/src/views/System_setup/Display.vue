@@ -60,6 +60,12 @@
 						item-value="Value"
 						item-label="Text"
 						:label="resources.groupSeparatorLabel" />
+					<q-select
+						v-model="model.NegativeFormat"
+						:items="SelectLists.NegativeFormat"
+						item-value="Value"
+						item-label="Text"
+						:label="resources.negativeNumberFormatLabel" />
 				</q-row-container>
 			</q-card>
 		</row>

@@ -140,26 +140,6 @@ namespace GenioMVC.Models
 		[GeographicAttribute("GG")]
 		public string ValGeocoord { get { return klass.ValGeocoord; } set { klass.ValGeocoord = value; } }
 
-		[DisplayName(">> Country")]
-		/// <summary>Field : ">> Country" Tipo: "CE" Formula:  ""</summary>
-		[ShouldSerialize("Facil.ValCodcntry")]
-		public string ValCodcntry { get { return klass.ValCodcntry; } set { klass.ValCodcntry = value; } }
-
-		private Cntry _cntry;
-		[DisplayName("Cntry")]
-		[ShouldSerialize("Cntry")]
-		public virtual Cntry Cntry
-		{
-			get
-			{
-				if (!isEmptyModel && (_cntry == null || (!string.IsNullOrEmpty(ValCodcntry) && (_cntry.isEmptyModel || _cntry.klass.QPrimaryKey != ValCodcntry))))
-					_cntry = Models.Cntry.Find(ValCodcntry, m_userContext, Identifier, _fieldsToSerialize);
-				_cntry ??= new Models.Cntry(m_userContext, true, _fieldsToSerialize);
-				return _cntry;
-			}
-			set { _cntry = value; }
-		}
-
 		[DisplayName("ZZSTATE")]
 		[ShouldSerialize("Facil.ValZzstate")]
 		/// <summary>Field: "ZZSTATE", Type: "INT", Formula: ""</summary>
@@ -198,10 +178,6 @@ namespace GenioMVC.Models
 					case "facty":
 						_facty ??= new Facty(m_userContext, true, _fieldsToSerialize);
 						_facty.klass.insertNameValueField(Qfield.FullName, Qfield.Value);
-						break;
-					case "cntry":
-						_cntry ??= new Cntry(m_userContext, true, _fieldsToSerialize);
-						_cntry.klass.insertNameValueField(Qfield.FullName, Qfield.Value);
 						break;
 					default:
 						break;

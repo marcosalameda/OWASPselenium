@@ -98,19 +98,15 @@
 								role="cell"
 								:gutter="0"
 								:justify="props.actionsAlignment">
-								<q-table-record-actions-menu
-									:texts="texts"
-									:btn-permission="card.mappedValue.btnPermission"
-									:action-visibility="card.mappedValue.actionVisibility"
-									:crud-actions="listConfig.crudActions"
-									:custom-actions="listConfig.customActions"
-									:show-row-action-icon="listConfig.showRowActionIcon"
-									:show-general-action-icon="listConfig.showGeneralActionIcon"
-									:show-row-action-text="showRowActionText"
-									:show-general-action-text="listConfig.showGeneralActionText"
+								<q-action-list
+									dropdown-size="small"
+									placement="bottom-start"
+									variant="outlined"
+									:groups="rowActionGroups"
+									:items="getRowActions(card)"
 									:readonly="readonly"
-									:display="props.actionsStyle"
-									@row-action="rowAction($event, card)" />
+									:title="texts.selectOptions"
+									@click="rowOptionSelect($event, card)" />
 							</q-row>
 						</template>
 					</q-card-view>
@@ -139,6 +135,7 @@
 
 	// Components
 	import QRenderData from '@/components/rendering/QRenderData.vue'
+	import { QActionList } from '@quidgest/clientapp/components'
 	import { QCol, QContainer, QRow } from '@quidgest/ui/components'
 	import QCardView from './QCardView.vue'
 	import QInsertCard from './QInsertCard.vue'
@@ -149,6 +146,7 @@
 
 	// Utils
 	import { computed, defineAsyncComponent, watch } from 'vue'
+	import { btnHasPermission } from '@quidgest/clientapp/utils/genericFunctions'
 
 	const props = withDefaults(defineProps<QCardsProps>(), {
 		cards: () => [],
@@ -172,9 +170,6 @@
 	}>()
 
 	/** Lazily loaded components. */
-	const QTableRecordActionsMenu = defineAsyncComponent(
-		() => import('@/components/table/QTableRecordActionsMenu.vue')
-	)
 	const QCardsGridLayout = defineAsyncComponent(() => import('./QCardsGridLayout.vue'))
 	const QCardsCarouselLayout = defineAsyncComponent(() => import('./QCardsCarouselLayout.vue'))
 
@@ -267,8 +262,41 @@
 		() => props.loading || shouldShowInsertCard.value || cards.value.length > 0
 	)
 
-	/** Whether row action text should be shown alongside icons. */
-	const showRowActionText = computed(() => ['dropdown', 'mixed'].includes(props.actionsStyle))
+	/** The list of action groups. */
+	const rowActionGroups = computed(
+		() => {
+			const display = props.actionsStyle
+			return [
+				{ id: 'custom', display },
+				{ id: 'crud', display }
+			]
+		}
+	)
+
+	/**
+	 * Gets the actions of the specified card.
+	 *
+	 * @param card - The card from which to get the actions.
+	 */
+	function getRowActions(card: Card): object[] {
+		return [
+			...(props.listConfig.customActions ?? []).map((act) => ({
+				...act,
+				key: act.id,
+				label: act.title,
+				group: 'custom',
+				isVisible: card.mappedValue.actionVisibility?.[act.id] ?? act.isVisible,
+				disabled: card.mappedValue.actionDisability?.[act.id] ?? act.disabled
+			})),
+			...(props.listConfig.crudActions ?? []).map((act) => ({
+				...act,
+				key: act.id,
+				label: act.title,
+				group: 'crud',
+				disabled: !btnHasPermission(card.mappedValue.btnPermission, act.id)
+			}))
+		]
+	}
 
 	/**
 	 * Handles click on a card.
@@ -276,7 +304,7 @@
 	 *
 	 * @param card - The card that was clicked.
 	 */
-	function onCardClick(card: Card) {
+	function onCardClick(card: Card): void {
 		if (card.mappedValue.customFollowup !== undefined) {
 			const url = card.mappedValue.customFollowup.value
 			if (url) {
@@ -298,8 +326,19 @@
 	 * @param action - The action to perform.
 	 * @param card - The optional card triggering the action.
 	 */
-	function rowAction(action: object, card?: Card) {
+	function rowAction(action: object, card?: Card): void {
 		emit('row-action', { ...action, rowKey: card?.id })
+	}
+
+	/**
+	 * Emits a row action event for the given key and card.
+	 *
+	 * @param key - The identifier of the triggered action.
+	 * @param card - The card triggering the action.
+	 */
+	function rowOptionSelect(key: string, card: Card): void {
+		const action = getRowActions(card).find((e) => e.key === key)
+		rowAction(action!, card)
 	}
 
 	/**

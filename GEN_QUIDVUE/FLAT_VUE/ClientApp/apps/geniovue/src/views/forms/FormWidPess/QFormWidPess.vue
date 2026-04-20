@@ -8,12 +8,13 @@
 		<div
 			v-if="showFormHeader"
 			class="c-action-bar">
-			<h1
+			<component
 				v-if="formControl.uiComponents.header && formInfo.designation"
+				:is="topHeadingTag"
 				:id="formTitleId"
 				class="form-header">
 				{{ formInfo.designation }}
-			</h1>
+			</component>
 
 			<div class="c-action-bar__menu">
 				<template
@@ -39,13 +40,10 @@
 								@click="btn.action">
 								<template v-if="btn.icon">
 									<q-badge-indicator
-										v-if="btn.badge && btn.badge.isVisible"
-										:color="btn.badge.color">
+										:enabled="btn.badge?.isVisible ?? false"
+										:color="btn.badge?.color">
 										<q-icon v-bind="btn.icon" />
 									</q-badge-indicator>
-									<q-icon
-										v-else
-										v-bind="btn.icon" />
 								</template>
 							</q-toggle-group-item>
 						</template>
@@ -57,6 +55,7 @@
 		<q-container
 			fluid
 			data-key="WID_PESS"
+			:data-identifier="primaryKeyValue"
 			:data-loading="!formInitialDataLoaded || !isActiveForm">
 			<template v-if="formControl.initialized && showFormBody">
 				<q-row v-if="controls.WID_PESSPSEUDPESSLIST.isVisible">
@@ -64,12 +63,13 @@
 						<q-table
 							v-if="controls.WID_PESSPSEUDPESSLIST.isVisible"
 							v-bind="controls.WID_PESSPSEUDPESSLIST"
+							:id="getControlId(controls.WID_PESSPSEUDPESSLIST)"
 							v-on="controls.WID_PESSPSEUDPESSLIST.handlers">
-						<q-table-extra-extension
-							v-if="controls.WID_PESSPSEUDPESSLIST.isVisible"
-							:list-ctrl="controls.WID_PESSPSEUDPESSLIST"
-							:filter-operators="controls.WID_PESSPSEUDPESSLIST.filterOperators"
-							v-on="controls.WID_PESSPSEUDPESSLIST.handlers" />
+							<template #header>
+								<q-table-config
+									:table-ctrl="controls.WID_PESSPSEUDPESSLIST"
+									v-on="controls.WID_PESSPSEUDPESSLIST.handlers" />
+							</template>
 							<!-- USE /[MANUAL GQT CUSTOM_TABLE WID_PESSPSEUDPESSLIST]/ -->
 						</q-table>
 					</q-col>
@@ -173,6 +173,7 @@
 					type: 'widget',
 					name: 'WID_PESS',
 					route: 'form-WID_PESS',
+					isEmptyForm: true,
 					area: 'Home',
 					designation: '',
 					identifier: '', // Unique identifier received by route (when it's nested).
@@ -347,6 +348,7 @@
 						label: computed(() => this.Resources.ALL_PEOPLE14919),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
+						headerLevel: computed(() => this.baseHeadingLevel + 1),
 						controller: 'Home',
 						action: 'Wid_pess_ValPesslist',
 						hasDependencies: false,
@@ -360,6 +362,7 @@
 								label: computed(() => this.Resources.NAME31974),
 								dataLength: 85,
 								scrollData: 30,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.ImageColumn({
 								order: 2,
@@ -371,6 +374,7 @@
 								scrollData: 3,
 								sortable: false,
 								searchable: false,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 3,
@@ -380,6 +384,7 @@
 								label: computed(() => this.Resources.EMAIL25170),
 								dataLength: 254,
 								scrollData: 30,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 4,
@@ -389,6 +394,7 @@
 								label: computed(() => this.Resources.CATEGORY18978),
 								dataLength: 50,
 								scrollData: 30,
+								export: 1,
 								pkColumn: 'ValCodcateg',
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
@@ -399,6 +405,7 @@
 								label: computed(() => this.Resources.COMPANY52963),
 								dataLength: 85,
 								scrollData: 30,
+								export: 1,
 								pkColumn: 'ValCodempre',
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 						],
@@ -417,7 +424,6 @@
 							searchBarConfig: {
 								visibility: false
 							},
-							filtersVisible: false,
 							allowColumnFilters: false,
 							allowColumnSort: true,
 							generalCustomActions: [
@@ -439,7 +445,7 @@
 								sortOrder: 'asc'
 							}
 						},
-						globalEvents: ['changed-PESSO', 'changed-CATEG', 'changed-REGI1', 'changed-CNTRY', 'changed-CMPNY', 'changed-PAIS1'],
+						globalEvents: ['changed-REGI1', 'changed-CNTRY', 'changed-PESSO', 'changed-CATEG', 'changed-PAIS1', 'changed-CMPNY'],
 						uuid: 'Wid_pess_ValPesslist',
 						allSelectedRows: 'false',
 						viewModes: [
@@ -926,7 +932,6 @@
 
 				this.afterControlUpdate(controlField, fieldValue)
 			},
-
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
 // USE /[MANUAL GQT FUNCTIONS_JS WID_PESS]/
 // eslint-disable-next-line

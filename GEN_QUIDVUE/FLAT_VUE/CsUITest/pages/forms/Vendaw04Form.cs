@@ -10,18 +10,18 @@ public class Vendaw04Form : Form
 	/// <summary>
 	/// Approach
 	/// </summary>
-	public CollapsibleZoneControl PseudNovogr04 => new CollapsibleZoneControl(driver, ContainerLocator, "#VENDAW04PSEUDNOVOGR04-container");
+	public CollapsibleZoneControl PseudNovogr04 => new CollapsibleZoneControl(driver, ContainerLocator, "#VENDAW04PSEUDNOVOGR04" + IdSuffix + "-container");
 
 	/// <summary>
 	/// Approach
 	/// </summary>
-	public DateInputControl SaleDtaborda => new DateInputControl(driver, ContainerLocator, "#VENDAW04SALE_DTABORDA", "dd/MM/yyyy HH:mm");
+	public DateInputControl SaleDtaborda => new DateInputControl(driver, ContainerLocator, "#VENDAW04SALE_DTABORDA" + IdSuffix, "dd/MM/yyyy HH:mm");
 
 	/// <summary>
 	/// Approach taken
 	/// </summary>
-	public CheckboxInputControl SaleApproach => new CheckboxInputControl(driver, ContainerLocator, "#container-VENDAW04SALE_APPROACH");
+	public CheckboxInputControl SaleApproach => new CheckboxInputControl(driver, ContainerLocator, "#container-VENDAW04SALE_APPROACH" + IdSuffix);
 
-	public Vendaw04Form(IWebDriver driver, FORM_MODE mode, By? containerLocator = null)
-		: base(driver, mode, "VENDAW04", containerLocator: containerLocator) { }
+	public Vendaw04Form(IWebDriver driver, FORM_MODE mode, By? containerLocator = null, bool usePkInId = false)
+		: base(driver, mode, "VENDAW04", containerLocator: containerLocator, usePkInId: usePkInId) { }
 }

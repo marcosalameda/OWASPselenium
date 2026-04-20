@@ -9,12 +9,13 @@
 			<div
 				v-if="showFormHeader"
 				class="c-action-bar">
-				<h1
+				<component
 					v-if="formControl.uiComponents.header && formInfo.designation"
+					:is="topHeadingTag"
 					:id="formTitleId"
 					class="form-header">
 					{{ formInfo.designation }}
-				</h1>
+				</component>
 
 				<div class="c-action-bar__menu">
 					<template
@@ -40,13 +41,10 @@
 									@click="btn.action">
 									<template v-if="btn.icon">
 										<q-badge-indicator
-											v-if="btn.badge && btn.badge.isVisible"
-											:color="btn.badge.color">
+											:enabled="btn.badge?.isVisible ?? false"
+											:color="btn.badge?.color">
 											<q-icon v-bind="btn.icon" />
 										</q-badge-indicator>
-										<q-icon
-											v-else
-											v-bind="btn.icon" />
 									</template>
 								</q-toggle-group-item>
 							</template>
@@ -97,6 +95,7 @@
 		<q-container
 			fluid
 			data-key="TIMEQUIP"
+			:data-identifier="primaryKeyValue"
 			:data-loading="!formInitialDataLoaded || !isActiveForm">
 			<template v-if="formControl.initialized && showFormBody">
 				<q-row v-if="controls.TIMEQUIPPSEUDREPARACO.isVisible">
@@ -104,12 +103,13 @@
 						<q-table
 							v-if="controls.TIMEQUIPPSEUDREPARACO.isVisible"
 							v-bind="controls.TIMEQUIPPSEUDREPARACO"
+							:id="getControlId(controls.TIMEQUIPPSEUDREPARACO)"
 							v-on="controls.TIMEQUIPPSEUDREPARACO.handlers">
-						<q-table-extra-extension
-							v-if="controls.TIMEQUIPPSEUDREPARACO.isVisible"
-							:list-ctrl="controls.TIMEQUIPPSEUDREPARACO"
-							:filter-operators="controls.TIMEQUIPPSEUDREPARACO.filterOperators"
-							v-on="controls.TIMEQUIPPSEUDREPARACO.handlers" />
+							<template #header>
+								<q-table-config
+									:table-ctrl="controls.TIMEQUIPPSEUDREPARACO"
+									v-on="controls.TIMEQUIPPSEUDREPARACO.handlers" />
+							</template>
 							<!-- USE /[MANUAL GQT CUSTOM_TABLE TIMEQUIPPSEUDREPARACO]/ -->
 						</q-table>
 					</q-col>
@@ -118,8 +118,8 @@
 					<q-col v-if="controls.TIMEQUIPPSEUDPRIMARY_.isVisible">
 						<q-timeline
 							v-if="controls.TIMEQUIPPSEUDPRIMARY_.isVisible"
-							id="TIMEQUIPPSEUDPRIMARY_"
 							v-bind="controls.TIMEQUIPPSEUDPRIMARY_"
+							:id="getControlId(controls.TIMEQUIPPSEUDPRIMARY_)"
 							@show-popup="timelineOpenForm" />
 					</q-col>
 				</q-row>
@@ -127,8 +127,8 @@
 					<q-col v-if="controls.TIMEQUIPPSEUDSECUNDAR.isVisible">
 						<q-timeline
 							v-if="controls.TIMEQUIPPSEUDSECUNDAR.isVisible"
-							id="TIMEQUIPPSEUDSECUNDAR"
 							v-bind="controls.TIMEQUIPPSEUDSECUNDAR"
+							:id="getControlId(controls.TIMEQUIPPSEUDSECUNDAR)"
 							@show-popup="timelineOpenForm" />
 					</q-col>
 				</q-row>
@@ -136,7 +136,7 @@
 		</q-container>
 	</teleport>
 
-	<hr v-if="!isPopup && showFormFooter" />
+	<q-divider v-if="!isPopup && showFormFooter" />
 
 	<teleport
 		v-if="formModalIsReady && showFormFooter"
@@ -485,6 +485,7 @@
 						label: computed(() => this.Resources.EQUIPMENT_REPAIRS62266),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
+						headerLevel: computed(() => this.baseHeadingLevel + 1),
 						controller: 'EQUIP',
 						action: 'Timequip_ValReparaco',
 						hasDependencies: false,
@@ -498,6 +499,7 @@
 								label: computed(() => this.Resources.FIXED_IN00179),
 								scrollData: 16,
 								dateTimeType: 'dateTime',
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.NumericColumn({
 								order: 2,
@@ -508,6 +510,7 @@
 								scrollData: 10,
 								maxDigits: 10,
 								decimalPlaces: 0,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.ArrayColumn({
 								order: 3,
@@ -517,8 +520,8 @@
 								label: computed(() => this.Resources.TECHNICAL_AREA50773),
 								dataLength: 1,
 								scrollData: 1,
+								export: 1,
 								array: computed(() => new qProjArrays.QArrayAreatecn(vm.$getResource).elements),
-								arrayType: qProjArrays.QArrayAreatecn.type,
 								arrayDisplayMode: 'D',
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
@@ -528,6 +531,7 @@
 								field: 'DESCRIPT',
 								label: computed(() => this.Resources.DESCRIPTION_OF_THE_R26085),
 								scrollData: 30,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.NumericColumn({
 								order: 5,
@@ -538,6 +542,7 @@
 								scrollData: 10,
 								maxDigits: 10,
 								decimalPlaces: 0,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 						],
 						config: {
@@ -555,7 +560,6 @@
 							searchBarConfig: {
 								visibility: false
 							},
-							filtersVisible: false,
 							allowColumnFilters: false,
 							allowColumnSort: true,
 							crudActions: [
@@ -629,9 +633,7 @@
 									id: 'insert',
 									name: 'insert',
 									title: computed(() => this.Resources.INSERIR43365),
-									icon: {
-										icon: 'add'
-									},
+									icon: { icon: 'add' },
 									isInReadOnly: false,
 									params: {
 										action: vm.openFormAction,
@@ -678,7 +680,7 @@
 								sortOrder: 'asc'
 							}
 						},
-						globalEvents: ['changed-EQUIP', 'changed-PESSO', 'changed-REPAR', 'changed-CATE1', 'changed-SPECI', 'changed-CMPNY'],
+						globalEvents: ['changed-CATE1', 'changed-EQUIP', 'changed-PESSO', 'changed-REPAR', 'changed-SPECI', 'changed-CMPNY'],
 						uuid: 'Timequip_ValReparaco',
 						allSelectedRows: 'false',
 						controlLimits: [
@@ -758,6 +760,8 @@
 						set ValCodwareh(value) { vm.model.ValCodwareh.updateValue(value) },
 						get ValRegistnr() { return vm.model.ValRegistnr.value },
 						set ValRegistnr(value) { vm.model.ValRegistnr.updateValue(value) },
+						get ValSequennr() { return vm.model.ValSequennr.value },
+						set ValSequennr(value) { vm.model.ValSequennr.updateValue(value) },
 					},
 					keys: {
 						/** The primary key of the EQUIP table */
@@ -1121,7 +1125,6 @@
 
 				this.afterControlUpdate(controlField, fieldValue)
 			},
-
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
 // USE /[MANUAL GQT FUNCTIONS_JS TIMEQUIP]/
 // eslint-disable-next-line

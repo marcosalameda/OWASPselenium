@@ -1,20 +1,20 @@
-﻿using JsonIgnoreAttribute = System.Text.Json.Serialization.JsonIgnoreAttribute;
+﻿using CSGenio.business;
+using CSGenio.framework;
+using CSGenio.persistence;
+using GenioMVC.Helpers;
+using GenioMVC.Models.Exception;
+using GenioMVC.Models.Navigation;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Quidgest.Persistence;
+using Quidgest.Persistence.GenericQuery;
+
 using System.Collections;
 using System.Collections.Concurrent;
 using System.Collections.Specialized;
 using System.ComponentModel.DataAnnotations;
 using System.Data;
 using System.Globalization;
-
-using CSGenio.business;
-using CSGenio.framework;
-using CSGenio.persistence;
-using GenioMVC.Helpers;
-using GenioMVC.Models.Exception;
-using GenioMVC.Models.Navigation;
-using Quidgest.Persistence;
-using Quidgest.Persistence.GenericQuery;
+using System.Text.Json.Serialization;
 
 namespace GenioMVC.ViewModels.Cmpny
 {
@@ -36,6 +36,7 @@ namespace GenioMVC.ViewModels.Cmpny
 		public string ValCodcntry { get; set; }
 
 		#endregion
+
 		/// <summary>
 		/// Title: "Logo" | Type: "IJ"
 		/// </summary>
@@ -75,8 +76,6 @@ namespace GenioMVC.ViewModels.Cmpny
 		/// Title: "Headquarter location" | Type: "GG"
 		/// </summary>
 		public string ValHeadloc { get; set; }
-
-
 
 		#region Navigations
 		#endregion
@@ -270,12 +269,7 @@ namespace GenioMVC.ViewModels.Cmpny
 			}
 		}
 
-		/// <summary>
-		/// Sets the value of a single property of the view model based on the provided table and field names.
-		/// </summary>
-		/// <param name="fullFieldName">The full field name in the format "table.field".</param>
-		/// <param name="value">The field value.</param>
-		/// <exception cref="ArgumentNullException">Thrown if <paramref name="fullFieldName"/> is null.</exception>
+		/// <inheritdoc />
 		public override void SetViewModelValue(string fullFieldName, object value)
 		{
 			try
@@ -421,6 +415,7 @@ namespace GenioMVC.ViewModels.Cmpny
 			Characs = new List<string>();
 
 			Load_Empre___cntrycountry_(qs, lazyLoad);
+
 // USE /[MANUAL GQT VIEWMODEL_LOADPARTIAL EMPRE]/
 		}
 
@@ -497,10 +492,7 @@ namespace GenioMVC.ViewModels.Cmpny
 				}
 			}
 
-			TableCntryCountry = new TableDBEdit<Models.Cntry>
-			{
-				IsLazyLoad = lazyLoad
-			};
+			TableCntryCountry = new TableDBEdit<Models.Cntry>();
 
 			if (lazyLoad)
 			{
@@ -544,7 +536,7 @@ namespace GenioMVC.ViewModels.Cmpny
 				int numberItems = CSGenio.framework.Configuration.NrRegDBedit;
 				int offset = (page - 1) * numberItems;
 
-				FieldRef[] fields = new FieldRef[] { CSGenioAcntry.FldCodcntry, CSGenioAcntry.FldCountry, CSGenioAcntry.FldZzstate };
+				FieldRef[] fields = [CSGenioAcntry.FldCodcntry, CSGenioAcntry.FldCountry, CSGenioAcntry.FldZzstate];
 
 // USE /[MANUAL GQT OVERRQ EMPRE_CNTRYCOUNTRY]/
 

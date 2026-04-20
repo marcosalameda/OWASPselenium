@@ -5,7 +5,7 @@
 		tabindex="0"
 		@keydown.enter.stop="onClick"
 		@click.stop="onClick">
-		<h5 class="q-menu-widget__title">{{ widget.Title }}</h5>
+		<h2 class="q-menu-widget__title">{{ widget.Title }}</h2>
 		<q-icon
 			v-if="getMenuIcon(widget.MenuEntry)"
 			v-bind="getMenuIcon(widget.MenuEntry)" />

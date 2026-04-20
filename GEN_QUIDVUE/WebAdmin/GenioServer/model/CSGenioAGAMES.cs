@@ -47,7 +47,7 @@ namespace CSGenio.business
 			Qfield = new Field(info.Alias, "codgames", FieldType.KEY_GUID);
 			Qfield.FieldDescription = "";
 			Qfield.FieldSize =  36;
-			Qfield.CavDesignation = "";
+			Qfield.VisivelCav = CavVisibilityType.Nunca;
 
 			Qfield.Dupmsg = "";
 			info.RegisterFieldDB(Qfield);
@@ -65,7 +65,7 @@ namespace CSGenio.business
 			Qfield = new Field(info.Alias, "codeqjgc", FieldType.KEY_GUID);
 			Qfield.FieldDescription = ">TEAM PLAYING AT HOME";
 			Qfield.FieldSize =  36;
-			Qfield.CavDesignation = "_TEAM_PLAYING_AT_HOM03863";
+			Qfield.VisivelCav = CavVisibilityType.Nunca;
 
 			Qfield.Dupmsg = "";
 			info.RegisterFieldDB(Qfield);
@@ -74,7 +74,7 @@ namespace CSGenio.business
 			Qfield = new Field(info.Alias, "codeqjgf", FieldType.KEY_GUID);
 			Qfield.FieldDescription = ">TEAM PLAYING AWAY";
 			Qfield.FieldSize =  36;
-			Qfield.CavDesignation = "_TEAM_PLAYING_AWAY39234";
+			Qfield.VisivelCav = CavVisibilityType.Nunca;
 
 			Qfield.Dupmsg = "";
 			info.RegisterFieldDB(Qfield);

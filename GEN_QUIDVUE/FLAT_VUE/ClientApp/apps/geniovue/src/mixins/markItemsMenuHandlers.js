@@ -28,7 +28,7 @@ export default {
 			this.controls.firstTable.fetchListData({}),
 			this.controls.secondTable.fetchListData({})
 		]).then(async () => {
-			for (let i in this.controls)
+			for (const i in this.controls)
 			{
 				await this.controls[i].init()
 				this.controls[i].initData?.()
@@ -46,7 +46,7 @@ export default {
 			'remove',
 			'remove-reset'
 		]
-		for (let i in config.permissions)
+		for (const i in config.permissions)
 			config.permissions[i] = false
 	},
 
@@ -242,7 +242,7 @@ export default {
 			if (selectedRows.length < 1)
 				return
 
-			for (let idx in selectedRows)
+			for (const idx in selectedRows)
 				this.model.selectedRows[selectedRows[idx].rowKey] = selectedRows[idx]
 		},
 

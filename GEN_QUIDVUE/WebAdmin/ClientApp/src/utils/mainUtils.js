@@ -98,7 +98,7 @@ export const QUtils = {
     },
     tryParseDate: function (value) {
         if (jQuery.type(value) === "string") {
-            // Try convert C# string to JS date
+            // Try convert Csharp string to JS date
             var patternCSharp = /Date\(([^)]+)\)/,
                 patternJSON = /(\d{4}-\d{2}-\d{2})[T](\d{2}:\d{2}:\d{2}.?(\d{3})?)[Z]?/;
             if (patternCSharp.test(value)) {

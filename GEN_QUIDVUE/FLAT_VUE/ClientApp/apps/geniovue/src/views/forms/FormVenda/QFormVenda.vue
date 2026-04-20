@@ -9,12 +9,13 @@
 			<div
 				v-if="showFormHeader"
 				class="c-action-bar">
-				<h1
+				<component
 					v-if="formControl.uiComponents.header && formInfo.designation"
+					:is="topHeadingTag"
 					:id="formTitleId"
 					class="form-header">
 					{{ formInfo.designation }}
-				</h1>
+				</component>
 
 				<div class="c-action-bar__menu">
 					<template
@@ -40,13 +41,10 @@
 									@click="btn.action">
 									<template v-if="btn.icon">
 										<q-badge-indicator
-											v-if="btn.badge && btn.badge.isVisible"
-											:color="btn.badge.color">
+											:enabled="btn.badge?.isVisible ?? false"
+											:color="btn.badge?.color">
 											<q-icon v-bind="btn.icon" />
 										</q-badge-indicator>
-										<q-icon
-											v-else
-											v-bind="btn.icon" />
 									</template>
 								</q-toggle-group-item>
 							</template>
@@ -97,6 +95,7 @@
 		<q-container
 			fluid
 			data-key="VENDA"
+			:data-identifier="primaryKeyValue"
 			:data-loading="!formInitialDataLoaded || !isActiveForm">
 			<template v-if="formControl.initialized && showFormBody">
 				<q-row v-if="controls.VENDA___ORGANORGANIZA.isVisible">
@@ -106,7 +105,8 @@
 						<base-input-structure
 							v-if="controls.VENDA___ORGANORGANIZA.isVisible"
 							class="i-text"
-							v-bind="controls.VENDA___ORGANORGANIZA"
+							v-bind="controls.VENDA___ORGANORGANIZA.wrapperProps"
+							:id="getControlId(controls.VENDA___ORGANORGANIZA)"
 							v-on="controls.VENDA___ORGANORGANIZA.handlers"
 							:loading="controls.VENDA___ORGANORGANIZA.props.loading"
 							:reporting-mode-on="reportingModeCAV"
@@ -114,6 +114,7 @@
 							<q-lookup
 								v-if="controls.VENDA___ORGANORGANIZA.isVisible"
 								v-bind="controls.VENDA___ORGANORGANIZA.props"
+								:id="getControlId(controls.VENDA___ORGANORGANIZA)"
 								v-on="controls.VENDA___ORGANORGANIZA.handlers" />
 							<q-see-more-venda-organorganiza
 								v-if="controls.VENDA___ORGANORGANIZA.seeMoreIsVisible"
@@ -129,7 +130,8 @@
 						<base-input-structure
 							v-if="controls.VENDA___SALE_NRLIDE__.isVisible"
 							class="i-text"
-							v-bind="controls.VENDA___SALE_NRLIDE__"
+							v-bind="controls.VENDA___SALE_NRLIDE__.wrapperProps"
+							:id="getControlId(controls.VENDA___SALE_NRLIDE__)"
 							v-on="controls.VENDA___SALE_NRLIDE__.handlers"
 							:loading="controls.VENDA___SALE_NRLIDE__.props.loading"
 							:reporting-mode-on="reportingModeCAV"
@@ -137,6 +139,7 @@
 							<q-numeric-input
 								v-if="controls.VENDA___SALE_NRLIDE__.isVisible"
 								v-bind="controls.VENDA___SALE_NRLIDE__.props"
+								:id="getControlId(controls.VENDA___SALE_NRLIDE__)"
 								@update:model-value="model.ValNrlide.fnUpdateValue" />
 						</base-input-structure>
 					</q-col>
@@ -146,7 +149,8 @@
 						<base-input-structure
 							v-if="controls.VENDA___SALE_STARTDT_.isVisible"
 							class="i-text"
-							v-bind="controls.VENDA___SALE_STARTDT_"
+							v-bind="controls.VENDA___SALE_STARTDT_.wrapperProps"
+							:id="getControlId(controls.VENDA___SALE_STARTDT_)"
 							v-on="controls.VENDA___SALE_STARTDT_.handlers"
 							:loading="controls.VENDA___SALE_STARTDT_.props.loading"
 							:reporting-mode-on="reportingModeCAV"
@@ -154,6 +158,7 @@
 							<q-date-time-picker
 								v-if="controls.VENDA___SALE_STARTDT_.isVisible"
 								v-bind="controls.VENDA___SALE_STARTDT_.props"
+								:id="getControlId(controls.VENDA___SALE_STARTDT_)"
 								:model-value="model.ValStartdt.value"
 								@reset-icon-click="model.ValStartdt.fnUpdateValue(model.ValStartdt.originalValue ?? new Date())"
 								@update:model-value="model.ValStartdt.fnUpdateValue($event ?? '')" />
@@ -164,9 +169,9 @@
 					<q-col v-if="controls.VENDA___PSEUDNOVOGR01.isVisible">
 						<q-group-box-container
 							v-if="controls.VENDA___PSEUDNOVOGR01.isVisible"
-							id="VENDA___PSEUDNOVOGR01"
 							v-bind="controls.VENDA___PSEUDNOVOGR01"
-							:is-visible="controls.VENDA___PSEUDNOVOGR01.isVisible">
+							:id="getControlId(controls.VENDA___PSEUDNOVOGR01)"
+							:no-border="controls.VENDA___PSEUDNOVOGR01.borderless">
 							<!-- Start VENDA___PSEUDNOVOGR01 -->
 							<q-row v-if="controls.VENDA___SALE_IDENTIFI.isVisible || controls.VENDA___SALE_POTCOMPR.isVisible || controls.VENDA___SALE_PROSPECC.isVisible">
 								<q-col
@@ -175,13 +180,15 @@
 									<base-input-structure
 										v-if="controls.VENDA___SALE_IDENTIFI.isVisible"
 										class="i-text"
-										v-bind="controls.VENDA___SALE_IDENTIFI"
+										v-bind="controls.VENDA___SALE_IDENTIFI.wrapperProps"
+										:id="getControlId(controls.VENDA___SALE_IDENTIFI)"
 										v-on="controls.VENDA___SALE_IDENTIFI.handlers"
 										:loading="controls.VENDA___SALE_IDENTIFI.props.loading"
 										:reporting-mode-on="reportingModeCAV"
 										:suggestion-mode-on="suggestionModeOn">
 										<q-text-field
 											v-bind="controls.VENDA___SALE_IDENTIFI.props"
+											:id="getControlId(controls.VENDA___SALE_IDENTIFI)"
 											@blur="onBlur(controls.VENDA___SALE_IDENTIFI, model.ValIdentifi.value)"
 											@change="model.ValIdentifi.fnUpdateValueOnChange" />
 									</base-input-structure>
@@ -192,13 +199,15 @@
 									<base-input-structure
 										v-if="controls.VENDA___SALE_POTCOMPR.isVisible"
 										class="i-text"
-										v-bind="controls.VENDA___SALE_POTCOMPR"
+										v-bind="controls.VENDA___SALE_POTCOMPR.wrapperProps"
+										:id="getControlId(controls.VENDA___SALE_POTCOMPR)"
 										v-on="controls.VENDA___SALE_POTCOMPR.handlers"
 										:loading="controls.VENDA___SALE_POTCOMPR.props.loading"
 										:reporting-mode-on="reportingModeCAV"
 										:suggestion-mode-on="suggestionModeOn">
 										<q-text-field
 											v-bind="controls.VENDA___SALE_POTCOMPR.props"
+											:id="getControlId(controls.VENDA___SALE_POTCOMPR)"
 											@blur="onBlur(controls.VENDA___SALE_POTCOMPR, model.ValPotcompr.value)"
 											@change="model.ValPotcompr.fnUpdateValueOnChange" />
 									</base-input-structure>
@@ -208,8 +217,9 @@
 									cols="auto">
 									<base-input-structure
 										v-if="controls.VENDA___SALE_PROSPECC.isVisible"
-										class="i-checkbox"
-										v-bind="controls.VENDA___SALE_PROSPECC"
+										class="i-text"
+										v-bind="controls.VENDA___SALE_PROSPECC.wrapperProps"
+										:id="getControlId(controls.VENDA___SALE_PROSPECC)"
 										v-on="controls.VENDA___SALE_PROSPECC.handlers"
 										:loading="controls.VENDA___SALE_PROSPECC.props.loading"
 										:reporting-mode-on="reportingModeCAV"
@@ -218,6 +228,7 @@
 											<q-checkbox
 												v-if="controls.VENDA___SALE_PROSPECC.isVisible"
 												v-bind="controls.VENDA___SALE_PROSPECC.props"
+												:id="getControlId(controls.VENDA___SALE_PROSPECC)"
 												v-on="controls.VENDA___SALE_PROSPECC.handlers" />
 										</template>
 									</base-input-structure>
@@ -231,9 +242,9 @@
 					<q-col v-if="controls.VENDA___PSEUDNOVOGR02.isVisible">
 						<q-group-box-container
 							v-if="controls.VENDA___PSEUDNOVOGR02.isVisible"
-							id="VENDA___PSEUDNOVOGR02"
 							v-bind="controls.VENDA___PSEUDNOVOGR02"
-							:is-visible="controls.VENDA___PSEUDNOVOGR02.isVisible">
+							:id="getControlId(controls.VENDA___PSEUDNOVOGR02)"
+							:no-border="controls.VENDA___PSEUDNOVOGR02.borderless">
 							<!-- Start VENDA___PSEUDNOVOGR02 -->
 							<q-row v-if="controls.VENDA___SALE_INTERESS.isVisible || controls.VENDA___SALE_SEMRFINA.isVisible || controls.VENDA___SALE_SEMCAPAC.isVisible || controls.VENDA___SALE_DTQUALIF.isVisible || controls.VENDA___SALE_QUALIFIC.isVisible">
 								<q-col
@@ -241,8 +252,9 @@
 									cols="auto">
 									<base-input-structure
 										v-if="controls.VENDA___SALE_INTERESS.isVisible"
-										class="i-checkbox"
-										v-bind="controls.VENDA___SALE_INTERESS"
+										class="i-text"
+										v-bind="controls.VENDA___SALE_INTERESS.wrapperProps"
+										:id="getControlId(controls.VENDA___SALE_INTERESS)"
 										v-on="controls.VENDA___SALE_INTERESS.handlers"
 										:loading="controls.VENDA___SALE_INTERESS.props.loading"
 										:reporting-mode-on="reportingModeCAV"
@@ -251,6 +263,7 @@
 											<q-checkbox
 												v-if="controls.VENDA___SALE_INTERESS.isVisible"
 												v-bind="controls.VENDA___SALE_INTERESS.props"
+												:id="getControlId(controls.VENDA___SALE_INTERESS)"
 												v-on="controls.VENDA___SALE_INTERESS.handlers" />
 										</template>
 									</base-input-structure>
@@ -260,8 +273,9 @@
 									cols="auto">
 									<base-input-structure
 										v-if="controls.VENDA___SALE_SEMRFINA.isVisible"
-										class="i-checkbox"
-										v-bind="controls.VENDA___SALE_SEMRFINA"
+										class="i-text"
+										v-bind="controls.VENDA___SALE_SEMRFINA.wrapperProps"
+										:id="getControlId(controls.VENDA___SALE_SEMRFINA)"
 										v-on="controls.VENDA___SALE_SEMRFINA.handlers"
 										:loading="controls.VENDA___SALE_SEMRFINA.props.loading"
 										:reporting-mode-on="reportingModeCAV"
@@ -270,6 +284,7 @@
 											<q-checkbox
 												v-if="controls.VENDA___SALE_SEMRFINA.isVisible"
 												v-bind="controls.VENDA___SALE_SEMRFINA.props"
+												:id="getControlId(controls.VENDA___SALE_SEMRFINA)"
 												v-on="controls.VENDA___SALE_SEMRFINA.handlers" />
 										</template>
 									</base-input-structure>
@@ -279,8 +294,9 @@
 									cols="auto">
 									<base-input-structure
 										v-if="controls.VENDA___SALE_SEMCAPAC.isVisible"
-										class="i-checkbox"
-										v-bind="controls.VENDA___SALE_SEMCAPAC"
+										class="i-text"
+										v-bind="controls.VENDA___SALE_SEMCAPAC.wrapperProps"
+										:id="getControlId(controls.VENDA___SALE_SEMCAPAC)"
 										v-on="controls.VENDA___SALE_SEMCAPAC.handlers"
 										:loading="controls.VENDA___SALE_SEMCAPAC.props.loading"
 										:reporting-mode-on="reportingModeCAV"
@@ -289,6 +305,7 @@
 											<q-checkbox
 												v-if="controls.VENDA___SALE_SEMCAPAC.isVisible"
 												v-bind="controls.VENDA___SALE_SEMCAPAC.props"
+												:id="getControlId(controls.VENDA___SALE_SEMCAPAC)"
 												v-on="controls.VENDA___SALE_SEMCAPAC.handlers" />
 										</template>
 									</base-input-structure>
@@ -299,7 +316,8 @@
 									<base-input-structure
 										v-if="controls.VENDA___SALE_DTQUALIF.isVisible"
 										class="i-text"
-										v-bind="controls.VENDA___SALE_DTQUALIF"
+										v-bind="controls.VENDA___SALE_DTQUALIF.wrapperProps"
+										:id="getControlId(controls.VENDA___SALE_DTQUALIF)"
 										v-on="controls.VENDA___SALE_DTQUALIF.handlers"
 										:loading="controls.VENDA___SALE_DTQUALIF.props.loading"
 										:reporting-mode-on="reportingModeCAV"
@@ -307,6 +325,7 @@
 										<q-date-time-picker
 											v-if="controls.VENDA___SALE_DTQUALIF.isVisible"
 											v-bind="controls.VENDA___SALE_DTQUALIF.props"
+											:id="getControlId(controls.VENDA___SALE_DTQUALIF)"
 											:model-value="model.ValDtqualif.value"
 											@reset-icon-click="model.ValDtqualif.fnUpdateValue(model.ValDtqualif.originalValue ?? new Date())"
 											@update:model-value="model.ValDtqualif.fnUpdateValue($event ?? '')" />
@@ -317,8 +336,9 @@
 									cols="auto">
 									<base-input-structure
 										v-if="controls.VENDA___SALE_QUALIFIC.isVisible"
-										class="i-checkbox"
-										v-bind="controls.VENDA___SALE_QUALIFIC"
+										class="i-text"
+										v-bind="controls.VENDA___SALE_QUALIFIC.wrapperProps"
+										:id="getControlId(controls.VENDA___SALE_QUALIFIC)"
 										v-on="controls.VENDA___SALE_QUALIFIC.handlers"
 										:loading="controls.VENDA___SALE_QUALIFIC.props.loading"
 										:reporting-mode-on="reportingModeCAV"
@@ -327,6 +347,7 @@
 											<q-checkbox
 												v-if="controls.VENDA___SALE_QUALIFIC.isVisible"
 												v-bind="controls.VENDA___SALE_QUALIFIC.props"
+												:id="getControlId(controls.VENDA___SALE_QUALIFIC)"
 												v-on="controls.VENDA___SALE_QUALIFIC.handlers" />
 										</template>
 									</base-input-structure>
@@ -340,9 +361,9 @@
 					<q-col v-if="controls.VENDA___PSEUDNOVOGR03.isVisible">
 						<q-group-box-container
 							v-if="controls.VENDA___PSEUDNOVOGR03.isVisible"
-							id="VENDA___PSEUDNOVOGR03"
 							v-bind="controls.VENDA___PSEUDNOVOGR03"
-							:is-visible="controls.VENDA___PSEUDNOVOGR03.isVisible">
+							:id="getControlId(controls.VENDA___PSEUDNOVOGR03)"
+							:no-border="controls.VENDA___PSEUDNOVOGR03.borderless">
 							<!-- Start VENDA___PSEUDNOVOGR03 -->
 							<q-row v-if="controls.VENDA___SALE_PREABORD.isVisible || controls.VENDA___SALE_HOMEWORK.isVisible">
 								<q-col
@@ -351,7 +372,8 @@
 									<base-input-structure
 										v-if="controls.VENDA___SALE_PREABORD.isVisible"
 										class="i-text"
-										v-bind="controls.VENDA___SALE_PREABORD"
+										v-bind="controls.VENDA___SALE_PREABORD.wrapperProps"
+										:id="getControlId(controls.VENDA___SALE_PREABORD)"
 										v-on="controls.VENDA___SALE_PREABORD.handlers"
 										:loading="controls.VENDA___SALE_PREABORD.props.loading"
 										:reporting-mode-on="reportingModeCAV"
@@ -359,6 +381,7 @@
 										<q-date-time-picker
 											v-if="controls.VENDA___SALE_PREABORD.isVisible"
 											v-bind="controls.VENDA___SALE_PREABORD.props"
+											:id="getControlId(controls.VENDA___SALE_PREABORD)"
 											:model-value="model.ValPreabord.value"
 											@reset-icon-click="model.ValPreabord.fnUpdateValue(model.ValPreabord.originalValue ?? new Date())"
 											@update:model-value="model.ValPreabord.fnUpdateValue($event ?? '')" />
@@ -369,8 +392,9 @@
 									cols="auto">
 									<base-input-structure
 										v-if="controls.VENDA___SALE_HOMEWORK.isVisible"
-										class="i-checkbox"
-										v-bind="controls.VENDA___SALE_HOMEWORK"
+										class="i-text"
+										v-bind="controls.VENDA___SALE_HOMEWORK.wrapperProps"
+										:id="getControlId(controls.VENDA___SALE_HOMEWORK)"
 										v-on="controls.VENDA___SALE_HOMEWORK.handlers"
 										:loading="controls.VENDA___SALE_HOMEWORK.props.loading"
 										:reporting-mode-on="reportingModeCAV"
@@ -379,6 +403,7 @@
 											<q-checkbox
 												v-if="controls.VENDA___SALE_HOMEWORK.isVisible"
 												v-bind="controls.VENDA___SALE_HOMEWORK.props"
+												:id="getControlId(controls.VENDA___SALE_HOMEWORK)"
 												v-on="controls.VENDA___SALE_HOMEWORK.handlers" />
 										</template>
 									</base-input-structure>
@@ -392,9 +417,9 @@
 					<q-col v-if="controls.VENDA___PSEUDNOVOGR04.isVisible">
 						<q-group-box-container
 							v-if="controls.VENDA___PSEUDNOVOGR04.isVisible"
-							id="VENDA___PSEUDNOVOGR04"
 							v-bind="controls.VENDA___PSEUDNOVOGR04"
-							:is-visible="controls.VENDA___PSEUDNOVOGR04.isVisible">
+							:id="getControlId(controls.VENDA___PSEUDNOVOGR04)"
+							:no-border="controls.VENDA___PSEUDNOVOGR04.borderless">
 							<!-- Start VENDA___PSEUDNOVOGR04 -->
 							<q-row v-if="controls.VENDA___SALE_DTABORDA.isVisible || controls.VENDA___SALE_APPROACH.isVisible">
 								<q-col
@@ -403,7 +428,8 @@
 									<base-input-structure
 										v-if="controls.VENDA___SALE_DTABORDA.isVisible"
 										class="i-text"
-										v-bind="controls.VENDA___SALE_DTABORDA"
+										v-bind="controls.VENDA___SALE_DTABORDA.wrapperProps"
+										:id="getControlId(controls.VENDA___SALE_DTABORDA)"
 										v-on="controls.VENDA___SALE_DTABORDA.handlers"
 										:loading="controls.VENDA___SALE_DTABORDA.props.loading"
 										:reporting-mode-on="reportingModeCAV"
@@ -411,6 +437,7 @@
 										<q-date-time-picker
 											v-if="controls.VENDA___SALE_DTABORDA.isVisible"
 											v-bind="controls.VENDA___SALE_DTABORDA.props"
+											:id="getControlId(controls.VENDA___SALE_DTABORDA)"
 											:model-value="model.ValDtaborda.value"
 											@reset-icon-click="model.ValDtaborda.fnUpdateValue(model.ValDtaborda.originalValue ?? new Date())"
 											@update:model-value="model.ValDtaborda.fnUpdateValue($event ?? '')" />
@@ -421,8 +448,9 @@
 									cols="auto">
 									<base-input-structure
 										v-if="controls.VENDA___SALE_APPROACH.isVisible"
-										class="i-checkbox"
-										v-bind="controls.VENDA___SALE_APPROACH"
+										class="i-text"
+										v-bind="controls.VENDA___SALE_APPROACH.wrapperProps"
+										:id="getControlId(controls.VENDA___SALE_APPROACH)"
 										v-on="controls.VENDA___SALE_APPROACH.handlers"
 										:loading="controls.VENDA___SALE_APPROACH.props.loading"
 										:reporting-mode-on="reportingModeCAV"
@@ -431,6 +459,7 @@
 											<q-checkbox
 												v-if="controls.VENDA___SALE_APPROACH.isVisible"
 												v-bind="controls.VENDA___SALE_APPROACH.props"
+												:id="getControlId(controls.VENDA___SALE_APPROACH)"
 												v-on="controls.VENDA___SALE_APPROACH.handlers" />
 										</template>
 									</base-input-structure>
@@ -444,9 +473,9 @@
 					<q-col v-if="controls.VENDA___PSEUDNOVOGR05.isVisible">
 						<q-group-box-container
 							v-if="controls.VENDA___PSEUDNOVOGR05.isVisible"
-							id="VENDA___PSEUDNOVOGR05"
 							v-bind="controls.VENDA___PSEUDNOVOGR05"
-							:is-visible="controls.VENDA___PSEUDNOVOGR05.isVisible">
+							:id="getControlId(controls.VENDA___PSEUDNOVOGR05)"
+							:no-border="controls.VENDA___PSEUDNOVOGR05.borderless">
 							<!-- Start VENDA___PSEUDNOVOGR05 -->
 							<q-row v-if="controls.VENDA___SALE_DTAPRESE.isVisible || controls.VENDA___SALE_APRESENT.isVisible">
 								<q-col
@@ -455,7 +484,8 @@
 									<base-input-structure
 										v-if="controls.VENDA___SALE_DTAPRESE.isVisible"
 										class="i-text"
-										v-bind="controls.VENDA___SALE_DTAPRESE"
+										v-bind="controls.VENDA___SALE_DTAPRESE.wrapperProps"
+										:id="getControlId(controls.VENDA___SALE_DTAPRESE)"
 										v-on="controls.VENDA___SALE_DTAPRESE.handlers"
 										:loading="controls.VENDA___SALE_DTAPRESE.props.loading"
 										:reporting-mode-on="reportingModeCAV"
@@ -463,6 +493,7 @@
 										<q-date-time-picker
 											v-if="controls.VENDA___SALE_DTAPRESE.isVisible"
 											v-bind="controls.VENDA___SALE_DTAPRESE.props"
+											:id="getControlId(controls.VENDA___SALE_DTAPRESE)"
 											:model-value="model.ValDtaprese.value"
 											@reset-icon-click="model.ValDtaprese.fnUpdateValue(model.ValDtaprese.originalValue ?? new Date())"
 											@update:model-value="model.ValDtaprese.fnUpdateValue($event ?? '')" />
@@ -473,8 +504,9 @@
 									cols="auto">
 									<base-input-structure
 										v-if="controls.VENDA___SALE_APRESENT.isVisible"
-										class="i-checkbox"
-										v-bind="controls.VENDA___SALE_APRESENT"
+										class="i-text"
+										v-bind="controls.VENDA___SALE_APRESENT.wrapperProps"
+										:id="getControlId(controls.VENDA___SALE_APRESENT)"
 										v-on="controls.VENDA___SALE_APRESENT.handlers"
 										:loading="controls.VENDA___SALE_APRESENT.props.loading"
 										:reporting-mode-on="reportingModeCAV"
@@ -483,6 +515,7 @@
 											<q-checkbox
 												v-if="controls.VENDA___SALE_APRESENT.isVisible"
 												v-bind="controls.VENDA___SALE_APRESENT.props"
+												:id="getControlId(controls.VENDA___SALE_APRESENT)"
 												v-on="controls.VENDA___SALE_APRESENT.handlers" />
 										</template>
 									</base-input-structure>
@@ -496,9 +529,9 @@
 					<q-col v-if="controls.VENDA___PSEUDNOVOGR06.isVisible">
 						<q-group-box-container
 							v-if="controls.VENDA___PSEUDNOVOGR06.isVisible"
-							id="VENDA___PSEUDNOVOGR06"
 							v-bind="controls.VENDA___PSEUDNOVOGR06"
-							:is-visible="controls.VENDA___PSEUDNOVOGR06.isVisible">
+							:id="getControlId(controls.VENDA___PSEUDNOVOGR06)"
+							:no-border="controls.VENDA___PSEUDNOVOGR06.borderless">
 							<!-- Start VENDA___PSEUDNOVOGR06 -->
 							<q-row v-if="controls.VENDA___SALE_DTSUPERA.isVisible">
 								<q-col
@@ -507,7 +540,8 @@
 									<base-input-structure
 										v-if="controls.VENDA___SALE_DTSUPERA.isVisible"
 										class="i-text"
-										v-bind="controls.VENDA___SALE_DTSUPERA"
+										v-bind="controls.VENDA___SALE_DTSUPERA.wrapperProps"
+										:id="getControlId(controls.VENDA___SALE_DTSUPERA)"
 										v-on="controls.VENDA___SALE_DTSUPERA.handlers"
 										:loading="controls.VENDA___SALE_DTSUPERA.props.loading"
 										:reporting-mode-on="reportingModeCAV"
@@ -515,6 +549,7 @@
 										<q-date-time-picker
 											v-if="controls.VENDA___SALE_DTSUPERA.isVisible"
 											v-bind="controls.VENDA___SALE_DTSUPERA.props"
+											:id="getControlId(controls.VENDA___SALE_DTSUPERA)"
 											:model-value="model.ValDtsupera.value"
 											@reset-icon-click="model.ValDtsupera.fnUpdateValue(model.ValDtsupera.originalValue ?? new Date())"
 											@update:model-value="model.ValDtsupera.fnUpdateValue($event ?? '')" />
@@ -529,9 +564,9 @@
 					<q-col v-if="controls.VENDA___PSEUDNOVOGR07.isVisible">
 						<q-group-box-container
 							v-if="controls.VENDA___PSEUDNOVOGR07.isVisible"
-							id="VENDA___PSEUDNOVOGR07"
 							v-bind="controls.VENDA___PSEUDNOVOGR07"
-							:is-visible="controls.VENDA___PSEUDNOVOGR07.isVisible">
+							:id="getControlId(controls.VENDA___PSEUDNOVOGR07)"
+							:no-border="controls.VENDA___PSEUDNOVOGR07.borderless">
 							<!-- Start VENDA___PSEUDNOVOGR07 -->
 							<q-row v-if="controls.VENDA___SALE_TENTFECH.isVisible || controls.VENDA___SALE_DTVENDA_.isVisible">
 								<q-col
@@ -540,7 +575,8 @@
 									<base-input-structure
 										v-if="controls.VENDA___SALE_TENTFECH.isVisible"
 										class="i-text"
-										v-bind="controls.VENDA___SALE_TENTFECH"
+										v-bind="controls.VENDA___SALE_TENTFECH.wrapperProps"
+										:id="getControlId(controls.VENDA___SALE_TENTFECH)"
 										v-on="controls.VENDA___SALE_TENTFECH.handlers"
 										:loading="controls.VENDA___SALE_TENTFECH.props.loading"
 										:reporting-mode-on="reportingModeCAV"
@@ -548,6 +584,7 @@
 										<q-date-time-picker
 											v-if="controls.VENDA___SALE_TENTFECH.isVisible"
 											v-bind="controls.VENDA___SALE_TENTFECH.props"
+											:id="getControlId(controls.VENDA___SALE_TENTFECH)"
 											:model-value="model.ValTentfech.value"
 											@reset-icon-click="model.ValTentfech.fnUpdateValue(model.ValTentfech.originalValue ?? new Date())"
 											@update:model-value="model.ValTentfech.fnUpdateValue($event ?? '')" />
@@ -559,7 +596,8 @@
 									<base-input-structure
 										v-if="controls.VENDA___SALE_DTVENDA_.isVisible"
 										class="i-text"
-										v-bind="controls.VENDA___SALE_DTVENDA_"
+										v-bind="controls.VENDA___SALE_DTVENDA_.wrapperProps"
+										:id="getControlId(controls.VENDA___SALE_DTVENDA_)"
 										v-on="controls.VENDA___SALE_DTVENDA_.handlers"
 										:loading="controls.VENDA___SALE_DTVENDA_.props.loading"
 										:reporting-mode-on="reportingModeCAV"
@@ -567,6 +605,7 @@
 										<q-date-time-picker
 											v-if="controls.VENDA___SALE_DTVENDA_.isVisible"
 											v-bind="controls.VENDA___SALE_DTVENDA_.props"
+											:id="getControlId(controls.VENDA___SALE_DTVENDA_)"
 											:model-value="model.ValDtvenda.value"
 											@reset-icon-click="model.ValDtvenda.fnUpdateValue(model.ValDtvenda.originalValue ?? new Date())"
 											@update:model-value="model.ValDtvenda.fnUpdateValue($event ?? '')" />
@@ -581,9 +620,9 @@
 					<q-col v-if="controls.VENDA___PSEUDNOVOGR08.isVisible">
 						<q-group-box-container
 							v-if="controls.VENDA___PSEUDNOVOGR08.isVisible"
-							id="VENDA___PSEUDNOVOGR08"
 							v-bind="controls.VENDA___PSEUDNOVOGR08"
-							:is-visible="controls.VENDA___PSEUDNOVOGR08.isVisible">
+							:id="getControlId(controls.VENDA___PSEUDNOVOGR08)"
+							:no-border="controls.VENDA___PSEUDNOVOGR08.borderless">
 							<!-- Start VENDA___PSEUDNOVOGR08 -->
 							<q-row v-if="controls.VENDA___SALE_DTACOMPA.isVisible">
 								<q-col
@@ -592,7 +631,8 @@
 									<base-input-structure
 										v-if="controls.VENDA___SALE_DTACOMPA.isVisible"
 										class="i-text"
-										v-bind="controls.VENDA___SALE_DTACOMPA"
+										v-bind="controls.VENDA___SALE_DTACOMPA.wrapperProps"
+										:id="getControlId(controls.VENDA___SALE_DTACOMPA)"
 										v-on="controls.VENDA___SALE_DTACOMPA.handlers"
 										:loading="controls.VENDA___SALE_DTACOMPA.props.loading"
 										:reporting-mode-on="reportingModeCAV"
@@ -600,6 +640,7 @@
 										<q-date-time-picker
 											v-if="controls.VENDA___SALE_DTACOMPA.isVisible"
 											v-bind="controls.VENDA___SALE_DTACOMPA.props"
+											:id="getControlId(controls.VENDA___SALE_DTACOMPA)"
 											:model-value="model.ValDtacompa.value"
 											@reset-icon-click="model.ValDtacompa.fnUpdateValue(model.ValDtacompa.originalValue ?? new Date())"
 											@update:model-value="model.ValDtacompa.fnUpdateValue($event ?? '')" />
@@ -614,7 +655,7 @@
 		</q-container>
 	</teleport>
 
-	<hr v-if="!isPopup && showFormFooter" />
+	<q-divider v-if="!isPopup && showFormFooter" />
 
 	<teleport
 		v-if="formModalIsReady && showFormFooter"
@@ -1019,6 +1060,7 @@
 						label: computed(() => this.Resources.PROSPECTION06755),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
+						borderless: false,
 						isCollapsible: false,
 						anchored: false,
 						directChildren: ['VENDA___SALE_IDENTIFI', 'VENDA___SALE_POTCOMPR', 'VENDA___SALE_PROSPECC'],
@@ -1073,6 +1115,7 @@
 						label: computed(() => this.Resources.QUALIFICATION64257),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
+						borderless: false,
 						isCollapsible: false,
 						anchored: false,
 						directChildren: ['VENDA___SALE_INTERESS', 'VENDA___SALE_SEMRFINA', 'VENDA___SALE_SEMCAPAC', 'VENDA___SALE_DTQUALIF', 'VENDA___SALE_QUALIFIC'],
@@ -1152,6 +1195,7 @@
 						label: computed(() => this.Resources.PRE_APPROACH58979),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
+						borderless: false,
 						isCollapsible: false,
 						anchored: false,
 						directChildren: ['VENDA___SALE_PREABORD', 'VENDA___SALE_HOMEWORK'],
@@ -1192,6 +1236,7 @@
 						label: computed(() => this.Resources.APPROACH06577),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
+						borderless: false,
 						isCollapsible: false,
 						anchored: false,
 						directChildren: ['VENDA___SALE_DTABORDA', 'VENDA___SALE_APPROACH'],
@@ -1232,6 +1277,7 @@
 						label: computed(() => this.Resources.PRESENTATION64246),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
+						borderless: false,
 						isCollapsible: false,
 						anchored: false,
 						directChildren: ['VENDA___SALE_DTAPRESE', 'VENDA___SALE_APRESENT'],
@@ -1272,6 +1318,7 @@
 						label: computed(() => this.Resources.OVERCOMING_OBJECTION04521),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
+						borderless: false,
 						isCollapsible: false,
 						anchored: false,
 						directChildren: ['VENDA___SALE_DTSUPERA'],
@@ -1299,6 +1346,7 @@
 						label: computed(() => this.Resources.CLOSING_OF_THE_SALE05493),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
+						borderless: false,
 						isCollapsible: false,
 						anchored: false,
 						directChildren: ['VENDA___SALE_TENTFECH', 'VENDA___SALE_DTVENDA_'],
@@ -1340,6 +1388,7 @@
 						label: computed(() => this.Resources.FOLLOW_UP22119),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
+						borderless: false,
 						isCollapsible: false,
 						anchored: false,
 						directChildren: ['VENDA___SALE_DTACOMPA'],
@@ -1788,7 +1837,6 @@
 
 				this.afterControlUpdate(controlField, fieldValue)
 			},
-
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
 // USE /[MANUAL GQT FUNCTIONS_JS VENDA]/
 // eslint-disable-next-line

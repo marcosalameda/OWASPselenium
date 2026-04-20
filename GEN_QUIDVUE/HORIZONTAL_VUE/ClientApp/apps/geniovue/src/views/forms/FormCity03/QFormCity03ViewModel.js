@@ -83,6 +83,7 @@ export default class ViewModel extends FormViewModelBase
 			field: 'COUNTRY',
 			maxLength: 50,
 			description: computed(() => this.Resources.COUNTRY64133),
+			ignoreFldSubmit: true,
 		}).cloneFrom(values?.TableCtryCountry))
 		this.stopWatchers.push(watch(() => this.TableCtryCountry.value, (newValue, oldValue) => this.onUpdate('ctry.country', this.TableCtryCountry, newValue, oldValue)))
 	}

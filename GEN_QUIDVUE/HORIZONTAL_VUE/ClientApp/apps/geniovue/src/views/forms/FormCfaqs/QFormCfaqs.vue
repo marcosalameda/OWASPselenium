@@ -9,12 +9,13 @@
 			<div
 				v-if="showFormHeader"
 				class="c-action-bar">
-				<h1
+				<component
 					v-if="formControl.uiComponents.header && formInfo.designation"
+					:is="topHeadingTag"
 					:id="formTitleId"
 					class="form-header">
 					{{ formInfo.designation }}
-				</h1>
+				</component>
 
 				<div class="c-action-bar__menu">
 					<template
@@ -40,13 +41,10 @@
 									@click="btn.action">
 									<template v-if="btn.icon">
 										<q-badge-indicator
-											v-if="btn.badge && btn.badge.isVisible"
-											:color="btn.badge.color">
+											:enabled="btn.badge?.isVisible ?? false"
+											:color="btn.badge?.color">
 											<q-icon v-bind="btn.icon" />
 										</q-badge-indicator>
-										<q-icon
-											v-else
-											v-bind="btn.icon" />
 									</template>
 								</q-toggle-group-item>
 							</template>
@@ -97,6 +95,7 @@
 		<q-container
 			fluid
 			data-key="CFAQS"
+			:data-identifier="primaryKeyValue"
 			:data-loading="!formInitialDataLoaded || !isActiveForm">
 			<template v-if="formControl.initialized && showFormBody">
 				<q-row v-if="controls.CFAQS___CFAQSICON____.isVisible">
@@ -106,7 +105,8 @@
 						<base-input-structure
 							v-if="controls.CFAQS___CFAQSICON____.isVisible"
 							class="q-image"
-							v-bind="controls.CFAQS___CFAQSICON____"
+							v-bind="controls.CFAQS___CFAQSICON____.wrapperProps"
+							:id="getControlId(controls.CFAQS___CFAQSICON____)"
 							v-on="controls.CFAQS___CFAQSICON____.handlers"
 							:loading="controls.CFAQS___CFAQSICON____.props.loading"
 							:reporting-mode-on="reportingModeCAV"
@@ -114,6 +114,7 @@
 							<q-image
 								v-if="controls.CFAQS___CFAQSICON____.isVisible"
 								v-bind="controls.CFAQS___CFAQSICON____.props"
+								:id="getControlId(controls.CFAQS___CFAQSICON____)"
 								v-on="controls.CFAQS___CFAQSICON____.handlers" />
 						</base-input-structure>
 					</q-col>
@@ -125,7 +126,8 @@
 						<base-input-structure
 							v-if="controls.CFAQS___CFAQSCATEGORY.isVisible"
 							class="i-textarea"
-							v-bind="controls.CFAQS___CFAQSCATEGORY"
+							v-bind="controls.CFAQS___CFAQSCATEGORY.wrapperProps"
+							:id="getControlId(controls.CFAQS___CFAQSCATEGORY)"
 							v-on="controls.CFAQS___CFAQSCATEGORY.handlers"
 							:loading="controls.CFAQS___CFAQSCATEGORY.props.loading"
 							:reporting-mode-on="reportingModeCAV"
@@ -133,6 +135,7 @@
 							<q-text-area
 								v-if="controls.CFAQS___CFAQSCATEGORY.isVisible"
 								v-bind="controls.CFAQS___CFAQSCATEGORY.props"
+								:id="getControlId(controls.CFAQS___CFAQSCATEGORY)"
 								v-on="controls.CFAQS___CFAQSCATEGORY.handlers" />
 						</base-input-structure>
 					</q-col>
@@ -144,7 +147,8 @@
 						<base-input-structure
 							v-if="controls.CFAQS___CFAQSDESCRIPT.isVisible"
 							class="i-textarea"
-							v-bind="controls.CFAQS___CFAQSDESCRIPT"
+							v-bind="controls.CFAQS___CFAQSDESCRIPT.wrapperProps"
+							:id="getControlId(controls.CFAQS___CFAQSDESCRIPT)"
 							v-on="controls.CFAQS___CFAQSDESCRIPT.handlers"
 							:loading="controls.CFAQS___CFAQSDESCRIPT.props.loading"
 							:reporting-mode-on="reportingModeCAV"
@@ -152,6 +156,7 @@
 							<q-text-area
 								v-if="controls.CFAQS___CFAQSDESCRIPT.isVisible"
 								v-bind="controls.CFAQS___CFAQSDESCRIPT.props"
+								:id="getControlId(controls.CFAQS___CFAQSDESCRIPT)"
 								v-on="controls.CFAQS___CFAQSDESCRIPT.handlers" />
 						</base-input-structure>
 					</q-col>
@@ -163,21 +168,22 @@
 						<q-table
 							v-if="controls.CFAQS___PSEUDEXPFAQS_.isVisible"
 							v-bind="controls.CFAQS___PSEUDEXPFAQS_"
+							:id="getControlId(controls.CFAQS___PSEUDEXPFAQS_)"
 							v-on="controls.CFAQS___PSEUDEXPFAQS_.handlers">
+							<template #header>
+								<q-table-config
+									:table-ctrl="controls.CFAQS___PSEUDEXPFAQS_"
+									v-on="controls.CFAQS___PSEUDEXPFAQS_.handlers" />
+							</template>
 							<!-- USE /[MANUAL GQT CUSTOM_TABLE CFAQS___PSEUDEXPFAQS_]/ -->
 						</q-table>
-						<q-table-extra-extension
-							v-if="controls.CFAQS___PSEUDEXPFAQS_.isVisible"
-							:list-ctrl="controls.CFAQS___PSEUDEXPFAQS_"
-							:filter-operators="controls.CFAQS___PSEUDEXPFAQS_.filterOperators"
-							v-on="controls.CFAQS___PSEUDEXPFAQS_.handlers" />
 					</q-col>
 				</q-row>
 			</template>
 		</q-container>
 	</teleport>
 
-	<hr v-if="!isPopup && showFormFooter" />
+	<q-divider v-if="!isPopup && showFormFooter" />
 
 	<teleport
 		v-if="formModalIsReady && showFormFooter"
@@ -565,10 +571,11 @@
 					CFAQS___PSEUDEXPFAQS_: new fieldControlClass.TableListControl({
 						id: 'CFAQS___PSEUDEXPFAQS_',
 						name: 'EXPFAQS',
-						size: '',
+						size: 'xxlarge',
 						label: computed(() => this.Resources.FAQS53959),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
+						headerLevel: computed(() => this.baseHeadingLevel + 1),
 						controller: 'CFAQS',
 						action: 'Cfaqs_ValExpfaqs',
 						hasDependencies: false,
@@ -608,7 +615,6 @@
 							searchBarConfig: {
 								visibility: false
 							},
-							filtersVisible: false,
 							allowColumnFilters: false,
 							allowColumnSort: true,
 							crudActions: [
@@ -682,9 +688,7 @@
 									id: 'insert',
 									name: 'insert',
 									title: computed(() => this.Resources.INSERIR43365),
-									icon: {
-										icon: 'add'
-									},
+									icon: { icon: 'add' },
 									isInReadOnly: false,
 									params: {
 										action: vm.openFormAction,
@@ -731,7 +735,7 @@
 								sortOrder: 'asc'
 							}
 						},
-						globalEvents: ['changed-CFAQS', 'changed-FAQS'],
+						globalEvents: ['changed-FAQS', 'changed-CFAQS'],
 						uuid: 'Cfaqs_ValExpfaqs',
 						allSelectedRows: 'false',
 						controlLimits: [
@@ -1122,7 +1126,6 @@
 
 				this.afterControlUpdate(controlField, fieldValue)
 			},
-
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
 // USE /[MANUAL GQT FUNCTIONS_JS CFAQS]/
 // eslint-disable-next-line

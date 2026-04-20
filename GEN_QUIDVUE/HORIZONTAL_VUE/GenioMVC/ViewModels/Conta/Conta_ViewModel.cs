@@ -7,6 +7,7 @@ using GenioMVC.Models.Navigation;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Quidgest.Persistence;
 using Quidgest.Persistence.GenericQuery;
+
 using System.Collections;
 using System.Collections.Concurrent;
 using System.Collections.Specialized;
@@ -43,6 +44,7 @@ namespace GenioMVC.ViewModels.Conta
 		public string ValCodtpcon { get; set; }
 
 		#endregion
+
 		/// <summary>
 		/// Title: "Name:" | Type: "C"
 		/// </summary>
@@ -62,8 +64,6 @@ namespace GenioMVC.ViewModels.Conta
 		/// Title: "Contact" | Type: "C"
 		/// </summary>
 		public string ValContacto { get; set; }
-
-
 
 		#region Navigations
 		#endregion
@@ -238,12 +238,7 @@ namespace GenioMVC.ViewModels.Conta
 			}
 		}
 
-		/// <summary>
-		/// Sets the value of a single property of the view model based on the provided table and field names.
-		/// </summary>
-		/// <param name="fullFieldName">The full field name in the format "table.field".</param>
-		/// <param name="value">The field value.</param>
-		/// <exception cref="ArgumentNullException">Thrown if <paramref name="fullFieldName"/> is null.</exception>
+		/// <inheritdoc />
 		public override void SetViewModelValue(string fullFieldName, object value)
 		{
 			try
@@ -379,6 +374,7 @@ namespace GenioMVC.ViewModels.Conta
 			Load_Conta___pessoname____(qs, lazyLoad);
 			Load_Conta___genregender__(qs, lazyLoad);
 			Load_Conta___tpcontipocont(qs, lazyLoad);
+
 // USE /[MANUAL GQT VIEWMODEL_LOADPARTIAL CONTA]/
 		}
 
@@ -449,10 +445,7 @@ namespace GenioMVC.ViewModels.Conta
 				}
 			}
 
-			TablePessoName = new TableDBEdit<Models.Pesso>
-			{
-				IsLazyLoad = lazyLoad
-			};
+			TablePessoName = new TableDBEdit<Models.Pesso>();
 
 			if (lazyLoad)
 			{
@@ -639,10 +632,7 @@ namespace GenioMVC.ViewModels.Conta
 				}
 			}
 
-			TableGenreGender = new TableDBEdit<Models.Genre>
-			{
-				IsLazyLoad = lazyLoad
-			};
+			TableGenreGender = new TableDBEdit<Models.Genre>();
 
 			if (lazyLoad)
 			{
@@ -833,10 +823,7 @@ namespace GenioMVC.ViewModels.Conta
 			// Area limit
 			conta___tpcontipocontDoLoad &= AddCriteriaAreaLimit(conta___tpcontipocontConds, CSGenio.business.CSGenioAgenre.FldCodgenre, "genre", this.ValCodgenre, true);
 
-			TableTpconTipocont = new TableDBEdit<Models.Tpcon>
-			{
-				IsLazyLoad = lazyLoad
-			};
+			TableTpconTipocont = new TableDBEdit<Models.Tpcon>();
 
 			if (lazyLoad)
 			{

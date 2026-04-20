@@ -7,6 +7,7 @@ using GenioMVC.Models.Navigation;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Quidgest.Persistence;
 using Quidgest.Persistence.GenericQuery;
+
 using System.Collections;
 using System.Collections.Concurrent;
 using System.Collections.Specialized;
@@ -39,6 +40,7 @@ namespace GenioMVC.ViewModels.Insta
 		public string ValCodtpequ { get; set; }
 
 		#endregion
+
 		/// <summary>
 		/// Title: "Registration No." | Type: "C"
 		/// </summary>
@@ -48,7 +50,7 @@ namespace GenioMVC.ViewModels.Insta
 		/// Title: "" | Type: "C"
 		/// </summary>
 		[ValidateSetAccess]
-		public string TpequValTipoequi 
+		public string TpequValTipoequi
 		{
 			get
 			{
@@ -108,8 +110,6 @@ namespace GenioMVC.ViewModels.Insta
 		/// Title: "Geographic Coordinates" | Type: "GG"
 		/// </summary>
 		public string ValCoordgeo { get; set; }
-
-
 
 		#region Navigations
 		#endregion
@@ -311,12 +311,7 @@ namespace GenioMVC.ViewModels.Insta
 			}
 		}
 
-		/// <summary>
-		/// Sets the value of a single property of the view model based on the provided table and field names.
-		/// </summary>
-		/// <param name="fullFieldName">The full field name in the format "table.field".</param>
-		/// <param name="value">The field value.</param>
-		/// <exception cref="ArgumentNullException">Thrown if <paramref name="fullFieldName"/> is null.</exception>
+		/// <inheritdoc />
 		public override void SetViewModelValue(string fullFieldName, object value)
 		{
 			try
@@ -468,6 +463,7 @@ namespace GenioMVC.ViewModels.Insta
 			Characs = new List<string>();
 
 			Load_Leaflettequipregistnr(qs, lazyLoad);
+
 // USE /[MANUAL GQT VIEWMODEL_LOADPARTIAL LEAFLETT]/
 		}
 
@@ -543,10 +539,7 @@ namespace GenioMVC.ViewModels.Insta
 			// Area limit
 			leaflettequipregistnrDoLoad &= AddCriteriaAreaLimit(leaflettequipregistnrConds, CSGenio.business.CSGenioAtpequ.FldCodtpequ, "tpequ", this.ValCodtpequ, true);
 
-			TableEquipRegistnr = new TableDBEdit<Models.Equip>
-			{
-				IsLazyLoad = lazyLoad
-			};
+			TableEquipRegistnr = new TableDBEdit<Models.Equip>();
 
 			if (lazyLoad)
 			{

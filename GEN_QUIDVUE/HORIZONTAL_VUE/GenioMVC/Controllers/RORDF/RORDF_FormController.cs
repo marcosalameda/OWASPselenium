@@ -358,8 +358,15 @@ namespace GenioMVC.Controllers
 				PersistentSupport sp = UserContext.Current.PersistentSupport;
 				try
 				{
-					GenioMVC.Models.Rordf model = new(UserContext.Current);
-					model.klass.QPrimaryKey = Navigation.GetStrValue("rordf");
+					var recordKey = Navigation.GetStrValue("rordf");
+					var model = GenioMVC.Models.Rordf.Find(recordKey, UserContext.Current);
+					if (model.ValZzstate == 0)
+					{
+						Navigation.ClearValue("rordf");
+						string errorMessage = Resources.Resources.ESTE_REGISTO_JA_FOI_02595;
+						Log.Error($"${errorMessage} ID: ${recordKey}");
+						return JsonOK(new { Success = true, currentNavigationLevel = Navigation.CurrentLevel.Level, Warning = errorMessage });
+					}
 
 // USE /[MANUAL GQT BEFORE_CANCEL RORDF]/
 

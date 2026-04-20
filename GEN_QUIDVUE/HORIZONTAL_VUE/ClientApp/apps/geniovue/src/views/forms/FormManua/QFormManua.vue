@@ -9,12 +9,13 @@
 			<div
 				v-if="showFormHeader"
 				class="c-action-bar">
-				<h1
+				<component
 					v-if="formControl.uiComponents.header && formInfo.designation"
+					:is="topHeadingTag"
 					:id="formTitleId"
 					class="form-header">
 					{{ formInfo.designation }}
-				</h1>
+				</component>
 
 				<div class="c-action-bar__menu">
 					<template
@@ -40,13 +41,10 @@
 									@click="btn.action">
 									<template v-if="btn.icon">
 										<q-badge-indicator
-											v-if="btn.badge && btn.badge.isVisible"
-											:color="btn.badge.color">
+											:enabled="btn.badge?.isVisible ?? false"
+											:color="btn.badge?.color">
 											<q-icon v-bind="btn.icon" />
 										</q-badge-indicator>
-										<q-icon
-											v-else
-											v-bind="btn.icon" />
 									</template>
 								</q-toggle-group-item>
 							</template>
@@ -97,6 +95,7 @@
 		<q-container
 			fluid
 			data-key="MANUA"
+			:data-identifier="primaryKeyValue"
 			:data-loading="!formInitialDataLoaded || !isActiveForm">
 			<template v-if="formControl.initialized && showFormBody">
 				<q-row v-if="controls.MANUA___KINDEDESIGNAT.isVisible">
@@ -106,7 +105,8 @@
 						<base-input-structure
 							v-if="controls.MANUA___KINDEDESIGNAT.isVisible"
 							class="i-text"
-							v-bind="controls.MANUA___KINDEDESIGNAT"
+							v-bind="controls.MANUA___KINDEDESIGNAT.wrapperProps"
+							:id="getControlId(controls.MANUA___KINDEDESIGNAT)"
 							v-on="controls.MANUA___KINDEDESIGNAT.handlers"
 							:loading="controls.MANUA___KINDEDESIGNAT.props.loading"
 							:reporting-mode-on="reportingModeCAV"
@@ -114,6 +114,7 @@
 							<q-lookup
 								v-if="controls.MANUA___KINDEDESIGNAT.isVisible"
 								v-bind="controls.MANUA___KINDEDESIGNAT.props"
+								:id="getControlId(controls.MANUA___KINDEDESIGNAT)"
 								v-on="controls.MANUA___KINDEDESIGNAT.handlers" />
 							<q-see-more-manua-kindedesignat
 								v-if="controls.MANUA___KINDEDESIGNAT.seeMoreIsVisible"
@@ -129,13 +130,15 @@
 						<base-input-structure
 							v-if="controls.MANUA___MANUANAME____.isVisible"
 							class="i-text"
-							v-bind="controls.MANUA___MANUANAME____"
+							v-bind="controls.MANUA___MANUANAME____.wrapperProps"
+							:id="getControlId(controls.MANUA___MANUANAME____)"
 							v-on="controls.MANUA___MANUANAME____.handlers"
 							:loading="controls.MANUA___MANUANAME____.props.loading"
 							:reporting-mode-on="reportingModeCAV"
 							:suggestion-mode-on="suggestionModeOn">
 							<q-text-field
 								v-bind="controls.MANUA___MANUANAME____.props"
+								:id="getControlId(controls.MANUA___MANUANAME____)"
 								@blur="onBlur(controls.MANUA___MANUANAME____, model.ValName.value)"
 								@change="model.ValName.fnUpdateValueOnChange" />
 						</base-input-structure>
@@ -148,7 +151,8 @@
 						<base-input-structure
 							v-if="controls.MANUA___MANUADIGDOCUM.isVisible"
 							class="i-text"
-							v-bind="controls.MANUA___MANUADIGDOCUM"
+							v-bind="controls.MANUA___MANUADIGDOCUM.wrapperProps"
+							:id="getControlId(controls.MANUA___MANUADIGDOCUM)"
 							v-on="controls.MANUA___MANUADIGDOCUM.handlers"
 							:loading="controls.MANUA___MANUADIGDOCUM.props.loading"
 							:reporting-mode-on="reportingModeCAV"
@@ -156,6 +160,7 @@
 							<q-document
 								v-if="controls.MANUA___MANUADIGDOCUM.isVisible"
 								v-bind="controls.MANUA___MANUADIGDOCUM.props"
+								:id="getControlId(controls.MANUA___MANUADIGDOCUM)"
 								v-on="controls.MANUA___MANUADIGDOCUM.handlers" />
 						</base-input-structure>
 					</q-col>
@@ -167,7 +172,8 @@
 						<base-input-structure
 							v-if="controls.MANUA___MANUANOTES___.isVisible"
 							class="i-textarea"
-							v-bind="controls.MANUA___MANUANOTES___"
+							v-bind="controls.MANUA___MANUANOTES___.wrapperProps"
+							:id="getControlId(controls.MANUA___MANUANOTES___)"
 							v-on="controls.MANUA___MANUANOTES___.handlers"
 							:loading="controls.MANUA___MANUANOTES___.props.loading"
 							:reporting-mode-on="reportingModeCAV"
@@ -175,6 +181,7 @@
 							<q-text-area
 								v-if="controls.MANUA___MANUANOTES___.isVisible"
 								v-bind="controls.MANUA___MANUANOTES___.props"
+								:id="getControlId(controls.MANUA___MANUANOTES___)"
 								v-on="controls.MANUA___MANUANOTES___.handlers" />
 						</base-input-structure>
 					</q-col>
@@ -183,7 +190,7 @@
 		</q-container>
 	</teleport>
 
-	<hr v-if="!isPopup && showFormFooter" />
+	<q-divider v-if="!isPopup && showFormFooter" />
 
 	<teleport
 		v-if="formModalIsReady && showFormFooter"
@@ -982,7 +989,6 @@
 
 				this.afterControlUpdate(controlField, fieldValue)
 			},
-
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
 // USE /[MANUAL GQT FUNCTIONS_JS MANUA]/
 // eslint-disable-next-line

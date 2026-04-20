@@ -3,22 +3,23 @@
 		v-if="menuModalIsReady"
 		:to="`#${uiContainersId.body}`"
 		:disabled="!menuInfo.isPopup">
-		<form
+		<div
 			class="form-horizontal"
 			@submit.prevent>
 			<q-row-container>
 				<q-table
 					v-bind="controls.menu"
 					v-on="controls.menu.handlers">
+					<template #header>
+						<q-table-config
+							:table-ctrl="controls.menu"
+							v-on="controls.menu.handlers">
+						</q-table-config>
+					</template>
 					<!-- USE /[MANUAL GQT CUSTOM_TABLE PTN_Menu_611]/ -->
 				</q-table>
-
-				<q-table-extra-extension
-					:list-ctrl="controls.menu"
-					:filter-operators="controls.menu.filterOperators"
-					v-on="controls.menu.handlers" />
 			</q-row-container>
-		</form>
+		</div>
 	</teleport>
 
 	<teleport
@@ -292,7 +293,6 @@
 								scrollData: 2,
 								export: 1,
 								array: computed(() => new qProjArrays.QArrayClass(vm.$getResource).elements),
-								arrayType: qProjArrays.QArrayClass.type,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.ArrayColumn({
 								order: 15,
@@ -305,7 +305,6 @@
 								decimalPlaces: 0,
 								export: 1,
 								array: computed(() => new qProjArrays.QArrayClassnum(vm.$getResource).elements),
-								arrayType: qProjArrays.QArrayClassnum.type,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.ArrayColumn({
 								order: 16,
@@ -316,7 +315,6 @@
 								scrollData: 1,
 								export: 1,
 								array: computed(() => new qProjArrays.QArrayPrimviag(vm.$getResource).elements),
-								arrayType: qProjArrays.QArrayPrimviag.type,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.ImageColumn({
 								order: 17,
@@ -536,7 +534,6 @@
 								scrollData: 5,
 								export: 1,
 								array: computed(() => new qProjArrays.QArrayRadiobtn(vm.$getResource).elements),
-								arrayType: qProjArrays.QArrayRadiobtn.type,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 						],
 						config: {
@@ -554,7 +551,6 @@
 							searchBarConfig: {
 								visibility: true
 							},
-							filtersVisible: true,
 							allowColumnFilters: true,
 							allowColumnSort: true,
 							crudActions: [
@@ -628,9 +624,7 @@
 									id: 'insert',
 									name: 'insert',
 									title: computed(() => this.Resources.INSERIR43365),
-									icon: {
-										icon: 'add'
-									},
+									icon: { icon: 'add' },
 									isInReadOnly: true,
 									params: {
 										action: vm.openFormAction,

@@ -58,20 +58,11 @@ namespace GenioMVC.Controllers
 			// Determine rows per page
 			tableConfig.RowsPerPage = tableConfig.DetermineRowsPerPage(CSGenio.framework.Configuration.NrRegDBedit, "");
 
-			// Determine what columns have totalizers
-			tableConfig.TotalizerColumns = requestModel.TotalizerColumns;
-
-			// For tables with multiple selection enabled, determine currently selected rows
-			tableConfig.SelectedRows = requestModel.SelectedRows;
-
-			// Add form field filters to the table configuration
-			tableConfig.FieldFilters = requestModel.RelatedFilterValues;
-
 			bool isHomePage = RouteData.Values.ContainsKey("isHomePage") ? (bool)RouteData.Values["isHomePage"] : false;
 			if (isHomePage)
 				Navigation.SetValue("HomePage", "STY_Menu_MODAL");
 
-			//If there was a recent operation on this table then force the primary persistence server to be called and ignore the read only feature
+			// If there was a recent operation on this table then force the primary persistence server to be called and ignore the read only feature
 			if (string.IsNullOrEmpty(Navigation.GetStrValue("ForcePrimaryRead_wareh")))
 				UserContext.Current.SetPersistenceReadOnly(true);
 			else
@@ -133,20 +124,11 @@ namespace GenioMVC.Controllers
 			// Determine rows per page
 			tableConfig.RowsPerPage = tableConfig.DetermineRowsPerPage(CSGenio.framework.Configuration.NrRegDBedit, "");
 
-			// Determine what columns have totalizers
-			tableConfig.TotalizerColumns = requestModel.TotalizerColumns;
-
-			// For tables with multiple selection enabled, determine currently selected rows
-			tableConfig.SelectedRows = requestModel.SelectedRows;
-
-			// Add form field filters to the table configuration
-			tableConfig.FieldFilters = requestModel.RelatedFilterValues;
-
 			bool isHomePage = RouteData.Values.ContainsKey("isHomePage") ? (bool)RouteData.Values["isHomePage"] : false;
 			if (isHomePage)
 				Navigation.SetValue("HomePage", "STY_Menu_ALERTS");
 
-			//If there was a recent operation on this table then force the primary persistence server to be called and ignore the read only feature
+			// If there was a recent operation on this table then force the primary persistence server to be called and ignore the read only feature
 			if (string.IsNullOrEmpty(Navigation.GetStrValue("ForcePrimaryRead_wareh")))
 				UserContext.Current.SetPersistenceReadOnly(true);
 			else
@@ -207,20 +189,11 @@ namespace GenioMVC.Controllers
 			// Determine rows per page
 			tableConfig.RowsPerPage = tableConfig.DetermineRowsPerPage(CSGenio.framework.Configuration.NrRegDBedit, "");
 
-			// Determine what columns have totalizers
-			tableConfig.TotalizerColumns = requestModel.TotalizerColumns;
-
-			// For tables with multiple selection enabled, determine currently selected rows
-			tableConfig.SelectedRows = requestModel.SelectedRows;
-
-			// Add form field filters to the table configuration
-			tableConfig.FieldFilters = requestModel.RelatedFilterValues;
-
 			bool isHomePage = RouteData.Values.ContainsKey("isHomePage") ? (bool)RouteData.Values["isHomePage"] : false;
 			if (isHomePage)
 				Navigation.SetValue("HomePage", "STY_Menu_AUTH");
 
-			//If there was a recent operation on this table then force the primary persistence server to be called and ignore the read only feature
+			// If there was a recent operation on this table then force the primary persistence server to be called and ignore the read only feature
 			if (string.IsNullOrEmpty(Navigation.GetStrValue("ForcePrimaryRead_wareh")))
 				UserContext.Current.SetPersistenceReadOnly(true);
 			else
@@ -275,7 +248,7 @@ namespace GenioMVC.Controllers
 			// only allow the jump if there are no filters
 			bool hasNoFilters = tableConfig.Filters.Count == 0;
 			bool isFirstDataLoad = (bool)requestModel?.IsFirstLoad;
-			bool isNoRedirect = (bool)requestModel?.noRedirect;
+			bool isNoRedirect = (bool)requestModel?.NoRedirect;
 
 			if (isFirstDataLoad && curRowsCount == 1 && hasNoFilters && model.Menu.Elements.First().ValZzstate == 0 && AllowSkipIfOnlyOne)
 			{
@@ -311,20 +284,11 @@ namespace GenioMVC.Controllers
 			// Determine rows per page
 			tableConfig.RowsPerPage = tableConfig.DetermineRowsPerPage(CSGenio.framework.Configuration.NrRegDBedit, "");
 
-			// Determine what columns have totalizers
-			tableConfig.TotalizerColumns = requestModel.TotalizerColumns;
-
-			// For tables with multiple selection enabled, determine currently selected rows
-			tableConfig.SelectedRows = requestModel.SelectedRows;
-
-			// Add form field filters to the table configuration
-			tableConfig.FieldFilters = requestModel.RelatedFilterValues;
-
 			bool isHomePage = RouteData.Values.ContainsKey("isHomePage") ? (bool)RouteData.Values["isHomePage"] : false;
 			if (isHomePage)
 				Navigation.SetValue("HomePage", "STY_Menu_BTNFORM");
 
-			//If there was a recent operation on this table then force the primary persistence server to be called and ignore the read only feature
+			// If there was a recent operation on this table then force the primary persistence server to be called and ignore the read only feature
 			if (string.IsNullOrEmpty(Navigation.GetStrValue("ForcePrimaryRead_wareh")))
 				UserContext.Current.SetPersistenceReadOnly(true);
 			else
@@ -379,7 +343,7 @@ namespace GenioMVC.Controllers
 			// only allow the jump if there are no filters
 			bool hasNoFilters = tableConfig.Filters.Count == 0;
 			bool isFirstDataLoad = (bool)requestModel?.IsFirstLoad;
-			bool isNoRedirect = (bool)requestModel?.noRedirect;
+			bool isNoRedirect = (bool)requestModel?.NoRedirect;
 
 			if (isFirstDataLoad && curRowsCount == 1 && hasNoFilters && model.Menu.Elements.First().ValZzstate == 0 && AllowSkipIfOnlyOne)
 			{
@@ -415,20 +379,11 @@ namespace GenioMVC.Controllers
 			// Determine rows per page
 			tableConfig.RowsPerPage = tableConfig.DetermineRowsPerPage(CSGenio.framework.Configuration.NrRegDBedit, "");
 
-			// Determine what columns have totalizers
-			tableConfig.TotalizerColumns = requestModel.TotalizerColumns;
-
-			// For tables with multiple selection enabled, determine currently selected rows
-			tableConfig.SelectedRows = requestModel.SelectedRows;
-
-			// Add form field filters to the table configuration
-			tableConfig.FieldFilters = requestModel.RelatedFilterValues;
-
 			bool isHomePage = RouteData.Values.ContainsKey("isHomePage") ? (bool)RouteData.Values["isHomePage"] : false;
 			if (isHomePage)
 				Navigation.SetValue("HomePage", "STY_Menu_MULTIFORM");
 
-			//If there was a recent operation on this table then force the primary persistence server to be called and ignore the read only feature
+			// If there was a recent operation on this table then force the primary persistence server to be called and ignore the read only feature
 			if (string.IsNullOrEmpty(Navigation.GetStrValue("ForcePrimaryRead_wareh")))
 				UserContext.Current.SetPersistenceReadOnly(true);
 			else
@@ -483,7 +438,7 @@ namespace GenioMVC.Controllers
 			// only allow the jump if there are no filters
 			bool hasNoFilters = tableConfig.Filters.Count == 0;
 			bool isFirstDataLoad = (bool)requestModel?.IsFirstLoad;
-			bool isNoRedirect = (bool)requestModel?.noRedirect;
+			bool isNoRedirect = (bool)requestModel?.NoRedirect;
 
 			if (isFirstDataLoad && curRowsCount == 1 && hasNoFilters && model.Menu.Elements.First().ValZzstate == 0 && AllowSkipIfOnlyOne)
 			{
@@ -519,20 +474,11 @@ namespace GenioMVC.Controllers
 			// Determine rows per page
 			tableConfig.RowsPerPage = tableConfig.DetermineRowsPerPage(CSGenio.framework.Configuration.NrRegDBedit, "");
 
-			// Determine what columns have totalizers
-			tableConfig.TotalizerColumns = requestModel.TotalizerColumns;
-
-			// For tables with multiple selection enabled, determine currently selected rows
-			tableConfig.SelectedRows = requestModel.SelectedRows;
-
-			// Add form field filters to the table configuration
-			tableConfig.FieldFilters = requestModel.RelatedFilterValues;
-
 			bool isHomePage = RouteData.Values.ContainsKey("isHomePage") ? (bool)RouteData.Values["isHomePage"] : false;
 			if (isHomePage)
 				Navigation.SetValue("HomePage", "STY_Menu_EXTENDFORM");
 
-			//If there was a recent operation on this table then force the primary persistence server to be called and ignore the read only feature
+			// If there was a recent operation on this table then force the primary persistence server to be called and ignore the read only feature
 			if (string.IsNullOrEmpty(Navigation.GetStrValue("ForcePrimaryRead_wareh")))
 				UserContext.Current.SetPersistenceReadOnly(true);
 			else
@@ -587,7 +533,7 @@ namespace GenioMVC.Controllers
 			// only allow the jump if there are no filters
 			bool hasNoFilters = tableConfig.Filters.Count == 0;
 			bool isFirstDataLoad = (bool)requestModel?.IsFirstLoad;
-			bool isNoRedirect = (bool)requestModel?.noRedirect;
+			bool isNoRedirect = (bool)requestModel?.NoRedirect;
 
 			if (isFirstDataLoad && curRowsCount == 1 && hasNoFilters && model.Menu.Elements.First().ValZzstate == 0 && AllowSkipIfOnlyOne)
 			{
@@ -623,20 +569,11 @@ namespace GenioMVC.Controllers
 			// Determine rows per page
 			tableConfig.RowsPerPage = tableConfig.DetermineRowsPerPage(CSGenio.framework.Configuration.NrRegDBedit, "");
 
-			// Determine what columns have totalizers
-			tableConfig.TotalizerColumns = requestModel.TotalizerColumns;
-
-			// For tables with multiple selection enabled, determine currently selected rows
-			tableConfig.SelectedRows = requestModel.SelectedRows;
-
-			// Add form field filters to the table configuration
-			tableConfig.FieldFilters = requestModel.RelatedFilterValues;
-
 			bool isHomePage = RouteData.Values.ContainsKey("isHomePage") ? (bool)RouteData.Values["isHomePage"] : false;
 			if (isHomePage)
 				Navigation.SetValue("HomePage", "STY_Menu_EXPOSETABLE");
 
-			//If there was a recent operation on this table then force the primary persistence server to be called and ignore the read only feature
+			// If there was a recent operation on this table then force the primary persistence server to be called and ignore the read only feature
 			if (string.IsNullOrEmpty(Navigation.GetStrValue("ForcePrimaryRead_wareh")))
 				UserContext.Current.SetPersistenceReadOnly(true);
 			else
@@ -691,7 +628,7 @@ namespace GenioMVC.Controllers
 			// only allow the jump if there are no filters
 			bool hasNoFilters = tableConfig.Filters.Count == 0;
 			bool isFirstDataLoad = (bool)requestModel?.IsFirstLoad;
-			bool isNoRedirect = (bool)requestModel?.noRedirect;
+			bool isNoRedirect = (bool)requestModel?.NoRedirect;
 
 			if (isFirstDataLoad && curRowsCount == 1 && hasNoFilters && model.Menu.Elements.First().ValZzstate == 0 && AllowSkipIfOnlyOne)
 			{
@@ -727,20 +664,11 @@ namespace GenioMVC.Controllers
 			// Determine rows per page
 			tableConfig.RowsPerPage = tableConfig.DetermineRowsPerPage(CSGenio.framework.Configuration.NrRegDBedit, "");
 
-			// Determine what columns have totalizers
-			tableConfig.TotalizerColumns = requestModel.TotalizerColumns;
-
-			// For tables with multiple selection enabled, determine currently selected rows
-			tableConfig.SelectedRows = requestModel.SelectedRows;
-
-			// Add form field filters to the table configuration
-			tableConfig.FieldFilters = requestModel.RelatedFilterValues;
-
 			bool isHomePage = RouteData.Values.ContainsKey("isHomePage") ? (bool)RouteData.Values["isHomePage"] : false;
 			if (isHomePage)
 				Navigation.SetValue("HomePage", "STY_Menu_TIMELIN");
 
-			//If there was a recent operation on this table then force the primary persistence server to be called and ignore the read only feature
+			// If there was a recent operation on this table then force the primary persistence server to be called and ignore the read only feature
 			if (string.IsNullOrEmpty(Navigation.GetStrValue("ForcePrimaryRead_wareh")))
 				UserContext.Current.SetPersistenceReadOnly(true);
 			else
@@ -795,7 +723,7 @@ namespace GenioMVC.Controllers
 			// only allow the jump if there are no filters
 			bool hasNoFilters = tableConfig.Filters.Count == 0;
 			bool isFirstDataLoad = (bool)requestModel?.IsFirstLoad;
-			bool isNoRedirect = (bool)requestModel?.noRedirect;
+			bool isNoRedirect = (bool)requestModel?.NoRedirect;
 
 			if (isFirstDataLoad && curRowsCount == 1 && hasNoFilters && model.Menu.Elements.First().ValZzstate == 0 && AllowSkipIfOnlyOne)
 			{
@@ -831,20 +759,11 @@ namespace GenioMVC.Controllers
 			// Determine rows per page
 			tableConfig.RowsPerPage = tableConfig.DetermineRowsPerPage(CSGenio.framework.Configuration.NrRegDBedit, "");
 
-			// Determine what columns have totalizers
-			tableConfig.TotalizerColumns = requestModel.TotalizerColumns;
-
-			// For tables with multiple selection enabled, determine currently selected rows
-			tableConfig.SelectedRows = requestModel.SelectedRows;
-
-			// Add form field filters to the table configuration
-			tableConfig.FieldFilters = requestModel.RelatedFilterValues;
-
 			bool isHomePage = RouteData.Values.ContainsKey("isHomePage") ? (bool)RouteData.Values["isHomePage"] : false;
 			if (isHomePage)
 				Navigation.SetValue("HomePage", "GQT_Menu_461");
 
-			//If there was a recent operation on this table then force the primary persistence server to be called and ignore the read only feature
+			// If there was a recent operation on this table then force the primary persistence server to be called and ignore the read only feature
 			if (string.IsNullOrEmpty(Navigation.GetStrValue("ForcePrimaryRead_wareh")))
 				UserContext.Current.SetPersistenceReadOnly(true);
 			else
@@ -905,20 +824,11 @@ namespace GenioMVC.Controllers
 			// Determine rows per page
 			tableConfig.RowsPerPage = tableConfig.DetermineRowsPerPage(CSGenio.framework.Configuration.NrRegDBedit, "");
 
-			// Determine what columns have totalizers
-			tableConfig.TotalizerColumns = requestModel.TotalizerColumns;
-
-			// For tables with multiple selection enabled, determine currently selected rows
-			tableConfig.SelectedRows = requestModel.SelectedRows;
-
-			// Add form field filters to the table configuration
-			tableConfig.FieldFilters = requestModel.RelatedFilterValues;
-
 			bool isHomePage = RouteData.Values.ContainsKey("isHomePage") ? (bool)RouteData.Values["isHomePage"] : false;
 			if (isHomePage)
 				Navigation.SetValue("HomePage", "GQT_Menu_491");
 
-			//If there was a recent operation on this table then force the primary persistence server to be called and ignore the read only feature
+			// If there was a recent operation on this table then force the primary persistence server to be called and ignore the read only feature
 			if (string.IsNullOrEmpty(Navigation.GetStrValue("ForcePrimaryRead_wareh")))
 				UserContext.Current.SetPersistenceReadOnly(true);
 			else

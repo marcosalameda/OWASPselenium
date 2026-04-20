@@ -7,6 +7,7 @@ using GenioMVC.Models.Navigation;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Quidgest.Persistence;
 using Quidgest.Persistence.GenericQuery;
+
 using System.Collections;
 using System.Collections.Concurrent;
 using System.Collections.Specialized;
@@ -39,6 +40,7 @@ namespace GenioMVC.ViewModels.Insta
 		public string ValCodtpequ { get; set; }
 
 		#endregion
+
 		/// <summary>
 		/// Title: "Type of equipment" | Type: "C"
 		/// </summary>
@@ -53,7 +55,7 @@ namespace GenioMVC.ViewModels.Insta
 		/// Title: "Designation:" | Type: "C"
 		/// </summary>
 		[ValidateSetAccess]
-		public string EquipValDesignat 
+		public string EquipValDesignat
 		{
 			get
 			{
@@ -71,7 +73,7 @@ namespace GenioMVC.ViewModels.Insta
 		/// </summary>
 		[ImageThumbnailJsonConverter(100, 50)]
 		[ValidateSetAccess]
-		public GenioMVC.Models.ImageModel EquipValPhotogra 
+		public GenioMVC.Models.ImageModel EquipValPhotogra
 		{
 			get
 			{
@@ -111,8 +113,6 @@ namespace GenioMVC.ViewModels.Insta
 		/// Title: "Geographic Coordinates" | Type: "GG"
 		/// </summary>
 		public string ValCoordgeo { get; set; }
-
-
 
 		#region Navigations
 		#endregion
@@ -305,12 +305,7 @@ namespace GenioMVC.ViewModels.Insta
 			}
 		}
 
-		/// <summary>
-		/// Sets the value of a single property of the view model based on the provided table and field names.
-		/// </summary>
-		/// <param name="fullFieldName">The full field name in the format "table.field".</param>
-		/// <param name="value">The field value.</param>
-		/// <exception cref="ArgumentNullException">Thrown if <paramref name="fullFieldName"/> is null.</exception>
+		/// <inheritdoc />
 		public override void SetViewModelValue(string fullFieldName, object value)
 		{
 			try
@@ -448,6 +443,7 @@ namespace GenioMVC.ViewModels.Insta
 
 			Load_Insta___tpequtipoequi(qs, lazyLoad);
 			Load_Insta___equipregistnr(qs, lazyLoad);
+
 // USE /[MANUAL GQT VIEWMODEL_LOADPARTIAL INSTA]/
 		}
 
@@ -518,10 +514,7 @@ namespace GenioMVC.ViewModels.Insta
 				}
 			}
 
-			TableTpequTipoequi = new TableDBEdit<Models.Tpequ>
-			{
-				IsLazyLoad = lazyLoad
-			};
+			TableTpequTipoequi = new TableDBEdit<Models.Tpequ>();
 
 			if (lazyLoad)
 			{
@@ -764,10 +757,7 @@ namespace GenioMVC.ViewModels.Insta
 			// Area limit
 			insta___equipregistnrDoLoad &= AddCriteriaAreaLimit(insta___equipregistnrConds, CSGenio.business.CSGenioAtpequ.FldCodtpequ, "tpequ", this.ValCodtpequ, true);
 
-			TableEquipRegistnr = new TableDBEdit<Models.Equip>
-			{
-				IsLazyLoad = lazyLoad
-			};
+			TableEquipRegistnr = new TableDBEdit<Models.Equip>();
 
 			if (lazyLoad)
 			{

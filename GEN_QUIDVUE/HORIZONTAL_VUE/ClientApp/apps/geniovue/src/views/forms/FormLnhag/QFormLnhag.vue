@@ -9,12 +9,13 @@
 			<div
 				v-if="showFormHeader"
 				class="c-action-bar">
-				<h1
+				<component
 					v-if="formControl.uiComponents.header && formInfo.designation"
+					:is="topHeadingTag"
 					:id="formTitleId"
 					class="form-header">
 					{{ formInfo.designation }}
-				</h1>
+				</component>
 
 				<div class="c-action-bar__menu">
 					<template
@@ -40,13 +41,10 @@
 									@click="btn.action">
 									<template v-if="btn.icon">
 										<q-badge-indicator
-											v-if="btn.badge && btn.badge.isVisible"
-											:color="btn.badge.color">
+											:enabled="btn.badge?.isVisible ?? false"
+											:color="btn.badge?.color">
 											<q-icon v-bind="btn.icon" />
 										</q-badge-indicator>
-										<q-icon
-											v-else
-											v-bind="btn.icon" />
 									</template>
 								</q-toggle-group-item>
 							</template>
@@ -97,6 +95,7 @@
 		<q-container
 			fluid
 			data-key="LNHAG"
+			:data-identifier="primaryKeyValue"
 			:data-loading="!formInitialDataLoaded || !isActiveForm">
 			<template v-if="formControl.initialized && showFormBody">
 				<q-row v-if="controls.LNHAG___PEDIDNRPEDIDO.isVisible || controls.LNHAG___TPEQ1TIPOEQUI.isVisible">
@@ -106,7 +105,8 @@
 						<base-input-structure
 							v-if="controls.LNHAG___PEDIDNRPEDIDO.isVisible"
 							class="i-text"
-							v-bind="controls.LNHAG___PEDIDNRPEDIDO"
+							v-bind="controls.LNHAG___PEDIDNRPEDIDO.wrapperProps"
+							:id="getControlId(controls.LNHAG___PEDIDNRPEDIDO)"
 							v-on="controls.LNHAG___PEDIDNRPEDIDO.handlers"
 							:loading="controls.LNHAG___PEDIDNRPEDIDO.props.loading"
 							:reporting-mode-on="reportingModeCAV"
@@ -114,6 +114,7 @@
 							<q-lookup
 								v-if="controls.LNHAG___PEDIDNRPEDIDO.isVisible"
 								v-bind="controls.LNHAG___PEDIDNRPEDIDO.props"
+								:id="getControlId(controls.LNHAG___PEDIDNRPEDIDO)"
 								v-on="controls.LNHAG___PEDIDNRPEDIDO.handlers" />
 							<q-see-more-lnhag-pedidnrpedido
 								v-if="controls.LNHAG___PEDIDNRPEDIDO.seeMoreIsVisible"
@@ -127,7 +128,8 @@
 						<base-input-structure
 							v-if="controls.LNHAG___TPEQ1TIPOEQUI.isVisible"
 							class="i-text"
-							v-bind="controls.LNHAG___TPEQ1TIPOEQUI"
+							v-bind="controls.LNHAG___TPEQ1TIPOEQUI.wrapperProps"
+							:id="getControlId(controls.LNHAG___TPEQ1TIPOEQUI)"
 							v-on="controls.LNHAG___TPEQ1TIPOEQUI.handlers"
 							:loading="controls.LNHAG___TPEQ1TIPOEQUI.props.loading"
 							:reporting-mode-on="reportingModeCAV"
@@ -135,6 +137,7 @@
 							<q-lookup
 								v-if="controls.LNHAG___TPEQ1TIPOEQUI.isVisible"
 								v-bind="controls.LNHAG___TPEQ1TIPOEQUI.props"
+								:id="getControlId(controls.LNHAG___TPEQ1TIPOEQUI)"
 								v-on="controls.LNHAG___TPEQ1TIPOEQUI.handlers" />
 							<q-see-more-lnhag-tpeq1tipoequi
 								v-if="controls.LNHAG___TPEQ1TIPOEQUI.seeMoreIsVisible"
@@ -150,7 +153,8 @@
 						<base-input-structure
 							v-if="controls.LNHAG___LNHAGQTDTPEQU.isVisible"
 							class="i-text"
-							v-bind="controls.LNHAG___LNHAGQTDTPEQU"
+							v-bind="controls.LNHAG___LNHAGQTDTPEQU.wrapperProps"
+							:id="getControlId(controls.LNHAG___LNHAGQTDTPEQU)"
 							v-on="controls.LNHAG___LNHAGQTDTPEQU.handlers"
 							:loading="controls.LNHAG___LNHAGQTDTPEQU.props.loading"
 							:reporting-mode-on="reportingModeCAV"
@@ -158,6 +162,7 @@
 							<q-numeric-input
 								v-if="controls.LNHAG___LNHAGQTDTPEQU.isVisible"
 								v-bind="controls.LNHAG___LNHAGQTDTPEQU.props"
+								:id="getControlId(controls.LNHAG___LNHAGQTDTPEQU)"
 								@update:model-value="model.ValQtdtpequ.fnUpdateValue" />
 						</base-input-structure>
 					</q-col>
@@ -166,7 +171,7 @@
 		</q-container>
 	</teleport>
 
-	<hr v-if="!isPopup && showFormFooter" />
+	<q-divider v-if="!isPopup && showFormFooter" />
 
 	<teleport
 		v-if="formModalIsReady && showFormFooter"
@@ -975,7 +980,6 @@
 
 				this.afterControlUpdate(controlField, fieldValue)
 			},
-
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
 // USE /[MANUAL GQT FUNCTIONS_JS LNHAG]/
 // eslint-disable-next-line

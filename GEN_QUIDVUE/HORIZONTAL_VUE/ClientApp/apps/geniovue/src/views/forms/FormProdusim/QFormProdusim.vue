@@ -9,12 +9,13 @@
 			<div
 				v-if="showFormHeader"
 				class="c-action-bar">
-				<h1
+				<component
 					v-if="formControl.uiComponents.header && formInfo.designation"
+					:is="topHeadingTag"
 					:id="formTitleId"
 					class="form-header">
 					{{ formInfo.designation }}
-				</h1>
+				</component>
 
 				<div class="c-action-bar__menu">
 					<template
@@ -40,13 +41,10 @@
 									@click="btn.action">
 									<template v-if="btn.icon">
 										<q-badge-indicator
-											v-if="btn.badge && btn.badge.isVisible"
-											:color="btn.badge.color">
+											:enabled="btn.badge?.isVisible ?? false"
+											:color="btn.badge?.color">
 											<q-icon v-bind="btn.icon" />
 										</q-badge-indicator>
-										<q-icon
-											v-else
-											v-bind="btn.icon" />
 									</template>
 								</q-toggle-group-item>
 							</template>
@@ -97,15 +95,16 @@
 		<q-container
 			fluid
 			data-key="PRODUSIM"
+			:data-identifier="primaryKeyValue"
 			:data-loading="!formInitialDataLoaded || !isActiveForm">
 			<template v-if="formControl.initialized && showFormBody">
 				<q-row v-if="controls.PRODUSIMPSEUDNOVOGR01.isVisible">
 					<q-col v-if="controls.PRODUSIMPSEUDNOVOGR01.isVisible">
 						<q-group-box-container
 							v-if="controls.PRODUSIMPSEUDNOVOGR01.isVisible"
-							id="PRODUSIMPSEUDNOVOGR01"
 							v-bind="controls.PRODUSIMPSEUDNOVOGR01"
-							:is-visible="controls.PRODUSIMPSEUDNOVOGR01.isVisible">
+							:id="getControlId(controls.PRODUSIMPSEUDNOVOGR01)"
+							:no-border="controls.PRODUSIMPSEUDNOVOGR01.borderless">
 							<!-- Start PRODUSIMPSEUDNOVOGR01 -->
 							<q-row v-if="controls.PRODUSIMPRODUPRODUCT_.isVisible">
 								<q-col
@@ -114,13 +113,15 @@
 									<base-input-structure
 										v-if="controls.PRODUSIMPRODUPRODUCT_.isVisible"
 										class="i-text"
-										v-bind="controls.PRODUSIMPRODUPRODUCT_"
+										v-bind="controls.PRODUSIMPRODUPRODUCT_.wrapperProps"
+										:id="getControlId(controls.PRODUSIMPRODUPRODUCT_)"
 										v-on="controls.PRODUSIMPRODUPRODUCT_.handlers"
 										:loading="controls.PRODUSIMPRODUPRODUCT_.props.loading"
 										:reporting-mode-on="reportingModeCAV"
 										:suggestion-mode-on="suggestionModeOn">
 										<q-text-field
 											v-bind="controls.PRODUSIMPRODUPRODUCT_.props"
+											:id="getControlId(controls.PRODUSIMPRODUPRODUCT_)"
 											@blur="onBlur(controls.PRODUSIMPRODUPRODUCT_, model.ValProduct.value)"
 											@change="model.ValProduct.fnUpdateValueOnChange" />
 									</base-input-structure>
@@ -133,7 +134,8 @@
 									<base-input-structure
 										v-if="controls.PRODUSIMPRODUDESCRIPT.isVisible"
 										class="i-textarea"
-										v-bind="controls.PRODUSIMPRODUDESCRIPT"
+										v-bind="controls.PRODUSIMPRODUDESCRIPT.wrapperProps"
+										:id="getControlId(controls.PRODUSIMPRODUDESCRIPT)"
 										v-on="controls.PRODUSIMPRODUDESCRIPT.handlers"
 										:loading="controls.PRODUSIMPRODUDESCRIPT.props.loading"
 										:reporting-mode-on="reportingModeCAV"
@@ -141,6 +143,7 @@
 										<q-text-area
 											v-if="controls.PRODUSIMPRODUDESCRIPT.isVisible"
 											v-bind="controls.PRODUSIMPRODUDESCRIPT.props"
+											:id="getControlId(controls.PRODUSIMPRODUDESCRIPT)"
 											v-on="controls.PRODUSIMPRODUDESCRIPT.handlers" />
 									</base-input-structure>
 								</q-col>
@@ -150,13 +153,15 @@
 									<base-input-structure
 										v-if="controls.PRODUSIMPRODUSKU_____.isVisible"
 										class="i-text"
-										v-bind="controls.PRODUSIMPRODUSKU_____"
+										v-bind="controls.PRODUSIMPRODUSKU_____.wrapperProps"
+										:id="getControlId(controls.PRODUSIMPRODUSKU_____)"
 										v-on="controls.PRODUSIMPRODUSKU_____.handlers"
 										:loading="controls.PRODUSIMPRODUSKU_____.props.loading"
 										:reporting-mode-on="reportingModeCAV"
 										:suggestion-mode-on="suggestionModeOn">
 										<q-text-field
 											v-bind="controls.PRODUSIMPRODUSKU_____.props"
+											:id="getControlId(controls.PRODUSIMPRODUSKU_____)"
 											@blur="onBlur(controls.PRODUSIMPRODUSKU_____, model.ValSku.value)"
 											@change="model.ValSku.fnUpdateValueOnChange" />
 									</base-input-structure>
@@ -167,13 +172,15 @@
 									<base-input-structure
 										v-if="controls.PRODUSIMPRODUGTIN____.isVisible"
 										class="i-text"
-										v-bind="controls.PRODUSIMPRODUGTIN____"
+										v-bind="controls.PRODUSIMPRODUGTIN____.wrapperProps"
+										:id="getControlId(controls.PRODUSIMPRODUGTIN____)"
 										v-on="controls.PRODUSIMPRODUGTIN____.handlers"
 										:loading="controls.PRODUSIMPRODUGTIN____.props.loading"
 										:reporting-mode-on="reportingModeCAV"
 										:suggestion-mode-on="suggestionModeOn">
 										<q-text-field
 											v-bind="controls.PRODUSIMPRODUGTIN____.props"
+											:id="getControlId(controls.PRODUSIMPRODUGTIN____)"
 											@blur="onBlur(controls.PRODUSIMPRODUGTIN____, model.ValGtin.value)"
 											@change="model.ValGtin.fnUpdateValueOnChange" />
 									</base-input-structure>
@@ -186,13 +193,15 @@
 									<base-input-structure
 										v-if="controls.PRODUSIMPRODUSIZE____.isVisible"
 										class="i-text"
-										v-bind="controls.PRODUSIMPRODUSIZE____"
+										v-bind="controls.PRODUSIMPRODUSIZE____.wrapperProps"
+										:id="getControlId(controls.PRODUSIMPRODUSIZE____)"
 										v-on="controls.PRODUSIMPRODUSIZE____.handlers"
 										:loading="controls.PRODUSIMPRODUSIZE____.props.loading"
 										:reporting-mode-on="reportingModeCAV"
 										:suggestion-mode-on="suggestionModeOn">
 										<q-text-field
 											v-bind="controls.PRODUSIMPRODUSIZE____.props"
+											:id="getControlId(controls.PRODUSIMPRODUSIZE____)"
 											@blur="onBlur(controls.PRODUSIMPRODUSIZE____, model.ValSize.value)"
 											@change="model.ValSize.fnUpdateValueOnChange" />
 									</base-input-structure>
@@ -203,7 +212,8 @@
 									<base-input-structure
 										v-if="controls.PRODUSIMPRODUWEIGHT__.isVisible"
 										class="i-text"
-										v-bind="controls.PRODUSIMPRODUWEIGHT__"
+										v-bind="controls.PRODUSIMPRODUWEIGHT__.wrapperProps"
+										:id="getControlId(controls.PRODUSIMPRODUWEIGHT__)"
 										v-on="controls.PRODUSIMPRODUWEIGHT__.handlers"
 										:loading="controls.PRODUSIMPRODUWEIGHT__.props.loading"
 										:reporting-mode-on="reportingModeCAV"
@@ -211,6 +221,7 @@
 										<q-numeric-input
 											v-if="controls.PRODUSIMPRODUWEIGHT__.isVisible"
 											v-bind="controls.PRODUSIMPRODUWEIGHT__.props"
+											:id="getControlId(controls.PRODUSIMPRODUWEIGHT__)"
 											@update:model-value="model.ValWeight.fnUpdateValue" />
 									</base-input-structure>
 								</q-col>
@@ -223,8 +234,8 @@
 					<q-col v-if="controls.PRODUSIMPSEUDNOVOGR02.isVisible">
 						<q-group-collapsible
 							v-if="controls.PRODUSIMPSEUDNOVOGR02.isVisible"
-							id="PRODUSIMPSEUDNOVOGR02"
 							v-bind="controls.PRODUSIMPSEUDNOVOGR02"
+							:id="getControlId(controls.PRODUSIMPSEUDNOVOGR02)"
 							v-on="controls.PRODUSIMPSEUDNOVOGR02.handlers">
 							<!-- Start PRODUSIMPSEUDNOVOGR02 -->
 							<q-row v-if="controls.PRODUSIMLOCATGLN_____.isVisible || controls.PRODUSIMLCEXTGLNEXT__.isVisible">
@@ -234,7 +245,8 @@
 									<base-input-structure
 										v-if="controls.PRODUSIMLOCATGLN_____.isVisible"
 										class="i-text"
-										v-bind="controls.PRODUSIMLOCATGLN_____"
+										v-bind="controls.PRODUSIMLOCATGLN_____.wrapperProps"
+										:id="getControlId(controls.PRODUSIMLOCATGLN_____)"
 										v-on="controls.PRODUSIMLOCATGLN_____.handlers"
 										:loading="controls.PRODUSIMLOCATGLN_____.props.loading"
 										:reporting-mode-on="reportingModeCAV"
@@ -242,6 +254,7 @@
 										<q-lookup
 											v-if="controls.PRODUSIMLOCATGLN_____.isVisible"
 											v-bind="controls.PRODUSIMLOCATGLN_____.props"
+											:id="getControlId(controls.PRODUSIMLOCATGLN_____)"
 											v-on="controls.PRODUSIMLOCATGLN_____.handlers" />
 										<q-see-more-produsimlocatgln
 											v-if="controls.PRODUSIMLOCATGLN_____.seeMoreIsVisible"
@@ -255,7 +268,8 @@
 									<base-input-structure
 										v-if="controls.PRODUSIMLCEXTGLNEXT__.isVisible"
 										class="i-text"
-										v-bind="controls.PRODUSIMLCEXTGLNEXT__"
+										v-bind="controls.PRODUSIMLCEXTGLNEXT__.wrapperProps"
+										:id="getControlId(controls.PRODUSIMLCEXTGLNEXT__)"
 										v-on="controls.PRODUSIMLCEXTGLNEXT__.handlers"
 										:loading="controls.PRODUSIMLCEXTGLNEXT__.props.loading"
 										:reporting-mode-on="reportingModeCAV"
@@ -263,6 +277,7 @@
 										<q-lookup
 											v-if="controls.PRODUSIMLCEXTGLNEXT__.isVisible"
 											v-bind="controls.PRODUSIMLCEXTGLNEXT__.props"
+											:id="getControlId(controls.PRODUSIMLCEXTGLNEXT__)"
 											v-on="controls.PRODUSIMLCEXTGLNEXT__.handlers" />
 										<q-see-more-produsimlcextglnext
 											v-if="controls.PRODUSIMLCEXTGLNEXT__.seeMoreIsVisible"
@@ -279,7 +294,7 @@
 		</q-container>
 	</teleport>
 
-	<hr v-if="!isPopup && showFormFooter" />
+	<q-divider v-if="!isPopup && showFormFooter" />
 
 	<teleport
 		v-if="formModalIsReady && showFormFooter"
@@ -630,6 +645,7 @@
 						label: computed(() => this.Resources.PRODUCT_IDENTIFICATI25169),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
+						borderless: false,
 						isCollapsible: false,
 						anchored: false,
 						directChildren: ['PRODUSIMPRODUPRODUCT_', 'PRODUSIMPRODUDESCRIPT', 'PRODUSIMPRODUSKU_____', 'PRODUSIMPRODUGTIN____', 'PRODUSIMPRODUSIZE____', 'PRODUSIMPRODUWEIGHT__'],
@@ -1204,7 +1220,6 @@
 
 				this.afterControlUpdate(controlField, fieldValue)
 			},
-
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
 // USE /[MANUAL GQT FUNCTIONS_JS PRODUSIM]/
 // eslint-disable-next-line

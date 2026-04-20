@@ -9,12 +9,13 @@
 			<div
 				v-if="showFormHeader"
 				class="c-action-bar">
-				<h1
+				<component
 					v-if="formControl.uiComponents.header && formInfo.designation"
+					:is="topHeadingTag"
 					:id="formTitleId"
 					class="form-header">
 					{{ formInfo.designation }}
-				</h1>
+				</component>
 
 				<div class="c-action-bar__menu">
 					<template
@@ -40,13 +41,10 @@
 									@click="btn.action">
 									<template v-if="btn.icon">
 										<q-badge-indicator
-											v-if="btn.badge && btn.badge.isVisible"
-											:color="btn.badge.color">
+											:enabled="btn.badge?.isVisible ?? false"
+											:color="btn.badge?.color">
 											<q-icon v-bind="btn.icon" />
 										</q-badge-indicator>
-										<q-icon
-											v-else
-											v-bind="btn.icon" />
 									</template>
 								</q-toggle-group-item>
 							</template>
@@ -97,14 +95,15 @@
 		<q-container
 			fluid
 			data-key="EQUIP"
+			:data-identifier="primaryKeyValue"
 			:data-loading="!formInitialDataLoaded || !isActiveForm">
 			<template v-if="formControl.initialized && showFormBody">
 				<q-row v-if="controls.EQUIP___PSEUDNOVOGR02.isVisible">
 					<q-col v-if="controls.EQUIP___PSEUDNOVOGR02.isVisible">
 						<q-group-collapsible
 							v-if="controls.EQUIP___PSEUDNOVOGR02.isVisible"
-							id="EQUIP___PSEUDNOVOGR02"
 							v-bind="controls.EQUIP___PSEUDNOVOGR02"
+							:id="getControlId(controls.EQUIP___PSEUDNOVOGR02)"
 							v-on="controls.EQUIP___PSEUDNOVOGR02.handlers">
 							<!-- Start EQUIP___PSEUDNOVOGR02 -->
 							<q-row v-if="controls.EQUIP___CMPNYDESIGNAT.isVisible || controls.EQUIP___PESS1NAME____.isVisible">
@@ -114,7 +113,8 @@
 									<base-input-structure
 										v-if="controls.EQUIP___CMPNYDESIGNAT.isVisible"
 										class="i-text"
-										v-bind="controls.EQUIP___CMPNYDESIGNAT"
+										v-bind="controls.EQUIP___CMPNYDESIGNAT.wrapperProps"
+										:id="getControlId(controls.EQUIP___CMPNYDESIGNAT)"
 										v-on="controls.EQUIP___CMPNYDESIGNAT.handlers"
 										:loading="controls.EQUIP___CMPNYDESIGNAT.props.loading"
 										:reporting-mode-on="reportingModeCAV"
@@ -122,6 +122,7 @@
 										<q-lookup
 											v-if="controls.EQUIP___CMPNYDESIGNAT.isVisible"
 											v-bind="controls.EQUIP___CMPNYDESIGNAT.props"
+											:id="getControlId(controls.EQUIP___CMPNYDESIGNAT)"
 											v-on="controls.EQUIP___CMPNYDESIGNAT.handlers" />
 										<q-see-more-equip-cmpnydesignat
 											v-if="controls.EQUIP___CMPNYDESIGNAT.seeMoreIsVisible"
@@ -135,7 +136,8 @@
 									<base-input-structure
 										v-if="controls.EQUIP___PESS1NAME____.isVisible"
 										class="i-text"
-										v-bind="controls.EQUIP___PESS1NAME____"
+										v-bind="controls.EQUIP___PESS1NAME____.wrapperProps"
+										:id="getControlId(controls.EQUIP___PESS1NAME____)"
 										v-on="controls.EQUIP___PESS1NAME____.handlers"
 										:loading="controls.EQUIP___PESS1NAME____.props.loading"
 										:reporting-mode-on="reportingModeCAV"
@@ -143,6 +145,7 @@
 										<q-lookup
 											v-if="controls.EQUIP___PESS1NAME____.isVisible"
 											v-bind="controls.EQUIP___PESS1NAME____.props"
+											:id="getControlId(controls.EQUIP___PESS1NAME____)"
 											v-on="controls.EQUIP___PESS1NAME____.handlers" />
 										<q-see-more-equip-pess1name
 											v-if="controls.EQUIP___PESS1NAME____.seeMoreIsVisible"
@@ -159,10 +162,10 @@
 					<q-col v-if="controls.EQUIP___PSEUDNOVOGR01.isVisible">
 						<q-group-box-container
 							v-if="controls.EQUIP___PSEUDNOVOGR01.isVisible"
-							id="EQUIP___PSEUDNOVOGR01"
 							class="c-groupbox--title-background"
 							v-bind="controls.EQUIP___PSEUDNOVOGR01"
-							:is-visible="controls.EQUIP___PSEUDNOVOGR01.isVisible">
+							:id="getControlId(controls.EQUIP___PSEUDNOVOGR01)"
+							:no-border="controls.EQUIP___PSEUDNOVOGR01.borderless">
 							<!-- Start EQUIP___PSEUDNOVOGR01 -->
 							<q-row v-if="controls.EQUIP___EQUIPSEQUENNR.isVisible || controls.EQUIP___EQUIPREGISTNR.isVisible || controls.EQUIP___TPEQUTIPOEQUI.isVisible">
 								<q-col
@@ -171,7 +174,8 @@
 									<base-input-structure
 										v-if="controls.EQUIP___EQUIPSEQUENNR.isVisible"
 										class="i-text"
-										v-bind="controls.EQUIP___EQUIPSEQUENNR"
+										v-bind="controls.EQUIP___EQUIPSEQUENNR.wrapperProps"
+										:id="getControlId(controls.EQUIP___EQUIPSEQUENNR)"
 										v-on="controls.EQUIP___EQUIPSEQUENNR.handlers"
 										:loading="controls.EQUIP___EQUIPSEQUENNR.props.loading"
 										:reporting-mode-on="reportingModeCAV"
@@ -179,6 +183,7 @@
 										<q-numeric-input
 											v-if="controls.EQUIP___EQUIPSEQUENNR.isVisible"
 											v-bind="controls.EQUIP___EQUIPSEQUENNR.props"
+											:id="getControlId(controls.EQUIP___EQUIPSEQUENNR)"
 											@update:model-value="model.ValSequennr.fnUpdateValue" />
 									</base-input-structure>
 								</q-col>
@@ -188,13 +193,15 @@
 									<base-input-structure
 										v-if="controls.EQUIP___EQUIPREGISTNR.isVisible"
 										class="i-text"
-										v-bind="controls.EQUIP___EQUIPREGISTNR"
+										v-bind="controls.EQUIP___EQUIPREGISTNR.wrapperProps"
+										:id="getControlId(controls.EQUIP___EQUIPREGISTNR)"
 										v-on="controls.EQUIP___EQUIPREGISTNR.handlers"
 										:loading="controls.EQUIP___EQUIPREGISTNR.props.loading"
 										:reporting-mode-on="reportingModeCAV"
 										:suggestion-mode-on="suggestionModeOn">
 										<q-text-field
 											v-bind="controls.EQUIP___EQUIPREGISTNR.props"
+											:id="getControlId(controls.EQUIP___EQUIPREGISTNR)"
 											@blur="onBlur(controls.EQUIP___EQUIPREGISTNR, model.ValRegistnr.value)"
 											@change="model.ValRegistnr.fnUpdateValueOnChange" />
 									</base-input-structure>
@@ -205,7 +212,8 @@
 									<base-input-structure
 										v-if="controls.EQUIP___TPEQUTIPOEQUI.isVisible"
 										class="i-text"
-										v-bind="controls.EQUIP___TPEQUTIPOEQUI"
+										v-bind="controls.EQUIP___TPEQUTIPOEQUI.wrapperProps"
+										:id="getControlId(controls.EQUIP___TPEQUTIPOEQUI)"
 										v-on="controls.EQUIP___TPEQUTIPOEQUI.handlers"
 										:loading="controls.EQUIP___TPEQUTIPOEQUI.props.loading"
 										:reporting-mode-on="reportingModeCAV"
@@ -213,6 +221,7 @@
 										<q-lookup
 											v-if="controls.EQUIP___TPEQUTIPOEQUI.isVisible"
 											v-bind="controls.EQUIP___TPEQUTIPOEQUI.props"
+											:id="getControlId(controls.EQUIP___TPEQUTIPOEQUI)"
 											v-on="controls.EQUIP___TPEQUTIPOEQUI.handlers" />
 										<q-see-more-equip-tpequtipoequi
 											v-if="controls.EQUIP___TPEQUTIPOEQUI.seeMoreIsVisible"
@@ -228,26 +237,29 @@
 									<base-input-structure
 										v-if="controls.EQUIP___EQUIPSITEFABR.isVisible"
 										class="i-text"
-										v-bind="controls.EQUIP___EQUIPSITEFABR"
+										v-bind="controls.EQUIP___EQUIPSITEFABR.wrapperProps"
+										:id="getControlId(controls.EQUIP___EQUIPSITEFABR)"
 										v-on="controls.EQUIP___EQUIPSITEFABR.handlers"
 										:loading="controls.EQUIP___EQUIPSITEFABR.props.loading"
 										:reporting-mode-on="reportingModeCAV"
 										:suggestion-mode-on="suggestionModeOn">
 										<q-text-field
 											v-bind="controls.EQUIP___EQUIPSITEFABR.props"
+											:id="getControlId(controls.EQUIP___EQUIPSITEFABR)"
 											@blur="onBlur(controls.EQUIP___EQUIPSITEFABR, model.ValSitefabr.value)"
 											@change="model.ValSitefabr.fnUpdateValueOnChange" />
 									</base-input-structure>
 								</q-col>
 							</q-row>
-							<q-row v-if="controls.EQUIP___WAREHWAREHDES.isVisible || controls.EQUIP___ITEM_ITEMDES_.isVisible">
+							<q-row v-if="controls.EQUIP___WAREHWAREHDES.isVisible || controls.EQUIP___ITEM_ITEMDES_.isVisible || controls.EQUIP___EQUIPDESIGNAT.isVisible || controls.EQUIP___EQUIPFREQUENC.isVisible || controls.EQUIP___EQUIPVALORTOT.isVisible || controls.EQUIP___EQUIPDTAQUISI.isVisible || controls.EQUIP___EQUIPDTDECO__.isVisible || controls.EQUIP___EQUIPBOUGHT__.isVisible">
 								<q-col
 									v-if="controls.EQUIP___WAREHWAREHDES.isVisible"
 									cols="auto">
 									<base-input-structure
 										v-if="controls.EQUIP___WAREHWAREHDES.isVisible"
 										class="i-text"
-										v-bind="controls.EQUIP___WAREHWAREHDES"
+										v-bind="controls.EQUIP___WAREHWAREHDES.wrapperProps"
+										:id="getControlId(controls.EQUIP___WAREHWAREHDES)"
 										v-on="controls.EQUIP___WAREHWAREHDES.handlers"
 										:loading="controls.EQUIP___WAREHWAREHDES.props.loading"
 										:reporting-mode-on="reportingModeCAV"
@@ -255,6 +267,7 @@
 										<q-lookup
 											v-if="controls.EQUIP___WAREHWAREHDES.isVisible"
 											v-bind="controls.EQUIP___WAREHWAREHDES.props"
+											:id="getControlId(controls.EQUIP___WAREHWAREHDES)"
 											v-on="controls.EQUIP___WAREHWAREHDES.handlers" />
 										<q-see-more-equip-warehwarehdes
 											v-if="controls.EQUIP___WAREHWAREHDES.seeMoreIsVisible"
@@ -268,7 +281,8 @@
 									<base-input-structure
 										v-if="controls.EQUIP___ITEM_ITEMDES_.isVisible"
 										class="i-text"
-										v-bind="controls.EQUIP___ITEM_ITEMDES_"
+										v-bind="controls.EQUIP___ITEM_ITEMDES_.wrapperProps"
+										:id="getControlId(controls.EQUIP___ITEM_ITEMDES_)"
 										v-on="controls.EQUIP___ITEM_ITEMDES_.handlers"
 										:loading="controls.EQUIP___ITEM_ITEMDES_.props.loading"
 										:reporting-mode-on="reportingModeCAV"
@@ -276,6 +290,7 @@
 										<q-lookup
 											v-if="controls.EQUIP___ITEM_ITEMDES_.isVisible"
 											v-bind="controls.EQUIP___ITEM_ITEMDES_.props"
+											:id="getControlId(controls.EQUIP___ITEM_ITEMDES_)"
 											v-on="controls.EQUIP___ITEM_ITEMDES_.handlers" />
 										<q-see-more-equip-item-itemdes
 											v-if="controls.EQUIP___ITEM_ITEMDES_.seeMoreIsVisible"
@@ -283,21 +298,21 @@
 											v-on="controls.EQUIP___ITEM_ITEMDES_.handlers" />
 									</base-input-structure>
 								</q-col>
-							</q-row>
-							<q-row v-if="controls.EQUIP___EQUIPDESIGNAT.isVisible || controls.EQUIP___EQUIPFREQUENC.isVisible || controls.EQUIP___EQUIPVALORTOT.isVisible || controls.EQUIP___EQUIPDTAQUISI.isVisible || controls.EQUIP___EQUIPDTDECO__.isVisible || controls.EQUIP___EQUIPBOUGHT__.isVisible">
 								<q-col
 									v-if="controls.EQUIP___EQUIPDESIGNAT.isVisible"
 									cols="auto">
 									<base-input-structure
 										v-if="controls.EQUIP___EQUIPDESIGNAT.isVisible"
 										class="i-text"
-										v-bind="controls.EQUIP___EQUIPDESIGNAT"
+										v-bind="controls.EQUIP___EQUIPDESIGNAT.wrapperProps"
+										:id="getControlId(controls.EQUIP___EQUIPDESIGNAT)"
 										v-on="controls.EQUIP___EQUIPDESIGNAT.handlers"
 										:loading="controls.EQUIP___EQUIPDESIGNAT.props.loading"
 										:reporting-mode-on="reportingModeCAV"
 										:suggestion-mode-on="suggestionModeOn">
 										<q-text-field
 											v-bind="controls.EQUIP___EQUIPDESIGNAT.props"
+											:id="getControlId(controls.EQUIP___EQUIPDESIGNAT)"
 											@blur="onBlur(controls.EQUIP___EQUIPDESIGNAT, model.ValDesignat.value)"
 											@change="model.ValDesignat.fnUpdateValueOnChange" />
 									</base-input-structure>
@@ -308,7 +323,8 @@
 									<base-input-structure
 										v-if="controls.EQUIP___EQUIPFREQUENC.isVisible"
 										class="i-text"
-										v-bind="controls.EQUIP___EQUIPFREQUENC"
+										v-bind="controls.EQUIP___EQUIPFREQUENC.wrapperProps"
+										:id="getControlId(controls.EQUIP___EQUIPFREQUENC)"
 										v-on="controls.EQUIP___EQUIPFREQUENC.handlers"
 										:loading="controls.EQUIP___EQUIPFREQUENC.props.loading"
 										:reporting-mode-on="reportingModeCAV"
@@ -316,6 +332,7 @@
 										<q-combobox
 											v-if="controls.EQUIP___EQUIPFREQUENC.isVisible"
 											v-bind="controls.EQUIP___EQUIPFREQUENC.props"
+											:id="getControlId(controls.EQUIP___EQUIPFREQUENC)"
 											:model-value="model.ValFrequenc.value"
 											@update:model-value="model.ValFrequenc.fnUpdateValue" />
 									</base-input-structure>
@@ -326,7 +343,8 @@
 									<base-input-structure
 										v-if="controls.EQUIP___EQUIPVALORTOT.isVisible"
 										class="i-text"
-										v-bind="controls.EQUIP___EQUIPVALORTOT"
+										v-bind="controls.EQUIP___EQUIPVALORTOT.wrapperProps"
+										:id="getControlId(controls.EQUIP___EQUIPVALORTOT)"
 										v-on="controls.EQUIP___EQUIPVALORTOT.handlers"
 										:loading="controls.EQUIP___EQUIPVALORTOT.props.loading"
 										:reporting-mode-on="reportingModeCAV"
@@ -334,6 +352,7 @@
 										<q-numeric-input
 											v-if="controls.EQUIP___EQUIPVALORTOT.isVisible"
 											v-bind="controls.EQUIP___EQUIPVALORTOT.props"
+											:id="getControlId(controls.EQUIP___EQUIPVALORTOT)"
 											@update:model-value="model.ValValortot.fnUpdateValue" />
 									</base-input-structure>
 								</q-col>
@@ -343,7 +362,8 @@
 									<base-input-structure
 										v-if="controls.EQUIP___EQUIPDTAQUISI.isVisible"
 										class="i-text"
-										v-bind="controls.EQUIP___EQUIPDTAQUISI"
+										v-bind="controls.EQUIP___EQUIPDTAQUISI.wrapperProps"
+										:id="getControlId(controls.EQUIP___EQUIPDTAQUISI)"
 										v-on="controls.EQUIP___EQUIPDTAQUISI.handlers"
 										:loading="controls.EQUIP___EQUIPDTAQUISI.props.loading"
 										:reporting-mode-on="reportingModeCAV"
@@ -351,6 +371,7 @@
 										<q-date-time-picker
 											v-if="controls.EQUIP___EQUIPDTAQUISI.isVisible"
 											v-bind="controls.EQUIP___EQUIPDTAQUISI.props"
+											:id="getControlId(controls.EQUIP___EQUIPDTAQUISI)"
 											:model-value="model.ValDtaquisi.value"
 											@reset-icon-click="model.ValDtaquisi.fnUpdateValue(model.ValDtaquisi.originalValue ?? new Date())"
 											@update:model-value="model.ValDtaquisi.fnUpdateValue($event ?? '')" />
@@ -362,7 +383,8 @@
 									<base-input-structure
 										v-if="controls.EQUIP___EQUIPDTDECO__.isVisible"
 										class="i-text"
-										v-bind="controls.EQUIP___EQUIPDTDECO__"
+										v-bind="controls.EQUIP___EQUIPDTDECO__.wrapperProps"
+										:id="getControlId(controls.EQUIP___EQUIPDTDECO__)"
 										v-on="controls.EQUIP___EQUIPDTDECO__.handlers"
 										:loading="controls.EQUIP___EQUIPDTDECO__.props.loading"
 										:reporting-mode-on="reportingModeCAV"
@@ -370,6 +392,7 @@
 										<q-date-time-picker
 											v-if="controls.EQUIP___EQUIPDTDECO__.isVisible"
 											v-bind="controls.EQUIP___EQUIPDTDECO__.props"
+											:id="getControlId(controls.EQUIP___EQUIPDTDECO__)"
 											:model-value="model.ValDtdeco.value"
 											@reset-icon-click="model.ValDtdeco.fnUpdateValue(model.ValDtdeco.originalValue ?? new Date())"
 											@update:model-value="model.ValDtdeco.fnUpdateValue($event ?? '')" />
@@ -380,8 +403,9 @@
 									cols="auto">
 									<base-input-structure
 										v-if="controls.EQUIP___EQUIPBOUGHT__.isVisible"
-										class="i-checkbox"
-										v-bind="controls.EQUIP___EQUIPBOUGHT__"
+										class="i-text"
+										v-bind="controls.EQUIP___EQUIPBOUGHT__.wrapperProps"
+										:id="getControlId(controls.EQUIP___EQUIPBOUGHT__)"
 										v-on="controls.EQUIP___EQUIPBOUGHT__.handlers"
 										:loading="controls.EQUIP___EQUIPBOUGHT__.props.loading"
 										:reporting-mode-on="reportingModeCAV"
@@ -390,6 +414,7 @@
 											<q-checkbox
 												v-if="controls.EQUIP___EQUIPBOUGHT__.isVisible"
 												v-bind="controls.EQUIP___EQUIPBOUGHT__.props"
+												:id="getControlId(controls.EQUIP___EQUIPBOUGHT__)"
 												v-on="controls.EQUIP___EQUIPBOUGHT__.handlers" />
 										</template>
 									</base-input-structure>
@@ -403,9 +428,9 @@
 					<q-col v-if="controls.EQUIP___PSEUDNOVOGR09.isVisible">
 						<q-group-box-container
 							v-if="controls.EQUIP___PSEUDNOVOGR09.isVisible"
-							id="EQUIP___PSEUDNOVOGR09"
 							v-bind="controls.EQUIP___PSEUDNOVOGR09"
-							:is-visible="controls.EQUIP___PSEUDNOVOGR09.isVisible">
+							:id="getControlId(controls.EQUIP___PSEUDNOVOGR09)"
+							:no-border="controls.EQUIP___PSEUDNOVOGR09.borderless">
 							<!-- Start EQUIP___PSEUDNOVOGR09 -->
 							<q-row v-if="controls.EQUIP___ROOM1ROOMNR__.isVisible || controls.EQUIP___ROOM1DESIGNAT.isVisible || controls.EQUIP___EQUIPDTREFERE.isVisible || controls.EQUIP___EQUIPFIRST___.isVisible || controls.EQUIP___EQUIPBEFORE__.isVisible || controls.EQUIP___EQUIPFOLLOWIN.isVisible || controls.EQUIP___EQUIPLAST____.isVisible || controls.EQUIP___EQUIPQTDMOVIM.isVisible">
 								<q-col
@@ -414,7 +439,8 @@
 									<base-input-structure
 										v-if="controls.EQUIP___ROOM1ROOMNR__.isVisible"
 										class="i-text"
-										v-bind="controls.EQUIP___ROOM1ROOMNR__"
+										v-bind="controls.EQUIP___ROOM1ROOMNR__.wrapperProps"
+										:id="getControlId(controls.EQUIP___ROOM1ROOMNR__)"
 										v-on="controls.EQUIP___ROOM1ROOMNR__.handlers"
 										:loading="controls.EQUIP___ROOM1ROOMNR__.props.loading"
 										:reporting-mode-on="reportingModeCAV"
@@ -422,6 +448,7 @@
 										<q-lookup
 											v-if="controls.EQUIP___ROOM1ROOMNR__.isVisible"
 											v-bind="controls.EQUIP___ROOM1ROOMNR__.props"
+											:id="getControlId(controls.EQUIP___ROOM1ROOMNR__)"
 											v-on="controls.EQUIP___ROOM1ROOMNR__.handlers" />
 									</base-input-structure>
 								</q-col>
@@ -431,13 +458,15 @@
 									<base-input-structure
 										v-if="controls.EQUIP___ROOM1DESIGNAT.isVisible"
 										class="i-text"
-										v-bind="controls.EQUIP___ROOM1DESIGNAT"
+										v-bind="controls.EQUIP___ROOM1DESIGNAT.wrapperProps"
+										:id="getControlId(controls.EQUIP___ROOM1DESIGNAT)"
 										v-on="controls.EQUIP___ROOM1DESIGNAT.handlers"
 										:loading="controls.EQUIP___ROOM1DESIGNAT.props.loading"
 										:reporting-mode-on="reportingModeCAV"
 										:suggestion-mode-on="suggestionModeOn">
 										<q-text-field
 											v-bind="controls.EQUIP___ROOM1DESIGNAT.props"
+											:id="getControlId(controls.EQUIP___ROOM1DESIGNAT)"
 											@blur="onBlur(controls.EQUIP___ROOM1DESIGNAT, model.Room1ValDesignat.value)"
 											@change="model.Room1ValDesignat.fnUpdateValueOnChange" />
 									</base-input-structure>
@@ -448,7 +477,8 @@
 									<base-input-structure
 										v-if="controls.EQUIP___EQUIPDTREFERE.isVisible"
 										class="i-text"
-										v-bind="controls.EQUIP___EQUIPDTREFERE"
+										v-bind="controls.EQUIP___EQUIPDTREFERE.wrapperProps"
+										:id="getControlId(controls.EQUIP___EQUIPDTREFERE)"
 										v-on="controls.EQUIP___EQUIPDTREFERE.handlers"
 										:loading="controls.EQUIP___EQUIPDTREFERE.props.loading"
 										:reporting-mode-on="reportingModeCAV"
@@ -456,6 +486,7 @@
 										<q-date-time-picker
 											v-if="controls.EQUIP___EQUIPDTREFERE.isVisible"
 											v-bind="controls.EQUIP___EQUIPDTREFERE.props"
+											:id="getControlId(controls.EQUIP___EQUIPDTREFERE)"
 											:model-value="model.ValDtrefere.value"
 											@reset-icon-click="model.ValDtrefere.fnUpdateValue(model.ValDtrefere.originalValue ?? new Date())"
 											@update:model-value="model.ValDtrefere.fnUpdateValue($event ?? '')" />
@@ -467,13 +498,15 @@
 									<base-input-structure
 										v-if="controls.EQUIP___EQUIPFIRST___.isVisible"
 										class="i-text"
-										v-bind="controls.EQUIP___EQUIPFIRST___"
+										v-bind="controls.EQUIP___EQUIPFIRST___.wrapperProps"
+										:id="getControlId(controls.EQUIP___EQUIPFIRST___)"
 										v-on="controls.EQUIP___EQUIPFIRST___.handlers"
 										:loading="controls.EQUIP___EQUIPFIRST___.props.loading"
 										:reporting-mode-on="reportingModeCAV"
 										:suggestion-mode-on="suggestionModeOn">
 										<q-text-field
 											v-bind="controls.EQUIP___EQUIPFIRST___.props"
+											:id="getControlId(controls.EQUIP___EQUIPFIRST___)"
 											@blur="onBlur(controls.EQUIP___EQUIPFIRST___, model.ValFirst.value)"
 											@change="model.ValFirst.fnUpdateValueOnChange" />
 									</base-input-structure>
@@ -484,13 +517,15 @@
 									<base-input-structure
 										v-if="controls.EQUIP___EQUIPBEFORE__.isVisible"
 										class="i-text"
-										v-bind="controls.EQUIP___EQUIPBEFORE__"
+										v-bind="controls.EQUIP___EQUIPBEFORE__.wrapperProps"
+										:id="getControlId(controls.EQUIP___EQUIPBEFORE__)"
 										v-on="controls.EQUIP___EQUIPBEFORE__.handlers"
 										:loading="controls.EQUIP___EQUIPBEFORE__.props.loading"
 										:reporting-mode-on="reportingModeCAV"
 										:suggestion-mode-on="suggestionModeOn">
 										<q-text-field
 											v-bind="controls.EQUIP___EQUIPBEFORE__.props"
+											:id="getControlId(controls.EQUIP___EQUIPBEFORE__)"
 											@blur="onBlur(controls.EQUIP___EQUIPBEFORE__, model.ValBefore.value)"
 											@change="model.ValBefore.fnUpdateValueOnChange" />
 									</base-input-structure>
@@ -501,13 +536,15 @@
 									<base-input-structure
 										v-if="controls.EQUIP___EQUIPFOLLOWIN.isVisible"
 										class="i-text"
-										v-bind="controls.EQUIP___EQUIPFOLLOWIN"
+										v-bind="controls.EQUIP___EQUIPFOLLOWIN.wrapperProps"
+										:id="getControlId(controls.EQUIP___EQUIPFOLLOWIN)"
 										v-on="controls.EQUIP___EQUIPFOLLOWIN.handlers"
 										:loading="controls.EQUIP___EQUIPFOLLOWIN.props.loading"
 										:reporting-mode-on="reportingModeCAV"
 										:suggestion-mode-on="suggestionModeOn">
 										<q-text-field
 											v-bind="controls.EQUIP___EQUIPFOLLOWIN.props"
+											:id="getControlId(controls.EQUIP___EQUIPFOLLOWIN)"
 											@blur="onBlur(controls.EQUIP___EQUIPFOLLOWIN, model.ValFollowin.value)"
 											@change="model.ValFollowin.fnUpdateValueOnChange" />
 									</base-input-structure>
@@ -518,13 +555,15 @@
 									<base-input-structure
 										v-if="controls.EQUIP___EQUIPLAST____.isVisible"
 										class="i-text"
-										v-bind="controls.EQUIP___EQUIPLAST____"
+										v-bind="controls.EQUIP___EQUIPLAST____.wrapperProps"
+										:id="getControlId(controls.EQUIP___EQUIPLAST____)"
 										v-on="controls.EQUIP___EQUIPLAST____.handlers"
 										:loading="controls.EQUIP___EQUIPLAST____.props.loading"
 										:reporting-mode-on="reportingModeCAV"
 										:suggestion-mode-on="suggestionModeOn">
 										<q-text-field
 											v-bind="controls.EQUIP___EQUIPLAST____.props"
+											:id="getControlId(controls.EQUIP___EQUIPLAST____)"
 											@blur="onBlur(controls.EQUIP___EQUIPLAST____, model.ValLast.value)"
 											@change="model.ValLast.fnUpdateValueOnChange" />
 									</base-input-structure>
@@ -535,7 +574,8 @@
 									<base-input-structure
 										v-if="controls.EQUIP___EQUIPQTDMOVIM.isVisible"
 										class="i-text"
-										v-bind="controls.EQUIP___EQUIPQTDMOVIM"
+										v-bind="controls.EQUIP___EQUIPQTDMOVIM.wrapperProps"
+										:id="getControlId(controls.EQUIP___EQUIPQTDMOVIM)"
 										v-on="controls.EQUIP___EQUIPQTDMOVIM.handlers"
 										:loading="controls.EQUIP___EQUIPQTDMOVIM.props.loading"
 										:reporting-mode-on="reportingModeCAV"
@@ -543,6 +583,7 @@
 										<q-numeric-input
 											v-if="controls.EQUIP___EQUIPQTDMOVIM.isVisible"
 											v-bind="controls.EQUIP___EQUIPQTDMOVIM.props"
+											:id="getControlId(controls.EQUIP___EQUIPQTDMOVIM)"
 											@update:model-value="model.ValQtdmovim.fnUpdateValue" />
 									</base-input-structure>
 								</q-col>
@@ -554,14 +595,15 @@
 									<base-input-structure
 										v-if="controls.EQUIP___EQUIPMOVIMENT.isVisible"
 										class="i-static-text"
-										v-bind="controls.EQUIP___EQUIPMOVIMENT"
+										v-bind="controls.EQUIP___EQUIPMOVIMENT.wrapperProps"
+										:id="getControlId(controls.EQUIP___EQUIPMOVIMENT)"
 										v-on="controls.EQUIP___EQUIPMOVIMENT.handlers"
 										:loading="controls.EQUIP___EQUIPMOVIMENT.props.loading"
 										:reporting-mode-on="reportingModeCAV"
 										:suggestion-mode-on="suggestionModeOn">
 										<q-static-text
 											v-if="controls.EQUIP___EQUIPMOVIMENT.isVisible"
-											id="EQUIP___EQUIPMOVIMENT"
+											:id="getControlId(controls.EQUIP___EQUIPMOVIMENT)"
 											:size="controls.EQUIP___EQUIPMOVIMENT.size"
 											:text="model.ValMoviment.value"
 											supports-html />
@@ -572,8 +614,8 @@
 								<q-col v-if="controls.EQUIP___PSEUDNOVOGR10.isVisible">
 									<q-group-collapsible
 										v-if="controls.EQUIP___PSEUDNOVOGR10.isVisible"
-										id="EQUIP___PSEUDNOVOGR10"
 										v-bind="controls.EQUIP___PSEUDNOVOGR10"
+										:id="getControlId(controls.EQUIP___PSEUDNOVOGR10)"
 										v-on="controls.EQUIP___PSEUDNOVOGR10.handlers">
 										<!-- Start EQUIP___PSEUDNOVOGR10 -->
 										<q-row v-if="controls.EQUIP___PSEUDMOVIMEVV.isVisible || controls.EQUIP___PSEUDROOMSMVE.isVisible">
@@ -583,14 +625,15 @@
 												<q-table
 													v-if="controls.EQUIP___PSEUDMOVIMEVV.isVisible"
 													v-bind="controls.EQUIP___PSEUDMOVIMEVV"
+													:id="getControlId(controls.EQUIP___PSEUDMOVIMEVV)"
 													v-on="controls.EQUIP___PSEUDMOVIMEVV.handlers">
+													<template #header>
+														<q-table-config
+															:table-ctrl="controls.EQUIP___PSEUDMOVIMEVV"
+															v-on="controls.EQUIP___PSEUDMOVIMEVV.handlers" />
+													</template>
 													<!-- USE /[MANUAL GQT CUSTOM_TABLE EQUIP___PSEUDMOVIMEVV]/ -->
 												</q-table>
-												<q-table-extra-extension
-													v-if="controls.EQUIP___PSEUDMOVIMEVV.isVisible"
-													:list-ctrl="controls.EQUIP___PSEUDMOVIMEVV"
-													:filter-operators="controls.EQUIP___PSEUDMOVIMEVV.filterOperators"
-													v-on="controls.EQUIP___PSEUDMOVIMEVV.handlers" />
 											</q-col>
 											<q-col
 												v-if="controls.EQUIP___PSEUDROOMSMVE.isVisible"
@@ -598,14 +641,15 @@
 												<base-input-structure
 													v-if="controls.EQUIP___PSEUDROOMSMVE.isVisible"
 													class="i-text"
-													v-bind="controls.EQUIP___PSEUDROOMSMVE"
+													v-bind="controls.EQUIP___PSEUDROOMSMVE.wrapperProps"
+													:id="getControlId(controls.EQUIP___PSEUDROOMSMVE)"
 													v-on="controls.EQUIP___PSEUDROOMSMVE.handlers"
 													:loading="controls.EQUIP___PSEUDROOMSMVE.props.loading"
 													:reporting-mode-on="reportingModeCAV"
 													:suggestion-mode-on="suggestionModeOn">
 													<q-check-list-extension
 														v-if="controls.EQUIP___PSEUDROOMSMVE.isVisible"
-														id="EQUIP___PSEUDROOMSMVE"
+														:id="getControlId(controls.EQUIP___PSEUDROOMSMVE)"
 														:options="controls.EQUIP___PSEUDMOVIMEVV.rows"
 														:search-column-name="controls.EQUIP___PSEUDMOVIMEVV.columnsOriginal[0].name"
 														:search-column-label="controls.EQUIP___PSEUDMOVIMEVV.columnsOriginal[0].label"
@@ -625,14 +669,15 @@
 												<q-table
 													v-if="controls.EQUIP___PSEUDMOVIMELS.isVisible"
 													v-bind="controls.EQUIP___PSEUDMOVIMELS"
+													:id="getControlId(controls.EQUIP___PSEUDMOVIMELS)"
 													v-on="controls.EQUIP___PSEUDMOVIMELS.handlers">
+													<template #header>
+														<q-table-config
+															:table-ctrl="controls.EQUIP___PSEUDMOVIMELS"
+															v-on="controls.EQUIP___PSEUDMOVIMELS.handlers" />
+													</template>
 													<!-- USE /[MANUAL GQT CUSTOM_TABLE EQUIP___PSEUDMOVIMELS]/ -->
 												</q-table>
-												<q-table-extra-extension
-													v-if="controls.EQUIP___PSEUDMOVIMELS.isVisible"
-													:list-ctrl="controls.EQUIP___PSEUDMOVIMELS"
-													:filter-operators="controls.EQUIP___PSEUDMOVIMELS.filterOperators"
-													v-on="controls.EQUIP___PSEUDMOVIMELS.handlers" />
 											</q-col>
 										</q-row>
 										<!-- End EQUIP___PSEUDNOVOGR10 -->
@@ -647,8 +692,8 @@
 					<q-col v-if="controls.EQUIP___PSEUDNOVOGR06.isVisible">
 						<q-group-collapsible
 							v-if="controls.EQUIP___PSEUDNOVOGR06.isVisible"
-							id="EQUIP___PSEUDNOVOGR06"
 							v-bind="controls.EQUIP___PSEUDNOVOGR06"
+							:id="getControlId(controls.EQUIP___PSEUDNOVOGR06)"
 							v-on="controls.EQUIP___PSEUDNOVOGR06.handlers">
 							<!-- Start EQUIP___PSEUDNOVOGR06 -->
 							<q-row v-if="controls.EQUIP___EQUIPPHOTOGRA.isVisible || controls.EQUIP___EQUIPLASTPHO_.isVisible">
@@ -658,7 +703,8 @@
 									<base-input-structure
 										v-if="controls.EQUIP___EQUIPPHOTOGRA.isVisible"
 										class="q-image"
-										v-bind="controls.EQUIP___EQUIPPHOTOGRA"
+										v-bind="controls.EQUIP___EQUIPPHOTOGRA.wrapperProps"
+										:id="getControlId(controls.EQUIP___EQUIPPHOTOGRA)"
 										v-on="controls.EQUIP___EQUIPPHOTOGRA.handlers"
 										:loading="controls.EQUIP___EQUIPPHOTOGRA.props.loading"
 										:reporting-mode-on="reportingModeCAV"
@@ -666,6 +712,7 @@
 										<q-image
 											v-if="controls.EQUIP___EQUIPPHOTOGRA.isVisible"
 											v-bind="controls.EQUIP___EQUIPPHOTOGRA.props"
+											:id="getControlId(controls.EQUIP___EQUIPPHOTOGRA)"
 											v-on="controls.EQUIP___EQUIPPHOTOGRA.handlers" />
 									</base-input-structure>
 								</q-col>
@@ -675,7 +722,8 @@
 									<base-input-structure
 										v-if="controls.EQUIP___EQUIPLASTPHO_.isVisible"
 										class="q-image"
-										v-bind="controls.EQUIP___EQUIPLASTPHO_"
+										v-bind="controls.EQUIP___EQUIPLASTPHO_.wrapperProps"
+										:id="getControlId(controls.EQUIP___EQUIPLASTPHO_)"
 										v-on="controls.EQUIP___EQUIPLASTPHO_.handlers"
 										:loading="controls.EQUIP___EQUIPLASTPHO_.props.loading"
 										:reporting-mode-on="reportingModeCAV"
@@ -683,6 +731,7 @@
 										<q-image
 											v-if="controls.EQUIP___EQUIPLASTPHO_.isVisible"
 											v-bind="controls.EQUIP___EQUIPLASTPHO_.props"
+											:id="getControlId(controls.EQUIP___EQUIPLASTPHO_)"
 											v-on="controls.EQUIP___EQUIPLASTPHO_.handlers" />
 									</base-input-structure>
 								</q-col>
@@ -695,12 +744,12 @@
 					<q-col v-if="controls.EQUIP___PSEUDNOVOGR05.isVisible">
 						<q-accordion
 							v-if="controls.EQUIP___PSEUDNOVOGR05.isVisible"
-							id="EQUIP___PSEUDNOVOGR05"
+							:id="getControlId(controls.EQUIP___PSEUDNOVOGR05)"
 							v-model="controls.EQUIP___PSEUDNOVOGR05.openChild">
 							<!-- Start EQUIP___PSEUDNOVOGR05 -->
 							<q-accordion-item
 								v-if="controls.EQUIP___PSEUDNOVOGR03.isVisible"
-								id="EQUIP___PSEUDNOVOGR03-container"
+								:id="getControlId(controls.EQUIP___PSEUDNOVOGR03) + '-container'"
 								value="EQUIP___PSEUDNOVOGR03"
 								:title="controls.EQUIP___PSEUDNOVOGR03.label">
 								<!-- Start EQUIP___PSEUDNOVOGR03 -->
@@ -711,21 +760,22 @@
 										<q-table
 											v-if="controls.EQUIP___PSEUDINSTALAG.isVisible"
 											v-bind="controls.EQUIP___PSEUDINSTALAG"
+											:id="getControlId(controls.EQUIP___PSEUDINSTALAG)"
 											v-on="controls.EQUIP___PSEUDINSTALAG.handlers">
+											<template #header>
+												<q-table-config
+													:table-ctrl="controls.EQUIP___PSEUDINSTALAG"
+													v-on="controls.EQUIP___PSEUDINSTALAG.handlers" />
+											</template>
 											<!-- USE /[MANUAL GQT CUSTOM_TABLE EQUIP___PSEUDINSTALAG]/ -->
 										</q-table>
-										<q-table-extra-extension
-											v-if="controls.EQUIP___PSEUDINSTALAG.isVisible"
-											:list-ctrl="controls.EQUIP___PSEUDINSTALAG"
-											:filter-operators="controls.EQUIP___PSEUDINSTALAG.filterOperators"
-											v-on="controls.EQUIP___PSEUDINSTALAG.handlers" />
 									</q-col>
 								</q-row>
 								<!-- End EQUIP___PSEUDNOVOGR03 -->
 							</q-accordion-item>
 							<q-accordion-item
 								v-if="controls.EQUIP___PSEUDNOVOGR04.isVisible"
-								id="EQUIP___PSEUDNOVOGR04-container"
+								:id="getControlId(controls.EQUIP___PSEUDNOVOGR04) + '-container'"
 								value="EQUIP___PSEUDNOVOGR04"
 								:title="controls.EQUIP___PSEUDNOVOGR04.label">
 								<!-- Start EQUIP___PSEUDNOVOGR04 -->
@@ -736,21 +786,22 @@
 										<q-table
 											v-if="controls.EQUIP___PSEUDINSTALAC.isVisible"
 											v-bind="controls.EQUIP___PSEUDINSTALAC"
+											:id="getControlId(controls.EQUIP___PSEUDINSTALAC)"
 											v-on="controls.EQUIP___PSEUDINSTALAC.handlers">
+											<template #header>
+												<q-table-config
+													:table-ctrl="controls.EQUIP___PSEUDINSTALAC"
+													v-on="controls.EQUIP___PSEUDINSTALAC.handlers" />
+											</template>
 											<!-- USE /[MANUAL GQT CUSTOM_TABLE EQUIP___PSEUDINSTALAC]/ -->
 										</q-table>
-										<q-table-extra-extension
-											v-if="controls.EQUIP___PSEUDINSTALAC.isVisible"
-											:list-ctrl="controls.EQUIP___PSEUDINSTALAC"
-											:filter-operators="controls.EQUIP___PSEUDINSTALAC.filterOperators"
-											v-on="controls.EQUIP___PSEUDINSTALAC.handlers" />
 									</q-col>
 								</q-row>
 								<!-- End EQUIP___PSEUDNOVOGR04 -->
 							</q-accordion-item>
 							<q-accordion-item
 								v-if="controls.EQUIP___PSEUDNOVOGR11.isVisible"
-								id="EQUIP___PSEUDNOVOGR11-container"
+								:id="getControlId(controls.EQUIP___PSEUDNOVOGR11) + '-container'"
 								value="EQUIP___PSEUDNOVOGR11"
 								:title="controls.EQUIP___PSEUDNOVOGR11.label">
 								<!-- Start EQUIP___PSEUDNOVOGR11 -->
@@ -761,14 +812,15 @@
 										<q-table
 											v-if="controls.EQUIP___PSEUDREPARACO.isVisible"
 											v-bind="controls.EQUIP___PSEUDREPARACO"
+											:id="getControlId(controls.EQUIP___PSEUDREPARACO)"
 											v-on="controls.EQUIP___PSEUDREPARACO.handlers">
+											<template #header>
+												<q-table-config
+													:table-ctrl="controls.EQUIP___PSEUDREPARACO"
+													v-on="controls.EQUIP___PSEUDREPARACO.handlers" />
+											</template>
 											<!-- USE /[MANUAL GQT CUSTOM_TABLE EQUIP___PSEUDREPARACO]/ -->
 										</q-table>
-										<q-table-extra-extension
-											v-if="controls.EQUIP___PSEUDREPARACO.isVisible"
-											:list-ctrl="controls.EQUIP___PSEUDREPARACO"
-											:filter-operators="controls.EQUIP___PSEUDREPARACO.filterOperators"
-											v-on="controls.EQUIP___PSEUDREPARACO.handlers" />
 									</q-col>
 									<q-col
 										v-if="controls.EQUIP___DECOMDECOMNR_.isVisible"
@@ -776,7 +828,8 @@
 										<base-input-structure
 											v-if="controls.EQUIP___DECOMDECOMNR_.isVisible"
 											class="i-text"
-											v-bind="controls.EQUIP___DECOMDECOMNR_"
+											v-bind="controls.EQUIP___DECOMDECOMNR_.wrapperProps"
+											:id="getControlId(controls.EQUIP___DECOMDECOMNR_)"
 											v-on="controls.EQUIP___DECOMDECOMNR_.handlers"
 											:loading="controls.EQUIP___DECOMDECOMNR_.props.loading"
 											:reporting-mode-on="reportingModeCAV"
@@ -784,6 +837,7 @@
 											<q-lookup
 												v-if="controls.EQUIP___DECOMDECOMNR_.isVisible"
 												v-bind="controls.EQUIP___DECOMDECOMNR_.props"
+												:id="getControlId(controls.EQUIP___DECOMDECOMNR_)"
 												v-on="controls.EQUIP___DECOMDECOMNR_.handlers" />
 											<q-see-more-equip-decomdecomnr
 												v-if="controls.EQUIP___DECOMDECOMNR_.seeMoreIsVisible"
@@ -796,8 +850,9 @@
 										cols="auto">
 										<base-input-structure
 											v-if="controls.EQUIP___EQUIPIFABATIF.isVisible"
-											class="i-checkbox"
-											v-bind="controls.EQUIP___EQUIPIFABATIF"
+											class="i-text"
+											v-bind="controls.EQUIP___EQUIPIFABATIF.wrapperProps"
+											:id="getControlId(controls.EQUIP___EQUIPIFABATIF)"
 											v-on="controls.EQUIP___EQUIPIFABATIF.handlers"
 											:loading="controls.EQUIP___EQUIPIFABATIF.props.loading"
 											:reporting-mode-on="reportingModeCAV"
@@ -806,6 +861,7 @@
 												<q-checkbox
 													v-if="controls.EQUIP___EQUIPIFABATIF.isVisible"
 													v-bind="controls.EQUIP___EQUIPIFABATIF.props"
+													:id="getControlId(controls.EQUIP___EQUIPIFABATIF)"
 													v-on="controls.EQUIP___EQUIPIFABATIF.handlers" />
 											</template>
 										</base-input-structure>
@@ -823,23 +879,26 @@
 						cols="auto">
 						<q-group-box-container
 							v-if="controls.EQUIP___PSEUDNOVOGR08.isVisible"
-							id="EQUIP___PSEUDNOVOGR08"
 							v-bind="controls.EQUIP___PSEUDNOVOGR08"
-							:is-visible="controls.EQUIP___PSEUDNOVOGR08.isVisible">
+							:id="getControlId(controls.EQUIP___PSEUDNOVOGR08)"
+							:no-border="controls.EQUIP___PSEUDNOVOGR08.borderless">
 							<!-- Start EQUIP___PSEUDNOVOGR08 -->
 							<q-row v-if="controls.EQUIP___PSEUDFOTOEQUI.isVisible">
-								<q-col v-if="controls.EQUIP___PSEUDFOTOEQUI.isVisible">
+								<q-col
+									v-if="controls.EQUIP___PSEUDFOTOEQUI.isVisible"
+									cols="auto">
 									<q-table
 										v-if="controls.EQUIP___PSEUDFOTOEQUI.isVisible"
 										v-bind="controls.EQUIP___PSEUDFOTOEQUI"
+										:id="getControlId(controls.EQUIP___PSEUDFOTOEQUI)"
 										v-on="controls.EQUIP___PSEUDFOTOEQUI.handlers">
+										<template #header>
+											<q-table-config
+												:table-ctrl="controls.EQUIP___PSEUDFOTOEQUI"
+												v-on="controls.EQUIP___PSEUDFOTOEQUI.handlers" />
+										</template>
 										<!-- USE /[MANUAL GQT CUSTOM_TABLE EQUIP___PSEUDFOTOEQUI]/ -->
 									</q-table>
-									<q-table-extra-extension
-										v-if="controls.EQUIP___PSEUDFOTOEQUI.isVisible"
-										:list-ctrl="controls.EQUIP___PSEUDFOTOEQUI"
-										:filter-operators="controls.EQUIP___PSEUDFOTOEQUI.filterOperators"
-										v-on="controls.EQUIP___PSEUDFOTOEQUI.handlers" />
 								</q-col>
 							</q-row>
 							<!-- End EQUIP___PSEUDNOVOGR08 -->
@@ -850,9 +909,9 @@
 					<q-col v-if="controls.EQUIP___PSEUDNOVOGR07.isVisible">
 						<q-group-box-container
 							v-if="controls.EQUIP___PSEUDNOVOGR07.isVisible"
-							id="EQUIP___PSEUDNOVOGR07"
 							v-bind="controls.EQUIP___PSEUDNOVOGR07"
-							:is-visible="controls.EQUIP___PSEUDNOVOGR07.isVisible">
+							:id="getControlId(controls.EQUIP___PSEUDNOVOGR07)"
+							:no-border="controls.EQUIP___PSEUDNOVOGR07.borderless">
 							<!-- Start EQUIP___PSEUDNOVOGR07 -->
 							<q-row v-if="controls.EQUIP___PSEUDVISEQUIP.isVisible">
 								<q-col
@@ -861,14 +920,15 @@
 									<q-table
 										v-if="controls.EQUIP___PSEUDVISEQUIP.isVisible"
 										v-bind="controls.EQUIP___PSEUDVISEQUIP"
+										:id="getControlId(controls.EQUIP___PSEUDVISEQUIP)"
 										v-on="controls.EQUIP___PSEUDVISEQUIP.handlers">
+										<template #header>
+											<q-table-config
+												:table-ctrl="controls.EQUIP___PSEUDVISEQUIP"
+												v-on="controls.EQUIP___PSEUDVISEQUIP.handlers" />
+										</template>
 										<!-- USE /[MANUAL GQT CUSTOM_TABLE EQUIP___PSEUDVISEQUIP]/ -->
 									</q-table>
-									<q-table-extra-extension
-										v-if="controls.EQUIP___PSEUDVISEQUIP.isVisible"
-										:list-ctrl="controls.EQUIP___PSEUDVISEQUIP"
-										:filter-operators="controls.EQUIP___PSEUDVISEQUIP.filterOperators"
-										v-on="controls.EQUIP___PSEUDVISEQUIP.handlers" />
 								</q-col>
 							</q-row>
 							<!-- End EQUIP___PSEUDNOVOGR07 -->
@@ -881,9 +941,9 @@
 						cols="auto">
 						<q-group-box-container
 							v-if="controls.EQUIP___PSEUDNOVOGR12.isVisible"
-							id="EQUIP___PSEUDNOVOGR12"
 							v-bind="controls.EQUIP___PSEUDNOVOGR12"
-							:is-visible="controls.EQUIP___PSEUDNOVOGR12.isVisible">
+							:id="getControlId(controls.EQUIP___PSEUDNOVOGR12)"
+							:no-border="controls.EQUIP___PSEUDNOVOGR12.borderless">
 							<!-- Start EQUIP___PSEUDNOVOGR12 -->
 							<q-row v-if="controls.EQUIP___PSEUDANEXOS__.isVisible">
 								<q-col
@@ -892,14 +952,15 @@
 									<q-table
 										v-if="controls.EQUIP___PSEUDANEXOS__.isVisible"
 										v-bind="controls.EQUIP___PSEUDANEXOS__"
+										:id="getControlId(controls.EQUIP___PSEUDANEXOS__)"
 										v-on="controls.EQUIP___PSEUDANEXOS__.handlers">
+										<template #header>
+											<q-table-config
+												:table-ctrl="controls.EQUIP___PSEUDANEXOS__"
+												v-on="controls.EQUIP___PSEUDANEXOS__.handlers" />
+										</template>
 										<!-- USE /[MANUAL GQT CUSTOM_TABLE EQUIP___PSEUDANEXOS__]/ -->
 									</q-table>
-									<q-table-extra-extension
-										v-if="controls.EQUIP___PSEUDANEXOS__.isVisible"
-										:list-ctrl="controls.EQUIP___PSEUDANEXOS__"
-										:filter-operators="controls.EQUIP___PSEUDANEXOS__.filterOperators"
-										v-on="controls.EQUIP___PSEUDANEXOS__.handlers" />
 								</q-col>
 							</q-row>
 							<!-- End EQUIP___PSEUDNOVOGR12 -->
@@ -910,8 +971,8 @@
 					<q-col v-if="controls.EQUIP___PSEUDTLEQUIPA.isVisible">
 						<q-timeline
 							v-if="controls.EQUIP___PSEUDTLEQUIPA.isVisible"
-							id="EQUIP___PSEUDTLEQUIPA"
 							v-bind="controls.EQUIP___PSEUDTLEQUIPA"
+							:id="getControlId(controls.EQUIP___PSEUDTLEQUIPA)"
 							@show-popup="timelineOpenForm" />
 					</q-col>
 				</q-row>
@@ -919,7 +980,7 @@
 		</q-container>
 	</teleport>
 
-	<hr v-if="!isPopup && showFormFooter" />
+	<q-divider v-if="!isPopup && showFormFooter" />
 
 	<teleport
 		v-if="formModalIsReady && showFormFooter"
@@ -1353,19 +1414,20 @@
 						size: 'block',
 						helpControl: {
 							shortHelp: {
-								type: '',
+								type: 'Tooltip',
 								text: computed(() => this.Resources._111418227),
 							},
 							detailedHelp: {
-								type: '',
+								type: 'Popover',
 								text: computed(() => this.Resources._1114_VERBOSE42095),
 							}
 						},
 						label: computed(() => this.Resources.EQUIPMENT38184),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
+						borderless: false,
 						isCollapsible: false,
-						anchored: true,
+						anchored: false,
 						directChildren: ['EQUIP___EQUIPSEQUENNR', 'EQUIP___EQUIPREGISTNR', 'EQUIP___TPEQUTIPOEQUI', 'EQUIP___EQUIPSITEFABR', 'EQUIP___WAREHWAREHDES', 'EQUIP___ITEM_ITEMDES_', 'EQUIP___EQUIPDESIGNAT', 'EQUIP___EQUIPFREQUENC', 'EQUIP___EQUIPVALORTOT', 'EQUIP___EQUIPDTAQUISI', 'EQUIP___EQUIPDTDECO__', 'EQUIP___EQUIPBOUGHT__'],
 						controlLimits: [
 						],
@@ -1532,7 +1594,7 @@
 						size: 'small',
 						helpControl: {
 							shortHelp: {
-								type: 'Tooltip',
+								type: 'subtext',
 								text: computed(() => this.Resources.___1438719),
 							},
 						},
@@ -1541,8 +1603,8 @@
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'EQUIP___PSEUDNOVOGR01',
 						arrayName: 'FreqEmpr',
-						helpShortItem: '',
-						helpDetailedItem: '',
+						helpShortItem: 'None',
+						helpDetailedItem: 'None',
 						controlLimits: [
 						],
 					}, this),
@@ -1587,7 +1649,7 @@
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'EQUIP___PSEUDNOVOGR01',
 						isFormulaBlocked: true,
-						dateTimeType: 'dateTime',
+						dateTimeType: 'date',
 						controlLimits: [
 						],
 					}, this),
@@ -1612,8 +1674,9 @@
 						label: computed(() => this.Resources.ASSET_LOCATION64080),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
+						borderless: false,
 						isCollapsible: false,
-						anchored: true,
+						anchored: false,
 						directChildren: ['EQUIP___ROOM1ROOMNR__', 'EQUIP___ROOM1DESIGNAT', 'EQUIP___EQUIPDTREFERE', 'EQUIP___EQUIPFIRST___', 'EQUIP___EQUIPBEFORE__', 'EQUIP___EQUIPFOLLOWIN', 'EQUIP___EQUIPLAST____', 'EQUIP___EQUIPQTDMOVIM', 'EQUIP___EQUIPMOVIMENT', 'EQUIP___PSEUDNOVOGR10'],
 						controlLimits: [
 						],
@@ -1789,7 +1852,7 @@
 					EQUIP___PSEUDMOVIMEVV: new fieldControlClass.MultipleValuesControl({
 						id: 'EQUIP___PSEUDMOVIMEVV',
 						name: 'MOVIMEVV',
-						size: '',
+						size: 'xlarge',
 						helpControl: {
 							shortHelp: {
 								type: 'Subtitle',
@@ -1804,6 +1867,7 @@
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'EQUIP___PSEUDNOVOGR10',
+						headerLevel: computed(() => this.baseHeadingLevel + 1),
 						controller: 'EQUIP',
 						action: 'Equip_List_Movimevv',
 						hasDependencies: true,
@@ -1888,11 +1952,12 @@
 					EQUIP___PSEUDMOVIMELS: new fieldControlClass.TableListControl({
 						id: 'EQUIP___PSEUDMOVIMELS',
 						name: 'MOVIMELS',
-						size: '',
+						size: 'xxlarge',
 						label: computed(() => this.Resources.EQUIPMENT_MOVEMENT_H06876),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'EQUIP___PSEUDNOVOGR10',
+						headerLevel: computed(() => this.baseHeadingLevel + 1),
 						controller: 'EQUIP',
 						action: 'Equip_ValMovimels',
 						hasDependencies: true,
@@ -1955,7 +2020,6 @@
 							searchBarConfig: {
 								visibility: false
 							},
-							filtersVisible: false,
 							allowColumnFilters: false,
 							allowColumnSort: true,
 							crudActions: [
@@ -2029,9 +2093,7 @@
 									id: 'insert',
 									name: 'insert',
 									title: computed(() => this.Resources.INSERIR43365),
-									icon: {
-										icon: 'add'
-									},
+									icon: { icon: 'add' },
 									isInReadOnly: false,
 									params: {
 										action: vm.openFormAction,
@@ -2159,6 +2221,7 @@
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'EQUIP___PSEUDNOVOGR05',
 						isInAccordion: true,
+						borderless: false,
 						isCollapsible: true,
 						anchored: false,
 						directChildren: ['EQUIP___PSEUDINSTALAG'],
@@ -2168,11 +2231,12 @@
 					EQUIP___PSEUDINSTALAG: new fieldControlClass.TableListControl({
 						id: 'EQUIP___PSEUDINSTALAG',
 						name: 'INSTALAG',
-						size: '',
+						size: 'xxlarge',
 						label: computed(() => this.Resources.FACILITIES_23844),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'EQUIP___PSEUDNOVOGR03',
+						headerLevel: computed(() => this.baseHeadingLevel + 1),
 						controller: 'EQUIP',
 						action: 'Equip_ValInstalag',
 						hasDependencies: true,
@@ -2247,7 +2311,6 @@
 							searchBarConfig: {
 								visibility: false
 							},
-							filtersVisible: false,
 							allowColumnFilters: false,
 							allowColumnSort: true,
 							crudActions: [
@@ -2321,9 +2384,7 @@
 									id: 'insert',
 									name: 'insert',
 									title: computed(() => this.Resources.INSERIR43365),
-									icon: {
-										icon: 'add'
-									},
+									icon: { icon: 'add' },
 									isInReadOnly: false,
 									params: {
 										action: vm.openFormAction,
@@ -2370,7 +2431,7 @@
 								sortOrder: 'asc'
 							}
 						},
-						globalEvents: ['changed-EQUIP', 'changed-TPEQU', 'changed-INSTA'],
+						globalEvents: ['changed-INSTA', 'changed-EQUIP', 'changed-TPEQU'],
 						uuid: 'Equip_ValInstalag',
 						allSelectedRows: 'false',
 						controlLimits: [
@@ -2391,6 +2452,7 @@
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'EQUIP___PSEUDNOVOGR05',
 						isInAccordion: true,
+						borderless: false,
 						isCollapsible: true,
 						anchored: false,
 						directChildren: ['EQUIP___PSEUDINSTALAC'],
@@ -2400,11 +2462,12 @@
 					EQUIP___PSEUDINSTALAC: new fieldControlClass.TableSpecialRenderingControl({
 						id: 'EQUIP___PSEUDINSTALAC',
 						name: 'INSTALAC',
-						size: '',
+						size: 'xxlarge',
 						label: computed(() => this.Resources.FACILITIES_23844),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'EQUIP___PSEUDNOVOGR04',
+						headerLevel: computed(() => this.baseHeadingLevel + 1),
 						controller: 'EQUIP',
 						action: 'Equip_ValInstalac',
 						hasDependencies: true,
@@ -2491,7 +2554,6 @@
 							searchBarConfig: {
 								visibility: false
 							},
-							filtersVisible: false,
 							allowColumnFilters: false,
 							allowColumnSort: true,
 							generalCustomActions: [
@@ -2513,7 +2575,7 @@
 								sortOrder: 'asc'
 							}
 						},
-						globalEvents: ['changed-EQUIP', 'changed-TPEQU', 'changed-INSTA'],
+						globalEvents: ['changed-INSTA', 'changed-EQUIP', 'changed-TPEQU'],
 						uuid: 'Equip_ValInstalac',
 						allSelectedRows: 'false',
 						viewModes: [
@@ -2702,6 +2764,7 @@
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'EQUIP___PSEUDNOVOGR05',
 						isInAccordion: true,
+						borderless: false,
 						isCollapsible: true,
 						anchored: false,
 						directChildren: ['EQUIP___PSEUDREPARACO', 'EQUIP___DECOMDECOMNR_', 'EQUIP___EQUIPIFABATIF'],
@@ -2711,11 +2774,12 @@
 					EQUIP___PSEUDREPARACO: new fieldControlClass.TableListControl({
 						id: 'EQUIP___PSEUDREPARACO',
 						name: 'REPARACO',
-						size: '',
+						size: 'xxlarge',
 						label: computed(() => this.Resources.EQUIPMENT_REPAIRS62266),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'EQUIP___PSEUDNOVOGR11',
+						headerLevel: computed(() => this.baseHeadingLevel + 1),
 						controller: 'EQUIP',
 						action: 'Equip_ValReparaco',
 						hasDependencies: false,
@@ -2784,19 +2848,6 @@
 								decimalPlaces: 0,
 								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
-							new listColumnTypes.ArrayColumn({
-								order: 7,
-								name: 'ValTipoarea',
-								area: 'REPAR',
-								field: 'TIPOAREA',
-								label: computed(() => this.Resources.TECHNICAL_AREA50773),
-								dataLength: 1,
-								scrollData: 1,
-								export: 1,
-								array: computed(() => new qProjArrays.QArrayAreatecn(vm.$getResource).elements),
-								arrayType: qProjArrays.QArrayAreatecn.type,
-								arrayDisplayMode: 'D',
-							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 						],
 						config: {
 							name: 'ValReparaco',
@@ -2804,7 +2855,7 @@
 							pkColumn: 'ValCodrepar',
 							tableAlias: 'REPAR',
 							tableNamePlural: computed(() => this.Resources.REPAIRS18165),
-							viewManagement: 'M',
+							viewManagement: 'N',
 							showLimitsInfo: true,
 							tableTitle: computed(() => this.Resources.EQUIPMENT_REPAIRS62266),
 							showAlternatePagination: true,
@@ -2813,7 +2864,6 @@
 							searchBarConfig: {
 								visibility: false
 							},
-							filtersVisible: false,
 							allowColumnFilters: false,
 							allowColumnSort: true,
 							crudActions: [
@@ -2887,9 +2937,7 @@
 									id: 'insert',
 									name: 'insert',
 									title: computed(() => this.Resources.INSERIR43365),
-									icon: {
-										icon: 'add'
-									},
+									icon: { icon: 'add' },
 									isInReadOnly: false,
 									params: {
 										action: vm.openFormAction,
@@ -2936,32 +2984,7 @@
 								sortOrder: 'asc'
 							}
 						},
-						groupFilters: [
-							{
-								id: 'filter_ValReparaco_STARTED',
-								isMultiple: true,
-								items: [
-									{
-										id: 'filter_ValReparaco_STARTED_1',
-										value: computed(() => this.Resources.SPECIALTY09304),
-										key: '1'
-									},
-									{
-										id: 'filter_ValReparaco_STARTED_2',
-										value: computed(() => this.Resources.DESCRIPTION07383),
-										key: '2'
-									},
-									{
-										id: 'filter_ValReparaco_STARTED_3',
-										value: computed(() => this.Resources.SPENT_ON_HOURS19285),
-										key: '3'
-									},
-								],
-								selected: undefined,
-								default: undefined
-							},
-						],
-						globalEvents: ['changed-PESSO', 'changed-REPAR', 'changed-CATE1', 'changed-CMPNY', 'changed-SPECI', 'changed-EQUIP'],
+						globalEvents: ['changed-CATE1', 'changed-EQUIP', 'changed-PESSO', 'changed-REPAR', 'changed-SPECI', 'changed-CMPNY'],
 						uuid: 'Equip_ValReparaco',
 						allSelectedRows: 'false',
 						controlLimits: [
@@ -3025,8 +3048,9 @@
 						label: computed(() => this.Resources.PHOTOS_42586),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
+						borderless: false,
 						isCollapsible: false,
-						anchored: true,
+						anchored: false,
 						directChildren: ['EQUIP___PSEUDFOTOEQUI'],
 						controlLimits: [
 						],
@@ -3034,11 +3058,12 @@
 					EQUIP___PSEUDFOTOEQUI: new fieldControlClass.TableListControl({
 						id: 'EQUIP___PSEUDFOTOEQUI',
 						name: 'FOTOEQUI',
-						size: 'block',
+						size: 'large',
 						label: computed(() => this.Resources.PHOTOS39221),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'EQUIP___PSEUDNOVOGR08',
+						headerLevel: computed(() => this.baseHeadingLevel + 1),
 						controller: 'EQUIP',
 						action: 'Equip_ValFotoequi',
 						hasDependencies: true,
@@ -3082,7 +3107,6 @@
 							searchBarConfig: {
 								visibility: false
 							},
-							filtersVisible: false,
 							allowColumnFilters: false,
 							allowColumnSort: true,
 							crudActions: [
@@ -3156,9 +3180,7 @@
 									id: 'insert',
 									name: 'insert',
 									title: computed(() => this.Resources.INSERIR43365),
-									icon: {
-										icon: 'add'
-									},
+									icon: { icon: 'add' },
 									isInReadOnly: false,
 									params: {
 										action: vm.openFormAction,
@@ -3224,8 +3246,9 @@
 						label: computed(() => this.Resources.INSPECTION_VISITS19524),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
+						borderless: false,
 						isCollapsible: false,
-						anchored: true,
+						anchored: false,
 						directChildren: ['EQUIP___PSEUDVISEQUIP'],
 						controlLimits: [
 						],
@@ -3233,11 +3256,12 @@
 					EQUIP___PSEUDVISEQUIP: new fieldControlClass.TableSpecialRenderingControl({
 						id: 'EQUIP___PSEUDVISEQUIP',
 						name: 'VISEQUIP',
-						size: '',
+						size: 'xxlarge',
 						label: computed(() => this.Resources.VISITS_63312),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'EQUIP___PSEUDNOVOGR07',
+						headerLevel: computed(() => this.baseHeadingLevel + 1),
 						controller: 'EQUIP',
 						action: 'Equip_ValVisequip',
 						hasDependencies: false,
@@ -3326,7 +3350,6 @@
 							searchBarConfig: {
 								visibility: false
 							},
-							filtersVisible: false,
 							allowColumnFilters: false,
 							allowColumnSort: true,
 							crudActions: [
@@ -3400,9 +3423,7 @@
 									id: 'insert',
 									name: 'insert',
 									title: computed(() => this.Resources.INSERIR43365),
-									icon: {
-										icon: 'add'
-									},
+									icon: { icon: 'add' },
 									isInReadOnly: false,
 									params: {
 										action: vm.openFormAction,
@@ -3667,8 +3688,9 @@
 						label: computed(() => this.Resources.DIGITAL_ATTACHMENTS64891),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
+						borderless: false,
 						isCollapsible: false,
-						anchored: true,
+						anchored: false,
 						directChildren: ['EQUIP___PSEUDANEXOS__'],
 						controlLimits: [
 						],
@@ -3676,11 +3698,12 @@
 					EQUIP___PSEUDANEXOS__: new fieldControlClass.TableListControl({
 						id: 'EQUIP___PSEUDANEXOS__',
 						name: 'ANEXOS',
-						size: '',
+						size: 'xxlarge',
 						label: computed(() => this.Resources.DIGITAL_ATTACHMENTS64891),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'EQUIP___PSEUDNOVOGR12',
+						headerLevel: computed(() => this.baseHeadingLevel + 1),
 						controller: 'EQUIP',
 						action: 'Equip_ValAnexos',
 						hasDependencies: false,
@@ -3734,7 +3757,6 @@
 							searchBarConfig: {
 								visibility: false
 							},
-							filtersVisible: false,
 							allowColumnFilters: false,
 							allowColumnSort: true,
 							crudActions: [
@@ -3808,9 +3830,7 @@
 									id: 'insert',
 									name: 'insert',
 									title: computed(() => this.Resources.INSERIR43365),
-									icon: {
-										icon: 'add'
-									},
+									icon: { icon: 'add' },
 									isInReadOnly: false,
 									params: {
 										action: vm.openFormAction,
@@ -3849,22 +3869,6 @@
 									fnKeySelector: (row) => row.Fields.ValCodanexd,
 									isPopup: false
 								},
-							},
-							insertCondition: {
-								// eslint-disable-next-line @typescript-eslint/no-unused-vars
-								fnFormula(params)
-								{
-									return netAPI.postData(
-										'Anexd',
-										'ANEXD_InsertCondition',
-										this.serverObjModel,
-										undefined,
-										undefined,
-										undefined,
-										this.navigationId)
-								},
-								dependencyEvents: ['fieldChange:equip.codequip'],
-								isServerRecalc: false,
 							},
 							defaultSearchColumnName: '',
 							defaultSearchColumnNameOriginal: '',
@@ -4387,7 +4391,6 @@
 
 				this.afterControlUpdate(controlField, fieldValue)
 			},
-
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
 // USE /[MANUAL GQT FUNCTIONS_JS EQUIP]/
 // eslint-disable-next-line

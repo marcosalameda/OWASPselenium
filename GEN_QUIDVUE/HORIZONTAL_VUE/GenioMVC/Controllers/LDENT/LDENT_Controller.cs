@@ -138,7 +138,7 @@ namespace GenioMVC.Controllers
 			}
 
 			if (result != null)
-				return JsonOK(new { List = result.List, TotalRows = result.Pagination.TotalRows, Selected = result.Selected, Value = result.Value });
+				return JsonOK(result);
 			return JsonERROR("Not found any valid result");
 		}
 

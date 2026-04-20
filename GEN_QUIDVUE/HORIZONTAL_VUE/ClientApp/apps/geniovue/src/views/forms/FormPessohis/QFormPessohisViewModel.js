@@ -54,16 +54,16 @@ export default class ViewModel extends FormViewModelBase
 		this.stopWatchers.push(watch(() => this.ValCodpesso.value, (newValue, oldValue) => this.onUpdate('pesso.codpesso', this.ValCodpesso, newValue, oldValue)))
 
 		/** The hidden foreign keys. */
-		this.ValCodcntry = reactive(new modelFieldType.ForeignKey({
-			id: 'ValCodcntry',
-			originId: 'ValCodcntry',
+		this.ValCodregia = reactive(new modelFieldType.ForeignKey({
+			id: 'ValCodregia',
+			originId: 'ValCodregia',
 			area: 'PESSO',
-			field: 'CODCNTRY',
-			relatedArea: 'PAIS1',
+			field: 'CODREGIA',
+			relatedArea: 'REGI1',
 			isFixed: true,
-			description: computed(() => this.Resources.PERSON_S_PARENTS05687),
-		}).cloneFrom(values?.ValCodcntry))
-		this.stopWatchers.push(watch(() => this.ValCodcntry.value, (newValue, oldValue) => this.onUpdate('pesso.codcntry', this.ValCodcntry, newValue, oldValue)))
+			description: '',
+		}).cloneFrom(values?.ValCodregia))
+		this.stopWatchers.push(watch(() => this.ValCodregia.value, (newValue, oldValue) => this.onUpdate('pesso.codregia', this.ValCodregia, newValue, oldValue)))
 
 		this.ValCodpaise = reactive(new modelFieldType.ForeignKey({
 			id: 'ValCodpaise',
@@ -76,28 +76,6 @@ export default class ViewModel extends FormViewModelBase
 		}).cloneFrom(values?.ValCodpaise))
 		this.stopWatchers.push(watch(() => this.ValCodpaise.value, (newValue, oldValue) => this.onUpdate('pesso.codpaise', this.ValCodpaise, newValue, oldValue)))
 
-		this.ValCodempre = reactive(new modelFieldType.ForeignKey({
-			id: 'ValCodempre',
-			originId: 'ValCodempre',
-			area: 'PESSO',
-			field: 'CODEMPRE',
-			relatedArea: 'CMPNY',
-			isFixed: true,
-			description: computed(() => this.Resources._COMPANY02087),
-		}).cloneFrom(values?.ValCodempre))
-		this.stopWatchers.push(watch(() => this.ValCodempre.value, (newValue, oldValue) => this.onUpdate('pesso.codempre', this.ValCodempre, newValue, oldValue)))
-
-		this.ValCodregia = reactive(new modelFieldType.ForeignKey({
-			id: 'ValCodregia',
-			originId: 'ValCodregia',
-			area: 'PESSO',
-			field: 'CODREGIA',
-			relatedArea: 'REGI1',
-			isFixed: true,
-			description: '',
-		}).cloneFrom(values?.ValCodregia))
-		this.stopWatchers.push(watch(() => this.ValCodregia.value, (newValue, oldValue) => this.onUpdate('pesso.codregia', this.ValCodregia, newValue, oldValue)))
-
 		this.ValCodcateg = reactive(new modelFieldType.ForeignKey({
 			id: 'ValCodcateg',
 			originId: 'ValCodcateg',
@@ -108,6 +86,28 @@ export default class ViewModel extends FormViewModelBase
 			description: computed(() => this.Resources._LAST_CATEGORY61019),
 		}).cloneFrom(values?.ValCodcateg))
 		this.stopWatchers.push(watch(() => this.ValCodcateg.value, (newValue, oldValue) => this.onUpdate('pesso.codcateg', this.ValCodcateg, newValue, oldValue)))
+
+		this.ValCodcntry = reactive(new modelFieldType.ForeignKey({
+			id: 'ValCodcntry',
+			originId: 'ValCodcntry',
+			area: 'PESSO',
+			field: 'CODCNTRY',
+			relatedArea: 'PAIS1',
+			isFixed: true,
+			description: computed(() => this.Resources.PERSON_S_PARENTS05687),
+		}).cloneFrom(values?.ValCodcntry))
+		this.stopWatchers.push(watch(() => this.ValCodcntry.value, (newValue, oldValue) => this.onUpdate('pesso.codcntry', this.ValCodcntry, newValue, oldValue)))
+
+		this.ValCodempre = reactive(new modelFieldType.ForeignKey({
+			id: 'ValCodempre',
+			originId: 'ValCodempre',
+			area: 'PESSO',
+			field: 'CODEMPRE',
+			relatedArea: 'CMPNY',
+			isFixed: true,
+			description: computed(() => this.Resources._COMPANY02087),
+		}).cloneFrom(values?.ValCodempre))
+		this.stopWatchers.push(watch(() => this.ValCodempre.value, (newValue, oldValue) => this.onUpdate('pesso.codempre', this.ValCodempre, newValue, oldValue)))
 
 		/** The remaining form fields. */
 		this.ValIdfuncio = reactive(new modelFieldType.Number({

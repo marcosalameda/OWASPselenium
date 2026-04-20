@@ -1,20 +1,20 @@
-﻿using JsonIgnoreAttribute = System.Text.Json.Serialization.JsonIgnoreAttribute;
+﻿using CSGenio.business;
+using CSGenio.framework;
+using CSGenio.persistence;
+using GenioMVC.Helpers;
+using GenioMVC.Models.Exception;
+using GenioMVC.Models.Navigation;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Quidgest.Persistence;
+using Quidgest.Persistence.GenericQuery;
+
 using System.Collections;
 using System.Collections.Concurrent;
 using System.Collections.Specialized;
 using System.ComponentModel.DataAnnotations;
 using System.Data;
 using System.Globalization;
-
-using CSGenio.business;
-using CSGenio.framework;
-using CSGenio.persistence;
-using GenioMVC.Helpers;
-using GenioMVC.Models.Exception;
-using GenioMVC.Models.Navigation;
-using Quidgest.Persistence;
-using Quidgest.Persistence.GenericQuery;
+using System.Text.Json.Serialization;
 
 namespace GenioMVC.ViewModels.Agreg
 {
@@ -42,6 +42,7 @@ namespace GenioMVC.ViewModels.Agreg
 		public string ValCodyear { get; set; }
 
 		#endregion
+
 		/// <summary>
 		/// Title: "Project" | Type: "C"
 		/// </summary>
@@ -57,8 +58,6 @@ namespace GenioMVC.ViewModels.Agreg
 		/// </summary>
 		[ValidateSetAccess]
 		public decimal? ValValue { get; set; }
-
-
 
 		#region Navigations
 		#endregion
@@ -239,12 +238,7 @@ namespace GenioMVC.ViewModels.Agreg
 			}
 		}
 
-		/// <summary>
-		/// Sets the value of a single property of the view model based on the provided table and field names.
-		/// </summary>
-		/// <param name="fullFieldName">The full field name in the format "table.field".</param>
-		/// <param name="value">The field value.</param>
-		/// <exception cref="ArgumentNullException">Thrown if <paramref name="fullFieldName"/> is null.</exception>
+		/// <inheritdoc />
 		public override void SetViewModelValue(string fullFieldName, object value)
 		{
 			try
@@ -367,6 +361,7 @@ namespace GenioMVC.ViewModels.Agreg
 
 			Load_Agreg___projeprojecto(qs, lazyLoad);
 			Load_Agreg___year_year____(qs, lazyLoad);
+
 // USE /[MANUAL GQT VIEWMODEL_LOADPARTIAL AGREG]/
 		}
 
@@ -436,10 +431,7 @@ namespace GenioMVC.ViewModels.Agreg
 				}
 			}
 
-			TableProjeProjecto = new TableDBEdit<Models.Proje>
-			{
-				IsLazyLoad = lazyLoad
-			};
+			TableProjeProjecto = new TableDBEdit<Models.Proje>();
 
 			if (lazyLoad)
 			{
@@ -483,7 +475,7 @@ namespace GenioMVC.ViewModels.Agreg
 				int numberItems = CSGenio.framework.Configuration.NrRegDBedit;
 				int offset = (page - 1) * numberItems;
 
-				FieldRef[] fields = new FieldRef[] { CSGenioAproje.FldCodproje, CSGenioAproje.FldProjecto, CSGenioAproje.FldZzstate };
+				FieldRef[] fields = [CSGenioAproje.FldCodproje, CSGenioAproje.FldProjecto, CSGenioAproje.FldZzstate];
 
 // USE /[MANUAL GQT OVERRQ AGREG_PROJEPROJECTO]/
 
@@ -626,10 +618,7 @@ namespace GenioMVC.ViewModels.Agreg
 				}
 			}
 
-			TableYearYear = new TableDBEdit<Models.Year>
-			{
-				IsLazyLoad = lazyLoad
-			};
+			TableYearYear = new TableDBEdit<Models.Year>();
 
 			if (lazyLoad)
 			{
@@ -673,7 +662,7 @@ namespace GenioMVC.ViewModels.Agreg
 				int numberItems = CSGenio.framework.Configuration.NrRegDBedit;
 				int offset = (page - 1) * numberItems;
 
-				FieldRef[] fields = new FieldRef[] { CSGenioAyear.FldCodyear, CSGenioAyear.FldYear, CSGenioAyear.FldZzstate };
+				FieldRef[] fields = [CSGenioAyear.FldCodyear, CSGenioAyear.FldYear, CSGenioAyear.FldZzstate];
 
 // USE /[MANUAL GQT OVERRQ AGREG_YEARYEAR]/
 

@@ -1,20 +1,20 @@
-﻿using JsonIgnoreAttribute = System.Text.Json.Serialization.JsonIgnoreAttribute;
+﻿using CSGenio.business;
+using CSGenio.framework;
+using CSGenio.persistence;
+using GenioMVC.Helpers;
+using GenioMVC.Models.Exception;
+using GenioMVC.Models.Navigation;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Quidgest.Persistence;
+using Quidgest.Persistence.GenericQuery;
+
 using System.Collections;
 using System.Collections.Concurrent;
 using System.Collections.Specialized;
 using System.ComponentModel.DataAnnotations;
 using System.Data;
 using System.Globalization;
-
-using CSGenio.business;
-using CSGenio.framework;
-using CSGenio.persistence;
-using GenioMVC.Helpers;
-using GenioMVC.Models.Exception;
-using GenioMVC.Models.Navigation;
-using Quidgest.Persistence;
-using Quidgest.Persistence.GenericQuery;
+using System.Text.Json.Serialization;
 
 namespace GenioMVC.ViewModels.Tradu
 {
@@ -40,6 +40,7 @@ namespace GenioMVC.ViewModels.Tradu
 		public string ValCodidio2 { get; set; }
 
 		#endregion
+
 		/// <summary>
 		/// Title: "Reference" | Type: "C"
 		/// </summary>
@@ -62,8 +63,6 @@ namespace GenioMVC.ViewModels.Tradu
 		/// Title: "Translated" | Type: "C"
 		/// </summary>
 		public string ValTraduzid { get; set; }
-
-
 
 		#region Navigations
 		#endregion
@@ -240,12 +239,7 @@ namespace GenioMVC.ViewModels.Tradu
 			}
 		}
 
-		/// <summary>
-		/// Sets the value of a single property of the view model based on the provided table and field names.
-		/// </summary>
-		/// <param name="fullFieldName">The full field name in the format "table.field".</param>
-		/// <param name="value">The field value.</param>
-		/// <exception cref="ArgumentNullException">Thrown if <paramref name="fullFieldName"/> is null.</exception>
+		/// <inheritdoc />
 		public override void SetViewModelValue(string fullFieldName, object value)
 		{
 			try
@@ -383,6 +377,7 @@ namespace GenioMVC.ViewModels.Tradu
 
 			Load_Tradu___lang1langua__(qs, lazyLoad);
 			Load_Tradu___lang2langua__(qs, lazyLoad);
+
 // USE /[MANUAL GQT VIEWMODEL_LOADPARTIAL TRADU]/
 		}
 
@@ -455,10 +450,7 @@ namespace GenioMVC.ViewModels.Tradu
 				}
 			}
 
-			TableLang1Langua = new TableDBEdit<Models.Lang1>
-			{
-				IsLazyLoad = lazyLoad
-			};
+			TableLang1Langua = new TableDBEdit<Models.Lang1>();
 
 			if (lazyLoad)
 			{
@@ -502,7 +494,7 @@ namespace GenioMVC.ViewModels.Tradu
 				int numberItems = CSGenio.framework.Configuration.NrRegDBedit;
 				int offset = (page - 1) * numberItems;
 
-				FieldRef[] fields = new FieldRef[] { CSGenioAlang1.FldCodlang, CSGenioAlang1.FldLangua, CSGenioAlang1.FldZzstate };
+				FieldRef[] fields = [CSGenioAlang1.FldCodlang, CSGenioAlang1.FldLangua, CSGenioAlang1.FldZzstate];
 
 // USE /[MANUAL GQT OVERRQ TRADU_LANG1LANGUA]/
 
@@ -645,10 +637,7 @@ namespace GenioMVC.ViewModels.Tradu
 				}
 			}
 
-			TableLang2Langua = new TableDBEdit<Models.Lang2>
-			{
-				IsLazyLoad = lazyLoad
-			};
+			TableLang2Langua = new TableDBEdit<Models.Lang2>();
 
 			if (lazyLoad)
 			{
@@ -692,7 +681,7 @@ namespace GenioMVC.ViewModels.Tradu
 				int numberItems = CSGenio.framework.Configuration.NrRegDBedit;
 				int offset = (page - 1) * numberItems;
 
-				FieldRef[] fields = new FieldRef[] { CSGenioAlang2.FldCodlang, CSGenioAlang2.FldLangua, CSGenioAlang2.FldZzstate };
+				FieldRef[] fields = [CSGenioAlang2.FldCodlang, CSGenioAlang2.FldLangua, CSGenioAlang2.FldZzstate];
 
 // USE /[MANUAL GQT OVERRQ TRADU_LANG2LANGUA]/
 

@@ -67,18 +67,9 @@ namespace GenioMVC.Models
 		public string UserTableConfigName { get; set; }
 		public bool LoadDefaultView { get; set; } = false;
 		public bool IsFirstLoad { get; set; } = false;
-		public bool noRedirect { get; set; } = false;
+		public bool NoRedirect { get; set; } = false;
 		[JsonIgnore]
 		public bool AllSelected { get; set; } = false;
-
-		// Column Totalizers: Props that are only defined if
-		// The table has columns with totalizers enabled.
-		public List<string> TotalizerColumns { get; set; } = [];
-		// The table has multiple selection enabled.
-		public List<string> SelectedRows { get; set; } = [];
-
-		[JsonConverter(typeof(VariantToObjectDictionaryConverter))]
-		public Dictionary<string, object> RelatedFilterValues { get; set; } = [];
 	}
 
 	public class RequestInitialEPH

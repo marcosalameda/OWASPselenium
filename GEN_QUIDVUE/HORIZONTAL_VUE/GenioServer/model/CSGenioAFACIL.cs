@@ -47,7 +47,7 @@ namespace CSGenio.business
 			Qfield = new Field(info.Alias, "codfacil", FieldType.KEY_GUID);
 			Qfield.FieldDescription = "";
 			Qfield.FieldSize =  36;
-			Qfield.CavDesignation = "";
+			Qfield.VisivelCav = CavVisibilityType.Nunca;
 
 			Qfield.Dupmsg = "";
 			info.RegisterFieldDB(Qfield);
@@ -57,7 +57,7 @@ namespace CSGenio.business
 			Qfield.FieldDescription = "";
 			Qfield.FieldSize =  36;
 			Qfield.MQueue = false;
-			Qfield.CavDesignation = "";
+			Qfield.VisivelCav = CavVisibilityType.Nunca;
 
 			Qfield.Dupmsg = "";
 			info.RegisterFieldDB(Qfield);
@@ -110,7 +110,7 @@ namespace CSGenio.business
 			Qfield.FieldDescription = ">>Facility type";
 			Qfield.FieldSize =  36;
 			Qfield.MQueue = false;
-			Qfield.CavDesignation = "__FACILITY_TYPE27254";
+			Qfield.VisivelCav = CavVisibilityType.Nunca;
 
 			Qfield.Dupmsg = "";
 			argumentsListByArea= new List<ByAreaArguments>();
@@ -127,7 +127,7 @@ namespace CSGenio.business
 			Qfield.FieldSize =  3;
 			Qfield.MQueue = false;
 			Qfield.Decimals = 1;
-			Qfield.CavDesignation = "IMAGE65174";
+			Qfield.VisivelCav = CavVisibilityType.Nunca;
 
 			Qfield.Dupmsg = "";
 			info.RegisterFieldDB(Qfield);
@@ -173,7 +173,7 @@ namespace CSGenio.business
 			Qfield.FieldDescription = "Geographical coordinate";
 			Qfield.FieldSize =  50;
 			Qfield.MQueue = false;
-			Qfield.CavDesignation = "GEOGRAPHICAL_COORDIN45869";
+			Qfield.VisivelCav = CavVisibilityType.Nunca;
 
 			Qfield.Dupmsg = "";
 			info.RegisterFieldDB(Qfield);
@@ -183,7 +183,7 @@ namespace CSGenio.business
 			Qfield.FieldDescription = "Geographical coordinate";
 			Qfield.FieldSize =  50;
 			Qfield.MQueue = false;
-			Qfield.CavDesignation = "GEOGRAPHICAL_COORDIN45869";
+			Qfield.VisivelCav = CavVisibilityType.Nunca;
 
 			Qfield.Dupmsg = "";
 			argumentsListByArea = new List<ByAreaArguments>();
@@ -191,16 +191,6 @@ namespace CSGenio.business
 			Qfield.Formula = new InternalOperationFormula(argumentsListByArea, 4, delegate(object[] args, User user, string module, PersistentSupport sp) {
 				return ((((string)args[0])=="L")?(new GlobalFunctions(user,module,sp).GetGeoFromLatLng(((decimal)args[1]),((decimal)args[2]))):(((string)args[3])));
 			});
-			info.RegisterFieldDB(Qfield);
-
-			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "codcntry", FieldType.KEY_GUID);
-			Qfield.FieldDescription = ">> Country";
-			Qfield.FieldSize =  36;
-			Qfield.MQueue = false;
-			Qfield.CavDesignation = "___COUNTRY10061";
-
-			Qfield.Dupmsg = "";
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
@@ -224,7 +214,6 @@ namespace CSGenio.business
 			// Mother Relations
 			//------------------------------
 			info.ParentTables = new Dictionary<string, Relation>();
-			info.ParentTables.Add("cntry", new Relation("GQT", "gqtfacility", "facil", "codfacil", "codcntry", "GQT", "gqtcntry", "cntry", "codcntry", "codcntry"));
 			info.ParentTables.Add("entit", new Relation("GQT", "gqtfacility", "facil", "codfacil", "codentit", "GQT", "gqtentity", "entit", "codentit", "codentit"));
 			info.ParentTables.Add("facty", new Relation("GQT", "gqtfacility", "facil", "codfacil", "codfacty", "GQT", "gqtfacilitytype", "facty", "codfacty", "codfacty"));
 		}
@@ -236,12 +225,11 @@ namespace CSGenio.business
 		{
 			// Pathways
 			//------------------------------
-			info.Pathways = new Dictionary<string, string>(5);
-			info.Pathways.Add("cntry","cntry");
+			info.Pathways = new Dictionary<string, string>(4);
 			info.Pathways.Add("facty","facty");
 			info.Pathways.Add("entit","entit");
-			info.Pathways.Add("faci1","entit");
 			info.Pathways.Add("faci2","entit");
+			info.Pathways.Add("faci1","entit");
 		}
 
 		/// <summary>
@@ -542,17 +530,6 @@ namespace CSGenio.business
 			set { insertNameValueField(FldGeocoord, value); }
 		}
 
-		/// <summary>Field : ">> Country" Tipo: "CE" Formula:  ""</summary>
-		public static FieldRef FldCodcntry { get { return m_fldCodcntry; } }
-		private static FieldRef m_fldCodcntry = new FieldRef("facil", "codcntry");
-
-		/// <summary>Field : ">> Country" Tipo: "CE" Formula:  ""</summary>
-		public string ValCodcntry
-		{
-			get { return (string)returnValueField(FldCodcntry); }
-			set { insertNameValueField(FldCodcntry, value); }
-		}
-
 		/// <summary>Field : "ZZSTATE" Type: "INT" Formula:  ""</summary>
 		public static FieldRef FldZzstate { get { return m_fldZzstate; } }
 		private static FieldRef m_fldZzstate = new FieldRef("facil", "zzstate");
@@ -650,7 +627,7 @@ namespace CSGenio.business
 		// USE /[MANUAL GQT TABAUX FACIL]/
 
      
-               
+              
 
 	}
 }

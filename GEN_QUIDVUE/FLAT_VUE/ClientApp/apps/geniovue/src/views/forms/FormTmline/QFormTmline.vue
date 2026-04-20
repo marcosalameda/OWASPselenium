@@ -9,12 +9,13 @@
 			<div
 				v-if="showFormHeader"
 				class="c-action-bar">
-				<h1
+				<component
 					v-if="formControl.uiComponents.header && formInfo.designation"
+					:is="topHeadingTag"
 					:id="formTitleId"
 					class="form-header">
 					{{ formInfo.designation }}
-				</h1>
+				</component>
 
 				<div class="c-action-bar__menu">
 					<template
@@ -40,13 +41,10 @@
 									@click="btn.action">
 									<template v-if="btn.icon">
 										<q-badge-indicator
-											v-if="btn.badge && btn.badge.isVisible"
-											:color="btn.badge.color">
+											:enabled="btn.badge?.isVisible ?? false"
+											:color="btn.badge?.color">
 											<q-icon v-bind="btn.icon" />
 										</q-badge-indicator>
-										<q-icon
-											v-else
-											v-bind="btn.icon" />
 									</template>
 								</q-toggle-group-item>
 							</template>
@@ -97,14 +95,15 @@
 		<q-container
 			fluid
 			data-key="TMLINE"
+			:data-identifier="primaryKeyValue"
 			:data-loading="!formInitialDataLoaded || !isActiveForm">
 			<template v-if="formControl.initialized && showFormBody">
 				<q-row v-if="controls.TMLINE__PSEUDTMDSAID_.isVisible">
 					<q-col v-if="controls.TMLINE__PSEUDTMDSAID_.isVisible">
 						<q-timeline
 							v-if="controls.TMLINE__PSEUDTMDSAID_.isVisible"
-							id="TMLINE__PSEUDTMDSAID_"
 							v-bind="controls.TMLINE__PSEUDTMDSAID_"
+							:id="getControlId(controls.TMLINE__PSEUDTMDSAID_)"
 							@show-popup="timelineOpenForm" />
 					</q-col>
 				</q-row>
@@ -112,7 +111,7 @@
 		</q-container>
 	</teleport>
 
-	<hr v-if="!isPopup && showFormFooter" />
+	<q-divider v-if="!isPopup && showFormFooter" />
 
 	<teleport
 		v-if="formModalIsReady && showFormFooter"
@@ -842,7 +841,6 @@
 
 				this.afterControlUpdate(controlField, fieldValue)
 			},
-
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
 // USE /[MANUAL GQT FUNCTIONS_JS TMLINE]/
 // eslint-disable-next-line

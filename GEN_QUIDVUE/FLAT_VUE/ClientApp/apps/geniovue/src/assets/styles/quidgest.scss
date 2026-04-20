@@ -33,15 +33,12 @@
 // Controls
 @import "controls/q-anchors.scss";
 @import "controls/q-captcha.scss";
-@import "controls/q-checkbox.scss";
 @import "controls/q-checklist.scss";
 @import "controls/q-code-editor.scss";
 @import "controls/q-cookies.scss";
 @import "controls/q-dashboard.scss";
 @import "controls/q-datetime.scss";
 @import "controls/q-dropdown.scss";
-@import "controls/q-dropdown-button.scss";
-@import "controls/q-dropdown-menu.scss";
 @import "controls/q-grid-table-list.scss";
 @import "controls/q-group-collapsible.scss";
 @import "controls/q-group.scss";
@@ -54,6 +51,7 @@
 @import "controls/q-markdown-editor.scss";
 @import "controls/q-markdown-viewer.scss";
 @import "controls/q-multiform.scss";
+@import "controls/q-notes.scss";
 @import "controls/q-numeric-input.scss";
 @import "controls/q-password-meter.scss";
 @import "controls/q-popover.scss";
@@ -102,6 +100,15 @@ body {
 label {
 	margin-bottom: unset !important;
 	font-weight: inherit !important;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+	font-weight: 500;
 }
 
 #app {

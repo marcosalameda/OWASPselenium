@@ -118,18 +118,6 @@
 									</a>
 								</li>
 								<li class="nav-item n-sidebar__nav-item">
-									<a class="nav-link n-sidebar__nav-link" @click.stop="tryNavigate($event, 'audit_viewer')">
-										<q-icon icon ="information" />
-										<p>&nbsp;{{ Resources.AUDITORIA_DO_SISTEMA08460 }}</p>
-									</a>
-								</li>
-								<li class="nav-item n-sidebar__nav-item">
-									<a class="nav-link n-sidebar__nav-link" @click.stop="tryNavigate($event, 'message_queue')">
-										<q-icon icon ="email" />
-										<p>&nbsp;{{ Resources.MESSAGE_QUEUEING34227 }}</p>
-									</a>
-								</li>
-								<li class="nav-item n-sidebar__nav-item">
 									<a class="nav-link n-sidebar__nav-link" @click.stop="tryNavigate($event, 'report_management')">
 										<q-icon icon ="file-chart" />
 										<p>&nbsp;{{ Resources.GESTAO_DE_RELATORIOS37970 }}</p>

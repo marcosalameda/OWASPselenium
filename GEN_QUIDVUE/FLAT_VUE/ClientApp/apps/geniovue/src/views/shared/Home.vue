@@ -91,9 +91,6 @@
 					case 'HomepageGQT':
 						this.currentComponent = defineAsyncComponent(() => import('@/views/forms/FormHomeg/QFormHomeg.vue'))
 						break
-					case 'HomepageUIS':
-						this.currentComponent = defineAsyncComponent(() => import('@/views/menus/ModuleUIS/MenuUIS_111/QMenuUis111.vue'))
-						break
 					case 'HomepageSTY':
 						this.currentComponent = defineAsyncComponent(() => import('@/views/menus/ModuleSTY/MenuSTY_OVERVIEW/QMenuStyOverview.vue'))
 						break

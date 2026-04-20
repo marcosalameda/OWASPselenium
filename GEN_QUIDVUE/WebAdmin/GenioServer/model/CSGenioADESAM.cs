@@ -47,7 +47,7 @@ namespace CSGenio.business
 			Qfield = new Field(info.Alias, "coddesam", FieldType.KEY_GUID);
 			Qfield.FieldDescription = "Primary key";
 			Qfield.FieldSize =  36;
-			Qfield.CavDesignation = "PRIMARY_KEY63745";
+			Qfield.VisivelCav = CavVisibilityType.Nunca;
 
 			Qfield.Dupmsg = "";
 			info.RegisterFieldDB(Qfield);

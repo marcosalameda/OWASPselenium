@@ -7,6 +7,7 @@ using GenioMVC.Models.Navigation;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Quidgest.Persistence;
 using Quidgest.Persistence.GenericQuery;
+
 using System.Collections;
 using System.Collections.Concurrent;
 using System.Collections.Specialized;
@@ -52,6 +53,7 @@ namespace GenioMVC.ViewModels.Propr
 		public string ValCodtppro { get; set; }
 
 		#endregion
+
 		/// <summary>
 		/// Title: "Real estate" | Type: "C"
 		/// </summary>
@@ -129,8 +131,6 @@ namespace GenioMVC.ViewModels.Propr
 		/// Title: "Description" | Type: "MO"
 		/// </summary>
 		public string ValDescript { get; set; }
-
-
 
 		#region Navigations
 		#endregion
@@ -344,12 +344,7 @@ namespace GenioMVC.ViewModels.Propr
 			}
 		}
 
-		/// <summary>
-		/// Sets the value of a single property of the view model based on the provided table and field names.
-		/// </summary>
-		/// <param name="fullFieldName">The full field name in the format "table.field".</param>
-		/// <param name="value">The field value.</param>
-		/// <exception cref="ArgumentNullException">Thrown if <paramref name="fullFieldName"/> is null.</exception>
+		/// <inheritdoc />
 		public override void SetViewModelValue(string fullFieldName, object value)
 		{
 			try
@@ -528,6 +523,7 @@ namespace GenioMVC.ViewModels.Propr
 			Load_Propr00_pessoname____(qs, lazyLoad);
 			Load_Propr01_cntrycountry_(qs, lazyLoad);
 			Load_Propr01_regioregiao__(qs, lazyLoad);
+
 // USE /[MANUAL GQT VIEWMODEL_LOADPARTIAL PROPR00]/
 		}
 
@@ -601,10 +597,7 @@ namespace GenioMVC.ViewModels.Propr
 				}
 			}
 
-			TableTpproTppropri = new TableDBEdit<Models.Tppro>
-			{
-				IsLazyLoad = lazyLoad
-			};
+			TableTpproTppropri = new TableDBEdit<Models.Tppro>();
 
 			if (lazyLoad)
 			{
@@ -791,10 +784,7 @@ namespace GenioMVC.ViewModels.Propr
 				}
 			}
 
-			TablePessoName = new TableDBEdit<Models.Pesso>
-			{
-				IsLazyLoad = lazyLoad
-			};
+			TablePessoName = new TableDBEdit<Models.Pesso>();
 
 			if (lazyLoad)
 			{
@@ -982,10 +972,7 @@ namespace GenioMVC.ViewModels.Propr
 				}
 			}
 
-			TableCntryCountry = new TableDBEdit<Models.Cntry>
-			{
-				IsLazyLoad = lazyLoad
-			};
+			TableCntryCountry = new TableDBEdit<Models.Cntry>();
 
 			if (lazyLoad)
 			{
@@ -1176,10 +1163,7 @@ namespace GenioMVC.ViewModels.Propr
 			// Area limit
 			propr01_regioregiao__DoLoad &= AddCriteriaAreaLimit(propr01_regioregiao__Conds, CSGenio.business.CSGenioAcntry.FldCodcntry, "cntry", this.ValCodcntry, true);
 
-			TableRegioRegiao = new TableDBEdit<Models.Regio>
-			{
-				IsLazyLoad = lazyLoad
-			};
+			TableRegioRegiao = new TableDBEdit<Models.Regio>();
 
 			if (lazyLoad)
 			{

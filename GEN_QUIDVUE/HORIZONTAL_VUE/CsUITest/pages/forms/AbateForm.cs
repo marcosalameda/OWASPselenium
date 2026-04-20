@@ -8,15 +8,20 @@ namespace quidgest.uitests.pages.forms;
 public class AbateForm : Form
 {
 	/// <summary>
-	/// Decomission
+	/// No decomission
 	/// </summary>
-	public DateInputControl DecomDtdeco => new DateInputControl(driver, ContainerLocator, "#ABATE___DECOMDTDECO__", "dd/MM/yyyy HH:mm");
+	public BaseInputControl DecomDecomnr => new BaseInputControl(driver, ContainerLocator, "container-ABATE___DECOMDECOMNR_" + IdSuffix, "#ABATE___DECOMDECOMNR_" + IdSuffix);
 
 	/// <summary>
-	/// No bate
+	/// Decomission
 	/// </summary>
-	public BaseInputControl DecomDecomnr => new BaseInputControl(driver, ContainerLocator, "container-ABATE___DECOMDECOMNR_", "#ABATE___DECOMDECOMNR_");
+	public DateInputControl DecomDtdeco => new DateInputControl(driver, ContainerLocator, "#ABATE___DECOMDTDECO__" + IdSuffix, "dd/MM/yyyy HH:mm");
 
-	public AbateForm(IWebDriver driver, FORM_MODE mode, By? containerLocator = null)
-		: base(driver, mode, "ABATE", containerLocator: containerLocator) { }
+	/// <summary>
+	/// Notes
+	/// </summary>
+	public BaseInputControl DecomNote => new BaseInputControl(driver, ContainerLocator, "container-ABATE___DECOMNOTE____" + IdSuffix, "#ABATE___DECOMNOTE____" + IdSuffix);
+
+	public AbateForm(IWebDriver driver, FORM_MODE mode, By? containerLocator = null, bool usePkInId = false)
+		: base(driver, mode, "ABATE", containerLocator: containerLocator, usePkInId: usePkInId) { }
 }

@@ -9,12 +9,13 @@
 			<div
 				v-if="showFormHeader"
 				class="c-action-bar">
-				<h1
+				<component
 					v-if="formControl.uiComponents.header && formInfo.designation"
+					:is="topHeadingTag"
 					:id="formTitleId"
 					class="form-header">
 					{{ formInfo.designation }}
-				</h1>
+				</component>
 
 				<div class="c-action-bar__menu">
 					<template
@@ -40,13 +41,10 @@
 									@click="btn.action">
 									<template v-if="btn.icon">
 										<q-badge-indicator
-											v-if="btn.badge && btn.badge.isVisible"
-											:color="btn.badge.color">
+											:enabled="btn.badge?.isVisible ?? false"
+											:color="btn.badge?.color">
 											<q-icon v-bind="btn.icon" />
 										</q-badge-indicator>
-										<q-icon
-											v-else
-											v-bind="btn.icon" />
 									</template>
 								</q-toggle-group-item>
 							</template>
@@ -97,37 +95,18 @@
 		<q-container
 			fluid
 			data-key="ABATE"
+			:data-identifier="primaryKeyValue"
 			:data-loading="!formInitialDataLoaded || !isActiveForm">
 			<template v-if="formControl.initialized && showFormBody">
-				<q-row v-if="controls.ABATE___DECOMDTDECO__.isVisible">
-					<q-col
-						v-if="controls.ABATE___DECOMDTDECO__.isVisible"
-						cols="auto">
-						<base-input-structure
-							v-if="controls.ABATE___DECOMDTDECO__.isVisible"
-							class="i-text"
-							v-bind="controls.ABATE___DECOMDTDECO__"
-							v-on="controls.ABATE___DECOMDTDECO__.handlers"
-							:loading="controls.ABATE___DECOMDTDECO__.props.loading"
-							:reporting-mode-on="reportingModeCAV"
-							:suggestion-mode-on="suggestionModeOn">
-							<q-date-time-picker
-								v-if="controls.ABATE___DECOMDTDECO__.isVisible"
-								v-bind="controls.ABATE___DECOMDTDECO__.props"
-								:model-value="model.ValDtdeco.value"
-								@reset-icon-click="model.ValDtdeco.fnUpdateValue(model.ValDtdeco.originalValue ?? new Date())"
-								@update:model-value="model.ValDtdeco.fnUpdateValue($event ?? '')" />
-						</base-input-structure>
-					</q-col>
-				</q-row>
-				<q-row v-if="controls.ABATE___DECOMDECOMNR_.isVisible">
+				<q-row v-if="controls.ABATE___DECOMDECOMNR_.isVisible || controls.ABATE___DECOMDTDECO__.isVisible">
 					<q-col
 						v-if="controls.ABATE___DECOMDECOMNR_.isVisible"
 						cols="auto">
 						<base-input-structure
 							v-if="controls.ABATE___DECOMDECOMNR_.isVisible"
 							class="i-text"
-							v-bind="controls.ABATE___DECOMDECOMNR_"
+							v-bind="controls.ABATE___DECOMDECOMNR_.wrapperProps"
+							:id="getControlId(controls.ABATE___DECOMDECOMNR_)"
 							v-on="controls.ABATE___DECOMDECOMNR_.handlers"
 							:loading="controls.ABATE___DECOMDECOMNR_.props.loading"
 							:reporting-mode-on="reportingModeCAV"
@@ -135,7 +114,50 @@
 							<q-numeric-input
 								v-if="controls.ABATE___DECOMDECOMNR_.isVisible"
 								v-bind="controls.ABATE___DECOMDECOMNR_.props"
+								:id="getControlId(controls.ABATE___DECOMDECOMNR_)"
 								@update:model-value="model.ValDecomnr.fnUpdateValue" />
+						</base-input-structure>
+					</q-col>
+					<q-col
+						v-if="controls.ABATE___DECOMDTDECO__.isVisible"
+						cols="auto">
+						<base-input-structure
+							v-if="controls.ABATE___DECOMDTDECO__.isVisible"
+							class="i-text"
+							v-bind="controls.ABATE___DECOMDTDECO__.wrapperProps"
+							:id="getControlId(controls.ABATE___DECOMDTDECO__)"
+							v-on="controls.ABATE___DECOMDTDECO__.handlers"
+							:loading="controls.ABATE___DECOMDTDECO__.props.loading"
+							:reporting-mode-on="reportingModeCAV"
+							:suggestion-mode-on="suggestionModeOn">
+							<q-date-time-picker
+								v-if="controls.ABATE___DECOMDTDECO__.isVisible"
+								v-bind="controls.ABATE___DECOMDTDECO__.props"
+								:id="getControlId(controls.ABATE___DECOMDTDECO__)"
+								:model-value="model.ValDtdeco.value"
+								@reset-icon-click="model.ValDtdeco.fnUpdateValue(model.ValDtdeco.originalValue ?? new Date())"
+								@update:model-value="model.ValDtdeco.fnUpdateValue($event ?? '')" />
+						</base-input-structure>
+					</q-col>
+				</q-row>
+				<q-row v-if="controls.ABATE___DECOMNOTE____.isVisible">
+					<q-col
+						v-if="controls.ABATE___DECOMNOTE____.isVisible"
+						cols="auto">
+						<base-input-structure
+							v-if="controls.ABATE___DECOMNOTE____.isVisible"
+							class="i-textarea"
+							v-bind="controls.ABATE___DECOMNOTE____.wrapperProps"
+							:id="getControlId(controls.ABATE___DECOMNOTE____)"
+							v-on="controls.ABATE___DECOMNOTE____.handlers"
+							:loading="controls.ABATE___DECOMNOTE____.props.loading"
+							:reporting-mode-on="reportingModeCAV"
+							:suggestion-mode-on="suggestionModeOn">
+							<q-text-area
+								v-if="controls.ABATE___DECOMNOTE____.isVisible"
+								v-bind="controls.ABATE___DECOMNOTE____.props"
+								:id="getControlId(controls.ABATE___DECOMNOTE____)"
+								v-on="controls.ABATE___DECOMNOTE____.handlers" />
 						</base-input-structure>
 					</q-col>
 				</q-row>
@@ -143,7 +165,7 @@
 		</q-container>
 	</teleport>
 
-	<hr v-if="!isPopup && showFormFooter" />
+	<q-divider v-if="!isPopup && showFormFooter" />
 
 	<teleport
 		v-if="formModalIsReady && showFormFooter"
@@ -270,7 +292,7 @@
 					route: 'form-ABATE',
 					area: 'DECOM',
 					primaryKey: 'ValCoddeco',
-					designation: computed(() => this.Resources.DESATIVACAO_DE_EQUIP16900),
+					designation: computed(() => this.Resources.EQUIPMENT_DECOMMISSI11875),
 					identifier: '', // Unique identifier received by route (when it's nested).
 					mode: '',
 					availableAgents: [],
@@ -485,6 +507,21 @@
 				},
 
 				controls: {
+					ABATE___DECOMDECOMNR_: new fieldControlClass.NumberControl({
+						modelField: 'ValDecomnr',
+						valueChangeEvent: 'fieldChange:decom.decomnr',
+						id: 'ABATE___DECOMDECOMNR_',
+						name: 'DECOMNR',
+						size: 'small',
+						label: computed(() => this.Resources.NO_DECOMISSION13045),
+						placeholder: '',
+						labelPosition: computed(() => this.labelAlignment.topleft),
+						maxIntegers: 10,
+						maxDecimals: 0,
+						mustBeFilled: true,
+						controlLimits: [
+						],
+					}, this),
 					ABATE___DECOMDTDECO__: new fieldControlClass.DateControl({
 						modelField: 'ValDtdeco',
 						valueChangeEvent: 'fieldChange:decom.dtdeco',
@@ -499,18 +536,17 @@
 						controlLimits: [
 						],
 					}, this),
-					ABATE___DECOMDECOMNR_: new fieldControlClass.NumberControl({
-						modelField: 'ValDecomnr',
-						valueChangeEvent: 'fieldChange:decom.decomnr',
-						id: 'ABATE___DECOMDECOMNR_',
-						name: 'DECOMNR',
-						size: 'small',
-						label: computed(() => this.Resources.NO_BATE21045),
+					ABATE___DECOMNOTE____: new fieldControlClass.MultilineStringControl({
+						modelField: 'ValNote',
+						valueChangeEvent: 'fieldChange:decom.note',
+						id: 'ABATE___DECOMNOTE____',
+						name: 'NOTE',
+						size: 'xxlarge',
+						label: computed(() => this.Resources.NOTES05274),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						maxIntegers: 10,
-						maxDecimals: 0,
-						mustBeFilled: true,
+						rows: 3,
+						cols: 85,
 						controlLimits: [
 						],
 					}, this),
@@ -541,6 +577,8 @@
 						set ValDecomnr(value) { vm.model.ValDecomnr.updateValue(value) },
 						get ValDtdeco() { return vm.model.ValDtdeco.value },
 						set ValDtdeco(value) { vm.model.ValDtdeco.updateValue(value) },
+						get ValNote() { return vm.model.ValNote.value },
+						set ValNote(value) { vm.model.ValNote.updateValue(value) },
 					},
 					keys: {
 						/** The primary key of the DECOM table */
@@ -890,7 +928,6 @@
 
 				this.afterControlUpdate(controlField, fieldValue)
 			},
-
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
 // USE /[MANUAL GQT FUNCTIONS_JS ABATE]/
 // eslint-disable-next-line

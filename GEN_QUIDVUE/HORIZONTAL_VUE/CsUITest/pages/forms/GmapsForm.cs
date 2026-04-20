@@ -10,8 +10,8 @@ public class GmapsForm : Form
 	/// <summary>
 	/// 
 	/// </summary>
-	public ListControl PseudInstalac => new ListControl(driver, ContainerLocator, "#GMAPS___PSEUDINSTALAC");
+	public ListControl PseudInstalac => new ListControl(driver, ContainerLocator, "#GMAPS___PSEUDINSTALAC" + IdSuffix);
 
-	public GmapsForm(IWebDriver driver, FORM_MODE mode, By? containerLocator = null)
-		: base(driver, mode, "GMAPS", containerLocator: containerLocator) { }
+	public GmapsForm(IWebDriver driver, FORM_MODE mode, By? containerLocator = null, bool usePkInId = false)
+		: base(driver, mode, "GMAPS", containerLocator: containerLocator, usePkInId: usePkInId) { }
 }

@@ -56,7 +56,6 @@ namespace GenioMVC.Controllers
 // USE /[MANUAL GQT CONTROLLER_SHOW REGIS]/
 
 		[HttpPost]
-		[AllowAnonymous]
 		public ActionResult Regis_Show_GET([FromBody] RequestIdModel requestModel)
 		{
 			string id = requestModel.Id;
@@ -86,7 +85,6 @@ namespace GenioMVC.Controllers
 
 // USE /[MANUAL GQT CONTROLLER_NEW_GET REGIS]/
 		[HttpPost]
-		[AllowAnonymous]
 		public ActionResult Regis_New_GET([FromBody] RequestNewGetModel requestModel)
 		{
 			string id = requestModel.Id;
@@ -120,7 +118,6 @@ namespace GenioMVC.Controllers
 		//
 		// POST: /Regis/Regis_New
 // USE /[MANUAL GQT CONTROLLER_NEW_POST REGIS]/
-		[AllowAnonymous]
 		[HttpPost]
 		public ActionResult Regis_New([FromBody]Regis_ViewModel model, [FromQuery]bool redirect = true)
 		{
@@ -158,7 +155,6 @@ namespace GenioMVC.Controllers
 
 // USE /[MANUAL GQT CONTROLLER_EDIT_GET REGIS]/
 		[HttpPost]
-		[AllowAnonymous]
 		public ActionResult Regis_Edit_GET([FromBody] RequestIdModel requestModel)
 		{
 			string id = requestModel.Id;
@@ -186,7 +182,6 @@ namespace GenioMVC.Controllers
 		//
 		// POST: /Regis/Regis_Edit
 // USE /[MANUAL GQT CONTROLLER_EDIT_POST REGIS]/
-		[AllowAnonymous]
 		[HttpPost]
 		public ActionResult Regis_Edit([FromBody]Regis_ViewModel model, [FromQuery]bool redirect)
 		{
@@ -224,7 +219,6 @@ namespace GenioMVC.Controllers
 
 // USE /[MANUAL GQT CONTROLLER_DELETE_GET REGIS]/
 		[HttpPost]
-		[AllowAnonymous]
 		public ActionResult Regis_Delete_GET([FromBody] RequestIdModel requestModel)
 		{
 			string id = requestModel.Id;
@@ -252,7 +246,6 @@ namespace GenioMVC.Controllers
 		//
 		// POST: /Regis/Regis_Delete
 // USE /[MANUAL GQT CONTROLLER_DELETE_POST REGIS]/
-		[AllowAnonymous]
 		[HttpPost]
 		public ActionResult Regis_Delete([FromBody] RequestIdModel requestModel)
 		{
@@ -292,7 +285,6 @@ namespace GenioMVC.Controllers
 // USE /[MANUAL GQT CONTROLLER_DUPLICATE_GET REGIS]/
 
 		[HttpPost]
-		[AllowAnonymous]
 		public ActionResult Regis_Duplicate_GET([FromBody] RequestNewGetModel requestModel)
 		{
 			string id = requestModel.Id;
@@ -321,7 +313,6 @@ namespace GenioMVC.Controllers
 		//
 		// POST: /Regis/Regis_Duplicate
 // USE /[MANUAL GQT CONTROLLER_DUPLICATE_POST REGIS]/
-		[AllowAnonymous]
 		[HttpPost]
 		public ActionResult Regis_Duplicate([FromBody]Regis_ViewModel model, [FromQuery]bool redirect = true)
 		{
@@ -360,7 +351,6 @@ namespace GenioMVC.Controllers
 		//
 		// GET: /Regis/Regis_Cancel
 // USE /[MANUAL GQT CONTROLLER_CANCEL_GET REGIS]/
-		[AllowAnonymous]
 		public ActionResult Regis_Cancel()
 		{
 			if (Navigation.CurrentLevel.FormMode == FormMode.New || Navigation.CurrentLevel.FormMode == FormMode.Duplicate)
@@ -368,8 +358,15 @@ namespace GenioMVC.Controllers
 				PersistentSupport sp = UserContext.Current.PersistentSupport;
 				try
 				{
-					GenioMVC.Models.Regis model = new(UserContext.Current);
-					model.klass.QPrimaryKey = Navigation.GetStrValue("regis");
+					var recordKey = Navigation.GetStrValue("regis");
+					var model = GenioMVC.Models.Regis.Find(recordKey, UserContext.Current);
+					if (model.ValZzstate == 0)
+					{
+						Navigation.ClearValue("regis");
+						string errorMessage = Resources.Resources.ESTE_REGISTO_JA_FOI_02595;
+						Log.Error($"${errorMessage} ID: ${recordKey}");
+						return JsonOK(new { Success = true, currentNavigationLevel = Navigation.CurrentLevel.Level, Warning = errorMessage });
+					}
 
 // USE /[MANUAL GQT BEFORE_CANCEL REGIS]/
 
@@ -403,7 +400,6 @@ namespace GenioMVC.Controllers
 
 
 		// POST: /Regis/Regis_SaveEdit
-		[AllowAnonymous]
 		[HttpPost]
 		public ActionResult Regis_SaveEdit([FromBody] Regis_ViewModel model)
 		{

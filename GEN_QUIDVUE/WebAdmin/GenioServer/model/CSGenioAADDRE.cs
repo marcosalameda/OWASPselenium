@@ -47,7 +47,7 @@ namespace CSGenio.business
 			Qfield = new Field(info.Alias, "codaddre", FieldType.KEY_GUID);
 			Qfield.FieldDescription = "";
 			Qfield.FieldSize =  36;
-			Qfield.CavDesignation = "";
+			Qfield.VisivelCav = CavVisibilityType.Nunca;
 
 			Qfield.Dupmsg = "";
 			info.RegisterFieldDB(Qfield);
@@ -246,8 +246,8 @@ namespace CSGenio.business
 			AreaInfo info = new AreaInfo();
 
 			// Area meta-information
-			info.QSystem="GQP";
-			info.TableName="gqpaddress";
+			info.QSystem="GQT";
+			info.TableName="gqtaddress";
 			info.ShadowTabName="";
 			info.ShadowTabKeyName="";
 

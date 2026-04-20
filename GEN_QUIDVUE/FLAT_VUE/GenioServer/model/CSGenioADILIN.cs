@@ -47,7 +47,7 @@ namespace CSGenio.business
 			Qfield = new Field(info.Alias, "coddilin", FieldType.KEY_GUID);
 			Qfield.FieldDescription = "";
 			Qfield.FieldSize =  36;
-			Qfield.CavDesignation = "";
+			Qfield.VisivelCav = CavVisibilityType.Nunca;
 
 			Qfield.Dupmsg = "";
 			info.RegisterFieldDB(Qfield);
@@ -57,7 +57,7 @@ namespace CSGenio.business
 			Qfield.FieldDescription = ">>DISPATCH";
 			Qfield.FieldSize =  36;
 			Qfield.MQueue = false;
-			Qfield.CavDesignation = "__DISPATCH53890";
+			Qfield.VisivelCav = CavVisibilityType.Nunca;
 
 			Qfield.Dupmsg = "";
 			info.RegisterFieldDB(Qfield);
@@ -82,7 +82,7 @@ namespace CSGenio.business
 			Qfield.FieldDescription = ">>PRODUCT";
 			Qfield.FieldSize =  36;
 			Qfield.MQueue = false;
-			Qfield.CavDesignation = "__PRODUCT04710";
+			Qfield.VisivelCav = CavVisibilityType.Nunca;
 
             Qfield.NotNull = true;
 			Qfield.Dupmsg = "";
@@ -167,19 +167,17 @@ namespace CSGenio.business
 		{
 			// Pathways
 			//------------------------------
-			info.Pathways = new Dictionary<string, string>(12);
+			info.Pathways = new Dictionary<string, string>(10);
 			info.Pathways.Add("dispa","dispa");
 			info.Pathways.Add("produ","produ");
 			info.Pathways.Add("perso","dispa");
-			info.Pathways.Add("disst","dispa");
 			info.Pathways.Add("entit","dispa");
-			info.Pathways.Add("faci1","dispa");
 			info.Pathways.Add("faci2","dispa");
+			info.Pathways.Add("faci1","dispa");
 			info.Pathways.Add("locat","produ");
 			info.Pathways.Add("lcext","produ");
 			info.Pathways.Add("facil","produ");
 			info.Pathways.Add("facty","produ");
-			info.Pathways.Add("cntry","produ");
 		}
 
 		/// <summary>
@@ -191,8 +189,8 @@ namespace CSGenio.business
 			//------------------------------
 			//Actualiza as seguintes somas relacionadas:
 			info.RelatedSumArgs = new List<RelatedSumArgument>();
-			info.RelatedSumArgs.Add( new RelatedSumArgument("dilin", "produ", "outputs", "delivere", '+', true));
 			info.RelatedSumArgs.Add( new RelatedSumArgument("dilin", "produ", "stock", "delivere", '-', true));
+			info.RelatedSumArgs.Add( new RelatedSumArgument("dilin", "produ", "outputs", "delivere", '+', true));
 
 
 

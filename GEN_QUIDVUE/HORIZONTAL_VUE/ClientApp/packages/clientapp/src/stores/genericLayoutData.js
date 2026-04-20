@@ -150,7 +150,8 @@ const actions = {
 			if (!this.progressBar.isVisible) {
 				const props = {
 					title: this.progressBar.modalProps.title,
-					size: this.progressBar.modalProps.width ?? 'small'
+					size: this.progressBar.modalProps.width ?? 'medium',
+					dismissible: this.progressBar.modalProps.dismissible ?? false
 				}
 
 				const modalProps = {
@@ -180,7 +181,7 @@ const actions = {
 	resetProgressBar() {
 		const defaultConfig = getProgressBarDefaultConfig()
 
-		for (let i in this.progressBar) this.progressBar[i] = defaultConfig[i]
+		for (const i in this.progressBar) this.progressBar[i] = defaultConfig[i]
 
 		const genericDataStore = useGenericDataStore()
 		genericDataStore.removeModal('progress-bar')

@@ -9,12 +9,13 @@
 			<div
 				v-if="showFormHeader"
 				class="c-action-bar">
-				<h1
+				<component
 					v-if="formControl.uiComponents.header && formInfo.designation"
+					:is="topHeadingTag"
 					:id="formTitleId"
 					class="form-header">
 					{{ formInfo.designation }}
-				</h1>
+				</component>
 
 				<div class="c-action-bar__menu">
 					<template
@@ -40,13 +41,10 @@
 									@click="btn.action">
 									<template v-if="btn.icon">
 										<q-badge-indicator
-											v-if="btn.badge && btn.badge.isVisible"
-											:color="btn.badge.color">
+											:enabled="btn.badge?.isVisible ?? false"
+											:color="btn.badge?.color">
 											<q-icon v-bind="btn.icon" />
 										</q-badge-indicator>
-										<q-icon
-											v-else
-											v-bind="btn.icon" />
 									</template>
 								</q-toggle-group-item>
 							</template>
@@ -97,6 +95,7 @@
 		<q-container
 			fluid
 			data-key="ESPEC"
+			:data-identifier="primaryKeyValue"
 			:data-loading="!formInitialDataLoaded || !isActiveForm">
 			<template v-if="formControl.initialized && showFormBody">
 				<q-row v-if="controls.ESPEC___SPECIESPECIAL.isVisible">
@@ -106,13 +105,15 @@
 						<base-input-structure
 							v-if="controls.ESPEC___SPECIESPECIAL.isVisible"
 							class="i-text"
-							v-bind="controls.ESPEC___SPECIESPECIAL"
+							v-bind="controls.ESPEC___SPECIESPECIAL.wrapperProps"
+							:id="getControlId(controls.ESPEC___SPECIESPECIAL)"
 							v-on="controls.ESPEC___SPECIESPECIAL.handlers"
 							:loading="controls.ESPEC___SPECIESPECIAL.props.loading"
 							:reporting-mode-on="reportingModeCAV"
 							:suggestion-mode-on="suggestionModeOn">
 							<q-text-field
 								v-bind="controls.ESPEC___SPECIESPECIAL.props"
+								:id="getControlId(controls.ESPEC___SPECIESPECIAL)"
 								@blur="onBlur(controls.ESPEC___SPECIESPECIAL, model.ValEspecial.value)"
 								@change="model.ValEspecial.fnUpdateValueOnChange" />
 						</base-input-structure>
@@ -125,7 +126,8 @@
 						<base-input-structure
 							v-if="controls.ESPEC___SPECIAREATECN.isVisible"
 							class="i-radio-container"
-							v-bind="controls.ESPEC___SPECIAREATECN"
+							v-bind="controls.ESPEC___SPECIAREATECN.wrapperProps"
+							:id="getControlId(controls.ESPEC___SPECIAREATECN)"
 							v-on="controls.ESPEC___SPECIAREATECN.handlers"
 							:label-position="labelAlignment.topleft"
 							:loading="controls.ESPEC___SPECIAREATECN.props.loading"
@@ -134,6 +136,7 @@
 							<q-radio-group
 								v-if="controls.ESPEC___SPECIAREATECN.isVisible"
 								v-bind="controls.ESPEC___SPECIAREATECN.props"
+								:id="getControlId(controls.ESPEC___SPECIAREATECN)"
 								v-on="controls.ESPEC___SPECIAREATECN.handlers">
 								<q-radio-button
 									v-for="radio in controls.ESPEC___SPECIAREATECN.items"
@@ -148,7 +151,7 @@
 		</q-container>
 	</teleport>
 
-	<hr v-if="!isPopup && showFormFooter" />
+	<q-divider v-if="!isPopup && showFormFooter" />
 
 	<teleport
 		v-if="formModalIsReady && showFormFooter"
@@ -893,7 +896,6 @@
 
 				this.afterControlUpdate(controlField, fieldValue)
 			},
-
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
 // USE /[MANUAL GQT FUNCTIONS_JS ESPEC]/
 // eslint-disable-next-line

@@ -1,8 +1,7 @@
 <template>
 	<div
 		:id="`${props.id}-container`"
-		class="q-document"
-		:class="{ 'q-document--readonly': readonly }">
+		:class="['q-document', { 'q-document--readonly': readonly }]">
 		<q-input-group
 			:size="props.size"
 			class="q-document__input">
@@ -15,10 +14,12 @@
 				@click="handleInputClick" />
 
 			<!-- Dropdown actions -->
-			<q-action-list
-				:groups="groups"
-				:items="items"
-				@click="handleDropdownClick" />
+			<template #append>
+				<q-action-list
+					:groups="groups"
+					:items="items"
+					@click="handleDropdownClick" />
+			</template>
 		</q-input-group>
 
 		<!-- Invisible input used to attach files -->
@@ -29,8 +30,7 @@
 			type="file"
 			data-testid="file-input"
 			:accept="extensions.join(' ')"
-			@on-change="handleUpdateFileEvent" />
-		<!--  -->
+			@change="handleUpdateFileEvent" />
 
 		<div
 			v-if="!props.disabled && !props.readonly && props.versioning && props.editing"
@@ -104,7 +104,10 @@
 		usesTemplates: false
 	})
 
-	function validateProps() {
+	/**
+	 * Validates the component props.
+	 */
+	function validateProps(): void {
 		if (!validateTexts(DEFAULT_TEXTS, props.texts))
 			// eslint-disable-next-line no-console
 			console.error('Invalid texts prop:', props.texts)
@@ -145,9 +148,9 @@
 
 	/**
 	 * Handles the click event on the dropdown.
-	 * @param {string} itemKey The key of the item
+	 * @param itemKey The key of the item
 	 */
-	async function handleDropdownClick(itemKey: string) {
+	async function handleDropdownClick(itemKey: string): Promise<void> {
 		if (itemKey.includes('version-')) {
 			const version = itemKey.replace('version-', '').trim()
 			getFile(version)
@@ -192,7 +195,7 @@
 	/**
 	 * Handles the click event on the document input.
 	 */
-	async function handleInputClick() {
+	async function handleInputClick(): Promise<void> {
 		if (!model.value) await attachFile()
 		else getFile(undefined, false)
 	}
@@ -200,17 +203,19 @@
 	/**
 	 * Triggers the file attach window.
 	 */
-	async function attachFile() {
+	async function attachFile(): Promise<void> {
+		if (props.readonly) return
+
 		// Clears the input before updating (doens't work without this if the model is filed already)
 		await nextTick(() => fileAttachRef.value?.click())
 	}
 
 	/**
 	 * Validates the attached file, if everything's ok calls the callback function, if one is provided.
-	 * @param {object} event The file attach event
-	 * @param {function} callback The callback function
+	 * @param file The file
+	 * @param callback The callback function
 	 */
-	function validateFile(file: File, callback: (file: File) => void) {
+	function validateFile(file: File, callback: (file: File) => void): void {
 		const validationResult: number = validateFileExtAndSize(
 			file,
 			props.extensions,
@@ -223,21 +228,21 @@
 
 	/**
 	 * Handles the input event to update the file
-	 * @param {Event} event The file attach event
+	 * @param event The file attach event
 	 */
-	function handleUpdateFileEvent(event: Event & { target: HTMLInputElement }) {
-		const input = event.target
+	function handleUpdateFileEvent(event: Event): void {
+		const input = event.target as HTMLInputElement
 		if (!input?.files?.[0]) return
 		updateFile(input.files[0])
 	}
 
 	/**
 	 * Emits an event with the attached file object
-	 * @param {File} file The file
-	 * @param {string} newVersion The new version to save
-	 * @param {boolean} unlock Wether or not to unlock the input
+	 * @param file The file
+	 * @param newVersion The new version to save
+	 * @param unlock Wether or not to unlock the input
 	 */
-	function updateFile(file: File, newVersion?: string, unlock?: boolean) {
+	function updateFile(file: File, newVersion?: string, unlock?: boolean): void {
 		function attach(validatedfile: File) {
 			emit('submit-file', {
 				file: validatedfile,
@@ -250,9 +255,9 @@
 
 	/**
 	 * Submits a new file versions
-	 * @param {SubmitFile} payload - The payload with the file and new version
+	 * @param payload The payload with the file and new version
 	 */
-	function submitFileVersion(payload: SubmitFile) {
+	function submitFileVersion(payload: SubmitFile): void {
 		if (!payload.file) return
 		updateFile(payload.file, payload.version, payload.unlock)
 	}
@@ -260,16 +265,16 @@
 	/**
 	 * Emits an event to update the document to "Edit" mode
 	 */
-	function editFile() {
+	function editFile(): void {
 		emit('edit-file')
 	}
 
 	/**
 	 * Confirmation window for the deletion of a document.
-	 * @param {string} question The question to present to the user
-	 * @param {function} action The action to be executed in case the user wants to proceed
+	 * @param question The question to present to the user
+	 * @param action The action to be executed in case the user wants to proceed
 	 */
-	function deleteValidation(question: string, action: () => void) {
+	function deleteValidation(question: string, action: () => void): void {
 		const buttons = {
 			confirm: { label: props.texts.yesLabel, action },
 			cancel: { label: props.texts.noLabel }
@@ -280,10 +285,10 @@
 
 	/**
 	 * Emits an event to delete the document attached
-	 * @param {boolean} last Whether or not to delete the last version of the document
-	 * @param {boolean} history Whether or not to delete the document history
+	 * @param last Whether or not to delete the last version of the document
+	 * @param history Whether or not to delete the document history
 	 */
-	function deleteFile(last?: boolean, history?: boolean) {
+	function deleteFile(last?: boolean, history?: boolean): void {
 		if (last && !history)
 			deleteValidation(props.texts.theLastVersionWillEliminate, () => emit('delete-last'))
 		else if (!last && history)
@@ -295,16 +300,19 @@
 
 	/**
 	 * Emits the event to get the specified version of the document.
-	 * @param {string} version The id of the version
-	 * @param {boolean} download Whether to force the file download
+	 * @param version The id of the version
+	 * @param download Whether to force the file download
 	 */
-	function getFile(version: string | undefined = undefined, download: boolean = true) {
+	function getFile(version: string | undefined = undefined, download: boolean = true): void {
 		if (!model.value) return
 
 		emit('get-file', { version: version ?? props.currentVersion, download })
 	}
 
-	function viewAllVersions() {
+	/**
+	 * Emits the event to show the verions history.
+	 */
+	function viewAllVersions(): void {
 		emit('get-version-history')
 		setShowVersions(true)
 	}
@@ -312,7 +320,7 @@
 	/**
 	 * Emits the event to fetch the properties of the document from the server.
 	 */
-	function getProperties() {
+	function getProperties(): void {
 		if (!model.value) return
 		emit('get-properties')
 		setShowProperties(true)
@@ -321,31 +329,31 @@
 	/**
 	 * Emits an event to open the Document Templates pop up (generated next to <q-document />)
 	 */
-	function createDocument() {
+	function createDocument(): void {
 		emit('show-templates-popup')
 	}
 
 	/**
 	 * Sets the overlay to submit a new version
-	 * @param {boolean} visible Wether the overlay is visible or not
+	 * @param visible Wether the overlay is visible or not
 	 */
-	function setShowFileSubmit(visible: boolean) {
+	function setShowFileSubmit(visible: boolean): void {
 		showFileSubmit.value = visible
 	}
 
 	/**
 	 * Sets the overlay to show the properties of the document
-	 * @param {boolean} visible Wether the overlay is visible or not
+	 * @param visible Wether the overlay is visible or not
 	 */
-	function setShowProperties(visible: boolean) {
+	function setShowProperties(visible: boolean): void {
 		showProperties.value = visible
 	}
 
 	/**
 	 * Sets the overlay to show the versions of the document
-	 * @param {boolean} visible Wether the overlay is visible or not
+	 * @param visible Wether the overlay is visible or not
 	 */
-	function setShowVersions(visible: boolean) {
+	function setShowVersions(visible: boolean): void {
 		showVersions.value = visible
 	}
 

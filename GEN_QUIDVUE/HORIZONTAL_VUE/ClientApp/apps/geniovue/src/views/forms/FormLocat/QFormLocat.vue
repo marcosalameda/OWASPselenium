@@ -9,12 +9,13 @@
 			<div
 				v-if="showFormHeader"
 				class="c-action-bar">
-				<h1
+				<component
 					v-if="formControl.uiComponents.header && formInfo.designation"
+					:is="topHeadingTag"
 					:id="formTitleId"
 					class="form-header">
 					{{ formInfo.designation }}
-				</h1>
+				</component>
 
 				<div class="c-action-bar__menu">
 					<template
@@ -40,13 +41,10 @@
 									@click="btn.action">
 									<template v-if="btn.icon">
 										<q-badge-indicator
-											v-if="btn.badge && btn.badge.isVisible"
-											:color="btn.badge.color">
+											:enabled="btn.badge?.isVisible ?? false"
+											:color="btn.badge?.color">
 											<q-icon v-bind="btn.icon" />
 										</q-badge-indicator>
-										<q-icon
-											v-else
-											v-bind="btn.icon" />
 									</template>
 								</q-toggle-group-item>
 							</template>
@@ -97,15 +95,16 @@
 		<q-container
 			fluid
 			data-key="LOCAT"
+			:data-identifier="primaryKeyValue"
 			:data-loading="!formInitialDataLoaded || !isActiveForm">
 			<template v-if="formControl.initialized && showFormBody">
 				<q-row v-if="controls.LOCAT___PSEUDNOVOGR01.isVisible">
 					<q-col v-if="controls.LOCAT___PSEUDNOVOGR01.isVisible">
 						<q-group-box-container
 							v-if="controls.LOCAT___PSEUDNOVOGR01.isVisible"
-							id="LOCAT___PSEUDNOVOGR01"
 							v-bind="controls.LOCAT___PSEUDNOVOGR01"
-							:is-visible="controls.LOCAT___PSEUDNOVOGR01.isVisible">
+							:id="getControlId(controls.LOCAT___PSEUDNOVOGR01)"
+							:no-border="controls.LOCAT___PSEUDNOVOGR01.borderless">
 							<!-- Start LOCAT___PSEUDNOVOGR01 -->
 							<q-row v-if="controls.LOCAT___ENTITNAME____.isVisible">
 								<q-col
@@ -114,7 +113,8 @@
 									<base-input-structure
 										v-if="controls.LOCAT___ENTITNAME____.isVisible"
 										class="i-text"
-										v-bind="controls.LOCAT___ENTITNAME____"
+										v-bind="controls.LOCAT___ENTITNAME____.wrapperProps"
+										:id="getControlId(controls.LOCAT___ENTITNAME____)"
 										v-on="controls.LOCAT___ENTITNAME____.handlers"
 										:loading="controls.LOCAT___ENTITNAME____.props.loading"
 										:reporting-mode-on="reportingModeCAV"
@@ -122,6 +122,7 @@
 										<q-lookup
 											v-if="controls.LOCAT___ENTITNAME____.isVisible"
 											v-bind="controls.LOCAT___ENTITNAME____.props"
+											:id="getControlId(controls.LOCAT___ENTITNAME____)"
 											v-on="controls.LOCAT___ENTITNAME____.handlers" />
 										<q-see-more-locat-entitname
 											v-if="controls.LOCAT___ENTITNAME____.seeMoreIsVisible"
@@ -137,7 +138,8 @@
 									<base-input-structure
 										v-if="controls.LOCAT___FACILNAME____.isVisible"
 										class="i-text"
-										v-bind="controls.LOCAT___FACILNAME____"
+										v-bind="controls.LOCAT___FACILNAME____.wrapperProps"
+										:id="getControlId(controls.LOCAT___FACILNAME____)"
 										v-on="controls.LOCAT___FACILNAME____.handlers"
 										:loading="controls.LOCAT___FACILNAME____.props.loading"
 										:reporting-mode-on="reportingModeCAV"
@@ -145,6 +147,7 @@
 										<q-lookup
 											v-if="controls.LOCAT___FACILNAME____.isVisible"
 											v-bind="controls.LOCAT___FACILNAME____.props"
+											:id="getControlId(controls.LOCAT___FACILNAME____)"
 											v-on="controls.LOCAT___FACILNAME____.handlers" />
 										<q-see-more-locat-facilname
 											v-if="controls.LOCAT___FACILNAME____.seeMoreIsVisible"
@@ -160,13 +163,15 @@
 									<base-input-structure
 										v-if="controls.LOCAT___LOCATGLN_____.isVisible"
 										class="i-text"
-										v-bind="controls.LOCAT___LOCATGLN_____"
+										v-bind="controls.LOCAT___LOCATGLN_____.wrapperProps"
+										:id="getControlId(controls.LOCAT___LOCATGLN_____)"
 										v-on="controls.LOCAT___LOCATGLN_____.handlers"
 										:loading="controls.LOCAT___LOCATGLN_____.props.loading"
 										:reporting-mode-on="reportingModeCAV"
 										:suggestion-mode-on="suggestionModeOn">
 										<q-text-field
 											v-bind="controls.LOCAT___LOCATGLN_____.props"
+											:id="getControlId(controls.LOCAT___LOCATGLN_____)"
 											@blur="onBlur(controls.LOCAT___LOCATGLN_____, model.ValGln.value)"
 											@change="model.ValGln.fnUpdateValueOnChange" />
 									</base-input-structure>
@@ -179,14 +184,15 @@
 									<q-table
 										v-if="controls.LOCAT___PSEUDLOCALEXT.isVisible"
 										v-bind="controls.LOCAT___PSEUDLOCALEXT"
+										:id="getControlId(controls.LOCAT___PSEUDLOCALEXT)"
 										v-on="controls.LOCAT___PSEUDLOCALEXT.handlers">
+										<template #header>
+											<q-table-config
+												:table-ctrl="controls.LOCAT___PSEUDLOCALEXT"
+												v-on="controls.LOCAT___PSEUDLOCALEXT.handlers" />
+										</template>
 										<!-- USE /[MANUAL GQT CUSTOM_TABLE LOCAT___PSEUDLOCALEXT]/ -->
 									</q-table>
-									<q-table-extra-extension
-										v-if="controls.LOCAT___PSEUDLOCALEXT.isVisible"
-										:list-ctrl="controls.LOCAT___PSEUDLOCALEXT"
-										:filter-operators="controls.LOCAT___PSEUDLOCALEXT.filterOperators"
-										v-on="controls.LOCAT___PSEUDLOCALEXT.handlers" />
 								</q-col>
 							</q-row>
 							<!-- End LOCAT___PSEUDNOVOGR01 -->
@@ -197,7 +203,7 @@
 		</q-container>
 	</teleport>
 
-	<hr v-if="!isPopup && showFormFooter" />
+	<q-divider v-if="!isPopup && showFormFooter" />
 
 	<teleport
 		v-if="formModalIsReady && showFormFooter"
@@ -548,6 +554,7 @@
 						label: computed(() => this.Resources.LOCATION54790),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
+						borderless: false,
 						isCollapsible: false,
 						anchored: false,
 						directChildren: ['LOCAT___ENTITNAME____', 'LOCAT___FACILNAME____', 'LOCAT___LOCATGLN_____', 'LOCAT___PSEUDLOCALEXT'],
@@ -635,11 +642,12 @@
 					LOCAT___PSEUDLOCALEXT: new fieldControlClass.TableListControl({
 						id: 'LOCAT___PSEUDLOCALEXT',
 						name: 'LOCALEXT',
-						size: '',
+						size: 'xxlarge',
 						label: computed(() => this.Resources.LOCATION_EXTENSION_C33560),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'LOCAT___PSEUDNOVOGR01',
+						headerLevel: computed(() => this.baseHeadingLevel + 1),
 						controller: 'LOCAT',
 						action: 'Locat_ValLocalext',
 						hasDependencies: false,
@@ -665,7 +673,6 @@
 								scrollData: 1,
 								export: 1,
 								array: computed(() => new qProjArrays.QArraySpacetyp(vm.$getResource).elements),
-								arrayType: qProjArrays.QArraySpacetyp.type,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 3,
@@ -693,7 +700,6 @@
 							searchBarConfig: {
 								visibility: false
 							},
-							filtersVisible: false,
 							allowColumnFilters: false,
 							allowColumnSort: true,
 							crudActions: [
@@ -767,9 +773,7 @@
 									id: 'insert',
 									name: 'insert',
 									title: computed(() => this.Resources.INSERIR43365),
-									icon: {
-										icon: 'add'
-									},
+									icon: { icon: 'add' },
 									isInReadOnly: false,
 									params: {
 										action: vm.openFormAction,
@@ -1220,7 +1224,6 @@
 
 				this.afterControlUpdate(controlField, fieldValue)
 			},
-
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
 // USE /[MANUAL GQT FUNCTIONS_JS LOCAT]/
 // eslint-disable-next-line

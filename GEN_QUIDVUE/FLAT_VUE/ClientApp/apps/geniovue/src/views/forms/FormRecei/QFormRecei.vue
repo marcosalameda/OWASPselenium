@@ -9,12 +9,13 @@
 			<div
 				v-if="showFormHeader"
 				class="c-action-bar">
-				<h1
+				<component
 					v-if="formControl.uiComponents.header && formInfo.designation"
+					:is="topHeadingTag"
 					:id="formTitleId"
 					class="form-header">
 					{{ formInfo.designation }}
-				</h1>
+				</component>
 
 				<div class="c-action-bar__menu">
 					<template
@@ -40,13 +41,10 @@
 									@click="btn.action">
 									<template v-if="btn.icon">
 										<q-badge-indicator
-											v-if="btn.badge && btn.badge.isVisible"
-											:color="btn.badge.color">
+											:enabled="btn.badge?.isVisible ?? false"
+											:color="btn.badge?.color">
 											<q-icon v-bind="btn.icon" />
 										</q-badge-indicator>
-										<q-icon
-											v-else
-											v-bind="btn.icon" />
 									</template>
 								</q-toggle-group-item>
 							</template>
@@ -97,6 +95,7 @@
 		<q-container
 			fluid
 			data-key="RECEI"
+			:data-identifier="primaryKeyValue"
 			:data-loading="!formInitialDataLoaded || !isActiveForm">
 			<template v-if="formControl.initialized && showFormBody">
 				<q-row v-if="controls.RECEI___RECEIDTRECEIP.isVisible || controls.RECEI___RECEINUMBER__.isVisible || controls.RECEI___ENTITNAME____.isVisible">
@@ -106,7 +105,8 @@
 						<base-input-structure
 							v-if="controls.RECEI___RECEIDTRECEIP.isVisible"
 							class="i-text"
-							v-bind="controls.RECEI___RECEIDTRECEIP"
+							v-bind="controls.RECEI___RECEIDTRECEIP.wrapperProps"
+							:id="getControlId(controls.RECEI___RECEIDTRECEIP)"
 							v-on="controls.RECEI___RECEIDTRECEIP.handlers"
 							:loading="controls.RECEI___RECEIDTRECEIP.props.loading"
 							:reporting-mode-on="reportingModeCAV"
@@ -114,6 +114,7 @@
 							<q-date-time-picker
 								v-if="controls.RECEI___RECEIDTRECEIP.isVisible"
 								v-bind="controls.RECEI___RECEIDTRECEIP.props"
+								:id="getControlId(controls.RECEI___RECEIDTRECEIP)"
 								:model-value="model.ValDtreceip.value"
 								@reset-icon-click="model.ValDtreceip.fnUpdateValue(model.ValDtreceip.originalValue ?? new Date())"
 								@update:model-value="model.ValDtreceip.fnUpdateValue($event ?? '')" />
@@ -125,7 +126,8 @@
 						<base-input-structure
 							v-if="controls.RECEI___RECEINUMBER__.isVisible"
 							class="i-text"
-							v-bind="controls.RECEI___RECEINUMBER__"
+							v-bind="controls.RECEI___RECEINUMBER__.wrapperProps"
+							:id="getControlId(controls.RECEI___RECEINUMBER__)"
 							v-on="controls.RECEI___RECEINUMBER__.handlers"
 							:loading="controls.RECEI___RECEINUMBER__.props.loading"
 							:reporting-mode-on="reportingModeCAV"
@@ -133,6 +135,7 @@
 							<q-numeric-input
 								v-if="controls.RECEI___RECEINUMBER__.isVisible"
 								v-bind="controls.RECEI___RECEINUMBER__.props"
+								:id="getControlId(controls.RECEI___RECEINUMBER__)"
 								@update:model-value="model.ValNumber.fnUpdateValue" />
 						</base-input-structure>
 					</q-col>
@@ -142,7 +145,8 @@
 						<base-input-structure
 							v-if="controls.RECEI___ENTITNAME____.isVisible"
 							class="i-text"
-							v-bind="controls.RECEI___ENTITNAME____"
+							v-bind="controls.RECEI___ENTITNAME____.wrapperProps"
+							:id="getControlId(controls.RECEI___ENTITNAME____)"
 							v-on="controls.RECEI___ENTITNAME____.handlers"
 							:loading="controls.RECEI___ENTITNAME____.props.loading"
 							:reporting-mode-on="reportingModeCAV"
@@ -150,6 +154,7 @@
 							<q-lookup
 								v-if="controls.RECEI___ENTITNAME____.isVisible"
 								v-bind="controls.RECEI___ENTITNAME____.props"
+								:id="getControlId(controls.RECEI___ENTITNAME____)"
 								v-on="controls.RECEI___ENTITNAME____.handlers" />
 							<q-see-more-recei-entitname
 								v-if="controls.RECEI___ENTITNAME____.seeMoreIsVisible"
@@ -165,12 +170,13 @@
 						<q-table
 							v-if="controls.RECEI___PSEUDRECEIPTL.isVisible"
 							v-bind="controls.RECEI___PSEUDRECEIPTL"
+							:id="getControlId(controls.RECEI___PSEUDRECEIPTL)"
 							v-on="controls.RECEI___PSEUDRECEIPTL.handlers">
-						<q-table-extra-extension
-							v-if="controls.RECEI___PSEUDRECEIPTL.isVisible"
-							:list-ctrl="controls.RECEI___PSEUDRECEIPTL"
-							:filter-operators="controls.RECEI___PSEUDRECEIPTL.filterOperators"
-							v-on="controls.RECEI___PSEUDRECEIPTL.handlers" />
+							<template #header>
+								<q-table-config
+									:table-ctrl="controls.RECEI___PSEUDRECEIPTL"
+									v-on="controls.RECEI___PSEUDRECEIPTL.handlers" />
+							</template>
 							<!-- USE /[MANUAL GQT CUSTOM_TABLE RECEI___PSEUDRECEIPTL]/ -->
 						</q-table>
 					</q-col>
@@ -180,7 +186,8 @@
 						<base-input-structure
 							v-if="controls.RECEI___RECEIDTCHECK_.isVisible"
 							class="i-text"
-							v-bind="controls.RECEI___RECEIDTCHECK_"
+							v-bind="controls.RECEI___RECEIDTCHECK_.wrapperProps"
+							:id="getControlId(controls.RECEI___RECEIDTCHECK_)"
 							v-on="controls.RECEI___RECEIDTCHECK_.handlers"
 							:loading="controls.RECEI___RECEIDTCHECK_.props.loading"
 							:reporting-mode-on="reportingModeCAV"
@@ -188,6 +195,7 @@
 							<q-date-time-picker
 								v-if="controls.RECEI___RECEIDTCHECK_.isVisible"
 								v-bind="controls.RECEI___RECEIDTCHECK_.props"
+								:id="getControlId(controls.RECEI___RECEIDTCHECK_)"
 								:model-value="model.ValDtcheck.value"
 								@reset-icon-click="model.ValDtcheck.fnUpdateValue(model.ValDtcheck.originalValue ?? new Date())"
 								@update:model-value="model.ValDtcheck.fnUpdateValue($event ?? '')" />
@@ -200,8 +208,9 @@
 						cols="auto">
 						<base-input-structure
 							v-if="controls.RECEI___RECEITOCHECK_.isVisible"
-							class="i-checkbox"
-							v-bind="controls.RECEI___RECEITOCHECK_"
+							class="i-text"
+							v-bind="controls.RECEI___RECEITOCHECK_.wrapperProps"
+							:id="getControlId(controls.RECEI___RECEITOCHECK_)"
 							v-on="controls.RECEI___RECEITOCHECK_.handlers"
 							:loading="controls.RECEI___RECEITOCHECK_.props.loading"
 							:reporting-mode-on="reportingModeCAV"
@@ -210,6 +219,7 @@
 								<q-checkbox
 									v-if="controls.RECEI___RECEITOCHECK_.isVisible"
 									v-bind="controls.RECEI___RECEITOCHECK_.props"
+									:id="getControlId(controls.RECEI___RECEITOCHECK_)"
 									v-on="controls.RECEI___RECEITOCHECK_.handlers" />
 							</template>
 						</base-input-structure>
@@ -221,8 +231,9 @@
 						cols="auto">
 						<base-input-structure
 							v-if="controls.RECEI___RECEICHECKED_.isVisible"
-							class="i-checkbox"
-							v-bind="controls.RECEI___RECEICHECKED_"
+							class="i-text"
+							v-bind="controls.RECEI___RECEICHECKED_.wrapperProps"
+							:id="getControlId(controls.RECEI___RECEICHECKED_)"
 							v-on="controls.RECEI___RECEICHECKED_.handlers"
 							:loading="controls.RECEI___RECEICHECKED_.props.loading"
 							:reporting-mode-on="reportingModeCAV"
@@ -231,6 +242,7 @@
 								<q-checkbox
 									v-if="controls.RECEI___RECEICHECKED_.isVisible"
 									v-bind="controls.RECEI___RECEICHECKED_.props"
+									:id="getControlId(controls.RECEI___RECEICHECKED_)"
 									v-on="controls.RECEI___RECEICHECKED_.handlers" />
 							</template>
 						</base-input-structure>
@@ -242,8 +254,9 @@
 						cols="auto">
 						<base-input-structure
 							v-if="controls.RECEI___RECEISTORED__.isVisible"
-							class="i-checkbox"
-							v-bind="controls.RECEI___RECEISTORED__"
+							class="i-text"
+							v-bind="controls.RECEI___RECEISTORED__.wrapperProps"
+							:id="getControlId(controls.RECEI___RECEISTORED__)"
 							v-on="controls.RECEI___RECEISTORED__.handlers"
 							:loading="controls.RECEI___RECEISTORED__.props.loading"
 							:reporting-mode-on="reportingModeCAV"
@@ -252,6 +265,7 @@
 								<q-checkbox
 									v-if="controls.RECEI___RECEISTORED__.isVisible"
 									v-bind="controls.RECEI___RECEISTORED__.props"
+									:id="getControlId(controls.RECEI___RECEISTORED__)"
 									v-on="controls.RECEI___RECEISTORED__.handlers" />
 							</template>
 						</base-input-structure>
@@ -262,7 +276,8 @@
 						<base-input-structure
 							v-if="controls.RECEI___RECEIDTSTORAG.isVisible"
 							class="i-text"
-							v-bind="controls.RECEI___RECEIDTSTORAG"
+							v-bind="controls.RECEI___RECEIDTSTORAG.wrapperProps"
+							:id="getControlId(controls.RECEI___RECEIDTSTORAG)"
 							v-on="controls.RECEI___RECEIDTSTORAG.handlers"
 							:loading="controls.RECEI___RECEIDTSTORAG.props.loading"
 							:reporting-mode-on="reportingModeCAV"
@@ -270,6 +285,7 @@
 							<q-date-time-picker
 								v-if="controls.RECEI___RECEIDTSTORAG.isVisible"
 								v-bind="controls.RECEI___RECEIDTSTORAG.props"
+								:id="getControlId(controls.RECEI___RECEIDTSTORAG)"
 								:model-value="model.ValDtstorag.value"
 								@reset-icon-click="model.ValDtstorag.fnUpdateValue(model.ValDtstorag.originalValue ?? new Date())"
 								@update:model-value="model.ValDtstorag.fnUpdateValue($event ?? '')" />
@@ -280,7 +296,7 @@
 		</q-container>
 	</teleport>
 
-	<hr v-if="!isPopup && showFormFooter" />
+	<q-divider v-if="!isPopup && showFormFooter" />
 
 	<teleport
 		v-if="formModalIsReady && showFormFooter"
@@ -683,10 +699,11 @@
 					RECEI___PSEUDRECEIPTL: new fieldControlClass.TableListControl({
 						id: 'RECEI___PSEUDRECEIPTL',
 						name: 'RECEIPTL',
-						size: '',
+						size: 'xxlarge',
 						label: computed(() => this.Resources.RECEIPT_LINES14292),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
+						headerLevel: computed(() => this.baseHeadingLevel + 1),
 						controller: 'RECEI',
 						action: 'Recei_ValReceiptl',
 						hasDependencies: false,
@@ -701,6 +718,7 @@
 								scrollData: 6,
 								maxDigits: 6,
 								decimalPlaces: 0,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 2,
@@ -710,6 +728,7 @@
 								label: computed(() => this.Resources.SKU42303),
 								dataLength: 20,
 								scrollData: 20,
+								export: 1,
 								pkColumn: 'ValCodprodu',
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
@@ -721,6 +740,7 @@
 								dataLength: 14,
 								scrollData: 14,
 								isVisible: false,
+								export: 1,
 								pkColumn: 'ValCodprodu',
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
@@ -731,6 +751,7 @@
 								label: computed(() => this.Resources.PRODUCT12880),
 								dataLength: 85,
 								scrollData: 30,
+								export: 1,
 								pkColumn: 'ValCodprodu',
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.NumericColumn({
@@ -742,6 +763,7 @@
 								scrollData: 10,
 								maxDigits: 10,
 								decimalPlaces: 0,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.NumericColumn({
 								order: 6,
@@ -752,6 +774,7 @@
 								scrollData: 10,
 								maxDigits: 10,
 								decimalPlaces: 0,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.NumericColumn({
 								order: 7,
@@ -762,6 +785,7 @@
 								scrollData: 10,
 								maxDigits: 10,
 								decimalPlaces: 0,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 						],
 						config: {
@@ -779,7 +803,6 @@
 							searchBarConfig: {
 								visibility: false
 							},
-							filtersVisible: false,
 							allowColumnFilters: false,
 							allowColumnSort: true,
 							crudActions: [
@@ -853,9 +876,7 @@
 									id: 'insert',
 									name: 'insert',
 									title: computed(() => this.Resources.INSERIR43365),
-									icon: {
-										icon: 'add'
-									},
+									icon: { icon: 'add' },
 									isInReadOnly: false,
 									params: {
 										action: vm.openFormAction,
@@ -1383,7 +1404,6 @@
 
 				this.afterControlUpdate(controlField, fieldValue)
 			},
-
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
 // USE /[MANUAL GQT FUNCTIONS_JS RECEI]/
 // eslint-disable-next-line

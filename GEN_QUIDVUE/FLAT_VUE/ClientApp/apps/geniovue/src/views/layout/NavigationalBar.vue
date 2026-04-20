@@ -35,6 +35,7 @@
 						:model-value="system.currentSystem"
 						:items="availableSystems"
 						:groups="availableSystemsGroups"
+						:aria-label="texts.systemYears"
 						@update:model-value="selectSystem">
 						<template #prepend>
 							<q-icon icon="system-choice" />

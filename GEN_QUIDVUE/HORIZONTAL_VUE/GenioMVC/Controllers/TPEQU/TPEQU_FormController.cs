@@ -374,8 +374,15 @@ namespace GenioMVC.Controllers
 				PersistentSupport sp = UserContext.Current.PersistentSupport;
 				try
 				{
-					GenioMVC.Models.Tpequ model = new(UserContext.Current);
-					model.klass.QPrimaryKey = Navigation.GetStrValue("tpequ");
+					var recordKey = Navigation.GetStrValue("tpequ");
+					var model = GenioMVC.Models.Tpequ.Find(recordKey, UserContext.Current);
+					if (model.ValZzstate == 0)
+					{
+						Navigation.ClearValue("tpequ");
+						string errorMessage = Resources.Resources.ESTE_REGISTO_JA_FOI_02595;
+						Log.Error($"${errorMessage} ID: ${recordKey}");
+						return JsonOK(new { Success = true, currentNavigationLevel = Navigation.CurrentLevel.Level, Warning = errorMessage });
+					}
 
 // USE /[MANUAL GQT BEFORE_CANCEL TPEQU]/
 
@@ -496,15 +503,6 @@ namespace GenioMVC.Controllers
 			// Determine rows per page
 			tableConfig.RowsPerPage = tableConfig.DetermineRowsPerPage(CSGenio.framework.Configuration.NrRegDBedit, "");
 
-			// Determine which columns have totalizers
-			tableConfig.TotalizerColumns = requestModel.TotalizerColumns;
-
-			// For tables with multiple selection enabled, determine currently selected rows
-			tableConfig.SelectedRows = requestModel.SelectedRows;
-
-			// Add form field filters to the table configuration
-			tableConfig.FieldFilters = requestModel.RelatedFilterValues;
-
 			model.setModes(Request.Query["m"].ToString());
 			model.Load(tableConfig, requestValues, Request.IsAjaxRequest());
 
@@ -553,15 +551,6 @@ namespace GenioMVC.Controllers
 
 			// Determine rows per page
 			tableConfig.RowsPerPage = tableConfig.DetermineRowsPerPage(CSGenio.framework.Configuration.NrRegDBedit, "");
-
-			// Determine which columns have totalizers
-			tableConfig.TotalizerColumns = requestModel.TotalizerColumns;
-
-			// For tables with multiple selection enabled, determine currently selected rows
-			tableConfig.SelectedRows = requestModel.SelectedRows;
-
-			// Add form field filters to the table configuration
-			tableConfig.FieldFilters = requestModel.RelatedFilterValues;
 
 			model.setModes(Request.Query["m"].ToString());
 			model.Load(tableConfig, requestValues, Request.IsAjaxRequest());
@@ -685,15 +674,6 @@ namespace GenioMVC.Controllers
 			// Determine rows per page
 			tableConfig.RowsPerPage = tableConfig.DetermineRowsPerPage(CSGenio.framework.Configuration.NrRegDBedit, "");
 
-			// Determine which columns have totalizers
-			tableConfig.TotalizerColumns = requestModel.TotalizerColumns;
-
-			// For tables with multiple selection enabled, determine currently selected rows
-			tableConfig.SelectedRows = requestModel.SelectedRows;
-
-			// Add form field filters to the table configuration
-			tableConfig.FieldFilters = requestModel.RelatedFilterValues;
-
 			model.setModes(Request.Query["m"].ToString());
 			model.Load(tableConfig, requestValues, Request.IsAjaxRequest());
 
@@ -743,15 +723,6 @@ namespace GenioMVC.Controllers
 			// Determine rows per page
 			tableConfig.RowsPerPage = tableConfig.DetermineRowsPerPage(CSGenio.framework.Configuration.NrRegDBedit, "");
 
-			// Determine which columns have totalizers
-			tableConfig.TotalizerColumns = requestModel.TotalizerColumns;
-
-			// For tables with multiple selection enabled, determine currently selected rows
-			tableConfig.SelectedRows = requestModel.SelectedRows;
-
-			// Add form field filters to the table configuration
-			tableConfig.FieldFilters = requestModel.RelatedFilterValues;
-
 			model.setModes(Request.Query["m"].ToString());
 			model.Load(tableConfig, requestValues, Request.IsAjaxRequest());
 
@@ -778,78 +749,6 @@ namespace GenioMVC.Controllers
 			};
 
 			return GenericHandlePostFormApply(eventSink, model);
-		}
-
-		/// <summary>
-		/// Server-side component of action #1 (RECALC) of trigger UPDATE_FORMULAS
-		/// </summary>
-		/// <param name="data">The client-side context of the trigger.</param>
-		/// <returns>
-		/// Success message
-		/// </returns>
-		[ActionName("Tpequ_FormTriggers_UPDATE_FORMULAS_1")]
-		public ActionResult Tpequ_FormTriggers_UPDATE_FORMULAS_1([FromBody] Tpequ_ViewModel vm)
-		{
-			var key = vm.ValCodtpequ;
-
-			User user = UserContext.Current.User;
-			PersistentSupport sp = PersistentSupport.getPersistentSupport(user.Year, user.Name);
-
-			try
-			{
-				var model = Models.Tpequ.Find(key, UserContext.Current, "FTPEQU");
-				vm.MapToModel(model);
-				// Context
-				var context = new CSGenio.business.Triggers.TriggerContext()
-				{
-					Area = model.klass,
-					PersistentSupport = sp,
-					User = user,
-				};
-
-				// Should open a local transaction
-				// if the context did not provide an open transaction.
-				bool openLocalTransaction = sp.TransactionIsClosed;
-
-				// Should keep the connection alive
-				// if the context provided an open connection but not an open transaction.
-				bool keepConnectionAlive = !sp.ConnectionIsClosed && sp.TransactionIsClosed;
-
-				if (openLocalTransaction)
-					sp.openTransaction();
-
-				// Trigger UPDATE_FORMULAS
-				CSGenio.business.Triggers.ITrigger trigger_UPDATE_FORMULAS = new CSGenio.business.Triggers.TriggerUpdateFormulas(context);
-				CSGenio.business.Triggers.IAction action = trigger_UPDATE_FORMULAS.GetAction(1);
-				trigger_UPDATE_FORMULAS.ExecuteAction(action);
-
-				// If a local transaction was opened, it should also be closed.
-				if (openLocalTransaction)
-				{
-					sp.closeTransaction();
-
-					// Reopen the connection if it needs to be kept alive.
-					if (keepConnectionAlive)
-						sp.openConnection();
-				}
-			}
-			catch (Exception)
-			{
-				sp.rollbackTransaction();
-				return Json(
-					new {
-						success = "E",
-						message = Resources.Resources.PEDIMOS_DESCULPA__OC63848
-					}
-				);
-			}
-
-			return Json(
-				new {
-					success = "OK",
-					message = Resources.Resources.A_OPERACAO_FOI_CONCL36721
-				}
-			);
 		}
 
 		public class TpequDocumValidateTickets : RequestDocumValidateTickets

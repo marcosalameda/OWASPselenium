@@ -72,9 +72,7 @@
 					STY : { active: true, Cod: "STY", Description: 'STYLE47121'},
 					PTN : { active: true, Cod: "PTN", Description: 'PATTERNS16056'},
 					REG : { active: true, Cod: "REG", Description: 'REGISTRATION03584'},
-					UIS : { active: true, Cod: "UIS", Description: 'USER_INTERFACE32384'},
 					GQT : { active: true, Cod: "GQT", Description: 'GENIO_QUALITY_TESTS30896'},
-					XRS : { active: true, Cod: "XRS", Description: 'WHAREHOUSE_API10412'},
 				},
 				modules: [{
 					Module: String,
@@ -147,9 +145,7 @@
                     this.Modules.STY.active &&
                     this.Modules.PTN.active &&
                     this.Modules.REG.active &&
-                    this.Modules.UIS.active &&
-                    this.Modules.GQT.active &&
-                    this.Modules.XRS.active ;
+                    this.Modules.GQT.active ;
                 },
                 set(value) {
                     //If we explicitly declare the variables, vue will bind them
@@ -160,9 +156,7 @@
                     this.Modules.STY.active = value;
                     this.Modules.PTN.active = value;
                     this.Modules.REG.active = value;
-                    this.Modules.UIS.active = value;
                     this.Modules.GQT.active = value;
-                    this.Modules.XRS.active = value;
                     return value;
                 }
             }

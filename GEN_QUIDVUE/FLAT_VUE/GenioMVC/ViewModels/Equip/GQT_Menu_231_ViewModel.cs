@@ -209,37 +209,29 @@ namespace GenioMVC.ViewModels.Equip
 
 			if (!tableConfig.GroupFilters.ContainsKey("filter_GQT_Menu_231_ACTIVO"))
 			{
-				string defaultValue = "1";
+				string defaultValue = "";
 				tableConfig.Filters.Add(new GroupFilter { Key = "filter_GQT_Menu_231_ACTIVO", Value = defaultValue });
 			}
 
 			{
 				var groupFilters = CriteriaSet.Or();
-				bool filter_GQT_Menu_231_ACTIVO_1 = false;
-				if (tableConfig.GroupFilters.ContainsKey("filter_GQT_Menu_231_ACTIVO"))
-					filter_GQT_Menu_231_ACTIVO_1 = tableConfig.GroupFilters["filter_GQT_Menu_231_ACTIVO"].Contains("1");
-				else if (!tableConfig.GroupFilters.ContainsKey("filter_GQT_Menu_231_ACTIVO"))
-					filter_GQT_Menu_231_ACTIVO_1 = true;
-				if (filter_GQT_Menu_231_ACTIVO_1)
-				{
-					groupFilters.Equal(CSGenioAcntry.FldActive, 1);
+				subfilters.SubSets.Add(groupFilters);
+			}
+			if (!tableConfig.GroupFilters.ContainsKey("filter_GQT_Menu_231_ACTIVO"))
+			{
+				string defaultValue = "";
+				tableConfig.Filters.Add(new GroupFilter { Key = "filter_GQT_Menu_231_ACTIVO", Value = defaultValue });
+			}
 
-				}
-
-				bool filter_GQT_Menu_231_ACTIVO_2 = false;
-				if (tableConfig.GroupFilters.ContainsKey("filter_GQT_Menu_231_ACTIVO"))
-					filter_GQT_Menu_231_ACTIVO_2 = tableConfig.GroupFilters["filter_GQT_Menu_231_ACTIVO"].Contains("2");
-				if (filter_GQT_Menu_231_ACTIVO_2)
-				{
-					groupFilters.Equal(CSGenioAcntry.FldActive, 0);
-
-				}
-
+			{
+				var groupFilters = CriteriaSet.Or();
 				subfilters.SubSets.Add(groupFilters);
 			}
 
 			crs.SubSets.Add(subfilters);
 
+			// Form field filters
+			crs.SubSets.Add(ProcessFieldFilters(tableConfig.GlobalFilters));
 
 			crs.SubSets.Add(GetCustomizedStaticLimits(StaticLimits));
 
@@ -368,12 +360,11 @@ namespace GenioMVC.ViewModels.Equip
 
 			FieldRef[] fields = new FieldRef[] { CSGenioAequip.FldCodequip, CSGenioAequip.FldZzstate, CSGenioAequip.FldRegistnr, CSGenioAequip.FldDesignat, CSGenioAequip.FldPhotogra, CSGenioAequip.FldCodrooms, CSGenioAroom1.FldCodrooms, CSGenioAroom1.FldRoomnr, CSGenioAequip.FldCodtpequ, CSGenioAtpequ.FldCodtpequ, CSGenioAtpequ.FldTipoequi, CSGenioAequip.FldCodwareh, CSGenioAwareh.FldCodwareh, CSGenioAwareh.FldWarehdes, CSGenioAequip.FldCoditem, CSGenioAitem.FldCoditem, CSGenioAitem.FldItemdes };
 
-
-			// Totalizers
-			List<FieldRef> fieldsWithTotalizers = fields.Where(field => tableConfig.TotalizerColumns.Contains(field.FullName)).ToList();
+			// List of column names that should display totalized (aggregated) values.
+			List<string> totalizerColumns = [];
+			List<FieldRef> fieldsWithTotalizers = [.. fields.Where(field => totalizerColumns.Contains(field.FullName))];
 
 			FieldRef firstVisibleColumn = null;
-
 			if (sorts.Count == 0)
 			{
 				firstVisibleColumn = tableConfig?.GetFirstVisibleColumn(TableAlias);

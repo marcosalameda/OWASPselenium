@@ -9,12 +9,13 @@
 			<div
 				v-if="showFormHeader"
 				class="c-action-bar">
-				<h1
+				<component
 					v-if="formControl.uiComponents.header && formInfo.designation"
+					:is="topHeadingTag"
 					:id="formTitleId"
 					class="form-header">
 					{{ formInfo.designation }}
-				</h1>
+				</component>
 
 				<div class="c-action-bar__menu">
 					<template
@@ -40,13 +41,10 @@
 									@click="btn.action">
 									<template v-if="btn.icon">
 										<q-badge-indicator
-											v-if="btn.badge && btn.badge.isVisible"
-											:color="btn.badge.color">
+											:enabled="btn.badge?.isVisible ?? false"
+											:color="btn.badge?.color">
 											<q-icon v-bind="btn.icon" />
 										</q-badge-indicator>
-										<q-icon
-											v-else
-											v-bind="btn.icon" />
 									</template>
 								</q-toggle-group-item>
 							</template>
@@ -97,6 +95,7 @@
 		<q-container
 			fluid
 			data-key="FACTY"
+			:data-identifier="primaryKeyValue"
 			:data-loading="!formInitialDataLoaded || !isActiveForm">
 			<template v-if="formControl.initialized && showFormBody">
 				<q-row v-if="controls.FACTY___FACTYTYPE____.isVisible || controls.FACTY___FACTYLAYRNAME.isVisible || controls.FACTY___FACTYICONURL_.isVisible || controls.FACTY___FACTYSHADOWUR.isVisible || controls.FACTY___FACTYICONANCX.isVisible || controls.FACTY___FACTYICONANCY.isVisible || controls.FACTY___FACTYICONHEIG.isVisible || controls.FACTY___FACTYICONWID_.isVisible || controls.FACTY___FACTYPOPUPANX.isVisible || controls.FACTY___FACTYPOPUPANY.isVisible || controls.FACTY___FACTYSHADOWAX.isVisible || controls.FACTY___FACTYSHADOWAY.isVisible || controls.FACTY___FACTYSHADOWHE.isVisible || controls.FACTY___FACTYSHADOWWI.isVisible">
@@ -106,13 +105,15 @@
 						<base-input-structure
 							v-if="controls.FACTY___FACTYTYPE____.isVisible"
 							class="i-text"
-							v-bind="controls.FACTY___FACTYTYPE____"
+							v-bind="controls.FACTY___FACTYTYPE____.wrapperProps"
+							:id="getControlId(controls.FACTY___FACTYTYPE____)"
 							v-on="controls.FACTY___FACTYTYPE____.handlers"
 							:loading="controls.FACTY___FACTYTYPE____.props.loading"
 							:reporting-mode-on="reportingModeCAV"
 							:suggestion-mode-on="suggestionModeOn">
 							<q-text-field
 								v-bind="controls.FACTY___FACTYTYPE____.props"
+								:id="getControlId(controls.FACTY___FACTYTYPE____)"
 								@blur="onBlur(controls.FACTY___FACTYTYPE____, model.ValType.value)"
 								@change="model.ValType.fnUpdateValueOnChange" />
 						</base-input-structure>
@@ -123,13 +124,15 @@
 						<base-input-structure
 							v-if="controls.FACTY___FACTYLAYRNAME.isVisible"
 							class="i-text"
-							v-bind="controls.FACTY___FACTYLAYRNAME"
+							v-bind="controls.FACTY___FACTYLAYRNAME.wrapperProps"
+							:id="getControlId(controls.FACTY___FACTYLAYRNAME)"
 							v-on="controls.FACTY___FACTYLAYRNAME.handlers"
 							:loading="controls.FACTY___FACTYLAYRNAME.props.loading"
 							:reporting-mode-on="reportingModeCAV"
 							:suggestion-mode-on="suggestionModeOn">
 							<q-text-field
 								v-bind="controls.FACTY___FACTYLAYRNAME.props"
+								:id="getControlId(controls.FACTY___FACTYLAYRNAME)"
 								@blur="onBlur(controls.FACTY___FACTYLAYRNAME, model.ValLayrname.value)"
 								@change="model.ValLayrname.fnUpdateValueOnChange" />
 						</base-input-structure>
@@ -140,13 +143,15 @@
 						<base-input-structure
 							v-if="controls.FACTY___FACTYICONURL_.isVisible"
 							class="i-text"
-							v-bind="controls.FACTY___FACTYICONURL_"
+							v-bind="controls.FACTY___FACTYICONURL_.wrapperProps"
+							:id="getControlId(controls.FACTY___FACTYICONURL_)"
 							v-on="controls.FACTY___FACTYICONURL_.handlers"
 							:loading="controls.FACTY___FACTYICONURL_.props.loading"
 							:reporting-mode-on="reportingModeCAV"
 							:suggestion-mode-on="suggestionModeOn">
 							<q-text-field
 								v-bind="controls.FACTY___FACTYICONURL_.props"
+								:id="getControlId(controls.FACTY___FACTYICONURL_)"
 								@blur="onBlur(controls.FACTY___FACTYICONURL_, model.ValIconurl.value)"
 								@change="model.ValIconurl.fnUpdateValueOnChange" />
 						</base-input-structure>
@@ -157,13 +162,15 @@
 						<base-input-structure
 							v-if="controls.FACTY___FACTYSHADOWUR.isVisible"
 							class="i-text"
-							v-bind="controls.FACTY___FACTYSHADOWUR"
+							v-bind="controls.FACTY___FACTYSHADOWUR.wrapperProps"
+							:id="getControlId(controls.FACTY___FACTYSHADOWUR)"
 							v-on="controls.FACTY___FACTYSHADOWUR.handlers"
 							:loading="controls.FACTY___FACTYSHADOWUR.props.loading"
 							:reporting-mode-on="reportingModeCAV"
 							:suggestion-mode-on="suggestionModeOn">
 							<q-text-field
 								v-bind="controls.FACTY___FACTYSHADOWUR.props"
+								:id="getControlId(controls.FACTY___FACTYSHADOWUR)"
 								@blur="onBlur(controls.FACTY___FACTYSHADOWUR, model.ValShadowur.value)"
 								@change="model.ValShadowur.fnUpdateValueOnChange" />
 						</base-input-structure>
@@ -174,7 +181,8 @@
 						<base-input-structure
 							v-if="controls.FACTY___FACTYICONANCX.isVisible"
 							class="i-text"
-							v-bind="controls.FACTY___FACTYICONANCX"
+							v-bind="controls.FACTY___FACTYICONANCX.wrapperProps"
+							:id="getControlId(controls.FACTY___FACTYICONANCX)"
 							v-on="controls.FACTY___FACTYICONANCX.handlers"
 							:loading="controls.FACTY___FACTYICONANCX.props.loading"
 							:reporting-mode-on="reportingModeCAV"
@@ -182,6 +190,7 @@
 							<q-numeric-input
 								v-if="controls.FACTY___FACTYICONANCX.isVisible"
 								v-bind="controls.FACTY___FACTYICONANCX.props"
+								:id="getControlId(controls.FACTY___FACTYICONANCX)"
 								@update:model-value="model.ValIconancx.fnUpdateValue" />
 						</base-input-structure>
 					</q-col>
@@ -191,7 +200,8 @@
 						<base-input-structure
 							v-if="controls.FACTY___FACTYICONANCY.isVisible"
 							class="i-text"
-							v-bind="controls.FACTY___FACTYICONANCY"
+							v-bind="controls.FACTY___FACTYICONANCY.wrapperProps"
+							:id="getControlId(controls.FACTY___FACTYICONANCY)"
 							v-on="controls.FACTY___FACTYICONANCY.handlers"
 							:loading="controls.FACTY___FACTYICONANCY.props.loading"
 							:reporting-mode-on="reportingModeCAV"
@@ -199,6 +209,7 @@
 							<q-numeric-input
 								v-if="controls.FACTY___FACTYICONANCY.isVisible"
 								v-bind="controls.FACTY___FACTYICONANCY.props"
+								:id="getControlId(controls.FACTY___FACTYICONANCY)"
 								@update:model-value="model.ValIconancy.fnUpdateValue" />
 						</base-input-structure>
 					</q-col>
@@ -208,7 +219,8 @@
 						<base-input-structure
 							v-if="controls.FACTY___FACTYICONHEIG.isVisible"
 							class="i-text"
-							v-bind="controls.FACTY___FACTYICONHEIG"
+							v-bind="controls.FACTY___FACTYICONHEIG.wrapperProps"
+							:id="getControlId(controls.FACTY___FACTYICONHEIG)"
 							v-on="controls.FACTY___FACTYICONHEIG.handlers"
 							:loading="controls.FACTY___FACTYICONHEIG.props.loading"
 							:reporting-mode-on="reportingModeCAV"
@@ -216,6 +228,7 @@
 							<q-numeric-input
 								v-if="controls.FACTY___FACTYICONHEIG.isVisible"
 								v-bind="controls.FACTY___FACTYICONHEIG.props"
+								:id="getControlId(controls.FACTY___FACTYICONHEIG)"
 								@update:model-value="model.ValIconheig.fnUpdateValue" />
 						</base-input-structure>
 					</q-col>
@@ -225,7 +238,8 @@
 						<base-input-structure
 							v-if="controls.FACTY___FACTYICONWID_.isVisible"
 							class="i-text"
-							v-bind="controls.FACTY___FACTYICONWID_"
+							v-bind="controls.FACTY___FACTYICONWID_.wrapperProps"
+							:id="getControlId(controls.FACTY___FACTYICONWID_)"
 							v-on="controls.FACTY___FACTYICONWID_.handlers"
 							:loading="controls.FACTY___FACTYICONWID_.props.loading"
 							:reporting-mode-on="reportingModeCAV"
@@ -233,6 +247,7 @@
 							<q-numeric-input
 								v-if="controls.FACTY___FACTYICONWID_.isVisible"
 								v-bind="controls.FACTY___FACTYICONWID_.props"
+								:id="getControlId(controls.FACTY___FACTYICONWID_)"
 								@update:model-value="model.ValIconwid.fnUpdateValue" />
 						</base-input-structure>
 					</q-col>
@@ -242,7 +257,8 @@
 						<base-input-structure
 							v-if="controls.FACTY___FACTYPOPUPANX.isVisible"
 							class="i-text"
-							v-bind="controls.FACTY___FACTYPOPUPANX"
+							v-bind="controls.FACTY___FACTYPOPUPANX.wrapperProps"
+							:id="getControlId(controls.FACTY___FACTYPOPUPANX)"
 							v-on="controls.FACTY___FACTYPOPUPANX.handlers"
 							:loading="controls.FACTY___FACTYPOPUPANX.props.loading"
 							:reporting-mode-on="reportingModeCAV"
@@ -250,6 +266,7 @@
 							<q-numeric-input
 								v-if="controls.FACTY___FACTYPOPUPANX.isVisible"
 								v-bind="controls.FACTY___FACTYPOPUPANX.props"
+								:id="getControlId(controls.FACTY___FACTYPOPUPANX)"
 								@update:model-value="model.ValPopupanx.fnUpdateValue" />
 						</base-input-structure>
 					</q-col>
@@ -259,7 +276,8 @@
 						<base-input-structure
 							v-if="controls.FACTY___FACTYPOPUPANY.isVisible"
 							class="i-text"
-							v-bind="controls.FACTY___FACTYPOPUPANY"
+							v-bind="controls.FACTY___FACTYPOPUPANY.wrapperProps"
+							:id="getControlId(controls.FACTY___FACTYPOPUPANY)"
 							v-on="controls.FACTY___FACTYPOPUPANY.handlers"
 							:loading="controls.FACTY___FACTYPOPUPANY.props.loading"
 							:reporting-mode-on="reportingModeCAV"
@@ -267,6 +285,7 @@
 							<q-numeric-input
 								v-if="controls.FACTY___FACTYPOPUPANY.isVisible"
 								v-bind="controls.FACTY___FACTYPOPUPANY.props"
+								:id="getControlId(controls.FACTY___FACTYPOPUPANY)"
 								@update:model-value="model.ValPopupany.fnUpdateValue" />
 						</base-input-structure>
 					</q-col>
@@ -276,7 +295,8 @@
 						<base-input-structure
 							v-if="controls.FACTY___FACTYSHADOWAX.isVisible"
 							class="i-text"
-							v-bind="controls.FACTY___FACTYSHADOWAX"
+							v-bind="controls.FACTY___FACTYSHADOWAX.wrapperProps"
+							:id="getControlId(controls.FACTY___FACTYSHADOWAX)"
 							v-on="controls.FACTY___FACTYSHADOWAX.handlers"
 							:loading="controls.FACTY___FACTYSHADOWAX.props.loading"
 							:reporting-mode-on="reportingModeCAV"
@@ -284,6 +304,7 @@
 							<q-numeric-input
 								v-if="controls.FACTY___FACTYSHADOWAX.isVisible"
 								v-bind="controls.FACTY___FACTYSHADOWAX.props"
+								:id="getControlId(controls.FACTY___FACTYSHADOWAX)"
 								@update:model-value="model.ValShadowax.fnUpdateValue" />
 						</base-input-structure>
 					</q-col>
@@ -293,7 +314,8 @@
 						<base-input-structure
 							v-if="controls.FACTY___FACTYSHADOWAY.isVisible"
 							class="i-text"
-							v-bind="controls.FACTY___FACTYSHADOWAY"
+							v-bind="controls.FACTY___FACTYSHADOWAY.wrapperProps"
+							:id="getControlId(controls.FACTY___FACTYSHADOWAY)"
 							v-on="controls.FACTY___FACTYSHADOWAY.handlers"
 							:loading="controls.FACTY___FACTYSHADOWAY.props.loading"
 							:reporting-mode-on="reportingModeCAV"
@@ -301,6 +323,7 @@
 							<q-numeric-input
 								v-if="controls.FACTY___FACTYSHADOWAY.isVisible"
 								v-bind="controls.FACTY___FACTYSHADOWAY.props"
+								:id="getControlId(controls.FACTY___FACTYSHADOWAY)"
 								@update:model-value="model.ValShadoway.fnUpdateValue" />
 						</base-input-structure>
 					</q-col>
@@ -310,7 +333,8 @@
 						<base-input-structure
 							v-if="controls.FACTY___FACTYSHADOWHE.isVisible"
 							class="i-text"
-							v-bind="controls.FACTY___FACTYSHADOWHE"
+							v-bind="controls.FACTY___FACTYSHADOWHE.wrapperProps"
+							:id="getControlId(controls.FACTY___FACTYSHADOWHE)"
 							v-on="controls.FACTY___FACTYSHADOWHE.handlers"
 							:loading="controls.FACTY___FACTYSHADOWHE.props.loading"
 							:reporting-mode-on="reportingModeCAV"
@@ -318,6 +342,7 @@
 							<q-numeric-input
 								v-if="controls.FACTY___FACTYSHADOWHE.isVisible"
 								v-bind="controls.FACTY___FACTYSHADOWHE.props"
+								:id="getControlId(controls.FACTY___FACTYSHADOWHE)"
 								@update:model-value="model.ValShadowhe.fnUpdateValue" />
 						</base-input-structure>
 					</q-col>
@@ -327,7 +352,8 @@
 						<base-input-structure
 							v-if="controls.FACTY___FACTYSHADOWWI.isVisible"
 							class="i-text"
-							v-bind="controls.FACTY___FACTYSHADOWWI"
+							v-bind="controls.FACTY___FACTYSHADOWWI.wrapperProps"
+							:id="getControlId(controls.FACTY___FACTYSHADOWWI)"
 							v-on="controls.FACTY___FACTYSHADOWWI.handlers"
 							:loading="controls.FACTY___FACTYSHADOWWI.props.loading"
 							:reporting-mode-on="reportingModeCAV"
@@ -335,6 +361,7 @@
 							<q-numeric-input
 								v-if="controls.FACTY___FACTYSHADOWWI.isVisible"
 								v-bind="controls.FACTY___FACTYSHADOWWI.props"
+								:id="getControlId(controls.FACTY___FACTYSHADOWWI)"
 								@update:model-value="model.ValShadowwi.fnUpdateValue" />
 						</base-input-structure>
 					</q-col>
@@ -343,7 +370,7 @@
 		</q-container>
 	</teleport>
 
-	<hr v-if="!isPopup && showFormFooter" />
+	<q-divider v-if="!isPopup && showFormFooter" />
 
 	<teleport
 		v-if="formModalIsReady && showFormFooter"
@@ -1277,7 +1304,6 @@
 
 				this.afterControlUpdate(controlField, fieldValue)
 			},
-
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
 // USE /[MANUAL GQT FUNCTIONS_JS FACTY]/
 // eslint-disable-next-line

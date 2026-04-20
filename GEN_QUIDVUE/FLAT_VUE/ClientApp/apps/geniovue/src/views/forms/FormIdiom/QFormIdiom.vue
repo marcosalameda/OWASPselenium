@@ -9,12 +9,13 @@
 			<div
 				v-if="showFormHeader"
 				class="c-action-bar">
-				<h1
+				<component
 					v-if="formControl.uiComponents.header && formInfo.designation"
+					:is="topHeadingTag"
 					:id="formTitleId"
 					class="form-header">
 					{{ formInfo.designation }}
-				</h1>
+				</component>
 
 				<div class="c-action-bar__menu">
 					<template
@@ -40,13 +41,10 @@
 									@click="btn.action">
 									<template v-if="btn.icon">
 										<q-badge-indicator
-											v-if="btn.badge && btn.badge.isVisible"
-											:color="btn.badge.color">
+											:enabled="btn.badge?.isVisible ?? false"
+											:color="btn.badge?.color">
 											<q-icon v-bind="btn.icon" />
 										</q-badge-indicator>
-										<q-icon
-											v-else
-											v-bind="btn.icon" />
 									</template>
 								</q-toggle-group-item>
 							</template>
@@ -97,6 +95,7 @@
 		<q-container
 			fluid
 			data-key="IDIOM"
+			:data-identifier="primaryKeyValue"
 			:data-loading="!formInitialDataLoaded || !isActiveForm">
 			<template v-if="formControl.initialized && showFormBody">
 				<q-row v-if="controls.IDIOM___LANGULANGUA__.isVisible || controls.IDIOM___LANGUACRON___.isVisible">
@@ -106,13 +105,15 @@
 						<base-input-structure
 							v-if="controls.IDIOM___LANGULANGUA__.isVisible"
 							class="i-text"
-							v-bind="controls.IDIOM___LANGULANGUA__"
+							v-bind="controls.IDIOM___LANGULANGUA__.wrapperProps"
+							:id="getControlId(controls.IDIOM___LANGULANGUA__)"
 							v-on="controls.IDIOM___LANGULANGUA__.handlers"
 							:loading="controls.IDIOM___LANGULANGUA__.props.loading"
 							:reporting-mode-on="reportingModeCAV"
 							:suggestion-mode-on="suggestionModeOn">
 							<q-text-field
 								v-bind="controls.IDIOM___LANGULANGUA__.props"
+								:id="getControlId(controls.IDIOM___LANGULANGUA__)"
 								@blur="onBlur(controls.IDIOM___LANGULANGUA__, model.ValLangua.value)"
 								@change="model.ValLangua.fnUpdateValueOnChange" />
 						</base-input-structure>
@@ -123,13 +124,15 @@
 						<base-input-structure
 							v-if="controls.IDIOM___LANGUACRON___.isVisible"
 							class="i-text"
-							v-bind="controls.IDIOM___LANGUACRON___"
+							v-bind="controls.IDIOM___LANGUACRON___.wrapperProps"
+							:id="getControlId(controls.IDIOM___LANGUACRON___)"
 							v-on="controls.IDIOM___LANGUACRON___.handlers"
 							:loading="controls.IDIOM___LANGUACRON___.props.loading"
 							:reporting-mode-on="reportingModeCAV"
 							:suggestion-mode-on="suggestionModeOn">
 							<q-text-field
 								v-bind="controls.IDIOM___LANGUACRON___.props"
+								:id="getControlId(controls.IDIOM___LANGUACRON___)"
 								@blur="onBlur(controls.IDIOM___LANGUACRON___, model.ValAcron.value)"
 								@change="model.ValAcron.fnUpdateValueOnChange" />
 						</base-input-structure>
@@ -139,7 +142,7 @@
 		</q-container>
 	</teleport>
 
-	<hr v-if="!isPopup && showFormFooter" />
+	<q-divider v-if="!isPopup && showFormFooter" />
 
 	<teleport
 		v-if="formModalIsReady && showFormFooter"
@@ -883,7 +886,6 @@
 
 				this.afterControlUpdate(controlField, fieldValue)
 			},
-
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
 // USE /[MANUAL GQT FUNCTIONS_JS IDIOM]/
 // eslint-disable-next-line

@@ -10,12 +10,12 @@ public class EquigrouForm : Form
 	/// <summary>
 	/// Default style
 	/// </summary>
-	public CollapsibleZoneControl PseudNewgrp19 => new CollapsibleZoneControl(driver, ContainerLocator, "#EQUIGROUPSEUDNEWGRP19-container");
+	public CollapsibleZoneControl PseudNewgrp19 => new CollapsibleZoneControl(driver, ContainerLocator, "#EQUIGROUPSEUDNEWGRP19" + IdSuffix + "-container");
 
 	/// <summary>
 	/// Owner
 	/// </summary>
-	public CollapsibleZoneControl PseudNewgrp13 => new CollapsibleZoneControl(driver, ContainerLocator, "#EQUIGROUPSEUDNEWGRP13-container");
+	public CollapsibleZoneControl PseudNewgrp13 => new CollapsibleZoneControl(driver, ContainerLocator, "#EQUIGROUPSEUDNEWGRP13" + IdSuffix + "-container");
 
 	/// <summary>
 	/// Photo
@@ -25,8 +25,8 @@ public class EquigrouForm : Form
 	/// <summary>
 	/// Name
 	/// </summary>
-	public LookupControl Pess1Name => new LookupControl(driver, ContainerLocator, "container-EQUIGROUPESS1NAME____");
-	public SeeMorePage Pess1NameSeeMorePage => new SeeMorePage(driver, "EQUIGROU", "EQUIGROUPESS1NAME____");
+	public LookupControl Pess1Name => new LookupControl(driver, ContainerLocator, "container-EQUIGROUPESS1NAME____" + IdSuffix);
+	public SeeMorePage Pess1NameSeeMorePage => new SeeMorePage(driver, "EQUIGROU", "EQUIGROUPESS1NAME____" + IdSuffix);
 
 	/// <summary>
 	/// Genre
@@ -36,7 +36,7 @@ public class EquigrouForm : Form
 	/// <summary>
 	/// 
 	/// </summary>
-	public CollapsibleZoneControl PseudNewgrp14 => new CollapsibleZoneControl(driver, ContainerLocator, "#EQUIGROUPSEUDNEWGRP14-container");
+	public CollapsibleZoneControl PseudNewgrp14 => new CollapsibleZoneControl(driver, ContainerLocator, "#EQUIGROUPSEUDNEWGRP14" + IdSuffix + "-container");
 
 	/// <summary>
 	/// Birth
@@ -56,7 +56,7 @@ public class EquigrouForm : Form
 	/// <summary>
 	/// group in accordian 1st
 	/// </summary>
-	public CollapsibleZoneControl PseudNewgrp15 => new CollapsibleZoneControl(driver, ContainerLocator, "#EQUIGROUPSEUDNEWGRP15-container");
+	public CollapsibleZoneControl PseudNewgrp15 => new CollapsibleZoneControl(driver, ContainerLocator, "#EQUIGROUPSEUDNEWGRP15" + IdSuffix + "-container");
 
 	/// <summary>
 	/// Official No.
@@ -71,7 +71,7 @@ public class EquigrouForm : Form
 	/// <summary>
 	/// group in accordian 2nd
 	/// </summary>
-	public CollapsibleZoneControl PseudNewgrp16 => new CollapsibleZoneControl(driver, ContainerLocator, "#EQUIGROUPSEUDNEWGRP16-container");
+	public CollapsibleZoneControl PseudNewgrp16 => new CollapsibleZoneControl(driver, ContainerLocator, "#EQUIGROUPSEUDNEWGRP16" + IdSuffix + "-container");
 
 	/// <summary>
 	/// Email 1
@@ -86,7 +86,7 @@ public class EquigrouForm : Form
 	/// <summary>
 	/// Mixed style
 	/// </summary>
-	public CollapsibleZoneControl PseudNewgrp18 => new CollapsibleZoneControl(driver, ContainerLocator, "#EQUIGROUPSEUDNEWGRP18-container");
+	public CollapsibleZoneControl PseudNewgrp18 => new CollapsibleZoneControl(driver, ContainerLocator, "#EQUIGROUPSEUDNEWGRP18" + IdSuffix + "-container");
 
 	/// <summary>
 	/// @mixed_zones
@@ -96,12 +96,12 @@ public class EquigrouForm : Form
 	/// <summary>
 	/// Company
 	/// </summary>
-	public CollapsibleZoneControl PseudNewgrp01 => new CollapsibleZoneControl(driver, ContainerLocator, "#EQUIGROUPSEUDNEWGRP01-container");
+	public CollapsibleZoneControl PseudNewgrp01 => new CollapsibleZoneControl(driver, ContainerLocator, "#EQUIGROUPSEUDNEWGRP01" + IdSuffix + "-container");
 
 	/// <summary>
 	/// Identification
 	/// </summary>
-	public CollapsibleZoneControl PseudNewgrp02 => new CollapsibleZoneControl(driver, ContainerLocator, "#EQUIGROUPSEUDNEWGRP02-container");
+	public CollapsibleZoneControl PseudNewgrp02 => new CollapsibleZoneControl(driver, ContainerLocator, "#EQUIGROUPSEUDNEWGRP02" + IdSuffix + "-container");
 
 	/// <summary>
 	/// Logo
@@ -126,7 +126,7 @@ public class EquigrouForm : Form
 	/// <summary>
 	/// Contacts
 	/// </summary>
-	public CollapsibleZoneControl PseudNewgrp03 => new CollapsibleZoneControl(driver, ContainerLocator, "#EQUIGROUPSEUDNEWGRP03-container");
+	public CollapsibleZoneControl PseudNewgrp03 => new CollapsibleZoneControl(driver, ContainerLocator, "#EQUIGROUPSEUDNEWGRP03" + IdSuffix + "-container");
 
 	/// <summary>
 	/// Phone
@@ -141,43 +141,43 @@ public class EquigrouForm : Form
 	/// <summary>
 	/// Collapsible style
 	/// </summary>
-	public CollapsibleZoneControl PseudNewgrp21 => new CollapsibleZoneControl(driver, ContainerLocator, "#EQUIGROUPSEUDNEWGRP21-container");
+	public CollapsibleZoneControl PseudNewgrp21 => new CollapsibleZoneControl(driver, ContainerLocator, "#EQUIGROUPSEUDNEWGRP21" + IdSuffix + "-container");
 
 	/// <summary>
 	/// Audit
 	/// </summary>
-	public CollapsibleZoneControl PseudNewgrp08 => new CollapsibleZoneControl(driver, ContainerLocator, "#EQUIGROUPSEUDNEWGRP08-container");
+	public CollapsibleZoneControl PseudNewgrp08 => new CollapsibleZoneControl(driver, ContainerLocator, "#EQUIGROUPSEUDNEWGRP08" + IdSuffix + "-container");
 
 	/// <summary>
 	/// Changes number
 	/// </summary>
-	public BaseInputControl EquipQtdmovim => new BaseInputControl(driver, ContainerLocator, "container-EQUIGROUEQUIPQTDMOVIM", "#EQUIGROUEQUIPQTDMOVIM");
+	public BaseInputControl EquipQtdmovim => new BaseInputControl(driver, ContainerLocator, "container-EQUIGROUEQUIPQTDMOVIM" + IdSuffix, "#EQUIGROUEQUIPQTDMOVIM" + IdSuffix);
 
 	/// <summary>
 	/// Acquisition
 	/// </summary>
-	public DateInputControl EquipDtaquisi => new DateInputControl(driver, ContainerLocator, "#EQUIGROUEQUIPDTAQUISI");
+	public DateInputControl EquipDtaquisi => new DateInputControl(driver, ContainerLocator, "#EQUIGROUEQUIPDTAQUISI" + IdSuffix);
 
 	/// <summary>
 	/// Groupbox styles
 	/// </summary>
-	public CollapsibleZoneControl PseudNewgrp23 => new CollapsibleZoneControl(driver, ContainerLocator, "#EQUIGROUPSEUDNEWGRP23-container");
+	public CollapsibleZoneControl PseudNewgrp23 => new CollapsibleZoneControl(driver, ContainerLocator, "#EQUIGROUPSEUDNEWGRP23" + IdSuffix + "-container");
 
 	/// <summary>
 	/// 1. c-groupbox--title-background
 	/// </summary>
-	public CollapsibleZoneControl PseudNewgrp09 => new CollapsibleZoneControl(driver, ContainerLocator, "#EQUIGROUPSEUDNEWGRP09-container");
+	public CollapsibleZoneControl PseudNewgrp09 => new CollapsibleZoneControl(driver, ContainerLocator, "#EQUIGROUPSEUDNEWGRP09" + IdSuffix + "-container");
 
 	/// <summary>
 	/// It is nest within the first zone and it has the same style
 	/// </summary>
-	public CollapsibleZoneControl PseudNewgrp10 => new CollapsibleZoneControl(driver, ContainerLocator, "#EQUIGROUPSEUDNEWGRP10-container");
+	public CollapsibleZoneControl PseudNewgrp10 => new CollapsibleZoneControl(driver, ContainerLocator, "#EQUIGROUPSEUDNEWGRP10" + IdSuffix + "-container");
 
 	/// <summary>
 	/// TYPE OF EQUIPMENT
 	/// </summary>
-	public LookupControl TpequTipoequi => new LookupControl(driver, ContainerLocator, "container-EQUIGROUTPEQUTIPOEQUI");
-	public SeeMorePage TpequTipoequiSeeMorePage => new SeeMorePage(driver, "EQUIGROU", "EQUIGROUTPEQUTIPOEQUI");
+	public LookupControl TpequTipoequi => new LookupControl(driver, ContainerLocator, "container-EQUIGROUTPEQUTIPOEQUI" + IdSuffix);
+	public SeeMorePage TpequTipoequiSeeMorePage => new SeeMorePage(driver, "EQUIGROU", "EQUIGROUTPEQUTIPOEQUI" + IdSuffix);
 
 	/// <summary>
 	/// Code
@@ -192,7 +192,7 @@ public class EquigrouForm : Form
 	/// <summary>
 	/// It is nest within the second zone and it has the default style
 	/// </summary>
-	public CollapsibleZoneControl PseudNewgrp11 => new CollapsibleZoneControl(driver, ContainerLocator, "#EQUIGROUPSEUDNEWGRP11-container");
+	public CollapsibleZoneControl PseudNewgrp11 => new CollapsibleZoneControl(driver, ContainerLocator, "#EQUIGROUPSEUDNEWGRP11" + IdSuffix + "-container");
 
 	/// <summary>
 	/// Dependent on
@@ -207,7 +207,7 @@ public class EquigrouForm : Form
 	/// <summary>
 	/// It is nest within the third zone and it has the default style
 	/// </summary>
-	public CollapsibleZoneControl PseudNewgrp12 => new CollapsibleZoneControl(driver, ContainerLocator, "#EQUIGROUPSEUDNEWGRP12-container");
+	public CollapsibleZoneControl PseudNewgrp12 => new CollapsibleZoneControl(driver, ContainerLocator, "#EQUIGROUPSEUDNEWGRP12" + IdSuffix + "-container");
 
 	/// <summary>
 	/// Background color
@@ -222,68 +222,68 @@ public class EquigrouForm : Form
 	/// <summary>
 	/// 2. c-groupbox--minor
 	/// </summary>
-	public CollapsibleZoneControl PseudNewgrp07 => new CollapsibleZoneControl(driver, ContainerLocator, "#EQUIGROUPSEUDNEWGRP07-container");
+	public CollapsibleZoneControl PseudNewgrp07 => new CollapsibleZoneControl(driver, ContainerLocator, "#EQUIGROUPSEUDNEWGRP07" + IdSuffix + "-container");
 
 	/// <summary>
 	/// Sequential no.
 	/// </summary>
-	public BaseInputControl EquipSequennr => new BaseInputControl(driver, ContainerLocator, "container-EQUIGROUEQUIPSEQUENNR", "#EQUIGROUEQUIPSEQUENNR");
+	public BaseInputControl EquipSequennr => new BaseInputControl(driver, ContainerLocator, "container-EQUIGROUEQUIPSEQUENNR" + IdSuffix, "#EQUIGROUEQUIPSEQUENNR" + IdSuffix);
 
 	/// <summary>
 	/// No. register
 	/// </summary>
-	public BaseInputControl EquipRegistnr => new BaseInputControl(driver, ContainerLocator, "container-EQUIGROUEQUIPREGISTNR", "#EQUIGROUEQUIPREGISTNR");
+	public BaseInputControl EquipRegistnr => new BaseInputControl(driver, ContainerLocator, "container-EQUIGROUEQUIPREGISTNR" + IdSuffix, "#EQUIGROUEQUIPREGISTNR" + IdSuffix);
 
 	/// <summary>
 	/// Total value
 	/// </summary>
-	public BaseInputControl EquipValortot => new BaseInputControl(driver, ContainerLocator, "container-EQUIGROUEQUIPVALORTOT", "#EQUIGROUEQUIPVALORTOT");
+	public BaseInputControl EquipValortot => new BaseInputControl(driver, ContainerLocator, "container-EQUIGROUEQUIPVALORTOT" + IdSuffix, "#EQUIGROUEQUIPVALORTOT" + IdSuffix);
 
 	/// <summary>
 	/// It is nest within the first zone and it has the same style
 	/// </summary>
-	public CollapsibleZoneControl PseudNewgrp05 => new CollapsibleZoneControl(driver, ContainerLocator, "#EQUIGROUPSEUDNEWGRP05-container");
+	public CollapsibleZoneControl PseudNewgrp05 => new CollapsibleZoneControl(driver, ContainerLocator, "#EQUIGROUPSEUDNEWGRP05" + IdSuffix + "-container");
 
 	/// <summary>
 	/// Loan frequency
 	/// </summary>
-	public EnumControl EquipFrequenc => new EnumControl(driver, ContainerLocator, "container-EQUIGROUEQUIPFREQUENC");
+	public EnumControl EquipFrequenc => new EnumControl(driver, ContainerLocator, "container-EQUIGROUEQUIPFREQUENC" + IdSuffix);
 
 	/// <summary>
 	/// Bought
 	/// </summary>
-	public CheckboxInputControl EquipBought => new CheckboxInputControl(driver, ContainerLocator, "#container-EQUIGROUEQUIPBOUGHT__");
+	public CheckboxInputControl EquipBought => new CheckboxInputControl(driver, ContainerLocator, "#container-EQUIGROUEQUIPBOUGHT__" + IdSuffix);
 
 	/// <summary>
 	/// Reference
 	/// </summary>
-	public DateInputControl EquipDtrefere => new DateInputControl(driver, ContainerLocator, "#EQUIGROUEQUIPDTREFERE", "dd/MM/yyyy HH:mm");
+	public DateInputControl EquipDtrefere => new DateInputControl(driver, ContainerLocator, "#EQUIGROUEQUIPDTREFERE" + IdSuffix, "dd/MM/yyyy HH:mm");
 
 	/// <summary>
 	/// First
 	/// </summary>
-	public BaseInputControl EquipFirst => new BaseInputControl(driver, ContainerLocator, "container-EQUIGROUEQUIPFIRST___", "#EQUIGROUEQUIPFIRST___");
+	public BaseInputControl EquipFirst => new BaseInputControl(driver, ContainerLocator, "container-EQUIGROUEQUIPFIRST___" + IdSuffix, "#EQUIGROUEQUIPFIRST___" + IdSuffix);
 
 	/// <summary>
 	/// 3. c-groupbox--minor-border-top
 	/// </summary>
-	public CollapsibleZoneControl PseudNewgrp04 => new CollapsibleZoneControl(driver, ContainerLocator, "#EQUIGROUPSEUDNEWGRP04-container");
+	public CollapsibleZoneControl PseudNewgrp04 => new CollapsibleZoneControl(driver, ContainerLocator, "#EQUIGROUPSEUDNEWGRP04" + IdSuffix + "-container");
 
 	/// <summary>
 	/// Photo
 	/// </summary>
-	public BaseInputControl EquipPhotogra => new BaseInputControl(driver, ContainerLocator, "container-EQUIGROUEQUIPPHOTOGRA", "#EQUIGROUEQUIPPHOTOGRA");
+	public BaseInputControl EquipPhotogra => new BaseInputControl(driver, ContainerLocator, "container-EQUIGROUEQUIPPHOTOGRA" + IdSuffix, "#EQUIGROUEQUIPPHOTOGRA" + IdSuffix);
 
 	/// <summary>
 	/// It is nest within the first zone and it has the same style
 	/// </summary>
-	public CollapsibleZoneControl PseudNewgrp06 => new CollapsibleZoneControl(driver, ContainerLocator, "#EQUIGROUPSEUDNEWGRP06-container");
+	public CollapsibleZoneControl PseudNewgrp06 => new CollapsibleZoneControl(driver, ContainerLocator, "#EQUIGROUPSEUDNEWGRP06" + IdSuffix + "-container");
 
 	/// <summary>
 	/// Designation
 	/// </summary>
-	public BaseInputControl EquipDesignat => new BaseInputControl(driver, ContainerLocator, "container-EQUIGROUEQUIPDESIGNAT", "#EQUIGROUEQUIPDESIGNAT");
+	public BaseInputControl EquipDesignat => new BaseInputControl(driver, ContainerLocator, "container-EQUIGROUEQUIPDESIGNAT" + IdSuffix, "#EQUIGROUEQUIPDESIGNAT" + IdSuffix);
 
-	public EquigrouForm(IWebDriver driver, FORM_MODE mode, By? containerLocator = null)
-		: base(driver, mode, "EQUIGROU", containerLocator: containerLocator) { }
+	public EquigrouForm(IWebDriver driver, FORM_MODE mode, By? containerLocator = null, bool usePkInId = false)
+		: base(driver, mode, "EQUIGROU", containerLocator: containerLocator, usePkInId: usePkInId) { }
 }

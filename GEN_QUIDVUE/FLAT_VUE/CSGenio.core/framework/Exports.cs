@@ -247,22 +247,9 @@ namespace CSGenio.framework
             public int Size { get; private set; }
             public int Decimals { get; private set; }
             public bool Visible { get; set; }
+            public bool AlwaysExportable { get; set; }
 
-
-            public QColumn(FieldRef field, FieldType fieldType, string descricao, int size, int decimais, bool visivel)
-            {
-                this.Field = field;
-                this.Name = field.FullName;
-                this.Type = fieldType;
-                this.Formatting = fieldType.GetFormatting();
-                this.ArrayName = null;
-                this.Description = descricao;
-                this.Size = size;
-                this.Decimals = decimais;
-                this.Visible = visivel;
-            }
-
-            public QColumn(FieldRef field, FieldType fieldType, string descricao, int size, int decimais, bool visivel, string arrayName)
+            public QColumn(FieldRef field, FieldType fieldType, string descricao, int size, int decimais, bool visivel, string arrayName = "", bool alwaysExportable = false)
             {
                 this.Field = field;
                 this.Name = field.FullName;
@@ -273,6 +260,7 @@ namespace CSGenio.framework
                 this.Size = size;
                 this.Decimals = decimais;
                 this.Visible = visivel;
+                this.AlwaysExportable = alwaysExportable;
             }
 
             public QColumn(string fieldName, Field campoBD)

@@ -45,7 +45,8 @@ const state = () => {
 
 		numberFormat: {
 			decimalSeparator: ',',
-			thousandsSeparator: ' '
+			thousandsSeparator: ' ',
+			negativeFormat: '-'
 		},
 
 		dateFormat: {
@@ -83,7 +84,7 @@ const getters = {
 	latestModalId(state) {
 		let id = ''
 
-		for (let modal of state.modals) if (modal.hasRoute && modal.isActive) id = modal.id
+		for (const modal of state.modals) if (modal.hasRoute && modal.isActive) id = modal.id
 
 		return id
 	},
@@ -127,6 +128,7 @@ const actions = {
 
 		this.numberFormat.decimalSeparator = numberFormat.DecimalSeparator ?? ','
 		this.numberFormat.thousandsSeparator = numberFormat.GroupSeparator ?? ' '
+		this.numberFormat.negativeFormat = numberFormat.NegativeFormat ?? '-'
 	},
 
 	/**
@@ -143,9 +145,9 @@ const actions = {
 		)
 			return
 
-		for (let i in dateFormat) {
+		for (const i in dateFormat) {
 			// Get property name starting with lowercase letter
-			let propName = i.substring(0, 1).toLowerCase() + i.substring(1)
+			const propName = i.substring(0, 1).toLowerCase() + i.substring(1)
 			this.dateFormat[propName] = dateFormat[i]
 		}
 	},
@@ -303,7 +305,7 @@ const actions = {
 		for (let i = 0; i < this.modals.length; i++) {
 			if (this.modals[i].id !== id) continue
 
-			let removedModalArr = this.modals.splice(i, 1)
+			const removedModalArr = this.modals.splice(i, 1)
 
 			// Focus on the element that opened the popup, if it still exists.
 			const returnElement = removedModalArr[0]?.returnElement

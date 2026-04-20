@@ -70,4 +70,7 @@ export type MappedRow = {
 
 	/** Visibility settings for custom actions. */
 	readonly actionVisibility?: Record<string, unknown>
+
+	/** Disability settings for custom actions. */
+	readonly actionDisability?: Record<string, unknown>
 }

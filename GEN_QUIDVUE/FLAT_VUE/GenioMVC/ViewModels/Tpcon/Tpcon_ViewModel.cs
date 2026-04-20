@@ -1,20 +1,20 @@
-﻿using JsonIgnoreAttribute = System.Text.Json.Serialization.JsonIgnoreAttribute;
+﻿using CSGenio.business;
+using CSGenio.framework;
+using CSGenio.persistence;
+using GenioMVC.Helpers;
+using GenioMVC.Models.Exception;
+using GenioMVC.Models.Navigation;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Quidgest.Persistence;
+using Quidgest.Persistence.GenericQuery;
+
 using System.Collections;
 using System.Collections.Concurrent;
 using System.Collections.Specialized;
 using System.ComponentModel.DataAnnotations;
 using System.Data;
 using System.Globalization;
-
-using CSGenio.business;
-using CSGenio.framework;
-using CSGenio.persistence;
-using GenioMVC.Helpers;
-using GenioMVC.Models.Exception;
-using GenioMVC.Models.Navigation;
-using Quidgest.Persistence;
-using Quidgest.Persistence.GenericQuery;
+using System.Text.Json.Serialization;
 
 namespace GenioMVC.ViewModels.Tpcon
 {
@@ -36,6 +36,7 @@ namespace GenioMVC.ViewModels.Tpcon
 		public string ValCodgenre { get; set; }
 
 		#endregion
+
 		/// <summary>
 		/// Title: "Genre" | Type: "C"
 		/// </summary>
@@ -45,8 +46,6 @@ namespace GenioMVC.ViewModels.Tpcon
 		/// Title: "Contact Type:" | Type: "C"
 		/// </summary>
 		public string ValTipocont { get; set; }
-
-
 
 		#region Navigations
 		#endregion
@@ -217,12 +216,7 @@ namespace GenioMVC.ViewModels.Tpcon
 			}
 		}
 
-		/// <summary>
-		/// Sets the value of a single property of the view model based on the provided table and field names.
-		/// </summary>
-		/// <param name="fullFieldName">The full field name in the format "table.field".</param>
-		/// <param name="value">The field value.</param>
-		/// <exception cref="ArgumentNullException">Thrown if <paramref name="fullFieldName"/> is null.</exception>
+		/// <inheritdoc />
 		public override void SetViewModelValue(string fullFieldName, object value)
 		{
 			try
@@ -350,6 +344,7 @@ namespace GenioMVC.ViewModels.Tpcon
 			Characs = new List<string>();
 
 			Load_Tpcon___genregender__(qs, lazyLoad);
+
 // USE /[MANUAL GQT VIEWMODEL_LOADPARTIAL TPCON]/
 		}
 
@@ -420,10 +415,7 @@ namespace GenioMVC.ViewModels.Tpcon
 				}
 			}
 
-			TableGenreGender = new TableDBEdit<Models.Genre>
-			{
-				IsLazyLoad = lazyLoad
-			};
+			TableGenreGender = new TableDBEdit<Models.Genre>();
 
 			if (lazyLoad)
 			{
@@ -467,7 +459,7 @@ namespace GenioMVC.ViewModels.Tpcon
 				int numberItems = CSGenio.framework.Configuration.NrRegDBedit;
 				int offset = (page - 1) * numberItems;
 
-				FieldRef[] fields = new FieldRef[] { CSGenioAgenre.FldCodgenre, CSGenioAgenre.FldGender, CSGenioAgenre.FldZzstate };
+				FieldRef[] fields = [CSGenioAgenre.FldCodgenre, CSGenioAgenre.FldGender, CSGenioAgenre.FldZzstate];
 
 // USE /[MANUAL GQT OVERRQ TPCON_GENREGENDER]/
 

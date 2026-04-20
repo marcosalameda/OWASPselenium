@@ -61,6 +61,7 @@ export default class ViewModel extends FormViewModelBase
 			field: 'NUMBGRO',
 			maxDigits: 9,
 			decimalDigits: 0,
+			maskType: 'NC',
 			description: computed(() => this.Resources.VAT_NUMBER24236),
 		}).cloneFrom(values?.ValNumbgro))
 		this.stopWatchers.push(watch(() => this.ValNumbgro.value, (newValue, oldValue) => this.onUpdate('inpgr.numbgro', this.ValNumbgro, newValue, oldValue)))

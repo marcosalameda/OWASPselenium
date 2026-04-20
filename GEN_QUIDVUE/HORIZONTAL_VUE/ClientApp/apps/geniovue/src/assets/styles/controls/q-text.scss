@@ -170,3 +170,8 @@ textarea {
 .i-static-text {
 	white-space: normal;
 }
+
+// TextAreas should use 'flex' in their style so they can span the full row when Whole Line is enabled.
+.i-textarea {
+	flex: 1;
+}

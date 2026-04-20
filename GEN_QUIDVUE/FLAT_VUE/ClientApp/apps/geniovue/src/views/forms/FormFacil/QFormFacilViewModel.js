@@ -53,18 +53,6 @@ export default class ViewModel extends FormViewModelBase
 		}).cloneFrom(values?.ValCodfacil))
 		this.stopWatchers.push(watch(() => this.ValCodfacil.value, (newValue, oldValue) => this.onUpdate('facil.codfacil', this.ValCodfacil, newValue, oldValue)))
 
-		/** The hidden foreign keys. */
-		this.ValCodcntry = reactive(new modelFieldType.ForeignKey({
-			id: 'ValCodcntry',
-			originId: 'ValCodcntry',
-			area: 'FACIL',
-			field: 'CODCNTRY',
-			relatedArea: 'CNTRY',
-			isFixed: true,
-			description: computed(() => this.Resources.___COUNTRY10061),
-		}).cloneFrom(values?.ValCodcntry))
-		this.stopWatchers.push(watch(() => this.ValCodcntry.value, (newValue, oldValue) => this.onUpdate('facil.codcntry', this.ValCodcntry, newValue, oldValue)))
-
 		/** The used foreign keys. */
 		this.ValCodentit = reactive(new modelFieldType.ForeignKey({
 			id: 'ValCodentit',
@@ -108,6 +96,7 @@ export default class ViewModel extends FormViewModelBase
 			field: 'NAME',
 			maxLength: 85,
 			description: computed(() => this.Resources.LEGAL_NAME42902),
+			ignoreFldSubmit: true,
 		}).cloneFrom(values?.TableEntitName))
 		this.stopWatchers.push(watch(() => this.TableEntitName.value, (newValue, oldValue) => this.onUpdate('entit.name', this.TableEntitName, newValue, oldValue)))
 
@@ -149,6 +138,7 @@ export default class ViewModel extends FormViewModelBase
 			field: 'TYPE',
 			maxLength: 25,
 			description: computed(() => this.Resources.FACILITY_TYPE44577),
+			ignoreFldSubmit: true,
 		}).cloneFrom(values?.TableFactyType))
 		this.stopWatchers.push(watch(() => this.TableFactyType.value, (newValue, oldValue) => this.onUpdate('facty.type', this.TableFactyType, newValue, oldValue)))
 

@@ -9,12 +9,13 @@
 			<div
 				v-if="showFormHeader"
 				class="c-action-bar">
-				<h1
+				<component
 					v-if="formControl.uiComponents.header && formInfo.designation"
+					:is="topHeadingTag"
 					:id="formTitleId"
 					class="form-header">
 					{{ formInfo.designation }}
-				</h1>
+				</component>
 
 				<div class="c-action-bar__menu">
 					<template
@@ -40,13 +41,10 @@
 									@click="btn.action">
 									<template v-if="btn.icon">
 										<q-badge-indicator
-											v-if="btn.badge && btn.badge.isVisible"
-											:color="btn.badge.color">
+											:enabled="btn.badge?.isVisible ?? false"
+											:color="btn.badge?.color">
 											<q-icon v-bind="btn.icon" />
 										</q-badge-indicator>
-										<q-icon
-											v-else
-											v-bind="btn.icon" />
 									</template>
 								</q-toggle-group-item>
 							</template>
@@ -97,6 +95,7 @@
 		<q-container
 			fluid
 			data-key="MLTFORM"
+			:data-identifier="primaryKeyValue"
 			:data-loading="!formInitialDataLoaded || !isActiveForm">
 			<template v-if="formControl.initialized && showFormBody">
 				<q-row v-if="controls.MLTFORM_WAREHWAREHDES.isVisible || controls.MLTFORM_WAREHWAREHCOD.isVisible || controls.MLTFORM_PSEUDMLTFORM1.isVisible">
@@ -106,13 +105,15 @@
 						<base-input-structure
 							v-if="controls.MLTFORM_WAREHWAREHDES.isVisible"
 							class="i-text"
-							v-bind="controls.MLTFORM_WAREHWAREHDES"
+							v-bind="controls.MLTFORM_WAREHWAREHDES.wrapperProps"
+							:id="getControlId(controls.MLTFORM_WAREHWAREHDES)"
 							v-on="controls.MLTFORM_WAREHWAREHDES.handlers"
 							:loading="controls.MLTFORM_WAREHWAREHDES.props.loading"
 							:reporting-mode-on="reportingModeCAV"
 							:suggestion-mode-on="suggestionModeOn">
 							<q-text-field
 								v-bind="controls.MLTFORM_WAREHWAREHDES.props"
+								:id="getControlId(controls.MLTFORM_WAREHWAREHDES)"
 								@blur="onBlur(controls.MLTFORM_WAREHWAREHDES, model.ValWarehdes.value)"
 								@change="model.ValWarehdes.fnUpdateValueOnChange" />
 						</base-input-structure>
@@ -123,13 +124,15 @@
 						<base-input-structure
 							v-if="controls.MLTFORM_WAREHWAREHCOD.isVisible"
 							class="i-text"
-							v-bind="controls.MLTFORM_WAREHWAREHCOD"
+							v-bind="controls.MLTFORM_WAREHWAREHCOD.wrapperProps"
+							:id="getControlId(controls.MLTFORM_WAREHWAREHCOD)"
 							v-on="controls.MLTFORM_WAREHWAREHCOD.handlers"
 							:loading="controls.MLTFORM_WAREHWAREHCOD.props.loading"
 							:reporting-mode-on="reportingModeCAV"
 							:suggestion-mode-on="suggestionModeOn">
 							<q-text-field
 								v-bind="controls.MLTFORM_WAREHWAREHCOD.props"
+								:id="getControlId(controls.MLTFORM_WAREHWAREHCOD)"
 								@blur="onBlur(controls.MLTFORM_WAREHWAREHCOD, model.ValWarehcod.value)"
 								@change="model.ValWarehcod.fnUpdateValueOnChange" />
 						</base-input-structure>
@@ -140,21 +143,22 @@
 						<q-table
 							v-if="controls.MLTFORM_PSEUDMLTFORM1.isVisible"
 							v-bind="controls.MLTFORM_PSEUDMLTFORM1"
+							:id="getControlId(controls.MLTFORM_PSEUDMLTFORM1)"
 							v-on="controls.MLTFORM_PSEUDMLTFORM1.handlers">
+							<template #header>
+								<q-table-config
+									:table-ctrl="controls.MLTFORM_PSEUDMLTFORM1"
+									v-on="controls.MLTFORM_PSEUDMLTFORM1.handlers" />
+							</template>
 							<!-- USE /[MANUAL GQT CUSTOM_TABLE MLTFORM_PSEUDMLTFORM1]/ -->
 						</q-table>
-						<q-table-extra-extension
-							v-if="controls.MLTFORM_PSEUDMLTFORM1.isVisible"
-							:list-ctrl="controls.MLTFORM_PSEUDMLTFORM1"
-							:filter-operators="controls.MLTFORM_PSEUDMLTFORM1.filterOperators"
-							v-on="controls.MLTFORM_PSEUDMLTFORM1.handlers" />
 					</q-col>
 				</q-row>
 			</template>
 		</q-container>
 	</teleport>
 
-	<hr v-if="!isPopup && showFormFooter" />
+	<q-divider v-if="!isPopup && showFormFooter" />
 
 	<teleport
 		v-if="formModalIsReady && showFormFooter"
@@ -529,6 +533,7 @@
 						label: computed(() => this.Resources.WAREHOUSE_EMPLOYEES19716),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
+						headerLevel: computed(() => this.baseHeadingLevel + 1),
 						controller: 'WAREH',
 						action: 'Mltform_ValMltform1',
 						hasDependencies: false,
@@ -584,7 +589,6 @@
 							searchBarConfig: {
 								visibility: false
 							},
-							filtersVisible: false,
 							allowColumnFilters: false,
 							allowColumnSort: true,
 							crudActions: [
@@ -662,9 +666,7 @@
 									id: 'insert',
 									name: 'insert',
 									title: computed(() => this.Resources.INSERIR43365),
-									icon: {
-										icon: 'add'
-									},
+									icon: { icon: 'add' },
 									isInReadOnly: false,
 									params: {
 										canExecuteAction: vm.applyChanges,
@@ -713,7 +715,7 @@
 								sortOrder: 'asc'
 							}
 						},
-						globalEvents: ['changed-WPESS', 'changed-WAREH'],
+						globalEvents: ['changed-WAREH', 'changed-WPESS'],
 						uuid: 'Mltform_ValMltform1',
 						allSelectedRows: 'false',
 						component: 'QFormArmapess',
@@ -1145,7 +1147,6 @@
 
 				this.afterControlUpdate(controlField, fieldValue)
 			},
-
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
 // USE /[MANUAL GQT FUNCTIONS_JS MLTFORM]/
 // eslint-disable-next-line

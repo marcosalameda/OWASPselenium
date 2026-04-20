@@ -47,7 +47,7 @@ namespace CSGenio.business
 			Qfield = new Field(info.Alias, "coddispa", FieldType.KEY_GUID);
 			Qfield.FieldDescription = "";
 			Qfield.FieldSize =  36;
-			Qfield.CavDesignation = "";
+			Qfield.VisivelCav = CavVisibilityType.Nunca;
 
 			Qfield.Dupmsg = "";
 			info.RegisterFieldDB(Qfield);
@@ -57,17 +57,7 @@ namespace CSGenio.business
 			Qfield.FieldDescription = ">>CUSTOMER";
 			Qfield.FieldSize =  36;
 			Qfield.MQueue = false;
-			Qfield.CavDesignation = "__CUSTOMER21546";
-
-			Qfield.Dupmsg = "";
-			info.RegisterFieldDB(Qfield);
-
-			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "coddisst", FieldType.KEY_GUID);
-			Qfield.FieldDescription = ">> STATUS";
-			Qfield.FieldSize =  36;
-			Qfield.MQueue = false;
-			Qfield.CavDesignation = "___STATUS46938";
+			Qfield.VisivelCav = CavVisibilityType.Nunca;
 
 			Qfield.Dupmsg = "";
 			info.RegisterFieldDB(Qfield);
@@ -131,7 +121,7 @@ namespace CSGenio.business
 			Qfield.FieldDescription = ">>PERSON RESPONSIBLE";
 			Qfield.FieldSize =  36;
 			Qfield.MQueue = false;
-			Qfield.CavDesignation = "__PERSON_RESPONSIBLE00553";
+			Qfield.VisivelCav = CavVisibilityType.Nunca;
 
 			Qfield.Dupmsg = "";
 			info.RegisterFieldDB(Qfield);
@@ -174,7 +164,6 @@ namespace CSGenio.business
 			// Mother Relations
 			//------------------------------
 			info.ParentTables = new Dictionary<string, Relation>();
-			info.ParentTables.Add("disst", new Relation("GQT", "gqtdispatch", "dispa", "coddispa", "coddisst", "GQT", "gqtdisst", "disst", "coddisst", "coddisst"));
 			info.ParentTables.Add("entit", new Relation("GQT", "gqtdispatch", "dispa", "coddispa", "codentit", "GQT", "gqtentity", "entit", "codentit", "codentit"));
 			info.ParentTables.Add("perso", new Relation("GQT", "gqtdispatch", "dispa", "coddispa", "codperso", "GQT", "gqtperson", "perso", "codperso", "codperso"));
 		}
@@ -186,12 +175,11 @@ namespace CSGenio.business
 		{
 			// Pathways
 			//------------------------------
-			info.Pathways = new Dictionary<string, string>(5);
-			info.Pathways.Add("disst","disst");
+			info.Pathways = new Dictionary<string, string>(4);
 			info.Pathways.Add("perso","perso");
 			info.Pathways.Add("entit","entit");
-			info.Pathways.Add("faci1","entit");
 			info.Pathways.Add("faci2","entit");
+			info.Pathways.Add("faci1","entit");
 		}
 
 		/// <summary>
@@ -345,17 +333,6 @@ namespace CSGenio.business
 		{
 			get { return (string)returnValueField(FldCodentit); }
 			set { insertNameValueField(FldCodentit, value); }
-		}
-
-		/// <summary>Field : ">> STATUS" Tipo: "CE" Formula:  ""</summary>
-		public static FieldRef FldCoddisst { get { return m_fldCoddisst; } }
-		private static FieldRef m_fldCoddisst = new FieldRef("dispa", "coddisst");
-
-		/// <summary>Field : ">> STATUS" Tipo: "CE" Formula:  ""</summary>
-		public string ValCoddisst
-		{
-			get { return (string)returnValueField(FldCoddisst); }
-			set { insertNameValueField(FldCoddisst, value); }
 		}
 
 		/// <summary>Field : "Is prepared" Tipo: "L" Formula:  ""</summary>
@@ -521,7 +498,7 @@ namespace CSGenio.business
 		// USE /[MANUAL GQT TABAUX DISPA]/
 
      
-          
+         
 
 	}
 }

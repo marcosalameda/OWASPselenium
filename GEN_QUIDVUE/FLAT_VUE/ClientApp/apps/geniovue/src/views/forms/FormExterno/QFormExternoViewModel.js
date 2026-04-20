@@ -54,17 +54,6 @@ export default class ViewModel extends FormViewModelBase
 		this.stopWatchers.push(watch(() => this.ValCodpesso.value, (newValue, oldValue) => this.onUpdate('pesso.codpesso', this.ValCodpesso, newValue, oldValue)))
 
 		/** The hidden foreign keys. */
-		this.ValCodcateg = reactive(new modelFieldType.ForeignKey({
-			id: 'ValCodcateg',
-			originId: 'ValCodcateg',
-			area: 'PESSO',
-			field: 'CODCATEG',
-			relatedArea: 'CATEG',
-			isFixed: true,
-			description: computed(() => this.Resources._LAST_CATEGORY61019),
-		}).cloneFrom(values?.ValCodcateg))
-		this.stopWatchers.push(watch(() => this.ValCodcateg.value, (newValue, oldValue) => this.onUpdate('pesso.codcateg', this.ValCodcateg, newValue, oldValue)))
-
 		this.ValCodregia = reactive(new modelFieldType.ForeignKey({
 			id: 'ValCodregia',
 			originId: 'ValCodregia',
@@ -86,6 +75,17 @@ export default class ViewModel extends FormViewModelBase
 			description: computed(() => this.Resources.COMPANY_PARENTS01581),
 		}).cloneFrom(values?.ValCodpaise))
 		this.stopWatchers.push(watch(() => this.ValCodpaise.value, (newValue, oldValue) => this.onUpdate('pesso.codpaise', this.ValCodpaise, newValue, oldValue)))
+
+		this.ValCodcateg = reactive(new modelFieldType.ForeignKey({
+			id: 'ValCodcateg',
+			originId: 'ValCodcateg',
+			area: 'PESSO',
+			field: 'CODCATEG',
+			relatedArea: 'CATEG',
+			isFixed: true,
+			description: computed(() => this.Resources._LAST_CATEGORY61019),
+		}).cloneFrom(values?.ValCodcateg))
+		this.stopWatchers.push(watch(() => this.ValCodcateg.value, (newValue, oldValue) => this.onUpdate('pesso.codcateg', this.ValCodcateg, newValue, oldValue)))
 
 		this.ValCodcntry = reactive(new modelFieldType.ForeignKey({
 			id: 'ValCodcntry',
@@ -118,6 +118,7 @@ export default class ViewModel extends FormViewModelBase
 			field: 'DESIGNAT',
 			maxLength: 85,
 			description: computed(() => this.Resources.DESIGNATION35876),
+			ignoreFldSubmit: true,
 		}).cloneFrom(values?.TableCmpnyDesignat))
 		this.stopWatchers.push(watch(() => this.TableCmpnyDesignat.value, (newValue, oldValue) => this.onUpdate('cmpny.designat', this.TableCmpnyDesignat, newValue, oldValue)))
 

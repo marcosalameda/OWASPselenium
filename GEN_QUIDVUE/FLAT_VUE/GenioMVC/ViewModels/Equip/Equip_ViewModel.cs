@@ -1,20 +1,20 @@
-﻿using JsonIgnoreAttribute = System.Text.Json.Serialization.JsonIgnoreAttribute;
+﻿using CSGenio.business;
+using CSGenio.framework;
+using CSGenio.persistence;
+using GenioMVC.Helpers;
+using GenioMVC.Models.Exception;
+using GenioMVC.Models.Navigation;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Quidgest.Persistence;
+using Quidgest.Persistence.GenericQuery;
+
 using System.Collections;
 using System.Collections.Concurrent;
 using System.Collections.Specialized;
 using System.ComponentModel.DataAnnotations;
 using System.Data;
 using System.Globalization;
-
-using CSGenio.business;
-using CSGenio.framework;
-using CSGenio.persistence;
-using GenioMVC.Helpers;
-using GenioMVC.Models.Exception;
-using GenioMVC.Models.Navigation;
-using Quidgest.Persistence;
-using Quidgest.Persistence.GenericQuery;
+using System.Text.Json.Serialization;
 
 namespace GenioMVC.ViewModels.Equip
 {
@@ -61,6 +61,7 @@ namespace GenioMVC.ViewModels.Equip
 		public string ValCodwareh { get; set; }
 
 		#endregion
+
 		/// <summary>
 		/// Title: "Company:" | Type: "C"
 		/// </summary>
@@ -108,11 +109,6 @@ namespace GenioMVC.ViewModels.Equip
 		/// </summary>
 		public decimal ValFrequenc { get; set; }
 		/// <summary>
-		/// Title: "" | Type: "PSEUD"
-		/// </summary>
-		[JsonIgnore]
-		public SelectList List_ValFrequenc { get; set; }
-		/// <summary>
 		/// Title: "Total Value:" | Type: "$D"
 		/// </summary>
 		[ValidateSetAccess]
@@ -122,7 +118,7 @@ namespace GenioMVC.ViewModels.Equip
 		/// </summary>
 		public DateTime? ValDtaquisi { get; set; }
 		/// <summary>
-		/// Title: "Decomission:" | Type: "DT"
+		/// Title: "Decomission:" | Type: "D"
 		/// </summary>
 		[ValidateSetAccess]
 		public DateTime? ValDtdeco { get; set; }
@@ -140,7 +136,7 @@ namespace GenioMVC.ViewModels.Equip
 		/// Title: "Room Designation:" | Type: "C"
 		/// </summary>
 		[ValidateSetAccess]
-		public string Room1ValDesignat 
+		public string Room1ValDesignat
 		{
 			get
 			{
@@ -226,8 +222,6 @@ namespace GenioMVC.ViewModels.Equip
 		[ValidateSetAccess]
 		public bool ValIfabatif { get; set; }
 
-
-
 		#region Navigations
 		#endregion
 
@@ -245,6 +239,24 @@ namespace GenioMVC.ViewModels.Equip
 
 		#region Fields for formulas
 
+		// Field for formula
+		/// <summary>Used only for lazy loading of the TpequValTipoequi field</summary>
+		[JsonIgnore]
+		[ValidateSetAccess]
+		public Func<string> funcTpequValTipoequi { get; set; }
+		private string _auxTpequValTipoequi { get; set; }
+		/// <summary>Field: "TYPE OF EQUIPMENT" Tipo: "C"</summary>
+		[ValidateSetAccess]
+		public string TpequValTipoequi { get { return funcTpequValTipoequi != null ? funcTpequValTipoequi() : _auxTpequValTipoequi; } private set { funcTpequValTipoequi = () => value; } }
+		// Field for formula
+		/// <summary>Used only for lazy loading of the ItemValItemdes field</summary>
+		[JsonIgnore]
+		[ValidateSetAccess]
+		public Func<string> funcItemValItemdes { get; set; }
+		private string _auxItemValItemdes { get; set; }
+		/// <summary>Field: "Article" Tipo: "C"</summary>
+		[ValidateSetAccess]
+		public string ItemValItemdes { get { return funcItemValItemdes != null ? funcItemValItemdes() : _auxItemValItemdes; } private set { funcItemValItemdes = () => value; } }
 
 		#endregion
 
@@ -385,6 +397,8 @@ namespace GenioMVC.ViewModels.Equip
 				ValPhotogra = ViewModelConversion.ToImage(m.ValPhotogra);
 				ValLastpho = ViewModelConversion.ToImage(m.ValLastpho);
 				ValIfabatif = ViewModelConversion.ToLogic(m.ValIfabatif);
+				funcTpequValTipoequi = () => ViewModelConversion.ToString(m.Tpequ.ValTipoequi);
+				funcItemValItemdes = () => ViewModelConversion.ToString(m.Item.ValItemdes);
 				ValCodequip = ViewModelConversion.ToString(m.ValCodequip);
 			}
 			catch (Exception)
@@ -456,12 +470,7 @@ namespace GenioMVC.ViewModels.Equip
 			}
 		}
 
-		/// <summary>
-		/// Sets the value of a single property of the view model based on the provided table and field names.
-		/// </summary>
-		/// <param name="fullFieldName">The full field name in the format "table.field".</param>
-		/// <param name="value">The field value.</param>
-		/// <exception cref="ArgumentNullException">Thrown if <paramref name="fullFieldName"/> is null.</exception>
+		/// <inheritdoc />
 		public override void SetViewModelValue(string fullFieldName, object value)
 		{
 			try
@@ -628,6 +637,7 @@ namespace GenioMVC.ViewModels.Equip
 			Load_Equip___item_itemdes_(qs, lazyLoad);
 			Load_Equip___room1roomnr__(qs, lazyLoad);
 			Load_Equip___decomdecomnr_(qs, lazyLoad);
+
 // USE /[MANUAL GQT VIEWMODEL_LOADPARTIAL EQUIP]/
 		}
 
@@ -707,10 +717,7 @@ namespace GenioMVC.ViewModels.Equip
 				}
 			}
 
-			TableCmpnyDesignat = new TableDBEdit<Models.Cmpny>
-			{
-				IsLazyLoad = lazyLoad
-			};
+			TableCmpnyDesignat = new TableDBEdit<Models.Cmpny>();
 
 			if (lazyLoad)
 			{
@@ -754,7 +761,7 @@ namespace GenioMVC.ViewModels.Equip
 				int numberItems = CSGenio.framework.Configuration.NrRegDBedit;
 				int offset = (page - 1) * numberItems;
 
-				FieldRef[] fields = new FieldRef[] { CSGenioAcmpny.FldCodempre, CSGenioAcmpny.FldDesignat, CSGenioAcmpny.FldZzstate };
+				FieldRef[] fields = [CSGenioAcmpny.FldCodempre, CSGenioAcmpny.FldDesignat, CSGenioAcmpny.FldZzstate];
 
 // USE /[MANUAL GQT OVERRQ EQUIP_CMPNYDESIGNAT]/
 
@@ -901,10 +908,7 @@ namespace GenioMVC.ViewModels.Equip
 			// Area limit
 			equip___pess1name____DoLoad &= AddCriteriaAreaLimit(equip___pess1name____Conds, CSGenio.business.CSGenioAcmpny.FldCodempre, "cmpny", this.ValCodempre, true);
 
-			TablePess1Name = new TableDBEdit<Models.Pess1>
-			{
-				IsLazyLoad = lazyLoad
-			};
+			TablePess1Name = new TableDBEdit<Models.Pess1>();
 
 			if (lazyLoad)
 			{
@@ -956,22 +960,6 @@ namespace GenioMVC.ViewModels.Equip
 					weakFilters.Equal(CSGenioApess1.FldCodpesso, selectedValue);
 
 				CriteriaSet subfilters = CriteriaSet.And();
-				if (Navigation.CheckKey("filter_ValCodpess1_FILTER1_1") && (bool)Navigation.GetValue("filter_ValCodpess1_FILTER1_1") == true)
-				{
-						subfilters.Equal(CSGenioApess1.FldGender, "F");
-
-				}
-				else
-					Navigation.SetValue("filter_ValCodpess1_FILTER1_1", false);
-
-				if (Navigation.CheckKey("filter_ValCodpess1_FILTER2_1") && (bool)Navigation.GetValue("filter_ValCodpess1_FILTER2_1") == true)
-				{
-						subfilters.Equal(CSGenioApess1.FldGender, "M");
-
-				}
-				else
-					Navigation.SetValue("filter_ValCodpess1_FILTER2_1", false);
-
 				weakFilters.SubSets.Add(subfilters);
 				equip___pess1name____Conds.SubSets.Add(weakFilters);
 
@@ -980,7 +968,7 @@ namespace GenioMVC.ViewModels.Equip
 				int numberItems = CSGenio.framework.Configuration.NrRegDBedit;
 				int offset = (page - 1) * numberItems;
 
-				FieldRef[] fields = new FieldRef[] { CSGenioApess1.FldCodpesso, CSGenioApess1.FldName, CSGenioApess1.FldZzstate };
+				FieldRef[] fields = [CSGenioApess1.FldCodpesso, CSGenioApess1.FldName, CSGenioApess1.FldZzstate];
 
 // USE /[MANUAL GQT OVERRQ EQUIP_PESS1NAME]/
 
@@ -1137,34 +1125,10 @@ namespace GenioMVC.ViewModels.Equip
 
 			{
 				var groupFilters = CriteriaSet.Or();
-				bool filter_Equip_Pess1ValName_FILTER1_1 = false;
-				if (requestValues["filter_Equip_Pess1ValName_FILTER1"] != null)
-					filter_Equip_Pess1ValName_FILTER1_1 = requestValues["filter_Equip_Pess1ValName_FILTER1"].Contains("1");
-				else if (Navigation.CheckKey("filter_Equip_Pess1ValName_FILTER1_1"))
-					filter_Equip_Pess1ValName_FILTER1_1 = (bool)Navigation.GetValue("filter_Equip_Pess1ValName_FILTER1_1");
-				Navigation.SetValue("filter_Equip_Pess1ValName_FILTER1_1", filter_Equip_Pess1ValName_FILTER1_1);
-				if (filter_Equip_Pess1ValName_FILTER1_1)
-				{
-					groupFilters.Equal(CSGenioApess1.FldGender, "F");
-
-				}
-
 				subfilters.SubSets.Add(groupFilters);
 			}
 			{
 				var groupFilters = CriteriaSet.Or();
-				bool filter_Equip_Pess1ValName_FILTER2_1 = false;
-				if (requestValues["filter_Equip_Pess1ValName_FILTER2"] != null)
-					filter_Equip_Pess1ValName_FILTER2_1 = requestValues["filter_Equip_Pess1ValName_FILTER2"].Contains("1");
-				else if (Navigation.CheckKey("filter_Equip_Pess1ValName_FILTER2_1"))
-					filter_Equip_Pess1ValName_FILTER2_1 = (bool)Navigation.GetValue("filter_Equip_Pess1ValName_FILTER2_1");
-				Navigation.SetValue("filter_Equip_Pess1ValName_FILTER2_1", filter_Equip_Pess1ValName_FILTER2_1);
-				if (filter_Equip_Pess1ValName_FILTER2_1)
-				{
-					groupFilters.Equal(CSGenioApess1.FldGender, "M");
-
-				}
-
 				subfilters.SubSets.Add(groupFilters);
 			}
 
@@ -1225,10 +1189,7 @@ namespace GenioMVC.ViewModels.Equip
 				}
 			}
 
-			TableTpequTipoequi = new TableDBEdit<Models.Tpequ>
-			{
-				IsLazyLoad = lazyLoad
-			};
+			TableTpequTipoequi = new TableDBEdit<Models.Tpequ>();
 
 			if (lazyLoad)
 			{
@@ -1272,7 +1233,7 @@ namespace GenioMVC.ViewModels.Equip
 				int numberItems = CSGenio.framework.Configuration.NrRegDBedit;
 				int offset = (page - 1) * numberItems;
 
-				FieldRef[] fields = new FieldRef[] { CSGenioAtpequ.FldCodtpequ, CSGenioAtpequ.FldTipoequi, CSGenioAtpequ.FldTpequcod, CSGenioAtpequ.FldTpequpai, CSGenioAtpequ.FldNivel, CSGenioAtpequ.FldBackcolo, CSGenioAtpequ.FldCorletra, CSGenioAtpequ.FldZzstate };
+				FieldRef[] fields = [CSGenioAtpequ.FldCodtpequ, CSGenioAtpequ.FldTipoequi, CSGenioAtpequ.FldTpequcod, CSGenioAtpequ.FldTpequpai, CSGenioAtpequ.FldNivel, CSGenioAtpequ.FldBackcolo, CSGenioAtpequ.FldCorletra, CSGenioAtpequ.FldZzstate];
 
 // USE /[MANUAL GQT OVERRQ EQUIP_TPEQUTIPOEQUI]/
 
@@ -1467,10 +1428,7 @@ namespace GenioMVC.ViewModels.Equip
 				}
 			}
 
-			TableWarehWarehdes = new TableDBEdit<Models.Wareh>
-			{
-				IsLazyLoad = lazyLoad
-			};
+			TableWarehWarehdes = new TableDBEdit<Models.Wareh>();
 
 			if (lazyLoad)
 			{
@@ -1514,7 +1472,7 @@ namespace GenioMVC.ViewModels.Equip
 				int numberItems = CSGenio.framework.Configuration.NrRegDBedit;
 				int offset = (page - 1) * numberItems;
 
-				FieldRef[] fields = new FieldRef[] { CSGenioAwareh.FldCodwareh, CSGenioAwareh.FldWarehdes, CSGenioAwareh.FldWarehcod, CSGenioAwareh.FldZzstate };
+				FieldRef[] fields = [CSGenioAwareh.FldCodwareh, CSGenioAwareh.FldWarehdes, CSGenioAwareh.FldWarehcod, CSGenioAwareh.FldZzstate];
 
 // USE /[MANUAL GQT OVERRQ EQUIP_WAREHWAREHDES]/
 
@@ -1661,10 +1619,7 @@ namespace GenioMVC.ViewModels.Equip
 			// Area limit
 			equip___item_itemdes_DoLoad &= AddCriteriaAreaLimit(equip___item_itemdes_Conds, CSGenio.business.CSGenioAwareh.FldCodwareh, "wareh", this.ValCodwareh, true);
 
-			TableItemItemdes = new TableDBEdit<Models.Item>
-			{
-				IsLazyLoad = lazyLoad
-			};
+			TableItemItemdes = new TableDBEdit<Models.Item>();
 
 			if (lazyLoad)
 			{
@@ -1711,7 +1666,7 @@ namespace GenioMVC.ViewModels.Equip
 				int numberItems = CSGenio.framework.Configuration.NrRegDBedit;
 				int offset = (page - 1) * numberItems;
 
-				FieldRef[] fields = new FieldRef[] { CSGenioAitem.FldCoditem, CSGenioAitem.FldItemdes, CSGenioAitem.FldItemcod, CSGenioAitem.FldZzstate };
+				FieldRef[] fields = [CSGenioAitem.FldCoditem, CSGenioAitem.FldItemdes, CSGenioAitem.FldItemcod, CSGenioAitem.FldZzstate];
 
 // USE /[MANUAL GQT OVERRQ EQUIP_ITEMITEMDES]/
 
@@ -1863,10 +1818,7 @@ namespace GenioMVC.ViewModels.Equip
 				}
 			}
 
-			TableRoom1Roomnr = new TableDBEdit<Models.Room1>
-			{
-				IsLazyLoad = lazyLoad
-			};
+			TableRoom1Roomnr = new TableDBEdit<Models.Room1>();
 
 			if (lazyLoad)
 			{
@@ -1909,7 +1861,7 @@ namespace GenioMVC.ViewModels.Equip
 				int numberItems = CSGenio.framework.Configuration.NrRegDBedit;
 				int offset = (page - 1) * numberItems;
 
-				FieldRef[] fields = new FieldRef[] { CSGenioAroom1.FldCodrooms, CSGenioAroom1.FldRoomnr, CSGenioAroom1.FldZzstate };
+				FieldRef[] fields = [CSGenioAroom1.FldCodrooms, CSGenioAroom1.FldRoomnr, CSGenioAroom1.FldZzstate];
 
 // USE /[MANUAL GQT OVERRQ EQUIP_ROOM1ROOMNR]/
 
@@ -2104,10 +2056,7 @@ namespace GenioMVC.ViewModels.Equip
 				}
 			}
 
-			TableDecomDecomnr = new TableDBEdit<Models.Decom>
-			{
-				IsLazyLoad = lazyLoad
-			};
+			TableDecomDecomnr = new TableDBEdit<Models.Decom>();
 
 			if (lazyLoad)
 			{
@@ -2150,7 +2099,7 @@ namespace GenioMVC.ViewModels.Equip
 				int numberItems = CSGenio.framework.Configuration.NrRegDBedit;
 				int offset = (page - 1) * numberItems;
 
-				FieldRef[] fields = new FieldRef[] { CSGenioAdecom.FldCoddeco, CSGenioAdecom.FldDecomnr, CSGenioAdecom.FldZzstate };
+				FieldRef[] fields = [CSGenioAdecom.FldCoddeco, CSGenioAdecom.FldDecomnr, CSGenioAdecom.FldZzstate];
 
 // USE /[MANUAL GQT OVERRQ EQUIP_DECOMDECOMNR]/
 
@@ -2306,17 +2255,17 @@ namespace GenioMVC.ViewModels.Equip
 				"equip.photogra" => ViewModelConversion.ToImage(modelValue),
 				"equip.lastpho" => ViewModelConversion.ToImage(modelValue),
 				"equip.ifabatif" => ViewModelConversion.ToLogic(modelValue),
+				"tpequ.tipoequi" => ViewModelConversion.ToString(modelValue),
+				"item.itemdes" => ViewModelConversion.ToString(modelValue),
 				"equip.codequip" => ViewModelConversion.ToString(modelValue),
 				"cmpny.codempre" => ViewModelConversion.ToString(modelValue),
 				"cmpny.designat" => ViewModelConversion.ToString(modelValue),
 				"pess1.codpesso" => ViewModelConversion.ToString(modelValue),
 				"pess1.name" => ViewModelConversion.ToString(modelValue),
 				"tpequ.codtpequ" => ViewModelConversion.ToString(modelValue),
-				"tpequ.tipoequi" => ViewModelConversion.ToString(modelValue),
 				"wareh.codwareh" => ViewModelConversion.ToString(modelValue),
 				"wareh.warehdes" => ViewModelConversion.ToString(modelValue),
 				"item.coditem" => ViewModelConversion.ToString(modelValue),
-				"item.itemdes" => ViewModelConversion.ToString(modelValue),
 				"room1.codrooms" => ViewModelConversion.ToString(modelValue),
 				"room1.roomnr" => ViewModelConversion.ToString(modelValue),
 				"decom.coddeco" => ViewModelConversion.ToString(modelValue),

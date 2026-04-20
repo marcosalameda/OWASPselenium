@@ -73,6 +73,7 @@ export default class ViewModel extends FormViewModelBase
 			field: 'NAME',
 			maxLength: 85,
 			description: computed(() => this.Resources.IDENTIFICATION_NAME16317),
+			ignoreFldSubmit: true,
 		}).cloneFrom(values?.TableAssetName))
 		this.stopWatchers.push(watch(() => this.TableAssetName.value, (newValue, oldValue) => this.onUpdate('asset.name', this.TableAssetName, newValue, oldValue)))
 

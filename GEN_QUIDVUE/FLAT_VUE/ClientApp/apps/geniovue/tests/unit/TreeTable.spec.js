@@ -9,7 +9,7 @@ import injectFunctions from '../injectFunctions'
 
 import QTreeTableRow from '@/components/table/QTreeTableRow'
 
-let configSimple = {
+const configSimple = {
 	row: {
 		hasChildren: { value: true },
 		children: [
@@ -101,7 +101,6 @@ let configSimple = {
 			field: 'NUM',
 			label: 'Número',
 			supportForm: 'MENUW',
-			supportFormIsPopup: false,
 			params: { 'type': 'form', 'formName': 'MENUW', 'mode': 'SHOW' },
 			cellAction: true,
 			hasTreeShowHide: true,
@@ -125,7 +124,6 @@ let configSimple = {
 			field: 'TIPOMENU',
 			label: 'Tipo de Menu',
 			supportForm: null,
-			supportFormIsPopup: false,
 			params: null,
 			cellAction: false,
 			isVisible: true,
@@ -152,7 +150,6 @@ let configSimple = {
 			field: 'NOME',
 			label: 'Descrição do menu',
 			supportForm: null,
-			supportFormIsPopup: false,
 			params: null,
 			cellAction: false,
 			isVisible: true,
@@ -183,7 +180,7 @@ let configSimple = {
 	toggleShowChildren: () => {},
 }
 
-let configSubTable = {
+const configSubTable = {
 	row: {
 		hasChildren: { value: true },
 		children: [
@@ -273,7 +270,6 @@ let configSubTable = {
 			field: 'NUM',
 			label: 'Número',
 			supportForm: 'MENUW',
-			supportFormIsPopup: false,
 			params: { 'type': 'form', 'formName': 'MENUW', 'mode': 'SHOW' },
 			cellAction: true,
 			hasTreeShowHide: true,
@@ -297,7 +293,6 @@ let configSubTable = {
 			field: 'TIPOMENU',
 			label: 'Tipo de Menu',
 			supportForm: null,
-			supportFormIsPopup: false,
 			params: null,
 			cellAction: false,
 			isVisible: true,
@@ -324,7 +319,6 @@ let configSubTable = {
 			field: 'NOME',
 			label: 'Descrição do menu',
 			supportForm: null,
-			supportFormIsPopup: false,
 			params: null,
 			cellAction: false,
 			isVisible: true,
@@ -347,7 +341,6 @@ let configSubTable = {
 			field: 'NOME',
 			label: 'Nome',
 			supportForm: null,
-			supportFormIsPopup: false,
 			params: null,
 			cellAction: false,
 			isVisible: true,
@@ -371,7 +364,6 @@ let configSubTable = {
 			field: 'NUM',
 			label: 'Num',
 			supportForm: null,
-			supportFormIsPopup: false,
 			params: null,
 			cellAction: false,
 			isVisible: true,
@@ -402,13 +394,13 @@ let configSubTable = {
 	toggleShowChildren: () => {},
 }
 
-let simpleUsageMethods = {
+const simpleUsageMethods = {
 	getColumnHierarchy(columns) {
 		return listFunctions.getColumnHierarchy(columns)
 	}
 }
 
-let _global = {
+const _global = {
 	provide: {
 		getValueFromRow: 			injectFunctions.getValueFromRow,
 		getCellSlotName: 			injectFunctions.getCellSlotName,
@@ -431,12 +423,11 @@ let _global = {
 		isRowSelected: 				injectFunctions.isRowSelected,
 		executeRowClickAction: 		injectFunctions.executeRowClickAction,
 		rowWithoutChildren: 		injectFunctions.rowWithoutChildren,
-		columnFullName: 			injectFunctions.columnFullName,
 		allSelectedRows: 			'false'
 	}
 }
 
-let _propsSimple = {
+const _propsSimple = {
 	uniqueId: configSimple.uniqueId,
 	row: configSimple.row,
 	rowKeyPath: [configSimple.row.rowKey],
@@ -451,7 +442,7 @@ let _propsSimple = {
 	resourcesPath: 'Content/img/'
 }
 
-let _propsSubTable = {
+const _propsSubTable = {
 	uniqueId: configSubTable.uniqueId,
 	row: configSubTable.row,
 	rowKeyPath: [configSubTable.row.rowKey],
@@ -476,7 +467,7 @@ describe('TreeList.vue', () => {
 		await flushPromises()
 		await vi.dynamicImportSettled()
 
-		var rows = await wrapper.findAll('tr')
+		const rows = await wrapper.findAll('tr')
 		expect(rows.length).toBe(1)
 		expect(rows[0].findAll('td').length).toBe(3)
 	})
@@ -490,7 +481,7 @@ describe('TreeList.vue', () => {
 		await flushPromises()
 		await vi.dynamicImportSettled()
 
-		var rows = await wrapper.findAll('tr')
+		let rows = await wrapper.findAll('tr')
 
 		await fireEvent.click(rows[0].find('button[data-testid="tree-action"]').element)
 
@@ -499,7 +490,7 @@ describe('TreeList.vue', () => {
 
 		rows = await wrapper.findAll('tr')
 		const header = await wrapper.findAll('thead')
-		var numHeaderRows = 0
+		let numHeaderRows = 0
 		await header.forEach(elem => {
 			numHeaderRows += elem.findAll('tr').length
 		})
@@ -516,7 +507,7 @@ describe('TreeList.vue', () => {
 		await flushPromises()
 		await vi.dynamicImportSettled()
 
-		var rows = await wrapper.findAll('tr[data-testid="table-row"]')
+		let rows = await wrapper.findAll('tr[data-testid="table-row"]')
 
 		await fireEvent.click(rows[0].find('button[data-testid="tree-action"]').element)
 
@@ -524,8 +515,8 @@ describe('TreeList.vue', () => {
 		await vi.dynamicImportSettled()
 
 		rows = await wrapper.findAll('tr[data-testid="table-row"]')
-		var header = await wrapper.findAll('thead')
-		var numHeaderRows = 0
+		const header = await wrapper.findAll('thead')
+		let numHeaderRows = 0
 		header.forEach(elem => {
 			numHeaderRows += elem.findAll('tr').length
 		})
@@ -553,7 +544,7 @@ describe('TreeList.vue', () => {
 		await flushPromises()
 		await vi.dynamicImportSettled()
 
-		var rows = await wrapper.findAll('tr')
+		let rows = await wrapper.findAll('tr')
 
 		await fireEvent.click(rows[0].find('button').element)
 
@@ -568,7 +559,7 @@ describe('TreeList.vue', () => {
 
 		rows = await wrapper.findAll('tr')
 		const header = await wrapper.findAll('thead')
-		var numHeaderRows = 0
+		let numHeaderRows = 0
 		header.forEach(elem => {
 			numHeaderRows += elem.findAll('tr').length
 		})
@@ -585,7 +576,7 @@ describe('TreeList.vue', () => {
 		await flushPromises()
 		await vi.dynamicImportSettled()
 
-		var rows = await wrapper.findAll('tr')
+		let rows = await wrapper.findAll('tr')
 
 		await fireEvent.click(rows[0].find('button').element)
 
@@ -600,11 +591,11 @@ describe('TreeList.vue', () => {
 		})
 
 		rows = await wrapper.findAll('tr')
-		var numHeaderRows = 0
+		let numHeaderRows = 0
 		header.forEach(elem => {
 			numHeaderRows += elem.findAll('tr').length
 		})
-		var subTables = await wrapper.findAll('tr table')
+		const subTables = await wrapper.findAll('tr table')
 		expect(rows.length - numHeaderRows - subTables.length).toBe(3)
 	})
 
@@ -617,15 +608,15 @@ describe('TreeList.vue', () => {
 		await flushPromises()
 		await vi.dynamicImportSettled()
 
-		var rows = await wrapper.findAll('tr')
+		let rows = await wrapper.findAll('tr')
 
 		await fireEvent.click(rows[0].find('button').element)
 
 		await flushPromises()
 		await vi.dynamicImportSettled()
 
-		var header = await wrapper.find('thead')
-		var titles = await header.findAll('div.d-flex')
+		let header = await wrapper.find('thead')
+		const titles = await header.findAll('div.d-flex')
 
 		titles.forEach((title, idx) => {
 			expect(title.text()).toBe(_propsSubTable.columnHierarchy[1][idx].label)
@@ -652,15 +643,15 @@ describe('TreeList.vue', () => {
 		await flushPromises()
 		await vi.dynamicImportSettled()
 
-		var rows = wrapper.findAll('tr[data-testid="table-row"]')
+		let rows = wrapper.findAll('tr[data-testid="table-row"]')
 
 		await fireEvent.click(rows[0].find('button').element)
 
 		await flushPromises()
 		await vi.dynamicImportSettled()
 
-		var header = await wrapper.find('thead')
-		var titles = await header.findAll('div.d-flex')
+		let header = await wrapper.find('thead')
+		const titles = await header.findAll('div.d-flex')
 
 		titles.forEach((title, idx) => {
 			expect(title.text()).toBe(_propsSubTable.columnHierarchy[1][idx].label)
@@ -674,12 +665,12 @@ describe('TreeList.vue', () => {
 
 		rows = await wrapper.findAll('tr[data-testid="table-row"]')
 		header = await wrapper.findAll('thead')
-		var numHeaderRows = 0
+		let numHeaderRows = 0
 		header.forEach(elem => {
 			numHeaderRows += elem.findAll('tr[data-testid="table-row"]').length
 		})
 
-		var subTables = await wrapper.findAll('tr[data-testid="table-row"] table')
+		const subTables = await wrapper.findAll('tr[data-testid="table-row"] table')
 		expect(rows.length - numHeaderRows - subTables.length).toBe(4)
 	})
 
@@ -703,7 +694,7 @@ describe('TreeList.vue', () => {
 		await vi.dynamicImportSettled()
 
 		// Get sub-rows
-		let allRowElems = document.querySelectorAll('tr[data-testid="table-row"]')
+		const allRowElems = document.querySelectorAll('tr[data-testid="table-row"]')
 		expect(allRowElems.length).toBe(3)
 	})
 

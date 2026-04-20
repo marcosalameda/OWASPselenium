@@ -47,7 +47,7 @@ namespace CSGenio.business
 			Qfield = new Field(info.Alias, "codtblb", FieldType.KEY_GUID);
 			Qfield.FieldDescription = "";
 			Qfield.FieldSize =  36;
-			Qfield.CavDesignation = "";
+			Qfield.VisivelCav = CavVisibilityType.Nunca;
 
 			Qfield.Dupmsg = "";
 			info.RegisterFieldDB(Qfield);
@@ -57,7 +57,7 @@ namespace CSGenio.business
 			Qfield.FieldDescription = "Foreign Key";
 			Qfield.FieldSize =  36;
 			Qfield.MQueue = false;
-			Qfield.CavDesignation = "FOREIGN_KEY39588";
+			Qfield.VisivelCav = CavVisibilityType.Nunca;
 
 			Qfield.Dupmsg = "";
 			info.RegisterFieldDB(Qfield);
@@ -253,36 +253,6 @@ namespace CSGenio.business
 
 			//Write conditions
 			List<ConditionFormula> conditions = new List<ConditionFormula>();
-
-			// [TBLB->TEXT] != "ERROR"
-			{
-			List<ByAreaArguments> argumentsListByArea = new List<ByAreaArguments>();
-			argumentsListByArea= new List<ByAreaArguments>();
-			argumentsListByArea.Add(new ByAreaArguments(new string[] {"text"},new int[] {0},"tblb","codtblb"));
-			ConditionFormula writeCondition = new ConditionFormula(argumentsListByArea, 1, delegate(object []args,User user,string module,PersistentSupport sp) {
-				return ((string)args[0])!="ERROR";
-			});
-			writeCondition.ErrorWarning = "Error on save grid item";
-            writeCondition.Type =  ConditionType.ERROR;
-            writeCondition.Validate = true;
-			writeCondition.Field = info.DBFields["text"];
-			conditions.Add(writeCondition);
-			}
-
-			// [TBLB->TEXT] != "WARN"
-			{
-			List<ByAreaArguments> argumentsListByArea = new List<ByAreaArguments>();
-			argumentsListByArea= new List<ByAreaArguments>();
-			argumentsListByArea.Add(new ByAreaArguments(new string[] {"text"},new int[] {0},"tblb","codtblb"));
-			ConditionFormula writeCondition = new ConditionFormula(argumentsListByArea, 1, delegate(object []args,User user,string module,PersistentSupport sp) {
-				return ((string)args[0])!="WARN";
-			});
-			writeCondition.ErrorWarning = "Warning on save grid item";
-            writeCondition.Type =  ConditionType.WARNING;
-            writeCondition.Validate = true;
-			writeCondition.Field = info.DBFields["text"];
-			conditions.Add(writeCondition);
-			}
 			info.WriteConditions = conditions.Where(c=> c.IsWriteCondition()).ToList();
 			info.CrudConditions = conditions.Where(c=> c.IsCrudCondition()).ToList();
 

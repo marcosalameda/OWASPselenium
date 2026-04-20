@@ -9,12 +9,13 @@
 			<div
 				v-if="showFormHeader"
 				class="c-action-bar">
-				<h1
+				<component
 					v-if="formControl.uiComponents.header && formInfo.designation"
+					:is="topHeadingTag"
 					:id="formTitleId"
 					class="form-header">
 					{{ formInfo.designation }}
-				</h1>
+				</component>
 
 				<div class="c-action-bar__menu">
 					<template
@@ -40,13 +41,10 @@
 									@click="btn.action">
 									<template v-if="btn.icon">
 										<q-badge-indicator
-											v-if="btn.badge && btn.badge.isVisible"
-											:color="btn.badge.color">
+											:enabled="btn.badge?.isVisible ?? false"
+											:color="btn.badge?.color">
 											<q-icon v-bind="btn.icon" />
 										</q-badge-indicator>
-										<q-icon
-											v-else
-											v-bind="btn.icon" />
 									</template>
 								</q-toggle-group-item>
 							</template>
@@ -97,6 +95,7 @@
 		<q-container
 			fluid
 			data-key="PWCOM"
+			:data-identifier="primaryKeyValue"
 			:data-loading="!formInitialDataLoaded || !isActiveForm">
 			<template v-if="formControl.initialized && showFormBody">
 				<q-row v-if="controls.PWCOM___PSW__NOME____.isVisible">
@@ -106,7 +105,8 @@
 						<base-input-structure
 							v-if="controls.PWCOM___PSW__NOME____.isVisible"
 							class="i-text"
-							v-bind="controls.PWCOM___PSW__NOME____"
+							v-bind="controls.PWCOM___PSW__NOME____.wrapperProps"
+							:id="getControlId(controls.PWCOM___PSW__NOME____)"
 							v-on="controls.PWCOM___PSW__NOME____.handlers"
 							:loading="controls.PWCOM___PSW__NOME____.props.loading"
 							:reporting-mode-on="reportingModeCAV"
@@ -114,6 +114,7 @@
 							<q-lookup
 								v-if="controls.PWCOM___PSW__NOME____.isVisible"
 								v-bind="controls.PWCOM___PSW__NOME____.props"
+								:id="getControlId(controls.PWCOM___PSW__NOME____)"
 								v-on="controls.PWCOM___PSW__NOME____.handlers" />
 							<q-see-more-pwcom-psw-nome
 								v-if="controls.PWCOM___PSW__NOME____.seeMoreIsVisible"
@@ -129,7 +130,8 @@
 						<base-input-structure
 							v-if="controls.PWCOM___PESS1NAME____.isVisible"
 							class="i-text"
-							v-bind="controls.PWCOM___PESS1NAME____"
+							v-bind="controls.PWCOM___PESS1NAME____.wrapperProps"
+							:id="getControlId(controls.PWCOM___PESS1NAME____)"
 							v-on="controls.PWCOM___PESS1NAME____.handlers"
 							:loading="controls.PWCOM___PESS1NAME____.props.loading"
 							:reporting-mode-on="reportingModeCAV"
@@ -137,6 +139,7 @@
 							<q-lookup
 								v-if="controls.PWCOM___PESS1NAME____.isVisible"
 								v-bind="controls.PWCOM___PESS1NAME____.props"
+								:id="getControlId(controls.PWCOM___PESS1NAME____)"
 								v-on="controls.PWCOM___PESS1NAME____.handlers" />
 							<q-see-more-pwcom-pess1name
 								v-if="controls.PWCOM___PESS1NAME____.seeMoreIsVisible"
@@ -152,7 +155,8 @@
 						<base-input-structure
 							v-if="controls.PWCOM___PWCOMFOTO____.isVisible"
 							class="q-image"
-							v-bind="controls.PWCOM___PWCOMFOTO____"
+							v-bind="controls.PWCOM___PWCOMFOTO____.wrapperProps"
+							:id="getControlId(controls.PWCOM___PWCOMFOTO____)"
 							v-on="controls.PWCOM___PWCOMFOTO____.handlers"
 							:loading="controls.PWCOM___PWCOMFOTO____.props.loading"
 							:reporting-mode-on="reportingModeCAV"
@@ -160,6 +164,7 @@
 							<q-image
 								v-if="controls.PWCOM___PWCOMFOTO____.isVisible"
 								v-bind="controls.PWCOM___PWCOMFOTO____.props"
+								:id="getControlId(controls.PWCOM___PWCOMFOTO____)"
 								v-on="controls.PWCOM___PWCOMFOTO____.handlers" />
 						</base-input-structure>
 					</q-col>
@@ -168,7 +173,7 @@
 		</q-container>
 	</teleport>
 
-	<hr v-if="!isPopup && showFormFooter" />
+	<q-divider v-if="!isPopup && showFormFooter" />
 
 	<teleport
 		v-if="formModalIsReady && showFormFooter"
@@ -977,7 +982,6 @@
 
 				this.afterControlUpdate(controlField, fieldValue)
 			},
-
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
 // USE /[MANUAL GQT FUNCTIONS_JS PWCOM]/
 // eslint-disable-next-line

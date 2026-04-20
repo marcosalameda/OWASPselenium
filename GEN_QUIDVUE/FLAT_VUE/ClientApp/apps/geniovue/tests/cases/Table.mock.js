@@ -1,6 +1,4 @@
-﻿import cloneDeep from 'lodash-es/cloneDeep'
-
-import controlClass from '@/mixins/fieldControl.js'
+﻿import controlClass from '@/mixins/fieldControl.js'
 import listFunctions from '@/mixins/listFunctions.js'
 
 function getTableTest(context)
@@ -579,7 +577,6 @@ function getTableTest(context)
 				name: 'DFLDS',
 				pkColumn: 'PrimaryKey',
 				tableTitle: 'Basic Types',
-				lcid: 'pt-PT',
 				numberFormat: {
 					decimalSeparator: ',',
 					groupSeparator: '.'
@@ -597,12 +594,7 @@ function getTableTest(context)
 					mode: 'insert',
 					repeatInsert: false
 				},
-				globalSearch: {
-					placeholder: 'PESQUISAR34506',
-					visibility: true
-				},
 				viewManagement: 'T',
-				signalOpenAdvancedFilters: null,
 				allowColumnFilters: true,
 				customActions: [
 					{
@@ -696,7 +688,6 @@ function getTableTest(context)
 				allowFileImport: true,
 				importOptions: [{ key: 'xlsx', value: 'FOLHA_DE_CALCULO_EXC59518' }],
 				importTemplateOptions: [{ key: 'xlsx', value: 'DOWNLOAD_DE_TEMPLATE48385' }],
-				columnConfigIsVisible: false,
 				rowClickActionInternal: 'selectMultiple',
 				hasTextWrap: false,
 				defaultSearchColumnName: 'Key',
@@ -1184,7 +1175,6 @@ export default {
 				name: 'DFLDS',
 				pkColumn: 'PrimaryKey',
 				tableTitle: 'Basic Types (Edit)',
-				lcid: 'pt-PT',
 				numberFormat: {
 					decimalSeparator: ',',
 					groupSeparator: '.'
@@ -1201,9 +1191,6 @@ export default {
 					type: 'popup',
 					mode: 'insert',
 					repeatInsert: false
-				},
-				globalSearch: {
-					visibility: true
 				},
 				crudActions: [
 					{
@@ -1698,7 +1685,6 @@ export default {
 					dataType: 'Numeric',
 					dataDisplay: listFunctions.numericDisplayCell,
 					dataSearch: listFunctions.numericSearchCell,
-					dataOnChange: listFunctions.reCalcCellOrder,
 					decimalPlaces: 3,
 					columnClasses: 'c-table__cell-numeric row-numeric',
 					columnHeaderClasses: 'c-table__head-numeric',
@@ -1768,7 +1754,6 @@ export default {
 				name: 'DFLDS_REORDER',
 				pkColumn: 'PrimaryKey',
 				tableTitle: 'Basic Types (Reorder)',
-				lcid: 'pt-PT',
 				numberFormat: {
 					decimalSeparator: ',',
 					groupSeparator: '.'
@@ -1785,9 +1770,6 @@ export default {
 					type: 'popup',
 					mode: 'insert',
 					repeatInsert: false
-				},
-				globalSearch: {
-					visibility: true
 				},
 				crudActions: [
 					{
@@ -2160,7 +2142,6 @@ export default {
 				name: 'DDATE',
 				pkColumn: '',
 				tableTitle: 'Date Types',
-				lcid: 'pt-PT',
 				numberFormat: {
 					decimalSeparator: ',',
 					groupSeparator: '.'
@@ -2177,9 +2158,6 @@ export default {
 					type: 'popup',
 					mode: 'insert',
 					repeatInsert: false
-				},
-				globalSearch: {
-					visibility: true
 				},
 				crudActions: [
 					{
@@ -2585,16 +2563,12 @@ export default {
 				name: 'DMISC',
 				pkColumn: 'Key',
 				tableTitle: 'Other Types',
-				lcid: 'pt-PT',
 				system: 0,
 				supportForm: {
 					name: 'FORMX',
 					type: 'popup',
 					mode: 'insert',
 					repeatInsert: false
-				},
-				globalSearch: {
-					visibility: true
 				},
 				crudActions: [
 					{
@@ -2992,7 +2966,6 @@ export default {
 				name: 'DFLDS',
 				pkColumn: 'PrimaryKey',
 				tableTitle: 'Column Totalers',
-				lcid: 'pt-PT',
 				numberFormat: {
 					decimalSeparator: ',',
 					groupSeparator: '.'
@@ -3009,9 +2982,6 @@ export default {
 					type: 'popup',
 					mode: 'insert',
 					repeatInsert: false
-				},
-				globalSearch: {
-					visibility: true
 				},
 				crudActions: [
 					{
@@ -3412,7 +3382,6 @@ export default {
 				name: 'DFLDS',
 				pkColumn: 'PrimaryKey',
 				tableTitle: 'Column Totalers (selected)',
-				lcid: 'pt-PT',
 				numberFormat: {
 					decimalSeparator: ',',
 					groupSeparator: '.'
@@ -3429,9 +3398,6 @@ export default {
 					type: 'popup',
 					mode: 'insert',
 					repeatInsert: false
-				},
-				globalSearch: {
-					visibility: true
 				},
 				crudActions: [
 					{
@@ -3835,7 +3801,6 @@ export default {
 				name: 'DFLDS_SELECT_CHECK',
 				pkColumn: 'PrimaryKey',
 				tableTitle: 'Select Multiple Rows',
-				lcid: 'pt-PT',
 				numberFormat: {
 					decimalSeparator: ',',
 					groupSeparator: '.'
@@ -3852,9 +3817,6 @@ export default {
 					type: 'popup',
 					mode: 'insert',
 					repeatInsert: false
-				},
-				globalSearch: {
-					visibility: true
 				},
 				crudActions: [
 					{
@@ -4259,7 +4221,6 @@ export default {
 				name: 'DFLDS_SELECT_CHECK_MULTI',
 				pkColumn: 'PrimaryKey',
 				tableTitle: 'Select Multiple Rows (Multiple Actions)',
-				lcid: 'pt-PT',
 				numberFormat: {
 					decimalSeparator: ',',
 					groupSeparator: '.'
@@ -4276,9 +4237,6 @@ export default {
 					type: 'popup',
 					mode: 'insert',
 					repeatInsert: false
-				},
-				globalSearch: {
-					visibility: true
 				},
 				crudActions: [
 					{
@@ -4721,7 +4679,6 @@ export default {
 				name: 'DFLDS',
 				pkColumn: 'PrimaryKey',
 				tableTitle: 'Select Single Row',
-				lcid: 'pt-PT',
 				numberFormat: {
 					decimalSeparator: ',',
 					groupSeparator: '.'
@@ -4738,9 +4695,6 @@ export default {
 					type: 'popup',
 					mode: 'insert',
 					repeatInsert: false
-				},
-				globalSearch: {
-					visibility: true
 				},
 				crudActions: [
 					{
@@ -5137,7 +5091,6 @@ export default {
 				name: 'DFLDS',
 				pkColumn: 'PrimaryKey',
 				tableTitle: 'Remove Rows',
-				lcid: 'pt-PT',
 				numberFormat: {
 					decimalSeparator: ',',
 					groupSeparator: '.'
@@ -5154,9 +5107,6 @@ export default {
 					type: 'popup',
 					mode: 'insert',
 					repeatInsert: false
-				},
-				globalSearch: {
-					visibility: true
 				},
 				actionsPlacement: 'left',
 				rowClickActionInternal: '',
@@ -5377,7 +5327,6 @@ export default {
 				name: 'DFLDS',
 				pkColumn: 'PrimaryKey',
 				tableTitle: 'Pagination (normal)',
-				lcid: 'pt-PT',
 				numberFormat: {
 					decimalSeparator: ',',
 					groupSeparator: '.'
@@ -5388,9 +5337,6 @@ export default {
 					dateTimeSeconds: 'yyyy/MM/dd HH:mm:ss',
 					hours: 'HH:mm',
 					use12Hour: false
-				},
-				globalSearch: {
-					visibility: true
 				},
 				crudActions: [
 					{
@@ -5447,7 +5393,7 @@ export default {
 				actionsPlacement: 'left',
 				rowClickActionInternal: '',
 				perPage: 1,
-				numVisibilePaginationButtons: 5,
+				numVisiblePaginationButtons: 5,
 				showRecordCount: true
 			}
 		},
@@ -5461,7 +5407,6 @@ export default {
 				name: 'DFLDS',
 				pkColumn: 'PrimaryKey',
 				tableTitle: 'Pagination (normal, server)',
-				lcid: 'pt-PT',
 				numberFormat: {
 					decimalSeparator: ',',
 					groupSeparator: '.'
@@ -5472,9 +5417,6 @@ export default {
 					dateTimeSeconds: 'yyyy/MM/dd HH:mm:ss',
 					hours: 'HH:mm',
 					use12Hour: false
-				},
-				globalSearch: {
-					visibility: true
 				},
 				crudActions: [
 					{
@@ -5531,7 +5473,7 @@ export default {
 				actionsPlacement: 'left',
 				rowClickActionInternal: '',
 				perPage: 1,
-				numVisibilePaginationButtons: 5,
+				numVisiblePaginationButtons: 5,
 				showRecordCount: true,
 				hydrate: listFunctions.hydrateTableData
 			}
@@ -5745,7 +5687,6 @@ export default {
 				name: 'DFLDS',
 				pkColumn: 'PrimaryKey',
 				tableTitle: 'Pagination (alternate)',
-				lcid: 'pt-PT',
 				numberFormat: {
 					decimalSeparator: ',',
 					groupSeparator: '.'
@@ -5756,9 +5697,6 @@ export default {
 					dateTimeSeconds: 'yyyy/MM/dd HH:mm:ss',
 					hours: 'HH:mm',
 					use12Hour: false
-				},
-				globalSearch: {
-					visibility: true
 				},
 				crudActions: [
 					{
@@ -6461,13 +6399,6 @@ export default {
 		],
 		readonly: true
 	},
-	searchbar01: {
-		globalSearch: {
-			placeholder: 'PESQUISAR34506',
-			visibility: true
-		},
-		tableTitle: 'Basic Types'
-	},
 	exportOptions01: [
 		{ id: 'pdf', text: 'FORMATO_DE_DOCUMENTO48724' },
 		{ id: 'ods', text: 'FOLHA_DE_CALCULO__OD46941' },
@@ -6553,7 +6484,7 @@ export default {
 		page: 5,
 		perPage: 10,
 		rowCount: 100,
-		numVisibilePaginationButtons: 5
+		numVisiblePaginationButtons: 5
 	},
 	paginationAlt01: {
 		page: 5,
@@ -6847,7 +6778,6 @@ export default {
 		name: 'DFLDS',
 		pkColumn: 'PrimaryKey',
 		tableTitle: 'Rows with empty field values',
-		lcid: 'pt-PT',
 		dateFormats: {
 			date: 'yyyy/MM/dd',
 			dateTime: 'yyyy/MM/dd HH:mm',
@@ -6855,11 +6785,6 @@ export default {
 			hours: 'HH:mm',
 			use12Hour: false
 		},
-		globalSearch: {
-			placeholder: 'PESQUISAR34506',
-			visibility: true
-		},
-		signalOpenAdvancedFilters: null,
 		allowColumnFilters: true,
 		rowClickAction: {
 			id: 'EDIT',
@@ -6874,7 +6799,6 @@ export default {
 			fnValidate: (row) => row.Fields.isValid,
 			message: 'ATENCAO__ESTA_FICHA_24725'
 		},
-		columnConfigIsVisible: false,
 		hasTextWrap: false,
 		defaultSearchColumnName: 'Key',
 		resourcesPath: 'dist/Content/img/'
@@ -6882,19 +6806,19 @@ export default {
 	simpleUsageMethods: {
 		runAction(eventName, emittedAction)
 		{
-			var str = eventName + ':\n' + JSON.stringify(emittedAction)
+			const str = eventName + ':\n' + JSON.stringify(emittedAction)
 			alert(str)
 		},
 
 		displayEmit(emittedAction)
 		{
-			var str = JSON.stringify(emittedAction)
+			const str = JSON.stringify(emittedAction)
 			alert(str)
 		},
 
 		displayAction(eventName, emittedAction)
 		{
-			var str = eventName + ':\n' + JSON.stringify(emittedAction)
+			const str = eventName + ':\n' + JSON.stringify(emittedAction)
 			alert(str)
 		},
 
@@ -6928,39 +6852,20 @@ export default {
 			this.displayAction('export-template-action', emittedAction)
 		},
 
-		showPopupAction(emittedAction, popupName)
+		showPopupAction(emittedAction)
 		{
 			this.$emit('show-popup', emittedAction)
-
-			if (popupName === 'column-config')
-				emittedAction.config.columnConfigIsVisible = true;
-			else if (popupName === 'advanced-filters')
-				emittedAction.config.advancedFiltersIsVisible = true;
 		},
 
-		hidePopupAction(emittedAction, popupName)
+		hidePopupAction(emittedAction)
 		{
 			this.$emit('hide-popup', emittedAction)
-
-			if (popupName === 'column-config') emittedAction.config.columnConfigIsVisible = false
-			else if (popupName === 'advanced-filters')
-				emittedAction.config.advancedFiltersIsVisible = false
-		},
-
-		saveColumnConfig(emittedAction)
-		{
-			this.displayAction('save-column-config', emittedAction)
-		},
-
-		resetColumnConfig(emittedAction)
-		{
-			this.displayAction('reset-column-config', emittedAction)
 		},
 
 		//FOR: EXTENDED ROW ACTIONS - REMOVE
 		removeRow(rows, rowKey)
 		{
-			var rowIdx = rows.findIndex((elem) => elem.rowKey === rowKey);
+			const rowIdx = rows.findIndex((elem) => elem.rowKey === rowKey);
 			rows.splice(rowIdx, 1);
 		},
 
@@ -6996,7 +6901,7 @@ export default {
 		 */
 		selectRows(rowArray, rowKeys)
 		{
-			for (let rowKey in rowKeys) rowArray[rowKey] = true
+			for (const rowKey in rowKeys) rowArray[rowKey] = true
 			alert(JSON.stringify(rowArray))
 		},
 
@@ -7008,7 +6913,7 @@ export default {
 		 */
 		unselectRows(rowArray, rowKeys)
 		{
-			for (let rowKey in rowKeys) delete rowArray[rowKey]
+			for (const rowKey in rowKeys) delete rowArray[rowKey]
 			alert(JSON.stringify(rowArray))
 		},
 
@@ -7019,87 +6924,8 @@ export default {
 		 */
 		unselectAllRows(rowArray)
 		{
-			for (let rowKey in rowArray) delete rowArray[rowKey]
+			for (const rowKey in rowArray) delete rowArray[rowKey]
 			alert(JSON.stringify(rowArray))
-		},
-
-		/**
-		 * Add row to array of rows checked in checklist column
-		 * @param rowArray {Object}
-		 * @param rowKey {Object}
-		 * @returns Boolean
-		 */
-		checkRow(rowArray, rowKey)
-		{
-			rowArray[rowKey] = true
-			alert(JSON.stringify(rowArray))
-		},
-
-		/**
-		 * Remove row from array of rows checked in checklist column
-		 * @param rowArray {Object}
-		 * @param rowKey {Object}
-		 * @returns Boolean
-		 */
-		uncheckRow(rowArray, rowKey)
-		{
-			delete rowArray[rowKey]
-			alert(JSON.stringify(rowArray))
-		},
-
-		/**
-		 * Add row to array of rows checked in checklist column
-		 * @param rowArray {Object}
-		 * @param rowKey {Object}
-		 * @returns Boolean
-		 */
-		checkRows(rowArray, rowKeys)
-		{
-			for (let rowKey in rowKeys) rowArray[rowKey] = true
-			alert(JSON.stringify(rowArray))
-		},
-
-		/**
-		 * Remove rows from array of rows checked in checklist column
-		 * @param rowArray {Object}
-		 * @param rowKey {Object}
-		 * @returns Boolean
-		 */
-		uncheckRows(rowArray, rowKeys)
-		{
-			for (let rowKey in rowKeys) delete rowArray[rowKey]
-			alert(JSON.stringify(rowArray))
-		},
-
-		/**
-		 * Remove all rows from array of rows checked in checklist column
-		 * @param rowArray {Object}
-		 * @returns Boolean
-		 */
-		uncheckAllRows(rowArray)
-		{
-			for (let rowKey in rowArray) delete rowArray[rowKey]
-			alert(JSON.stringify(rowArray))
-		},
-
-		/**
-		 * Copy checked rows to selected rows
-		 * @param table {Object}
-		 * @returns Boolean
-		 */
-		selectCheckedRows(table)
-		{
-			table.rowsSelected = cloneDeep(table.rowsChecked) //alert(JSON.stringify(table.rowsSelected));
-		},
-
-		/**
-		 * Copy selected rows to checked rows
-		 * @param table {Object}
-		 * @returns Boolean
-		 */
-		checkSelectedRows(table)
-		{
-			table.rowsChecked = cloneDeep(table.rowsSelected) //alert(JSON.stringify(table.rowsChecked));
 		},
 
 		rowGroupAction(emittedAction)

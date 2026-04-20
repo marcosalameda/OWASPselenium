@@ -9,12 +9,13 @@
 			<div
 				v-if="showFormHeader"
 				class="c-action-bar">
-				<h1
+				<component
 					v-if="formControl.uiComponents.header && formInfo.designation"
+					:is="topHeadingTag"
 					:id="formTitleId"
 					class="form-header">
 					{{ formInfo.designation }}
-				</h1>
+				</component>
 
 				<div class="c-action-bar__menu">
 					<template
@@ -40,13 +41,10 @@
 									@click="btn.action">
 									<template v-if="btn.icon">
 										<q-badge-indicator
-											v-if="btn.badge && btn.badge.isVisible"
-											:color="btn.badge.color">
+											:enabled="btn.badge?.isVisible ?? false"
+											:color="btn.badge?.color">
 											<q-icon v-bind="btn.icon" />
 										</q-badge-indicator>
-										<q-icon
-											v-else
-											v-bind="btn.icon" />
 									</template>
 								</q-toggle-group-item>
 							</template>
@@ -97,6 +95,7 @@
 		<q-container
 			fluid
 			data-key="CAMPO"
+			:data-identifier="primaryKeyValue"
 			:data-loading="!formInitialDataLoaded || !isActiveForm">
 			<template v-if="formControl.initialized && showFormBody">
 				<q-row v-if="controls.CAMPO___AERO_NAME____.isVisible">
@@ -106,7 +105,8 @@
 						<base-input-structure
 							v-if="controls.CAMPO___AERO_NAME____.isVisible"
 							class="i-text"
-							v-bind="controls.CAMPO___AERO_NAME____"
+							v-bind="controls.CAMPO___AERO_NAME____.wrapperProps"
+							:id="getControlId(controls.CAMPO___AERO_NAME____)"
 							v-on="controls.CAMPO___AERO_NAME____.handlers"
 							:loading="controls.CAMPO___AERO_NAME____.props.loading"
 							:reporting-mode-on="reportingModeCAV"
@@ -114,6 +114,7 @@
 							<q-lookup
 								v-if="controls.CAMPO___AERO_NAME____.isVisible"
 								v-bind="controls.CAMPO___AERO_NAME____.props"
+								:id="getControlId(controls.CAMPO___AERO_NAME____)"
 								v-on="controls.CAMPO___AERO_NAME____.handlers" />
 							<q-see-more-campo-aero-name
 								v-if="controls.CAMPO___AERO_NAME____.seeMoreIsVisible"
@@ -129,7 +130,8 @@
 						<base-input-structure
 							v-if="controls.CAMPO___FLDS_DESCRIP_.isVisible"
 							class="i-textarea"
-							v-bind="controls.CAMPO___FLDS_DESCRIP_"
+							v-bind="controls.CAMPO___FLDS_DESCRIP_.wrapperProps"
+							:id="getControlId(controls.CAMPO___FLDS_DESCRIP_)"
 							v-on="controls.CAMPO___FLDS_DESCRIP_.handlers"
 							:loading="controls.CAMPO___FLDS_DESCRIP_.props.loading"
 							:reporting-mode-on="reportingModeCAV"
@@ -137,6 +139,7 @@
 							<q-text-area
 								v-if="controls.CAMPO___FLDS_DESCRIP_.isVisible"
 								v-bind="controls.CAMPO___FLDS_DESCRIP_.props"
+								:id="getControlId(controls.CAMPO___FLDS_DESCRIP_)"
 								v-on="controls.CAMPO___FLDS_DESCRIP_.handlers" />
 						</base-input-structure>
 					</q-col>
@@ -148,7 +151,8 @@
 						<base-input-structure
 							v-if="controls.CAMPO___FLDS_NPASSAGE.isVisible"
 							class="i-text"
-							v-bind="controls.CAMPO___FLDS_NPASSAGE"
+							v-bind="controls.CAMPO___FLDS_NPASSAGE.wrapperProps"
+							:id="getControlId(controls.CAMPO___FLDS_NPASSAGE)"
 							v-on="controls.CAMPO___FLDS_NPASSAGE.handlers"
 							:loading="controls.CAMPO___FLDS_NPASSAGE.props.loading"
 							:reporting-mode-on="reportingModeCAV"
@@ -156,6 +160,7 @@
 							<q-numeric-input
 								v-if="controls.CAMPO___FLDS_NPASSAGE.isVisible"
 								v-bind="controls.CAMPO___FLDS_NPASSAGE.props"
+								:id="getControlId(controls.CAMPO___FLDS_NPASSAGE)"
 								@update:model-value="model.ValNpassage.fnUpdateValue" />
 						</base-input-structure>
 					</q-col>
@@ -165,7 +170,8 @@
 						<base-input-structure
 							v-if="controls.CAMPO___FLDS_DURATION.isVisible"
 							class="i-text"
-							v-bind="controls.CAMPO___FLDS_DURATION"
+							v-bind="controls.CAMPO___FLDS_DURATION.wrapperProps"
+							:id="getControlId(controls.CAMPO___FLDS_DURATION)"
 							v-on="controls.CAMPO___FLDS_DURATION.handlers"
 							:loading="controls.CAMPO___FLDS_DURATION.props.loading"
 							:reporting-mode-on="reportingModeCAV"
@@ -173,6 +179,7 @@
 							<q-numeric-input
 								v-if="controls.CAMPO___FLDS_DURATION.isVisible"
 								v-bind="controls.CAMPO___FLDS_DURATION.props"
+								:id="getControlId(controls.CAMPO___FLDS_DURATION)"
 								@update:model-value="model.ValDuration.fnUpdateValue" />
 						</base-input-structure>
 					</q-col>
@@ -182,7 +189,8 @@
 						<base-input-structure
 							v-if="controls.CAMPO___FLDS_PRICE___.isVisible"
 							class="i-text"
-							v-bind="controls.CAMPO___FLDS_PRICE___"
+							v-bind="controls.CAMPO___FLDS_PRICE___.wrapperProps"
+							:id="getControlId(controls.CAMPO___FLDS_PRICE___)"
 							v-on="controls.CAMPO___FLDS_PRICE___.handlers"
 							:loading="controls.CAMPO___FLDS_PRICE___.props.loading"
 							:reporting-mode-on="reportingModeCAV"
@@ -190,6 +198,7 @@
 							<q-numeric-input
 								v-if="controls.CAMPO___FLDS_PRICE___.isVisible"
 								v-bind="controls.CAMPO___FLDS_PRICE___.props"
+								:id="getControlId(controls.CAMPO___FLDS_PRICE___)"
 								@update:model-value="model.ValPrice.fnUpdateValue" />
 						</base-input-structure>
 					</q-col>
@@ -199,7 +208,8 @@
 						<base-input-structure
 							v-if="controls.CAMPO___FLDS_PRECOBIL.isVisible"
 							class="i-text"
-							v-bind="controls.CAMPO___FLDS_PRECOBIL"
+							v-bind="controls.CAMPO___FLDS_PRECOBIL.wrapperProps"
+							:id="getControlId(controls.CAMPO___FLDS_PRECOBIL)"
 							v-on="controls.CAMPO___FLDS_PRECOBIL.handlers"
 							:loading="controls.CAMPO___FLDS_PRECOBIL.props.loading"
 							:reporting-mode-on="reportingModeCAV"
@@ -207,6 +217,7 @@
 							<q-numeric-input
 								v-if="controls.CAMPO___FLDS_PRECOBIL.isVisible"
 								v-bind="controls.CAMPO___FLDS_PRECOBIL.props"
+								:id="getControlId(controls.CAMPO___FLDS_PRECOBIL)"
 								@update:model-value="model.ValPrecobil.fnUpdateValue" />
 						</base-input-structure>
 					</q-col>
@@ -218,7 +229,8 @@
 						<base-input-structure
 							v-if="controls.CAMPO___FLDS_DATE____.isVisible"
 							class="i-text"
-							v-bind="controls.CAMPO___FLDS_DATE____"
+							v-bind="controls.CAMPO___FLDS_DATE____.wrapperProps"
+							:id="getControlId(controls.CAMPO___FLDS_DATE____)"
 							v-on="controls.CAMPO___FLDS_DATE____.handlers"
 							:loading="controls.CAMPO___FLDS_DATE____.props.loading"
 							:reporting-mode-on="reportingModeCAV"
@@ -226,6 +238,7 @@
 							<q-date-time-picker
 								v-if="controls.CAMPO___FLDS_DATE____.isVisible"
 								v-bind="controls.CAMPO___FLDS_DATE____.props"
+								:id="getControlId(controls.CAMPO___FLDS_DATE____)"
 								:model-value="model.ValDate.value"
 								@reset-icon-click="model.ValDate.fnUpdateValue(model.ValDate.originalValue ?? new Date())"
 								@update:model-value="model.ValDate.fnUpdateValue($event ?? '')" />
@@ -239,7 +252,8 @@
 						<base-input-structure
 							v-if="controls.CAMPO___FLDS_DATETIME.isVisible"
 							class="i-text"
-							v-bind="controls.CAMPO___FLDS_DATETIME"
+							v-bind="controls.CAMPO___FLDS_DATETIME.wrapperProps"
+							:id="getControlId(controls.CAMPO___FLDS_DATETIME)"
 							v-on="controls.CAMPO___FLDS_DATETIME.handlers"
 							:loading="controls.CAMPO___FLDS_DATETIME.props.loading"
 							:reporting-mode-on="reportingModeCAV"
@@ -247,6 +261,7 @@
 							<q-date-time-picker
 								v-if="controls.CAMPO___FLDS_DATETIME.isVisible"
 								v-bind="controls.CAMPO___FLDS_DATETIME.props"
+								:id="getControlId(controls.CAMPO___FLDS_DATETIME)"
 								:model-value="model.ValDatetime.value"
 								@reset-icon-click="model.ValDatetime.fnUpdateValue(model.ValDatetime.originalValue ?? new Date())"
 								@update:model-value="model.ValDatetime.fnUpdateValue($event ?? '')" />
@@ -260,7 +275,8 @@
 						<base-input-structure
 							v-if="controls.CAMPO___FLDS_DATESECO.isVisible"
 							class="i-text"
-							v-bind="controls.CAMPO___FLDS_DATESECO"
+							v-bind="controls.CAMPO___FLDS_DATESECO.wrapperProps"
+							:id="getControlId(controls.CAMPO___FLDS_DATESECO)"
 							v-on="controls.CAMPO___FLDS_DATESECO.handlers"
 							:loading="controls.CAMPO___FLDS_DATESECO.props.loading"
 							:reporting-mode-on="reportingModeCAV"
@@ -268,6 +284,7 @@
 							<q-date-time-picker
 								v-if="controls.CAMPO___FLDS_DATESECO.isVisible"
 								v-bind="controls.CAMPO___FLDS_DATESECO.props"
+								:id="getControlId(controls.CAMPO___FLDS_DATESECO)"
 								:model-value="model.ValDateseco.value"
 								@reset-icon-click="model.ValDateseco.fnUpdateValue(model.ValDateseco.originalValue ?? new Date())"
 								@update:model-value="model.ValDateseco.fnUpdateValue($event ?? '')" />
@@ -281,7 +298,8 @@
 						<base-input-structure
 							v-if="controls.CAMPO___FLDS_TIME____.isVisible"
 							class="i-text"
-							v-bind="controls.CAMPO___FLDS_TIME____"
+							v-bind="controls.CAMPO___FLDS_TIME____.wrapperProps"
+							:id="getControlId(controls.CAMPO___FLDS_TIME____)"
 							v-on="controls.CAMPO___FLDS_TIME____.handlers"
 							:loading="controls.CAMPO___FLDS_TIME____.props.loading"
 							:reporting-mode-on="reportingModeCAV"
@@ -289,6 +307,7 @@
 							<q-date-time-picker
 								v-if="controls.CAMPO___FLDS_TIME____.isVisible"
 								v-bind="controls.CAMPO___FLDS_TIME____.props"
+								:id="getControlId(controls.CAMPO___FLDS_TIME____)"
 								:model-value="model.ValTime.value"
 								@reset-icon-click="model.ValTime.fnUpdateValue(model.ValTime.originalValue ?? new Date())"
 								@update:model-value="model.ValTime.fnUpdateValue($event ?? '')" />
@@ -302,7 +321,8 @@
 						<base-input-structure
 							v-if="controls.CAMPO___FLDS_YEAR____.isVisible"
 							class="i-text"
-							v-bind="controls.CAMPO___FLDS_YEAR____"
+							v-bind="controls.CAMPO___FLDS_YEAR____.wrapperProps"
+							:id="getControlId(controls.CAMPO___FLDS_YEAR____)"
 							v-on="controls.CAMPO___FLDS_YEAR____.handlers"
 							:loading="controls.CAMPO___FLDS_YEAR____.props.loading"
 							:reporting-mode-on="reportingModeCAV"
@@ -310,6 +330,7 @@
 							<q-numeric-input
 								v-if="controls.CAMPO___FLDS_YEAR____.isVisible"
 								v-bind="controls.CAMPO___FLDS_YEAR____.props"
+								:id="getControlId(controls.CAMPO___FLDS_YEAR____)"
 								@update:model-value="model.ValYear.fnUpdateValue" />
 						</base-input-structure>
 					</q-col>
@@ -320,8 +341,9 @@
 						cols="auto">
 						<base-input-structure
 							v-if="controls.CAMPO___FLDS_PRIMVIAG.isVisible"
-							class="i-checkbox"
-							v-bind="controls.CAMPO___FLDS_PRIMVIAG"
+							class="i-text"
+							v-bind="controls.CAMPO___FLDS_PRIMVIAG.wrapperProps"
+							:id="getControlId(controls.CAMPO___FLDS_PRIMVIAG)"
 							v-on="controls.CAMPO___FLDS_PRIMVIAG.handlers"
 							:loading="controls.CAMPO___FLDS_PRIMVIAG.props.loading"
 							:reporting-mode-on="reportingModeCAV"
@@ -330,6 +352,7 @@
 								<q-checkbox
 									v-if="controls.CAMPO___FLDS_PRIMVIAG.isVisible"
 									v-bind="controls.CAMPO___FLDS_PRIMVIAG.props"
+									:id="getControlId(controls.CAMPO___FLDS_PRIMVIAG)"
 									v-on="controls.CAMPO___FLDS_PRIMVIAG.handlers" />
 							</template>
 						</base-input-structure>
@@ -340,7 +363,8 @@
 						<base-input-structure
 							v-if="controls.CAMPO___FLDS_CONDITIO.isVisible"
 							class="i-text"
-							v-bind="controls.CAMPO___FLDS_CONDITIO"
+							v-bind="controls.CAMPO___FLDS_CONDITIO.wrapperProps"
+							:id="getControlId(controls.CAMPO___FLDS_CONDITIO)"
 							v-on="controls.CAMPO___FLDS_CONDITIO.handlers"
 							:loading="controls.CAMPO___FLDS_CONDITIO.props.loading"
 							:reporting-mode-on="reportingModeCAV"
@@ -349,6 +373,7 @@
 								<q-checkbox
 									v-if="controls.CAMPO___FLDS_CONDITIO.isVisible"
 									v-bind="controls.CAMPO___FLDS_CONDITIO.props"
+									:id="getControlId(controls.CAMPO___FLDS_CONDITIO)"
 									v-on="controls.CAMPO___FLDS_CONDITIO.handlers" />
 							</template>
 						</base-input-structure>
@@ -361,7 +386,8 @@
 						<base-input-structure
 							v-if="controls.CAMPO___FLDS_CLASS___.isVisible"
 							class="i-text"
-							v-bind="controls.CAMPO___FLDS_CLASS___"
+							v-bind="controls.CAMPO___FLDS_CLASS___.wrapperProps"
+							:id="getControlId(controls.CAMPO___FLDS_CLASS___)"
 							v-on="controls.CAMPO___FLDS_CLASS___.handlers"
 							:loading="controls.CAMPO___FLDS_CLASS___.props.loading"
 							:reporting-mode-on="reportingModeCAV"
@@ -369,6 +395,7 @@
 							<q-select
 								v-if="controls.CAMPO___FLDS_CLASS___.isVisible"
 								v-bind="controls.CAMPO___FLDS_CLASS___.props"
+								:id="getControlId(controls.CAMPO___FLDS_CLASS___)"
 								@update:model-value="model.ValClass.fnUpdateValue" />
 						</base-input-structure>
 					</q-col>
@@ -380,7 +407,8 @@
 						<base-input-structure
 							v-if="controls.CAMPO___FLDS_CLASSNUM.isVisible"
 							class="i-text"
-							v-bind="controls.CAMPO___FLDS_CLASSNUM"
+							v-bind="controls.CAMPO___FLDS_CLASSNUM.wrapperProps"
+							:id="getControlId(controls.CAMPO___FLDS_CLASSNUM)"
 							v-on="controls.CAMPO___FLDS_CLASSNUM.handlers"
 							:loading="controls.CAMPO___FLDS_CLASSNUM.props.loading"
 							:reporting-mode-on="reportingModeCAV"
@@ -388,6 +416,7 @@
 							<q-select
 								v-if="controls.CAMPO___FLDS_CLASSNUM.isVisible"
 								v-bind="controls.CAMPO___FLDS_CLASSNUM.props"
+								:id="getControlId(controls.CAMPO___FLDS_CLASSNUM)"
 								@update:model-value="model.ValClassnum.fnUpdateValue" />
 						</base-input-structure>
 					</q-col>
@@ -399,7 +428,8 @@
 						<base-input-structure
 							v-if="controls.CAMPO___FLDS_LOGICENU.isVisible"
 							class="i-text"
-							v-bind="controls.CAMPO___FLDS_LOGICENU"
+							v-bind="controls.CAMPO___FLDS_LOGICENU.wrapperProps"
+							:id="getControlId(controls.CAMPO___FLDS_LOGICENU)"
 							v-on="controls.CAMPO___FLDS_LOGICENU.handlers"
 							:loading="controls.CAMPO___FLDS_LOGICENU.props.loading"
 							:reporting-mode-on="reportingModeCAV"
@@ -407,6 +437,7 @@
 							<q-switch
 								v-if="controls.CAMPO___FLDS_LOGICENU.isVisible"
 								v-bind="controls.CAMPO___FLDS_LOGICENU.props"
+								:id="getControlId(controls.CAMPO___FLDS_LOGICENU)"
 								v-on="controls.CAMPO___FLDS_LOGICENU.handlers" />
 						</base-input-structure>
 					</q-col>
@@ -418,7 +449,8 @@
 						<base-input-structure
 							v-if="controls.CAMPO___FLDS_LOGO____.isVisible"
 							class="q-image"
-							v-bind="controls.CAMPO___FLDS_LOGO____"
+							v-bind="controls.CAMPO___FLDS_LOGO____.wrapperProps"
+							:id="getControlId(controls.CAMPO___FLDS_LOGO____)"
 							v-on="controls.CAMPO___FLDS_LOGO____.handlers"
 							:loading="controls.CAMPO___FLDS_LOGO____.props.loading"
 							:reporting-mode-on="reportingModeCAV"
@@ -426,6 +458,7 @@
 							<q-image
 								v-if="controls.CAMPO___FLDS_LOGO____.isVisible"
 								v-bind="controls.CAMPO___FLDS_LOGO____.props"
+								:id="getControlId(controls.CAMPO___FLDS_LOGO____)"
 								v-on="controls.CAMPO___FLDS_LOGO____.handlers" />
 						</base-input-structure>
 					</q-col>
@@ -437,7 +470,8 @@
 						<base-input-structure
 							v-if="controls.CAMPO___FLDS_ATTACH__.isVisible"
 							class="i-text"
-							v-bind="controls.CAMPO___FLDS_ATTACH__"
+							v-bind="controls.CAMPO___FLDS_ATTACH__.wrapperProps"
+							:id="getControlId(controls.CAMPO___FLDS_ATTACH__)"
 							v-on="controls.CAMPO___FLDS_ATTACH__.handlers"
 							:loading="controls.CAMPO___FLDS_ATTACH__.props.loading"
 							:reporting-mode-on="reportingModeCAV"
@@ -445,6 +479,7 @@
 							<q-document
 								v-if="controls.CAMPO___FLDS_ATTACH__.isVisible"
 								v-bind="controls.CAMPO___FLDS_ATTACH__.props"
+								:id="getControlId(controls.CAMPO___FLDS_ATTACH__)"
 								v-on="controls.CAMPO___FLDS_ATTACH__.handlers" />
 						</base-input-structure>
 					</q-col>
@@ -456,13 +491,15 @@
 						<base-input-structure
 							v-if="controls.CAMPO___FLDS_CREATUSE.isVisible"
 							class="i-text"
-							v-bind="controls.CAMPO___FLDS_CREATUSE"
+							v-bind="controls.CAMPO___FLDS_CREATUSE.wrapperProps"
+							:id="getControlId(controls.CAMPO___FLDS_CREATUSE)"
 							v-on="controls.CAMPO___FLDS_CREATUSE.handlers"
 							:loading="controls.CAMPO___FLDS_CREATUSE.props.loading"
 							:reporting-mode-on="reportingModeCAV"
 							:suggestion-mode-on="suggestionModeOn">
 							<q-text-field
 								v-bind="controls.CAMPO___FLDS_CREATUSE.props"
+								:id="getControlId(controls.CAMPO___FLDS_CREATUSE)"
 								@blur="onBlur(controls.CAMPO___FLDS_CREATUSE, model.ValCreatuse.value)"
 								@change="model.ValCreatuse.fnUpdateValueOnChange" />
 						</base-input-structure>
@@ -473,7 +510,8 @@
 						<base-input-structure
 							v-if="controls.CAMPO___FLDS_CREATDAT.isVisible"
 							class="i-text"
-							v-bind="controls.CAMPO___FLDS_CREATDAT"
+							v-bind="controls.CAMPO___FLDS_CREATDAT.wrapperProps"
+							:id="getControlId(controls.CAMPO___FLDS_CREATDAT)"
 							v-on="controls.CAMPO___FLDS_CREATDAT.handlers"
 							:loading="controls.CAMPO___FLDS_CREATDAT.props.loading"
 							:reporting-mode-on="reportingModeCAV"
@@ -481,6 +519,7 @@
 							<q-date-time-picker
 								v-if="controls.CAMPO___FLDS_CREATDAT.isVisible"
 								v-bind="controls.CAMPO___FLDS_CREATDAT.props"
+								:id="getControlId(controls.CAMPO___FLDS_CREATDAT)"
 								:model-value="model.ValCreatdat.value"
 								@reset-icon-click="model.ValCreatdat.fnUpdateValue(model.ValCreatdat.originalValue ?? new Date())"
 								@update:model-value="model.ValCreatdat.fnUpdateValue($event ?? '')" />
@@ -492,7 +531,8 @@
 						<base-input-structure
 							v-if="controls.CAMPO___FLDS_CREATHOU.isVisible"
 							class="i-text"
-							v-bind="controls.CAMPO___FLDS_CREATHOU"
+							v-bind="controls.CAMPO___FLDS_CREATHOU.wrapperProps"
+							:id="getControlId(controls.CAMPO___FLDS_CREATHOU)"
 							v-on="controls.CAMPO___FLDS_CREATHOU.handlers"
 							:loading="controls.CAMPO___FLDS_CREATHOU.props.loading"
 							:reporting-mode-on="reportingModeCAV"
@@ -500,6 +540,7 @@
 							<q-date-time-picker
 								v-if="controls.CAMPO___FLDS_CREATHOU.isVisible"
 								v-bind="controls.CAMPO___FLDS_CREATHOU.props"
+								:id="getControlId(controls.CAMPO___FLDS_CREATHOU)"
 								:model-value="model.ValCreathou.value"
 								@reset-icon-click="model.ValCreathou.fnUpdateValue(model.ValCreathou.originalValue ?? new Date())"
 								@update:model-value="model.ValCreathou.fnUpdateValue($event ?? '')" />
@@ -513,7 +554,8 @@
 						<base-input-structure
 							v-if="controls.CAMPO___FLDS_CREATINS.isVisible"
 							class="i-text"
-							v-bind="controls.CAMPO___FLDS_CREATINS"
+							v-bind="controls.CAMPO___FLDS_CREATINS.wrapperProps"
+							:id="getControlId(controls.CAMPO___FLDS_CREATINS)"
 							v-on="controls.CAMPO___FLDS_CREATINS.handlers"
 							:loading="controls.CAMPO___FLDS_CREATINS.props.loading"
 							:reporting-mode-on="reportingModeCAV"
@@ -521,6 +563,7 @@
 							<q-date-time-picker
 								v-if="controls.CAMPO___FLDS_CREATINS.isVisible"
 								v-bind="controls.CAMPO___FLDS_CREATINS.props"
+								:id="getControlId(controls.CAMPO___FLDS_CREATINS)"
 								:model-value="model.ValCreatins.value"
 								@reset-icon-click="model.ValCreatins.fnUpdateValue(model.ValCreatins.originalValue ?? new Date())"
 								@update:model-value="model.ValCreatins.fnUpdateValue($event ?? '')" />
@@ -531,7 +574,7 @@
 		</q-container>
 	</teleport>
 
-	<hr v-if="!isPopup && showFormFooter" />
+	<q-divider v-if="!isPopup && showFormFooter" />
 
 	<teleport
 		v-if="formModalIsReady && showFormFooter"
@@ -1075,8 +1118,8 @@
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						maxLength: 2,
 						arrayName: 'CLASS',
-						helpShortItem: '',
-						helpDetailedItem: '',
+						helpShortItem: 'None',
+						helpDetailedItem: 'None',
 						controlLimits: [
 						],
 					}, this),
@@ -1092,8 +1135,8 @@
 						maxIntegers: 1,
 						maxDecimals: 0,
 						arrayName: 'CLASSNUM',
-						helpShortItem: '',
-						helpDetailedItem: '',
+						helpShortItem: 'None',
+						helpDetailedItem: 'None',
 						controlLimits: [
 						],
 					}, this),
@@ -1233,8 +1276,6 @@
 						set ValCodaero(value) { vm.model.ValCodaero.updateValue(value) },
 						get ValCodequip() { return vm.model.ValCodequip.value },
 						set ValCodequip(value) { vm.model.ValCodequip.updateValue(value) },
-						get ValCond() { return vm.model.ValCond.value },
-						set ValCond(value) { vm.model.ValCond.updateValue(value) },
 						get ValConditio() { return vm.model.ValConditio.value },
 						set ValConditio(value) { vm.model.ValConditio.updateValue(value) },
 						get ValCreatdat() { return vm.model.ValCreatdat.value },
@@ -1267,8 +1308,6 @@
 						set ValPrice(value) { vm.model.ValPrice.updateValue(value) },
 						get ValPrimviag() { return vm.model.ValPrimviag.value },
 						set ValPrimviag(value) { vm.model.ValPrimviag.updateValue(value) },
-						get ValTblcond() { return vm.model.ValTblcond.value },
-						set ValTblcond(value) { vm.model.ValTblcond.updateValue(value) },
 						get ValTime() { return vm.model.ValTime.value },
 						set ValTime(value) { vm.model.ValTime.updateValue(value) },
 						get ValYear() { return vm.model.ValYear.value },
@@ -1626,7 +1665,6 @@
 
 				this.afterControlUpdate(controlField, fieldValue)
 			},
-
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
 // USE /[MANUAL GQT FUNCTIONS_JS CAMPO]/
 // eslint-disable-next-line

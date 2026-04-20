@@ -73,6 +73,7 @@ export default class ViewModel extends FormViewModelBase
 			field: 'NAME',
 			maxLength: 85,
 			description: computed(() => this.Resources.IDENTIFICATION_NAME16317),
+			ignoreFldSubmit: true,
 		}).cloneFrom(values?.TableAssetName))
 		this.stopWatchers.push(watch(() => this.TableAssetName.value, (newValue, oldValue) => this.onUpdate('asset.name', this.TableAssetName, newValue, oldValue)))
 
@@ -118,6 +119,7 @@ export default class ViewModel extends FormViewModelBase
 			field: 'DOCUMENTFK'
 		}).cloneFrom(values?.ValDocumentfk))
 		this.stopWatchers.push(watch(() => this.ValDocumentfk.value, (newValue, oldValue) => this.onUpdate('attac.documentfk', this.ValDocumentfk, newValue, oldValue)))
+
 		this.ValDocumentData = reactive(new modelFieldType.DocumentData({
 			id: 'ValDocumentData',
 			area: 'ATTAC',

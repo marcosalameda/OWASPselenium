@@ -146,7 +146,7 @@ namespace GenioMVC.ViewModels
 				if (!string.IsNullOrWhiteSpace(json))
 				{
 					var options = System.Text.Json.JsonSerializer.Deserialize<CalendarVariables>(json);
-					if (options != null /*&& this.IsInsideCalendar */ && options.HasCalendarFields)
+					if (options != null && options.HasCalendarFields)
 					{
 						if (!string.IsNullOrWhiteSpace(options.startDateField))
 							SetViewModelValue(options.startDateField.ToLower(), options.DateStart);
@@ -167,9 +167,8 @@ namespace GenioMVC.ViewModels
 					// Remove the history entry after it has already been used.
 					Navigation.ClearValue("CalendarOptions", true);
 				}
-
 			}
-			catch(System.Exception e)
+			catch (System.Exception e)
 			{
 				Log.Error("LoadCalendarValues: " + e.Message);
 			}

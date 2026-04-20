@@ -9,7 +9,7 @@
 			:rows="1"
 			:cols="10"
 			:size="size"
-			:classes="classes"
+			:class="classes"
 			:disabled="options.disabled"
 			:readonly="options.readonly"
 			:model-value="value"

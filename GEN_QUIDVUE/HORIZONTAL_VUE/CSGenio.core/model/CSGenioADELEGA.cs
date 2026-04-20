@@ -88,7 +88,6 @@ namespace CSGenio.business
 			// Automatic audit stamps in BD
             //------------------------------
 
-
 			return info;
 		}
 		

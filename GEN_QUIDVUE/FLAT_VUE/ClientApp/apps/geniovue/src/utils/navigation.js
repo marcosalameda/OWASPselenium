@@ -13,7 +13,7 @@ export function goBack(navigationId = 'main', hasInitialPHE = false)
 	const systemDataStore = useSystemDataStore()
 	const navDataStore = useNavDataStore()
 	const navigation = navDataStore.navigation.getHistory(navigationId)
-	var currentLevelWasEmpty = false
+	let currentLevelWasEmpty = false
 
 	if (navigation.currentLevel === null)
 	{

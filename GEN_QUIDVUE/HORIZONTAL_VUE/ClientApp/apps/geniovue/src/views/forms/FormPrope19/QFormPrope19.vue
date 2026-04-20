@@ -9,12 +9,13 @@
 			<div
 				v-if="showFormHeader"
 				class="c-action-bar">
-				<h1
+				<component
 					v-if="formControl.uiComponents.header && formInfo.designation"
+					:is="topHeadingTag"
 					:id="formTitleId"
 					class="form-header">
 					{{ formInfo.designation }}
-				</h1>
+				</component>
 
 				<div class="c-action-bar__menu">
 					<template
@@ -40,13 +41,10 @@
 									@click="btn.action">
 									<template v-if="btn.icon">
 										<q-badge-indicator
-											v-if="btn.badge && btn.badge.isVisible"
-											:color="btn.badge.color">
+											:enabled="btn.badge?.isVisible ?? false"
+											:color="btn.badge?.color">
 											<q-icon v-bind="btn.icon" />
 										</q-badge-indicator>
-										<q-icon
-											v-else
-											v-bind="btn.icon" />
 									</template>
 								</q-toggle-group-item>
 							</template>
@@ -97,6 +95,7 @@
 		<q-container
 			fluid
 			data-key="PROPE19"
+			:data-identifier="primaryKeyValue"
 			:data-loading="!formInitialDataLoaded || !isActiveForm">
 			<template v-if="formControl.initialized && showFormBody">
 				<q-row v-if="controls.PROPE19_PROPEORDER___.isVisible">
@@ -106,7 +105,8 @@
 						<base-input-structure
 							v-if="controls.PROPE19_PROPEORDER___.isVisible"
 							class="i-text"
-							v-bind="controls.PROPE19_PROPEORDER___"
+							v-bind="controls.PROPE19_PROPEORDER___.wrapperProps"
+							:id="getControlId(controls.PROPE19_PROPEORDER___)"
 							v-on="controls.PROPE19_PROPEORDER___.handlers"
 							:loading="controls.PROPE19_PROPEORDER___.props.loading"
 							:reporting-mode-on="reportingModeCAV"
@@ -114,6 +114,7 @@
 							<q-numeric-input
 								v-if="controls.PROPE19_PROPEORDER___.isVisible"
 								v-bind="controls.PROPE19_PROPEORDER___.props"
+								:id="getControlId(controls.PROPE19_PROPEORDER___)"
 								@update:model-value="model.ValOrder.fnUpdateValue" />
 						</base-input-structure>
 					</q-col>
@@ -124,9 +125,9 @@
 						cols="auto">
 						<q-group-box-container
 							v-if="controls.PROPE19_PSEUDMAININF_.isVisible"
-							id="PROPE19_PSEUDMAININF_"
 							v-bind="controls.PROPE19_PSEUDMAININF_"
-							:is-visible="controls.PROPE19_PSEUDMAININF_.isVisible">
+							:id="getControlId(controls.PROPE19_PSEUDMAININF_)"
+							:no-border="controls.PROPE19_PSEUDMAININF_.borderless">
 							<!-- Start PROPE19_PSEUDMAININF_ -->
 							<q-row v-if="controls.PROPE19_PROPEPHOTO___.isVisible">
 								<q-col
@@ -135,7 +136,8 @@
 									<base-input-structure
 										v-if="controls.PROPE19_PROPEPHOTO___.isVisible"
 										class="q-image"
-										v-bind="controls.PROPE19_PROPEPHOTO___"
+										v-bind="controls.PROPE19_PROPEPHOTO___.wrapperProps"
+										:id="getControlId(controls.PROPE19_PROPEPHOTO___)"
 										v-on="controls.PROPE19_PROPEPHOTO___.handlers"
 										:loading="controls.PROPE19_PROPEPHOTO___.props.loading"
 										:reporting-mode-on="reportingModeCAV"
@@ -143,6 +145,7 @@
 										<q-image
 											v-if="controls.PROPE19_PROPEPHOTO___.isVisible"
 											v-bind="controls.PROPE19_PROPEPHOTO___.props"
+											:id="getControlId(controls.PROPE19_PROPEPHOTO___)"
 											v-on="controls.PROPE19_PROPEPHOTO___.handlers" />
 									</base-input-structure>
 								</q-col>
@@ -154,13 +157,15 @@
 									<base-input-structure
 										v-if="controls.PROPE19_PROPETITLE___.isVisible"
 										class="i-text"
-										v-bind="controls.PROPE19_PROPETITLE___"
+										v-bind="controls.PROPE19_PROPETITLE___.wrapperProps"
+										:id="getControlId(controls.PROPE19_PROPETITLE___)"
 										v-on="controls.PROPE19_PROPETITLE___.handlers"
 										:loading="controls.PROPE19_PROPETITLE___.props.loading"
 										:reporting-mode-on="reportingModeCAV"
 										:suggestion-mode-on="suggestionModeOn">
 										<q-text-field
 											v-bind="controls.PROPE19_PROPETITLE___.props"
+											:id="getControlId(controls.PROPE19_PROPETITLE___)"
 											@blur="onBlur(controls.PROPE19_PROPETITLE___, model.ValTitle.value)"
 											@change="model.ValTitle.fnUpdateValueOnChange" />
 									</base-input-structure>
@@ -173,7 +178,8 @@
 									<base-input-structure
 										v-if="controls.PROPE19_PROPEPRICE___.isVisible"
 										class="i-text"
-										v-bind="controls.PROPE19_PROPEPRICE___"
+										v-bind="controls.PROPE19_PROPEPRICE___.wrapperProps"
+										:id="getControlId(controls.PROPE19_PROPEPRICE___)"
 										v-on="controls.PROPE19_PROPEPRICE___.handlers"
 										:loading="controls.PROPE19_PROPEPRICE___.props.loading"
 										:reporting-mode-on="reportingModeCAV"
@@ -181,6 +187,7 @@
 										<q-numeric-input
 											v-if="controls.PROPE19_PROPEPRICE___.isVisible"
 											v-bind="controls.PROPE19_PROPEPRICE___.props"
+											:id="getControlId(controls.PROPE19_PROPEPRICE___)"
 											@update:model-value="model.ValPrice.fnUpdateValue" />
 									</base-input-structure>
 								</q-col>
@@ -192,7 +199,8 @@
 									<base-input-structure
 										v-if="controls.PROPE19_PROPEDESCRIPT.isVisible"
 										class="i-textarea"
-										v-bind="controls.PROPE19_PROPEDESCRIPT"
+										v-bind="controls.PROPE19_PROPEDESCRIPT.wrapperProps"
+										:id="getControlId(controls.PROPE19_PROPEDESCRIPT)"
 										v-on="controls.PROPE19_PROPEDESCRIPT.handlers"
 										:loading="controls.PROPE19_PROPEDESCRIPT.props.loading"
 										:reporting-mode-on="reportingModeCAV"
@@ -200,6 +208,7 @@
 										<q-text-area
 											v-if="controls.PROPE19_PROPEDESCRIPT.isVisible"
 											v-bind="controls.PROPE19_PROPEDESCRIPT.props"
+											:id="getControlId(controls.PROPE19_PROPEDESCRIPT)"
 											v-on="controls.PROPE19_PROPEDESCRIPT.handlers" />
 									</base-input-structure>
 								</q-col>
@@ -214,12 +223,12 @@
 						cols="auto">
 						<q-accordion
 							v-if="controls.PROPE19_PSEUDACC01___.isVisible"
-							id="PROPE19_PSEUDACC01___"
+							:id="getControlId(controls.PROPE19_PSEUDACC01___)"
 							v-model="controls.PROPE19_PSEUDACC01___.openChild">
 							<!-- Start PROPE19_PSEUDACC01___ -->
 							<q-accordion-item
 								v-if="controls.PROPE19_PSEUDLOCALIZA.isVisible"
-								id="PROPE19_PSEUDLOCALIZA-container"
+								:id="getControlId(controls.PROPE19_PSEUDLOCALIZA) + '-container'"
 								value="PROPE19_PSEUDLOCALIZA"
 								:title="controls.PROPE19_PSEUDLOCALIZA.label">
 								<!-- Start PROPE19_PSEUDLOCALIZA -->
@@ -230,7 +239,8 @@
 										<base-input-structure
 											v-if="controls.PROPE19_CITY_CITY____.isVisible"
 											class="i-text"
-											v-bind="controls.PROPE19_CITY_CITY____"
+											v-bind="controls.PROPE19_CITY_CITY____.wrapperProps"
+											:id="getControlId(controls.PROPE19_CITY_CITY____)"
 											v-on="controls.PROPE19_CITY_CITY____.handlers"
 											:loading="controls.PROPE19_CITY_CITY____.props.loading"
 											:reporting-mode-on="reportingModeCAV"
@@ -238,6 +248,7 @@
 											<q-lookup
 												v-if="controls.PROPE19_CITY_CITY____.isVisible"
 												v-bind="controls.PROPE19_CITY_CITY____.props"
+												:id="getControlId(controls.PROPE19_CITY_CITY____)"
 												v-on="controls.PROPE19_CITY_CITY____.handlers" />
 											<q-see-more-prope19-city-city
 												v-if="controls.PROPE19_CITY_CITY____.seeMoreIsVisible"
@@ -253,13 +264,15 @@
 										<base-input-structure
 											v-if="controls.PROPE19_CTRY_COUNTRY_.isVisible"
 											class="i-text"
-											v-bind="controls.PROPE19_CTRY_COUNTRY_"
+											v-bind="controls.PROPE19_CTRY_COUNTRY_.wrapperProps"
+											:id="getControlId(controls.PROPE19_CTRY_COUNTRY_)"
 											v-on="controls.PROPE19_CTRY_COUNTRY_.handlers"
 											:loading="controls.PROPE19_CTRY_COUNTRY_.props.loading"
 											:reporting-mode-on="reportingModeCAV"
 											:suggestion-mode-on="suggestionModeOn">
 											<q-text-field
 												v-bind="controls.PROPE19_CTRY_COUNTRY_.props"
+												:id="getControlId(controls.PROPE19_CTRY_COUNTRY_)"
 												@blur="onBlur(controls.PROPE19_CTRY_COUNTRY_, model.CityCtryValCountry.value)"
 												@change="model.CityCtryValCountry.fnUpdateValueOnChange" />
 										</base-input-structure>
@@ -269,7 +282,7 @@
 							</q-accordion-item>
 							<q-accordion-item
 								v-if="controls.PROPE19_PSEUDDETAILS_.isVisible"
-								id="PROPE19_PSEUDDETAILS_-container"
+								:id="getControlId(controls.PROPE19_PSEUDDETAILS_) + '-container'"
 								value="PROPE19_PSEUDDETAILS_"
 								:title="controls.PROPE19_PSEUDDETAILS_.label">
 								<!-- Start PROPE19_PSEUDDETAILS_ -->
@@ -280,7 +293,8 @@
 										<base-input-structure
 											v-if="controls.PROPE19_PROPEBUILDTYP.isVisible"
 											class="i-text"
-											v-bind="controls.PROPE19_PROPEBUILDTYP"
+											v-bind="controls.PROPE19_PROPEBUILDTYP.wrapperProps"
+											:id="getControlId(controls.PROPE19_PROPEBUILDTYP)"
 											v-on="controls.PROPE19_PROPEBUILDTYP.handlers"
 											:loading="controls.PROPE19_PROPEBUILDTYP.props.loading"
 											:reporting-mode-on="reportingModeCAV"
@@ -288,12 +302,14 @@
 											<q-select
 												v-if="controls.PROPE19_PROPEBUILDTYP.isVisible"
 												v-bind="controls.PROPE19_PROPEBUILDTYP.props"
+												:id="getControlId(controls.PROPE19_PROPEBUILDTYP)"
 												@update:model-value="model.ValBuildtyp.fnUpdateValue" />
 										</base-input-structure>
 										<base-input-structure
 											v-if="controls.PROPE19_PROPEGRNDSIZE.isVisible"
 											class="i-text"
-											v-bind="controls.PROPE19_PROPEGRNDSIZE"
+											v-bind="controls.PROPE19_PROPEGRNDSIZE.wrapperProps"
+											:id="getControlId(controls.PROPE19_PROPEGRNDSIZE)"
 											v-on="controls.PROPE19_PROPEGRNDSIZE.handlers"
 											:loading="controls.PROPE19_PROPEGRNDSIZE.props.loading"
 											:reporting-mode-on="reportingModeCAV"
@@ -301,6 +317,7 @@
 											<q-numeric-input
 												v-if="controls.PROPE19_PROPEGRNDSIZE.isVisible"
 												v-bind="controls.PROPE19_PROPEGRNDSIZE.props"
+												:id="getControlId(controls.PROPE19_PROPEGRNDSIZE)"
 												@update:model-value="model.ValGrndsize.fnUpdateValue" />
 										</base-input-structure>
 									</q-col>
@@ -312,7 +329,8 @@
 										<base-input-structure
 											v-if="controls.PROPE19_PROPEFLOORNUM.isVisible"
 											class="i-text"
-											v-bind="controls.PROPE19_PROPEFLOORNUM"
+											v-bind="controls.PROPE19_PROPEFLOORNUM.wrapperProps"
+											:id="getControlId(controls.PROPE19_PROPEFLOORNUM)"
 											v-on="controls.PROPE19_PROPEFLOORNUM.handlers"
 											:loading="controls.PROPE19_PROPEFLOORNUM.props.loading"
 											:reporting-mode-on="reportingModeCAV"
@@ -320,6 +338,7 @@
 											<q-numeric-input
 												v-if="controls.PROPE19_PROPEFLOORNUM.isVisible"
 												v-bind="controls.PROPE19_PROPEFLOORNUM.props"
+												:id="getControlId(controls.PROPE19_PROPEFLOORNUM)"
 												@update:model-value="model.ValFloornum.fnUpdateValue" />
 										</base-input-structure>
 									</q-col>
@@ -331,7 +350,8 @@
 										<base-input-structure
 											v-if="controls.PROPE19_PROPETYPOLOGY.isVisible"
 											class="i-radio-container"
-											v-bind="controls.PROPE19_PROPETYPOLOGY"
+											v-bind="controls.PROPE19_PROPETYPOLOGY.wrapperProps"
+											:id="getControlId(controls.PROPE19_PROPETYPOLOGY)"
 											v-on="controls.PROPE19_PROPETYPOLOGY.handlers"
 											:label-position="labelAlignment.topleft"
 											:loading="controls.PROPE19_PROPETYPOLOGY.props.loading"
@@ -340,6 +360,7 @@
 											<q-radio-group
 												v-if="controls.PROPE19_PROPETYPOLOGY.isVisible"
 												v-bind="controls.PROPE19_PROPETYPOLOGY.props"
+												:id="getControlId(controls.PROPE19_PROPETYPOLOGY)"
 												v-on="controls.PROPE19_PROPETYPOLOGY.handlers">
 												<q-radio-button
 													v-for="radio in controls.PROPE19_PROPETYPOLOGY.items"
@@ -357,7 +378,8 @@
 										<base-input-structure
 											v-if="controls.PROPE19_PROPESIZE____.isVisible"
 											class="i-text"
-											v-bind="controls.PROPE19_PROPESIZE____"
+											v-bind="controls.PROPE19_PROPESIZE____.wrapperProps"
+											:id="getControlId(controls.PROPE19_PROPESIZE____)"
 											v-on="controls.PROPE19_PROPESIZE____.handlers"
 											:loading="controls.PROPE19_PROPESIZE____.props.loading"
 											:reporting-mode-on="reportingModeCAV"
@@ -365,6 +387,7 @@
 											<q-numeric-input
 												v-if="controls.PROPE19_PROPESIZE____.isVisible"
 												v-bind="controls.PROPE19_PROPESIZE____.props"
+												:id="getControlId(controls.PROPE19_PROPESIZE____)"
 												@update:model-value="model.ValSize.fnUpdateValue" />
 										</base-input-structure>
 									</q-col>
@@ -376,7 +399,8 @@
 										<base-input-structure
 											v-if="controls.PROPE19_PROPEBATHRMS_.isVisible"
 											class="i-text"
-											v-bind="controls.PROPE19_PROPEBATHRMS_"
+											v-bind="controls.PROPE19_PROPEBATHRMS_.wrapperProps"
+											:id="getControlId(controls.PROPE19_PROPEBATHRMS_)"
 											v-on="controls.PROPE19_PROPEBATHRMS_.handlers"
 											:loading="controls.PROPE19_PROPEBATHRMS_.props.loading"
 											:reporting-mode-on="reportingModeCAV"
@@ -384,6 +408,7 @@
 											<q-numeric-input
 												v-if="controls.PROPE19_PROPEBATHRMS_.isVisible"
 												v-bind="controls.PROPE19_PROPEBATHRMS_.props"
+												:id="getControlId(controls.PROPE19_PROPEBATHRMS_)"
 												@update:model-value="model.ValBathrms.fnUpdateValue" />
 										</base-input-structure>
 									</q-col>
@@ -395,20 +420,23 @@
 										<base-input-structure
 											v-if="controls.PROPE19_PROPEYEAR____.isVisible"
 											class="i-text"
-											v-bind="controls.PROPE19_PROPEYEAR____"
+											v-bind="controls.PROPE19_PROPEYEAR____.wrapperProps"
+											:id="getControlId(controls.PROPE19_PROPEYEAR____)"
 											v-on="controls.PROPE19_PROPEYEAR____.handlers"
 											:loading="controls.PROPE19_PROPEYEAR____.props.loading"
 											:reporting-mode-on="reportingModeCAV"
 											:suggestion-mode-on="suggestionModeOn">
 											<q-text-field
 												v-bind="controls.PROPE19_PROPEYEAR____.props"
+												:id="getControlId(controls.PROPE19_PROPEYEAR____)"
 												@blur="onBlur(controls.PROPE19_PROPEYEAR____, model.ValYear.value)"
 												@change="model.ValYear.fnUpdateValueOnChange" />
 										</base-input-structure>
 										<base-input-structure
 											v-if="controls.PROPE19_PROPEBUILDAGE.isVisible"
 											class="i-text"
-											v-bind="controls.PROPE19_PROPEBUILDAGE"
+											v-bind="controls.PROPE19_PROPEBUILDAGE.wrapperProps"
+											:id="getControlId(controls.PROPE19_PROPEBUILDAGE)"
 											v-on="controls.PROPE19_PROPEBUILDAGE.handlers"
 											:loading="controls.PROPE19_PROPEBUILDAGE.props.loading"
 											:reporting-mode-on="reportingModeCAV"
@@ -416,6 +444,7 @@
 											<q-numeric-input
 												v-if="controls.PROPE19_PROPEBUILDAGE.isVisible"
 												v-bind="controls.PROPE19_PROPEBUILDAGE.props"
+												:id="getControlId(controls.PROPE19_PROPEBUILDAGE)"
 												@update:model-value="model.ValBuildage.fnUpdateValue" />
 										</base-input-structure>
 									</q-col>
@@ -424,7 +453,7 @@
 							</q-accordion-item>
 							<q-accordion-item
 								v-if="controls.PROPE19_PSEUDAGENTINF.isVisible"
-								id="PROPE19_PSEUDAGENTINF-container"
+								:id="getControlId(controls.PROPE19_PSEUDAGENTINF) + '-container'"
 								value="PROPE19_PSEUDAGENTINF"
 								:title="controls.PROPE19_PSEUDAGENTINF.label">
 								<!-- Start PROPE19_PSEUDAGENTINF -->
@@ -435,7 +464,8 @@
 										<base-input-structure
 											v-if="controls.PROPE19_AGENTNAME____.isVisible"
 											class="i-text"
-											v-bind="controls.PROPE19_AGENTNAME____"
+											v-bind="controls.PROPE19_AGENTNAME____.wrapperProps"
+											:id="getControlId(controls.PROPE19_AGENTNAME____)"
 											v-on="controls.PROPE19_AGENTNAME____.handlers"
 											:loading="controls.PROPE19_AGENTNAME____.props.loading"
 											:reporting-mode-on="reportingModeCAV"
@@ -443,6 +473,7 @@
 											<q-lookup
 												v-if="controls.PROPE19_AGENTNAME____.isVisible"
 												v-bind="controls.PROPE19_AGENTNAME____.props"
+												:id="getControlId(controls.PROPE19_AGENTNAME____)"
 												v-on="controls.PROPE19_AGENTNAME____.handlers" />
 											<q-see-more-prope19-agentname
 												v-if="controls.PROPE19_AGENTNAME____.seeMoreIsVisible"
@@ -458,14 +489,16 @@
 										<base-input-structure
 											v-if="controls.PROPE19_AGENTEMAIL___.isVisible"
 											class="i-text"
-											v-bind="controls.PROPE19_AGENTEMAIL___"
+											v-bind="controls.PROPE19_AGENTEMAIL___.wrapperProps"
+											:id="getControlId(controls.PROPE19_AGENTEMAIL___)"
 											v-on="controls.PROPE19_AGENTEMAIL___.handlers"
 											:loading="controls.PROPE19_AGENTEMAIL___.props.loading"
 											:reporting-mode-on="reportingModeCAV"
 											:suggestion-mode-on="suggestionModeOn">
 											<q-mask
 												v-if="controls.PROPE19_AGENTEMAIL___.isVisible"
-												v-bind="controls.PROPE19_AGENTEMAIL___"
+												v-bind="controls.PROPE19_AGENTEMAIL___.props"
+												:id="getControlId(controls.PROPE19_AGENTEMAIL___)"
 												:model-value="model.AgentValEmail.value"
 												@change="model.AgentValEmail.fnUpdateValueOnChange" />
 										</base-input-structure>
@@ -478,7 +511,8 @@
 										<base-input-structure
 											v-if="controls.PROPE19_AGENTPHOTO___.isVisible"
 											class="q-image"
-											v-bind="controls.PROPE19_AGENTPHOTO___"
+											v-bind="controls.PROPE19_AGENTPHOTO___.wrapperProps"
+											:id="getControlId(controls.PROPE19_AGENTPHOTO___)"
 											v-on="controls.PROPE19_AGENTPHOTO___.handlers"
 											:loading="controls.PROPE19_AGENTPHOTO___.props.loading"
 											:reporting-mode-on="reportingModeCAV"
@@ -486,6 +520,7 @@
 											<q-image
 												v-if="controls.PROPE19_AGENTPHOTO___.isVisible"
 												v-bind="controls.PROPE19_AGENTPHOTO___.props"
+												:id="getControlId(controls.PROPE19_AGENTPHOTO___)"
 												v-on="controls.PROPE19_AGENTPHOTO___.handlers" />
 										</base-input-structure>
 									</q-col>
@@ -501,14 +536,15 @@
 						<q-table
 							v-if="controls.PROPE19_PSEUDPROPHOTO.isVisible"
 							v-bind="controls.PROPE19_PSEUDPROPHOTO"
+							:id="getControlId(controls.PROPE19_PSEUDPROPHOTO)"
 							v-on="controls.PROPE19_PSEUDPROPHOTO.handlers">
+							<template #header>
+								<q-table-config
+									:table-ctrl="controls.PROPE19_PSEUDPROPHOTO"
+									v-on="controls.PROPE19_PSEUDPROPHOTO.handlers" />
+							</template>
 							<!-- USE /[MANUAL GQT CUSTOM_TABLE PROPE19_PSEUDPROPHOTO]/ -->
 						</q-table>
-						<q-table-extra-extension
-							v-if="controls.PROPE19_PSEUDPROPHOTO.isVisible"
-							:list-ctrl="controls.PROPE19_PSEUDPROPHOTO"
-							:filter-operators="controls.PROPE19_PSEUDPROPHOTO.filterOperators"
-							v-on="controls.PROPE19_PSEUDPROPHOTO.handlers" />
 					</q-col>
 				</q-row>
 				<q-row v-if="controls.PROPE19_PSEUDPROPCONT.isVisible">
@@ -518,21 +554,22 @@
 						<q-table
 							v-if="controls.PROPE19_PSEUDPROPCONT.isVisible"
 							v-bind="controls.PROPE19_PSEUDPROPCONT"
+							:id="getControlId(controls.PROPE19_PSEUDPROPCONT)"
 							v-on="controls.PROPE19_PSEUDPROPCONT.handlers">
+							<template #header>
+								<q-table-config
+									:table-ctrl="controls.PROPE19_PSEUDPROPCONT"
+									v-on="controls.PROPE19_PSEUDPROPCONT.handlers" />
+							</template>
 							<!-- USE /[MANUAL GQT CUSTOM_TABLE PROPE19_PSEUDPROPCONT]/ -->
 						</q-table>
-						<q-table-extra-extension
-							v-if="controls.PROPE19_PSEUDPROPCONT.isVisible"
-							:list-ctrl="controls.PROPE19_PSEUDPROPCONT"
-							:filter-operators="controls.PROPE19_PSEUDPROPCONT.filterOperators"
-							v-on="controls.PROPE19_PSEUDPROPCONT.handlers" />
 					</q-col>
 				</q-row>
 			</template>
 		</q-container>
 	</teleport>
 
-	<hr v-if="!isPopup && showFormFooter" />
+	<q-divider v-if="!isPopup && showFormFooter" />
 
 	<teleport
 		v-if="formModalIsReady && showFormFooter"
@@ -908,6 +945,7 @@
 						label: computed(() => this.Resources.INFORMACOES_PRINCIPA43450),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
+						borderless: false,
 						isCollapsible: false,
 						anchored: false,
 						directChildren: ['PROPE19_PROPEPHOTO___', 'PROPE19_PROPETITLE___', 'PROPE19_PROPEPRICE___', 'PROPE19_PROPEDESCRIPT'],
@@ -996,6 +1034,7 @@
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'PROPE19_PSEUDACC01___',
 						isInAccordion: true,
+						borderless: false,
 						isCollapsible: true,
 						anchored: false,
 						directChildren: ['PROPE19_CITY_CITY____', 'PROPE19_CTRY_COUNTRY_'],
@@ -1057,6 +1096,7 @@
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'PROPE19_PSEUDACC01___',
 						isInAccordion: true,
+						borderless: false,
 						isCollapsible: true,
 						anchored: false,
 						directChildren: ['PROPE19_PROPEBUILDTYP', 'PROPE19_PROPEGRNDSIZE', 'PROPE19_PROPEFLOORNUM', 'PROPE19_PROPETYPOLOGY', 'PROPE19_PROPESIZE____', 'PROPE19_PROPEBATHRMS_', 'PROPE19_PROPEYEAR____', 'PROPE19_PROPEBUILDAGE'],
@@ -1075,8 +1115,8 @@
 						container: 'PROPE19_PSEUDDETAILS_',
 						maxLength: 1,
 						arrayName: 'buildtyp',
-						helpShortItem: '',
-						helpDetailedItem: '',
+						helpShortItem: 'None',
+						helpDetailedItem: 'None',
 						controlLimits: [
 						],
 					}, this),
@@ -1225,6 +1265,7 @@
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'PROPE19_PSEUDACC01___',
 						isInAccordion: true,
+						borderless: false,
 						isCollapsible: true,
 						anchored: false,
 						directChildren: ['PROPE19_AGENTNAME____', 'PROPE19_AGENTEMAIL___', 'PROPE19_AGENTPHOTO___'],
@@ -1305,6 +1346,7 @@
 						label: computed(() => this.Resources.PHOTOS39221),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
+						headerLevel: computed(() => this.baseHeadingLevel + 1),
 						controller: 'PROPE',
 						action: 'Prope19_ValProphoto',
 						hasDependencies: false,
@@ -1348,7 +1390,6 @@
 							searchBarConfig: {
 								visibility: false
 							},
-							filtersVisible: false,
 							allowColumnFilters: false,
 							allowColumnSort: true,
 							crudActions: [
@@ -1426,9 +1467,7 @@
 									id: 'insert',
 									name: 'insert',
 									title: computed(() => this.Resources.INSERIR43365),
-									icon: {
-										icon: 'add'
-									},
+									icon: { icon: 'add' },
 									isInReadOnly: false,
 									params: {
 										canExecuteAction: vm.applyChanges,
@@ -1477,7 +1516,7 @@
 								sortOrder: 'asc'
 							}
 						},
-						globalEvents: ['changed-PROPH', 'changed-PROPE'],
+						globalEvents: ['changed-PROPE', 'changed-PROPH'],
 						uuid: 'Prope19_ValProphoto',
 						allSelectedRows: 'false',
 						controlLimits: [
@@ -1496,6 +1535,7 @@
 						label: computed(() => this.Resources.CONTACTS55742),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
+						headerLevel: computed(() => this.baseHeadingLevel + 1),
 						controller: 'PROPE',
 						action: 'Prope19_ValPropcont',
 						hasDependencies: false,
@@ -1546,7 +1586,6 @@
 							searchBarConfig: {
 								visibility: false
 							},
-							filtersVisible: false,
 							allowColumnFilters: false,
 							allowColumnSort: true,
 							crudActions: [
@@ -1624,9 +1663,7 @@
 									id: 'insert',
 									name: 'insert',
 									title: computed(() => this.Resources.INSERIR43365),
-									icon: {
-										icon: 'add'
-									},
+									icon: { icon: 'add' },
 									isInReadOnly: false,
 									params: {
 										canExecuteAction: vm.applyChanges,
@@ -1675,7 +1712,7 @@
 								sortOrder: 'asc'
 							}
 						},
-						globalEvents: ['changed-PROPE', 'changed-PROCN'],
+						globalEvents: ['changed-PROCN', 'changed-PROPE'],
 						uuid: 'Prope19_ValPropcont',
 						allSelectedRows: 'false',
 						controlLimits: [
@@ -2116,7 +2153,6 @@
 
 				this.afterControlUpdate(controlField, fieldValue)
 			},
-
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
 // USE /[MANUAL GQT FUNCTIONS_JS PROPE19]/
 // eslint-disable-next-line

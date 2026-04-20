@@ -4,7 +4,7 @@
 		:model-value="value"
 		:max-length="options.dataLength"
 		:size="size"
-		:classes="classes"
+		:class="classes"
 		:disabled="options.disabled"
 		:readonly="options.readonly"
 		:placeholder="placeholder"
@@ -21,8 +21,6 @@
 		name: 'QEditText',
 
 		emits: ['update', 'loaded'],
-
-		components: {},
 
 		props: {
 			/**

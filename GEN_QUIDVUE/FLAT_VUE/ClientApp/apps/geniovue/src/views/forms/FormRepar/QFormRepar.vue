@@ -9,12 +9,13 @@
 			<div
 				v-if="showFormHeader"
 				class="c-action-bar">
-				<h1
+				<component
 					v-if="formControl.uiComponents.header && formInfo.designation"
+					:is="topHeadingTag"
 					:id="formTitleId"
 					class="form-header">
 					{{ formInfo.designation }}
-				</h1>
+				</component>
 
 				<div class="c-action-bar__menu">
 					<template
@@ -40,13 +41,10 @@
 									@click="btn.action">
 									<template v-if="btn.icon">
 										<q-badge-indicator
-											v-if="btn.badge && btn.badge.isVisible"
-											:color="btn.badge.color">
+											:enabled="btn.badge?.isVisible ?? false"
+											:color="btn.badge?.color">
 											<q-icon v-bind="btn.icon" />
 										</q-badge-indicator>
-										<q-icon
-											v-else
-											v-bind="btn.icon" />
 									</template>
 								</q-toggle-group-item>
 							</template>
@@ -97,16 +95,18 @@
 		<q-container
 			fluid
 			data-key="REPAR"
+			:data-identifier="primaryKeyValue"
 			:data-loading="!formInitialDataLoaded || !isActiveForm">
 			<template v-if="formControl.initialized && showFormBody">
-				<q-row v-if="controls.REPAR___EQUIPREGISTNR.isVisible || controls.REPAR___EQUIPDESIGNAT.isVisible || controls.REPAR___EQUIPPHOTOGRA.isVisible">
+				<q-row v-if="controls.REPAR___EQUIPREGISTNR.isVisible || controls.REPAR___EQUIPDESIGNAT.isVisible || controls.REPAR___EQUIPPHOTOGRA.isVisible || controls.REPAR___REPARDTREPARA.isVisible || controls.REPAR___REPARNRREPARA.isVisible">
 					<q-col
 						v-if="controls.REPAR___EQUIPREGISTNR.isVisible"
 						cols="auto">
 						<base-input-structure
 							v-if="controls.REPAR___EQUIPREGISTNR.isVisible"
 							class="i-text"
-							v-bind="controls.REPAR___EQUIPREGISTNR"
+							v-bind="controls.REPAR___EQUIPREGISTNR.wrapperProps"
+							:id="getControlId(controls.REPAR___EQUIPREGISTNR)"
 							v-on="controls.REPAR___EQUIPREGISTNR.handlers"
 							:loading="controls.REPAR___EQUIPREGISTNR.props.loading"
 							:reporting-mode-on="reportingModeCAV"
@@ -114,6 +114,7 @@
 							<q-lookup
 								v-if="controls.REPAR___EQUIPREGISTNR.isVisible"
 								v-bind="controls.REPAR___EQUIPREGISTNR.props"
+								:id="getControlId(controls.REPAR___EQUIPREGISTNR)"
 								v-on="controls.REPAR___EQUIPREGISTNR.handlers" />
 							<q-see-more-repar-equipregistnr
 								v-if="controls.REPAR___EQUIPREGISTNR.seeMoreIsVisible"
@@ -127,13 +128,15 @@
 						<base-input-structure
 							v-if="controls.REPAR___EQUIPDESIGNAT.isVisible"
 							class="i-text"
-							v-bind="controls.REPAR___EQUIPDESIGNAT"
+							v-bind="controls.REPAR___EQUIPDESIGNAT.wrapperProps"
+							:id="getControlId(controls.REPAR___EQUIPDESIGNAT)"
 							v-on="controls.REPAR___EQUIPDESIGNAT.handlers"
 							:loading="controls.REPAR___EQUIPDESIGNAT.props.loading"
 							:reporting-mode-on="reportingModeCAV"
 							:suggestion-mode-on="suggestionModeOn">
 							<q-text-field
 								v-bind="controls.REPAR___EQUIPDESIGNAT.props"
+								:id="getControlId(controls.REPAR___EQUIPDESIGNAT)"
 								@blur="onBlur(controls.REPAR___EQUIPDESIGNAT, model.EquipValDesignat.value)"
 								@change="model.EquipValDesignat.fnUpdateValueOnChange" />
 						</base-input-structure>
@@ -144,7 +147,8 @@
 						<base-input-structure
 							v-if="controls.REPAR___EQUIPPHOTOGRA.isVisible"
 							class="q-image"
-							v-bind="controls.REPAR___EQUIPPHOTOGRA"
+							v-bind="controls.REPAR___EQUIPPHOTOGRA.wrapperProps"
+							:id="getControlId(controls.REPAR___EQUIPPHOTOGRA)"
 							v-on="controls.REPAR___EQUIPPHOTOGRA.handlers"
 							:loading="controls.REPAR___EQUIPPHOTOGRA.props.loading"
 							:reporting-mode-on="reportingModeCAV"
@@ -152,18 +156,18 @@
 							<q-image
 								v-if="controls.REPAR___EQUIPPHOTOGRA.isVisible"
 								v-bind="controls.REPAR___EQUIPPHOTOGRA.props"
+								:id="getControlId(controls.REPAR___EQUIPPHOTOGRA)"
 								v-on="controls.REPAR___EQUIPPHOTOGRA.handlers" />
 						</base-input-structure>
 					</q-col>
-				</q-row>
-				<q-row v-if="controls.REPAR___REPARDTREPARA.isVisible || controls.REPAR___REPARNRREPARA.isVisible">
 					<q-col
 						v-if="controls.REPAR___REPARDTREPARA.isVisible"
 						cols="auto">
 						<base-input-structure
 							v-if="controls.REPAR___REPARDTREPARA.isVisible"
 							class="i-text"
-							v-bind="controls.REPAR___REPARDTREPARA"
+							v-bind="controls.REPAR___REPARDTREPARA.wrapperProps"
+							:id="getControlId(controls.REPAR___REPARDTREPARA)"
 							v-on="controls.REPAR___REPARDTREPARA.handlers"
 							:loading="controls.REPAR___REPARDTREPARA.props.loading"
 							:reporting-mode-on="reportingModeCAV"
@@ -171,6 +175,7 @@
 							<q-date-time-picker
 								v-if="controls.REPAR___REPARDTREPARA.isVisible"
 								v-bind="controls.REPAR___REPARDTREPARA.props"
+								:id="getControlId(controls.REPAR___REPARDTREPARA)"
 								:model-value="model.ValDtrepara.value"
 								@reset-icon-click="model.ValDtrepara.fnUpdateValue(model.ValDtrepara.originalValue ?? new Date())"
 								@update:model-value="model.ValDtrepara.fnUpdateValue($event ?? '')" />
@@ -182,7 +187,8 @@
 						<base-input-structure
 							v-if="controls.REPAR___REPARNRREPARA.isVisible"
 							class="i-text"
-							v-bind="controls.REPAR___REPARNRREPARA"
+							v-bind="controls.REPAR___REPARNRREPARA.wrapperProps"
+							:id="getControlId(controls.REPAR___REPARNRREPARA)"
 							v-on="controls.REPAR___REPARNRREPARA.handlers"
 							:loading="controls.REPAR___REPARNRREPARA.props.loading"
 							:reporting-mode-on="reportingModeCAV"
@@ -190,6 +196,7 @@
 							<q-numeric-input
 								v-if="controls.REPAR___REPARNRREPARA.isVisible"
 								v-bind="controls.REPAR___REPARNRREPARA.props"
+								:id="getControlId(controls.REPAR___REPARNRREPARA)"
 								@update:model-value="model.ValNrrepara.fnUpdateValue" />
 						</base-input-structure>
 					</q-col>
@@ -201,7 +208,8 @@
 						<base-input-structure
 							v-if="controls.REPAR___REPARTIPOAREA.isVisible"
 							class="i-radio-container"
-							v-bind="controls.REPAR___REPARTIPOAREA"
+							v-bind="controls.REPAR___REPARTIPOAREA.wrapperProps"
+							:id="getControlId(controls.REPAR___REPARTIPOAREA)"
 							v-on="controls.REPAR___REPARTIPOAREA.handlers"
 							:label-position="labelAlignment.topleft"
 							:loading="controls.REPAR___REPARTIPOAREA.props.loading"
@@ -210,6 +218,7 @@
 							<q-radio-group
 								v-if="controls.REPAR___REPARTIPOAREA.isVisible"
 								v-bind="controls.REPAR___REPARTIPOAREA.props"
+								:id="getControlId(controls.REPAR___REPARTIPOAREA)"
 								v-on="controls.REPAR___REPARTIPOAREA.handlers">
 								<q-radio-button
 									v-for="radio in controls.REPAR___REPARTIPOAREA.items"
@@ -227,7 +236,8 @@
 						<base-input-structure
 							v-if="controls.REPAR___SPECIESPECIAL.isVisible"
 							class="i-text"
-							v-bind="controls.REPAR___SPECIESPECIAL"
+							v-bind="controls.REPAR___SPECIESPECIAL.wrapperProps"
+							:id="getControlId(controls.REPAR___SPECIESPECIAL)"
 							v-on="controls.REPAR___SPECIESPECIAL.handlers"
 							:loading="controls.REPAR___SPECIESPECIAL.props.loading"
 							:reporting-mode-on="reportingModeCAV"
@@ -235,6 +245,7 @@
 							<q-lookup
 								v-if="controls.REPAR___SPECIESPECIAL.isVisible"
 								v-bind="controls.REPAR___SPECIESPECIAL.props"
+								:id="getControlId(controls.REPAR___SPECIESPECIAL)"
 								v-on="controls.REPAR___SPECIESPECIAL.handlers" />
 							<q-see-more-repar-speciespecial
 								v-if="controls.REPAR___SPECIESPECIAL.seeMoreIsVisible"
@@ -248,7 +259,8 @@
 						<base-input-structure
 							v-if="controls.REPAR___PESSONAME____.isVisible"
 							class="i-text"
-							v-bind="controls.REPAR___PESSONAME____"
+							v-bind="controls.REPAR___PESSONAME____.wrapperProps"
+							:id="getControlId(controls.REPAR___PESSONAME____)"
 							v-on="controls.REPAR___PESSONAME____.handlers"
 							:loading="controls.REPAR___PESSONAME____.props.loading"
 							:reporting-mode-on="reportingModeCAV"
@@ -256,6 +268,7 @@
 							<q-lookup
 								v-if="controls.REPAR___PESSONAME____.isVisible"
 								v-bind="controls.REPAR___PESSONAME____.props"
+								:id="getControlId(controls.REPAR___PESSONAME____)"
 								v-on="controls.REPAR___PESSONAME____.handlers" />
 							<q-see-more-repar-pessoname
 								v-if="controls.REPAR___PESSONAME____.seeMoreIsVisible"
@@ -264,14 +277,15 @@
 						</base-input-structure>
 					</q-col>
 				</q-row>
-				<q-row v-if="controls.REPAR___REPARDESCRIPT.isVisible">
+				<q-row v-if="controls.REPAR___REPARDESCRIPT.isVisible || controls.REPAR___REPARHOURS___.isVisible">
 					<q-col
 						v-if="controls.REPAR___REPARDESCRIPT.isVisible"
 						cols="auto">
 						<base-input-structure
 							v-if="controls.REPAR___REPARDESCRIPT.isVisible"
 							class="i-textarea"
-							v-bind="controls.REPAR___REPARDESCRIPT"
+							v-bind="controls.REPAR___REPARDESCRIPT.wrapperProps"
+							:id="getControlId(controls.REPAR___REPARDESCRIPT)"
 							v-on="controls.REPAR___REPARDESCRIPT.handlers"
 							:loading="controls.REPAR___REPARDESCRIPT.props.loading"
 							:reporting-mode-on="reportingModeCAV"
@@ -279,38 +293,18 @@
 							<q-text-area
 								v-if="controls.REPAR___REPARDESCRIPT.isVisible"
 								v-bind="controls.REPAR___REPARDESCRIPT.props"
+								:id="getControlId(controls.REPAR___REPARDESCRIPT)"
 								v-on="controls.REPAR___REPARDESCRIPT.handlers" />
 						</base-input-structure>
 					</q-col>
-				</q-row>
-				<q-row v-if="controls.REPAR___PSEUDCATEG_AI.isVisible">
-					<q-col
-						v-if="controls.REPAR___PSEUDCATEG_AI.isVisible"
-						cols="auto">
-						<base-input-structure
-							v-if="controls.REPAR___PSEUDCATEG_AI.isVisible"
-							class="i-button"
-							v-bind="controls.REPAR___PSEUDCATEG_AI"
-							v-on="controls.REPAR___PSEUDCATEG_AI.handlers"
-							:loading="controls.REPAR___PSEUDCATEG_AI.props.loading"
-							:reporting-mode-on="reportingModeCAV"
-							:suggestion-mode-on="suggestionModeOn">
-							<q-button
-								v-if="controls.REPAR___PSEUDCATEG_AI.isVisible"
-								v-bind="controls.REPAR___PSEUDCATEG_AI.props"
-								@click="controls.REPAR___PSEUDCATEG_AI.action($event)">
-							</q-button>
-						</base-input-structure>
-					</q-col>
-				</q-row>
-				<q-row v-if="controls.REPAR___REPARHOURS___.isVisible">
 					<q-col
 						v-if="controls.REPAR___REPARHOURS___.isVisible"
 						cols="auto">
 						<base-input-structure
 							v-if="controls.REPAR___REPARHOURS___.isVisible"
 							class="i-text"
-							v-bind="controls.REPAR___REPARHOURS___"
+							v-bind="controls.REPAR___REPARHOURS___.wrapperProps"
+							:id="getControlId(controls.REPAR___REPARHOURS___)"
 							v-on="controls.REPAR___REPARHOURS___.handlers"
 							:loading="controls.REPAR___REPARHOURS___.props.loading"
 							:reporting-mode-on="reportingModeCAV"
@@ -318,6 +312,7 @@
 							<q-numeric-input
 								v-if="controls.REPAR___REPARHOURS___.isVisible"
 								v-bind="controls.REPAR___REPARHOURS___.props"
+								:id="getControlId(controls.REPAR___REPARHOURS___)"
 								@update:model-value="model.ValHours.fnUpdateValue" />
 						</base-input-structure>
 					</q-col>
@@ -326,7 +321,7 @@
 		</q-container>
 	</teleport>
 
-	<hr v-if="!isPopup && showFormFooter" />
+	<q-divider v-if="!isPopup && showFormFooter" />
 
 	<teleport
 		v-if="formModalIsReady && showFormFooter"
@@ -676,7 +671,7 @@
 						valueChangeEvent: 'fieldChange:equip.registnr',
 						id: 'REPAR___EQUIPREGISTNR',
 						name: 'REGISTNR',
-						size: 'medium',
+						size: 'mini',
 						label: computed(() => this.Resources.REGISTRATION_NO_06209),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
@@ -730,7 +725,7 @@
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						height: 50,
-						width: 30,
+						width: 100,
 						dataTitle: computed(() => genericFunctions.formatString(vm.Resources.IMAGEM_UTILIZADA_PAR17299, vm.Resources.PHOTO51874)),
 						controlLimits: [
 						],
@@ -774,7 +769,7 @@
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						maxLength: 1,
 						arrayName: 'AreaTecn',
-						columns: 4,
+						columns: 1,
 						controlLimits: [
 						],
 					}, this),
@@ -783,7 +778,7 @@
 						valueChangeEvent: 'fieldChange:speci.especial',
 						id: 'REPAR___SPECIESPECIAL',
 						name: 'ESPECIAL',
-						size: 'medium',
+						size: 'xlarge',
 						label: computed(() => this.Resources.SPECIALTY09304),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
@@ -818,7 +813,7 @@
 						valueChangeEvent: 'fieldChange:pesso.name',
 						id: 'REPAR___PESSONAME____',
 						name: 'NAME',
-						size: 'large',
+						size: 'xxlarge',
 						label: computed(() => this.Resources.TECHNICIAN44001),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
@@ -858,23 +853,6 @@
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						rows: 3,
 						cols: 85,
-						controlLimits: [
-						],
-					}, this),
-					REPAR___PSEUDCATEG_AI: new fieldControlClass.ButtonControl({
-						id: 'REPAR___PSEUDCATEG_AI',
-						name: 'CATEG_AI',
-						hasLabel: false,
-						label: computed(() => this.Resources.CATEGORIZE52450),
-						placeholder: '',
-						labelPosition: computed(() => this.labelAlignment.topleft),
-						// eslint-disable-next-line
-						action: (event) => {
-							const btnAction = () => {
-								vm.Repar_BT_CATEG_AI(vm.primaryKeyValue)
-							}
-							btnAction()
-						},
 						controlLimits: [
 						],
 					}, this),
@@ -1312,89 +1290,6 @@
 
 				this.afterControlUpdate(controlField, fieldValue)
 			},
-
-			/**
-			 * Execute the triggers of the trigger button CATEG_AI.
-			 * Event triggered by a click on the trigger button CATEG_AI.
-			 * @param {string} id The primary key of the record
-			 */
-			// eslint-disable-next-line @typescript-eslint/no-unused-vars
-			async Repar_BT_CATEG_AI(id)
-			{
-				setProgressBar({ title: computed(() => this.Resources.CATEGORIZING_REPAIR_02121) }, { max: 2 })
-
-				// Parallel trigger execution.
-				this.controls.REPAR___PSEUDCATEG_AI.componentOnLoadProc.addWL(
-					(async () => {
-						await this.Repar_BT_CATEG_AI_REPAIR_AGENT_1(id)
-					})())
-
-				this.controls.REPAR___PSEUDCATEG_AI.componentOnLoadProc.once(resetProgressBar)
-			},
-
-			/**
-			 * Client-side component of action #1 (AGENT) of trigger REPAIR_AGENT.
-			 * @param {string} id The primary key of the record
-			 */
-			// eslint-disable-next-line @typescript-eslint/no-unused-vars
-			async Repar_BT_CATEG_AI_REPAIR_AGENT_1(id)
-			{
-				setProgressBar({}, { modelValue: 1 })
-				try
-				{
-					const data = await netAPI.postData(
-						'Repar',
-						'Repar_BT_CATEG_AI_REPAIR_AGENT_1',
-						this.model.serverObjModel,
-						undefined,
-						undefined,
-						undefined,
-						this.navigationId)
-
-					if (typeof data.success !== 'string' || typeof data.message !== 'string')
-						throw new Error('Invalid data structure.')
-
-					const result = qEnums.messageTypes[data.success]
-
-					if (!this.isEmpty(result))
-					{
-						if (result !== 'error')
-						{
-							// Return the promise of followup method.
-							return this.Repar_BT_CATEG_AI_REPAIR_AGENT_2(id)
-						}
-						else
-							genericFunctions.displayMessage(data.message, 'error')
-					}
-					else
-					{
-						this.$eventTracker.addError({
-							origin: 'Trigger REPAIR_AGENT',
-							message: 'Routine "Repar_BT_CATEG_AI" finished execution with an unknown result type: ' + data.success
-						})
-					}
-				}
-				catch (e)
-				{
-					genericFunctions.displayMessage(this.Resources.NAO_FOI_POSSIVEL_CON65121, 'error')
-					this.$eventTracker.addError({
-						origin: 'Trigger REPAIR_AGENT (catch)',
-						message: e.toString()
-					})
-				}
-			},
-
-			/**
-			 * Client-side component of action #2 (CREFRESH) of trigger REPAIR_AGENT.
-			 * @param {string} id The primary key of the record
-			 */
-			// eslint-disable-next-line @typescript-eslint/no-unused-vars
-			async Repar_BT_CATEG_AI_REPAIR_AGENT_2(id)
-			{
-				setProgressBar({}, { modelValue: 2 })
-				await this.controls.REPAR___REPARTIPOAREA.reload()
-			},
-
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
 // USE /[MANUAL GQT FUNCTIONS_JS REPAR]/
 // eslint-disable-next-line

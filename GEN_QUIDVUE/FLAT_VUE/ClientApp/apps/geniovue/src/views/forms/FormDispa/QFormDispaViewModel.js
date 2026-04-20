@@ -54,16 +54,6 @@ export default class ViewModel extends FormViewModelBase
 		this.stopWatchers.push(watch(() => this.ValCoddispa.value, (newValue, oldValue) => this.onUpdate('dispa.coddispa', this.ValCoddispa, newValue, oldValue)))
 
 		/** The used foreign keys. */
-		this.ValCoddisst = reactive(new modelFieldType.ForeignKey({
-			id: 'ValCoddisst',
-			originId: 'ValCoddisst',
-			area: 'DISPA',
-			field: 'CODDISST',
-			relatedArea: 'DISST',
-			description: computed(() => this.Resources.___STATUS46938),
-		}).cloneFrom(values?.ValCoddisst))
-		this.stopWatchers.push(watch(() => this.ValCoddisst.value, (newValue, oldValue) => this.onUpdate('dispa.coddisst', this.ValCoddisst, newValue, oldValue)))
-
 		this.ValCodentit = reactive(new modelFieldType.ForeignKey({
 			id: 'ValCodentit',
 			originId: 'ValCodentit',
@@ -105,17 +95,6 @@ export default class ViewModel extends FormViewModelBase
 		}).cloneFrom(values?.ValDispanr))
 		this.stopWatchers.push(watch(() => this.ValDispanr.value, (newValue, oldValue) => this.onUpdate('dispa.dispanr', this.ValDispanr, newValue, oldValue)))
 
-		this.TableDisstStatus = reactive(new modelFieldType.String({
-			type: 'Lookup',
-			id: 'TableDisstStatus',
-			originId: 'ValStatus',
-			area: 'DISST',
-			field: 'STATUS',
-			maxLength: 50,
-			description: computed(() => this.Resources.STATUS62033),
-		}).cloneFrom(values?.TableDisstStatus))
-		this.stopWatchers.push(watch(() => this.TableDisstStatus.value, (newValue, oldValue) => this.onUpdate('disst.status', this.TableDisstStatus, newValue, oldValue)))
-
 		this.ValStatus = reactive(new modelFieldType.String({
 			id: 'ValStatus',
 			originId: 'ValStatus',
@@ -148,6 +127,7 @@ export default class ViewModel extends FormViewModelBase
 			field: 'NAME',
 			maxLength: 85,
 			description: computed(() => this.Resources.LEGAL_NAME42902),
+			ignoreFldSubmit: true,
 		}).cloneFrom(values?.TableEntitName))
 		this.stopWatchers.push(watch(() => this.TableEntitName.value, (newValue, oldValue) => this.onUpdate('entit.name', this.TableEntitName, newValue, oldValue)))
 
@@ -189,6 +169,7 @@ export default class ViewModel extends FormViewModelBase
 			field: 'NAME',
 			maxLength: 85,
 			description: computed(() => this.Resources.PERSON_NAME40980),
+			ignoreFldSubmit: true,
 		}).cloneFrom(values?.TablePersoName))
 		this.stopWatchers.push(watch(() => this.TablePersoName.value, (newValue, oldValue) => this.onUpdate('perso.name', this.TablePersoName, newValue, oldValue)))
 	}

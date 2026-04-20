@@ -35,24 +35,25 @@
 					<div
 						v-else-if="isChecklistColumn(column)"
 						class="column-header-content">
+						<slot :name="`column_${getCellSlotName(column)}.prepend`" />
 						<slot
-							:name="'column_' + getCellSlotName(column)"
+							:name="`column_${getCellSlotName(column)}`"
 							:column="column">
 							<q-action-list
-								:disabled="readonly || rowCount < 1"
-								:dropdown-options="dropdownOptions"
-								:texts="texts"
-								:actions="checklistActions"
+								borderless
 								data-table-action-selected="false"
+								placement="bottom-start"
 								tabindex="-1"
-								@click:action="checklistAction">
-								<template #customDropdownButton>
-									<q-icon
-										:icon="checklistIcon"
-										:class="checklistIconClass" />
-								</template>
+								variant="text"
+								:groups="checklistGroups"
+								:items="checklistActions"
+								:readonly="readonly || rowCount < 1"
+								:title="texts.selectOptions"
+								@click="onChecklistClick">
+								<q-icon :icon="checklistIcon" />
 							</q-action-list>
 						</slot>
+						<slot :name="`column_${getCellSlotName(column)}.append`" />
 					</div>
 					<!-- END: Checklist header cell content -->
 					<!-- BEGIN: Extended row action column -->
@@ -91,30 +92,39 @@
 							data-table-action-selected="false"
 							tabindex="-1"
 							@click="toggleSorting(column)">
+							<slot :name="`column_${getCellSlotName(column)}.prepend`" />
 							<slot
-								:name="'column_' + getCellSlotName(column)"
+								:name="`column_${getCellSlotName(column)}`"
 								:column="column">
 								{{ column.label }}
 							</slot>
+							<slot :name="`column_${getCellSlotName(column)}.append`" />
 							<q-icon
-								:class="{ 'q-table-header__no-sorting': getSorting(column) === 'undefined' }"
+								:class="{
+									'q-table-header__no-sorting': getSorting(column) === 'undefined'
+								}"
 								:icon="getSortIcon(column)" />
 						</q-button>
 						<div
 							v-else
 							class="column-header-text">
+							<slot :name="`column_${getCellSlotName(column)}.prepend`" />
 							<slot
-								:name="'column_' + getCellSlotName(column)"
+								:name="`column_${getCellSlotName(column)}`"
 								:column="column">
 								{{ column.label }}
 							</slot>
+							<slot :name="`column_${getCellSlotName(column)}.append`" />
 						</div>
 
 						<q-button
 							v-if="allowFilters && isSearchableColumn(column)"
-							:id="getTableColumnDropdownToAdvancedId(tableName, column.name)"
+							:id="getTableColumnFilterId(tableName, column.name)"
 							borderless
-							:class="['q-table-header__filter', { 'q-table-header__filter--active': isFiltered(filters, column) }]"
+							:class="[
+								'q-table-header__filter',
+								{ 'q-table-header__filter--active': isFiltered(filters, column) }
+							]"
 							size="small"
 							variant="text"
 							data-control-type="edit-filter"
@@ -149,13 +159,15 @@
 		columnIsFiltered,
 		getTableColumnDropdownSortAscId,
 		getTableColumnDropdownSortDescId,
-		getTableColumnDropdownToAdvancedId,
+		getTableColumnFilterId,
 		isSearchableColumn,
 		isSortableColumn
 	} from '@/mixins/listFunctions.js'
 	import has from 'lodash-es/has'
 	import includes from 'lodash-es/includes'
 	import { computed, inject, ref, useTemplateRef } from 'vue'
+
+	import { QActionList } from '@quidgest/clientapp/components'
 
 	defineOptions({
 		name: 'QTableHeader',
@@ -166,7 +178,7 @@
 		'check-all-rows',
 		'check-current-page-rows',
 		'check-none-rows',
-		'show-advanced-filters',
+		'show-filters',
 		'unselect-all-rows',
 		'update-sort'
 	])
@@ -313,28 +325,25 @@
 		undefined: 'asc'
 	}
 
-	const dropdownOptions = computed(() => ({
-		icon: 'unchecked',
-		borderless: true,
-		variant: 'text',
-		placement: 'bottom-start',
-		class: 'q-dropdown-toggle'
-	}))
+	const checklistGroups = computed(() => [
+		{
+			id: 'default',
+			display: 'dropdown'
+		}
+	])
 
 	const checklistActions = computed(() => [
-		{ id: 'all', title: props.texts.allRecordsText, icon: { icon: 'apply' } },
-		{ id: 'page', title: props.texts.currentPageText, icon: { icon: 'check' } },
-		{ id: 'none', title: props.texts.noneText, icon: { icon: 'remove' } }
+		{ key: 'all', label: props.texts.allRecordsText, group: 'default', icon: { icon: 'apply' } },
+		{ key: 'page', label: props.texts.currentPageText, group: 'default', icon: { icon: 'check' } },
+		{ key: 'none', label: props.texts.noneText, group: 'default', icon: { icon: 'remove' } }
 	])
 
 	const checklistIcon = computed(() => {
-		if (props.allSelectedRows === 'true') return 'checkbox-checked'
-		else if (props.rowsSelectedCount > 0) return 'minus-box'
-		else return 'checkbox-unchecked'
-	})
-
-	const checklistIconClass = computed(() => {
-		return checklistIcon.value === 'checkbox-unchecked' ? null : 'active'
+		return props.allSelectedRows === 'true'
+			? 'checkbox-checked'
+			: props.rowsSelectedCount > 0
+				? 'minus-box'
+				: 'checkbox-unchecked'
 	})
 
 	/**
@@ -344,7 +353,11 @@
 	 * @returns True if it's filtered, false otherwise.
 	 */
 	function isFiltered(filters, column) {
-		return filters.some((f) => f.active && (f.field === `${column.area}.${column.field}` || isFiltered(f.subFilters, column)))
+		return filters.some(
+			(f) =>
+				f.active &&
+				(f.field === `${column.area}.${column.field}` || isFiltered(f.subFilters, column))
+		)
 	}
 
 	/**
@@ -355,11 +368,9 @@
 	function columnClasses(column) {
 		const classes = ['q-table__column-header']
 
-		if (isSortableColumn(column))
-			classes.push('q-table__column-header--sortable')
+		if (isSortableColumn(column)) classes.push('q-table__column-header--sortable')
 
-		if (isFiltered(props.filters, column))
-			classes.push('q-table__column-header--filtered')
+		if (isFiltered(props.filters, column)) classes.push('q-table__column-header--filtered')
 
 		const alignments = ['text-justify', 'text-right', 'text-left', 'text-center']
 		if (
@@ -401,13 +412,13 @@
 
 	/**
 	 * Executes the action selected in the dropdown
-	 * @param $event the click event from the dropdown
+	 * @param {string} optionKey The identifier of the selected action
 	 */
-	function checklistAction(event) {
+	function onChecklistClick(optionKey) {
 		const action =
-			event.id === 'all'
+			optionKey === 'all'
 				? 'check-all-rows'
-				: event.id === 'page'
+				: optionKey === 'page'
 					? 'check-current-page-rows'
 					: 'check-none-rows'
 		emit(action)
@@ -418,10 +429,8 @@
 	 * @param {Object} column
 	 */
 	function editFilter(column) {
-		const columnName = columnIsFiltered(props.filters, column)
-			? null
-			: columnFullName(column)
-		emit('show-advanced-filters', columnName)
+		const columnName = columnIsFiltered(props.filters, column) ? null : columnFullName(column)
+		emit('show-filters', columnName)
 	}
 
 	/**
@@ -430,11 +439,7 @@
 	 */
 	function getSorting(column) {
 		const sortColumn = props.columns.find((c) => c.name === column.name)
-		return sortColumn?.sortOrder > 0
-			? sortColumn.sortAsc
-				? 'asc'
-				: 'desc'
-			: 'undefined'
+		return sortColumn?.sortOrder > 0 ? (sortColumn.sortAsc ? 'asc' : 'desc') : 'undefined'
 	}
 
 	/**
@@ -443,9 +448,9 @@
 	 */
 	function getSortingAttribute(column) {
 		const sortMap = {
-			'asc': 'ascending',
-			'desc': 'descending',
-			'undefined': undefined
+			asc: 'ascending',
+			desc: 'descending',
+			undefined: undefined
 		}
 		return sortMap[getSorting(column)]
 	}
@@ -455,8 +460,7 @@
 	 * @param column The column
 	 */
 	function toggleSorting(column) {
-		if (props.allowColumnSort && !isSortableColumn(column))
-			return
+		if (props.allowColumnSort && !isSortableColumn(column)) return
 
 		const sorting = nextSort[getSorting(column)]
 		emit('update-sort', column.name, sorting)
@@ -505,11 +509,7 @@
 	 */
 	function getDataType(column) {
 		const sorting = getSorting(column)
-		return sorting === 'asc'
-			? 'sort-asc'
-			: sorting === 'desc'
-				? 'sort-desc'
-				: ''
+		return sorting === 'asc' ? 'sort-asc' : sorting === 'desc' ? 'sort-desc' : ''
 	}
 
 	defineExpose({

@@ -36,6 +36,14 @@ class TableListMainResources extends BaseResources
 			get: () => this._fnGetResource('SEM_DADOS_PARA_MOSTR24928'),
 			enumerable: true
 		})
+		Object.defineProperty(this, 'emptyTextShowAfterFilter', {
+			get: () => this._fnGetResource('POR_FAVOR__APLIQUE_U20107'),
+			enumerable: true
+		})
+		Object.defineProperty(this, 'emptyTextNoMatch', {
+			get: () => this._fnGetResource('NAO_FORAM_ENCONTRADO25167'),
+			enumerable: true
+		})
 		Object.defineProperty(this, 'importButtonTitle', {
 			get: () => this._fnGetResource('IMPORTAR64751'),
 			enumerable: true
@@ -50,6 +58,10 @@ class TableListMainResources extends BaseResources
 		})
 		Object.defineProperty(this, 'applyText', {
 			get: () => this._fnGetResource('APLICAR33981'),
+			enumerable: true
+		})
+		Object.defineProperty(this, 'preview', {
+			get: () => this._fnGetResource('PRE_VISUALIZAR51638'),
 			enumerable: true
 		})
 		Object.defineProperty(this, 'editText', {
@@ -80,20 +92,8 @@ class TableListMainResources extends BaseResources
 			get: () => this._fnGetResource('CONSULTAR57388'),
 			enumerable: true
 		})
-		Object.defineProperty(this, 'deleteText', {
-			get: () => this._fnGetResource('ELIMINAR21155'),
-			enumerable: true
-		})
 		Object.defineProperty(this, 'duplicateText', {
 			get: () => this._fnGetResource('DUPLICAR09748'),
-			enumerable: true
-		})
-		Object.defineProperty(this, 'renameText', {
-			get: () => this._fnGetResource('MUDAR_O_NOME17369'),
-			enumerable: true
-		})
-		Object.defineProperty(this, 'confirmText', {
-			get: () => this._fnGetResource('CONFIRMAR09808'),
 			enumerable: true
 		})
 		Object.defineProperty(this, 'cancelText', {
@@ -113,23 +113,19 @@ class TableListMainResources extends BaseResources
 			enumerable: true
 		})
 		Object.defineProperty(this, 'tableConfig', {
-			get: () => this._fnGetResource('DEFINICOES_DA_TABELA04919'),
+			get: () => this._fnGetResource('DEFINICOES_DA_VISTA20048'),
 			enumerable: true
 		})
 		Object.defineProperty(this, 'baseTable', {
 			get: () => this._fnGetResource('TABELA_BASE39739'),
 			enumerable: true
 		})
-		Object.defineProperty(this, 'baseTableAsDefault', {
-			get: () => this._fnGetResource('TABELA_BASE_POR_OMIS45720'),
+		Object.defineProperty(this, 'columns', {
+			get: () => this._fnGetResource('COLUNAS06085'),
 			enumerable: true
 		})
 		Object.defineProperty(this, 'configureColumns', {
 			get: () => this._fnGetResource('CONFIGURAR_COLUNAS42252'),
-			enumerable: true
-		})
-		Object.defineProperty(this, 'columns', {
-			get: () => this._fnGetResource('COLUNAS06085'),
 			enumerable: true
 		})
 		Object.defineProperty(this, 'configureFilters', {
@@ -146,10 +142,6 @@ class TableListMainResources extends BaseResources
 		})
 		Object.defineProperty(this, 'saveChanges', {
 			get: () => this._fnGetResource('GRAVAR_ALTERACOES12886'),
-			enumerable: true
-		})
-		Object.defineProperty(this, 'viewModeConfigButtonTitle', {
-			get: () => this._fnGetResource('OPCOES_DE_VISUALIZAC22988'),
 			enumerable: true
 		})
 		Object.defineProperty(this, 'toListViewButtonTitle', {
@@ -170,10 +162,6 @@ class TableListMainResources extends BaseResources
 		})
 		Object.defineProperty(this, 'visibleText', {
 			get: () => this._fnGetResource('VISIVEL07768'),
-			enumerable: true
-		})
-		Object.defineProperty(this, 'searchTextTitle', {
-			get: () => this._fnGetResource('CAIXA_DE_PESQUISA53870'),
 			enumerable: true
 		})
 		Object.defineProperty(this, 'searchText', {
@@ -212,8 +200,8 @@ class TableListMainResources extends BaseResources
 			get: () => this._fnGetResource('O_CAMPO__0__E_OBRIGA36687'),
 			enumerable: true
 		})
-		Object.defineProperty(this, 'isRequired', {
-			get: () => this._fnGetResource('E_OBRIGATORIO35368'),
+		Object.defineProperty(this, 'fieldRequiredInfo', {
+			get: () => this._fnGetResource('INTRODUZA_CRITERIOS_35679'),
 			enumerable: true
 		})
 		Object.defineProperty(this, 'limitsButtonTitle', {
@@ -240,10 +228,6 @@ class TableListMainResources extends BaseResources
 			get: () => this._fnGetResource('ACOES_COLETIVAS25162'),
 			enumerable: true
 		})
-		Object.defineProperty(this, 'applyFiltersText', {
-			get: () => this._fnGetResource('APLICAR_FILTROS22808'),
-			enumerable: true
-		})
 		Object.defineProperty(this, 'createFilterText', {
 			get: () => this._fnGetResource('CRIAR_FILTRO61015'),
 			enumerable: true
@@ -260,20 +244,16 @@ class TableListMainResources extends BaseResources
 			get: () => this._fnGetResource('E12427'),
 			enumerable: true
 		})
+		Object.defineProperty(this, 'selectedView', {
+			get: () => this._fnGetResource('VISTA_SELECIONADA35371'),
+			enumerable: true
+		})
 		Object.defineProperty(this, 'createConditionText', {
-			get: () => this._fnGetResource('CRIAR_CONDICAO10949'),
+			get: () => this._fnGetResource('ADICIONAR_CONDICAO25777'),
 			enumerable: true
 		})
 		Object.defineProperty(this, 'removeConditionText', {
 			get: () => this._fnGetResource('REMOVER_CONDICAO64117'),
-			enumerable: true
-		})
-		Object.defineProperty(this, 'savedFiltersText', {
-			get: () => this._fnGetResource('FILTROS_GRAVADOS05983'),
-			enumerable: true
-		})
-		Object.defineProperty(this, 'saveFilterText', {
-			get: () => this._fnGetResource('GRAVAR_FILTRO16375'),
 			enumerable: true
 		})
 		Object.defineProperty(this, 'removeText', {
@@ -340,56 +320,44 @@ class TableListMainResources extends BaseResources
 			get: () => this._fnGetResource('COLUNAS_INVISIVEIS_N46371'),
 			enumerable: true
 		})
-		Object.defineProperty(this, 'selectView', {
-			get: () => this._fnGetResource('SELECIONAR_VISTA16672'),
-			enumerable: true
-		})
-		Object.defineProperty(this, 'saveViewText', {
-			get: () => this._fnGetResource('GUARDAR_VISTA35229'),
-			enumerable: true
-		})
-		Object.defineProperty(this, 'savedView', {
-			get: () => this._fnGetResource('VISTA_GRAVADA55829'),
-			enumerable: true
-		})
-		Object.defineProperty(this, 'viewManagerText', {
-			get: () => this._fnGetResource('GESTOR_DE_VISTAS43375'),
-			enumerable: true
-		})
-		Object.defineProperty(this, 'viewExistsText', {
-			get: () => this._fnGetResource('ESSA_VISTA_JA_EXISTE52743'),
-			enumerable: true
-		})
-		Object.defineProperty(this, 'wantToOverwriteText', {
-			get: () => this._fnGetResource('DESEJA_SUBSTITUI_LA_25718'),
-			enumerable: true
-		})
-		Object.defineProperty(this, 'wantToSaveChanges', {
-			get: () => this._fnGetResource('QUER_GRAVAR_AS_ALTER22033'),
-			enumerable: true
-		})
-		Object.defineProperty(this, 'wantToDelete', {
-			get: () => this._fnGetResource('TEM_A_CERTEZA_QUE_QU37043'),
-			enumerable: true
-		})
 		Object.defineProperty(this, 'wantToSaveChangesToView', {
 			get: () => this._fnGetResource('SALVAR_AS_ALTERACOES51739'),
 			enumerable: true
 		})
+		Object.defineProperty(this, 'changesWillBeLost', {
+			get: () => this._fnGetResource('AS_SUAS_ALTERACOES_S04591'),
+			enumerable: true
+		})
 		Object.defineProperty(this, 'tableViewSaveSuccess', {
-			get: () => this._fnGetResource('VISUALIZACAO_DE_TABE40128'),
+			get: () => this._fnGetResource('VISUALIZACAO_DE_TABE33613'),
+			enumerable: true
+		})
+		Object.defineProperty(this, 'tableViewsSaveSuccess', {
+			get: () => this._fnGetResource('VISUALIZACOES_DE_TAB59202'),
+			enumerable: true
+		})
+		Object.defineProperty(this, 'repeatedViewName', {
+			get: () => this._fnGetResource('O_NOME_DESTA_VISTA_J58725'),
+			enumerable: true
+		})
+		Object.defineProperty(this, 'emptyViewName', {
+			get: () => this._fnGetResource('O_NOME_DA_VISTA_TEM_31070'),
+			enumerable: true
+		})
+		Object.defineProperty(this, 'chooseViewName', {
+			get: () => this._fnGetResource('QUE_NOME_PRETENDE_AT44270'),
 			enumerable: true
 		})
 		Object.defineProperty(this, 'viewNameText', {
 			get: () => this._fnGetResource('NOME_DA_VISTA31135'),
 			enumerable: true
 		})
-		Object.defineProperty(this, 'setDefaultViewText', {
-			get: () => this._fnGetResource('DEFINIR_COMO_VISTA_P09954'),
-			enumerable: true
-		})
 		Object.defineProperty(this, 'defaultViewText', {
 			get: () => this._fnGetResource('VISTA_PREDEFINIDA61222'),
+			enumerable: true
+		})
+		Object.defineProperty(this, 'basedOn', {
+			get: () => this._fnGetResource('BASEADA_EM08149'),
 			enumerable: true
 		})
 		Object.defineProperty(this, 'downloadTemplateText', {
@@ -414,10 +382,6 @@ class TableListMainResources extends BaseResources
 		})
 		Object.defineProperty(this, 'rowsPerPage', {
 			get: () => this._fnGetResource('LINHAS_POR_PAGINA55027'),
-			enumerable: true
-		})
-		Object.defineProperty(this, 'gotToPage', {
-			get: () => this._fnGetResource('IR_PARA_PAGINA12084'),
 			enumerable: true
 		})
 		Object.defineProperty(this, 'noneText', {
@@ -452,11 +416,11 @@ class TableListMainResources extends BaseResources
 			get: () => this._fnGetResource('TOTAL49307'),
 			enumerable: true
 		})
-		Object.defineProperty(this, 'MoveUp', {
+		Object.defineProperty(this, 'moveUp', {
 			get: () => this._fnGetResource('MOVER_PARA_CIMA46136'),
 			enumerable: true
 		})
-		Object.defineProperty(this, 'MoveDown', {
+		Object.defineProperty(this, 'moveDown', {
 			get: () => this._fnGetResource('MOVER_PARA_BAIXO46489'),
 			enumerable: true
 		})
@@ -518,6 +482,34 @@ class TableListMainResources extends BaseResources
 		})
 		Object.defineProperty(this, 'selectOptions', {
 			get: () => this._fnGetResource('OPCOES_DE_SELECAO40249'),
+			enumerable: true
+		})
+		Object.defineProperty(this, 'messages', {
+			get: () => this._fnGetResource('MENSAGENS53948'),
+			enumerable: true
+		})
+		Object.defineProperty(this, 'delete', {
+			get: () => this._fnGetResource('ELIMINAR21155'),
+			enumerable: true
+		})
+		Object.defineProperty(this, 'remove', {
+			get: () => this._fnGetResource('REMOVER14367'),
+			enumerable: true
+		})
+		Object.defineProperty(this, 'restore', {
+			get: () => this._fnGetResource('RESTAURAR57043'),
+			enumerable: true
+		})
+		Object.defineProperty(this, 'selected', {
+			get: () => this._fnGetResource('SELECIONADA52117'),
+			enumerable: true
+		})
+		Object.defineProperty(this, 'selectAll', {
+			get: () => this._fnGetResource('SELECIONAR_TODAS05564'),
+			enumerable: true
+		})
+		Object.defineProperty(this, 'deselectAll', {
+			get: () => this._fnGetResource('DESMARCAR_TODAS61108'),
 			enumerable: true
 		})
 	}
@@ -1209,7 +1201,7 @@ class MarkdownEditorResources extends BaseResources
 			enumerable: true
 		})
 		Object.defineProperty(this, 'preview', {
-			get: () => this._fnGetResource('PREVIEW45357'),
+			get: () => this._fnGetResource('PRE_VISUALIZAR51638'),
 			enumerable: true
 		})
 		Object.defineProperty(this, 'fullScreen', {
@@ -1272,6 +1264,26 @@ class MarkdownEditorResources extends BaseResources
 	}
 }
 
+export class BooleanResources extends BaseResources
+{
+	constructor(fnGetResource)
+	{
+		super(fnGetResource)
+
+		this._fnGetResource = typeof fnGetResource !== 'function' ? resId => resId : fnGetResource
+		Object.defineProperty(this, '_fnGetResource', { enumerable: false })
+
+		Object.defineProperty(this, 'yesLabel', {
+			get: () => this._fnGetResource('SIM28552'),
+			enumerable: true
+		})
+		Object.defineProperty(this, 'noLabel', {
+			get: () => this._fnGetResource('NAO06521'),
+			enumerable: true
+		})
+	}
+}
+
 export default {
 	BaseResources,
 	TableListMainResources,
@@ -1289,5 +1301,6 @@ export default {
 	PropertyListResources,
 	TabsResources,
 	KanbanResources,
-	MarkdownEditorResources
+	MarkdownEditorResources,
+	BooleanResources
 }

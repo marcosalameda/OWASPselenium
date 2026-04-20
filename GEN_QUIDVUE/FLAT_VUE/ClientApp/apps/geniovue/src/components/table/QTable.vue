@@ -1,78 +1,43 @@
 ﻿<template>
-	<!-- TODO configurable header title position -->
 	<div
 		:id="controlId"
 		:class="['q-table-list', ...classes, sizeClass, $attrs.class, isListVisible ? tableModeClasses : null, { 'q-table-list--loading': !loaded }]"
-		:data-loading="!loaded">
+		:data-loading="!loaded"
+		data-testid="table-container">
 		<div
 			v-if="showHeader"
-			class="page-header justify-content-between">
+			class="q-table__head justify-content-between">
 			<q-row
-				v-if="tableTitle.length > 0 || $slots.tableTitle || hasActionBar"
+				v-if="tableTitle.length > 0 || $slots.title || hasActionBar"
 				:gutter="4">
 				<!-- BEGIN: Table title -->
 				<q-col
+					v-if="tableTitle.length > 0 || $slots.title"
 					class="c-table__title"
 					cols="auto">
 					<component
 						v-if="hasLabel"
 						:is="headerTag"
-						:id="labelId">
+						:id="`label_${controlId}`">
 						<slot
-							name="tableTitle"
+							name="title"
 							:table-title="tableTitle">
 							{{ tableTitle }}
 						</slot>
 					</component>
 					<q-popover-help
 						v-if="popoverText"
-						:help-control="helpControl"
 						:id="id"
+						:help-control="helpControl"
 						:label="tableTitle"
 						:texts="texts" />
 				</q-col>
 				<!-- END: Table title -->
 
 				<template v-if="hasActionBar">
-					<!-- BEGIN: Saved views menu -->
-					<q-col
-						v-if="showSavedViews"
-						cols="auto">
-						<q-select
-							:model-value="selectedViewId"
-							:items="savedViewsOptions"
-							:texts="texts"
-							:groups="[
-								{ id: 'user', title: '' },
-								{ id: 'system', title: '' }
-							]"
-							size="small"
-							item-value="id"
-							item-label="text"
-							@update:model-value="confirmAndSetSelectedViewById" />
+					<q-col cols="auto">
+						<slot name="header" />
 					</q-col>
-					<!-- END: Saved views menu -->
-
-					<!-- BEGIN: Configuration menu / button -->
-					<q-col
-						v-if="showConfigMenu"
-						cols="auto">
-						<q-dropdown-menu
-							:id="configMenuId"
-							data-testid="table-config"
-							:texts="{ title: texts.tableConfig }"
-							:options="configOptionsUse"
-							:button-options="{ borderless: true }"
-							:button-classes="['dropdown-toggle']"
-							@selected="emitConfigAction">
-							<component
-								:is="confirmChanges ? 'q-badge-indicator' : 'v-fragment'"
-								color="highlight">
-								<q-icon icon="table-configuration" />
-							</component>
-						</q-dropdown-menu>
-					</q-col>
-					<!-- END: Configuration menu / button -->
 
 					<q-col
 						v-if="$props.viewModes.length > 0"
@@ -108,8 +73,7 @@
 								v-if="allowFileExport"
 								:options="exportOptions"
 								:texts="texts"
-								@export-data="exportData">
-							</q-table-export>
+								@export-data="exportData" />
 							<!-- END: Export menu -->
 							<!-- BEGIN: Import menu -->
 							<q-table-import
@@ -122,32 +86,37 @@
 								@import-data="importData"
 								@show-import-popup="emitEvent('show-popup', importModalProps)"
 								@hide-import-popup="emitEvent('hide-popup', 'data-import')"
-								@export-template="(format) => exportTemplate(format)">
-							</q-table-import>
+								@export-template="(format) => exportTemplate(format)" />
 							<!-- END: Import menu -->
 						</q-button-group>
 					</q-col>
 
+					<!-- BEGIN: Toggle show/hide filters -->
 					<template v-if="hasFilters">
 						<q-col cols="auto">
-							<q-divider direction="vertical" />
-						</q-col>
-
-						<!-- BEGIN: Toggle show/hide filters -->
-						<q-col
-							class="q-table__filter-toggle"
-							cols="auto">
 							<q-switch
 								:model-value="filtersVisible"
 								size="small"
+								show-state-labels
 								:label="texts.filtersText"
 								:true-label="texts.showText"
 								:false-label="texts.hideText"
-								show-state-labels
 								@update:model-value="toggleShowFilters" />
+
+							<q-button
+								v-if="filtersVisible"
+								data-testid="clear-filters"
+								pill
+								size="small"
+								class="q-table__clear-filters"
+								:label="texts.clear"
+								:title="texts.clear"
+								@click="emitEvent('clear-filters')">
+								<q-icon icon="remove" />
+							</q-button>
 						</q-col>
-						<!-- END: Toggle show/hide filters -->
 					</template>
+					<!-- END: Toggle show/hide filters -->
 				</template>
 			</q-row>
 
@@ -164,7 +133,6 @@
 						:show-refresh-button="searchBarConfig.showRefreshButton"
 						:texts="texts"
 						:disabled="!loaded"
-						:signal="signalSearch"
 						@search-by-column="searchByColumn" />
 				</q-col>
 			</q-row>
@@ -175,17 +143,17 @@
 				:help-control="helpControl"
 				:anchor="anchorId"
 				:label="tableTitle" />
-
-			<q-info-banner-help
-				v-if="hasInfoBanner"
-				:help-control="helpControl"
-				:id="id" />
 		</div>
 
 		<q-subtitle-help
 			v-if="subtitleText"
 			:help-control="helpControl"
-			:id="id" />
+			:id="'subtitle_' + id" />
+
+		<q-info-banner-help
+			v-if="hasInfoBanner"
+			:help-control="helpControl"
+			:id="'info-banner_' + id" />
 
 		<component
 			:is="isListVisible && !(rowComponent === 'q-form-container' && formName !== '') ? 'div' : 'v-fragment'"
@@ -194,6 +162,12 @@
 			<div
 				v-if="hasFilters"
 				v-show="filtersVisible">
+				<div
+					v-if="!!$slots.filters"
+					class="q-table__global-filters">
+					<slot name="filters" />
+				</div>
+
 				<q-table-static-filters
 					v-if="hasStaticFilters"
 					:id="`${config.name}-filters`"
@@ -203,10 +177,27 @@
 					:disabled="!loaded"
 					:locale="locale"
 					:texts="texts"
+					:check-box-size="checkBoxSize"
+					:radio-button-size="radioButtonSize"
 					@update:active-filters="updateActiveFilters"
 					@update:group-filters="updateGroupFilters" />
 
-				<!-- Condition "searchableColumns.length > 0" needed because of delay in loading columns -->
+				<q-row
+					v-if="config.showApplyButton"
+					:gutter="4">
+					<q-col cols="auto">
+						<q-button
+							data-testid="apply-filters"
+							variant="bold"
+							:label="texts.applyText"
+							:title="texts.applyText"
+							:disabled="!unappliedFilters"
+							@click="emitEvent('refresh')">
+							<q-icon icon="ok" />
+						</q-button>
+					</q-col>
+				</q-row>
+
 				<q-table-current-filters
 					v-if="hasCustomFilters"
 					:filters="filters"
@@ -214,47 +205,13 @@
 					:texts="texts"
 					:filter-operators="filterOperators"
 					@update:filters="emitEvent('update:filters', $event)"
-					@show-advanced-filters="
-						(idx) => {
-							emitEvent('signal-component', 'config', { show: true, selectedTab: 'advanced-filters' }, true)
-							emitEvent('signal-component', 'advancedFilters', { columnName: null, selectedFilterIdx: idx }, true)
-						}
-					" />
+					@show-filters="showConfig({ selectedTab: 'filters', selectedFilter: $event })" />
 			</div>
 			<!-- END: Filters -->
 			<div
 				v-if="isListVisible"
 				:class="['table-responsive-wrapper', tableWrapperClasses, { 'text-nowrap': !hasTextWrap }]"
 				ref="tableWrapperElem">
-				<div
-					v-if="actionsPlacement === 'above' || generalActionsPlacement === 'above'"
-					class="c-action-bar">
-					<q-table-record-actions-menu
-						:btn-permission="rowSelected?.btnPermission ?? { insertBtnDisabled: !canInsert }"
-						:action-visibility="rowSelected?.actionVisibility ?? {}"
-						:crud-actions="actionsPlacement === 'above' ? crudActions : null"
-						:custom-actions="actionsPlacement === 'above' ? customActions : null"
-						:general-actions="generalActionsPlacement === 'above' ? generalActions : null"
-						:general-custom-actions="generalActionsPlacement === 'above' ? generalCustomActions : null"
-						:actions-placement="actionsPlacement"
-						:show-row-action-icon="showRowActionIcon"
-						:show-general-action-icon="showGeneralActionIcon"
-						:show-row-action-text="showRowActionText"
-						:show-general-action-text="showGeneralActionText"
-						:readonly="tableIsReadonly"
-						display="inlineAll"
-						:enable-row-actions="rowSelected !== undefined && rowSelected !== null"
-						:texts="texts"
-						@row-action="
-							(emitAction) =>
-								emitEvent('row-action', {
-									...emitAction,
-									row: rowSelected,
-									rowKeyPath: rowSelected?.rowKeyPath ?? '',
-									rowValue: rowSelected?.Value ?? ''
-								})
-						" />
-				</div>
 				<div v-if="rowComponent === 'q-form-container' && formName !== ''">
 					<template v-if="permissions.canView !== undefined && permissions.canView !== null ? permissions.canView : true">
 						<div
@@ -271,6 +228,7 @@
 									actionsPlacement: 'actionsPlacement'
 								}"
 								:resources-path="config.resourcesPath"
+								is-multiple
 								@edit="
 									rowComponentProps.parentFormMode === 'EDIT' &&
 										(permissions.canEdit !== undefined && permissions.canEdit !== null ? permissions.canEdit : true)
@@ -289,6 +247,7 @@
 								:form-data="{ form: formName, id: newRowID, mode: 'NEW' }"
 								:row-component-props="rowComponentPropsInsert"
 								:resources-path="config.resourcesPath"
+								is-multiple
 								@insert-form="(...args) => emitEvent('insert-form', ...args)"
 								@cancel-insert="(...args) => emitEvent('cancel-insert', ...args)">
 							</component>
@@ -297,207 +256,237 @@
 				</div>
 				<div
 					v-else
-					:class="['table-responsive', tableContainerClasses]"
-					ref="tableContainerElem"
-					:id="tableContainerId"
-					tabindex="0"
-					@keydown="tableOnKeyDown"
-					@focusout="tableOnFocusout">
-					<!-- FOR: COLUMN RESIZE, uses ref property -->
-					<table
-						:class="['c-table', tableClasses]"
-						ref="tableElem"
-						:aria-label="tableTitle"
-						:role="type === 'TreeList' ? 'treegrid' : null">
-						<caption class="hidden-elem">
-							{{
-								tableTitle
-							}}
-						</caption>
-						<!-- BEGIN: Header -->
-						<q-table-header
-							ref="headerRowElem"
-							:filters="filters"
-							:columns="topLevelColumns"
-							:table-name="name"
-							:readonly="tableIsReadonly"
-							:allow-filters="allowColumnFilters"
-							:allow-column-sort="allowColumnSort && !hasRowDragAndDrop"
-							:row-count="totalRows"
-							:texts="texts"
-							:locale="locale"
-							:loading="!loaded"
-							:disabled="!loaded"
-							:rows-selected-count="rowsSelectedCount"
-							:all-selected-rows="allSelectedRows"
-							:header-cell-ids="getHeaderCellIds(vbtColumns)"
-							@update-sort="changeInitialSort"
-							@check-all-rows="checkAllRows"
-							@check-current-page-rows="checkCurrentPageRows"
-							@check-none-rows="checkNoneRows"
-							@unselect-all-rows="emitEvent('unselect-all-rows')"
-							@update:filters="emitEvent('update:filters', $event)"
-							@show-advanced-filters="
-								(columnName) => {
-									emitEvent('signal-component', 'config', { show: true, selectedTab: 'advanced-filters' }, true)
-									emitEvent('signal-component', 'advancedFilters', { columnName, selectedFilterIdx: undefined }, true)
-								}
-							"
-							@focusin="rowOnFocusin($event)"
-							@focusout="rowOnFocusout($event)">
-							<!-- Custom columns -->
-							<template
-								v-for="col in vbtColumns"
-								v-slot:[`column_${getCellSlotName(col)}`]="slotProps">
-								<slot :name="`column_${getCellSlotName(col)}`" v-bind="slotProps"></slot>
-							</template>
-						</q-table-header>
-						<!-- END: Header -->
-						<tbody
-							class="c-table__body"
-							ref="tbody"
-							data-testid="table-body">
-							<!-- BEGIN: data rows -->
-							<template v-if="vbtRows.length > 0">
-								<component
-									:is="rowComponent"
-									v-for="(row, index) in vbtRows"
-									:key="row.rowKey + '_' + rowDomKey"
-									ref="rowElems"
-									:table-name="name"
-									:id="row.rowKey"
-									:row="row"
-									:columns="vbtColumns"
-									:column-hierarchy="columnHierarchy"
-									:row-key-path="[row.rowKey]"
-									:row-index="index"
-									:navigated-row-key-path="navigatedRowKeyPath"
-									:prop-row-classes="getRowClasses(row)"
-									:unique-id="uniqueId"
-									:is-valid="rowIsValid(row)"
-									:row-title="getRowTitle(row)"
-									:crud-actions="crudActions"
-									:custom-actions="customActions"
-									:general-actions="generalActions"
-									:general-custom-actions="generalCustomActions"
-									:actions-placement="actionsPlacement"
-									:general-actions-placement="generalActionsPlacement"
-									:show-row-action-icon="showRowActionIcon"
-									:show-general-action-icon="showGeneralActionIcon"
-									:show-row-action-text="showRowActionText"
-									:show-general-action-text="showGeneralActionText"
-									:readonly="tableIsReadonly"
-									:bg-color-selected="rowBgColorSelected"
-									:row-selected-for-group="isRowSelected(row)"
-									:cell-titles="getRowCellDataTitles(row, vbtColumns)"
-									:header-cell-ids="getHeaderCellIds(vbtColumns)"
-									:has-row-drag-and-drop="hasRowDragAndDrop"
-									:sort-order-column="sortOrderColumn"
-									:expand-icon="expandIcon"
-									:collapse-icon="collapseIcon"
-									:row-action-display="rowActionDisplay"
-									:disable-checkbox="blockTableCheck"
-									:row-key-to-scroll="rowKeyToScroll"
-									:texts="texts"
-									:resources-path="config.resourcesPath"
-									@row-click="(...args) => executeRowClickAction(...args)"
-									@row-action="(emitAction) => emitEvent('row-action', emitAction)"
-									@row-reorder="rowReorder"
-									@execute-action="(...args) => emitEvent('execute-action', ...args)"
-									@cell-action="(...args) => executeActionCell(...args)"
-									@remove-row="removeRow(row.rowKey)"
-									@toggle-row-selected="toggleRowSelectMultiple(row)"
-									@update="(...args) => updateCell(...args)"
-									@update-external="(...args) => emitEvent('update-external', ...args)"
-									@toggle-show-children="setChildRowsVisibility"
-									@go-to-row="(...args) => goToRow(...args)"
-									@navigate-row="(...args) => navigateToRowByMultiIndex(...args)"
-									@focusin="rowOnFocusin($event)"
-									@focusout="rowOnFocusout($event)"
-									@loaded="onRowLoaded"
-									@sub-rows-loaded="onSubRowsLoaded">
-									<!-- Custom columns -->
-									<template
-										v-for="col in vbtColumns"
-										v-slot:[getCellSlotName(col)]="slotProps">
-										<slot :name="getCellSlotName(col)" v-bind="slotProps"></slot>
-									</template>
-								</component>
-							</template>
-							<!-- BEGIN: No results row -->
-							<tr
-								v-else-if="loaded"
-								class="c-table__row--empty"
-								data-testid="table-row">
-								<td :colspan="headerColSpan">
-									<slot name="empty-results">
-										<img
-											v-if="emptyRowImgPath"
-											:src="emptyRowImgPath"
-											:alt="texts.emptyText" />
-										{{ texts.emptyText }}
-									</slot>
-								</td>
-							</tr>
-							<template v-else>
+					class="table-responsive-container">
+					<div
+						:class="['table-responsive', tableContainerClasses]"
+						ref="tableContainerElem"
+						:id="tableContainerId"
+						tabindex="0"
+						@keydown="tableOnKeyDown"
+						@focusout="tableOnFocusout"
+						@scroll="updateScrollers">
+						<!-- FOR: COLUMN RESIZE, uses ref property -->
+						<table
+							:class="['c-table', tableClasses]"
+							ref="tableElem"
+							:aria-label="tableTitle"
+							:role="type === 'TreeList' ? 'treegrid' : null">
+							<caption class="hidden-elem">
+								{{ tableTitle }}
+							</caption>
+							<q-table-header
+								ref="headerRowElem"
+								:filters="filters"
+								:columns="topLevelColumns"
+								:table-name="name"
+								:readonly="tableIsReadonly"
+								:allow-filters="allowColumnFilters"
+								:allow-column-sort="allowColumnSort && !hasRowDragAndDrop"
+								:row-count="totalRows"
+								:texts="texts"
+								:locale="locale"
+								:loading="!loaded"
+								:disabled="!loaded"
+								:rows-selected-count="rowsSelectedCount"
+								:all-selected-rows="allSelectedRows"
+								:header-cell-ids="getHeaderCellIds(vbtColumns)"
+								@update-sort="changeInitialSort"
+								@check-all-rows="checkAllRows"
+								@check-current-page-rows="checkCurrentPageRows"
+								@check-none-rows="checkNoneRows"
+								@unselect-all-rows="emitEvent('unselect-all-rows')"
+								@update:filters="emitEvent('update:filters', $event)"
+								@show-filters="showConfig({ selectedTab: 'filters', columnName: $event })"
+								@focusin="rowOnFocusin"
+								@focusout="rowOnFocusout">
+								<!-- Custom columns -->
+								<template
+									v-for="col in vbtColumns"
+									#[`column_${getCellSlotName(col)}.prepend`]>
+									<slot :name="`column_${getCellSlotName(col)}.prepend`" />
+								</template>
+								<template
+									v-for="col in vbtColumns"
+									#[`column_${getCellSlotName(col)}`]="slotProps">
+									<slot
+										:name="`column_${getCellSlotName(col)}`"
+										v-bind="slotProps" />
+								</template>
+								<template
+									v-for="col in vbtColumns"
+									#[`column_${getCellSlotName(col)}.append`]>
+									<slot :name="`column_${getCellSlotName(col)}.append`" />
+								</template>
+							</q-table-header>
+							<tbody
+								class="c-table__body"
+								ref="tbody"
+								data-testid="table-body">
+								<!-- BEGIN: data rows -->
+								<template v-if="vbtRows.length > 0">
+									<component
+										:is="rowComponent"
+										v-for="(row, index) in vbtRows"
+										:key="row.rowKey + '_' + rowDomKey"
+										ref="rowElems"
+										:id="row.rowKey"
+										:table-name="name"
+										:row="row"
+										:columns="vbtColumns"
+										:column-hierarchy="columnHierarchy"
+										:row-key-path="[row.rowKey]"
+										:row-index="index"
+										:row-count="vbtRows.length"
+										:navigated-row-key-path="navigatedRowKeyPath"
+										:prop-row-classes="getRowClasses(row)"
+										:is-valid="rowIsValid(row)"
+										:row-title="getRowTitle(row)"
+										:crud-actions="crudActions"
+										:custom-actions="customActions"
+										:general-actions="generalActions"
+										:readonly="tableIsReadonly"
+										:bg-color-selected="rowBgColorSelected"
+										:row-selected-for-group="isRowSelected(row)"
+										:cell-titles="getRowCellDataTitles(row, vbtColumns)"
+										:header-cell-ids="getHeaderCellIds(vbtColumns)"
+										:sort-order-column="sortOrderColumn"
+										:expand-icon="expandIcon"
+										:collapse-icon="collapseIcon"
+										:row-action-display="rowActionDisplay"
+										:disable-checkbox="blockTableCheck"
+										:row-key-to-scroll="rowKeyToScroll"
+										:texts="texts"
+										:resources-path="config.resourcesPath"
+										:check-box-size="checkBoxSize"
+										@row-click="(...args) => executeRowClickAction(...args)"
+										@row-action="(emitAction) => emitEvent('row-action', emitAction)"
+										@row-reorder="rowReorder"
+										@execute-action="(...args) => emitEvent('execute-action', ...args)"
+										@cell-action="(...args) => executeActionCell(...args)"
+										@remove-row="removeRow(row.rowKey)"
+										@toggle-row-selected="toggleRowSelectMultiple(row)"
+										@update="(...args) => updateCell(...args)"
+										@update-external="(...args) => emitEvent('update-external', ...args)"
+										@toggle-show-children="setChildRowsVisibility"
+										@go-to-row="(...args) => goToRow(...args)"
+										@navigate-row="(...args) => navigateToRowByMultiIndex(...args)"
+										@focusin="rowOnFocusin"
+										@focusout="rowOnFocusout"
+										@loaded="onRowLoaded"
+										@sub-rows-loaded="onSubRowsLoaded">
+										<!-- Custom columns -->
+										<template
+											v-for="col in vbtColumns"
+											#[getCellSlotName(col)]="slotProps">
+											<slot
+												:name="getCellSlotName(col)"
+												v-bind="slotProps" />
+										</template>
+									</component>
+								</template>
+								<!-- BEGIN: No results row -->
 								<tr
-									v-for="i in 3"
-									:key="i"
+									v-else-if="loaded"
+									class="c-table__row--empty"
 									data-testid="table-row">
-									<td
-										v-for="j in headerColSpan"
-										:key="j">
-										<q-skeleton-loader type="text" />
+									<td :colspan="headerColSpan">
+										<slot name="empty-results">
+											<img
+												v-if="emptyRowImgPath"
+												:src="emptyRowImgPath"
+												:alt="emptyTextToShow" />
+											{{ emptyTextToShow }}
+										</slot>
 									</td>
 								</tr>
-							</template>
-							<!-- END: No results row -->
-							<!-- END: data rows -->
-						</tbody>
-						<tfoot v-if="hasNewRecordRow || hasColumnTotalizers">
-							<q-table-row
-								v-if="hasNewRecordRow"
-								:table-name="name"
-								:key="newRow.Rownum"
-								:row="newRow"
-								:columns="vbtColumns"
-								row-index="new"
-								unique-id="new_row"
-								:bg-color-selected="rowBgColorSelected"
-								:cell-titles="getRowCellDataTitles(newRow, vbtColumns)"
-								@update="(...args) => setCellValue(...args)">
-								<template #checklist>
-									<q-button
-										:label="texts.removeText"
-										:title="texts.removeText"
-										@click="emitRowsDelete(rowsSelected)">
-										<q-icon icon="remove" />
-									</q-button>
+								<template v-else>
+									<tr
+										v-for="i in 3"
+										:key="i"
+										data-testid="table-row">
+										<td
+											v-for="j in headerColSpan"
+											:key="j">
+											<q-skeleton-loader type="text" />
+										</td>
+									</tr>
 								</template>
-								<template #actions>
-									<q-button
-										:label="texts.insertText"
-										:title="texts.insertText"
-										@click="emitRowAdd(newRow)">
-										<q-icon icon="add" />
-									</q-button>
-								</template>
-							</q-table-row>
+								<!-- END: No results row -->
+								<!-- END: data rows -->
+							</tbody>
+							<tfoot v-if="hasNewRecordRow || hasColumnTotalizers">
+								<q-table-row
+									v-if="hasNewRecordRow"
+									:table-name="name"
+									:key="newRow.Rownum"
+									:row="newRow"
+									:columns="vbtColumns"
+									row-index="new"
+									unique-id="new_row"
+									:bg-color-selected="rowBgColorSelected"
+									:cell-titles="getRowCellDataTitles(newRow, vbtColumns)"
+									@update="(...args) => setCellValue(...args)">
+									<template #checklist>
+										<q-button
+											:label="texts.removeText"
+											:title="texts.removeText"
+											@click="emitRowsDelete(rowsSelected)">
+											<q-icon icon="remove" />
+										</q-button>
+									</template>
+									<template #actions>
+										<q-button
+											:label="texts.insertText"
+											:title="texts.insertText"
+											@click="emitRowAdd(newRow)">
+											<q-icon icon="add" />
+										</q-button>
+									</template>
+								</q-table-row>
 
-							<!-- BEGIN: Column totalizers -->
-							<q-table-column-totalizers
-								v-if="hasColumnTotalizers"
-								:class="totalizersClasses"
-								:columns="vbtColumns"
-								:totalizers="columnTotalizers"
-								:multiple-selection="showRowsSelectedTotalizer"
-								:rows="vbtRows"
-								:selected-rows="rowsSelected"
-								:current-page="page"
-								:all-selected="vbtAllSelected" />
-							<!-- END: Column totalizers -->
-						</tfoot>
-					</table>
+								<!-- BEGIN: Column totalizers -->
+								<q-table-column-totalizers
+									v-if="hasColumnTotalizers"
+									:class="totalizersClasses"
+									:columns="vbtColumns"
+									:totalizers="columnTotalizers"
+									:multiple-selection="showRowsSelectedTotalizer"
+									:rows="vbtRows"
+									:selected-rows="rowsSelected"
+									:current-page="page"
+									:all-selected="allSelected" />
+								<!-- END: Column totalizers -->
+							</tfoot>
+						</table>
+					</div>
+					<q-button
+						v-if="hasHorizontalScrollers"
+						v-show="scrollHorizLeftVisible"
+						variant="bold"
+						class="q-table_scroll--left"
+						tabindex="-1"
+						@mousedown="scrollButtonLeftOnMousedown()"
+						@mouseup="setScrollButtonLeftPressed(false)"
+						@touchstart="scrollButtonLeftOnMousedown()"
+						@touchend="setScrollButtonLeftPressed(false)"
+						@touchcancel="setScrollButtonLeftPressed(false)"
+						@touchmove="setScrollButtonLeftPressed(false)">
+						<q-icon icon="page-previous" />
+					</q-button>
+					<q-button
+						v-if="hasHorizontalScrollers"
+						v-show="scrollHorizRightVisible"
+						variant="bold"
+						class="q-table_scroll--right"
+						tabindex="-1"
+						@mousedown="scrollButtonRightOnMousedown()"
+						@mouseup="setScrollButtonRightPressed(false)"
+						@touchstart="scrollButtonRightOnMousedown()"
+						@touchend="setScrollButtonRightPressed(false)"
+						@touchcancel="setScrollButtonRightPressed(false)"
+						@touchmove="setScrollButtonRightPressed(false)">
+						<q-icon icon="page-next" />
+					</q-button>
 				</div>
 				<!-- BEGIN: Footer -->
 				<!-- Adding class hiddenFooter since using the v-if to hide the footer is causing an issue (scrolling down causes the page to go up and down) -->
@@ -511,41 +500,33 @@
 						:show-per-page-menu="perPageMenuVisible"
 						:current-page-rows-length="currentPageRowsLength"
 						:page="page"
-						v-model:per-page="perPage"
-						:per-page-options="unselectedPerPageOptions"
+						:per-page="perPage"
+						:per-page-options="sortedPerPageOptions"
 						:has-more="hasMorePages"
 						:show-rows-selected-count="showRowsSelectedCount"
-						:all-rows-selected="vbtAllSelected"
+						:all-rows-selected="allSelected"
 						:rows-selected-count="rowsSelectedCount"
 						:has-row-select-actions="hasRowSelectActions"
 						:group-actions="groupActions"
 						:show-record-count="showRecordCount"
 						:row-count="totalRows"
 						:show-alternate-pagination="showAlternatePagination"
-						:num-visibile-pagination-buttons="numVisibilePaginationButtons"
+						:num-visible-pagination-buttons="numVisiblePaginationButtons"
 						:show-limits="showLimits"
 						:table-limits="tableLimits"
 						:table-id="controlId"
 						:table-name-plural="tableNamePlural"
 						:texts="texts"
 						:disabled="!loaded"
-						@update:page="(emitAction) => goToPage(emitAction)"
-						@update:per-page="setPerPage($event)"
-						@group-action="rowGroupAction($event)">
-						<template #row-general-actions>
-							<q-table-record-actions-menu
-								v-if="generalActionsPlacement === 'below'"
-								:btn-permission="{ insertBtnDisabled: !canInsert }"
-								:general-actions="generalActions"
-								:general-custom-actions="generalCustomActions"
-								:actions-placement="actionsPlacement"
-								:readonly="tableIsReadonly"
-								:enable-general-actions="loaded"
-								display="inline"
-								:texts="texts"
-								:table-name="name"
-								@row-action="(emitAction) => emitEvent('row-action', emitAction)" />
-						</template>
+						@update:page="goToPage"
+						@update:per-page="setPerPage"
+						@group-action="rowGroupAction">
+						<q-action-list
+							variant="outlined"
+							:groups="generalActionGroups"
+							:items="generalActionItems"
+							:readonly="tableIsReadonly"
+							@click="executeGeneralAction" />
 					</q-table-footer>
 				</div>
 				<!-- END: Footer -->
@@ -564,7 +545,7 @@
 							:alt="texts.emptyText" />
 					</template>
 					<template #empty-text>
-						{{ texts.emptyText }}
+						{{ emptyTextToShow }}
 					</template>
 				</component>
 				<!-- BEGIN: Footer -->
@@ -577,8 +558,8 @@
 						:show-per-page-menu="false"
 						:current-page-rows-length="currentPageRowsLength"
 						:page="page"
-						v-model:per-page="perPage"
-						:per-page-options="unselectedPerPageOptions"
+						:per-page="perPage"
+						:per-page-options="sortedPerPageOptions"
 						:has-more="hasMorePages"
 						:show-rows-selected-count="showRowsSelectedCount"
 						:rows-selected-count="rowsSelectedCount"
@@ -587,29 +568,23 @@
 						:show-record-count="showRecordCount"
 						:row-count="totalRows"
 						:show-alternate-pagination="showAlternatePagination"
-						:num-visibile-pagination-buttons="numVisibilePaginationButtons"
+						:num-visible-pagination-buttons="numVisiblePaginationButtons"
 						:show-limits="showLimits"
 						:table-limits="tableLimits"
 						:table-id="controlId"
 						:table-name-plural="tableNamePlural"
 						:texts="texts"
 						:disabled="!loaded"
-						@update:page="(emitAction) => goToPage(emitAction)"
-						@update:per-page="setPerPage($event)"
-						@group-action="rowGroupAction($event)">
-						<template #row-general-actions>
-							<q-table-record-actions-menu
-								v-if="generalActionsPlacement === 'below' && !activeViewMode.implementsOwnInsert"
-								:btn-permission="{ insertBtnDisabled: !canInsert }"
-								:general-actions="generalActions"
-								:general-custom-actions="generalCustomActions"
-								:actions-placement="actionsPlacement"
-								:readonly="tableIsReadonly"
-								:enable-general-actions="loaded"
-								display="inline"
-								:texts="texts"
-								@row-action="emitEvent('row-action', $event)" />
-						</template>
+						@update:page="goToPage"
+						@update:per-page="setPerPage"
+						@group-action="rowGroupAction">
+						<q-action-list
+							v-if="!activeViewMode.implementsOwnInsert"
+							variant="outlined"
+							:groups="generalActionGroups"
+							:items="generalActionItems"
+							:readonly="tableIsReadonly"
+							@click="executeGeneralAction" />
 					</q-table-footer>
 				</div>
 				<!-- END: Footer -->
@@ -619,10 +594,8 @@
 </template>
 
 <script>
-	import { defineAsyncComponent, markRaw } from 'vue'
+	import { defineAsyncComponent, markRaw, nextTick } from 'vue'
 	import cloneDeep from 'lodash-es/cloneDeep'
-	import filter from 'lodash-es/filter'
-	import find from 'lodash-es/find'
 	import findIndex from 'lodash-es/findIndex'
 	import has from 'lodash-es/has'
 	import isEmpty from 'lodash-es/isEmpty'
@@ -630,12 +603,14 @@
 
 	import Sortable from 'sortablejs'
 
-	import genericFunctions from '@quidgest/clientapp/utils/genericFunctions'
+	import { btnHasPermission, getHeadingTagNameByLevel, validateTexts } from '@quidgest/clientapp/utils/genericFunctions'
 	import listFunctions from '@/mixins/listFunctions.js'
 	import HelpControl from '@/mixins/helpControls.js'
 
 	import ColumnResizeable from '@/api/genio/columnResizeable.js'
 	import searchFilterData from '@/api/genio/searchFilterData.js'
+
+	import { QActionList } from '@quidgest/clientapp/components'
 
 	// The texts needed by the component.
 	const DEFAULT_TEXTS = {
@@ -645,36 +620,38 @@
 		templateButtonTitle: 'Select a template to use.',
 		submitText: 'Submit',
 		applyText: 'Apply',
+		preview: 'Preview',
 		editText: 'Edit',
 		closeText: 'Close',
 		dropToUpload: 'Drag the file to upload',
 		okText: 'OK',
-		pendingRecords: 'Warning: This record is pending, you must edit or delete it.',
 		saveText: 'Save',
 		viewText: 'View',
-		deleteText: 'Delete',
 		duplicateText: 'Duplicate',
-		confirmText: 'Confirm',
 		cancelText: 'Cancel',
 		discard: 'Discard',
 		resetText: 'Reset',
 		insertText: 'Insert',
-		tableConfig: 'Table configuration',
-		configureColumns: 'Configure columns',
+		tableConfig: 'View configuration',
+		baseTable: 'Base table',
 		columns: 'Columns',
-		viewModeConfigButtonTitle: 'View options',
+		configureColumns: 'Configure columns',
+		configureFilters: 'Configure filters',
+		manageViews: 'Manage views',
+		createView: 'Create view',
 		toListViewButtonTitle: 'List view',
 		toAlternativeViewButtonTitle: 'Alternative view',
 		orderText: 'Order',
 		nameOfColumnText: 'Column name',
 		visibleText: 'Visible',
-		searchTextTitle: 'Search box',
 		searchText: 'Search',
 		forText: 'for',
 		ofText: 'of',
 		orText: 'Or',
 		andText: 'And',
 		allFieldsText: 'all fields',
+		fieldIsRequired: 'The {0} field is required.',
+		fieldRequiredInfo: 'Enter some search criteria',
 		showText: 'Show',
 		hideText: 'Hide',
 		filtersText: 'Filters',
@@ -687,10 +664,9 @@
 		groupActionsText: 'Group actions',
 		createFilterText: 'Create filter',
 		filterNameText: 'Filter name',
-		createConditionText: 'Create condition',
+		selectedView: 'Selected view',
+		createConditionText: 'Add condition',
 		removeConditionText: 'Remove condition',
-		savedFiltersText: 'Saved filters',
-		saveFilterText: 'Save filter',
 		removeText: 'Remove',
 		removeAll: 'Remove all',
 		sortAscendingText: 'Sort ascending',
@@ -707,13 +683,10 @@
 		inactiveText: 'Inactive',
 		visibleColumnsText: 'Visible columns',
 		invisibleColumnsHelpText: 'Invisible columns are not searchable.',
-		saveViewText: 'Save view',
-		viewManagerText: 'View manager',
-		viewExistsText: 'This view already exists.',
-		wantToOverwriteText: 'Do you want to overwrite it?',
-		tableViewSaveSuccess: 'Table view saved successfully',
+		wantToSaveChangesToView: 'Save changes to the current table view?',
+		repeatedViewName: 'The name of this view is already being used in another.',
+		emptyViewName: 'The view name must be filled in.',
 		viewNameText: 'View name',
-		setDefaultViewText: 'Set as default view',
 		defaultViewText: 'Default view',
 		downloadTemplateText: 'Download the excel template file by clicking the button below',
 		fillTemplateFileText: 'Fill the file with the necessary information',
@@ -721,14 +694,13 @@
 		allRecordsText: 'All',
 		currentPageText: 'Current page',
 		noneText: 'None',
-		loading: 'Loading data...',
 		onDate: 'On:',
 		first: 'First',
 		last: 'Last',
 		previous: 'Previous',
 		next: 'Next',
-		MoveUp: 'Move up',
-		MoveDown: 'Move down',
+		moveUp: 'Move up',
+		moveDown: 'Move down',
 		insertBelow: 'Insert below',
 		rowDragDropReorder: 'Drag and drop to change row order',
 		rowExpand: 'Expand row',
@@ -739,7 +711,16 @@
 		clearValue: 'Clear value',
 		showOptions: 'Show options',
 		hideColumnConfirm: 'You have hidden columns with filters, all associated filters will be removed. Do you want to continue?',
-		selectOptions: "Select options"
+		selectOptions: 'Select options',
+		emptyTextShowAfterFilter: 'Please apply one or more filters to display the data',
+		emptyTextNoMatch: 'No matching records found',
+		messages: 'Messages',
+		delete: 'Delete',
+		remove: 'Remove',
+		restore: 'Restore',
+		selected: 'Selected',
+		selectAll: 'Select all',
+		deselectAll: 'Deselect all'
 	}
 
 	export default {
@@ -748,16 +729,17 @@
 		emits: [
 			'cancel-insert',
 			'cell-action',
-			'close-view',
+			'clear-filters',
 			'execute-action',
-			'fetch-qtable-all-selected',
+			'go-to-row',
 			'hide-popup',
+			'init-all-selected',
 			'insert-form',
 			'loaded',
-			'on-change-query',
 			'on-export-data',
 			'on-export-template',
 			'on-import-data',
+			'refresh',
 			'remove-row',
 			'row-action',
 			'row-add',
@@ -766,42 +748,34 @@
 			'row-reorder',
 			'rows-delete',
 			'rows-loaded',
-			'save-view',
-			'go-to-row',
 			'select-row',
 			'select-rows',
 			'set-array-sub-prop-where',
-			'set-info-message',
+			'set-confirm-changes',
 			'set-property',
-			'set-qtable-all-selected',
 			'set-row-index-property',
+			'set-selected-rows',
+			'show-config',
 			'show-popup',
-			'signal-component',
 			'toggle-rows-drag-drop',
 			'tree-load-branch-data',
 			'unselect-all-rows',
 			'unselect-row',
 			'update-cell',
-			'update-config',
 			'update-external',
-			'update-list-visible',
 			'update:active-view-mode',
-			'update:filters',
 			'update:activeFilters',
+			'update:filters',
 			'update:groupFilters',
-			'update:sorting',
-			'view-action',
-			'set-confirm-changes'
+			'update:sorting'
 		],
 
 		components: {
-			QDropdownMenu: defineAsyncComponent(() => import('@/components/QDropdownMenu.vue')),
 			QTableStaticFilters: defineAsyncComponent(() => import('./QTableStaticFilters.vue')),
 			QTableCurrentFilters: defineAsyncComponent(() => import('./QTableCurrentFilters.vue')),
 			QTableHeader: defineAsyncComponent(() => import('./QTableHeader.vue')),
 			QTableFooter: defineAsyncComponent(() => import('./QTableFooter.vue')),
 			QTableSearch: defineAsyncComponent(() => import('./QTableSearch.vue')),
-			QTableRecordActionsMenu: defineAsyncComponent(() => import('./QTableRecordActionsMenu.vue')),
 			QTableChecklistCheckbox: defineAsyncComponent(() => import('./QTableChecklistCheckbox.vue')),
 			QTableExport: defineAsyncComponent(() => import('./QTableExport.vue')),
 			QTableImport: defineAsyncComponent(() => import('./QTableImport.vue')),
@@ -810,7 +784,8 @@
 			QPopoverHelp: defineAsyncComponent(() => import('@/components/QPopoverHelp.vue')),
 			QTooltipHelp: defineAsyncComponent(() => import('@/components/QTooltipHelp.vue')),
 			QSubtitleHelp: defineAsyncComponent(() => import('@/components/QSubtitleHelp.vue')),
-			QInfoBannerHelp: defineAsyncComponent(() => import('@/components/QInfoBannerHelp.vue'))
+			QInfoBannerHelp: defineAsyncComponent(() => import('@/components/QInfoBannerHelp.vue')),
+			QActionList
 		},
 
 		inheritAttrs: false,
@@ -900,7 +875,7 @@
 			 */
 			texts: {
 				type: Object,
-				validator: (value) => genericFunctions.validateTexts(DEFAULT_TEXTS, value),
+				validator: (value) => validateTexts(DEFAULT_TEXTS, value),
 				default: () => DEFAULT_TEXTS
 			},
 
@@ -987,6 +962,14 @@
 			filters: {
 				type: Array,
 				default: () => []
+			},
+
+			/**
+			 * Whether there are any static filters still not applied to the table.
+			 */
+			unappliedFilters: {
+				type: Boolean,
+				default: false
 			},
 
 			/**
@@ -1094,14 +1077,6 @@
 			},
 
 			/**
-			 * An object for passing signals to the component, often used for higher-level state management or control.
-			 */
-			signal: {
-				type: Object,
-				default: () => ({})
-			},
-
-			/**
 			 * A predefined set of operators used for creating or managing filters within the component.
 			 */
 			filterOperators: {
@@ -1160,7 +1135,7 @@
 				perPageDefault: 10,
 				showRecordCount: false,
 				showRowsSelectedTotalizer: false,
-				numVisibilePaginationButtons: undefined,
+				numVisiblePaginationButtons: undefined,
 				pagination: true,
 				tableTitle: '',
 				tableNamePlural: '',
@@ -1169,33 +1144,27 @@
 					visibility: false,
 					showRefreshButton: true
 				},
+				filtersVisible: true,
 				allowColumnSort: false,
 				allowColumnFilters: false,
 				allowColumnResize: true,
 				perPageOptions: [],
-				numRows: 0,
-				cardMode: false,
 				isFirstTime: true,
-				isResponsive: false,
 				canInsert: true,
 				crudActions: [],
 				customActions: [],
 				generalActions: [],
 				generalCustomActions: [],
-				addAction: {},
 				rowClickAction: {},
-				rowActionClasses: {},
 				rowActionDisplay: 'dropdown',
 				showRowActionIcon: true,
 				showGeneralActionIcon: true,
 				showRowActionText: true,
 				showGeneralActionText: true,
 				actionsPlacement: 'left',
-				generalActionsPlacement: 'below',
 				rowClickActionInternal: '',
 				extendedActions: [],
 				paginationPlacement: 'left',
-				lcid: 'pt-PT',
 				system: 0,
 				pkColumn: '',
 				menuForJump: '',
@@ -1209,15 +1178,12 @@
 					hours: 'HH:mm'
 				},
 				rowBgColorSelected: '#E0E0E0',
-				filtersVisible: false,
-				staticFiltersVisible: true,
 				allowFileExport: false,
 				exportOptions: [],
 				allowFileImport: false,
 				importOptions: [],
 				importTemplateOptions: [],
 				showLimitsInfo: false,
-				showImportResponsePopup: false,
 				showFooter: true,
 				resizableGrid: null,
 				hasTextWrap: false,
@@ -1231,11 +1197,10 @@
 				},
 				rowKeyToScroll: '',
 				focusElement: '',
-				userTableConfigName: '',
-				tableConfigNames: [],
 				defaultSearchColumnName: '',
 				columnResizeOptions: {},
 				tableContainerElem: {},
+				hasHorizontalScrollers: false,
 				importModalProps: {
 					props: {
 						size: 'medium',
@@ -1245,16 +1210,13 @@
 						id: 'data-import'
 					}
 				},
-				configOptions: [],
-				configOptionsUse: [],
 				permissions: {},
-				signalSearch: {},
 
 				// SortableJS plugin instance
 				sortablePlugin: null,
 
 				blockTableCheck: false,
-				vbtAllSelected: this.allSelectedRows === 'true',
+				allSelected: this.allSelectedRows === 'true',
 				/**
 				 * Row key path of navigated row
 				 */
@@ -1290,7 +1252,28 @@
 				/**
 				 * Whether the rows should be re-rendered when the row data changes.
 				 */
-				rerenderRowsOnNextChange: true
+				rerenderRowsOnNextChange: true,
+				// Whether the horizontal scroll left indicator should be visible
+				scrollHorizLeftVisible: false,
+				// Whether the horizontal scroll right indicator should be visible
+				scrollHorizRightVisible: false,
+				// Pressed state for scroll button
+				scrollHorizLeftPressed: false,
+				// Pressed state for scroll button
+				scrollHorizRightPressed: false,
+				// Resize observer to react to changes in the table size
+				resizeObserver: null,
+				// Horizontal scroll interval ID
+				scrollHorizIntervalId: null,
+				checkBoxSize: null,
+				radioButtonSize: null,
+				generalActionGroups: [
+					{
+						id: 'default',
+						display: 'inline',
+						displayLabels: true
+					}
+				]
 			}
 		},
 
@@ -1313,8 +1296,7 @@
 				hasExtendedAction: this.hasExtendedAction,
 				getCellDataDisplay: this.getCellDataDisplay,
 				getRowCellDataTitles: this.getRowCellDataTitles,
-				isRowSelected: this.isRowSelected,
-				columnFullName: this.columnFullName
+				isRowSelected: this.isRowSelected
 			}
 		},
 
@@ -1342,7 +1324,7 @@
 
 			this.handleShiftKey()
 
-			this.$nextTick().then(() => {
+			nextTick().then(() => {
 				if (this.$refs.tableElem && this.$refs.tableContainerElem)
 				{
 					//FOR: COLUMN RESIZE
@@ -1358,7 +1340,7 @@
 
 			this.initRowsDragAndDrop()
 
-			this.$nextTick().then(() => this.emitEvent('loaded'))
+			nextTick().then(() => this.emitEvent('loaded'))
 		},
 
 		updated()
@@ -1373,7 +1355,7 @@
 			{
 				this.emitEvent('set-property', ['config', 'setNavOnUpdate'], false)
 
-				this.$nextTick().then(() => {
+				nextTick().then(() => {
 					this.navigateToTableRowAction('first')
 				})
 			}
@@ -1409,6 +1391,9 @@
 
 			this.columnHierarchy.length = 0
 			this.vbtRows = null
+
+			this.resizeObserver?.disconnect()
+			this.resizeObserver = null
 		},
 
 		computed: {
@@ -1471,14 +1456,6 @@
 			},
 
 			/**
-			 * Determine the icon used for toggling filters visibility.
-			 */
-			toggleFiltersIcon()
-			{
-				return this.filtersVisible ? 'collapse' : 'expand'
-			},
-
-			/**
 			 * Calculate total number of pages based on the current per-page setting and the number of filtered results.
 			 */
 			totalPages()
@@ -1527,19 +1504,11 @@
 			},
 
 			/**
-			 * Get the unique identifier for the configuration menu.
-			 */
-			configMenuId()
-			{
-				return this.controlId + '-config-menu-btn'
-			},
-
-			/**
 			 * Define the HTML level tag to be used for the table header.
 			 */
 			headerTag()
 			{
-				return 'h' + this.headerLevel
+				return getHeadingTagNameByLevel(this.headerLevel)
 			},
 
 			/**
@@ -1595,22 +1564,6 @@
 			},
 
 			/**
-			 * Determine if rows can be selected (single).
-			 */
-			rowsSelectableSingle()
-			{
-				return this.rowClickActionInternal === 'selectSingle'
-			},
-
-			/**
-			 * Determine if all rows are selected in the checklist column.
-			 */
-			isSelectedAllRows()
-			{
-				return Object.keys(this.rows).every((key) => this.rowsSelected[this.rows[key].rowKey])
-			},
-
-			/**
 			 * Number of rows selected
 			 */
 			rowsSelectedCount()
@@ -1639,11 +1592,11 @@
 			 */
 			hasFilters()
 			{
-				return this.hasStaticFilters || this.hasCustomFilters
+				return this.hasStaticFilters || this.hasCustomFilters || !!this.$slots.filters
 			},
 
 			/**
-			 * Determine if there are any advanced, column-specific, or search bar filters available.
+			 * Determine if there are any search filters available.
 			 */
 			hasCustomFilters()
 			{
@@ -1663,62 +1616,39 @@
 			 */
 			hasStaticFiltersActive()
 			{
-				// Iterate group filters
-				for (const key in this.groupFilters)
-				{
-					const curFilter = this.groupFilters[key]
-
-					for (const idx in curFilter.filters)
-					{
-						const curSubFilter = curFilter.filters[idx]
-
-						if (curSubFilter.selected !== false) return true
-					}
-				}
-
-				// Iterate active filters
-				for (const key in this.activeFilters.options)
-				{
-					const curFilter = this.activeFilters.options[key]
-
-					if (curFilter.selected !== false) return true
-				}
-
-				return false
+				return this.groupFilters.some((f) => !isEmpty(f.selected)) ||
+					!isEmpty(this.activeFilters?.selected)
 			},
 
 			/**
-			 * Generates a title based on whether the filters are currently displayed.
-			 */
-			showHideFiltersTitle()
-			{
-				return `${this.texts.showText}/${this.texts.hideText} ${this.texts.filtersText}`
-			},
-
-			/**
-			 * Provides a list of all currently active advanced filters.
+			 * Provides a list of all currently active filters.
 			 */
 			filtersActive()
 			{
-				const filtersActive = []
-
-				for (const filter of this.filters)
-					if (filter.active !== false)
-						filtersActive.push(filter)
-
-				return filtersActive
+				return this.filters.filter((f) => f.active)
 			},
 
 			/**
-			 * Identify if rows are fully loaded and searchable.
+			 * The empty text that should be displayed.
 			 */
-			hasTableViewLoaded()
+			emptyTextToShow()
 			{
-				return (
-					this.config.userTableConfigName !== undefined &&
-					this.config.userTableConfigName !== null &&
-					this.config.userTableConfigName !== ''
-				)
+				const hasAnyFilterApplied =
+					(this.filtersActive?.length ?? 0) > 0 ||
+					this.hasStaticFiltersActive === true
+
+				const isEmpty = (this.vbtRows?.length ?? 0) === 0
+
+				// Show message when table is configured to only show after filtering
+				if (this.config.showAfterFilter && !hasAnyFilterApplied)
+					return this.texts.emptyTextShowAfterFilter
+
+				// Show message when filters are applied but no results are found
+				if (hasAnyFilterApplied && isEmpty)
+					return this.texts.emptyTextNoMatch
+
+				// Default empty text
+				return this.texts.emptyText
 			},
 
 			/**
@@ -1794,7 +1724,7 @@
 			{
 				return (
 					this.showConfigMenu ||
-					this.hasFilters ||
+					this.config.allowColumnFilters ||
 					this.showRowDragAndDropOption ||
 					this.allowFileExport ||
 					this.allowFileImport ||
@@ -1890,56 +1820,6 @@
 			},
 
 			/**
-			 * Get options array of saved views.
-			 */
-			savedViewsOptions()
-			{
-				if (!this.tableConfigNames) return []
-
-				let viewIdx = 1
-				const savedViewsOptions = []
-
-				for (const idx in this.tableConfigNames)
-				{
-					const configName = this.tableConfigNames[idx]
-					savedViewsOptions.push({
-						id: viewIdx,
-						text: configName,
-						key: viewIdx++,
-						value: configName,
-						group: 'user'
-					})
-				}
-
-				savedViewsOptions.push({
-					id: 0,
-					text: this.texts.baseTable,
-					separatorBefore: true,
-					key: 0,
-					value: this.texts.baseTable,
-					group: 'system'
-				})
-
-				return savedViewsOptions
-			},
-
-			/**
-			 * Determine whether to show the list of saved table views.
-			 */
-			showSavedViews()
-			{
-				return this.config.allowManageViews && this.savedViewsOptions.length > 1
-			},
-
-			/**
-			 * The ID of the selected table view.
-			 */
-			selectedViewId()
-			{
-				return this.getViewIdByName(this.userTableConfigName)
-			},
-
-			/**
 			 * Determine whether to show table view configuration dropdown menu.
 			 */
 			showConfigMenu()
@@ -1950,12 +1830,11 @@
 			},
 
 			/**
-			 * Get unselected options for the `perPage` dropdown.
+			 * Get sorted options for the `perPage` dropdown.
 			 */
-			unselectedPerPageOptions()
+			sortedPerPageOptions()
 			{
-				const perPageOptions = this.perPageOptions.concat([this.perPageDefault]).sort((a, b) => a - b)
-				return perPageOptions.filter((item, pos) => item !== this.perPage && perPageOptions.indexOf(item) === pos)
+				return this.perPageOptions.concat([this.perPageDefault]).toSorted((a, b) => a - b)
 			},
 
 			/**
@@ -1986,14 +1865,30 @@
 				return resourcesPath + this.config.emptyRowImg
 			},
 
-			labelId() {
-				return `label_${this.controlId}`
-			},
+			/**
+			 * The list of general actions.
+			 */
+			generalActionItems()
+			{
+				const permissions = { insertBtnDisabled: !this.canInsert }
 
-			hasInfoBanner() {
-				if(!this.helpControl) return false
-				return this.helpControl.shortHelp.type === 'Info-banner' || this.helpControl.detailedHelp?.type === 'Info-banner'
-			},
+				return [
+					...this.generalCustomActions.map((act) => ({
+						...act,
+						key: act.id,
+						label: act.title,
+						group: 'default'
+					})),
+					...this.generalActions.map((act) => ({
+						...act,
+						key: act.id,
+						label: act.title,
+						group: 'default',
+						isVisible: !this.tableIsReadonly,
+						disabled: !btnHasPermission(permissions, act.id)
+					}))
+				]
+			}
 		},
 
 		methods: {
@@ -2020,6 +1915,21 @@
 			},
 
 			/**
+			 * Emits the event to open the configuration popup.
+			 * @param props An object with properties to include in the payload
+			 */
+			showConfig(props)
+			{
+				const payload = {
+					...props,
+					modalProps: {
+						id: `${this.controlId}-config`
+					}
+				}
+				this.emitEvent('show-config', payload)
+			},
+
+			/**
 			 * Sets all data properties from props passed in
 			 */
 			initConfig()
@@ -2027,7 +1937,7 @@
 				// Merge properties of config prop
 				// Replace arrays with the new values instead of merging
 				mergeWith(this, this.config, (objValue, srcValue) => {
-					if(Array.isArray(objValue) && Array.isArray(srcValue))
+					if (Array.isArray(objValue) && Array.isArray(srcValue))
 						return srcValue
 				})
 			},
@@ -2174,12 +2084,12 @@
 			 * Navigate to row
 			 * @param index {number} Index of row to navigate to
 			 */
-			navigateToRow(index)
+			async navigateToRow(index)
 			{
-				const rowElems = this.navRowElems
+				const rowElems = this.navRowElems ?? []
 
 				// Check index bounds
-				if(index < 0 || index >= rowElems?.length)
+				if(index < 0 || index >= rowElems.length)
 					return
 
 				// Navigate to row
@@ -2195,9 +2105,8 @@
 				this.navRowIndex = index
 
 				// Find action elements and focus on first one
-				this.$nextTick().then(()=> {
-					this.navigateToTableRowAction('first')
-				})
+				await nextTick()
+				this.navigateToTableRowAction('first')
 			},
 
 			/**
@@ -2264,7 +2173,7 @@
 				const key = event?.key
 				const tableContainerElem = this.getTableContainerElement()
 
-				switch(key)
+				switch (key)
 				{
 					case 'Tab':
 					case 'Escape':
@@ -2290,11 +2199,19 @@
 						event.preventDefault()
 						break
 					case 'ArrowLeft':
+						// If the focused element is the table
+						// Let the normal scrolling happen
+						if(event.target === tableContainerElem)
+							return
 						// Navigate to the previous action element
 						this.navigateToTableRowAction('previous')
 						event.preventDefault()
 						break
 					case 'ArrowRight':
+						// If the focused element is the table
+						// Let the normal scrolling happen
+						if(event.target === tableContainerElem)
+							return
 						// Navigate to the next action element
 						this.navigateToTableRowAction('next')
 						event.preventDefault()
@@ -2345,7 +2262,7 @@
 			 * so keyboard navigation can continue from there
 			 * @param event {object} Event object
 			 */
-			rowOnFocusin(event)
+			async rowOnFocusin(event)
 			{
 				// Actual element mousedown happens on
 				const element = event?.target
@@ -2378,13 +2295,11 @@
 				// Prevent re-rendering rows when changing the row navigated property
 				this.rerenderRowsOnNextChange = false
 
+				if (this.config.returnElement)
+					await nextTick()
+
 				// Set the row property that signals if the row is navigated
-				if(this.config.returnElement)
-					this.$nextTick().then(() => {
-						this.emitRowNavigationIndex(multiIndex, true)
-					})
-				else
-					this.emitRowNavigationIndex(multiIndex, true)
+				this.emitRowNavigationIndex(multiIndex, true)
 			},
 
 			/**
@@ -2430,12 +2345,16 @@
 			 */
 			goToPage(pageNumber)
 			{
+				if (this.page === pageNumber)
+					return
+
 				this.page = pageNumber
 				this.emitEvent('set-property', ['config', 'page'], pageNumber)
 
-				if (!this.readonly && this.rowsSelectableMultiple) this.initHeaderSelector()
+				if (!this.readonly && this.rowsSelectableMultiple)
+					this.initHeaderSelector()
 
-				this.emitEvent('on-change-query')
+				this.emitEvent('refresh')
 			},
 
 			/**
@@ -2444,13 +2363,16 @@
 			 */
 			setPerPage(perPage)
 			{
+				if (this.perPage === perPage)
+					return
+
 				this.perPage = perPage
 
 				// Update property in table model object
 				this.emitEvent('set-property', ['config', 'perPageSelected'], perPage)
 
 				this.emitEvent('set-confirm-changes', true)
-				this.emitEvent('on-change-query')
+				this.emitEvent('refresh')
 			},
 
 			/**
@@ -2458,10 +2380,10 @@
 			 */
 			initHeaderSelector()
 			{
-				this.emitEvent('fetch-qtable-all-selected', this.id)
+				this.emitEvent('init-all-selected', this.id)
 
 				//If less than three records, disable button
-				if (this.vbtAllSelected)
+				if (this.allSelected)
 				{
 					this.checkCurrentPageRows(true)
 					this.disableAllChecks()
@@ -2617,7 +2539,7 @@
 				if (this.type === 'TreeList')
 					this.columnHierarchy = listFunctions.getColumnHierarchy(this.vbtColumns)
 
-				this.$nextTick().then(() => {
+				nextTick().then(() => {
 					if (this.$refs.tableElem && this.$refs.tableContainerElem)
 					{
 						//FOR: COLUMN RESIZE
@@ -2650,16 +2572,6 @@
 				}
 			},
 
-			/**
-			 * Get CSS class for table action element
-			 * @param action {Object}
-			 * @returns CSS class
-			 */
-			getActionButtonClass(action)
-			{
-				return has(action, 'class') ? action.class : 'btn-secondary'
-			},
-
 			//FOR: TABLE LIST ACTIONS
 			/**
 			 * Returns true if the action is to be called and false otherwise (if false then selects the row clicked)
@@ -2690,9 +2602,9 @@
 			 */
 			executeActionCell(row, column)
 			{
-				const emitAction = { row: row }
+				const emitAction = { row }
 
-				if (column !== undefined) emitAction['column'] = column
+				if (column !== undefined) emitAction.column = column
 
 				this.emitEvent('cell-action', emitAction)
 			},
@@ -2714,12 +2626,12 @@
 			 */
 			checkAllRows()
 			{
-				if (!this.vbtAllSelected)
+				if (!this.allSelected)
 				{
 					this.checkCurrentPageRows()
 
-					this.emitEvent('set-qtable-all-selected', { isSelected: true, id: this.id })
-					this.vbtAllSelected = true
+					this.emitEvent('set-selected-rows', { isSelected: true, id: this.id })
+					this.allSelected = true
 
 					//Make sure no one can uncheck rows
 					this.disableAllChecks()
@@ -2730,38 +2642,35 @@
 			 * Check all rows in current checklist column page
 			 * @returns Boolean
 			 */
-			checkCurrentPageRows(isInit = false)
+			async checkCurrentPageRows(isInit = false)
 			{
-				if (this.vbtAllSelected && !isInit)
+				if (this.allSelected && !isInit)
 				{
-					this.emitEvent('set-qtable-all-selected', { isSelected: false, id: this.id })
-					this.vbtAllSelected = false
+					this.emitEvent('set-selected-rows', { isSelected: false, id: this.id })
+					this.allSelected = false
 
 					//Re-enable rows
 					this.enableAllChecks()
 				}
 
-				let key = '',
-					row = {}
+				await nextTick()
 
+				// Check all visible rows, if they aren't checked already
 				const rowKeysArray = {}
+				let wasUnselected = false
 
-				//Check all visible rows if they aren't checked already
-				if (!this.isSelectedAllRows)
+				for (const row of this.rows)
 				{
-					for (key in this.rows)
+					// If row isn't already selected, add it to selected rows
+					if (!this.isRowSelected(row))
 					{
-						row = this.rows[key]
-
-						//If row is not already selected
-						if (!this.isRowSelected(row))
-						{
-							//Add to selected rows
-							rowKeysArray[row.rowKey] = true
-						}
+						rowKeysArray[row.rowKey] = true
+						wasUnselected = true
 					}
-					this.emitEvent('select-rows', rowKeysArray)
 				}
+
+				if (wasUnselected)
+					this.emitEvent('select-rows', rowKeysArray)
 			},
 
 			/**
@@ -2770,27 +2679,16 @@
 			 */
 			checkNoneRows()
 			{
-				if (this.vbtAllSelected)
+				if (this.allSelected)
 				{
-					this.emitEvent('set-qtable-all-selected', { isSelected: false, id: this.id })
-					this.vbtAllSelected = false
+					this.emitEvent('set-selected-rows', { isSelected: false, id: this.id })
+					this.allSelected = false
 
 					//Re-enable rows
 					this.enableAllChecks()
 				}
 
 				this.emitEvent('unselect-all-rows')
-			},
-
-			//FOR: TABLE LIST COLUMN SUPPORT FORMS
-			/**
-			 * Determine if column has a support form associated
-			 * @param column {Object}
-			 * @returns Boolean
-			 */
-			columnHasSupportForm(column)
-			{
-				return has(column, 'supportForm') && column.supportForm.length > 0
 			},
 
 			/**
@@ -2839,45 +2737,20 @@
 			 * Get string for title attribute of each cell in a row
 			 * @param row {Object}
 			 * @param columns {Object}
-			 * @param options {Object} [optional]
 			 * @returns String
 			 */
-			getRowCellDataTitles(row, columns, options)
+			getRowCellDataTitles(row, columns)
 			{
 				const cellTitles = {}
 
-				if (options !== undefined)
+				for (const column of columns)
 				{
-					options = {}
-				}
-
-				for (const col in columns)
-				{
-					const column = columns[col]
-
 					// Columns with multiple values will display a tooltip for each badge instead of a single tooltip for the entire cell.
 					if (column.isHtmlField || column.multipleValues) cellTitles[column.name] = ''
-					else cellTitles[column.name] = listFunctions.getCellValueDisplay(this, row, column, options)
+					else cellTitles[column.name] = listFunctions.getCellValueDisplay(this, row, column)
 				}
 
 				return cellTitles
-			},
-
-			/**
-			 * Get string for search value of cell data
-			 * @param row {Object}
-			 * @param column {Object}
-			 * @param options {Object} [optional]
-			 * @returns String
-			 */
-			getCellDataSearch(row, column, options)
-			{
-				if (options !== undefined)
-				{
-					return listFunctions.getCellValueSearch(this, row, column, options)
-				}
-
-				return listFunctions.getCellValueSearch(this, row, column)
 			},
 
 			/**
@@ -2889,12 +2762,8 @@
 			{
 				const cellIds = {}
 
-				for (const col in columns)
-				{
-					const column = columns[col]
-
+				for (const column of columns)
 					cellIds[column.name] = this.name + '-' + column.name
-				}
 
 				return cellIds
 			},
@@ -2907,15 +2776,7 @@
 			 */
 			rowIsValid(row)
 			{
-				if (this.config.rowValidation)
-				{
-					if (this.config.rowValidation.fnValidate(row) === false)
-					{
-						//Row is not valid
-						return false
-					}
-				}
-				return true
+				return this.config.rowValidation?.fnValidate(row) !== false
 			},
 
 			/**
@@ -2929,7 +2790,7 @@
 
 				if (this.hasRowClickAction) rowClasses.push('c-table__row--clickable')
 
-				if (this.rowIsValid(row) === false) rowClasses.push(this.config.rowValidation.class ?? 'c-table__row--pending')
+				if (!this.rowIsValid(row)) rowClasses.push(this.config.rowValidation.class ?? 'c-table__row--pending')
 				else if (columnsLevel > 0) rowClasses.push('q-tree-table-row')
 
 				return rowClasses.join(' ')
@@ -2942,11 +2803,9 @@
 			 */
 			getRowTitle(row)
 			{
-				if (this.rowIsValid(row) === false)
-				{
-					return this.config.rowValidation.message.value
-				}
-				return ''
+				return this.rowIsValid(row)
+					? ''
+					: this.config.rowValidation.message.value
 			},
 
 			//FOR: ROW CLICK ACTION (default click action or select row)
@@ -2958,9 +2817,7 @@
 			executeRowClickAction(row, rowId)
 			{
 				if (this.blockTableCheck || this.hasRowDragAndDrop)
-				{
 					return
-				}
 
 				//Remove child rows
 				row = this.rowWithoutChildren(row)
@@ -2972,6 +2829,16 @@
 				const rowKeyPath = listFunctions.getRowKeyPath(this.rows, row)
 				if (Object.keys(this.rowClickAction).length > 0) this.emitEvent('row-action', { id: this.rowClickAction.id, rowKeyPath, returnElement: rowId })
 				else this.emitEvent('row-action', { rowKeyPath, returnElement: rowId })
+			},
+
+			/**
+			 * Emits an event to execute the specified action.
+			 * @param {string} actionId The action identifier
+			 */
+			executeGeneralAction(actionId)
+			{
+				const action = this.generalActionItems.find((e) => e.key === actionId)
+				this.emitEvent('row-action', action)
 			},
 
 			/**
@@ -3044,43 +2911,6 @@
 			//END: Row methods
 
 			/**
-			 * Get sum of values of column in rows
-			 * @param column {Object}
-			 * @param selectedOnly {Boolean} total only selected rows
-			 * @returns Number
-			 */
-			getColumnTotalValue(column, selectedOnly)
-			{
-				if (column.showTotal)
-				{
-					let total = 0
-					let row = {}
-
-					if (selectedOnly === undefined)
-					{
-						selectedOnly = false
-					}
-
-					//Sum column values of rows
-					if (column.showTotal !== false)
-					{
-						for (const idx in this.rows)
-						{
-							row = this.rows[idx]
-
-							if (selectedOnly === false || this.isRowSelected(row))
-							{
-								total += this.getValueFromRow(row, column)
-							}
-						}
-
-						return total
-					}
-				}
-				return ''
-			},
-
-			/**
 			 * Submit selected rows
 			 * @param event {String}
 			 * @returns
@@ -3089,21 +2919,11 @@
 			{
 				this.emitEvent('row-group-action', {
 					rowsSelected: this.rowsSelected,
-					allSelected: this.vbtAllSelected,
+					allSelected: this.allSelected,
 					action: event.action
 				})
 			},
 
-			/**
-			 * Full column name
-			 * @param {object} column
-			 */
-			columnFullName(column)
-			{
-				return listFunctions.columnFullName(column)
-			},
-
-			//BEGIN: FOR: SEARCH FILTERS
 			/**
 			 * Search by a column for a value
 			 * @param column {Object}
@@ -3118,31 +2938,22 @@
 				const columnName = listFunctions.columnFullName(column)
 				const operator = searchFilterData.searchBarOperator(column?.searchFieldType ?? 'text', value)
 
+				// If a similar filter already exists, do nothing.
+				// TODO: Create a Filter type and implement this logic there.
+				if (this.filters.some((f) => f.active &&
+					f.field === columnName &&
+					f.operator === operator &&
+					f.values.length === 1 &&
+					f.subFilters.length === 0 &&
+					f.values[0] === value))
+					return
+
 				const searchFilter = listFunctions.searchFilter('', true, columnName, operator, [value])
 				const filters = cloneDeep(this.filters)
 				filters.push(searchFilter)
 
 				this.emitEvent('update:filters', filters)
 			},
-
-			/**
-			 * Show advanced filters interface
-			 */
-			showAdvancedFilters()
-			{
-				this.emitEvent(
-					'signal-component',
-					'config',
-					{
-						show: true,
-						selectedTab: 'advanced-filters',
-						returnElement: this.configMenuId
-					},
-					true
-				)
-				this.emitEvent('signal-component', 'advancedFilters', { columnName: null, selectedFilterIdx: undefined }, true)
-			},
-			//END: FOR: SEARCH FILTERS
 
 			/**
 			 * Emit action to export table data
@@ -3171,10 +2982,7 @@
 			 */
 			exportTemplate(format)
 			{
-				const payload = {
-					format: format
-				}
-				this.emitEvent('on-export-template', payload)
+				this.emitEvent('on-export-template', { format })
 			},
 
 			/**
@@ -3193,16 +3001,6 @@
 			updateGroupFilters(groupFilters)
 			{
 				this.emitEvent('update:groupFilters', groupFilters)
-			},
-
-			/**
-			 * Get value for radio button group based on filter model
-			 * @param entry {Object}
-			 * @returns String
-			 */
-			radioValue(entry)
-			{
-				return this.groupFilterIsMultiple(entry) ? '' : filter.value
 			},
 
 			/**
@@ -3254,17 +3052,8 @@
 			},
 
 			/**
-			 * Toggle showing/hiding static filters
-			 */
-			toggleShowStaticFilters()
-			{
-				this.staticFiltersVisible = !this.staticFiltersVisible
-			},
-
-			/**
 			 * Emit to add new row
 			 * @param row {Object}
-			 * @returns
 			 */
 			emitRowAdd(row)
 			{
@@ -3277,7 +3066,6 @@
 			/**
 			 * Emit to update row values
 			 * @param row {Object}
-			 * @returns
 			 */
 			emitRowEdit(row)
 			{
@@ -3287,7 +3075,6 @@
 			/**
 			 * Emit to delete rows
 			 * @param rowKeys {Object}
-			 * @returns
 			 */
 			emitRowsDelete(rowKeys)
 			{
@@ -3302,35 +3089,11 @@
 			 * @param row {Object}
 			 * @param column {Object}
 			 * @param value {Object}
-			 * @returns
 			 */
+			// TODO: This method is mutating props (row is an element of rows)...
 			setCellValue(row, column, value)
 			{
 				listFunctions.setCellValue(row, column, value)
-			},
-
-			/**
-			 * Set the value of a cell
-			 * @param row {Object}
-			 * @param column {Object}
-			 * @param value {Object}
-			 * @returns
-			 */
-			setTableCellValue(row, column, value)
-			{
-				listFunctions.setTableCellValue(this, row, column, value)
-			},
-
-			/**
-			 * Set the value of a cell
-			 * @param row {Object}
-			 * @param column {Object}
-			 * @param options {Object}
-			 * @returns
-			 */
-			cellOnChange(row, column, options)
-			{
-				listFunctions.cellOnChange(this, row, column, options)
 			},
 
 			/**
@@ -3338,45 +3101,24 @@
 			 * @param row {Object}
 			 * @param column {Object}
 			 * @param value {Object}
-			 * @returns
 			 */
 			updateCell(row, column, event)
 			{
-				this.emitEvent('update-cell', { row: row, column: column, value: event })
+				this.emitEvent('update-cell', { row, column, value: event })
 
-				// Optionally prevent rerendering rows when changing cell values
-				if(column.rerenderRowsOnNextChange === false)
-					this.rerenderRowsOnNextChange = false
-				else
-					this.rerenderRows()
+				this.rerenderRows()
 
 				//Set cell value in component data
 				this.setCellValue(row, column, event)
 
-				//Set cell value in external table data
-				this.setTableCellValue(row, column, event)
-
-				//Call method set to run when changing data in this column
-				this.cellOnChange(row, column, {})
-
 				if (this.fieldsEditable)
-				{
 					this.emitRowEdit(row, column, event)
-				}
 
 				if (this.hasRowDragAndDrop && column.sortOrder > 0)
 				{
 					const index = listFunctions.getCellValue(row, column)
 					this.navigateToRow(parseInt(index) - 1)
 				}
-			},
-
-			/**
-			 * Toggle text wrap in cells
-			 */
-			toggleTextWrap()
-			{
-				this.hasTextWrap = !this.hasTextWrap
 			},
 
 			/**
@@ -3423,39 +3165,6 @@
 				}
 
 				return tableElem
-			},
-
-			/**
-			 * Get the column header DOM elements
-			 * @returns
-			 */
-			getColumnHeaderElements()
-			{
-				const columnHeaderDOMElems = []
-				//Get table element
-				const tableElem = this.getTableElement()
-				if (tableElem === undefined || tableElem === null)
-				{
-					return columnHeaderDOMElems
-				}
-				//Get row elements
-				const rowElems = tableElem.getElementsByTagName('TR')
-				if (rowElems === undefined || rowElems === null || rowElems.length < 1)
-				{
-					return columnHeaderDOMElems
-				}
-				//Get column header elements
-				const columnHeaderElems = rowElems[0].getElementsByTagName('TH')
-				if (columnHeaderElems === undefined || columnHeaderElems === null || columnHeaderElems.length < 1)
-				{
-					return columnHeaderDOMElems
-				}
-				//Add DOM elements to array
-				for (let idx = 0; idx < columnHeaderElems.length; idx++)
-				{
-					columnHeaderDOMElems.push(columnHeaderElems.item(idx))
-				}
-				return columnHeaderDOMElems
 			},
 
 			/**
@@ -3525,67 +3234,6 @@
 				}
 
 				return tableFooterElem
-			},
-
-			/**
-			 * Set the size of the table footer DOM element
-			 * @returns
-			 */
-			setTableFooterSize()
-			{
-				const tableElem = this.getTableElement()
-				if (tableElem === undefined || tableElem === null)
-				{
-					return
-				}
-				const tableWrapperElem = this.getTableWrapperElement()
-				if (tableWrapperElem === undefined || tableWrapperElem === null)
-				{
-					return
-				}
-				const tableFooterElem = this.getTableFooterElement()
-				if (tableFooterElem === undefined || tableFooterElem === null)
-				{
-					return
-				}
-
-				if (tableElem.offsetWidth < tableWrapperElem.offsetWidth)
-				{
-					tableFooterElem.style.width = tableElem.offsetWidth + 'px'
-				} else
-				{
-					tableFooterElem.style.width = null
-				}
-			},
-
-			/**
-			 * Save current view
-			 * @returns
-			 */
-			saveCurrentView()
-			{
-				this.emitEvent('save-view', {
-					name: this.config.userTableConfigName,
-					isSelected: -1
-				})
-
-				const alertProps = {
-					type: 'success',
-					message: this.texts.tableViewSaveSuccess,
-					icon: 'ok'
-				}
-				this.emitEvent('set-info-message', alertProps)
-				this.emitEvent('set-confirm-changes', false)
-				this.emitEvent('update-config')
-			},
-
-			/**
-			 * Close current view
-			 * @returns
-			 */
-			closeCurrentView()
-			{
-				this.emitEvent('close-view', {})
 			},
 
 			/**
@@ -3675,13 +3323,13 @@
 							draggable: 'tr',
 							dataIdAttr: 'id',
 							direction: 'vertical',
-							chosenClass: 'row-grabbed',
-							ghostClass: 'row-ghost',
-							dragClass: 'row-drag',
-							handle: '.c-table__drag',
+							chosenClass: 'q-table__row-grabbed',
+							ghostClass: 'q-table__row-ghost',
+							dragClass: 'q-table__row-dragging',
+							handle: '.q-table__row-drag-handle',
 							animation: 300,
 							forceFallback: true,
-							fallbackClass: 'row-drag',
+							fallbackClass: 'q-table__row-dragging',
 							// Adds a class to prevent the selection of other rows text
 							onStart: () => this.$refs.tableElem.style.userSelect = 'none',
 							onEnd: this.onRowDragAndDrop
@@ -3716,120 +3364,7 @@
 			goToRow(rowKeyPath, rowId)
 			{
 				this.emitEvent('go-to-row', rowKeyPath)
-
 				this.scrollToRow(rowId)
-			},
-
-			/**
-			 * Emits for table configuration menu
-			 * @param id {string}
-			 */
-			emitConfigAction(id)
-			{
-				const eObj = find(this.configOptions, ['id', id])
-				if (!eObj) return
-
-				// If saving changes to current table view
-				if (eObj.id === 'viewSaveChanges') this.saveCurrentView()
-				// Other options that open the table configuration pop-up and need an element ID
-				// to signal which tab will be selected in the pop-up
-				else if (eObj.elementId)
-				{
-					if (eObj.elementId === 'advanced-filters')
-						this.showAdvancedFilters()
-					else
-					{
-						// For saving a new configuration, the mode must be specified
-						// since multiple actions used the same interface that will be opened
-						if (eObj.id === 'viewSave')
-						{
-							this.emitEvent(
-								'signal-component',
-								'viewSave',
-								{ mode: 'SAVE' },
-								true
-							)
-						}
-						this.emitEvent('signal-component', 'config', {
-							show: true,
-							selectedTab: eObj.elementId,
-							returnElement: this.configMenuId
-						})
-					}
-				}
-			},
-
-			/**
-			 * Get view by ID
-			 * @param id {number}
-			 */
-			getViewById(id)
-			{
-				return find(this.savedViewsOptions, ['id', id])
-			},
-
-			/**
-			 * Get view ID by Name
-			 * @param name {string}
-			 */
-			getViewIdByName(name)
-			{
-				const view = find(this.savedViewsOptions, ['value', name])
-				if (!view) return 0
-				return view.id
-			},
-
-			/**
-			 * Set view as selected view by ID
-			 * @param id {number}
-			 */
-			setSelectedViewById(id)
-			{
-				if (id === 0)
-				{
-					this.closeCurrentView()
-				} else
-				{
-					const selectedViewInfo = find(this.savedViewsOptions, ['key', id])
-					if (!selectedViewInfo) return
-					//Emit data to script which calls apply function
-					this.emitEvent('view-action', { name: 'SHOW', rowValue: selectedViewInfo.value })
-				}
-			},
-
-			/**
-			 * Save view and set view as selected view by ID
-			 * @param id {number}
-			 */
-			saveViewOpenView(id)
-			{
-				this.saveCurrentView()
-				this.setSelectedViewById(id)
-			},
-
-			/**
-			 * Confirm whether to save if there are changes and set view as selected view by ID
-			 * @param id {number}
-			 */
-			confirmAndSetSelectedViewById(id)
-			{
-				if (this.confirmChanges && !this.readonly)
-				{
-					const buttons = {
-						confirm: {
-							label: this.texts.saveText,
-							action: () => { this.saveViewOpenView(id) }
-						},
-						cancel: {
-							label: this.texts.discard,
-							action: () => { this.setSelectedViewById(id) }
-						}
-					}
-					genericFunctions.displayMessage(`${this.texts.wantToSaveChangesToView}`, 'warning', null, buttons)
-				} else
-				{
-					this.setSelectedViewById(id)
-				}
 			},
 
 			setChildRowsVisibility(eventData)
@@ -3905,12 +3440,36 @@
 			 * Re-render rows
 			 * FOR: GETTING NAVIGABLE ROW ELEMENTS
 			 */
-			rerenderRows()
+			async rerenderRows()
 			{
+				const focusableSelector = `
+					a[href],
+					button:not([disabled]),
+					input:not([disabled]),
+					select:not([disabled]),
+					textarea:not([disabled]),
+					[tabindex]:not([tabindex="-1"])
+				`
+
+				// Before re-render, get the currently focused element
+				const focusedIndex = Array.from(
+					this.$refs.tbody.querySelectorAll(focusableSelector)
+				).indexOf(document.activeElement)
+
 				// Track number of rows to render
 				this.setRowsToLoad()
 				// Make rows re-mount
 				this.rowDomKey++
+
+				// After re-render, restore the focused element
+				if (focusedIndex !== -1)
+				{
+					await nextTick()
+
+					Array.from(
+						this.$refs.tbody.querySelectorAll(focusableSelector)
+					)[focusedIndex]?.focus()
+				}
 			},
 
 			/**
@@ -3934,6 +3493,11 @@
 				this.setNavRowElements()
 				// Uses setTimeout with 0 to prevent focusing before everything else has finished running
 				setTimeout(() => this.setInitialFocus(), 0)
+
+				// Update scroll indicators after all rows have loaded
+				// so the table's scrollWidth property is accurate
+				if (this.isListVisible)
+					this.updateScrollers()
 			},
 
 			/**
@@ -3951,7 +3515,7 @@
 			 */
 			setInitialFocus()
 			{
-				if(
+				if (
 					this.config.focusElement === undefined ||
 					this.config.focusElement === null ||
 					this.config.focusElement === ''
@@ -3965,23 +3529,149 @@
 				this.emitEvent('set-property', ['config', 'focusElement'], '')
 
 				// If element doesn't exist, focus on table container
-				if(!focusElement)
+				if (!focusElement)
 					focusElement = document.getElementById(this.tableContainerId)
 
-				if(typeof focusElement?.focus !== 'function') return
+				if (typeof focusElement?.focus !== 'function') return
 				focusElement.focus()
+			},
+
+			/**
+			 * Sets the pressed state of the left scroll button.
+			 * @param isPressed {Boolean} Whether the button is being pressed or not
+			 */
+			setScrollButtonLeftPressed(isPressed)
+			{
+				this.scrollHorizLeftPressed = isPressed
+			},
+
+			/**
+			 * Sets the pressed state of the right scroll button.
+			 * @param isPressed {Boolean} Whether the button is being pressed or not
+			 */
+			setScrollButtonRightPressed(isPressed)
+			{
+				this.scrollHorizRightPressed = isPressed
+			},
+
+			/**
+			 * Scroll the table contents
+			 * @param scrollAmountHoriz {Number} Amount to scroll horizontally
+			 * @param scrollAmountVert {Number} Amount to scroll vertically
+			 */
+			scrollTable(scrollAmountHoriz, scrollAmountVert)
+			{
+				// Table container element
+				const tableContainer = this.getTableContainerElement()
+				// Scroll position before scrolling
+				const scrollPosHoriz = tableContainer.scrollLeft
+				const scrollPosVert = tableContainer.scrollTop
+
+				// Scroll table contents
+				tableContainer.scroll(scrollPosHoriz + scrollAmountHoriz, scrollPosVert + scrollAmountVert)
+			},
+
+			/**
+			 * Called when scrolling the table contents
+			 */
+			async updateScrollers()
+			{
+				if (!this.hasHorizontalScrollers)
+					return
+
+				await nextTick()
+
+				// Table container element
+				const tableContainer = this.getTableContainerElement()
+
+				if (!tableContainer)
+					return
+
+				// Whether the table is scrolled to the beginning horizontally
+				const atBeginHoriz = tableContainer.scrollLeft < 1
+				// Whether the table is scrolled to the end horizontally
+				const atEndHoriz = tableContainer.scrollWidth - tableContainer.scrollLeft - tableContainer.clientWidth < 1
+
+				// Update table scroll indicators
+				this.scrollHorizLeftVisible = !atBeginHoriz
+				this.scrollHorizRightVisible = !atEndHoriz
+
+				// Update scroll button pressed states
+				if (atBeginHoriz)
+					this.setScrollButtonLeftPressed(false)
+				if (atEndHoriz)
+					this.setScrollButtonRightPressed(false)
+			},
+
+			/**
+			 * Mouse down handler for the left scroll button.
+			 */
+			scrollButtonLeftOnMousedown()
+			{
+				this.setScrollButtonLeftPressed(true)
+
+				if (this.scrollHorizIntervalId)
+				{
+					clearInterval(this.scrollHorizIntervalId)
+					this.scrollHorizIntervalId = null
+				}
+
+				// Scroll table while scroll button is being pressed
+				// Delay of 33ms to scroll at around 30fps
+				// Scroll by 33px to match the normal scroll wheel speed
+				// when using this delay
+				this.scrollHorizIntervalId = setInterval(() => {
+					// Scroll table
+					this.scrollTable(-33)
+					// If mouse is not down on scroll button anymore,
+					// clear interval to stop scrolling
+					if (!this.scrollHorizLeftPressed)
+					{
+						clearInterval(this.scrollHorizIntervalId)
+						this.scrollHorizIntervalId = null
+					}
+				}, 33)
+			},
+
+			/**
+			 * Mouse down handler for the right scroll button.
+			 */
+			scrollButtonRightOnMousedown()
+			{
+				this.setScrollButtonRightPressed(true)
+
+				if (this.scrollHorizIntervalId)
+				{
+					clearInterval(this.scrollHorizIntervalId)
+					this.scrollHorizIntervalId = null
+				}
+
+				// Scroll table while scroll button is being pressed
+				// Delay of 33ms to scroll at around 30fps
+				// Scroll by 33px to match the normal scroll wheel speed
+				// when using this delay
+				this.scrollHorizIntervalId = setInterval(() => {
+					// Scroll table
+					this.scrollTable(33)
+					// If mouse is not down on scroll button anymore,
+					// clear interval to stop scrolling
+					if (!this.scrollHorizRightPressed)
+					{
+						clearInterval(this.scrollHorizIntervalId)
+						this.scrollHorizIntervalId = null
+					}
+				}, 33)
 			}
 		},
-		//END: methods
 
 		watch: {
-			'rows': {
+			rows: {
 				handler(newVal)
 				{
 					this.vbtRows = newVal
 					this.isFirstTime = false
 
-					if (this.vbtAllSelected) this.checkCurrentPageRows(true)
+					if (this.allSelected) this.checkCurrentPageRows(true)
 
 					// Track number of rows to render
 					this.setRowsToLoad()
@@ -4001,7 +3691,7 @@
 				deep: true
 			},
 
-			'columns': {
+			columns: {
 				handler()
 				{
 					//FOR: ROW ACTIONS, EXTENDED ACTIONS, COLUMN ORDER AND VISIBILITY
@@ -4011,32 +3701,43 @@
 				deep: true
 			},
 
-			activeViewModeId()
-			{
-				if (this.isListVisible)
+			activeViewModeId: {
+				handler()
 				{
-					this.$nextTick().then(() => {
-						if (this.$refs.tableElem && this.$refs.tableContainerElem)
-						{
-							//FOR: COLUMN RESIZE
-							this.applyColumnResizeable()
-						}
-					})
-				}
-			},
-
-			signal: {
-				handler(newValue)
-				{
-					if (newValue.saveCurrentView !== undefined)
+					if (this.isListVisible)
 					{
-						this.saveCurrentView()
+						nextTick().then(() => {
+							if (this.$refs.tableElem && this.$refs.tableContainerElem)
+							{
+								//FOR: COLUMN RESIZE
+								this.applyColumnResizeable()
+
+								if (this.hasHorizontalScrollers)
+								{
+									// Update scroll indicators after all rows have loaded
+									// so the table's scrollWidth property is accurate
+									this.updateScrollers()
+
+									// Check for table size changes to update scrollers
+									this.resizeObserver = new ResizeObserver(() => {
+										this.updateScrollers()
+									})
+									this.resizeObserver.observe(this.getTableElement())
+									this.resizeObserver.observe(this.getTableContainerElement())
+								}
+							}
+						})
+					}
+					else
+					{
+						this.resizeObserver?.disconnect()
+						this.resizeObserver = null
 					}
 				},
-				deep: true
+				immediate: true
 			},
 
-			'config': {
+			config: {
 				handler()
 				{
 					this.initConfig()
@@ -4044,20 +3745,19 @@
 				deep: true
 			},
 
-			'hasRowDragAndDrop'(newValue)
+			hasRowDragAndDrop(newValue)
 			{
 				if (newValue) this.initRowsDragAndDrop()
 				else this.destroyRowsDragAndDrop()
 			},
 
-			'allSelectedRows': {
+			allSelectedRows: {
 				handler(newValue) {
 					if (newValue === 'true')
 						this.checkAllRows()
 					else
 						this.checkNoneRows()
 				},
-				deep: true,
 				immediate: true
 			}
 		}

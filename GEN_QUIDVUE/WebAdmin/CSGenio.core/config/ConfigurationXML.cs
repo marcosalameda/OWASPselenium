@@ -94,7 +94,7 @@ namespace CSGenio
                 newElement.Users = new List<UserCfgEl>();
 
                 //Set default values for security configuration
-                newElement.AuthenticationMode = GenioServer.security.AuthenticationMode.AcceptOnFirstSucess;
+                newElement.AuthenticationMode = GenioServer.security.AuthenticationMode.OneButtonPerProvider;
 
                 IdentityProviderCfgEl identProvid = new IdentityProviderCfgEl();
                 identProvid.Name = "quidgest";
@@ -421,6 +421,10 @@ namespace CSGenio
                 JWTEncryptionKey = ConfigurationXML.EncodeSecret(value);
             }
         }
+
+        [CliProperty("mcp-url", "Mcp URL to be used by the AI service. Should end in /mcp")]
+        [XmlElement("mcpURL")]
+        public string AppMCPEndpoint { get; set; }
     }
 
     [XmlRoot("core")]
@@ -1012,6 +1016,9 @@ namespace CSGenio
 
         [XmlAttribute("groupSeparator")]
         public string GroupSeparator {get; set;} = " ";
+
+        [XmlAttribute("negativeFormat")]
+        public string NegativeFormat { get; set; } = "-";
     }
 
 

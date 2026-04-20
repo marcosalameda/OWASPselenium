@@ -7,6 +7,7 @@ using GenioMVC.Models.Navigation;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Quidgest.Persistence;
 using Quidgest.Persistence.GenericQuery;
+
 using System.Collections;
 using System.Collections.Concurrent;
 using System.Collections.Specialized;
@@ -35,6 +36,7 @@ namespace GenioMVC.ViewModels.Proje
 		public string ValCodyear { get; set; }
 
 		#endregion
+
 		/// <summary>
 		/// Title: "Project" | Type: "C"
 		/// </summary>
@@ -74,8 +76,6 @@ namespace GenioMVC.ViewModels.Proje
 		/// </summary>
 		[ValidateSetAccess]
 		public decimal? ValSaldo2 { get; set; }
-
-
 
 		#region Navigations
 		#endregion
@@ -266,12 +266,7 @@ namespace GenioMVC.ViewModels.Proje
 			}
 		}
 
-		/// <summary>
-		/// Sets the value of a single property of the view model based on the provided table and field names.
-		/// </summary>
-		/// <param name="fullFieldName">The full field name in the format "table.field".</param>
-		/// <param name="value">The field value.</param>
-		/// <exception cref="ArgumentNullException">Thrown if <paramref name="fullFieldName"/> is null.</exception>
+		/// <inheritdoc />
 		public override void SetViewModelValue(string fullFieldName, object value)
 		{
 			try
@@ -399,6 +394,7 @@ namespace GenioMVC.ViewModels.Proje
 			Characs = new List<string>();
 
 			Load_Proje___year1year____(qs, lazyLoad);
+
 // USE /[MANUAL GQT VIEWMODEL_LOADPARTIAL PROJE]/
 		}
 
@@ -469,10 +465,7 @@ namespace GenioMVC.ViewModels.Proje
 				}
 			}
 
-			TableYear1Year = new TableDBEdit<Models.Year1>
-			{
-				IsLazyLoad = lazyLoad
-			};
+			TableYear1Year = new TableDBEdit<Models.Year1>();
 
 			if (lazyLoad)
 			{

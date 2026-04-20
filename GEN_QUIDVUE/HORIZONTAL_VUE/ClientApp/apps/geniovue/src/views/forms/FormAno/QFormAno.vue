@@ -9,12 +9,13 @@
 			<div
 				v-if="showFormHeader"
 				class="c-action-bar">
-				<h1
+				<component
 					v-if="formControl.uiComponents.header && formInfo.designation"
+					:is="topHeadingTag"
 					:id="formTitleId"
 					class="form-header">
 					{{ formInfo.designation }}
-				</h1>
+				</component>
 
 				<div class="c-action-bar__menu">
 					<template
@@ -40,13 +41,10 @@
 									@click="btn.action">
 									<template v-if="btn.icon">
 										<q-badge-indicator
-											v-if="btn.badge && btn.badge.isVisible"
-											:color="btn.badge.color">
+											:enabled="btn.badge?.isVisible ?? false"
+											:color="btn.badge?.color">
 											<q-icon v-bind="btn.icon" />
 										</q-badge-indicator>
-										<q-icon
-											v-else
-											v-bind="btn.icon" />
 									</template>
 								</q-toggle-group-item>
 							</template>
@@ -97,6 +95,7 @@
 		<q-container
 			fluid
 			data-key="ANO"
+			:data-identifier="primaryKeyValue"
 			:data-loading="!formInitialDataLoaded || !isActiveForm">
 			<template v-if="formControl.initialized && showFormBody">
 				<q-row v-if="controls.ANO_____YEAR_YEAR____.isVisible || controls.ANO_____YEAR_YEARNUM_.isVisible">
@@ -106,13 +105,15 @@
 						<base-input-structure
 							v-if="controls.ANO_____YEAR_YEAR____.isVisible"
 							class="i-text"
-							v-bind="controls.ANO_____YEAR_YEAR____"
+							v-bind="controls.ANO_____YEAR_YEAR____.wrapperProps"
+							:id="getControlId(controls.ANO_____YEAR_YEAR____)"
 							v-on="controls.ANO_____YEAR_YEAR____.handlers"
 							:loading="controls.ANO_____YEAR_YEAR____.props.loading"
 							:reporting-mode-on="reportingModeCAV"
 							:suggestion-mode-on="suggestionModeOn">
 							<q-text-field
 								v-bind="controls.ANO_____YEAR_YEAR____.props"
+								:id="getControlId(controls.ANO_____YEAR_YEAR____)"
 								@blur="onBlur(controls.ANO_____YEAR_YEAR____, model.ValYear.value)"
 								@change="model.ValYear.fnUpdateValueOnChange" />
 						</base-input-structure>
@@ -123,7 +124,8 @@
 						<base-input-structure
 							v-if="controls.ANO_____YEAR_YEARNUM_.isVisible"
 							class="i-text"
-							v-bind="controls.ANO_____YEAR_YEARNUM_"
+							v-bind="controls.ANO_____YEAR_YEARNUM_.wrapperProps"
+							:id="getControlId(controls.ANO_____YEAR_YEARNUM_)"
 							v-on="controls.ANO_____YEAR_YEARNUM_.handlers"
 							:loading="controls.ANO_____YEAR_YEARNUM_.props.loading"
 							:reporting-mode-on="reportingModeCAV"
@@ -131,6 +133,7 @@
 							<q-numeric-input
 								v-if="controls.ANO_____YEAR_YEARNUM_.isVisible"
 								v-bind="controls.ANO_____YEAR_YEARNUM_.props"
+								:id="getControlId(controls.ANO_____YEAR_YEARNUM_)"
 								@update:model-value="model.ValYearnum.fnUpdateValue" />
 						</base-input-structure>
 					</q-col>
@@ -142,14 +145,15 @@
 						<q-table
 							v-if="controls.ANO_____PSEUDTODASDES.isVisible"
 							v-bind="controls.ANO_____PSEUDTODASDES"
+							:id="getControlId(controls.ANO_____PSEUDTODASDES)"
 							v-on="controls.ANO_____PSEUDTODASDES.handlers">
+							<template #header>
+								<q-table-config
+									:table-ctrl="controls.ANO_____PSEUDTODASDES"
+									v-on="controls.ANO_____PSEUDTODASDES.handlers" />
+							</template>
 							<!-- USE /[MANUAL GQT CUSTOM_TABLE ANO_____PSEUDTODASDES]/ -->
 						</q-table>
-						<q-table-extra-extension
-							v-if="controls.ANO_____PSEUDTODASDES.isVisible"
-							:list-ctrl="controls.ANO_____PSEUDTODASDES"
-							:filter-operators="controls.ANO_____PSEUDTODASDES.filterOperators"
-							v-on="controls.ANO_____PSEUDTODASDES.handlers" />
 					</q-col>
 					<q-col
 						v-if="controls.ANO_____PSEUDAGREGADO.isVisible"
@@ -157,14 +161,15 @@
 						<q-table
 							v-if="controls.ANO_____PSEUDAGREGADO.isVisible"
 							v-bind="controls.ANO_____PSEUDAGREGADO"
+							:id="getControlId(controls.ANO_____PSEUDAGREGADO)"
 							v-on="controls.ANO_____PSEUDAGREGADO.handlers">
+							<template #header>
+								<q-table-config
+									:table-ctrl="controls.ANO_____PSEUDAGREGADO"
+									v-on="controls.ANO_____PSEUDAGREGADO.handlers" />
+							</template>
 							<!-- USE /[MANUAL GQT CUSTOM_TABLE ANO_____PSEUDAGREGADO]/ -->
 						</q-table>
-						<q-table-extra-extension
-							v-if="controls.ANO_____PSEUDAGREGADO.isVisible"
-							:list-ctrl="controls.ANO_____PSEUDAGREGADO"
-							:filter-operators="controls.ANO_____PSEUDAGREGADO.filterOperators"
-							v-on="controls.ANO_____PSEUDAGREGADO.handlers" />
 					</q-col>
 				</q-row>
 				<q-row v-if="controls.ANO_____YEAR_VALUE___.isVisible">
@@ -174,7 +179,8 @@
 						<base-input-structure
 							v-if="controls.ANO_____YEAR_VALUE___.isVisible"
 							class="i-text"
-							v-bind="controls.ANO_____YEAR_VALUE___"
+							v-bind="controls.ANO_____YEAR_VALUE___.wrapperProps"
+							:id="getControlId(controls.ANO_____YEAR_VALUE___)"
 							v-on="controls.ANO_____YEAR_VALUE___.handlers"
 							:loading="controls.ANO_____YEAR_VALUE___.props.loading"
 							:reporting-mode-on="reportingModeCAV"
@@ -182,6 +188,7 @@
 							<q-numeric-input
 								v-if="controls.ANO_____YEAR_VALUE___.isVisible"
 								v-bind="controls.ANO_____YEAR_VALUE___.props"
+								:id="getControlId(controls.ANO_____YEAR_VALUE___)"
 								@update:model-value="model.ValValue.fnUpdateValue" />
 						</base-input-structure>
 					</q-col>
@@ -190,7 +197,7 @@
 		</q-container>
 	</teleport>
 
-	<hr v-if="!isPopup && showFormFooter" />
+	<q-divider v-if="!isPopup && showFormFooter" />
 
 	<teleport
 		v-if="formModalIsReady && showFormFooter"
@@ -562,10 +569,11 @@
 					ANO_____PSEUDTODASDES: new fieldControlClass.TableListControl({
 						id: 'ANO_____PSEUDTODASDES',
 						name: 'TODASDES',
-						size: '',
+						size: 'xlarge',
 						label: computed(() => this.Resources.ALL_THE_EXPENSES38264),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
+						headerLevel: computed(() => this.baseHeadingLevel + 1),
 						controller: 'YEAR',
 						action: 'Ano_ValTodasdes',
 						hasDependencies: false,
@@ -608,7 +616,6 @@
 							searchBarConfig: {
 								visibility: false
 							},
-							filtersVisible: false,
 							allowColumnFilters: false,
 							allowColumnSort: true,
 							crudActions: [
@@ -682,9 +689,7 @@
 									id: 'insert',
 									name: 'insert',
 									title: computed(() => this.Resources.INSERIR43365),
-									icon: {
-										icon: 'add'
-									},
+									icon: { icon: 'add' },
 									isInReadOnly: false,
 									params: {
 										action: vm.openFormAction,
@@ -731,7 +736,7 @@
 								sortOrder: 'asc'
 							}
 						},
-						globalEvents: ['changed-YEAR', 'changed-PROJE', 'changed-AGREG', 'changed-EXPEN'],
+						globalEvents: ['changed-PROJE', 'changed-YEAR', 'changed-AGREG', 'changed-EXPEN'],
 						uuid: 'Ano_ValTodasdes',
 						allSelectedRows: 'false',
 						controlLimits: [
@@ -746,10 +751,11 @@
 					ANO_____PSEUDAGREGADO: new fieldControlClass.TableListControl({
 						id: 'ANO_____PSEUDAGREGADO',
 						name: 'AGREGADO',
-						size: '',
+						size: 'small',
 						label: computed(() => this.Resources.AGGREGATED_PER_YEAR01261),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
+						headerLevel: computed(() => this.baseHeadingLevel + 1),
 						controller: 'YEAR',
 						action: 'Ano_ValAgregado',
 						hasDependencies: true,
@@ -782,7 +788,6 @@
 							searchBarConfig: {
 								visibility: false
 							},
-							filtersVisible: false,
 							allowColumnFilters: false,
 							allowColumnSort: true,
 							crudActions: [
@@ -856,9 +861,7 @@
 									id: 'insert',
 									name: 'insert',
 									title: computed(() => this.Resources.INSERIR43365),
-									icon: {
-										icon: 'add'
-									},
+									icon: { icon: 'add' },
 									isInReadOnly: false,
 									params: {
 										action: vm.openFormAction,
@@ -905,7 +908,7 @@
 								sortOrder: 'asc'
 							}
 						},
-						globalEvents: ['changed-AGREG', 'changed-YEAR', 'changed-PROJE'],
+						globalEvents: ['changed-PROJE', 'changed-AGREG', 'changed-YEAR'],
 						uuid: 'Ano_ValAgregado',
 						allSelectedRows: 'false',
 						controlLimits: [
@@ -1312,7 +1315,6 @@
 
 				this.afterControlUpdate(controlField, fieldValue)
 			},
-
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
 // USE /[MANUAL GQT FUNCTIONS_JS ANO]/
 // eslint-disable-next-line

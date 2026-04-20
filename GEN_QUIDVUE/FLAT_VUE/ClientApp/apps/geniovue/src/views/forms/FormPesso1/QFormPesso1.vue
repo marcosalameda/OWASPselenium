@@ -9,12 +9,13 @@
 			<div
 				v-if="showFormHeader"
 				class="c-action-bar">
-				<h1
+				<component
 					v-if="formControl.uiComponents.header && formInfo.designation"
+					:is="topHeadingTag"
 					:id="formTitleId"
 					class="form-header">
 					{{ formInfo.designation }}
-				</h1>
+				</component>
 
 				<div class="c-action-bar__menu">
 					<template
@@ -40,13 +41,10 @@
 									@click="btn.action">
 									<template v-if="btn.icon">
 										<q-badge-indicator
-											v-if="btn.badge && btn.badge.isVisible"
-											:color="btn.badge.color">
+											:enabled="btn.badge?.isVisible ?? false"
+											:color="btn.badge?.color">
 											<q-icon v-bind="btn.icon" />
 										</q-badge-indicator>
-										<q-icon
-											v-else
-											v-bind="btn.icon" />
 									</template>
 								</q-toggle-group-item>
 							</template>
@@ -97,16 +95,16 @@
 		<q-container
 			fluid
 			data-key="PESSO1"
+			:data-identifier="primaryKeyValue"
 			:data-loading="!formInitialDataLoaded || !isActiveForm">
 			<template v-if="formControl.initialized && showFormBody">
 				<q-row v-if="controls.PESSO1__PSEUDNOVOGR08.isVisible">
 					<q-col v-if="controls.PESSO1__PSEUDNOVOGR08.isVisible">
 						<q-group-box-container
 							v-if="controls.PESSO1__PSEUDNOVOGR08.isVisible"
-							id="PESSO1__PSEUDNOVOGR08"
 							v-bind="controls.PESSO1__PSEUDNOVOGR08"
-							no-border
-							:is-visible="controls.PESSO1__PSEUDNOVOGR08.isVisible">
+							:id="getControlId(controls.PESSO1__PSEUDNOVOGR08)"
+							:no-border="controls.PESSO1__PSEUDNOVOGR08.borderless">
 							<!-- Start PESSO1__PSEUDNOVOGR08 -->
 							<q-row v-if="controls.PESSO1__PSEUDNOVOGR04.isVisible || controls.PESSO1__PSEUDNOVOGR02.isVisible">
 								<q-col
@@ -114,9 +112,9 @@
 									cols="auto">
 									<q-group-box-container
 										v-if="controls.PESSO1__PSEUDNOVOGR04.isVisible"
-										id="PESSO1__PSEUDNOVOGR04"
 										v-bind="controls.PESSO1__PSEUDNOVOGR04"
-										:is-visible="controls.PESSO1__PSEUDNOVOGR04.isVisible">
+										:id="getControlId(controls.PESSO1__PSEUDNOVOGR04)"
+										:no-border="controls.PESSO1__PSEUDNOVOGR04.borderless">
 										<!-- Start PESSO1__PSEUDNOVOGR04 -->
 										<q-row v-if="controls.PESSO1__PESSOPHOTOGRA.isVisible">
 											<q-col
@@ -125,7 +123,8 @@
 												<base-input-structure
 													v-if="controls.PESSO1__PESSOPHOTOGRA.isVisible"
 													class="q-image"
-													v-bind="controls.PESSO1__PESSOPHOTOGRA"
+													v-bind="controls.PESSO1__PESSOPHOTOGRA.wrapperProps"
+													:id="getControlId(controls.PESSO1__PESSOPHOTOGRA)"
 													v-on="controls.PESSO1__PESSOPHOTOGRA.handlers"
 													:loading="controls.PESSO1__PESSOPHOTOGRA.props.loading"
 													:reporting-mode-on="reportingModeCAV"
@@ -133,6 +132,7 @@
 													<q-image
 														v-if="controls.PESSO1__PESSOPHOTOGRA.isVisible"
 														v-bind="controls.PESSO1__PESSOPHOTOGRA.props"
+														:id="getControlId(controls.PESSO1__PESSOPHOTOGRA)"
 														v-on="controls.PESSO1__PESSOPHOTOGRA.handlers" />
 												</base-input-structure>
 											</q-col>
@@ -141,9 +141,9 @@
 									</q-group-box-container>
 									<q-group-box-container
 										v-if="controls.PESSO1__PSEUDNOVOGR02.isVisible"
-										id="PESSO1__PSEUDNOVOGR02"
 										v-bind="controls.PESSO1__PSEUDNOVOGR02"
-										:is-visible="controls.PESSO1__PSEUDNOVOGR02.isVisible">
+										:id="getControlId(controls.PESSO1__PSEUDNOVOGR02)"
+										:no-border="controls.PESSO1__PSEUDNOVOGR02.borderless">
 										<!-- Start PESSO1__PSEUDNOVOGR02 -->
 										<q-row v-if="controls.PESSO1__PESSOIDFUNCIO.isVisible || controls.PESSO1__PESSONAME____.isVisible || controls.PESSO1__PESSODTNASCIM.isVisible || controls.PESSO1__PESSOIDADE___.isVisible">
 											<q-col
@@ -152,7 +152,8 @@
 												<base-input-structure
 													v-if="controls.PESSO1__PESSOIDFUNCIO.isVisible"
 													class="i-text"
-													v-bind="controls.PESSO1__PESSOIDFUNCIO"
+													v-bind="controls.PESSO1__PESSOIDFUNCIO.wrapperProps"
+													:id="getControlId(controls.PESSO1__PESSOIDFUNCIO)"
 													v-on="controls.PESSO1__PESSOIDFUNCIO.handlers"
 													:loading="controls.PESSO1__PESSOIDFUNCIO.props.loading"
 													:reporting-mode-on="reportingModeCAV"
@@ -160,18 +161,21 @@
 													<q-numeric-input
 														v-if="controls.PESSO1__PESSOIDFUNCIO.isVisible"
 														v-bind="controls.PESSO1__PESSOIDFUNCIO.props"
+														:id="getControlId(controls.PESSO1__PESSOIDFUNCIO)"
 														@update:model-value="model.ValIdfuncio.fnUpdateValue" />
 												</base-input-structure>
 												<base-input-structure
 													v-if="controls.PESSO1__PESSONAME____.isVisible"
 													class="i-text"
-													v-bind="controls.PESSO1__PESSONAME____"
+													v-bind="controls.PESSO1__PESSONAME____.wrapperProps"
+													:id="getControlId(controls.PESSO1__PESSONAME____)"
 													v-on="controls.PESSO1__PESSONAME____.handlers"
 													:loading="controls.PESSO1__PESSONAME____.props.loading"
 													:reporting-mode-on="reportingModeCAV"
 													:suggestion-mode-on="suggestionModeOn">
 													<q-text-field
 														v-bind="controls.PESSO1__PESSONAME____.props"
+														:id="getControlId(controls.PESSO1__PESSONAME____)"
 														@blur="onBlur(controls.PESSO1__PESSONAME____, model.ValName.value)"
 														@change="model.ValName.fnUpdateValueOnChange" />
 												</base-input-structure>
@@ -182,7 +186,8 @@
 												<base-input-structure
 													v-if="controls.PESSO1__PESSODTNASCIM.isVisible"
 													class="i-text"
-													v-bind="controls.PESSO1__PESSODTNASCIM"
+													v-bind="controls.PESSO1__PESSODTNASCIM.wrapperProps"
+													:id="getControlId(controls.PESSO1__PESSODTNASCIM)"
 													v-on="controls.PESSO1__PESSODTNASCIM.handlers"
 													:loading="controls.PESSO1__PESSODTNASCIM.props.loading"
 													:reporting-mode-on="reportingModeCAV"
@@ -190,6 +195,7 @@
 													<q-date-time-picker
 														v-if="controls.PESSO1__PESSODTNASCIM.isVisible"
 														v-bind="controls.PESSO1__PESSODTNASCIM.props"
+														:id="getControlId(controls.PESSO1__PESSODTNASCIM)"
 														:model-value="model.ValDtnascim.value"
 														@reset-icon-click="model.ValDtnascim.fnUpdateValue(model.ValDtnascim.originalValue ?? new Date())"
 														@update:model-value="model.ValDtnascim.fnUpdateValue($event ?? '')" />
@@ -201,7 +207,8 @@
 												<base-input-structure
 													v-if="controls.PESSO1__PESSOIDADE___.isVisible"
 													class="i-text"
-													v-bind="controls.PESSO1__PESSOIDADE___"
+													v-bind="controls.PESSO1__PESSOIDADE___.wrapperProps"
+													:id="getControlId(controls.PESSO1__PESSOIDADE___)"
 													v-on="controls.PESSO1__PESSOIDADE___.handlers"
 													:loading="controls.PESSO1__PESSOIDADE___.props.loading"
 													:reporting-mode-on="reportingModeCAV"
@@ -209,6 +216,7 @@
 													<q-numeric-input
 														v-if="controls.PESSO1__PESSOIDADE___.isVisible"
 														v-bind="controls.PESSO1__PESSOIDADE___.props"
+														:id="getControlId(controls.PESSO1__PESSOIDADE___)"
 														@update:model-value="model.ValIdade.fnUpdateValue" />
 												</base-input-structure>
 											</q-col>
@@ -219,8 +227,9 @@
 												cols="auto">
 												<base-input-structure
 													v-if="controls.PESSO1__PESSOINTERNA_.isVisible"
-													class="i-checkbox"
-													v-bind="controls.PESSO1__PESSOINTERNA_"
+													class="i-text"
+													v-bind="controls.PESSO1__PESSOINTERNA_.wrapperProps"
+													:id="getControlId(controls.PESSO1__PESSOINTERNA_)"
 													v-on="controls.PESSO1__PESSOINTERNA_.handlers"
 													:loading="controls.PESSO1__PESSOINTERNA_.props.loading"
 													:reporting-mode-on="reportingModeCAV"
@@ -229,6 +238,7 @@
 														<q-checkbox
 															v-if="controls.PESSO1__PESSOINTERNA_.isVisible"
 															v-bind="controls.PESSO1__PESSOINTERNA_.props"
+															:id="getControlId(controls.PESSO1__PESSOINTERNA_)"
 															v-on="controls.PESSO1__PESSOINTERNA_.handlers" />
 													</template>
 												</base-input-structure>
@@ -240,8 +250,9 @@
 												cols="auto">
 												<base-input-structure
 													v-if="controls.PESSO1__PESSOEXTERNA_.isVisible"
-													class="i-checkbox"
-													v-bind="controls.PESSO1__PESSOEXTERNA_"
+													class="i-text"
+													v-bind="controls.PESSO1__PESSOEXTERNA_.wrapperProps"
+													:id="getControlId(controls.PESSO1__PESSOEXTERNA_)"
 													v-on="controls.PESSO1__PESSOEXTERNA_.handlers"
 													:loading="controls.PESSO1__PESSOEXTERNA_.props.loading"
 													:reporting-mode-on="reportingModeCAV"
@@ -250,6 +261,7 @@
 														<q-checkbox
 															v-if="controls.PESSO1__PESSOEXTERNA_.isVisible"
 															v-bind="controls.PESSO1__PESSOEXTERNA_.props"
+															:id="getControlId(controls.PESSO1__PESSOEXTERNA_)"
 															v-on="controls.PESSO1__PESSOEXTERNA_.handlers" />
 													</template>
 												</base-input-structure>
@@ -262,7 +274,8 @@
 												<base-input-structure
 													v-if="controls.PESSO1__CATEGCATEGORY.isVisible"
 													class="i-text"
-													v-bind="controls.PESSO1__CATEGCATEGORY"
+													v-bind="controls.PESSO1__CATEGCATEGORY.wrapperProps"
+													:id="getControlId(controls.PESSO1__CATEGCATEGORY)"
 													v-on="controls.PESSO1__CATEGCATEGORY.handlers"
 													:loading="controls.PESSO1__CATEGCATEGORY.props.loading"
 													:reporting-mode-on="reportingModeCAV"
@@ -270,6 +283,7 @@
 													<q-lookup
 														v-if="controls.PESSO1__CATEGCATEGORY.isVisible"
 														v-bind="controls.PESSO1__CATEGCATEGORY.props"
+														:id="getControlId(controls.PESSO1__CATEGCATEGORY)"
 														v-on="controls.PESSO1__CATEGCATEGORY.handlers" />
 													<q-see-more-pesso1-categcategory
 														v-if="controls.PESSO1__CATEGCATEGORY.seeMoreIsVisible"
@@ -283,7 +297,8 @@
 												<base-input-structure
 													v-if="controls.PESSO1__PESSODTULTCAT.isVisible"
 													class="i-text"
-													v-bind="controls.PESSO1__PESSODTULTCAT"
+													v-bind="controls.PESSO1__PESSODTULTCAT.wrapperProps"
+													:id="getControlId(controls.PESSO1__PESSODTULTCAT)"
 													v-on="controls.PESSO1__PESSODTULTCAT.handlers"
 													:loading="controls.PESSO1__PESSODTULTCAT.props.loading"
 													:reporting-mode-on="reportingModeCAV"
@@ -291,6 +306,7 @@
 													<q-date-time-picker
 														v-if="controls.PESSO1__PESSODTULTCAT.isVisible"
 														v-bind="controls.PESSO1__PESSODTULTCAT.props"
+														:id="getControlId(controls.PESSO1__PESSODTULTCAT)"
 														:model-value="model.ValDtultcat.value"
 														@reset-icon-click="model.ValDtultcat.fnUpdateValue(model.ValDtultcat.originalValue ?? new Date())"
 														@update:model-value="model.ValDtultcat.fnUpdateValue($event ?? '')" />
@@ -309,17 +325,17 @@
 					<q-col v-if="controls.PESSO1__PSEUDNOVOGR06.isVisible">
 						<q-group-box-container
 							v-if="controls.PESSO1__PSEUDNOVOGR06.isVisible"
-							id="PESSO1__PSEUDNOVOGR06"
 							v-bind="controls.PESSO1__PSEUDNOVOGR06"
-							:is-visible="controls.PESSO1__PSEUDNOVOGR06.isVisible">
+							:id="getControlId(controls.PESSO1__PSEUDNOVOGR06)"
+							:no-border="controls.PESSO1__PSEUDNOVOGR06.borderless">
 							<!-- Start PESSO1__PSEUDNOVOGR06 -->
 							<q-row v-if="controls.PESSO1__PSEUDNOVOGR07.isVisible">
 								<q-col v-if="controls.PESSO1__PSEUDNOVOGR07.isVisible">
 									<q-group-box-container
 										v-if="controls.PESSO1__PSEUDNOVOGR07.isVisible"
-										id="PESSO1__PSEUDNOVOGR07"
 										v-bind="controls.PESSO1__PSEUDNOVOGR07"
-										:is-visible="controls.PESSO1__PSEUDNOVOGR07.isVisible">
+										:id="getControlId(controls.PESSO1__PSEUDNOVOGR07)"
+										:no-border="controls.PESSO1__PSEUDNOVOGR07.borderless">
 										<!-- Start PESSO1__PSEUDNOVOGR07 -->
 										<q-row v-if="controls.PESSO1__PSEUDNOVOGR03.isVisible || controls.PESSO1__PSEUDNOVOGR09.isVisible">
 											<q-col
@@ -327,9 +343,9 @@
 												cols="auto">
 												<q-group-box-container
 													v-if="controls.PESSO1__PSEUDNOVOGR03.isVisible"
-													id="PESSO1__PSEUDNOVOGR03"
 													v-bind="controls.PESSO1__PSEUDNOVOGR03"
-													:is-visible="controls.PESSO1__PSEUDNOVOGR03.isVisible">
+													:id="getControlId(controls.PESSO1__PSEUDNOVOGR03)"
+													:no-border="controls.PESSO1__PSEUDNOVOGR03.borderless">
 													<!-- Start PESSO1__PSEUDNOVOGR03 -->
 													<q-row v-if="controls.PESSO1__PESSOTELEPHON.isVisible || controls.PESSO1__PESSOEMAIL___.isVisible">
 														<q-col
@@ -338,13 +354,15 @@
 															<base-input-structure
 																v-if="controls.PESSO1__PESSOTELEPHON.isVisible"
 																class="i-text"
-																v-bind="controls.PESSO1__PESSOTELEPHON"
+																v-bind="controls.PESSO1__PESSOTELEPHON.wrapperProps"
+																:id="getControlId(controls.PESSO1__PESSOTELEPHON)"
 																v-on="controls.PESSO1__PESSOTELEPHON.handlers"
 																:loading="controls.PESSO1__PESSOTELEPHON.props.loading"
 																:reporting-mode-on="reportingModeCAV"
 																:suggestion-mode-on="suggestionModeOn">
 																<q-text-field
 																	v-bind="controls.PESSO1__PESSOTELEPHON.props"
+																	:id="getControlId(controls.PESSO1__PESSOTELEPHON)"
 																	@blur="onBlur(controls.PESSO1__PESSOTELEPHON, model.ValTelephon.value)"
 																	@change="model.ValTelephon.fnUpdateValueOnChange" />
 															</base-input-structure>
@@ -355,13 +373,15 @@
 															<base-input-structure
 																v-if="controls.PESSO1__PESSOEMAIL___.isVisible"
 																class="i-text"
-																v-bind="controls.PESSO1__PESSOEMAIL___"
+																v-bind="controls.PESSO1__PESSOEMAIL___.wrapperProps"
+																:id="getControlId(controls.PESSO1__PESSOEMAIL___)"
 																v-on="controls.PESSO1__PESSOEMAIL___.handlers"
 																:loading="controls.PESSO1__PESSOEMAIL___.props.loading"
 																:reporting-mode-on="reportingModeCAV"
 																:suggestion-mode-on="suggestionModeOn">
 																<q-text-field
 																	v-bind="controls.PESSO1__PESSOEMAIL___.props"
+																	:id="getControlId(controls.PESSO1__PESSOEMAIL___)"
 																	@blur="onBlur(controls.PESSO1__PESSOEMAIL___, model.ValEmail.value)"
 																	@change="model.ValEmail.fnUpdateValueOnChange" />
 															</base-input-structure>
@@ -375,9 +395,9 @@
 												cols="auto">
 												<q-group-box-container
 													v-if="controls.PESSO1__PSEUDNOVOGR09.isVisible"
-													id="PESSO1__PSEUDNOVOGR09"
 													v-bind="controls.PESSO1__PSEUDNOVOGR09"
-													:is-visible="controls.PESSO1__PSEUDNOVOGR09.isVisible">
+													:id="getControlId(controls.PESSO1__PSEUDNOVOGR09)"
+													:no-border="controls.PESSO1__PSEUDNOVOGR09.borderless">
 													<!-- Start PESSO1__PSEUDNOVOGR09 -->
 													<q-row v-if="controls.PESSO1__PSEUDCONTACTO.isVisible">
 														<q-col
@@ -386,12 +406,13 @@
 															<q-table
 																v-if="controls.PESSO1__PSEUDCONTACTO.isVisible"
 																v-bind="controls.PESSO1__PSEUDCONTACTO"
+																:id="getControlId(controls.PESSO1__PSEUDCONTACTO)"
 																v-on="controls.PESSO1__PSEUDCONTACTO.handlers">
-															<q-table-extra-extension
-																v-if="controls.PESSO1__PSEUDCONTACTO.isVisible"
-																:list-ctrl="controls.PESSO1__PSEUDCONTACTO"
-																:filter-operators="controls.PESSO1__PSEUDCONTACTO.filterOperators"
-																v-on="controls.PESSO1__PSEUDCONTACTO.handlers" />
+																<template #header>
+																	<q-table-config
+																		:table-ctrl="controls.PESSO1__PSEUDCONTACTO"
+																		v-on="controls.PESSO1__PSEUDCONTACTO.handlers" />
+																</template>
 																<!-- USE /[MANUAL GQT CUSTOM_TABLE PESSO1__PSEUDCONTACTO]/ -->
 															</q-table>
 														</q-col>
@@ -408,17 +429,17 @@
 								<q-col v-if="controls.PESSO1__PSEUDNOVOGR05.isVisible">
 									<q-group-box-container
 										v-if="controls.PESSO1__PSEUDNOVOGR05.isVisible"
-										id="PESSO1__PSEUDNOVOGR05"
 										v-bind="controls.PESSO1__PSEUDNOVOGR05"
-										:is-visible="controls.PESSO1__PSEUDNOVOGR05.isVisible">
+										:id="getControlId(controls.PESSO1__PSEUDNOVOGR05)"
+										:no-border="controls.PESSO1__PSEUDNOVOGR05.borderless">
 										<!-- Start PESSO1__PSEUDNOVOGR05 -->
 										<q-row v-if="controls.PESSO1__PSEUDNOVOGR01.isVisible">
 											<q-col v-if="controls.PESSO1__PSEUDNOVOGR01.isVisible">
 												<q-group-box-container
 													v-if="controls.PESSO1__PSEUDNOVOGR01.isVisible"
-													id="PESSO1__PSEUDNOVOGR01"
 													v-bind="controls.PESSO1__PSEUDNOVOGR01"
-													:is-visible="controls.PESSO1__PSEUDNOVOGR01.isVisible">
+													:id="getControlId(controls.PESSO1__PSEUDNOVOGR01)"
+													:no-border="controls.PESSO1__PSEUDNOVOGR01.borderless">
 													<!-- Start PESSO1__PSEUDNOVOGR01 -->
 													<q-row v-if="controls.PESSO1__CMPNYDESIGNAT.isVisible || controls.PESSO1__CNTRYCOUNTRY_.isVisible">
 														<q-col
@@ -427,7 +448,8 @@
 															<base-input-structure
 																v-if="controls.PESSO1__CMPNYDESIGNAT.isVisible"
 																class="i-text"
-																v-bind="controls.PESSO1__CMPNYDESIGNAT"
+																v-bind="controls.PESSO1__CMPNYDESIGNAT.wrapperProps"
+																:id="getControlId(controls.PESSO1__CMPNYDESIGNAT)"
 																v-on="controls.PESSO1__CMPNYDESIGNAT.handlers"
 																:loading="controls.PESSO1__CMPNYDESIGNAT.props.loading"
 																:reporting-mode-on="reportingModeCAV"
@@ -435,6 +457,7 @@
 																<q-lookup
 																	v-if="controls.PESSO1__CMPNYDESIGNAT.isVisible"
 																	v-bind="controls.PESSO1__CMPNYDESIGNAT.props"
+																	:id="getControlId(controls.PESSO1__CMPNYDESIGNAT)"
 																	v-on="controls.PESSO1__CMPNYDESIGNAT.handlers" />
 																<q-see-more-pesso1-cmpnydesignat
 																	v-if="controls.PESSO1__CMPNYDESIGNAT.seeMoreIsVisible"
@@ -448,13 +471,15 @@
 															<base-input-structure
 																v-if="controls.PESSO1__CNTRYCOUNTRY_.isVisible"
 																class="i-text"
-																v-bind="controls.PESSO1__CNTRYCOUNTRY_"
+																v-bind="controls.PESSO1__CNTRYCOUNTRY_.wrapperProps"
+																:id="getControlId(controls.PESSO1__CNTRYCOUNTRY_)"
 																v-on="controls.PESSO1__CNTRYCOUNTRY_.handlers"
 																:loading="controls.PESSO1__CNTRYCOUNTRY_.props.loading"
 																:reporting-mode-on="reportingModeCAV"
 																:suggestion-mode-on="suggestionModeOn">
 																<q-text-field
 																	v-bind="controls.PESSO1__CNTRYCOUNTRY_.props"
+																	:id="getControlId(controls.PESSO1__CNTRYCOUNTRY_)"
 																	@blur="onBlur(controls.PESSO1__CNTRYCOUNTRY_, model.CntryValCountry.value)"
 																	@change="model.CntryValCountry.fnUpdateValueOnChange" />
 															</base-input-structure>
@@ -468,9 +493,9 @@
 											<q-col v-if="controls.PESSO1__PSEUDNOVOGR10.isVisible">
 												<q-group-box-container
 													v-if="controls.PESSO1__PSEUDNOVOGR10.isVisible"
-													id="PESSO1__PSEUDNOVOGR10"
 													v-bind="controls.PESSO1__PSEUDNOVOGR10"
-													:is-visible="controls.PESSO1__PSEUDNOVOGR10.isVisible">
+													:id="getControlId(controls.PESSO1__PSEUDNOVOGR10)"
+													:no-border="controls.PESSO1__PSEUDNOVOGR10.borderless">
 													<!-- Start PESSO1__PSEUDNOVOGR10 -->
 													<q-row v-if="controls.PESSO1__PSEUDEVOLUCAO.isVisible">
 														<q-col
@@ -479,12 +504,13 @@
 															<q-table
 																v-if="controls.PESSO1__PSEUDEVOLUCAO.isVisible"
 																v-bind="controls.PESSO1__PSEUDEVOLUCAO"
+																:id="getControlId(controls.PESSO1__PSEUDEVOLUCAO)"
 																v-on="controls.PESSO1__PSEUDEVOLUCAO.handlers">
-															<q-table-extra-extension
-																v-if="controls.PESSO1__PSEUDEVOLUCAO.isVisible"
-																:list-ctrl="controls.PESSO1__PSEUDEVOLUCAO"
-																:filter-operators="controls.PESSO1__PSEUDEVOLUCAO.filterOperators"
-																v-on="controls.PESSO1__PSEUDEVOLUCAO.handlers" />
+																<template #header>
+																	<q-table-config
+																		:table-ctrl="controls.PESSO1__PSEUDEVOLUCAO"
+																		v-on="controls.PESSO1__PSEUDEVOLUCAO.handlers" />
+																</template>
 																<!-- USE /[MANUAL GQT CUSTOM_TABLE PESSO1__PSEUDEVOLUCAO]/ -->
 															</q-table>
 														</q-col>
@@ -501,9 +527,9 @@
 								<q-col v-if="controls.PESSO1__PSEUDNOVOGR11.isVisible">
 									<q-group-box-container
 										v-if="controls.PESSO1__PSEUDNOVOGR11.isVisible"
-										id="PESSO1__PSEUDNOVOGR11"
 										v-bind="controls.PESSO1__PSEUDNOVOGR11"
-										:is-visible="controls.PESSO1__PSEUDNOVOGR11.isVisible">
+										:id="getControlId(controls.PESSO1__PSEUDNOVOGR11)"
+										:no-border="controls.PESSO1__PSEUDNOVOGR11.borderless">
 										<!-- Start PESSO1__PSEUDNOVOGR11 -->
 										<q-row v-if="controls.PESSO1__REGI1REGIAO__.isVisible">
 											<q-col
@@ -512,7 +538,8 @@
 												<base-input-structure
 													v-if="controls.PESSO1__REGI1REGIAO__.isVisible"
 													class="i-text"
-													v-bind="controls.PESSO1__REGI1REGIAO__"
+													v-bind="controls.PESSO1__REGI1REGIAO__.wrapperProps"
+													:id="getControlId(controls.PESSO1__REGI1REGIAO__)"
 													v-on="controls.PESSO1__REGI1REGIAO__.handlers"
 													:loading="controls.PESSO1__REGI1REGIAO__.props.loading"
 													:reporting-mode-on="reportingModeCAV"
@@ -520,6 +547,7 @@
 													<q-lookup
 														v-if="controls.PESSO1__REGI1REGIAO__.isVisible"
 														v-bind="controls.PESSO1__REGI1REGIAO__.props"
+														:id="getControlId(controls.PESSO1__REGI1REGIAO__)"
 														v-on="controls.PESSO1__REGI1REGIAO__.handlers" />
 													<q-see-more-pesso1-regi1regiao
 														v-if="controls.PESSO1__REGI1REGIAO__.seeMoreIsVisible"
@@ -543,14 +571,15 @@
 						<base-input-structure
 							v-if="controls.PESSO1__PSEUDOBRIGATO.isVisible"
 							class="i-static-text"
-							v-bind="controls.PESSO1__PSEUDOBRIGATO"
+							v-bind="controls.PESSO1__PSEUDOBRIGATO.wrapperProps"
+							:id="getControlId(controls.PESSO1__PSEUDOBRIGATO)"
 							v-on="controls.PESSO1__PSEUDOBRIGATO.handlers"
 							:loading="controls.PESSO1__PSEUDOBRIGATO.props.loading"
 							:reporting-mode-on="reportingModeCAV"
 							:suggestion-mode-on="suggestionModeOn">
 							<q-static-text
 								v-if="controls.PESSO1__PSEUDOBRIGATO.isVisible"
-								id="PESSO1__PSEUDOBRIGATO"
+								:id="getControlId(controls.PESSO1__PSEUDOBRIGATO)"
 								:size="controls.PESSO1__PSEUDOBRIGATO.size"
 								:text="controls.PESSO1__PSEUDOBRIGATO.label"
 								supports-html />
@@ -561,7 +590,7 @@
 		</q-container>
 	</teleport>
 
-	<hr v-if="!isPopup && showFormFooter" />
+	<q-divider v-if="!isPopup && showFormFooter" />
 
 	<teleport
 		v-if="formModalIsReady && showFormFooter"
@@ -913,9 +942,11 @@
 						label: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
+						borderless: true,
 						isCollapsible: false,
 						anchored: false,
 						directChildren: ['PESSO1__PSEUDNOVOGR04', 'PESSO1__PSEUDNOVOGR02'],
+						mustBeFilled: true,
 						controlLimits: [
 						],
 					}, this),
@@ -927,6 +958,7 @@
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'PESSO1__PSEUDNOVOGR08',
+						borderless: false,
 						isCollapsible: false,
 						anchored: false,
 						directChildren: ['PESSO1__PESSOPHOTOGRA'],
@@ -957,9 +989,11 @@
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'PESSO1__PSEUDNOVOGR08',
+						borderless: false,
 						isCollapsible: false,
 						anchored: false,
 						directChildren: ['PESSO1__PESSOIDFUNCIO', 'PESSO1__PESSONAME____', 'PESSO1__PESSODTNASCIM', 'PESSO1__PESSOIDADE___', 'PESSO1__PESSOGENDER__', 'PESSO1__PESSOINTERNA_', 'PESSO1__PESSOEXTERNA_', 'PESSO1__CATEGCATEGORY', 'PESSO1__PESSODTULTCAT'],
+						mustBeFilled: true,
 						controlLimits: [
 						],
 					}, this),
@@ -976,6 +1010,7 @@
 						maxIntegers: 6,
 						maxDecimals: 0,
 						isSequencial: true,
+						mustBeFilled: true,
 						controlLimits: [
 						],
 					}, this),
@@ -990,6 +1025,7 @@
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'PESSO1__PSEUDNOVOGR02',
 						maxLength: 85,
+						mustBeFilled: true,
 						controlLimits: [
 						],
 					}, this),
@@ -1035,8 +1071,8 @@
 						container: 'PESSO1__PSEUDNOVOGR02',
 						maxLength: 1,
 						arrayName: 'Genero',
-						helpShortItem: '',
-						helpDetailedItem: '',
+						helpShortItem: 'None',
+						helpDetailedItem: 'None',
 						controlLimits: [
 						],
 					}, this),
@@ -1140,6 +1176,7 @@
 						label: computed(() => this.Resources.ACCORDION01950),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
+						borderless: false,
 						isCollapsible: false,
 						anchored: false,
 						directChildren: ['PESSO1__PSEUDNOVOGR07', 'PESSO1__PSEUDNOVOGR05', 'PESSO1__PSEUDNOVOGR11'],
@@ -1154,6 +1191,7 @@
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'PESSO1__PSEUDNOVOGR06',
+						borderless: false,
 						isCollapsible: false,
 						anchored: false,
 						directChildren: ['PESSO1__PSEUDNOVOGR03', 'PESSO1__PSEUDNOVOGR09'],
@@ -1168,6 +1206,7 @@
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'PESSO1__PSEUDNOVOGR07',
+						borderless: false,
 						isCollapsible: false,
 						anchored: false,
 						directChildren: ['PESSO1__PESSOTELEPHON', 'PESSO1__PESSOEMAIL___'],
@@ -1210,6 +1249,7 @@
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'PESSO1__PSEUDNOVOGR07',
+						borderless: false,
 						isCollapsible: false,
 						anchored: false,
 						directChildren: ['PESSO1__PSEUDCONTACTO'],
@@ -1219,11 +1259,12 @@
 					PESSO1__PSEUDCONTACTO: new fieldControlClass.TableListControl({
 						id: 'PESSO1__PSEUDCONTACTO',
 						name: 'CONTACTO',
-						size: '',
+						size: 'xxlarge',
 						label: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'PESSO1__PSEUDNOVOGR09',
+						headerLevel: computed(() => this.baseHeadingLevel + 1),
 						controller: 'PESSO',
 						action: 'Pesso1_ValContacto',
 						hasDependencies: false,
@@ -1237,6 +1278,7 @@
 								label: computed(() => this.Resources.GENUS37471),
 								dataLength: 50,
 								scrollData: 20,
+								export: 1,
 								pkColumn: 'ValCodtpcon',
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
@@ -1247,6 +1289,7 @@
 								label: computed(() => this.Resources.CONTACT59247),
 								dataLength: 254,
 								scrollData: 30,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 						],
 						config: {
@@ -1263,7 +1306,6 @@
 							searchBarConfig: {
 								visibility: false
 							},
-							filtersVisible: false,
 							allowColumnFilters: false,
 							allowColumnSort: true,
 							crudActions: [
@@ -1337,9 +1379,7 @@
 									id: 'insert',
 									name: 'insert',
 									title: computed(() => this.Resources.INSERIR43365),
-									icon: {
-										icon: 'add'
-									},
+									icon: { icon: 'add' },
 									isInReadOnly: false,
 									params: {
 										action: vm.openFormAction,
@@ -1386,7 +1426,7 @@
 								sortOrder: 'asc'
 							}
 						},
-						globalEvents: ['changed-GENRE', 'changed-TPCON', 'changed-CONTA', 'changed-PESSO'],
+						globalEvents: ['changed-TPCON', 'changed-GENRE', 'changed-CONTA', 'changed-PESSO'],
 						uuid: 'Pesso1_ValContacto',
 						allSelectedRows: 'false',
 						controlLimits: [
@@ -1406,6 +1446,7 @@
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'PESSO1__PSEUDNOVOGR06',
+						borderless: false,
 						isCollapsible: false,
 						anchored: false,
 						directChildren: ['PESSO1__PSEUDNOVOGR01', 'PESSO1__PSEUDNOVOGR10'],
@@ -1420,6 +1461,7 @@
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'PESSO1__PSEUDNOVOGR05',
+						borderless: false,
 						isCollapsible: false,
 						anchored: false,
 						directChildren: ['PESSO1__CMPNYDESIGNAT', 'PESSO1__CNTRYCOUNTRY_'],
@@ -1484,6 +1526,7 @@
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'PESSO1__PSEUDNOVOGR05',
+						borderless: false,
 						isCollapsible: false,
 						anchored: false,
 						directChildren: ['PESSO1__PSEUDEVOLUCAO'],
@@ -1493,11 +1536,12 @@
 					PESSO1__PSEUDEVOLUCAO: new fieldControlClass.TableListControl({
 						id: 'PESSO1__PSEUDEVOLUCAO',
 						name: 'EVOLUCAO',
-						size: '',
+						size: 'xxlarge',
 						label: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'PESSO1__PSEUDNOVOGR10',
+						headerLevel: computed(() => this.baseHeadingLevel + 1),
 						controller: 'PESSO',
 						action: 'Pesso1_ValEvolucao',
 						hasDependencies: true,
@@ -1511,6 +1555,7 @@
 								label: computed(() => this.Resources.SINCE47259),
 								scrollData: 8,
 								dateTimeType: 'date',
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 2,
@@ -1520,6 +1565,7 @@
 								label: computed(() => this.Resources.CATEGORY18978),
 								dataLength: 50,
 								scrollData: 30,
+								export: 1,
 								pkColumn: 'ValCodcateg',
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.DateColumn({
@@ -1530,6 +1576,7 @@
 								label: computed(() => this.Resources.END_OF_PERIOD44616),
 								scrollData: 8,
 								dateTimeType: 'date',
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 4,
@@ -1538,6 +1585,7 @@
 								field: 'OBSERVAT',
 								label: computed(() => this.Resources.OBSERVATION37880),
 								scrollData: 30,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 						],
 						config: {
@@ -1554,7 +1602,6 @@
 							searchBarConfig: {
 								visibility: false
 							},
-							filtersVisible: false,
 							allowColumnFilters: false,
 							allowColumnSort: true,
 							crudActions: [
@@ -1628,9 +1675,7 @@
 									id: 'insert',
 									name: 'insert',
 									title: computed(() => this.Resources.INSERIR43365),
-									icon: {
-										icon: 'add'
-									},
+									icon: { icon: 'add' },
 									isInReadOnly: false,
 									params: {
 										action: vm.openFormAction,
@@ -1677,7 +1722,7 @@
 								sortOrder: 'desc'
 							}
 						},
-						globalEvents: ['changed-PESSO', 'changed-EVCAT', 'changed-CATE1'],
+						globalEvents: ['changed-PESSO', 'changed-CATE1', 'changed-EVCAT'],
 						uuid: 'Pesso1_ValEvolucao',
 						allSelectedRows: 'false',
 						controlLimits: [
@@ -1709,6 +1754,7 @@
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'PESSO1__PSEUDNOVOGR06',
+						borderless: false,
 						isCollapsible: false,
 						anchored: false,
 						directChildren: ['PESSO1__REGI1REGIAO__'],
@@ -2196,7 +2242,6 @@
 
 				this.afterControlUpdate(controlField, fieldValue)
 			},
-
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
 // USE /[MANUAL GQT FUNCTIONS_JS PESSO1]/
 // eslint-disable-next-line

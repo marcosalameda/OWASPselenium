@@ -47,7 +47,7 @@ namespace CSGenio.business
 			Qfield = new Field(info.Alias, "codrepar", FieldType.KEY_GUID);
 			Qfield.FieldDescription = "";
 			Qfield.FieldSize =  36;
-			Qfield.CavDesignation = "";
+			Qfield.VisivelCav = CavVisibilityType.Nunca;
 
 			Qfield.Dupmsg = "";
 			info.RegisterFieldDB(Qfield);
@@ -56,7 +56,7 @@ namespace CSGenio.business
 			Qfield = new Field(info.Alias, "codequip", FieldType.KEY_GUID);
 			Qfield.FieldDescription = ">EQUIPMENT";
 			Qfield.FieldSize =  36;
-			Qfield.CavDesignation = "_EQUIPMENT12605";
+			Qfield.VisivelCav = CavVisibilityType.Nunca;
 
 			Qfield.Dupmsg = "";
 			info.RegisterFieldDB(Qfield);
@@ -109,7 +109,7 @@ namespace CSGenio.business
 			Qfield = new Field(info.Alias, "codespec", FieldType.KEY_GUID);
 			Qfield.FieldDescription = ">SPECIALTY";
 			Qfield.FieldSize =  36;
-			Qfield.CavDesignation = "_SPECIALTY24336";
+			Qfield.VisivelCav = CavVisibilityType.Nunca;
 
 			Qfield.Dupmsg = "";
 			info.RegisterFieldDB(Qfield);
@@ -118,7 +118,7 @@ namespace CSGenio.business
 			Qfield = new Field(info.Alias, "codcateg", FieldType.KEY_GUID);
 			Qfield.FieldDescription = ">CATEGORy";
 			Qfield.FieldSize =  36;
-			Qfield.CavDesignation = "_CATEGORY37591";
+			Qfield.VisivelCav = CavVisibilityType.Nunca;
 
 			Qfield.Dupmsg = "";
 			info.RegisterFieldDB(Qfield);
@@ -127,7 +127,7 @@ namespace CSGenio.business
 			Qfield = new Field(info.Alias, "codpesso", FieldType.KEY_GUID);
 			Qfield.FieldDescription = ">REPAIRER";
 			Qfield.FieldSize =  36;
-			Qfield.CavDesignation = "_REPAIRER36801";
+			Qfield.VisivelCav = CavVisibilityType.Nunca;
 
 			Qfield.Dupmsg = "";
 			info.RegisterFieldDB(Qfield);

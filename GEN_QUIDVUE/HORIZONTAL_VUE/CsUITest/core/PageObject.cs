@@ -33,7 +33,7 @@ public class PageObject {
     /// </summary>
 	/// <param name="element">The DOM element to search within.</param>
     /// <param name="by">The locating mechanism to use.</param>
-    public IWebElement GetElement(IWebElement element, By by)
+    public IWebElement GetElement(ISearchContext element, By by)
     {
 		if (element == null)
 			return null;

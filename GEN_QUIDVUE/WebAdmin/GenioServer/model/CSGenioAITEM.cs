@@ -47,7 +47,7 @@ namespace CSGenio.business
 			Qfield = new Field(info.Alias, "coditem", FieldType.KEY_GUID);
 			Qfield.FieldDescription = "";
 			Qfield.FieldSize =  36;
-			Qfield.CavDesignation = "";
+			Qfield.VisivelCav = CavVisibilityType.Nunca;
 
 			Qfield.Dupmsg = "";
 			info.RegisterFieldDB(Qfield);
@@ -56,7 +56,7 @@ namespace CSGenio.business
 			Qfield = new Field(info.Alias, "codgitem", FieldType.KEY_GUID);
 			Qfield.FieldDescription = ">GLOBAL ARTICLE";
 			Qfield.FieldSize =  36;
-			Qfield.CavDesignation = "_GLOBAL_ARTICLE51116";
+			Qfield.VisivelCav = CavVisibilityType.Nunca;
 
 			Qfield.Dupmsg = "";
 			info.RegisterFieldDB(Qfield);
@@ -65,7 +65,7 @@ namespace CSGenio.business
 			Qfield = new Field(info.Alias, "codwareh", FieldType.KEY_GUID);
 			Qfield.FieldDescription = ">WAREHOUSE";
 			Qfield.FieldSize =  36;
-			Qfield.CavDesignation = "_WAREHOUSE19861";
+			Qfield.VisivelCav = CavVisibilityType.Nunca;
 
             Qfield.NotNull = true;
 			Qfield.Dupmsg = "";
@@ -148,7 +148,7 @@ namespace CSGenio.business
 			Qfield.FieldDescription = "Image";
 			Qfield.FieldSize =  3;
 			Qfield.Decimals = 1;
-			Qfield.CavDesignation = "IMAGE65174";
+			Qfield.VisivelCav = CavVisibilityType.Nunca;
 
 			Qfield.Dupmsg = "";
 			info.RegisterFieldDB(Qfield);
@@ -232,13 +232,12 @@ namespace CSGenio.business
 		{
 			// Daughters Relations
 			//------------------------------
-			info.ChildTable = new ChildRelation[6];
+			info.ChildTable = new ChildRelation[5];
 			info.ChildTable[0]= new ChildRelation("ccorr", new String[] {"coditem"}, DeleteProc.NA);
 			info.ChildTable[1]= new ChildRelation("ldent", new String[] {"coditem"}, DeleteProc.NA);
-			info.ChildTable[2]= new ChildRelation("itemp", new String[] {"coditem"}, DeleteProc.AP);
-			info.ChildTable[3]= new ChildRelation("outpu", new String[] {"coditem"}, DeleteProc.NA);
-			info.ChildTable[4]= new ChildRelation("itemc", new String[] {"coditem"}, DeleteProc.NA);
-			info.ChildTable[5]= new ChildRelation("equip", new String[] {"coditem"}, DeleteProc.NA);
+			info.ChildTable[2]= new ChildRelation("outpu", new String[] {"coditem"}, DeleteProc.NA);
+			info.ChildTable[3]= new ChildRelation("itemc", new String[] {"coditem"}, DeleteProc.NA);
+			info.ChildTable[4]= new ChildRelation("equip", new String[] {"coditem"}, DeleteProc.NA);
 
 			// Mother Relations
 			//------------------------------
@@ -255,8 +254,8 @@ namespace CSGenio.business
 			// Pathways
 			//------------------------------
 			info.Pathways = new Dictionary<string, string>(2);
-			info.Pathways.Add("wareh","wareh");
 			info.Pathways.Add("gitem","gitem");
+			info.Pathways.Add("wareh","wareh");
 		}
 
 		/// <summary>

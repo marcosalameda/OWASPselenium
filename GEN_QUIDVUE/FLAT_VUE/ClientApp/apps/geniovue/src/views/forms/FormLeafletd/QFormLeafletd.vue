@@ -9,12 +9,13 @@
 			<div
 				v-if="showFormHeader"
 				class="c-action-bar">
-				<h1
+				<component
 					v-if="formControl.uiComponents.header && formInfo.designation"
+					:is="topHeadingTag"
 					:id="formTitleId"
 					class="form-header">
 					{{ formInfo.designation }}
-				</h1>
+				</component>
 
 				<div class="c-action-bar__menu">
 					<template
@@ -40,13 +41,10 @@
 									@click="btn.action">
 									<template v-if="btn.icon">
 										<q-badge-indicator
-											v-if="btn.badge && btn.badge.isVisible"
-											:color="btn.badge.color">
+											:enabled="btn.badge?.isVisible ?? false"
+											:color="btn.badge?.color">
 											<q-icon v-bind="btn.icon" />
 										</q-badge-indicator>
-										<q-icon
-											v-else
-											v-bind="btn.icon" />
 									</template>
 								</q-toggle-group-item>
 							</template>
@@ -97,6 +95,7 @@
 		<q-container
 			fluid
 			data-key="LEAFLETD"
+			:data-identifier="primaryKeyValue"
 			:data-loading="!formInitialDataLoaded || !isActiveForm">
 			<template v-if="formControl.initialized && showFormBody">
 				<q-row v-if="controls.LEAFLETDEQUIPREGISTNR.isVisible || controls.LEAFLETDTPEQUTIPOEQUI.isVisible">
@@ -106,7 +105,8 @@
 						<base-input-structure
 							v-if="controls.LEAFLETDEQUIPREGISTNR.isVisible"
 							class="i-text"
-							v-bind="controls.LEAFLETDEQUIPREGISTNR"
+							v-bind="controls.LEAFLETDEQUIPREGISTNR.wrapperProps"
+							:id="getControlId(controls.LEAFLETDEQUIPREGISTNR)"
 							v-on="controls.LEAFLETDEQUIPREGISTNR.handlers"
 							:loading="controls.LEAFLETDEQUIPREGISTNR.props.loading"
 							:reporting-mode-on="reportingModeCAV"
@@ -114,6 +114,7 @@
 							<q-lookup
 								v-if="controls.LEAFLETDEQUIPREGISTNR.isVisible"
 								v-bind="controls.LEAFLETDEQUIPREGISTNR.props"
+								:id="getControlId(controls.LEAFLETDEQUIPREGISTNR)"
 								v-on="controls.LEAFLETDEQUIPREGISTNR.handlers" />
 							<q-see-more-leafletdequipregistnr
 								v-if="controls.LEAFLETDEQUIPREGISTNR.seeMoreIsVisible"
@@ -127,13 +128,15 @@
 						<base-input-structure
 							v-if="controls.LEAFLETDTPEQUTIPOEQUI.isVisible"
 							class="i-text"
-							v-bind="controls.LEAFLETDTPEQUTIPOEQUI"
+							v-bind="controls.LEAFLETDTPEQUTIPOEQUI.wrapperProps"
+							:id="getControlId(controls.LEAFLETDTPEQUTIPOEQUI)"
 							v-on="controls.LEAFLETDTPEQUTIPOEQUI.handlers"
 							:loading="controls.LEAFLETDTPEQUTIPOEQUI.props.loading"
 							:reporting-mode-on="reportingModeCAV"
 							:suggestion-mode-on="suggestionModeOn">
 							<q-text-field
 								v-bind="controls.LEAFLETDTPEQUTIPOEQUI.props"
+								:id="getControlId(controls.LEAFLETDTPEQUTIPOEQUI)"
 								@blur="onBlur(controls.LEAFLETDTPEQUTIPOEQUI, model.TpequValTipoequi.value)"
 								@change="model.TpequValTipoequi.fnUpdateValueOnChange" />
 						</base-input-structure>
@@ -146,13 +149,15 @@
 						<base-input-structure
 							v-if="controls.LEAFLETDINSTADESIGNAT.isVisible"
 							class="i-text"
-							v-bind="controls.LEAFLETDINSTADESIGNAT"
+							v-bind="controls.LEAFLETDINSTADESIGNAT.wrapperProps"
+							:id="getControlId(controls.LEAFLETDINSTADESIGNAT)"
 							v-on="controls.LEAFLETDINSTADESIGNAT.handlers"
 							:loading="controls.LEAFLETDINSTADESIGNAT.props.loading"
 							:reporting-mode-on="reportingModeCAV"
 							:suggestion-mode-on="suggestionModeOn">
 							<q-text-field
 								v-bind="controls.LEAFLETDINSTADESIGNAT.props"
+								:id="getControlId(controls.LEAFLETDINSTADESIGNAT)"
 								@blur="onBlur(controls.LEAFLETDINSTADESIGNAT, model.ValDesignat.value)"
 								@change="model.ValDesignat.fnUpdateValueOnChange" />
 						</base-input-structure>
@@ -163,7 +168,8 @@
 						<base-input-structure
 							v-if="controls.LEAFLETDINSTADTINIAGE.isVisible"
 							class="i-text"
-							v-bind="controls.LEAFLETDINSTADTINIAGE"
+							v-bind="controls.LEAFLETDINSTADTINIAGE.wrapperProps"
+							:id="getControlId(controls.LEAFLETDINSTADTINIAGE)"
 							v-on="controls.LEAFLETDINSTADTINIAGE.handlers"
 							:loading="controls.LEAFLETDINSTADTINIAGE.props.loading"
 							:reporting-mode-on="reportingModeCAV"
@@ -171,6 +177,7 @@
 							<q-date-time-picker
 								v-if="controls.LEAFLETDINSTADTINIAGE.isVisible"
 								v-bind="controls.LEAFLETDINSTADTINIAGE.props"
+								:id="getControlId(controls.LEAFLETDINSTADTINIAGE)"
 								:model-value="model.ValDtiniage.value"
 								@reset-icon-click="model.ValDtiniage.fnUpdateValue(model.ValDtiniage.originalValue ?? new Date())"
 								@update:model-value="model.ValDtiniage.fnUpdateValue($event ?? '')" />
@@ -182,7 +189,8 @@
 						<base-input-structure
 							v-if="controls.LEAFLETDINSTADTFIMAGE.isVisible"
 							class="i-text"
-							v-bind="controls.LEAFLETDINSTADTFIMAGE"
+							v-bind="controls.LEAFLETDINSTADTFIMAGE.wrapperProps"
+							:id="getControlId(controls.LEAFLETDINSTADTFIMAGE)"
 							v-on="controls.LEAFLETDINSTADTFIMAGE.handlers"
 							:loading="controls.LEAFLETDINSTADTFIMAGE.props.loading"
 							:reporting-mode-on="reportingModeCAV"
@@ -190,6 +198,7 @@
 							<q-date-time-picker
 								v-if="controls.LEAFLETDINSTADTFIMAGE.isVisible"
 								v-bind="controls.LEAFLETDINSTADTFIMAGE.props"
+								:id="getControlId(controls.LEAFLETDINSTADTFIMAGE)"
 								:model-value="model.ValDtfimage.value"
 								@reset-icon-click="model.ValDtfimage.fnUpdateValue(model.ValDtfimage.originalValue ?? new Date())"
 								@update:model-value="model.ValDtfimage.fnUpdateValue($event ?? '')" />
@@ -203,7 +212,8 @@
 						<base-input-structure
 							v-if="controls.LEAFLETDINSTADESCRIPT.isVisible"
 							class="i-textarea"
-							v-bind="controls.LEAFLETDINSTADESCRIPT"
+							v-bind="controls.LEAFLETDINSTADESCRIPT.wrapperProps"
+							:id="getControlId(controls.LEAFLETDINSTADESCRIPT)"
 							v-on="controls.LEAFLETDINSTADESCRIPT.handlers"
 							:loading="controls.LEAFLETDINSTADESCRIPT.props.loading"
 							:reporting-mode-on="reportingModeCAV"
@@ -211,6 +221,7 @@
 							<q-text-area
 								v-if="controls.LEAFLETDINSTADESCRIPT.isVisible"
 								v-bind="controls.LEAFLETDINSTADESCRIPT.props"
+								:id="getControlId(controls.LEAFLETDINSTADESCRIPT)"
 								v-on="controls.LEAFLETDINSTADESCRIPT.handlers" />
 						</base-input-structure>
 					</q-col>
@@ -221,8 +232,9 @@
 						cols="auto">
 						<base-input-structure
 							v-if="controls.LEAFLETDINSTAALLDAY__.isVisible"
-							class="i-checkbox"
-							v-bind="controls.LEAFLETDINSTAALLDAY__"
+							class="i-text"
+							v-bind="controls.LEAFLETDINSTAALLDAY__.wrapperProps"
+							:id="getControlId(controls.LEAFLETDINSTAALLDAY__)"
 							v-on="controls.LEAFLETDINSTAALLDAY__.handlers"
 							:loading="controls.LEAFLETDINSTAALLDAY__.props.loading"
 							:reporting-mode-on="reportingModeCAV"
@@ -231,6 +243,7 @@
 								<q-checkbox
 									v-if="controls.LEAFLETDINSTAALLDAY__.isVisible"
 									v-bind="controls.LEAFLETDINSTAALLDAY__.props"
+									:id="getControlId(controls.LEAFLETDINSTAALLDAY__)"
 									v-on="controls.LEAFLETDINSTAALLDAY__.handlers" />
 							</template>
 						</base-input-structure>
@@ -241,7 +254,8 @@
 						<base-input-structure
 							v-if="controls.LEAFLETDINSTASINCE___.isVisible"
 							class="i-text"
-							v-bind="controls.LEAFLETDINSTASINCE___"
+							v-bind="controls.LEAFLETDINSTASINCE___.wrapperProps"
+							:id="getControlId(controls.LEAFLETDINSTASINCE___)"
 							v-on="controls.LEAFLETDINSTASINCE___.handlers"
 							:loading="controls.LEAFLETDINSTASINCE___.props.loading"
 							:reporting-mode-on="reportingModeCAV"
@@ -249,6 +263,7 @@
 							<q-date-time-picker
 								v-if="controls.LEAFLETDINSTASINCE___.isVisible"
 								v-bind="controls.LEAFLETDINSTASINCE___.props"
+								:id="getControlId(controls.LEAFLETDINSTASINCE___)"
 								:model-value="model.ValSince.value"
 								@reset-icon-click="model.ValSince.fnUpdateValue(model.ValSince.originalValue ?? new Date())"
 								@update:model-value="model.ValSince.fnUpdateValue($event ?? '')" />
@@ -260,7 +275,8 @@
 						<base-input-structure
 							v-if="controls.LEAFLETDINSTAUNTIL___.isVisible"
 							class="i-text"
-							v-bind="controls.LEAFLETDINSTAUNTIL___"
+							v-bind="controls.LEAFLETDINSTAUNTIL___.wrapperProps"
+							:id="getControlId(controls.LEAFLETDINSTAUNTIL___)"
 							v-on="controls.LEAFLETDINSTAUNTIL___.handlers"
 							:loading="controls.LEAFLETDINSTAUNTIL___.props.loading"
 							:reporting-mode-on="reportingModeCAV"
@@ -268,6 +284,7 @@
 							<q-date-time-picker
 								v-if="controls.LEAFLETDINSTAUNTIL___.isVisible"
 								v-bind="controls.LEAFLETDINSTAUNTIL___.props"
+								:id="getControlId(controls.LEAFLETDINSTAUNTIL___)"
 								:model-value="model.ValUntil.value"
 								@reset-icon-click="model.ValUntil.fnUpdateValue(model.ValUntil.originalValue ?? new Date())"
 								@update:model-value="model.ValUntil.fnUpdateValue($event ?? '')" />
@@ -279,7 +296,8 @@
 						<base-input-structure
 							v-if="controls.LEAFLETDINSTAHOURS___.isVisible"
 							class="i-text"
-							v-bind="controls.LEAFLETDINSTAHOURS___"
+							v-bind="controls.LEAFLETDINSTAHOURS___.wrapperProps"
+							:id="getControlId(controls.LEAFLETDINSTAHOURS___)"
 							v-on="controls.LEAFLETDINSTAHOURS___.handlers"
 							:loading="controls.LEAFLETDINSTAHOURS___.props.loading"
 							:reporting-mode-on="reportingModeCAV"
@@ -287,6 +305,7 @@
 							<q-numeric-input
 								v-if="controls.LEAFLETDINSTAHOURS___.isVisible"
 								v-bind="controls.LEAFLETDINSTAHOURS___.props"
+								:id="getControlId(controls.LEAFLETDINSTAHOURS___)"
 								@update:model-value="model.ValHours.fnUpdateValue" />
 						</base-input-structure>
 					</q-col>
@@ -298,7 +317,8 @@
 						<base-input-structure
 							v-if="controls.LEAFLETDINSTAPRECOHOR.isVisible"
 							class="i-text"
-							v-bind="controls.LEAFLETDINSTAPRECOHOR"
+							v-bind="controls.LEAFLETDINSTAPRECOHOR.wrapperProps"
+							:id="getControlId(controls.LEAFLETDINSTAPRECOHOR)"
 							v-on="controls.LEAFLETDINSTAPRECOHOR.handlers"
 							:loading="controls.LEAFLETDINSTAPRECOHOR.props.loading"
 							:reporting-mode-on="reportingModeCAV"
@@ -306,6 +326,7 @@
 							<q-numeric-input
 								v-if="controls.LEAFLETDINSTAPRECOHOR.isVisible"
 								v-bind="controls.LEAFLETDINSTAPRECOHOR.props"
+								:id="getControlId(controls.LEAFLETDINSTAPRECOHOR)"
 								@update:model-value="model.ValPrecohor.fnUpdateValue" />
 						</base-input-structure>
 					</q-col>
@@ -315,7 +336,8 @@
 						<base-input-structure
 							v-if="controls.LEAFLETDINSTAVALUE___.isVisible"
 							class="i-text"
-							v-bind="controls.LEAFLETDINSTAVALUE___"
+							v-bind="controls.LEAFLETDINSTAVALUE___.wrapperProps"
+							:id="getControlId(controls.LEAFLETDINSTAVALUE___)"
 							v-on="controls.LEAFLETDINSTAVALUE___.handlers"
 							:loading="controls.LEAFLETDINSTAVALUE___.props.loading"
 							:reporting-mode-on="reportingModeCAV"
@@ -323,6 +345,7 @@
 							<q-numeric-input
 								v-if="controls.LEAFLETDINSTAVALUE___.isVisible"
 								v-bind="controls.LEAFLETDINSTAVALUE___.props"
+								:id="getControlId(controls.LEAFLETDINSTAVALUE___)"
 								@update:model-value="model.ValValue.fnUpdateValue" />
 						</base-input-structure>
 					</q-col>
@@ -332,13 +355,15 @@
 						<base-input-structure
 							v-if="controls.LEAFLETDINSTACOORDGEO.isVisible"
 							class="i-text"
-							v-bind="controls.LEAFLETDINSTACOORDGEO"
+							v-bind="controls.LEAFLETDINSTACOORDGEO.wrapperProps"
+							:id="getControlId(controls.LEAFLETDINSTACOORDGEO)"
 							v-on="controls.LEAFLETDINSTACOORDGEO.handlers"
 							:loading="controls.LEAFLETDINSTACOORDGEO.props.loading"
 							:reporting-mode-on="reportingModeCAV"
 							:suggestion-mode-on="suggestionModeOn">
 							<q-text-field
 								v-bind="controls.LEAFLETDINSTACOORDGEO.props"
+								:id="getControlId(controls.LEAFLETDINSTACOORDGEO)"
 								@blur="onBlur(controls.LEAFLETDINSTACOORDGEO, model.ValCoordgeo.value)"
 								@change="model.ValCoordgeo.fnUpdateValueOnChange" />
 						</base-input-structure>
@@ -348,7 +373,7 @@
 		</q-container>
 	</teleport>
 
-	<hr v-if="!isPopup && showFormFooter" />
+	<q-divider v-if="!isPopup && showFormFooter" />
 
 	<teleport
 		v-if="formModalIsReady && showFormFooter"
@@ -1303,7 +1328,6 @@
 
 				this.afterControlUpdate(controlField, fieldValue)
 			},
-
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
 // USE /[MANUAL GQT FUNCTIONS_JS LEAFLETD]/
 // eslint-disable-next-line

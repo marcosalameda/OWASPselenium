@@ -9,12 +9,13 @@
 			<div
 				v-if="showFormHeader"
 				class="c-action-bar">
-				<h1
+				<component
 					v-if="formControl.uiComponents.header && formInfo.designation"
+					:is="topHeadingTag"
 					:id="formTitleId"
 					class="form-header">
 					{{ formInfo.designation }}
-				</h1>
+				</component>
 
 				<div class="c-action-bar__menu">
 					<template
@@ -40,13 +41,10 @@
 									@click="btn.action">
 									<template v-if="btn.icon">
 										<q-badge-indicator
-											v-if="btn.badge && btn.badge.isVisible"
-											:color="btn.badge.color">
+											:enabled="btn.badge?.isVisible ?? false"
+											:color="btn.badge?.color">
 											<q-icon v-bind="btn.icon" />
 										</q-badge-indicator>
-										<q-icon
-											v-else
-											v-bind="btn.icon" />
 									</template>
 								</q-toggle-group-item>
 							</template>
@@ -97,6 +95,7 @@
 		<q-container
 			fluid
 			data-key="TBLK"
+			:data-identifier="primaryKeyValue"
 			:data-loading="!formInitialDataLoaded || !isActiveForm">
 			<template v-if="formControl.initialized && showFormBody">
 				<q-row v-if="controls.TBLK____TBLK_NAME____.isVisible">
@@ -106,13 +105,15 @@
 						<base-input-structure
 							v-if="controls.TBLK____TBLK_NAME____.isVisible"
 							class="i-text"
-							v-bind="controls.TBLK____TBLK_NAME____"
+							v-bind="controls.TBLK____TBLK_NAME____.wrapperProps"
+							:id="getControlId(controls.TBLK____TBLK_NAME____)"
 							v-on="controls.TBLK____TBLK_NAME____.handlers"
 							:loading="controls.TBLK____TBLK_NAME____.props.loading"
 							:reporting-mode-on="reportingModeCAV"
 							:suggestion-mode-on="suggestionModeOn">
 							<q-text-field
 								v-bind="controls.TBLK____TBLK_NAME____.props"
+								:id="getControlId(controls.TBLK____TBLK_NAME____)"
 								@blur="onBlur(controls.TBLK____TBLK_NAME____, model.ValName.value)"
 								@change="model.ValName.fnUpdateValueOnChange" />
 						</base-input-structure>
@@ -125,7 +126,8 @@
 						<base-input-structure
 							v-if="controls.TBLK____GRPB_NAME____.isVisible"
 							class="i-text"
-							v-bind="controls.TBLK____GRPB_NAME____"
+							v-bind="controls.TBLK____GRPB_NAME____.wrapperProps"
+							:id="getControlId(controls.TBLK____GRPB_NAME____)"
 							v-on="controls.TBLK____GRPB_NAME____.handlers"
 							:loading="controls.TBLK____GRPB_NAME____.props.loading"
 							:reporting-mode-on="reportingModeCAV"
@@ -133,6 +135,7 @@
 							<q-lookup
 								v-if="controls.TBLK____GRPB_NAME____.isVisible"
 								v-bind="controls.TBLK____GRPB_NAME____.props"
+								:id="getControlId(controls.TBLK____GRPB_NAME____)"
 								v-on="controls.TBLK____GRPB_NAME____.handlers" />
 							<q-see-more-tblk-grpb-name
 								v-if="controls.TBLK____GRPB_NAME____.seeMoreIsVisible"
@@ -148,7 +151,8 @@
 						<base-input-structure
 							v-if="controls.TBLK____TRSB_NAME____.isVisible"
 							class="i-text"
-							v-bind="controls.TBLK____TRSB_NAME____"
+							v-bind="controls.TBLK____TRSB_NAME____.wrapperProps"
+							:id="getControlId(controls.TBLK____TRSB_NAME____)"
 							v-on="controls.TBLK____TRSB_NAME____.handlers"
 							:loading="controls.TBLK____TRSB_NAME____.props.loading"
 							:reporting-mode-on="reportingModeCAV"
@@ -156,6 +160,7 @@
 							<q-lookup
 								v-if="controls.TBLK____TRSB_NAME____.isVisible"
 								v-bind="controls.TBLK____TRSB_NAME____.props"
+								:id="getControlId(controls.TBLK____TRSB_NAME____)"
 								v-on="controls.TBLK____TRSB_NAME____.handlers" />
 							<q-see-more-tblk-trsb-name
 								v-if="controls.TBLK____TRSB_NAME____.seeMoreIsVisible"
@@ -168,7 +173,7 @@
 		</q-container>
 	</teleport>
 
-	<hr v-if="!isPopup && showFormFooter" />
+	<q-divider v-if="!isPopup && showFormFooter" />
 
 	<teleport
 		v-if="formModalIsReady && showFormFooter"
@@ -971,7 +976,6 @@
 
 				this.afterControlUpdate(controlField, fieldValue)
 			},
-
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
 // USE /[MANUAL GQT FUNCTIONS_JS TBLK]/
 // eslint-disable-next-line

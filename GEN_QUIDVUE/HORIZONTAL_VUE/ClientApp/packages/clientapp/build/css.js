@@ -56,7 +56,7 @@ async function renderPrecompiledCss(cssCode) {
  */
 function getCssContent(path) {
 	return new Promise((resolve) => {
-		let code = readFile(path)
+		const code = readFile(path)
 
 		// Clean up file
 		code

@@ -73,6 +73,7 @@ export default class ViewModel extends FormViewModelBase
 			field: 'TYPE',
 			maxLength: 25,
 			description: computed(() => this.Resources.FACILITY_TYPE44577),
+			ignoreFldSubmit: true,
 		}).cloneFrom(values?.TableFactyType))
 		this.stopWatchers.push(watch(() => this.TableFactyType.value, (newValue, oldValue) => this.onUpdate('facty.type', this.TableFactyType, newValue, oldValue)))
 

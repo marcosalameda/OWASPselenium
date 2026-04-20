@@ -15,53 +15,53 @@ public class Pessos01Form : Subform
 	/// <summary>
 	/// CONTACT
 	/// </summary>
-	public CollapsibleZoneControl PseudNovogr03 => new CollapsibleZoneControl(driver, ContainerLocator, "#PESSOS01PSEUDNOVOGR03-container");
+	public CollapsibleZoneControl PseudNovogr03 => new CollapsibleZoneControl(driver, ContainerLocator, "#PESSOS01PSEUDNOVOGR03" + IdSuffix + "-container");
 
 	/// <summary>
 	/// Telephone
 	/// </summary>
-	public BaseInputControl PessoTelephon => new BaseInputControl(driver, ContainerLocator, "container-PESSOS01PESSOTELEPHON", "#PESSOS01PESSOTELEPHON");
+	public BaseInputControl PessoTelephon => new BaseInputControl(driver, ContainerLocator, "container-PESSOS01PESSOTELEPHON" + IdSuffix, "#PESSOS01PESSOTELEPHON" + IdSuffix);
 
 	/// <summary>
 	/// Email:
 	/// </summary>
-	public BaseInputControl PessoEmail => new BaseInputControl(driver, ContainerLocator, "container-PESSOS01PESSOEMAIL___", "#PESSOS01PESSOEMAIL___");
+	public BaseInputControl PessoEmail => new BaseInputControl(driver, ContainerLocator, "container-PESSOS01PESSOEMAIL___" + IdSuffix, "#PESSOS01PESSOEMAIL___" + IdSuffix);
 
 	/// <summary>
 	/// PHOTO
 	/// </summary>
-	public CollapsibleZoneControl PseudNovogr04 => new CollapsibleZoneControl(driver, ContainerLocator, "#PESSOS01PSEUDNOVOGR04-container");
+	public CollapsibleZoneControl PseudNovogr04 => new CollapsibleZoneControl(driver, ContainerLocator, "#PESSOS01PSEUDNOVOGR04" + IdSuffix + "-container");
 
 	/// <summary>
 	/// Photo
 	/// </summary>
-	public BaseInputControl PessoPhotogra => new BaseInputControl(driver, ContainerLocator, "container-PESSOS01PESSOPHOTOGRA", "#PESSOS01PESSOPHOTOGRA");
+	public BaseInputControl PessoPhotogra => new BaseInputControl(driver, ContainerLocator, "container-PESSOS01PESSOPHOTOGRA" + IdSuffix, "#PESSOS01PESSOPHOTOGRA" + IdSuffix);
 
 	/// <summary>
 	/// CAREER
 	/// </summary>
-	public CollapsibleZoneControl PseudNovogr05 => new CollapsibleZoneControl(driver, ContainerLocator, "#PESSOS01PSEUDNOVOGR05-container");
+	public CollapsibleZoneControl PseudNovogr05 => new CollapsibleZoneControl(driver, ContainerLocator, "#PESSOS01PSEUDNOVOGR05" + IdSuffix + "-container");
 
 	/// <summary>
 	/// Professional Category Evolution
 	/// </summary>
-	public ListControl PseudEvolucao => new ListControl(driver, ContainerLocator, "#PESSOS01PSEUDEVOLUCAO");
+	public ListControl PseudEvolucao => new ListControl(driver, ContainerLocator, "#PESSOS01PSEUDEVOLUCAO" + IdSuffix);
 
 	/// <summary>
 	/// Career record
 	/// </summary>
-	public EvcatForm  PseudFichacar => new EvcatForm(driver, FORM_MODE.EDIT, By.Id("PESSOS01PSEUDFICHACAR"));
+	public EvcatForm  PseudFichacar => new EvcatForm(driver, FORM_MODE.EDIT, By.Id("PESSOS01PSEUDFICHACAR"), usePkInId: true);
 
 	/// <summary>
 	/// CONTACT
 	/// </summary>
-	public CollapsibleZoneControl PseudNovogr07 => new CollapsibleZoneControl(driver, ContainerLocator, "#PESSOS01PSEUDNOVOGR07-container");
+	public CollapsibleZoneControl PseudNovogr07 => new CollapsibleZoneControl(driver, ContainerLocator, "#PESSOS01PSEUDNOVOGR07" + IdSuffix + "-container");
 
 	/// <summary>
 	/// Contacts
 	/// </summary>
-	public ListControl PseudContacto => new ListControl(driver, ContainerLocator, "#PESSOS01PSEUDCONTACTO");
+	public ListControl PseudContacto => new ListControl(driver, ContainerLocator, "#PESSOS01PSEUDCONTACTO" + IdSuffix);
 
-	public Pessos01Form(IWebDriver driver, FORM_MODE mode, By? containerLocator = null)
-		: base(driver, mode, "PESSOS01", "PESSOSEP", containerLocator: containerLocator) { }
+	public Pessos01Form(IWebDriver driver, FORM_MODE mode, By? containerLocator = null, bool usePkInId = false)
+		: base(driver, mode, "PESSOS01", "PESSOSEP", containerLocator: containerLocator, usePkInId: usePkInId) { }
 }

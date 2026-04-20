@@ -3,22 +3,23 @@
 		v-if="menuModalIsReady"
 		:to="`#${uiContainersId.body}`"
 		:disabled="!menuInfo.isPopup">
-		<form
+		<div
 			class="form-horizontal"
 			@submit.prevent>
 			<q-row-container>
 				<q-table
 					v-bind="controls.menu"
 					v-on="controls.menu.handlers">
+					<template #header>
+						<q-table-config
+							:table-ctrl="controls.menu"
+							v-on="controls.menu.handlers">
+						</q-table-config>
+					</template>
 					<!-- USE /[MANUAL GQT CUSTOM_TABLE WMS_Menu_2211]/ -->
 				</q-table>
-
-				<q-table-extra-extension
-					:list-ctrl="controls.menu"
-					:filter-operators="controls.menu.filterOperators"
-					v-on="controls.menu.handlers" />
 			</q-row-container>
-		</form>
+		</div>
 	</teleport>
 
 	<teleport
@@ -194,7 +195,6 @@
 							searchBarConfig: {
 								visibility: true
 							},
-							filtersVisible: true,
 							allowColumnFilters: true,
 							allowColumnSort: true,
 							crudActions: [
@@ -268,9 +268,7 @@
 									id: 'insert',
 									name: 'insert',
 									title: computed(() => this.Resources.INSERIR43365),
-									icon: {
-										icon: 'add'
-									},
+									icon: { icon: 'add' },
 									isInReadOnly: true,
 									params: {
 										action: vm.openFormAction,
@@ -319,8 +317,8 @@
 								sortOrder: 'asc'
 							}
 						},
-						globalEvents: ['changed-DISPA', 'changed-ENTIT', 'changed-DISST', 'changed-PERSO'],
-						uuid: 'cfbb1913-41cc-44c3-9c1e-563789f3471f',
+						globalEvents: ['changed-PERSO', 'changed-DISPA', 'changed-ENTIT'],
+						uuid: '26adf4c3-c69b-49c3-9b58-2dd6e756779a',
 						allSelectedRows: 'false',
 						headerLevel: 1,
 						/** Menu limits */

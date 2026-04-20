@@ -1,6 +1,6 @@
 ﻿<template>
 	<q-grid-table-row
-		:id="id"
+		:id="primaryKeyValue"
 		:initial-state="initialState"
 		:is-deleted-state="isDeletedState"
 		:mode="mode"
@@ -13,75 +13,91 @@
 		<q-grid-table-column
 			v-if="canShowColumn('TBLB', 'TEXT')"
 			class=""
-			v-bind="controls.GRPB____PSEUDTBLB______TBLB__TEXT.wrapperProps">
+			v-bind="controls.GRPB____PSEUDTBLB______TBLB__TEXT.gridColumnProps"
+			:id="getControlId(controls.GRPB____PSEUDTBLB______TBLB__TEXT)">
 			<q-text-field
 				v-bind="controls.GRPB____PSEUDTBLB______TBLB__TEXT.props"
+				:id="getControlId(controls.GRPB____PSEUDTBLB______TBLB__TEXT)"
 				@blur="onBlur(controls.GRPB____PSEUDTBLB______TBLB__TEXT, model.ValText.value)"
 				@change="model.ValText.fnUpdateValueOnChange" />
 		</q-grid-table-column>
 		<q-grid-table-column
 			v-if="canShowColumn('TBLB', 'TEXTML')"
 			class=""
-			v-bind="controls.GRPB____PSEUDTBLB______TBLB__TEXTML.wrapperProps">
+			v-bind="controls.GRPB____PSEUDTBLB______TBLB__TEXTML.gridColumnProps"
+			:id="getControlId(controls.GRPB____PSEUDTBLB______TBLB__TEXTML)">
 			<q-text-area
 				v-if="controls.GRPB____PSEUDTBLB______TBLB__TEXTML.isVisible"
 				v-bind="controls.GRPB____PSEUDTBLB______TBLB__TEXTML.props"
+				:id="getControlId(controls.GRPB____PSEUDTBLB______TBLB__TEXTML)"
 				v-on="controls.GRPB____PSEUDTBLB______TBLB__TEXTML.handlers" />
 		</q-grid-table-column>
 		<q-grid-table-column
 			v-if="canShowColumn('TBLB', 'NUMINT')"
 			class=""
-			v-bind="controls.GRPB____PSEUDTBLB______TBLB__NUMINT.wrapperProps">
+			v-bind="controls.GRPB____PSEUDTBLB______TBLB__NUMINT.gridColumnProps"
+			:id="getControlId(controls.GRPB____PSEUDTBLB______TBLB__NUMINT)">
 			<q-numeric-input
 				v-if="controls.GRPB____PSEUDTBLB______TBLB__NUMINT.isVisible"
 				v-bind="controls.GRPB____PSEUDTBLB______TBLB__NUMINT.props"
+				:id="getControlId(controls.GRPB____PSEUDTBLB______TBLB__NUMINT)"
 				@update:model-value="model.ValNumint.fnUpdateValue" />
 		</q-grid-table-column>
 		<q-grid-table-column
 			v-if="canShowColumn('TBLB', 'NUMDEC')"
 			class=""
-			v-bind="controls.GRPB____PSEUDTBLB______TBLB__NUMDEC.wrapperProps">
+			v-bind="controls.GRPB____PSEUDTBLB______TBLB__NUMDEC.gridColumnProps"
+			:id="getControlId(controls.GRPB____PSEUDTBLB______TBLB__NUMDEC)">
 			<q-numeric-input
 				v-if="controls.GRPB____PSEUDTBLB______TBLB__NUMDEC.isVisible"
 				v-bind="controls.GRPB____PSEUDTBLB______TBLB__NUMDEC.props"
+				:id="getControlId(controls.GRPB____PSEUDTBLB______TBLB__NUMDEC)"
 				@update:model-value="model.ValNumdec.fnUpdateValue" />
 		</q-grid-table-column>
 		<q-grid-table-column
 			v-if="canShowColumn('TBLB', 'CURINT')"
 			class=""
-			v-bind="controls.GRPB____PSEUDTBLB______TBLB__CURINT.wrapperProps">
+			v-bind="controls.GRPB____PSEUDTBLB______TBLB__CURINT.gridColumnProps"
+			:id="getControlId(controls.GRPB____PSEUDTBLB______TBLB__CURINT)">
 			<q-numeric-input
 				v-if="controls.GRPB____PSEUDTBLB______TBLB__CURINT.isVisible"
 				v-bind="controls.GRPB____PSEUDTBLB______TBLB__CURINT.props"
+				:id="getControlId(controls.GRPB____PSEUDTBLB______TBLB__CURINT)"
 				@update:model-value="model.ValCurint.fnUpdateValue" />
 		</q-grid-table-column>
 		<q-grid-table-column
 			v-if="canShowColumn('TBLB', 'CURDEC')"
 			class=""
-			v-bind="controls.GRPB____PSEUDTBLB______TBLB__CURDEC.wrapperProps">
+			v-bind="controls.GRPB____PSEUDTBLB______TBLB__CURDEC.gridColumnProps"
+			:id="getControlId(controls.GRPB____PSEUDTBLB______TBLB__CURDEC)">
 			<q-numeric-input
 				v-if="controls.GRPB____PSEUDTBLB______TBLB__CURDEC.isVisible"
 				v-bind="controls.GRPB____PSEUDTBLB______TBLB__CURDEC.props"
+				:id="getControlId(controls.GRPB____PSEUDTBLB______TBLB__CURDEC)"
 				@update:model-value="model.ValCurdec.fnUpdateValue" />
 		</q-grid-table-column>
 		<q-grid-table-column
 			v-if="canShowColumn('TBLB', 'BOOL')"
 			class=""
-			v-bind="controls.GRPB____PSEUDTBLB______TBLB__BOOL.wrapperProps">
+			v-bind="controls.GRPB____PSEUDTBLB______TBLB__BOOL.gridColumnProps"
+			:id="getControlId(controls.GRPB____PSEUDTBLB______TBLB__BOOL)">
 			<template #label>
 				<q-checkbox
 					v-if="controls.GRPB____PSEUDTBLB______TBLB__BOOL.isVisible"
 					v-bind="controls.GRPB____PSEUDTBLB______TBLB__BOOL.props"
+					:id="getControlId(controls.GRPB____PSEUDTBLB______TBLB__BOOL)"
 					v-on="controls.GRPB____PSEUDTBLB______TBLB__BOOL.handlers" />
 			</template>
 		</q-grid-table-column>
 		<q-grid-table-column
 			v-if="canShowColumn('TBLB', 'DATE')"
 			class=""
-			v-bind="controls.GRPB____PSEUDTBLB______TBLB__DATE.wrapperProps">
+			v-bind="controls.GRPB____PSEUDTBLB______TBLB__DATE.gridColumnProps"
+			:id="getControlId(controls.GRPB____PSEUDTBLB______TBLB__DATE)">
 			<q-date-time-picker
 				v-if="controls.GRPB____PSEUDTBLB______TBLB__DATE.isVisible"
 				v-bind="controls.GRPB____PSEUDTBLB______TBLB__DATE.props"
+				:id="getControlId(controls.GRPB____PSEUDTBLB______TBLB__DATE)"
 				:model-value="model.ValDate.value"
 				@reset-icon-click="model.ValDate.fnUpdateValue(model.ValDate.originalValue ?? new Date())"
 				@update:model-value="model.ValDate.fnUpdateValue($event ?? '')" />
@@ -89,10 +105,12 @@
 		<q-grid-table-column
 			v-if="canShowColumn('TBLB', 'DATETM')"
 			class=""
-			v-bind="controls.GRPB____PSEUDTBLB______TBLB__DATETM.wrapperProps">
+			v-bind="controls.GRPB____PSEUDTBLB______TBLB__DATETM.gridColumnProps"
+			:id="getControlId(controls.GRPB____PSEUDTBLB______TBLB__DATETM)">
 			<q-date-time-picker
 				v-if="controls.GRPB____PSEUDTBLB______TBLB__DATETM.isVisible"
 				v-bind="controls.GRPB____PSEUDTBLB______TBLB__DATETM.props"
+				:id="getControlId(controls.GRPB____PSEUDTBLB______TBLB__DATETM)"
 				:model-value="model.ValDatetm.value"
 				@reset-icon-click="model.ValDatetm.fnUpdateValue(model.ValDatetm.originalValue ?? new Date())"
 				@update:model-value="model.ValDatetm.fnUpdateValue($event ?? '')" />
@@ -100,10 +118,12 @@
 		<q-grid-table-column
 			v-if="canShowColumn('TBLB', 'DATETS')"
 			class=""
-			v-bind="controls.GRPB____PSEUDTBLB______TBLB__DATETS.wrapperProps">
+			v-bind="controls.GRPB____PSEUDTBLB______TBLB__DATETS.gridColumnProps"
+			:id="getControlId(controls.GRPB____PSEUDTBLB______TBLB__DATETS)">
 			<q-date-time-picker
 				v-if="controls.GRPB____PSEUDTBLB______TBLB__DATETS.isVisible"
 				v-bind="controls.GRPB____PSEUDTBLB______TBLB__DATETS.props"
+				:id="getControlId(controls.GRPB____PSEUDTBLB______TBLB__DATETS)"
 				:model-value="model.ValDatets.value"
 				@reset-icon-click="model.ValDatets.fnUpdateValue(model.ValDatets.originalValue ?? new Date())"
 				@update:model-value="model.ValDatets.fnUpdateValue($event ?? '')" />
@@ -111,10 +131,12 @@
 		<q-grid-table-column
 			v-if="canShowColumn('TBLB', 'TIMEHM')"
 			class=""
-			v-bind="controls.GRPB____PSEUDTBLB______TBLB__TIMEHM.wrapperProps">
+			v-bind="controls.GRPB____PSEUDTBLB______TBLB__TIMEHM.gridColumnProps"
+			:id="getControlId(controls.GRPB____PSEUDTBLB______TBLB__TIMEHM)">
 			<q-date-time-picker
 				v-if="controls.GRPB____PSEUDTBLB______TBLB__TIMEHM.isVisible"
 				v-bind="controls.GRPB____PSEUDTBLB______TBLB__TIMEHM.props"
+				:id="getControlId(controls.GRPB____PSEUDTBLB______TBLB__TIMEHM)"
 				:model-value="model.ValTimehm.value"
 				@reset-icon-click="model.ValTimehm.fnUpdateValue(model.ValTimehm.originalValue ?? new Date())"
 				@update:model-value="model.ValTimehm.fnUpdateValue($event ?? '')" />
@@ -122,19 +144,23 @@
 		<q-grid-table-column
 			v-if="canShowColumn('TBLB', 'ENUMT')"
 			class=""
-			v-bind="controls.GRPB____PSEUDTBLB______TBLB__ENUMT.wrapperProps">
+			v-bind="controls.GRPB____PSEUDTBLB______TBLB__ENUMT.gridColumnProps"
+			:id="getControlId(controls.GRPB____PSEUDTBLB______TBLB__ENUMT)">
 			<q-select
 				v-if="controls.GRPB____PSEUDTBLB______TBLB__ENUMT.isVisible"
 				v-bind="controls.GRPB____PSEUDTBLB______TBLB__ENUMT.props"
+				:id="getControlId(controls.GRPB____PSEUDTBLB______TBLB__ENUMT)"
 				@update:model-value="model.ValEnumt.fnUpdateValue" />
 		</q-grid-table-column>
 		<q-grid-table-column
 			v-if="canShowColumn('TBLB', 'ENUMN')"
 			class=""
-			v-bind="controls.GRPB____PSEUDTBLB______TBLB__ENUMN.wrapperProps">
+			v-bind="controls.GRPB____PSEUDTBLB______TBLB__ENUMN.gridColumnProps"
+			:id="getControlId(controls.GRPB____PSEUDTBLB______TBLB__ENUMN)">
 			<q-select
 				v-if="controls.GRPB____PSEUDTBLB______TBLB__ENUMN.isVisible"
 				v-bind="controls.GRPB____PSEUDTBLB______TBLB__ENUMN.props"
+				:id="getControlId(controls.GRPB____PSEUDTBLB______TBLB__ENUMN)"
 				@update:model-value="model.ValEnumn.fnUpdateValue" />
 		</q-grid-table-column>
 	</q-grid-table-row>
@@ -200,7 +226,8 @@
 					primaryKey: 'ValCodtblb',
 					designation: '',
 					identifier: '', // Unique identifier received by route (when it's nested).
-					mode: ''
+					mode: '',
+					isMultiple: true
 				},
 
 				model: this.nestedModel
@@ -370,8 +397,8 @@
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						maxLength: 1,
 						arrayName: 'typet',
-						helpShortItem: '${field.ShortHelpItem}',
-						helpDetailedItem: '${field.DetailedHelpItem}',
+						helpShortItem: 'None',
+						helpDetailedItem: 'None',
 						controlLimits: [
 						],
 					}, this),
@@ -387,8 +414,8 @@
 						maxIntegers: 1,
 						maxDecimals: 0,
 						arrayName: 'typen',
-						helpShortItem: '${field.ShortHelpItem}',
-						helpDetailedItem: '${field.DetailedHelpItem}',
+						helpShortItem: 'None',
+						helpDetailedItem: 'None',
 						controlLimits: [
 						],
 					}, this),

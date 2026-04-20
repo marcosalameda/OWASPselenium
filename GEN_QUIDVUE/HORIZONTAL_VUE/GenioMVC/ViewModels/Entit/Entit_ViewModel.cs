@@ -7,6 +7,7 @@ using GenioMVC.Models.Navigation;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Quidgest.Persistence;
 using Quidgest.Persistence.GenericQuery;
+
 using System.Collections;
 using System.Collections.Concurrent;
 using System.Collections.Specialized;
@@ -41,6 +42,7 @@ namespace GenioMVC.ViewModels.Entit
 		public string ValLastfacilitie { get; set; }
 
 		#endregion
+
 		/// <summary>
 		/// Title: "Legal name" | Type: "C"
 		/// </summary>
@@ -57,14 +59,6 @@ namespace GenioMVC.ViewModels.Entit
 		/// Title: "VAT Number" | Type: "C"
 		/// </summary>
 		public string ValTaxnumbe { get; set; }
-		/// <summary>
-		/// Title: "Founded in" | Type: "D"
-		/// </summary>
-		public DateTime? ValFounded { get; set; }
-		/// <summary>
-		/// Title: "Owner" | Type: "C"
-		/// </summary>
-		public string ValOwner { get; set; }
 		/// <summary>
 		/// Title: "Email" | Type: "C"
 		/// </summary>
@@ -126,6 +120,10 @@ namespace GenioMVC.ViewModels.Entit
 		/// </summary>
 		public string ValContact { get; set; }
 		/// <summary>
+		/// Title: "Owner" | Type: "L"
+		/// </summary>
+		public bool ValOwner { get; set; }
+		/// <summary>
 		/// Title: "Carrier" | Type: "L"
 		/// </summary>
 		public bool ValCarrier { get; set; }
@@ -137,6 +135,10 @@ namespace GenioMVC.ViewModels.Entit
 		/// Title: "Manufacturer" | Type: "L"
 		/// </summary>
 		public bool ValManufact { get; set; }
+		/// <summary>
+		/// Title: "Founded in" | Type: "D"
+		/// </summary>
+		public DateTime? ValFounded { get; set; }
 		/// <summary>
 		/// Title: "Facility name" | Type: "C"
 		/// </summary>
@@ -155,8 +157,6 @@ namespace GenioMVC.ViewModels.Entit
 		/// Title: "Currency" | Type: "C"
 		/// </summary>
 		public string ValCurrency { get; set; }
-
-
 
 		#region Navigations
 		#endregion
@@ -294,8 +294,6 @@ namespace GenioMVC.ViewModels.Entit
 				ValInitials = ViewModelConversion.ToString(m.ValInitials);
 				ValRegistra = ViewModelConversion.ToString(m.ValRegistra);
 				ValTaxnumbe = ViewModelConversion.ToString(m.ValTaxnumbe);
-				ValFounded = ViewModelConversion.ToDateTime(m.ValFounded);
-				ValOwner = ViewModelConversion.ToString(m.ValOwner);
 				ValEmail = ViewModelConversion.ToString(m.ValEmail);
 				ValPhonenum = ViewModelConversion.ToString(m.ValPhonenum);
 				ValIban = ViewModelConversion.ToString(m.ValIban);
@@ -311,9 +309,11 @@ namespace GenioMVC.ViewModels.Entit
 				ValWebsite = ViewModelConversion.ToString(m.ValWebsite);
 				ValPerson = ViewModelConversion.ToString(m.ValPerson);
 				ValContact = ViewModelConversion.ToString(m.ValContact);
+				ValOwner = ViewModelConversion.ToLogic(m.ValOwner);
 				ValCarrier = ViewModelConversion.ToLogic(m.ValCarrier);
 				ValSupplier = ViewModelConversion.ToLogic(m.ValSupplier);
 				ValManufact = ViewModelConversion.ToLogic(m.ValManufact);
+				ValFounded = ViewModelConversion.ToDateTime(m.ValFounded);
 				ValLanguage = ViewModelConversion.ToString(m.ValLanguage);
 				ValCurrency = ViewModelConversion.ToString(m.ValCurrency);
 				ValCodentit = ViewModelConversion.ToString(m.ValCodentit);
@@ -346,8 +346,6 @@ namespace GenioMVC.ViewModels.Entit
 				m.ValInitials = ViewModelConversion.ToString(ValInitials);
 				m.ValRegistra = ViewModelConversion.ToString(ValRegistra);
 				m.ValTaxnumbe = ViewModelConversion.ToString(ValTaxnumbe);
-				m.ValFounded = ViewModelConversion.ToDateTime(ValFounded);
-				m.ValOwner = ViewModelConversion.ToString(ValOwner);
 				m.ValEmail = ViewModelConversion.ToString(ValEmail);
 				m.ValPhonenum = ViewModelConversion.ToString(ValPhonenum);
 				m.ValIban = ViewModelConversion.ToString(ValIban);
@@ -363,9 +361,11 @@ namespace GenioMVC.ViewModels.Entit
 				m.ValWebsite = ViewModelConversion.ToString(ValWebsite);
 				m.ValPerson = ViewModelConversion.ToString(ValPerson);
 				m.ValContact = ViewModelConversion.ToString(ValContact);
+				m.ValOwner = ViewModelConversion.ToLogic(ValOwner);
 				m.ValCarrier = ViewModelConversion.ToLogic(ValCarrier);
 				m.ValSupplier = ViewModelConversion.ToLogic(ValSupplier);
 				m.ValManufact = ViewModelConversion.ToLogic(ValManufact);
+				m.ValFounded = ViewModelConversion.ToDateTime(ValFounded);
 				m.ValLanguage = ViewModelConversion.ToString(ValLanguage);
 				m.ValCurrency = ViewModelConversion.ToString(ValCurrency);
 				m.ValCodentit = ViewModelConversion.ToString(ValCodentit);
@@ -387,12 +387,7 @@ namespace GenioMVC.ViewModels.Entit
 			}
 		}
 
-		/// <summary>
-		/// Sets the value of a single property of the view model based on the provided table and field names.
-		/// </summary>
-		/// <param name="fullFieldName">The full field name in the format "table.field".</param>
-		/// <param name="value">The field value.</param>
-		/// <exception cref="ArgumentNullException">Thrown if <paramref name="fullFieldName"/> is null.</exception>
+		/// <inheritdoc />
 		public override void SetViewModelValue(string fullFieldName, object value)
 		{
 			try
@@ -414,12 +409,6 @@ namespace GenioMVC.ViewModels.Entit
 						break;
 					case "entit.taxnumbe":
 						this.ValTaxnumbe = ViewModelConversion.ToString(_value);
-						break;
-					case "entit.founded":
-						this.ValFounded = ViewModelConversion.ToDateTime(_value);
-						break;
-					case "entit.owner":
-						this.ValOwner = ViewModelConversion.ToString(_value);
 						break;
 					case "entit.email":
 						this.ValEmail = ViewModelConversion.ToString(_value);
@@ -466,6 +455,9 @@ namespace GenioMVC.ViewModels.Entit
 					case "entit.contact":
 						this.ValContact = ViewModelConversion.ToString(_value);
 						break;
+					case "entit.owner":
+						this.ValOwner = ViewModelConversion.ToLogic(_value);
+						break;
 					case "entit.carrier":
 						this.ValCarrier = ViewModelConversion.ToLogic(_value);
 						break;
@@ -474,6 +466,9 @@ namespace GenioMVC.ViewModels.Entit
 						break;
 					case "entit.manufact":
 						this.ValManufact = ViewModelConversion.ToLogic(_value);
+						break;
+					case "entit.founded":
+						this.ValFounded = ViewModelConversion.ToDateTime(_value);
 						break;
 					case "entit.language":
 						this.ValLanguage = ViewModelConversion.ToString(_value);
@@ -593,6 +588,7 @@ namespace GenioMVC.ViewModels.Entit
 
 			Load_Entit___faci1name____(qs, lazyLoad);
 			Load_Entit___faci2name____(qs, lazyLoad);
+
 // USE /[MANUAL GQT VIEWMODEL_LOADPARTIAL ENTIT]/
 		}
 
@@ -611,25 +607,24 @@ namespace GenioMVC.ViewModels.Entit
 
 			validator.Required("ValName", Resources.Resources.LEGAL_NAME42902, ViewModelConversion.ToString(ValName), FieldType.TEXT.GetFormatting());
 			validator.StringLength("ValInitials", Resources.Resources.COMPANY_INITIALS56204, ValInitials, 10);
-			validator.StringLength("ValRegistra", Resources.Resources.LEGAL_REGISTRATION04413, ValRegistra, 30);
-			validator.StringLength("ValTaxnumbe", Resources.Resources.VAT_NUMBER24236, ValTaxnumbe, 30);
-			validator.StringLength("ValOwner", Resources.Resources.OWNER09558, ValOwner, 50);
+			validator.StringLength("ValRegistra", Resources.Resources.LEGAL_REGISTRATION04413, ValRegistra, 20);
+			validator.StringLength("ValTaxnumbe", Resources.Resources.VAT_NUMBER24236, ValTaxnumbe, 20);
 			validator.StringLength("ValEmail", Resources.Resources.EMAIL25170, ValEmail, 254);
 			validator.StringLength("ValPhonenum", Resources.Resources.PHONE_NUMBER20774, ValPhonenum, 20);
-			validator.StringLength("ValIban", Resources.Resources.IBAN__INTERNATIONAL_45066, ValIban, 33);
-			validator.StringLength("ValBuilding", Resources.Resources.BUILDING_HOUSE_NUMBE20738, ValBuilding, 25);
-			validator.StringLength("ValStreet", Resources.Resources.STREET44324, ValStreet, 50);
-			validator.StringLength("ValTown", Resources.Resources.TOWN_CITY16259, ValTown, 50);
-			validator.StringLength("ValCounty", Resources.Resources.COUNTY_PROVINCE34285, ValCounty, 50);
-			validator.StringLength("ValState", Resources.Resources.STATE_PROVINCE28516, ValState, 50);
+			validator.StringLength("ValIban", Resources.Resources.IBAN__INTERNATIONAL_45066, ValIban, 25);
+			validator.StringLength("ValBuilding", Resources.Resources.BUILDING_HOUSE_NUMBE20738, ValBuilding, 10);
+			validator.StringLength("ValStreet", Resources.Resources.STREET44324, ValStreet, 85);
+			validator.StringLength("ValTown", Resources.Resources.TOWN_CITY16259, ValTown, 85);
+			validator.StringLength("ValCounty", Resources.Resources.COUNTY_PROVINCE34285, ValCounty, 85);
+			validator.StringLength("ValState", Resources.Resources.STATE_PROVINCE28516, ValState, 85);
 			validator.StringLength("ValPobox", Resources.Resources.POST_OFFICE_BOX06223, ValPobox, 5);
-			validator.StringLength("ValPostalco", Resources.Resources.ZIP_POSTAL_CODE55613, ValPostalco, 10);
+			validator.StringLength("ValPostalco", Resources.Resources.ZIP_POSTAL_CODE55613, ValPostalco, 50);
 			validator.StringLength("ValTelephon", Resources.Resources.TELEPHONE28697, ValTelephon, 20);
 			validator.StringLength("ValFax", Resources.Resources.FAX08532, ValFax, 20);
 			validator.StringLength("ValWebsite", Resources.Resources.WEB_SITE06263, ValWebsite, 254);
 			validator.Hyperlink(Resources.Resources.WEB_SITE06263, ValWebsite);
 			validator.StringLength("ValPerson", Resources.Resources.PERSON_DEPARTMENT_TO28777, ValPerson, 85);
-			validator.StringLength("ValContact", Resources.Resources.CONTACT_TELEPHONE_NU12694, ValContact, 30);
+			validator.StringLength("ValContact", Resources.Resources.CONTACT_TELEPHONE_NU12694, ValContact, 20);
 			validator.StringLength("ValLanguage", Resources.Resources.LANGUAGE16872, ValLanguage, 2);
 			validator.StringLength("ValCurrency", Resources.Resources.CURRENCY13881, ValCurrency, 3);
 
@@ -687,10 +682,7 @@ namespace GenioMVC.ViewModels.Entit
 				}
 			}
 
-			TableFaci1Name = new TableDBEdit<Models.Faci1>
-			{
-				IsLazyLoad = lazyLoad
-			};
+			TableFaci1Name = new TableDBEdit<Models.Faci1>();
 
 			if (lazyLoad)
 			{
@@ -877,10 +869,7 @@ namespace GenioMVC.ViewModels.Entit
 				}
 			}
 
-			TableFaci2Name = new TableDBEdit<Models.Faci2>
-			{
-				IsLazyLoad = lazyLoad
-			};
+			TableFaci2Name = new TableDBEdit<Models.Faci2>();
 
 			if (lazyLoad)
 			{
@@ -1059,8 +1048,6 @@ namespace GenioMVC.ViewModels.Entit
 				"entit.initials" => ViewModelConversion.ToString(modelValue),
 				"entit.registra" => ViewModelConversion.ToString(modelValue),
 				"entit.taxnumbe" => ViewModelConversion.ToString(modelValue),
-				"entit.founded" => ViewModelConversion.ToDateTime(modelValue),
-				"entit.owner" => ViewModelConversion.ToString(modelValue),
 				"entit.email" => ViewModelConversion.ToString(modelValue),
 				"entit.phonenum" => ViewModelConversion.ToString(modelValue),
 				"entit.iban" => ViewModelConversion.ToString(modelValue),
@@ -1076,9 +1063,11 @@ namespace GenioMVC.ViewModels.Entit
 				"entit.website" => ViewModelConversion.ToString(modelValue),
 				"entit.person" => ViewModelConversion.ToString(modelValue),
 				"entit.contact" => ViewModelConversion.ToString(modelValue),
+				"entit.owner" => ViewModelConversion.ToLogic(modelValue),
 				"entit.carrier" => ViewModelConversion.ToLogic(modelValue),
 				"entit.supplier" => ViewModelConversion.ToLogic(modelValue),
 				"entit.manufact" => ViewModelConversion.ToLogic(modelValue),
+				"entit.founded" => ViewModelConversion.ToDateTime(modelValue),
 				"entit.language" => ViewModelConversion.ToString(modelValue),
 				"entit.currency" => ViewModelConversion.ToString(modelValue),
 				"entit.codentit" => ViewModelConversion.ToString(modelValue),

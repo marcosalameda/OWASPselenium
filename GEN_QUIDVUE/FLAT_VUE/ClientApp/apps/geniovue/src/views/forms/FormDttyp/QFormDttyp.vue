@@ -9,12 +9,13 @@
 			<div
 				v-if="showFormHeader"
 				class="c-action-bar">
-				<h1
+				<component
 					v-if="formControl.uiComponents.header && formInfo.designation"
+					:is="topHeadingTag"
 					:id="formTitleId"
 					class="form-header">
 					{{ formInfo.designation }}
-				</h1>
+				</component>
 
 				<div class="c-action-bar__menu">
 					<template
@@ -40,13 +41,10 @@
 									@click="btn.action">
 									<template v-if="btn.icon">
 										<q-badge-indicator
-											v-if="btn.badge && btn.badge.isVisible"
-											:color="btn.badge.color">
+											:enabled="btn.badge?.isVisible ?? false"
+											:color="btn.badge?.color">
 											<q-icon v-bind="btn.icon" />
 										</q-badge-indicator>
-										<q-icon
-											v-else
-											v-bind="btn.icon" />
 									</template>
 								</q-toggle-group-item>
 							</template>
@@ -97,18 +95,19 @@
 		<q-container
 			fluid
 			data-key="DTTYP"
+			:data-identifier="primaryKeyValue"
 			:data-loading="!formInitialDataLoaded || !isActiveForm">
 			<template v-if="formControl.initialized && showFormBody">
 				<q-row v-if="controls.DTTYP___PSEUDNOVOGR06.isVisible">
 					<q-col v-if="controls.DTTYP___PSEUDNOVOGR06.isVisible">
 						<q-accordion
 							v-if="controls.DTTYP___PSEUDNOVOGR06.isVisible"
-							id="DTTYP___PSEUDNOVOGR06"
+							:id="getControlId(controls.DTTYP___PSEUDNOVOGR06)"
 							v-model="controls.DTTYP___PSEUDNOVOGR06.openChild">
 							<!-- Start DTTYP___PSEUDNOVOGR06 -->
 							<q-accordion-item
 								v-if="controls.DTTYP___PSEUDNOVOGR01.isVisible"
-								id="DTTYP___PSEUDNOVOGR01-container"
+								:id="getControlId(controls.DTTYP___PSEUDNOVOGR01) + '-container'"
 								value="DTTYP___PSEUDNOVOGR01"
 								:title="controls.DTTYP___PSEUDNOVOGR01.label">
 								<!-- Start DTTYP___PSEUDNOVOGR01 -->
@@ -119,13 +118,15 @@
 										<base-input-structure
 											v-if="controls.DTTYP___DTTYPSTRING__.isVisible"
 											class="i-text"
-											v-bind="controls.DTTYP___DTTYPSTRING__"
+											v-bind="controls.DTTYP___DTTYPSTRING__.wrapperProps"
+											:id="getControlId(controls.DTTYP___DTTYPSTRING__)"
 											v-on="controls.DTTYP___DTTYPSTRING__.handlers"
 											:loading="controls.DTTYP___DTTYPSTRING__.props.loading"
 											:reporting-mode-on="reportingModeCAV"
 											:suggestion-mode-on="suggestionModeOn">
 											<q-text-field
 												v-bind="controls.DTTYP___DTTYPSTRING__.props"
+												:id="getControlId(controls.DTTYP___DTTYPSTRING__)"
 												@blur="onBlur(controls.DTTYP___DTTYPSTRING__, model.ValString.value)"
 												@change="model.ValString.fnUpdateValueOnChange" />
 										</base-input-structure>
@@ -138,14 +139,16 @@
 										<base-input-structure
 											v-if="controls.DTTYP___DTTYPUPPERCAS.isVisible"
 											class="i-text"
-											v-bind="controls.DTTYP___DTTYPUPPERCAS"
+											v-bind="controls.DTTYP___DTTYPUPPERCAS.wrapperProps"
+											:id="getControlId(controls.DTTYP___DTTYPUPPERCAS)"
 											v-on="controls.DTTYP___DTTYPUPPERCAS.handlers"
 											:loading="controls.DTTYP___DTTYPUPPERCAS.props.loading"
 											:reporting-mode-on="reportingModeCAV"
 											:suggestion-mode-on="suggestionModeOn">
 											<q-mask
 												v-if="controls.DTTYP___DTTYPUPPERCAS.isVisible"
-												v-bind="controls.DTTYP___DTTYPUPPERCAS"
+												v-bind="controls.DTTYP___DTTYPUPPERCAS.props"
+												:id="getControlId(controls.DTTYP___DTTYPUPPERCAS)"
 												:model-value="model.ValUppercas.value"
 												@change="model.ValUppercas.fnUpdateValueOnChange" />
 										</base-input-structure>
@@ -158,13 +161,15 @@
 										<base-input-structure
 											v-if="controls.DTTYP___DTTYPUUID____.isVisible"
 											class="i-text"
-											v-bind="controls.DTTYP___DTTYPUUID____"
+											v-bind="controls.DTTYP___DTTYPUUID____.wrapperProps"
+											:id="getControlId(controls.DTTYP___DTTYPUUID____)"
 											v-on="controls.DTTYP___DTTYPUUID____.handlers"
 											:loading="controls.DTTYP___DTTYPUUID____.props.loading"
 											:reporting-mode-on="reportingModeCAV"
 											:suggestion-mode-on="suggestionModeOn">
 											<q-text-field
 												v-bind="controls.DTTYP___DTTYPUUID____.props"
+												:id="getControlId(controls.DTTYP___DTTYPUUID____)"
 												@blur="onBlur(controls.DTTYP___DTTYPUUID____, model.ValUuid.value)"
 												@change="model.ValUuid.fnUpdateValueOnChange" />
 										</base-input-structure>
@@ -177,7 +182,8 @@
 										<base-input-structure
 											v-if="controls.DTTYP___DTTYPMULTILIN.isVisible"
 											class="i-textarea"
-											v-bind="controls.DTTYP___DTTYPMULTILIN"
+											v-bind="controls.DTTYP___DTTYPMULTILIN.wrapperProps"
+											:id="getControlId(controls.DTTYP___DTTYPMULTILIN)"
 											v-on="controls.DTTYP___DTTYPMULTILIN.handlers"
 											:loading="controls.DTTYP___DTTYPMULTILIN.props.loading"
 											:reporting-mode-on="reportingModeCAV"
@@ -185,6 +191,7 @@
 											<q-text-area
 												v-if="controls.DTTYP___DTTYPMULTILIN.isVisible"
 												v-bind="controls.DTTYP___DTTYPMULTILIN.props"
+												:id="getControlId(controls.DTTYP___DTTYPMULTILIN)"
 												v-on="controls.DTTYP___DTTYPMULTILIN.handlers" />
 										</base-input-structure>
 									</q-col>
@@ -196,7 +203,8 @@
 										<base-input-structure
 											v-if="controls.DTTYP___DTTYPMULTILI3.isVisible"
 											class="i-text"
-											v-bind="controls.DTTYP___DTTYPMULTILI3"
+											v-bind="controls.DTTYP___DTTYPMULTILI3.wrapperProps"
+											:id="getControlId(controls.DTTYP___DTTYPMULTILI3)"
 											v-on="controls.DTTYP___DTTYPMULTILI3.handlers"
 											:loading="controls.DTTYP___DTTYPMULTILI3.props.loading"
 											:reporting-mode-on="reportingModeCAV"
@@ -204,6 +212,7 @@
 											<q-text-editor
 												v-if="controls.DTTYP___DTTYPMULTILI3.isVisible"
 												v-bind="controls.DTTYP___DTTYPMULTILI3.props"
+												:id="getControlId(controls.DTTYP___DTTYPMULTILI3)"
 												v-on="controls.DTTYP___DTTYPMULTILI3.handlers" />
 										</base-input-structure>
 									</q-col>
@@ -212,7 +221,7 @@
 							</q-accordion-item>
 							<q-accordion-item
 								v-if="controls.DTTYP___PSEUDNOVOGR02.isVisible"
-								id="DTTYP___PSEUDNOVOGR02-container"
+								:id="getControlId(controls.DTTYP___PSEUDNOVOGR02) + '-container'"
 								value="DTTYP___PSEUDNOVOGR02"
 								:title="controls.DTTYP___PSEUDNOVOGR02.label">
 								<!-- Start DTTYP___PSEUDNOVOGR02 -->
@@ -222,8 +231,9 @@
 										cols="auto">
 										<base-input-structure
 											v-if="controls.DTTYP___DTTYPBOOLEAN_.isVisible"
-											class="i-checkbox"
-											v-bind="controls.DTTYP___DTTYPBOOLEAN_"
+											class="i-text"
+											v-bind="controls.DTTYP___DTTYPBOOLEAN_.wrapperProps"
+											:id="getControlId(controls.DTTYP___DTTYPBOOLEAN_)"
 											v-on="controls.DTTYP___DTTYPBOOLEAN_.handlers"
 											:loading="controls.DTTYP___DTTYPBOOLEAN_.props.loading"
 											:reporting-mode-on="reportingModeCAV"
@@ -232,6 +242,7 @@
 												<q-checkbox
 													v-if="controls.DTTYP___DTTYPBOOLEAN_.isVisible"
 													v-bind="controls.DTTYP___DTTYPBOOLEAN_.props"
+													:id="getControlId(controls.DTTYP___DTTYPBOOLEAN_)"
 													v-on="controls.DTTYP___DTTYPBOOLEAN_.handlers" />
 											</template>
 										</base-input-structure>
@@ -244,7 +255,8 @@
 										<base-input-structure
 											v-if="controls.DTTYP___DTTYPBOOLEAN2.isVisible"
 											class="i-text"
-											v-bind="controls.DTTYP___DTTYPBOOLEAN2"
+											v-bind="controls.DTTYP___DTTYPBOOLEAN2.wrapperProps"
+											:id="getControlId(controls.DTTYP___DTTYPBOOLEAN2)"
 											v-on="controls.DTTYP___DTTYPBOOLEAN2.handlers"
 											:loading="controls.DTTYP___DTTYPBOOLEAN2.props.loading"
 											:reporting-mode-on="reportingModeCAV"
@@ -253,6 +265,7 @@
 												<q-checkbox
 													v-if="controls.DTTYP___DTTYPBOOLEAN2.isVisible"
 													v-bind="controls.DTTYP___DTTYPBOOLEAN2.props"
+													:id="getControlId(controls.DTTYP___DTTYPBOOLEAN2)"
 													v-on="controls.DTTYP___DTTYPBOOLEAN2.handlers" />
 											</template>
 										</base-input-structure>
@@ -262,7 +275,7 @@
 							</q-accordion-item>
 							<q-accordion-item
 								v-if="controls.DTTYP___PSEUDNOVOGR03.isVisible"
-								id="DTTYP___PSEUDNOVOGR03-container"
+								:id="getControlId(controls.DTTYP___PSEUDNOVOGR03) + '-container'"
 								value="DTTYP___PSEUDNOVOGR03"
 								:title="controls.DTTYP___PSEUDNOVOGR03.label">
 								<!-- Start DTTYP___PSEUDNOVOGR03 -->
@@ -273,7 +286,8 @@
 										<base-input-structure
 											v-if="controls.DTTYP___DTTYPSMALLINT.isVisible"
 											class="i-text"
-											v-bind="controls.DTTYP___DTTYPSMALLINT"
+											v-bind="controls.DTTYP___DTTYPSMALLINT.wrapperProps"
+											:id="getControlId(controls.DTTYP___DTTYPSMALLINT)"
 											v-on="controls.DTTYP___DTTYPSMALLINT.handlers"
 											:loading="controls.DTTYP___DTTYPSMALLINT.props.loading"
 											:reporting-mode-on="reportingModeCAV"
@@ -281,6 +295,7 @@
 											<q-numeric-input
 												v-if="controls.DTTYP___DTTYPSMALLINT.isVisible"
 												v-bind="controls.DTTYP___DTTYPSMALLINT.props"
+												:id="getControlId(controls.DTTYP___DTTYPSMALLINT)"
 												@update:model-value="model.ValSmallint.fnUpdateValue" />
 										</base-input-structure>
 									</q-col>
@@ -292,7 +307,8 @@
 										<base-input-structure
 											v-if="controls.DTTYP___DTTYPINTEGER_.isVisible"
 											class="i-text"
-											v-bind="controls.DTTYP___DTTYPINTEGER_"
+											v-bind="controls.DTTYP___DTTYPINTEGER_.wrapperProps"
+											:id="getControlId(controls.DTTYP___DTTYPINTEGER_)"
 											v-on="controls.DTTYP___DTTYPINTEGER_.handlers"
 											:loading="controls.DTTYP___DTTYPINTEGER_.props.loading"
 											:reporting-mode-on="reportingModeCAV"
@@ -300,6 +316,7 @@
 											<q-numeric-input
 												v-if="controls.DTTYP___DTTYPINTEGER_.isVisible"
 												v-bind="controls.DTTYP___DTTYPINTEGER_.props"
+												:id="getControlId(controls.DTTYP___DTTYPINTEGER_)"
 												@update:model-value="model.ValInteger.fnUpdateValue" />
 										</base-input-structure>
 									</q-col>
@@ -311,7 +328,8 @@
 										<base-input-structure
 											v-if="controls.DTTYP___DTTYPBIGINT__.isVisible"
 											class="i-text"
-											v-bind="controls.DTTYP___DTTYPBIGINT__"
+											v-bind="controls.DTTYP___DTTYPBIGINT__.wrapperProps"
+											:id="getControlId(controls.DTTYP___DTTYPBIGINT__)"
 											v-on="controls.DTTYP___DTTYPBIGINT__.handlers"
 											:loading="controls.DTTYP___DTTYPBIGINT__.props.loading"
 											:reporting-mode-on="reportingModeCAV"
@@ -319,6 +337,7 @@
 											<q-numeric-input
 												v-if="controls.DTTYP___DTTYPBIGINT__.isVisible"
 												v-bind="controls.DTTYP___DTTYPBIGINT__.props"
+												:id="getControlId(controls.DTTYP___DTTYPBIGINT__)"
 												@update:model-value="model.ValBigint.fnUpdateValue" />
 										</base-input-structure>
 									</q-col>
@@ -330,7 +349,8 @@
 										<base-input-structure
 											v-if="controls.DTTYP___DTTYPREAL____.isVisible"
 											class="i-text"
-											v-bind="controls.DTTYP___DTTYPREAL____"
+											v-bind="controls.DTTYP___DTTYPREAL____.wrapperProps"
+											:id="getControlId(controls.DTTYP___DTTYPREAL____)"
 											v-on="controls.DTTYP___DTTYPREAL____.handlers"
 											:loading="controls.DTTYP___DTTYPREAL____.props.loading"
 											:reporting-mode-on="reportingModeCAV"
@@ -338,6 +358,7 @@
 											<q-numeric-input
 												v-if="controls.DTTYP___DTTYPREAL____.isVisible"
 												v-bind="controls.DTTYP___DTTYPREAL____.props"
+												:id="getControlId(controls.DTTYP___DTTYPREAL____)"
 												@update:model-value="model.ValReal.fnUpdateValue" />
 										</base-input-structure>
 									</q-col>
@@ -349,7 +370,8 @@
 										<base-input-structure
 											v-if="controls.DTTYP___DTTYPFLOAT___.isVisible"
 											class="i-text"
-											v-bind="controls.DTTYP___DTTYPFLOAT___"
+											v-bind="controls.DTTYP___DTTYPFLOAT___.wrapperProps"
+											:id="getControlId(controls.DTTYP___DTTYPFLOAT___)"
 											v-on="controls.DTTYP___DTTYPFLOAT___.handlers"
 											:loading="controls.DTTYP___DTTYPFLOAT___.props.loading"
 											:reporting-mode-on="reportingModeCAV"
@@ -357,6 +379,7 @@
 											<q-numeric-input
 												v-if="controls.DTTYP___DTTYPFLOAT___.isVisible"
 												v-bind="controls.DTTYP___DTTYPFLOAT___.props"
+												:id="getControlId(controls.DTTYP___DTTYPFLOAT___)"
 												@update:model-value="model.ValFloat.fnUpdateValue" />
 										</base-input-structure>
 									</q-col>
@@ -368,7 +391,8 @@
 										<base-input-structure
 											v-if="controls.DTTYP___DTTYPDECIMAL_.isVisible"
 											class="i-text"
-											v-bind="controls.DTTYP___DTTYPDECIMAL_"
+											v-bind="controls.DTTYP___DTTYPDECIMAL_.wrapperProps"
+											:id="getControlId(controls.DTTYP___DTTYPDECIMAL_)"
 											v-on="controls.DTTYP___DTTYPDECIMAL_.handlers"
 											:loading="controls.DTTYP___DTTYPDECIMAL_.props.loading"
 											:reporting-mode-on="reportingModeCAV"
@@ -376,6 +400,7 @@
 											<q-numeric-input
 												v-if="controls.DTTYP___DTTYPDECIMAL_.isVisible"
 												v-bind="controls.DTTYP___DTTYPDECIMAL_.props"
+												:id="getControlId(controls.DTTYP___DTTYPDECIMAL_)"
 												@update:model-value="model.ValDecimal.fnUpdateValue" />
 										</base-input-structure>
 									</q-col>
@@ -387,7 +412,8 @@
 										<base-input-structure
 											v-if="controls.DTTYP___DTTYPDECIMAL9.isVisible"
 											class="i-text"
-											v-bind="controls.DTTYP___DTTYPDECIMAL9"
+											v-bind="controls.DTTYP___DTTYPDECIMAL9.wrapperProps"
+											:id="getControlId(controls.DTTYP___DTTYPDECIMAL9)"
 											v-on="controls.DTTYP___DTTYPDECIMAL9.handlers"
 											:loading="controls.DTTYP___DTTYPDECIMAL9.props.loading"
 											:reporting-mode-on="reportingModeCAV"
@@ -395,6 +421,7 @@
 											<q-numeric-input
 												v-if="controls.DTTYP___DTTYPDECIMAL9.isVisible"
 												v-bind="controls.DTTYP___DTTYPDECIMAL9.props"
+												:id="getControlId(controls.DTTYP___DTTYPDECIMAL9)"
 												@update:model-value="model.ValDecimal9.fnUpdateValue" />
 										</base-input-structure>
 									</q-col>
@@ -406,7 +433,8 @@
 										<base-input-structure
 											v-if="controls.DTTYP___DTTYPMONEY___.isVisible"
 											class="i-text"
-											v-bind="controls.DTTYP___DTTYPMONEY___"
+											v-bind="controls.DTTYP___DTTYPMONEY___.wrapperProps"
+											:id="getControlId(controls.DTTYP___DTTYPMONEY___)"
 											v-on="controls.DTTYP___DTTYPMONEY___.handlers"
 											:loading="controls.DTTYP___DTTYPMONEY___.props.loading"
 											:reporting-mode-on="reportingModeCAV"
@@ -414,6 +442,7 @@
 											<q-numeric-input
 												v-if="controls.DTTYP___DTTYPMONEY___.isVisible"
 												v-bind="controls.DTTYP___DTTYPMONEY___.props"
+												:id="getControlId(controls.DTTYP___DTTYPMONEY___)"
 												@update:model-value="model.ValMoney.fnUpdateValue" />
 										</base-input-structure>
 									</q-col>
@@ -425,7 +454,8 @@
 										<base-input-structure
 											v-if="controls.DTTYP___DTTYPMONEY9__.isVisible"
 											class="i-text"
-											v-bind="controls.DTTYP___DTTYPMONEY9__"
+											v-bind="controls.DTTYP___DTTYPMONEY9__.wrapperProps"
+											:id="getControlId(controls.DTTYP___DTTYPMONEY9__)"
 											v-on="controls.DTTYP___DTTYPMONEY9__.handlers"
 											:loading="controls.DTTYP___DTTYPMONEY9__.props.loading"
 											:reporting-mode-on="reportingModeCAV"
@@ -433,6 +463,7 @@
 											<q-numeric-input
 												v-if="controls.DTTYP___DTTYPMONEY9__.isVisible"
 												v-bind="controls.DTTYP___DTTYPMONEY9__.props"
+												:id="getControlId(controls.DTTYP___DTTYPMONEY9__)"
 												@update:model-value="model.ValMoney9.fnUpdateValue" />
 										</base-input-structure>
 									</q-col>
@@ -441,7 +472,7 @@
 							</q-accordion-item>
 							<q-accordion-item
 								v-if="controls.DTTYP___PSEUDNOVOGR04.isVisible"
-								id="DTTYP___PSEUDNOVOGR04-container"
+								:id="getControlId(controls.DTTYP___PSEUDNOVOGR04) + '-container'"
 								value="DTTYP___PSEUDNOVOGR04"
 								:title="controls.DTTYP___PSEUDNOVOGR04.label">
 								<!-- Start DTTYP___PSEUDNOVOGR04 -->
@@ -452,7 +483,8 @@
 										<base-input-structure
 											v-if="controls.DTTYP___DTTYPDATE____.isVisible"
 											class="i-text"
-											v-bind="controls.DTTYP___DTTYPDATE____"
+											v-bind="controls.DTTYP___DTTYPDATE____.wrapperProps"
+											:id="getControlId(controls.DTTYP___DTTYPDATE____)"
 											v-on="controls.DTTYP___DTTYPDATE____.handlers"
 											:loading="controls.DTTYP___DTTYPDATE____.props.loading"
 											:reporting-mode-on="reportingModeCAV"
@@ -460,6 +492,7 @@
 											<q-date-time-picker
 												v-if="controls.DTTYP___DTTYPDATE____.isVisible"
 												v-bind="controls.DTTYP___DTTYPDATE____.props"
+												:id="getControlId(controls.DTTYP___DTTYPDATE____)"
 												:model-value="model.ValDate.value"
 												@reset-icon-click="model.ValDate.fnUpdateValue(model.ValDate.originalValue ?? new Date())"
 												@update:model-value="model.ValDate.fnUpdateValue($event ?? '')" />
@@ -473,7 +506,8 @@
 										<base-input-structure
 											v-if="controls.DTTYP___DTTYPDATETIME.isVisible"
 											class="i-text"
-											v-bind="controls.DTTYP___DTTYPDATETIME"
+											v-bind="controls.DTTYP___DTTYPDATETIME.wrapperProps"
+											:id="getControlId(controls.DTTYP___DTTYPDATETIME)"
 											v-on="controls.DTTYP___DTTYPDATETIME.handlers"
 											:loading="controls.DTTYP___DTTYPDATETIME.props.loading"
 											:reporting-mode-on="reportingModeCAV"
@@ -481,6 +515,7 @@
 											<q-date-time-picker
 												v-if="controls.DTTYP___DTTYPDATETIME.isVisible"
 												v-bind="controls.DTTYP___DTTYPDATETIME.props"
+												:id="getControlId(controls.DTTYP___DTTYPDATETIME)"
 												:model-value="model.ValDatetime.value"
 												@reset-icon-click="model.ValDatetime.fnUpdateValue(model.ValDatetime.originalValue ?? new Date())"
 												@update:model-value="model.ValDatetime.fnUpdateValue($event ?? '')" />
@@ -494,7 +529,8 @@
 										<base-input-structure
 											v-if="controls.DTTYP___DTTYPDTSESOND.isVisible"
 											class="i-text"
-											v-bind="controls.DTTYP___DTTYPDTSESOND"
+											v-bind="controls.DTTYP___DTTYPDTSESOND.wrapperProps"
+											:id="getControlId(controls.DTTYP___DTTYPDTSESOND)"
 											v-on="controls.DTTYP___DTTYPDTSESOND.handlers"
 											:loading="controls.DTTYP___DTTYPDTSESOND.props.loading"
 											:reporting-mode-on="reportingModeCAV"
@@ -502,6 +538,7 @@
 											<q-date-time-picker
 												v-if="controls.DTTYP___DTTYPDTSESOND.isVisible"
 												v-bind="controls.DTTYP___DTTYPDTSESOND.props"
+												:id="getControlId(controls.DTTYP___DTTYPDTSESOND)"
 												:model-value="model.ValDtsesond.value"
 												@reset-icon-click="model.ValDtsesond.fnUpdateValue(model.ValDtsesond.originalValue ?? new Date())"
 												@update:model-value="model.ValDtsesond.fnUpdateValue($event ?? '')" />
@@ -515,7 +552,8 @@
 										<base-input-structure
 											v-if="controls.DTTYP___DTTYPTIME____.isVisible"
 											class="i-text"
-											v-bind="controls.DTTYP___DTTYPTIME____"
+											v-bind="controls.DTTYP___DTTYPTIME____.wrapperProps"
+											:id="getControlId(controls.DTTYP___DTTYPTIME____)"
 											v-on="controls.DTTYP___DTTYPTIME____.handlers"
 											:loading="controls.DTTYP___DTTYPTIME____.props.loading"
 											:reporting-mode-on="reportingModeCAV"
@@ -523,6 +561,7 @@
 											<q-date-time-picker
 												v-if="controls.DTTYP___DTTYPTIME____.isVisible"
 												v-bind="controls.DTTYP___DTTYPTIME____.props"
+												:id="getControlId(controls.DTTYP___DTTYPTIME____)"
 												:model-value="model.ValTime.value"
 												@reset-icon-click="model.ValTime.fnUpdateValue(model.ValTime.originalValue ?? new Date())"
 												@update:model-value="model.ValTime.fnUpdateValue($event ?? '')" />
@@ -533,7 +572,7 @@
 							</q-accordion-item>
 							<q-accordion-item
 								v-if="controls.DTTYP___PSEUDNOVOGR05.isVisible"
-								id="DTTYP___PSEUDNOVOGR05-container"
+								:id="getControlId(controls.DTTYP___PSEUDNOVOGR05) + '-container'"
 								value="DTTYP___PSEUDNOVOGR05"
 								:title="controls.DTTYP___PSEUDNOVOGR05.label">
 								<!-- Start DTTYP___PSEUDNOVOGR05 -->
@@ -544,7 +583,8 @@
 										<base-input-structure
 											v-if="controls.DTTYP___DTTYPIMAGE___.isVisible"
 											class="q-image"
-											v-bind="controls.DTTYP___DTTYPIMAGE___"
+											v-bind="controls.DTTYP___DTTYPIMAGE___.wrapperProps"
+											:id="getControlId(controls.DTTYP___DTTYPIMAGE___)"
 											v-on="controls.DTTYP___DTTYPIMAGE___.handlers"
 											:loading="controls.DTTYP___DTTYPIMAGE___.props.loading"
 											:reporting-mode-on="reportingModeCAV"
@@ -552,6 +592,7 @@
 											<q-image
 												v-if="controls.DTTYP___DTTYPIMAGE___.isVisible"
 												v-bind="controls.DTTYP___DTTYPIMAGE___.props"
+												:id="getControlId(controls.DTTYP___DTTYPIMAGE___)"
 												v-on="controls.DTTYP___DTTYPIMAGE___.handlers" />
 										</base-input-structure>
 									</q-col>
@@ -566,7 +607,7 @@
 		</q-container>
 	</teleport>
 
-	<hr v-if="!isPopup && showFormFooter" />
+	<q-divider v-if="!isPopup && showFormFooter" />
 
 	<teleport
 		v-if="formModalIsReady && showFormFooter"
@@ -930,6 +971,7 @@
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'DTTYP___PSEUDNOVOGR06',
 						isInAccordion: true,
+						borderless: false,
 						isCollapsible: true,
 						anchored: false,
 						directChildren: ['DTTYP___DTTYPSTRING__', 'DTTYP___DTTYPUPPERCAS', 'DTTYP___DTTYPUUID____', 'DTTYP___DTTYPMULTILIN', 'DTTYP___DTTYPMULTILI3'],
@@ -1015,6 +1057,7 @@
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'DTTYP___PSEUDNOVOGR06',
 						isInAccordion: true,
+						borderless: false,
 						isCollapsible: true,
 						anchored: false,
 						directChildren: ['DTTYP___DTTYPBOOLEAN_', 'DTTYP___DTTYPBOOLEAN2'],
@@ -1058,6 +1101,7 @@
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'DTTYP___PSEUDNOVOGR06',
 						isInAccordion: true,
+						borderless: false,
 						isCollapsible: true,
 						anchored: false,
 						directChildren: ['DTTYP___DTTYPSMALLINT', 'DTTYP___DTTYPINTEGER_', 'DTTYP___DTTYPBIGINT__', 'DTTYP___DTTYPREAL____', 'DTTYP___DTTYPFLOAT___', 'DTTYP___DTTYPDECIMAL_', 'DTTYP___DTTYPDECIMAL9', 'DTTYP___DTTYPMONEY___', 'DTTYP___DTTYPMONEY9__'],
@@ -1208,6 +1252,7 @@
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'DTTYP___PSEUDNOVOGR06',
 						isInAccordion: true,
+						borderless: false,
 						isCollapsible: true,
 						anchored: false,
 						directChildren: ['DTTYP___DTTYPDATE____', 'DTTYP___DTTYPDATETIME', 'DTTYP___DTTYPDTSESOND', 'DTTYP___DTTYPTIME____'],
@@ -1279,6 +1324,7 @@
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'DTTYP___PSEUDNOVOGR06',
 						isInAccordion: true,
+						borderless: false,
 						isCollapsible: true,
 						anchored: false,
 						directChildren: ['DTTYP___DTTYPIMAGE___'],
@@ -1721,7 +1767,6 @@
 
 				this.afterControlUpdate(controlField, fieldValue)
 			},
-
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
 // USE /[MANUAL GQT FUNCTIONS_JS DTTYP]/
 // eslint-disable-next-line

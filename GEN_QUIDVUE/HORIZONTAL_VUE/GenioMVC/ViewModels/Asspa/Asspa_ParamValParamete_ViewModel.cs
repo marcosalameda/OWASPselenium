@@ -93,7 +93,6 @@ namespace GenioMVC.ViewModels.Asspa
 			return crs;
 		}
 
-
 		public override int GetCount(User user)
 		{
 			throw new NotImplementedException("This operation is not supported");
@@ -130,9 +129,6 @@ namespace GenioMVC.ViewModels.Asspa
 			return
 			[
 				new Exports.QColumn(CSGenioAparam.FldParameter, FieldType.TEXT, Resources.Resources.PARAMETER41976, 50, 0, true),
-				new Exports.QColumn(CSGenioAparam.FldDecimalplaces, FieldType.ARRAY_NUMERIC, Resources.Resources.DECIMAL_PLACES62575, 1, 0, true, "DecPlace"),
-				new Exports.QColumn(CSGenioAkinde.FldDesignat, FieldType.TEXT, Resources.Resources.KIND_OF_EQUIPMENT22928, 30, 0, true),
-				new Exports.QColumn(CSGenioAparam.FldDatatype, FieldType.ARRAY_TEXT, Resources.Resources.DATA_TYPE47159, 1, 0, true, "DataType"),
 			];
 		}
 
@@ -173,10 +169,6 @@ namespace GenioMVC.ViewModels.Asspa
 
 			crs ??= CriteriaSet.And();
 
-			// Limits Generation
-
-			// History limit
-			tableReload &= AddCriteriaHistoryLimit(crs, CSGenio.business.CSGenioAparam.FldCodkinde, OperationType.EQUAL, "kinde", false);
 
 			Menu ??= new TablePartial<Asspa_ParamValParameter_RowViewModel>();
 			// Set table name (used in getting searchable column names)
@@ -194,8 +186,7 @@ namespace GenioMVC.ViewModels.Asspa
 			crs.SubSets.Add(subfilters);
 
 			// Form field filters
-			if (tableConfig.FieldFilters != null)
-				crs.SubSets.Add(ProcessFieldFilters(tableConfig.FieldFilters));
+			crs.SubSets.Add(ProcessFieldFilters(tableConfig.GlobalFilters));
 
 
 			crs.SubSets.Add(GetCustomizedStaticLimits(StaticLimits));
@@ -321,14 +312,13 @@ namespace GenioMVC.ViewModels.Asspa
 
 			}
 
-			FieldRef[] fields = new FieldRef[] { CSGenioAparam.FldCodparam, CSGenioAparam.FldZzstate, CSGenioAparam.FldParameter, CSGenioAparam.FldDecimalplaces, CSGenioAparam.FldCodkinde, CSGenioAkinde.FldCodkinde, CSGenioAkinde.FldDesignat, CSGenioAparam.FldDatatype };
+			FieldRef[] fields = new FieldRef[] { CSGenioAparam.FldCodparam, CSGenioAparam.FldZzstate, CSGenioAparam.FldParameter };
 
-
-			// Totalizers
-			List<FieldRef> fieldsWithTotalizers = fields.Where(field => tableConfig.TotalizerColumns.Contains(field.FullName)).ToList();
+			// List of column names that should display totalized (aggregated) values.
+			List<string> totalizerColumns = [];
+			List<FieldRef> fieldsWithTotalizers = [.. fields.Where(field => totalizerColumns.Contains(field.FullName))];
 
 			FieldRef firstVisibleColumn = null;
-
 			if (sorts.Count == 0)
 			{
 				firstVisibleColumn = tableConfig?.GetFirstVisibleColumn(TableAlias);
@@ -455,8 +445,6 @@ namespace GenioMVC.ViewModels.Asspa
 				{
 					case "param":
 						model.klass.insertNameValueField(Qfield.FullName, Qfield.Value); break;
-					case "kinde":
-						model.Kinde.klass.insertNameValueField(Qfield.FullName, Qfield.Value); break;
 					default:
 						break;
 				}
@@ -508,15 +496,12 @@ namespace GenioMVC.ViewModels.Asspa
 
 		private static readonly string[] _fieldsToSerialize =
 		[
-			"Param", "Param.ValCodparam", "Param.ValZzstate", "Param.ValParameter", "Param.ValDecimalplaces", "Kinde", "Kinde.ValDesignat", "Param.ValDatatype", "Param.ValCodkinde"
+			"Param", "Param.ValCodparam", "Param.ValZzstate", "Param.ValParameter", "Param.ValCodkinde"
 		];
 
 		private static readonly List<TableSearchColumn> _searchableColumns =
 		[
 			new TableSearchColumn("ValParameter", CSGenioAparam.FldParameter, typeof(string)),
-			new TableSearchColumn("ValDecimalplaces", CSGenioAparam.FldDecimalplaces, typeof(decimal), array : "DecPlace"),
-			new TableSearchColumn("Kinde_ValDesignat", CSGenioAkinde.FldDesignat, typeof(string), defaultSearch : true),
-			new TableSearchColumn("ValDatatype", CSGenioAparam.FldDatatype, typeof(string), array : "DataType"),
 		];
 	}
 }

@@ -10,24 +10,18 @@ public class RegraForm : Form
 	/// <summary>
 	/// Condition type
 	/// </summary>
-	public EnumControl RulesTipocond => new EnumControl(driver, ContainerLocator, "container-REGRA___RULESTIPOCOND");
+	public EnumControl RulesTipocond => new EnumControl(driver, ContainerLocator, "container-REGRA___RULESTIPOCOND" + IdSuffix);
 
 	/// <summary>
 	/// Description
 	/// </summary>
-	public BaseInputControl RulesDescript => new BaseInputControl(driver, ContainerLocator, "container-REGRA___RULESDESCRIPT", "#REGRA___RULESDESCRIPT");
+	public BaseInputControl RulesDescript => new BaseInputControl(driver, ContainerLocator, "container-REGRA___RULESDESCRIPT" + IdSuffix, "#REGRA___RULESDESCRIPT" + IdSuffix);
 
 	/// <summary>
 	/// Local onde executa
 	/// </summary>
-	public EnumControl RulesLocal => new EnumControl(driver, ContainerLocator, "container-REGRA___RULESLOCAL___");
+	public EnumControl RulesLocal => new EnumControl(driver, ContainerLocator, "container-REGRA___RULESLOCAL___" + IdSuffix);
 
-	/// <summary>
-	/// Description
-	/// </summary>
-	public LookupControl Up_rulesDescript => new LookupControl(driver, ContainerLocator, "container-REGRA__UP_RULES__DESCRIPT");
-	public SeeMorePage Up_rulesDescriptSeeMorePage => new SeeMorePage(driver, "REGRA", "REGRA__UP_RULES__DESCRIPT");
-
-	public RegraForm(IWebDriver driver, FORM_MODE mode, By? containerLocator = null)
-		: base(driver, mode, "REGRA", containerLocator: containerLocator) { }
+	public RegraForm(IWebDriver driver, FORM_MODE mode, By? containerLocator = null, bool usePkInId = false)
+		: base(driver, mode, "REGRA", containerLocator: containerLocator, usePkInId: usePkInId) { }
 }

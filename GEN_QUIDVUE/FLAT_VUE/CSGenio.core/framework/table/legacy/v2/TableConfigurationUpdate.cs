@@ -424,7 +424,7 @@ public class TableConfigurationUpdate() : table.TableConfigurationUpdate(2)
 		};
 
 		// Move ColumnOrderBy to ColumnConfigurations (SortOrder + SortAsc)
-		if (tableConfig.ColumnConfigurations.Count > 0)
+		if (tableConfig.ColumnConfigurations.Count > 0 && oldTableConfig.ColumnOrderBy != null)
 		{
 			ColumnConfiguration colConfig = tableConfig.ColumnConfigurations.Find(c => c.Name == oldTableConfig.ColumnOrderBy.ColumnName);
 			if (colConfig != null)

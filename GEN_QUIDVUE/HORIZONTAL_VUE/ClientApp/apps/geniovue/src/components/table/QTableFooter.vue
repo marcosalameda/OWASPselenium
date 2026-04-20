@@ -30,9 +30,9 @@
 		</span>
 	</div>
 	<!-- END: Record count -->
+
 	<!-- BEGIN: Pagination row -->
 	<div :class="paginationClasses">
-		<!-- BEGIN: Pagination -->
 		<q-table-pagination-alt
 			v-if="showAlternatePagination"
 			ref="paginationAlt"
@@ -47,8 +47,7 @@
 			:disabled="disabled"
 			:table-id="tableId"
 			@update:page="$emit('update:page', $event)"
-			@update:per-page="$emit('update:perPage', $event)">
-		</q-table-pagination-alt>
+			@update:per-page="$emit('update:perPage', $event)" />
 		<q-table-pagination
 			v-else
 			:texts="texts"
@@ -56,17 +55,16 @@
 			:per-page="perPage"
 			:per-page-options="perPageOptions"
 			:total="rowCount"
-			:num-visibile-pagination-buttons="numVisibilePaginationButtons"
+			:num-visible-pagination-buttons="numVisiblePaginationButtons"
 			:show-per-page-menu="showPerPageMenu"
 			:per-page-label="perPageLabel"
 			:disabled="disabled"
 			:table-id="tableId"
 			@update:page="$emit('update:page', $event)"
-			@update:per-page="$emit('update:perPage', $event)">
-		</q-table-pagination>
-		<!-- END: Pagination -->
+			@update:per-page="$emit('update:perPage', $event)" />
 	</div>
 	<!-- END: Pagination row -->
+
 	<!-- BEGIN: Pagination info -->
 	<div
 		v-if="selectedRowsInfo && isSelectable"
@@ -80,18 +78,19 @@
 		</div>
 	</div>
 	<!-- END: Pagination info -->
-	<div class="d-flex">
-		<!-- BEGIN: Row general action buttons -->
-		<slot name="row-general-actions"></slot>
-		<!-- END: Row general action buttons -->
-		<!-- BEGIN: Limit information button -->
-		<q-table-limit-info
-			v-if="showLimits"
-			:limits="tableLimits"
-			:table-name-plural="tableNamePlural"
-			:texts="texts" />
-		<!-- END: Limit information button -->
-	</div>
+
+	<!-- BEGIN: Row general action buttons -->
+	<slot />
+	<!-- END: Row general action buttons -->
+
+	<!-- BEGIN: Limit information button -->
+	<q-table-limit-info
+		v-if="showLimits"
+		:limits="tableLimits"
+		:table-id="tableId"
+		:table-name-plural="tableNamePlural"
+		:texts="texts" />
+	<!-- END: Limit information button -->
 </template>
 
 <script>
@@ -188,9 +187,7 @@
 			/**
 			 * The number of buttons to show in the pagination control for page numbers.
 			 */
-			numVisibilePaginationButtons: {
-				type: Number
-			},
+			numVisiblePaginationButtons: Number,
 
 			/**
 			 * Information about selected rows.

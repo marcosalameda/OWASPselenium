@@ -9,12 +9,13 @@
 			<div
 				v-if="showFormHeader"
 				class="c-action-bar">
-				<h1
+				<component
 					v-if="formControl.uiComponents.header && formInfo.designation"
+					:is="topHeadingTag"
 					:id="formTitleId"
 					class="form-header">
 					{{ formInfo.designation }}
-				</h1>
+				</component>
 
 				<div class="c-action-bar__menu">
 					<template
@@ -40,13 +41,10 @@
 									@click="btn.action">
 									<template v-if="btn.icon">
 										<q-badge-indicator
-											v-if="btn.badge && btn.badge.isVisible"
-											:color="btn.badge.color">
+											:enabled="btn.badge?.isVisible ?? false"
+											:color="btn.badge?.color">
 											<q-icon v-bind="btn.icon" />
 										</q-badge-indicator>
-										<q-icon
-											v-else
-											v-bind="btn.icon" />
 									</template>
 								</q-toggle-group-item>
 							</template>
@@ -97,6 +95,7 @@
 		<q-container
 			fluid
 			data-key="ARTIGINV"
+			:data-identifier="primaryKeyValue"
 			:data-loading="!formInitialDataLoaded || !isActiveForm">
 			<template v-if="formControl.initialized && showFormBody">
 				<q-row v-if="controls.ARTIGINVITEM_IMAGE___.isVisible">
@@ -106,7 +105,8 @@
 						<base-input-structure
 							v-if="controls.ARTIGINVITEM_IMAGE___.isVisible"
 							class="q-image"
-							v-bind="controls.ARTIGINVITEM_IMAGE___"
+							v-bind="controls.ARTIGINVITEM_IMAGE___.wrapperProps"
+							:id="getControlId(controls.ARTIGINVITEM_IMAGE___)"
 							v-on="controls.ARTIGINVITEM_IMAGE___.handlers"
 							:loading="controls.ARTIGINVITEM_IMAGE___.props.loading"
 							:reporting-mode-on="reportingModeCAV"
@@ -114,6 +114,7 @@
 							<q-image
 								v-if="controls.ARTIGINVITEM_IMAGE___.isVisible"
 								v-bind="controls.ARTIGINVITEM_IMAGE___.props"
+								:id="getControlId(controls.ARTIGINVITEM_IMAGE___)"
 								v-on="controls.ARTIGINVITEM_IMAGE___.handlers" />
 						</base-input-structure>
 					</q-col>
@@ -125,7 +126,8 @@
 						<base-input-structure
 							v-if="controls.ARTIGINVGITEMITEMDES_.isVisible"
 							class="i-text"
-							v-bind="controls.ARTIGINVGITEMITEMDES_"
+							v-bind="controls.ARTIGINVGITEMITEMDES_.wrapperProps"
+							:id="getControlId(controls.ARTIGINVGITEMITEMDES_)"
 							v-on="controls.ARTIGINVGITEMITEMDES_.handlers"
 							:loading="controls.ARTIGINVGITEMITEMDES_.props.loading"
 							:reporting-mode-on="reportingModeCAV"
@@ -133,6 +135,7 @@
 							<q-lookup
 								v-if="controls.ARTIGINVGITEMITEMDES_.isVisible"
 								v-bind="controls.ARTIGINVGITEMITEMDES_.props"
+								:id="getControlId(controls.ARTIGINVGITEMITEMDES_)"
 								v-on="controls.ARTIGINVGITEMITEMDES_.handlers" />
 							<q-see-more-artiginvgitemitemdes
 								v-if="controls.ARTIGINVGITEMITEMDES_.seeMoreIsVisible"
@@ -148,7 +151,8 @@
 						<base-input-structure
 							v-if="controls.ARTIGINVWAREHWAREHDES.isVisible"
 							class="i-text"
-							v-bind="controls.ARTIGINVWAREHWAREHDES"
+							v-bind="controls.ARTIGINVWAREHWAREHDES.wrapperProps"
+							:id="getControlId(controls.ARTIGINVWAREHWAREHDES)"
 							v-on="controls.ARTIGINVWAREHWAREHDES.handlers"
 							:loading="controls.ARTIGINVWAREHWAREHDES.props.loading"
 							:reporting-mode-on="reportingModeCAV"
@@ -156,6 +160,7 @@
 							<q-lookup
 								v-if="controls.ARTIGINVWAREHWAREHDES.isVisible"
 								v-bind="controls.ARTIGINVWAREHWAREHDES.props"
+								:id="getControlId(controls.ARTIGINVWAREHWAREHDES)"
 								v-on="controls.ARTIGINVWAREHWAREHDES.handlers" />
 							<q-see-more-artiginvwarehwarehdes
 								v-if="controls.ARTIGINVWAREHWAREHDES.seeMoreIsVisible"
@@ -171,7 +176,8 @@
 						<base-input-structure
 							v-if="controls.ARTIGINVITEM_ITEMTYPE.isVisible"
 							class="i-text"
-							v-bind="controls.ARTIGINVITEM_ITEMTYPE"
+							v-bind="controls.ARTIGINVITEM_ITEMTYPE.wrapperProps"
+							:id="getControlId(controls.ARTIGINVITEM_ITEMTYPE)"
 							v-on="controls.ARTIGINVITEM_ITEMTYPE.handlers"
 							:loading="controls.ARTIGINVITEM_ITEMTYPE.props.loading"
 							:reporting-mode-on="reportingModeCAV"
@@ -179,6 +185,7 @@
 							<q-select
 								v-if="controls.ARTIGINVITEM_ITEMTYPE.isVisible"
 								v-bind="controls.ARTIGINVITEM_ITEMTYPE.props"
+								:id="getControlId(controls.ARTIGINVITEM_ITEMTYPE)"
 								@update:model-value="model.ValItemtype.fnUpdateValue" />
 						</base-input-structure>
 					</q-col>
@@ -188,13 +195,15 @@
 						<base-input-structure
 							v-if="controls.ARTIGINVITEM_ITEMCOD_.isVisible"
 							class="i-text"
-							v-bind="controls.ARTIGINVITEM_ITEMCOD_"
+							v-bind="controls.ARTIGINVITEM_ITEMCOD_.wrapperProps"
+							:id="getControlId(controls.ARTIGINVITEM_ITEMCOD_)"
 							v-on="controls.ARTIGINVITEM_ITEMCOD_.handlers"
 							:loading="controls.ARTIGINVITEM_ITEMCOD_.props.loading"
 							:reporting-mode-on="reportingModeCAV"
 							:suggestion-mode-on="suggestionModeOn">
 							<q-text-field
 								v-bind="controls.ARTIGINVITEM_ITEMCOD_.props"
+								:id="getControlId(controls.ARTIGINVITEM_ITEMCOD_)"
 								@blur="onBlur(controls.ARTIGINVITEM_ITEMCOD_, model.ValItemcod.value)"
 								@change="model.ValItemcod.fnUpdateValueOnChange" />
 						</base-input-structure>
@@ -207,20 +216,23 @@
 						<base-input-structure
 							v-if="controls.ARTIGINVITEM_ITEMDES_.isVisible"
 							class="i-text"
-							v-bind="controls.ARTIGINVITEM_ITEMDES_"
+							v-bind="controls.ARTIGINVITEM_ITEMDES_.wrapperProps"
+							:id="getControlId(controls.ARTIGINVITEM_ITEMDES_)"
 							v-on="controls.ARTIGINVITEM_ITEMDES_.handlers"
 							:loading="controls.ARTIGINVITEM_ITEMDES_.props.loading"
 							:reporting-mode-on="reportingModeCAV"
 							:suggestion-mode-on="suggestionModeOn">
 							<q-text-field
 								v-bind="controls.ARTIGINVITEM_ITEMDES_.props"
+								:id="getControlId(controls.ARTIGINVITEM_ITEMDES_)"
 								@blur="onBlur(controls.ARTIGINVITEM_ITEMDES_, model.ValItemdes.value)"
 								@change="model.ValItemdes.fnUpdateValueOnChange" />
 						</base-input-structure>
 						<base-input-structure
 							v-if="controls.ARTIGINVITEM_VALID___.isVisible"
-							class="i-checkbox"
-							v-bind="controls.ARTIGINVITEM_VALID___"
+							class="i-text"
+							v-bind="controls.ARTIGINVITEM_VALID___.wrapperProps"
+							:id="getControlId(controls.ARTIGINVITEM_VALID___)"
 							v-on="controls.ARTIGINVITEM_VALID___.handlers"
 							:loading="controls.ARTIGINVITEM_VALID___.props.loading"
 							:reporting-mode-on="reportingModeCAV"
@@ -229,6 +241,7 @@
 								<q-checkbox
 									v-if="controls.ARTIGINVITEM_VALID___.isVisible"
 									v-bind="controls.ARTIGINVITEM_VALID___.props"
+									:id="getControlId(controls.ARTIGINVITEM_VALID___)"
 									v-on="controls.ARTIGINVITEM_VALID___.handlers" />
 							</template>
 						</base-input-structure>
@@ -238,7 +251,7 @@
 		</q-container>
 	</teleport>
 
-	<hr v-if="!isPopup && showFormFooter" />
+	<q-divider v-if="!isPopup && showFormFooter" />
 
 	<teleport
 		v-if="formModalIsReady && showFormFooter"
@@ -666,8 +679,8 @@
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						maxLength: 1,
 						arrayName: 'TipoArti',
-						helpShortItem: '',
-						helpDetailedItem: '',
+						helpShortItem: 'None',
+						helpDetailedItem: 'None',
 						controlLimits: [
 						],
 					}, this),
@@ -1110,7 +1123,6 @@
 
 				this.afterControlUpdate(controlField, fieldValue)
 			},
-
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
 // USE /[MANUAL GQT FUNCTIONS_JS ARTIGINV]/
 // eslint-disable-next-line

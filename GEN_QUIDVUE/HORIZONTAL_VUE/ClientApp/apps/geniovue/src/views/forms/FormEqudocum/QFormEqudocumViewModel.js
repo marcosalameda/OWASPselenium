@@ -54,17 +54,6 @@ export default class ViewModel extends FormViewModelBase
 		this.stopWatchers.push(watch(() => this.ValCodequip.value, (newValue, oldValue) => this.onUpdate('equip.codequip', this.ValCodequip, newValue, oldValue)))
 
 		/** The hidden foreign keys. */
-		this.ValCodpess1 = reactive(new modelFieldType.ForeignKey({
-			id: 'ValCodpess1',
-			originId: 'ValCodpess1',
-			area: 'EQUIP',
-			field: 'CODPESS1',
-			relatedArea: 'PESS1',
-			isFixed: true,
-			description: computed(() => this.Resources._COMOMODOR01469),
-		}).cloneFrom(values?.ValCodpess1))
-		this.stopWatchers.push(watch(() => this.ValCodpess1.value, (newValue, oldValue) => this.onUpdate('equip.codpess1', this.ValCodpess1, newValue, oldValue)))
-
 		this.ValCodtpequ = reactive(new modelFieldType.ForeignKey({
 			id: 'ValCodtpequ',
 			originId: 'ValCodtpequ',
@@ -87,6 +76,28 @@ export default class ViewModel extends FormViewModelBase
 		}).cloneFrom(values?.ValCodrooms))
 		this.stopWatchers.push(watch(() => this.ValCodrooms.value, (newValue, oldValue) => this.onUpdate('equip.codrooms', this.ValCodrooms, newValue, oldValue)))
 
+		this.ValCoddeco = reactive(new modelFieldType.ForeignKey({
+			id: 'ValCoddeco',
+			originId: 'ValCoddeco',
+			area: 'EQUIP',
+			field: 'CODDECO',
+			relatedArea: 'DECOM',
+			isFixed: true,
+			description: '',
+		}).cloneFrom(values?.ValCoddeco))
+		this.stopWatchers.push(watch(() => this.ValCoddeco.value, (newValue, oldValue) => this.onUpdate('equip.coddeco', this.ValCoddeco, newValue, oldValue)))
+
+		this.ValCodpess1 = reactive(new modelFieldType.ForeignKey({
+			id: 'ValCodpess1',
+			originId: 'ValCodpess1',
+			area: 'EQUIP',
+			field: 'CODPESS1',
+			relatedArea: 'PESS1',
+			isFixed: true,
+			description: computed(() => this.Resources._COMOMODOR01469),
+		}).cloneFrom(values?.ValCodpess1))
+		this.stopWatchers.push(watch(() => this.ValCodpess1.value, (newValue, oldValue) => this.onUpdate('equip.codpess1', this.ValCodpess1, newValue, oldValue)))
+
 		this.ValCodwareh = reactive(new modelFieldType.ForeignKey({
 			id: 'ValCodwareh',
 			originId: 'ValCodwareh',
@@ -97,17 +108,6 @@ export default class ViewModel extends FormViewModelBase
 			description: '',
 		}).cloneFrom(values?.ValCodwareh))
 		this.stopWatchers.push(watch(() => this.ValCodwareh.value, (newValue, oldValue) => this.onUpdate('equip.codwareh', this.ValCodwareh, newValue, oldValue)))
-
-		this.ValCodempre = reactive(new modelFieldType.ForeignKey({
-			id: 'ValCodempre',
-			originId: 'ValCodempre',
-			area: 'EQUIP',
-			field: 'CODEMPRE',
-			relatedArea: 'CMPNY',
-			isFixed: true,
-			description: computed(() => this.Resources._COMPANY02087),
-		}).cloneFrom(values?.ValCodempre))
-		this.stopWatchers.push(watch(() => this.ValCodempre.value, (newValue, oldValue) => this.onUpdate('equip.codempre', this.ValCodempre, newValue, oldValue)))
 
 		this.ValCoditem = reactive(new modelFieldType.ForeignKey({
 			id: 'ValCoditem',
@@ -120,16 +120,16 @@ export default class ViewModel extends FormViewModelBase
 		}).cloneFrom(values?.ValCoditem))
 		this.stopWatchers.push(watch(() => this.ValCoditem.value, (newValue, oldValue) => this.onUpdate('equip.coditem', this.ValCoditem, newValue, oldValue)))
 
-		this.ValCoddeco = reactive(new modelFieldType.ForeignKey({
-			id: 'ValCoddeco',
-			originId: 'ValCoddeco',
+		this.ValCodempre = reactive(new modelFieldType.ForeignKey({
+			id: 'ValCodempre',
+			originId: 'ValCodempre',
 			area: 'EQUIP',
-			field: 'CODDECO',
-			relatedArea: 'DECOM',
+			field: 'CODEMPRE',
+			relatedArea: 'CMPNY',
 			isFixed: true,
-			description: '',
-		}).cloneFrom(values?.ValCoddeco))
-		this.stopWatchers.push(watch(() => this.ValCoddeco.value, (newValue, oldValue) => this.onUpdate('equip.coddeco', this.ValCoddeco, newValue, oldValue)))
+			description: computed(() => this.Resources._COMPANY02087),
+		}).cloneFrom(values?.ValCodempre))
+		this.stopWatchers.push(watch(() => this.ValCodempre.value, (newValue, oldValue) => this.onUpdate('equip.codempre', this.ValCodempre, newValue, oldValue)))
 
 		/** The remaining form fields. */
 		this.ValDesignat = reactive(new modelFieldType.String({
@@ -167,14 +167,8 @@ export default class ViewModel extends FormViewModelBase
 				// eslint-disable-next-line @typescript-eslint/no-unused-vars
 				fnFormula(params)
 				{
-					return netAPI.postData(
-						'Equip',
-						'EQUDOCUM_EQUIP_REGISTNR_Formula',
-						this.serverObjModel,
-						undefined,
-						undefined,
-						undefined,
-						this.navigationId)
+					// Formula: RIGHT("000000"+NumericToString([EQUIP->SEQUENNR],0),6)
+					return qApi.RIGHT("000000"+qApi.NumericToString(this.ValSequennr.value,0),6)
 				},
 				dependencyEvents: ['fieldChange:equip.sequennr'],
 				isServerRecalc: false,
@@ -183,6 +177,18 @@ export default class ViewModel extends FormViewModelBase
 			description: computed(() => this.Resources.NO__REGISTER04207),
 		}).cloneFrom(values?.ValRegistnr))
 		this.stopWatchers.push(watch(() => this.ValRegistnr.value, (newValue, oldValue) => this.onUpdate('equip.registnr', this.ValRegistnr, newValue, oldValue)))
+
+		this.ValSequennr = reactive(new modelFieldType.Number({
+			id: 'ValSequennr',
+			originId: 'ValSequennr',
+			area: 'EQUIP',
+			field: 'SEQUENNR',
+			maxDigits: 6,
+			decimalDigits: 0,
+			isFixed: true,
+			description: computed(() => this.Resources.SEQUENTIAL_NO_38590),
+		}).cloneFrom(values?.ValSequennr))
+		this.stopWatchers.push(watch(() => this.ValSequennr.value, (newValue, oldValue) => this.onUpdate('equip.sequennr', this.ValSequennr, newValue, oldValue)))
 
 		this.ItemValItemdes = reactive(new modelFieldType.String({
 			id: 'ItemValItemdes',

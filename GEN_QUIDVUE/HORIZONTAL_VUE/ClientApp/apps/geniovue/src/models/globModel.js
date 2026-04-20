@@ -21,7 +21,6 @@ export default class ViewModel
 	 */
 	constructor()
 	{
-
 		this.ValCodglob = new modelFieldType.PrimaryKey({
 			id: 'ValCodglob',
 			originId: 'ValCodglob',
@@ -701,7 +700,7 @@ export default class ViewModel
 	 * @param {object} rawData The data to be hydrated
 	 */
 	hydrate(rawData) {
-		for (let modelField in this) {
+		for (const modelField in this) {
 			if (this[modelField] instanceof modelFieldType.Base && _has(rawData, modelField)) {
 				const rawDataFieldValue = rawData[modelField]
 				this.hydrateField(modelField, rawDataFieldValue)

@@ -55,26 +55,6 @@ namespace GenioMVC.Models
 		[JsonIgnore]
 		public SelectList ArrayVallocal { get { return new SelectList(CSGenio.business.ArrayAlocregr.GetDictionary(), "Key", "Value", ValLocal); } set { ValLocal = value.SelectedValue as string; } }
 
-		[DisplayName("")]
-		/// <summary>Field : "" Tipo: "CE" Formula:  ""</summary>
-		[ShouldSerialize("Rules.ValCodup_rules")]
-		public string ValCodup_rules { get { return klass.ValCodup_rules; } set { klass.ValCodup_rules = value; } }
-
-		private Up_rules _up_rules;
-		[DisplayName("Up_rules")]
-		[ShouldSerialize("Up_rules")]
-		public virtual Up_rules Up_rules
-		{
-			get
-			{
-				if (!isEmptyModel && (_up_rules == null || (!string.IsNullOrEmpty(ValCodup_rules) && (_up_rules.isEmptyModel || _up_rules.klass.QPrimaryKey != ValCodup_rules))))
-					_up_rules = Models.Up_rules.Find(ValCodup_rules, m_userContext, Identifier, _fieldsToSerialize);
-				_up_rules ??= new Models.Up_rules(m_userContext, true, _fieldsToSerialize);
-				return _up_rules;
-			}
-			set { _up_rules = value; }
-		}
-
 		[DisplayName("ZZSTATE")]
 		[ShouldSerialize("Rules.ValZzstate")]
 		/// <summary>Field: "ZZSTATE", Type: "INT", Formula: ""</summary>
@@ -106,10 +86,6 @@ namespace GenioMVC.Models
 			{
 				switch (Qfield.Area)
 				{
-					case "up_rules":
-						_up_rules ??= new Up_rules(m_userContext, true, _fieldsToSerialize);
-						_up_rules.klass.insertNameValueField(Qfield.FullName, Qfield.Value);
-						break;
 					default:
 						break;
 				}

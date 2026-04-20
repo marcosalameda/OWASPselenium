@@ -1,4 +1,5 @@
-import type { Icon } from '@quidgest/ui/components'
+import type { Icon, QButtonSize, QOverlayPlacement } from '@quidgest/ui/components'
+import { DEFAULT_SUBMENU_ICONS } from './constants'
 
 export type QActionListProps = {
 	/**
@@ -12,14 +13,29 @@ export type QActionListProps = {
 	groups?: QActionListGroup[]
 
 	/**
-	 * Options for the dropdown menu.
+	 * The size of the dropdown button.
 	 */
-	options?: QActionListOptions
+	dropdownSize?: QButtonSize
+
+	/**
+	 * Custom icon for submenus.
+	 */
+	submenusIcon?: typeof DEFAULT_SUBMENU_ICONS
+
+	/**
+	 * The placement of the dropdown menu.
+	 */
+	placement?: QOverlayPlacement
 
 	/**
 	 * If the actions are all in readonly.
 	 */
 	readonly?: boolean
+
+	/**
+	 * Whether the buttons have borders.
+	 */
+	borderless?: boolean
 }
 
 export type QActionListItem = {
@@ -59,7 +75,7 @@ export type QActionListItem = {
 	description?: string
 
 	/**
-	 * List of items to show in the submenu
+	 * List of items to show in the submenu.
 	 */
 	items?: QActionListItem[]
 }
@@ -81,50 +97,17 @@ export type QActionListGroup = {
 	title?: string
 
 	/**
-	 * Whether the group is disabled
+	 * Whether the group is disabled.
 	 */
 	disabled?: boolean
 
 	/**
-	 * The size of the group
+	 * The size of the group.
 	 */
-	size?: 'small' | 'regular'
+	size?: QButtonSize
 
 	/**
-	 * Whether the group has border
+	 * Whether to display the labels of the options in the group.
 	 */
-	borderless?: boolean
-
-	/**
-	 * Custom css class for the group
-	 */
-	customClass?: string
-}
-
-export type QActionListOptions = {
-	/**
-	 * Custom icon for the dropdown button.
-	 */
-	dropdownIcon?: Icon
-
-	/**
-	 * The size of the dropdown button.
-	 */
-	dropdownSize?: 'small' | 'regular'
-
-	/**
-	 * Custom icons for submenus
-	 */
-	submenusIcons?: typeof DEFAULT_SUBMENU_ICONS
-}
-
-// The default icons of the component
-export const DEFAULT_SUBMENU_ICONS = {
-	expand: {
-		icon: 'page-next'
-	}
-} satisfies Record<string, Icon>
-
-export const DEFAULT_DROPDOWN_ICON = {
-	icon: 'more-items'
+	displayLabels?: boolean
 }

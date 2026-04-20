@@ -181,8 +181,6 @@ public class STY_Menu_358211_RowViewModel : Models.Flds
 
 		using (new CSGenio.persistence.ScopedPersistentSupport(m_userContext.PersistentSupport))
 		{
-
-			// Table FLDS CRUD conditions.
 		}
 
 		BtnPermission = new TableRowCrudButtonPermissions()

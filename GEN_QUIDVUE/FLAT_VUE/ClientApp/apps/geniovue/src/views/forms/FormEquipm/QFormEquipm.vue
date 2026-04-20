@@ -9,12 +9,13 @@
 			<div
 				v-if="showFormHeader"
 				class="c-action-bar">
-				<h1
+				<component
 					v-if="formControl.uiComponents.header && formInfo.designation"
+					:is="topHeadingTag"
 					:id="formTitleId"
 					class="form-header">
 					{{ formInfo.designation }}
-				</h1>
+				</component>
 
 				<div class="c-action-bar__menu">
 					<template
@@ -40,13 +41,10 @@
 									@click="btn.action">
 									<template v-if="btn.icon">
 										<q-badge-indicator
-											v-if="btn.badge && btn.badge.isVisible"
-											:color="btn.badge.color">
+											:enabled="btn.badge?.isVisible ?? false"
+											:color="btn.badge?.color">
 											<q-icon v-bind="btn.icon" />
 										</q-badge-indicator>
-										<q-icon
-											v-else
-											v-bind="btn.icon" />
 									</template>
 								</q-toggle-group-item>
 							</template>
@@ -97,17 +95,16 @@
 		<q-container
 			fluid
 			data-key="EQUIPM"
+			:data-identifier="primaryKeyValue"
 			:data-loading="!formInitialDataLoaded || !isActiveForm">
 			<template v-if="formControl.initialized && showFormBody">
 				<q-row v-if="controls.EQUIPM__PSEUDNOVOGR01.isVisible">
-					<q-col
-						v-if="controls.EQUIPM__PSEUDNOVOGR01.isVisible"
-						cols="auto">
+					<q-col v-if="controls.EQUIPM__PSEUDNOVOGR01.isVisible">
 						<q-group-box-container
 							v-if="controls.EQUIPM__PSEUDNOVOGR01.isVisible"
-							id="EQUIPM__PSEUDNOVOGR01"
 							v-bind="controls.EQUIPM__PSEUDNOVOGR01"
-							:is-visible="controls.EQUIPM__PSEUDNOVOGR01.isVisible">
+							:id="getControlId(controls.EQUIPM__PSEUDNOVOGR01)"
+							:no-border="controls.EQUIPM__PSEUDNOVOGR01.borderless">
 							<!-- Start EQUIPM__PSEUDNOVOGR01 -->
 							<q-row v-if="controls.EQUIPM__ASSETNAME____.isVisible">
 								<q-col
@@ -116,13 +113,15 @@
 									<base-input-structure
 										v-if="controls.EQUIPM__ASSETNAME____.isVisible"
 										class="i-text"
-										v-bind="controls.EQUIPM__ASSETNAME____"
+										v-bind="controls.EQUIPM__ASSETNAME____.wrapperProps"
+										:id="getControlId(controls.EQUIPM__ASSETNAME____)"
 										v-on="controls.EQUIPM__ASSETNAME____.handlers"
 										:loading="controls.EQUIPM__ASSETNAME____.props.loading"
 										:reporting-mode-on="reportingModeCAV"
 										:suggestion-mode-on="suggestionModeOn">
 										<q-text-field
 											v-bind="controls.EQUIPM__ASSETNAME____.props"
+											:id="getControlId(controls.EQUIPM__ASSETNAME____)"
 											@blur="onBlur(controls.EQUIPM__ASSETNAME____, model.ValName.value)"
 											@change="model.ValName.fnUpdateValueOnChange" />
 									</base-input-structure>
@@ -135,7 +134,8 @@
 									<base-input-structure
 										v-if="controls.EQUIPM__ASSETASSETTYP.isVisible"
 										class="i-text"
-										v-bind="controls.EQUIPM__ASSETASSETTYP"
+										v-bind="controls.EQUIPM__ASSETASSETTYP.wrapperProps"
+										:id="getControlId(controls.EQUIPM__ASSETASSETTYP)"
 										v-on="controls.EQUIPM__ASSETASSETTYP.handlers"
 										:loading="controls.EQUIPM__ASSETASSETTYP.props.loading"
 										:reporting-mode-on="reportingModeCAV"
@@ -143,6 +143,7 @@
 										<q-select
 											v-if="controls.EQUIPM__ASSETASSETTYP.isVisible"
 											v-bind="controls.EQUIPM__ASSETASSETTYP.props"
+											:id="getControlId(controls.EQUIPM__ASSETASSETTYP)"
 											@update:model-value="model.ValAssettyp.fnUpdateValue" />
 									</base-input-structure>
 								</q-col>
@@ -152,7 +153,8 @@
 									<base-input-structure
 										v-if="controls.EQUIPM__ASSETASSETNUM.isVisible"
 										class="i-text"
-										v-bind="controls.EQUIPM__ASSETASSETNUM"
+										v-bind="controls.EQUIPM__ASSETASSETNUM.wrapperProps"
+										:id="getControlId(controls.EQUIPM__ASSETASSETNUM)"
 										v-on="controls.EQUIPM__ASSETASSETNUM.handlers"
 										:loading="controls.EQUIPM__ASSETASSETNUM.props.loading"
 										:reporting-mode-on="reportingModeCAV"
@@ -160,6 +162,7 @@
 										<q-numeric-input
 											v-if="controls.EQUIPM__ASSETASSETNUM.isVisible"
 											v-bind="controls.EQUIPM__ASSETASSETNUM.props"
+											:id="getControlId(controls.EQUIPM__ASSETASSETNUM)"
 											@update:model-value="model.ValAssetnum.fnUpdateValue" />
 									</base-input-structure>
 								</q-col>
@@ -171,7 +174,8 @@
 									<base-input-structure
 										v-if="controls.EQUIPM__ASSETIDENTTYP.isVisible"
 										class="i-text"
-										v-bind="controls.EQUIPM__ASSETIDENTTYP"
+										v-bind="controls.EQUIPM__ASSETIDENTTYP.wrapperProps"
+										:id="getControlId(controls.EQUIPM__ASSETIDENTTYP)"
 										v-on="controls.EQUIPM__ASSETIDENTTYP.handlers"
 										:loading="controls.EQUIPM__ASSETIDENTTYP.props.loading"
 										:reporting-mode-on="reportingModeCAV"
@@ -179,6 +183,7 @@
 										<q-select
 											v-if="controls.EQUIPM__ASSETIDENTTYP.isVisible"
 											v-bind="controls.EQUIPM__ASSETIDENTTYP.props"
+											:id="getControlId(controls.EQUIPM__ASSETIDENTTYP)"
 											@update:model-value="model.ValIdenttyp.fnUpdateValue" />
 									</base-input-structure>
 								</q-col>
@@ -188,13 +193,15 @@
 									<base-input-structure
 										v-if="controls.EQUIPM__ASSETGRAI____.isVisible"
 										class="i-text"
-										v-bind="controls.EQUIPM__ASSETGRAI____"
+										v-bind="controls.EQUIPM__ASSETGRAI____.wrapperProps"
+										:id="getControlId(controls.EQUIPM__ASSETGRAI____)"
 										v-on="controls.EQUIPM__ASSETGRAI____.handlers"
 										:loading="controls.EQUIPM__ASSETGRAI____.props.loading"
 										:reporting-mode-on="reportingModeCAV"
 										:suggestion-mode-on="suggestionModeOn">
 										<q-text-field
 											v-bind="controls.EQUIPM__ASSETGRAI____.props"
+											:id="getControlId(controls.EQUIPM__ASSETGRAI____)"
 											@blur="onBlur(controls.EQUIPM__ASSETGRAI____, model.ValGrai.value)"
 											@change="model.ValGrai.fnUpdateValueOnChange" />
 									</base-input-structure>
@@ -205,13 +212,15 @@
 									<base-input-structure
 										v-if="controls.EQUIPM__ASSETGIAI____.isVisible"
 										class="i-text"
-										v-bind="controls.EQUIPM__ASSETGIAI____"
+										v-bind="controls.EQUIPM__ASSETGIAI____.wrapperProps"
+										:id="getControlId(controls.EQUIPM__ASSETGIAI____)"
 										v-on="controls.EQUIPM__ASSETGIAI____.handlers"
 										:loading="controls.EQUIPM__ASSETGIAI____.props.loading"
 										:reporting-mode-on="reportingModeCAV"
 										:suggestion-mode-on="suggestionModeOn">
 										<q-text-field
 											v-bind="controls.EQUIPM__ASSETGIAI____.props"
+											:id="getControlId(controls.EQUIPM__ASSETGIAI____)"
 											@blur="onBlur(controls.EQUIPM__ASSETGIAI____, model.ValGiai.value)"
 											@change="model.ValGiai.fnUpdateValueOnChange" />
 									</base-input-structure>
@@ -224,7 +233,8 @@
 									<base-input-structure
 										v-if="controls.EQUIPM__MANUFNAME____.isVisible"
 										class="i-text"
-										v-bind="controls.EQUIPM__MANUFNAME____"
+										v-bind="controls.EQUIPM__MANUFNAME____.wrapperProps"
+										:id="getControlId(controls.EQUIPM__MANUFNAME____)"
 										v-on="controls.EQUIPM__MANUFNAME____.handlers"
 										:loading="controls.EQUIPM__MANUFNAME____.props.loading"
 										:reporting-mode-on="reportingModeCAV"
@@ -232,6 +242,7 @@
 										<q-lookup
 											v-if="controls.EQUIPM__MANUFNAME____.isVisible"
 											v-bind="controls.EQUIPM__MANUFNAME____.props"
+											:id="getControlId(controls.EQUIPM__MANUFNAME____)"
 											v-on="controls.EQUIPM__MANUFNAME____.handlers" />
 										<q-see-more-equipm-manufname
 											v-if="controls.EQUIPM__MANUFNAME____.seeMoreIsVisible"
@@ -247,7 +258,8 @@
 									<base-input-structure
 										v-if="controls.EQUIPM__KINDEDESIGNAT.isVisible"
 										class="i-text"
-										v-bind="controls.EQUIPM__KINDEDESIGNAT"
+										v-bind="controls.EQUIPM__KINDEDESIGNAT.wrapperProps"
+										:id="getControlId(controls.EQUIPM__KINDEDESIGNAT)"
 										v-on="controls.EQUIPM__KINDEDESIGNAT.handlers"
 										:loading="controls.EQUIPM__KINDEDESIGNAT.props.loading"
 										:reporting-mode-on="reportingModeCAV"
@@ -255,6 +267,7 @@
 										<q-lookup
 											v-if="controls.EQUIPM__KINDEDESIGNAT.isVisible"
 											v-bind="controls.EQUIPM__KINDEDESIGNAT.props"
+											:id="getControlId(controls.EQUIPM__KINDEDESIGNAT)"
 											v-on="controls.EQUIPM__KINDEDESIGNAT.handlers" />
 										<q-see-more-equipm-kindedesignat
 											v-if="controls.EQUIPM__KINDEDESIGNAT.seeMoreIsVisible"
@@ -273,293 +286,210 @@
 						cols="auto">
 						<q-tab-container
 							v-if="controls.formTabs.isVisible"
-							id="q-tabs-EQUIPM"
+							:id="getId('q-tabs-EQUIPM')"
 							v-bind="controls.formTabs.props"
 							@tab-changed="controls.formTabs.selectTab($event)">
-							<template #tab-panel>
-								<section
-									v-if="controls.EQUIPM__PSEUDEQUIP01_.isVisible"
-									v-show="controls.formTabs.selectedTab === 'EQUIPM__PSEUDEQUIP01_'">
-									<div
-										id="EQUIPM__PSEUDEQUIP01_"
-										role="tabpanel"
-										aria-labelledby="tab-container-EQUIPM__PSEUDEQUIP01_">
-										<q-row v-if="controls.EQUIP01_ASSETPHOTO___.isVisible">
-											<q-col
+							<section
+								v-if="controls.EQUIPM__PSEUDEQUIP01_.isVisible"
+								v-show="controls.formTabs.selectedTab === 'EQUIPM__PSEUDEQUIP01_'">
+								<div
+									id="EQUIPM__PSEUDEQUIP01_"
+									role="tabpanel"
+									aria-labelledby="q-tabs-EQUIPM-tab-EQUIPM__PSEUDEQUIP01_">
+									<q-row v-if="controls.EQUIP01_ASSETPHOTO___.isVisible">
+										<q-col
+											v-if="controls.EQUIP01_ASSETPHOTO___.isVisible"
+											cols="auto">
+											<base-input-structure
 												v-if="controls.EQUIP01_ASSETPHOTO___.isVisible"
-												cols="auto">
-												<base-input-structure
+												class="q-image"
+												v-bind="controls.EQUIP01_ASSETPHOTO___.wrapperProps"
+												:id="getControlId(controls.EQUIP01_ASSETPHOTO___)"
+												v-on="controls.EQUIP01_ASSETPHOTO___.handlers"
+												:loading="controls.EQUIP01_ASSETPHOTO___.props.loading"
+												:reporting-mode-on="reportingModeCAV"
+												:suggestion-mode-on="suggestionModeOn">
+												<q-image
 													v-if="controls.EQUIP01_ASSETPHOTO___.isVisible"
-													class="q-image"
-													v-bind="controls.EQUIP01_ASSETPHOTO___"
-													v-on="controls.EQUIP01_ASSETPHOTO___.handlers"
-													:loading="controls.EQUIP01_ASSETPHOTO___.props.loading"
-													:reporting-mode-on="reportingModeCAV"
-													:suggestion-mode-on="suggestionModeOn">
-													<q-image
-														v-if="controls.EQUIP01_ASSETPHOTO___.isVisible"
-														v-bind="controls.EQUIP01_ASSETPHOTO___.props"
-														v-on="controls.EQUIP01_ASSETPHOTO___.handlers" />
-												</base-input-structure>
-											</q-col>
-										</q-row>
-									</div>
-								</section>
-								<section
-									v-if="controls.EQUIPM__PSEUDEQUIP02_.isVisible"
-									v-show="controls.formTabs.selectedTab === 'EQUIPM__PSEUDEQUIP02_'">
-									<div
-										id="EQUIPM__PSEUDEQUIP02_"
-										role="tabpanel"
-										aria-labelledby="tab-container-EQUIPM__PSEUDEQUIP02_">
-										<q-row v-if="controls.EQUIP02_PSEUDNOVOGR01.isVisible">
-											<q-col
+													v-bind="controls.EQUIP01_ASSETPHOTO___.props"
+													:id="getControlId(controls.EQUIP01_ASSETPHOTO___)"
+													v-on="controls.EQUIP01_ASSETPHOTO___.handlers" />
+											</base-input-structure>
+										</q-col>
+									</q-row>
+								</div>
+							</section>
+							<section
+								v-if="controls.EQUIPM__PSEUDEQUIP02_.isVisible"
+								v-show="controls.formTabs.selectedTab === 'EQUIPM__PSEUDEQUIP02_'">
+								<div
+									id="EQUIPM__PSEUDEQUIP02_"
+									role="tabpanel"
+									aria-labelledby="q-tabs-EQUIPM-tab-EQUIPM__PSEUDEQUIP02_">
+									<q-row v-if="controls.EQUIP02_PSEUDNOVOGR01.isVisible">
+										<q-col
+											v-if="controls.EQUIP02_PSEUDNOVOGR01.isVisible"
+											cols="auto">
+											<q-group-box-container
 												v-if="controls.EQUIP02_PSEUDNOVOGR01.isVisible"
-												cols="auto">
-												<q-group-box-container
-													v-if="controls.EQUIP02_PSEUDNOVOGR01.isVisible"
-													id="EQUIP02_PSEUDNOVOGR01"
-													v-bind="controls.EQUIP02_PSEUDNOVOGR01"
-													no-border
-													:is-visible="controls.EQUIP02_PSEUDNOVOGR01.isVisible">
-													<!-- Start EQUIP02_PSEUDNOVOGR01 -->
-													<q-row v-if="controls.EQUIP02_PSEUDATTACHME.isVisible">
-														<q-col
+												v-bind="controls.EQUIP02_PSEUDNOVOGR01"
+												:id="getControlId(controls.EQUIP02_PSEUDNOVOGR01)"
+												:no-border="controls.EQUIP02_PSEUDNOVOGR01.borderless">
+												<!-- Start EQUIP02_PSEUDNOVOGR01 -->
+												<q-row v-if="controls.EQUIP02_PSEUDATTACHME.isVisible">
+													<q-col
+														v-if="controls.EQUIP02_PSEUDATTACHME.isVisible"
+														cols="auto">
+														<q-table
 															v-if="controls.EQUIP02_PSEUDATTACHME.isVisible"
-															cols="auto">
-															<q-table
-																v-if="controls.EQUIP02_PSEUDATTACHME.isVisible"
-																v-bind="controls.EQUIP02_PSEUDATTACHME"
-																v-on="controls.EQUIP02_PSEUDATTACHME.handlers">
-															<q-table-extra-extension
-																v-if="controls.EQUIP02_PSEUDATTACHME.isVisible"
-																:list-ctrl="controls.EQUIP02_PSEUDATTACHME"
-																:filter-operators="controls.EQUIP02_PSEUDATTACHME.filterOperators"
-																v-on="controls.EQUIP02_PSEUDATTACHME.handlers" />
-																<!-- USE /[MANUAL GQT CUSTOM_TABLE EQUIP02_PSEUDATTACHME]/ -->
-															</q-table>
-														</q-col>
-													</q-row>
-													<!-- End EQUIP02_PSEUDNOVOGR01 -->
-												</q-group-box-container>
-											</q-col>
-										</q-row>
-									</div>
-								</section>
-								<section
-									v-if="controls.EQUIPM__PSEUDEQUIP03_.isVisible"
-									v-show="controls.formTabs.selectedTab === 'EQUIPM__PSEUDEQUIP03_'">
-									<div
-										id="EQUIPM__PSEUDEQUIP03_"
-										role="tabpanel"
-										aria-labelledby="tab-container-EQUIPM__PSEUDEQUIP03_">
-										<q-row v-if="controls.EQUIP03_PSEUDNOVOGR01.isVisible">
-											<q-col
+															v-bind="controls.EQUIP02_PSEUDATTACHME"
+															:id="getControlId(controls.EQUIP02_PSEUDATTACHME)"
+															v-on="controls.EQUIP02_PSEUDATTACHME.handlers">
+															<template #header>
+																<q-table-config
+																	:table-ctrl="controls.EQUIP02_PSEUDATTACHME"
+																	v-on="controls.EQUIP02_PSEUDATTACHME.handlers" />
+															</template>
+															<!-- USE /[MANUAL GQT CUSTOM_TABLE EQUIP02_PSEUDATTACHME]/ -->
+														</q-table>
+													</q-col>
+												</q-row>
+												<!-- End EQUIP02_PSEUDNOVOGR01 -->
+											</q-group-box-container>
+										</q-col>
+									</q-row>
+								</div>
+							</section>
+							<section
+								v-if="controls.EQUIPM__PSEUDEQUIP03_.isVisible"
+								v-show="controls.formTabs.selectedTab === 'EQUIPM__PSEUDEQUIP03_'">
+								<div
+									id="EQUIPM__PSEUDEQUIP03_"
+									role="tabpanel"
+									aria-labelledby="q-tabs-EQUIPM-tab-EQUIPM__PSEUDEQUIP03_">
+									<q-row v-if="controls.EQUIP03_PSEUDNOVOGR01.isVisible">
+										<q-col
+											v-if="controls.EQUIP03_PSEUDNOVOGR01.isVisible"
+											cols="auto">
+											<q-group-box-container
 												v-if="controls.EQUIP03_PSEUDNOVOGR01.isVisible"
-												cols="auto">
-												<q-group-box-container
-													v-if="controls.EQUIP03_PSEUDNOVOGR01.isVisible"
-													id="EQUIP03_PSEUDNOVOGR01"
-													v-bind="controls.EQUIP03_PSEUDNOVOGR01"
-													no-border
-													:is-visible="controls.EQUIP03_PSEUDNOVOGR01.isVisible">
-													<!-- Start EQUIP03_PSEUDNOVOGR01 -->
-													<q-row v-if="controls.EQUIP03_PSEUDDOCUMENT.isVisible">
-														<q-col
+												v-bind="controls.EQUIP03_PSEUDNOVOGR01"
+												:id="getControlId(controls.EQUIP03_PSEUDNOVOGR01)"
+												:no-border="controls.EQUIP03_PSEUDNOVOGR01.borderless">
+												<!-- Start EQUIP03_PSEUDNOVOGR01 -->
+												<q-row v-if="controls.EQUIP03_PSEUDDOCUMENT.isVisible">
+													<q-col
+														v-if="controls.EQUIP03_PSEUDDOCUMENT.isVisible"
+														cols="auto">
+														<q-table
 															v-if="controls.EQUIP03_PSEUDDOCUMENT.isVisible"
-															cols="auto">
-															<q-table
-																v-if="controls.EQUIP03_PSEUDDOCUMENT.isVisible"
-																v-bind="controls.EQUIP03_PSEUDDOCUMENT"
-																v-on="controls.EQUIP03_PSEUDDOCUMENT.handlers">
-															<q-table-extra-extension
-																v-if="controls.EQUIP03_PSEUDDOCUMENT.isVisible"
-																:list-ctrl="controls.EQUIP03_PSEUDDOCUMENT"
-																:filter-operators="controls.EQUIP03_PSEUDDOCUMENT.filterOperators"
-																v-on="controls.EQUIP03_PSEUDDOCUMENT.handlers" />
-																<!-- USE /[MANUAL GQT CUSTOM_TABLE EQUIP03_PSEUDDOCUMENT]/ -->
-															</q-table>
-														</q-col>
-													</q-row>
-													<!-- End EQUIP03_PSEUDNOVOGR01 -->
-												</q-group-box-container>
-											</q-col>
-										</q-row>
-									</div>
-								</section>
-								<section
-									v-if="controls.EQUIPM__PSEUDEQUIP04_.isVisible"
-									v-show="controls.formTabs.selectedTab === 'EQUIPM__PSEUDEQUIP04_'">
-									<div
-										id="EQUIPM__PSEUDEQUIP04_"
-										role="tabpanel"
-										aria-labelledby="tab-container-EQUIPM__PSEUDEQUIP04_">
-										<q-row v-if="controls.EQUIP04_PSEUDNOVOGR01.isVisible">
-											<q-col
+															v-bind="controls.EQUIP03_PSEUDDOCUMENT"
+															:id="getControlId(controls.EQUIP03_PSEUDDOCUMENT)"
+															v-on="controls.EQUIP03_PSEUDDOCUMENT.handlers">
+															<template #header>
+																<q-table-config
+																	:table-ctrl="controls.EQUIP03_PSEUDDOCUMENT"
+																	v-on="controls.EQUIP03_PSEUDDOCUMENT.handlers" />
+															</template>
+															<!-- USE /[MANUAL GQT CUSTOM_TABLE EQUIP03_PSEUDDOCUMENT]/ -->
+														</q-table>
+													</q-col>
+												</q-row>
+												<!-- End EQUIP03_PSEUDNOVOGR01 -->
+											</q-group-box-container>
+										</q-col>
+									</q-row>
+								</div>
+							</section>
+							<section
+								v-if="controls.EQUIPM__PSEUDEQUIP04_.isVisible"
+								v-show="controls.formTabs.selectedTab === 'EQUIPM__PSEUDEQUIP04_'">
+								<div
+									id="EQUIPM__PSEUDEQUIP04_"
+									role="tabpanel"
+									aria-labelledby="q-tabs-EQUIPM-tab-EQUIPM__PSEUDEQUIP04_">
+									<q-row v-if="controls.EQUIP04_PSEUDNOVOGR01.isVisible">
+										<q-col
+											v-if="controls.EQUIP04_PSEUDNOVOGR01.isVisible"
+											cols="auto">
+											<q-group-box-container
 												v-if="controls.EQUIP04_PSEUDNOVOGR01.isVisible"
-												cols="auto">
-												<q-group-box-container
-													v-if="controls.EQUIP04_PSEUDNOVOGR01.isVisible"
-													id="EQUIP04_PSEUDNOVOGR01"
-													v-bind="controls.EQUIP04_PSEUDNOVOGR01"
-													no-border
-													:is-visible="controls.EQUIP04_PSEUDNOVOGR01.isVisible">
-													<!-- Start EQUIP04_PSEUDNOVOGR01 -->
-													<q-row v-if="controls.EQUIP04_PSEUDPARAMLOA.isVisible || controls.EQUIP04_PSEUDMANUALS_.isVisible || controls.EQUIP04_PSEUDPARAMETE.isVisible">
-														<q-col
+												v-bind="controls.EQUIP04_PSEUDNOVOGR01"
+												:id="getControlId(controls.EQUIP04_PSEUDNOVOGR01)"
+												:no-border="controls.EQUIP04_PSEUDNOVOGR01.borderless">
+												<!-- Start EQUIP04_PSEUDNOVOGR01 -->
+												<q-row v-if="controls.EQUIP04_PSEUDPARAMLOA.isVisible || controls.EQUIP04_PSEUDMANUALS_.isVisible || controls.EQUIP04_PSEUDPARAMETE.isVisible">
+													<q-col
+														v-if="controls.EQUIP04_PSEUDPARAMLOA.isVisible"
+														cols="auto">
+														<base-input-structure
 															v-if="controls.EQUIP04_PSEUDPARAMLOA.isVisible"
-															cols="auto">
-															<base-input-structure
+															class="i-button"
+															v-bind="controls.EQUIP04_PSEUDPARAMLOA.wrapperProps"
+															:id="getControlId(controls.EQUIP04_PSEUDPARAMLOA)"
+															v-on="controls.EQUIP04_PSEUDPARAMLOA.handlers"
+															:loading="controls.EQUIP04_PSEUDPARAMLOA.props.loading"
+															:reporting-mode-on="reportingModeCAV"
+															:suggestion-mode-on="suggestionModeOn">
+															<q-button
 																v-if="controls.EQUIP04_PSEUDPARAMLOA.isVisible"
-																class="i-button"
-																v-bind="controls.EQUIP04_PSEUDPARAMLOA"
-																v-on="controls.EQUIP04_PSEUDPARAMLOA.handlers"
-																:loading="controls.EQUIP04_PSEUDPARAMLOA.props.loading"
-																:reporting-mode-on="reportingModeCAV"
-																:suggestion-mode-on="suggestionModeOn">
-																<q-button
-																	v-if="controls.EQUIP04_PSEUDPARAMLOA.isVisible"
-																	v-bind="controls.EQUIP04_PSEUDPARAMLOA.props"
-																	@click="controls.EQUIP04_PSEUDPARAMLOA.action($event)">
-																</q-button>
-															</base-input-structure>
-														</q-col>
-														<q-col
+																v-bind="controls.EQUIP04_PSEUDPARAMLOA.props"
+																:id="getControlId(controls.EQUIP04_PSEUDPARAMLOA)"
+																@click="controls.EQUIP04_PSEUDPARAMLOA.action($event)">
+															</q-button>
+														</base-input-structure>
+													</q-col>
+													<q-col
+														v-if="controls.EQUIP04_PSEUDMANUALS_.isVisible"
+														cols="auto">
+														<base-input-structure
 															v-if="controls.EQUIP04_PSEUDMANUALS_.isVisible"
-															cols="auto">
-															<base-input-structure
+															class="i-button"
+															v-bind="controls.EQUIP04_PSEUDMANUALS_.wrapperProps"
+															:id="getControlId(controls.EQUIP04_PSEUDMANUALS_)"
+															v-on="controls.EQUIP04_PSEUDMANUALS_.handlers"
+															:loading="controls.EQUIP04_PSEUDMANUALS_.props.loading"
+															:reporting-mode-on="reportingModeCAV"
+															:suggestion-mode-on="suggestionModeOn">
+															<q-button
 																v-if="controls.EQUIP04_PSEUDMANUALS_.isVisible"
-																class="i-button"
-																v-bind="controls.EQUIP04_PSEUDMANUALS_"
-																v-on="controls.EQUIP04_PSEUDMANUALS_.handlers"
-																:loading="controls.EQUIP04_PSEUDMANUALS_.props.loading"
-																:reporting-mode-on="reportingModeCAV"
-																:suggestion-mode-on="suggestionModeOn">
-																<q-button
-																	v-if="controls.EQUIP04_PSEUDMANUALS_.isVisible"
-																	v-bind="controls.EQUIP04_PSEUDMANUALS_.props"
-																	@click="controls.EQUIP04_PSEUDMANUALS_.action($event)">
-																</q-button>
-															</base-input-structure>
-														</q-col>
-														<q-col
+																v-bind="controls.EQUIP04_PSEUDMANUALS_.props"
+																:id="getControlId(controls.EQUIP04_PSEUDMANUALS_)"
+																@click="controls.EQUIP04_PSEUDMANUALS_.action($event)">
+															</q-button>
+														</base-input-structure>
+													</q-col>
+													<q-col
+														v-if="controls.EQUIP04_PSEUDPARAMETE.isVisible"
+														cols="auto">
+														<q-table
 															v-if="controls.EQUIP04_PSEUDPARAMETE.isVisible"
-															cols="auto">
-															<q-table
-																v-if="controls.EQUIP04_PSEUDPARAMETE.isVisible"
-																v-bind="controls.EQUIP04_PSEUDPARAMETE"
-																v-on="controls.EQUIP04_PSEUDPARAMETE.handlers">
-															<q-table-extra-extension
-																v-if="controls.EQUIP04_PSEUDPARAMETE.isVisible"
-																:list-ctrl="controls.EQUIP04_PSEUDPARAMETE"
-																:filter-operators="controls.EQUIP04_PSEUDPARAMETE.filterOperators"
-																v-on="controls.EQUIP04_PSEUDPARAMETE.handlers" />
-																<!-- USE /[MANUAL GQT CUSTOM_TABLE EQUIP04_PSEUDPARAMETE]/ -->
-															</q-table>
-														</q-col>
-													</q-row>
-													<!-- End EQUIP04_PSEUDNOVOGR01 -->
-												</q-group-box-container>
-											</q-col>
-										</q-row>
-									</div>
-								</section>
-							</template>
+															v-bind="controls.EQUIP04_PSEUDPARAMETE"
+															:id="getControlId(controls.EQUIP04_PSEUDPARAMETE)"
+															v-on="controls.EQUIP04_PSEUDPARAMETE.handlers">
+															<template #header>
+																<q-table-config
+																	:table-ctrl="controls.EQUIP04_PSEUDPARAMETE"
+																	v-on="controls.EQUIP04_PSEUDPARAMETE.handlers" />
+															</template>
+															<!-- USE /[MANUAL GQT CUSTOM_TABLE EQUIP04_PSEUDPARAMETE]/ -->
+														</q-table>
+													</q-col>
+												</q-row>
+												<!-- End EQUIP04_PSEUDNOVOGR01 -->
+											</q-group-box-container>
+										</q-col>
+									</q-row>
+								</div>
+							</section>
 						</q-tab-container>
-					</q-col>
-				</q-row>
-				<q-row v-if="controls.EQUIPM__ASSETDESCRIPT.isVisible">
-					<q-col v-if="controls.EQUIPM__ASSETDESCRIPT.isVisible">
-						<base-input-structure
-							v-if="controls.EQUIPM__ASSETDESCRIPT.isVisible"
-							class="i-textarea"
-							v-bind="controls.EQUIPM__ASSETDESCRIPT"
-							v-on="controls.EQUIPM__ASSETDESCRIPT.handlers"
-							:loading="controls.EQUIPM__ASSETDESCRIPT.props.loading"
-							:reporting-mode-on="reportingModeCAV"
-							:suggestion-mode-on="suggestionModeOn">
-							<q-text-area
-								v-if="controls.EQUIPM__ASSETDESCRIPT.isVisible"
-								v-bind="controls.EQUIPM__ASSETDESCRIPT.props"
-								v-on="controls.EQUIPM__ASSETDESCRIPT.handlers" />
-							<template #alternative-view>
-								<q-markdown-viewer
-									id="EQUIPM__ASSETDESCRIPT"
-									:model-value="model.ValDescription.value"
-									:options="controls.EQUIPM__ASSETDESCRIPT.markdownOptions" />
-							</template>
-						</base-input-structure>
-					</q-col>
-				</q-row>
-				<q-row v-if="controls.EQUIPM__ASSETLONGDESC.isVisible">
-					<q-col v-if="controls.EQUIPM__ASSETLONGDESC.isVisible">
-						<base-input-structure
-							v-if="controls.EQUIPM__ASSETLONGDESC.isVisible"
-							class="i-text"
-							v-bind="controls.EQUIPM__ASSETLONGDESC"
-							v-on="controls.EQUIPM__ASSETLONGDESC.handlers"
-							:loading="controls.EQUIPM__ASSETLONGDESC.props.loading"
-							:reporting-mode-on="reportingModeCAV"
-							:suggestion-mode-on="suggestionModeOn">
-							<q-markdown-editor
-								v-if="controls.EQUIPM__ASSETLONGDESC.isVisible"
-								v-bind="controls.EQUIPM__ASSETLONGDESC.props"
-								:model-value="model.ValLongdesc.value"
-								@update:model-value="model.ValLongdesc.fnUpdateValue" />
-							<template #alternative-view>
-								<q-markdown-viewer
-									id="EQUIPM__ASSETLONGDESC"
-									:model-value="model.ValLongdesc.value"
-									:options="controls.EQUIPM__ASSETLONGDESC.markdownOptions" />
-							</template>
-						</base-input-structure>
-					</q-col>
-				</q-row>
-				<q-row v-if="controls.EQUIPM__ASSETCATEGORY.isVisible || controls.EQUIPM__ASSETBG_COLOR.isVisible">
-					<q-col
-						v-if="controls.EQUIPM__ASSETCATEGORY.isVisible || controls.EQUIPM__ASSETBG_COLOR.isVisible"
-						cols="auto">
-						<base-input-structure
-							v-if="controls.EQUIPM__ASSETCATEGORY.isVisible"
-							class="i-text"
-							v-bind="controls.EQUIPM__ASSETCATEGORY"
-							v-on="controls.EQUIPM__ASSETCATEGORY.handlers"
-							:loading="controls.EQUIPM__ASSETCATEGORY.props.loading"
-							:reporting-mode-on="reportingModeCAV"
-							:suggestion-mode-on="suggestionModeOn">
-							<q-select
-								v-if="controls.EQUIPM__ASSETCATEGORY.isVisible"
-								v-bind="controls.EQUIPM__ASSETCATEGORY.props"
-								@update:model-value="model.ValCategory.fnUpdateValue" />
-						</base-input-structure>
-						<base-input-structure
-							v-if="controls.EQUIPM__ASSETBG_COLOR.isVisible"
-							class="i-text"
-							v-bind="controls.EQUIPM__ASSETBG_COLOR"
-							v-on="controls.EQUIPM__ASSETBG_COLOR.handlers"
-							:loading="controls.EQUIPM__ASSETBG_COLOR.props.loading"
-							:reporting-mode-on="reportingModeCAV"
-							:suggestion-mode-on="suggestionModeOn">
-							<q-text-field
-								v-bind="controls.EQUIPM__ASSETBG_COLOR.props"
-								@blur="onBlur(controls.EQUIPM__ASSETBG_COLOR, model.ValBg_color.value)"
-								@change="model.ValBg_color.fnUpdateValueOnChange" />
-						</base-input-structure>
-					</q-col>
-				</q-row>
-				<q-row v-if="controls.EQUIPM__PSEUDA_TAGS__.isVisible">
-					<q-col v-if="controls.EQUIPM__PSEUDA_TAGS__.isVisible">
-						<q-grid-table-list
-							v-if="controls.EQUIPM__PSEUDA_TAGS__.isVisible"
-							v-bind="controls.EQUIPM__PSEUDA_TAGS__"
-							v-on="controls.EQUIPM__PSEUDA_TAGS__.handlers" />
 					</q-col>
 				</q-row>
 			</template>
 		</q-container>
 	</teleport>
 
-	<hr v-if="!isPopup && showFormFooter" />
+	<q-divider v-if="!isPopup && showFormFooter" />
 
 	<teleport
 		v-if="formModalIsReady && showFormFooter"
@@ -906,10 +836,11 @@
 					EQUIPM__PSEUDNOVOGR01: new fieldControlClass.GroupControl({
 						id: 'EQUIPM__PSEUDNOVOGR01',
 						name: 'NOVOGR01',
-						size: 'xxlarge',
+						size: 'block',
 						label: computed(() => this.Resources.ASSET_IDENTIFICATION53152),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
+						borderless: false,
 						isCollapsible: false,
 						anchored: false,
 						directChildren: ['EQUIPM__ASSETNAME____', 'EQUIPM__ASSETASSETTYP', 'EQUIPM__ASSETASSETNUM', 'EQUIPM__ASSETIDENTTYP', 'EQUIPM__ASSETGRAI____', 'EQUIPM__ASSETGIAI____', 'EQUIPM__MANUFNAME____', 'EQUIPM__KINDEDESIGNAT'],
@@ -944,8 +875,8 @@
 						maxLength: 1,
 						mustBeFilled: true,
 						arrayName: 'AssetTyp',
-						helpShortItem: '',
-						helpDetailedItem: '',
+						helpShortItem: 'None',
+						helpDetailedItem: 'None',
 						controlLimits: [
 						],
 					}, this),
@@ -978,8 +909,8 @@
 						container: 'EQUIPM__PSEUDNOVOGR01',
 						maxLength: 1,
 						arrayName: 'IdentTyp',
-						helpShortItem: '',
-						helpDetailedItem: '',
+						helpShortItem: 'None',
+						helpDetailedItem: 'None',
 						controlLimits: [
 						],
 					}, this),
@@ -1016,7 +947,7 @@
 						valueChangeEvent: 'fieldChange:manuf.name',
 						id: 'EQUIPM__MANUFNAME____',
 						name: 'NAME',
-						size: 'mini',
+						size: 'xxlarge',
 						label: computed(() => this.Resources.MANUFACTURER50759),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
@@ -1036,35 +967,6 @@
 						dependentFields: () => ({
 							set 'manuf.codentit'(value) { vm.model.ValCodmanuf.updateValue(value) },
 							set 'manuf.name'(value) { vm.model.TableManufName.updateValue(value) },
-						}),
-						controlLimits: [
-						],
-					}, this),
-					EQUIPM__KINDEDESIGNAT: new fieldControlClass.LookupControl({
-						modelField: 'TableKindeDesignat',
-						valueChangeEvent: 'fieldChange:kinde.designat',
-						id: 'EQUIPM__KINDEDESIGNAT',
-						name: 'DESIGNAT',
-						size: 'xxlarge',
-						label: computed(() => this.Resources.KIND_OF_EQUIPMENT22928),
-						placeholder: '',
-						labelPosition: computed(() => this.labelAlignment.topleft),
-						container: 'EQUIPM__PSEUDNOVOGR01',
-						externalCallbacks: {
-							getModelField: vm.getModelField,
-							getModelFieldValue: vm.getModelFieldValue,
-							setModelFieldValue: vm.setModelFieldValue
-						},
-						externalProperties: {
-							modelKeys: computed(() => vm.modelKeys)
-						},
-						lookupKeyModelField: {
-							name: 'ValCodkinde',
-							dependencyEvent: 'fieldChange:asset.codkinde'
-						},
-						dependentFields: () => ({
-							set 'kinde.codkinde'(value) { vm.model.ValCodkinde.updateValue(value) },
-							set 'kinde.designat'(value) { vm.model.TableKindeDesignat.updateValue(value) },
 						}),
 						controlLimits: [
 						],
@@ -1113,121 +1015,33 @@
 						controlLimits: [
 						],
 					}, this),
-					EQUIPM__ASSETDESCRIPT: new fieldControlClass.MultilineStringControl({
-						modelField: 'ValDescription',
-						valueChangeEvent: 'fieldChange:asset.description',
-						id: 'EQUIPM__ASSETDESCRIPT',
-						name: 'DESCRIPT',
-						size: 'block',
-						label: computed(() => this.Resources.DESCRIPTION07383),
+					EQUIPM__KINDEDESIGNAT: new fieldControlClass.LookupControl({
+						modelField: 'TableKindeDesignat',
+						valueChangeEvent: 'fieldChange:kinde.designat',
+						id: 'EQUIPM__KINDEDESIGNAT',
+						name: 'DESIGNAT',
+						size: 'xxlarge',
+						label: computed(() => this.Resources.KIND_OF_EQUIPMENT22928),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						rows: 5,
-						cols: 30,
-						showAlternativeView: computed(() => !this.isEditable),
-						markdownOptions: {
-							allowAttributes: false,
-							allowImage: true,
-							enableTypographer: true,
+						container: 'EQUIPM__PSEUDNOVOGR01',
+						externalCallbacks: {
+							getModelField: vm.getModelField,
+							getModelFieldValue: vm.getModelFieldValue,
+							setModelFieldValue: vm.setModelFieldValue
 						},
-						controlLimits: [
-						],
-					}, this),
-					EQUIPM__ASSETLONGDESC: new fieldControlClass.MarkdownEditorControl({
-						modelField: 'ValLongdesc',
-						valueChangeEvent: 'fieldChange:asset.longdesc',
-						id: 'EQUIPM__ASSETLONGDESC',
-						name: 'LONGDESC',
-						size: 'block',
-						label: computed(() => this.Resources.DETAILED_DESCRIPTION36560),
-						placeholder: '',
-						labelPosition: computed(() => this.labelAlignment.topleft),
-						showAlternativeView: computed(() => !this.isEditable),
-						markdownOptions: {
-							allowAttributes: true,
-							allowImage: true,
-							enableTypographer: true,
+						externalProperties: {
+							modelKeys: computed(() => vm.modelKeys)
 						},
-						controlLimits: [
-						],
-					}, this),
-					EQUIPM__ASSETCATEGORY: new fieldControlClass.ArrayStringControl({
-						modelField: 'ValCategory',
-						valueChangeEvent: 'fieldChange:asset.category',
-						id: 'EQUIPM__ASSETCATEGORY',
-						name: 'CATEGORY',
-						size: 'small',
-						label: computed(() => this.Resources.CATEGORY18978),
-						placeholder: '',
-						labelPosition: computed(() => this.labelAlignment.topleft),
-						maxLength: 5,
-						arrayName: 'assetCategory',
-						helpShortItem: 'None',
-						helpDetailedItem: 'None',
-						controlLimits: [
-						],
-					}, this),
-					EQUIPM__ASSETBG_COLOR: new fieldControlClass.FieldSpecialRenderingControl({
-						modelField: 'ValBg_color',
-						valueChangeEvent: 'fieldChange:asset.bg_color',
-						id: 'EQUIPM__ASSETBG_COLOR',
-						name: 'BG_COLOR',
-						size: 'xlarge',
-						label: computed(() => this.Resources.BACKGROUND_COLOR_FOR59228),
-						placeholder: '',
-						labelPosition: computed(() => this.labelAlignment.topleft),
-						maxLength: 50,
-						viewModes: [
-							{
-								id: 'COLORPICKER',
-								type: 'colorpicker',
-								subtype: '',
-								label: computed(() => this.Resources.COLOR_PICKER08843),
-								order: 1,
-								implicitVariable: 'color',
-								implicitIsMultiple: true,
-								mappingVariables: readonly({
-								}),
-								styleVariables: {
-								},
-								groups: {
-								}
-							},
-						],
-						controlLimits: [
-						],
-					}, this),
-					EQUIPM__PSEUDA_TAGS__: new fieldControlClass.GridTableListControl({
-						id: 'EQUIPM__PSEUDA_TAGS__',
-						name: 'A_TAGS',
-						size: 'block',
-						label: computed(() => this.Resources.ASSET_TAGS23725),
-						placeholder: '',
-						labelPosition: computed(() => this.labelAlignment.topleft),
-						controller: 'ASSET',
-						action: 'Equipm_ValA_tags',
-						modelField: 'ValA_tags',
-						component: 'q-grid-form-equipm-pseuda-tags',
-						permissions: {
+						lookupKeyModelField: {
+							name: 'ValCodkinde',
+							dependencyEvent: 'fieldChange:asset.codkinde'
 						},
-						columns: [
-							new listColumnTypes.TextColumn({
-								order: 1,
-								name: 'ValName',
-								area: 'ATAGS',
-								field: 'NAME',
-								label: computed(() => this.Resources.TAG_NAME52385),
-								dataLength: 75,
-								scrollData: 30,
-							}, computed(() => vm.model), computed(() => vm.internalEvents)),
-						],
+						dependentFields: () => ({
+							set 'kinde.codkinde'(value) { vm.model.ValCodkinde.updateValue(value) },
+							set 'kinde.designat'(value) { vm.model.TableKindeDesignat.updateValue(value) },
+						}),
 						controlLimits: [
-							{
-								identifier: ['id', 'asset'],
-								dependencyEvents: ['fieldChange:asset.codasset'],
-								dependencyField: 'ASSET.CODASSET',
-								fnValueSelector: (model) => model.ValCodasset.value
-							},
 						],
 					}, this),
 					EQUIP01_ASSETPHOTO___: new fieldControlClass.ImageControl({
@@ -1254,6 +1068,7 @@
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						tab: 'EQUIPM__PSEUDEQUIP02_',
+						borderless: true,
 						isCollapsible: false,
 						anchored: false,
 						directChildren: ['EQUIP02_PSEUDATTACHME'],
@@ -1263,12 +1078,13 @@
 					EQUIP02_PSEUDATTACHME: new fieldControlClass.TableListControl({
 						id: 'EQUIP02_PSEUDATTACHME',
 						name: 'ATTACHME',
-						size: '',
+						size: 'xxlarge',
 						label: computed(() => this.Resources.ATTACHMENTS19612),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'EQUIP02_PSEUDNOVOGR01',
 						tab: 'EQUIPM__PSEUDEQUIP02_',
+						headerLevel: computed(() => this.baseHeadingLevel + 1),
 						controller: 'ASSET',
 						action: 'Equip02_ValAttachme',
 						hasDependencies: false,
@@ -1282,6 +1098,7 @@
 								label: computed(() => this.Resources.ATTACHED26247),
 								scrollData: 16,
 								dateTimeType: 'dateTime',
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 2,
@@ -1290,6 +1107,7 @@
 								field: 'NOTE',
 								label: computed(() => this.Resources.NOTE54557),
 								scrollData: 30,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.DocumentColumn({
 								order: 3,
@@ -1300,6 +1118,7 @@
 								dataLength: 85,
 								scrollData: 30,
 								sortable: false,
+								export: 1,
 								viewType: qEnums.documentViewTypeMode.print,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 						],
@@ -1318,7 +1137,6 @@
 							searchBarConfig: {
 								visibility: false
 							},
-							filtersVisible: false,
 							allowColumnFilters: false,
 							allowColumnSort: true,
 							crudActions: [
@@ -1392,9 +1210,7 @@
 									id: 'insert',
 									name: 'insert',
 									title: computed(() => this.Resources.INSERIR43365),
-									icon: {
-										icon: 'add'
-									},
+									icon: { icon: 'add' },
 									isInReadOnly: false,
 									params: {
 										action: vm.openFormAction,
@@ -1461,6 +1277,7 @@
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						tab: 'EQUIPM__PSEUDEQUIP03_',
+						borderless: true,
 						isCollapsible: false,
 						anchored: false,
 						directChildren: ['EQUIP03_PSEUDDOCUMENT'],
@@ -1470,12 +1287,13 @@
 					EQUIP03_PSEUDDOCUMENT: new fieldControlClass.TableListControl({
 						id: 'EQUIP03_PSEUDDOCUMENT',
 						name: 'DOCUMENT',
-						size: '',
+						size: 'xxlarge',
 						label: computed(() => this.Resources.DOCUMENTS14470),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'EQUIP03_PSEUDNOVOGR01',
 						tab: 'EQUIPM__PSEUDEQUIP03_',
+						headerLevel: computed(() => this.baseHeadingLevel + 1),
 						controller: 'ASSET',
 						action: 'Equip03_ValDocument',
 						hasDependencies: false,
@@ -1489,6 +1307,7 @@
 								label: computed(() => this.Resources.MANUAL_NAME60077),
 								dataLength: 50,
 								scrollData: 30,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.DocumentColumn({
 								order: 2,
@@ -1499,6 +1318,7 @@
 								dataLength: 50,
 								scrollData: 30,
 								sortable: false,
+								export: 1,
 								viewType: qEnums.documentViewTypeMode.print,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
@@ -1508,6 +1328,7 @@
 								field: 'NOTES',
 								label: computed(() => this.Resources.NOTES05274),
 								scrollData: 30,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 						],
 						config: {
@@ -1525,7 +1346,6 @@
 							searchBarConfig: {
 								visibility: false
 							},
-							filtersVisible: false,
 							allowColumnFilters: false,
 							allowColumnSort: true,
 							crudActions: [
@@ -1599,9 +1419,7 @@
 									id: 'insert',
 									name: 'insert',
 									title: computed(() => this.Resources.INSERIR43365),
-									icon: {
-										icon: 'add'
-									},
+									icon: { icon: 'add' },
 									isInReadOnly: false,
 									params: {
 										action: vm.openFormAction,
@@ -1648,7 +1466,7 @@
 								sortOrder: 'asc'
 							}
 						},
-						globalEvents: ['changed-ASSMA', 'changed-ASSET'],
+						globalEvents: ['changed-ASSET', 'changed-ASSMA'],
 						uuid: 'Equip03_ValDocument',
 						allSelectedRows: 'false',
 						controlLimits: [
@@ -1668,6 +1486,7 @@
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						tab: 'EQUIPM__PSEUDEQUIP04_',
+						borderless: true,
 						isCollapsible: false,
 						anchored: false,
 						directChildren: ['EQUIP04_PSEUDPARAMLOA', 'EQUIP04_PSEUDMANUALS_', 'EQUIP04_PSEUDPARAMETE'],
@@ -1757,12 +1576,13 @@
 					EQUIP04_PSEUDPARAMETE: new fieldControlClass.TableListControl({
 						id: 'EQUIP04_PSEUDPARAMETE',
 						name: 'PARAMETE',
-						size: '',
+						size: 'xxlarge',
 						label: computed(() => this.Resources.PARAMETERS28294),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'EQUIP04_PSEUDNOVOGR01',
 						tab: 'EQUIPM__PSEUDEQUIP04_',
+						headerLevel: computed(() => this.baseHeadingLevel + 1),
 						controller: 'ASSET',
 						action: 'Equip04_ValParamete',
 						hasDependencies: false,
@@ -1776,6 +1596,7 @@
 								label: computed(() => this.Resources.PARAMETER41976),
 								dataLength: 50,
 								scrollData: 30,
+								export: 1,
 								pkColumn: 'ValCodparam',
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.ArrayColumn({
@@ -1787,8 +1608,8 @@
 								dataLength: 1,
 								scrollData: 1,
 								isVisible: false,
+								export: 1,
 								array: computed(() => new qProjArrays.QArrayDatatype(vm.$getResource).elements),
-								arrayType: qProjArrays.QArrayDatatype.type,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.NumericColumn({
 								order: 3,
@@ -1800,6 +1621,7 @@
 								maxDigits: 1,
 								decimalPlaces: 0,
 								isVisible: false,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 4,
@@ -1810,6 +1632,7 @@
 								dataLength: 50,
 								scrollData: 30,
 								isVisible: false,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.NumericColumn({
 								order: 5,
@@ -1821,6 +1644,7 @@
 								maxDigits: 7,
 								decimalPlaces: 4,
 								isVisible: false,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.DateColumn({
 								order: 6,
@@ -1831,6 +1655,7 @@
 								scrollData: 8,
 								dateTimeType: 'date',
 								isVisible: false,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 7,
@@ -1840,6 +1665,7 @@
 								label: computed(() => this.Resources.VALUE10285),
 								dataLength: 50,
 								scrollData: 30,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 						],
 						config: {
@@ -1857,7 +1683,6 @@
 							searchBarConfig: {
 								visibility: true
 							},
-							filtersVisible: true,
 							allowColumnFilters: true,
 							allowColumnSort: true,
 							crudActions: [
@@ -1931,9 +1756,7 @@
 									id: 'insert',
 									name: 'insert',
 									title: computed(() => this.Resources.INSERIR43365),
-									icon: {
-										icon: 'add'
-									},
+									icon: { icon: 'add' },
 									isInReadOnly: false,
 									params: {
 										action: vm.openFormAction,
@@ -1980,7 +1803,7 @@
 								sortOrder: 'asc'
 							}
 						},
-						globalEvents: ['changed-ASSET', 'changed-PARAM', 'changed-ASSPA'],
+						globalEvents: ['changed-ASSPA', 'changed-ASSET', 'changed-PARAM'],
 						uuid: 'Equip04_ValParamete',
 						allSelectedRows: 'false',
 						controlLimits: [
@@ -2022,7 +1845,6 @@
 				]),
 
 				tableFields: readonly([
-					'EQUIPM__PSEUDA_TAGS__',
 					'EQUIP02_PSEUDATTACHME',
 					'EQUIP03_PSEUDDOCUMENT',
 					'EQUIP04_PSEUDPARAMETE',
@@ -2040,24 +1862,16 @@
 						set ValAssetnum(value) { vm.model.ValAssetnum.updateValue(value) },
 						get ValAssettyp() { return vm.model.ValAssettyp.value },
 						set ValAssettyp(value) { vm.model.ValAssettyp.updateValue(value) },
-						get ValBg_color() { return vm.model.ValBg_color.value },
-						set ValBg_color(value) { vm.model.ValBg_color.updateValue(value) },
-						get ValCategory() { return vm.model.ValCategory.value },
-						set ValCategory(value) { vm.model.ValCategory.updateValue(value) },
 						get ValCodkinde() { return vm.model.ValCodkinde.value },
 						set ValCodkinde(value) { vm.model.ValCodkinde.updateValue(value) },
 						get ValCodmanuf() { return vm.model.ValCodmanuf.value },
 						set ValCodmanuf(value) { vm.model.ValCodmanuf.updateValue(value) },
-						get ValDescription() { return vm.model.ValDescription.value },
-						set ValDescription(value) { vm.model.ValDescription.updateValue(value) },
 						get ValGiai() { return vm.model.ValGiai.value },
 						set ValGiai(value) { vm.model.ValGiai.updateValue(value) },
 						get ValGrai() { return vm.model.ValGrai.value },
 						set ValGrai(value) { vm.model.ValGrai.updateValue(value) },
 						get ValIdenttyp() { return vm.model.ValIdenttyp.value },
 						set ValIdenttyp(value) { vm.model.ValIdenttyp.updateValue(value) },
-						get ValLongdesc() { return vm.model.ValLongdesc.value },
-						set ValLongdesc(value) { vm.model.ValLongdesc.updateValue(value) },
 						get ValName() { return vm.model.ValName.value },
 						set ValName(value) { vm.model.ValName.updateValue(value) },
 						get ValPhoto() { return vm.model.ValPhoto.value },
@@ -2423,7 +2237,6 @@
 
 				this.afterControlUpdate(controlField, fieldValue)
 			},
-
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
 // USE /[MANUAL GQT FUNCTIONS_JS EQUIPM]/
 // eslint-disable-next-line

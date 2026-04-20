@@ -143,6 +143,7 @@ export default class ViewModel extends FormViewModelBase
 			field: 'GLN',
 			maxLength: 50,
 			description: computed(() => this.Resources.GLOBAL_LOCATION_NUMB24637),
+			ignoreFldSubmit: true,
 		}).cloneFrom(values?.TableLocatGln))
 		this.stopWatchers.push(watch(() => this.TableLocatGln.value, (newValue, oldValue) => this.onUpdate('locat.gln', this.TableLocatGln, newValue, oldValue)))
 
@@ -154,6 +155,7 @@ export default class ViewModel extends FormViewModelBase
 			field: 'GLNEXT',
 			maxLength: 50,
 			description: computed(() => this.Resources.GLN_EXTENSION_COMPON55869),
+			ignoreFldSubmit: true,
 		}).cloneFrom(values?.TableLcextGlnext))
 		this.stopWatchers.push(watch(() => this.TableLcextGlnext.value, (newValue, oldValue) => this.onUpdate('lcext.glnext', this.TableLcextGlnext, newValue, oldValue)))
 	}

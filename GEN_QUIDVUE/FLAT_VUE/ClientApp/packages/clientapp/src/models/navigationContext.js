@@ -236,10 +236,10 @@ export class HistoryLevel {
 
 		// Removal of Proxy objects from the central store so that there are no subscribers.
 		// While we have several things holding objects, a simple «this.formValues = null» keeps references in memory (based on the heap snapshot analysis).
-		for (let areaName in this.formValues) {
-			for (let dataKey in this.formValues[areaName]) {
-				for (let formName in this.formValues[areaName][dataKey]) {
-					for (let fieldName in this.formValues[areaName][dataKey][formName]) {
+		for (const areaName in this.formValues) {
+			for (const dataKey in this.formValues[areaName]) {
+				for (const formName in this.formValues[areaName][dataKey]) {
+					for (const fieldName in this.formValues[areaName][dataKey][formName]) {
 						this.formValues[areaName][dataKey][formName][fieldName] = null
 					}
 					this.formValues[areaName][dataKey][formName] = null
@@ -435,8 +435,8 @@ function _entryConvert(srcValue) {
  * @returns {Array} An array of processed history levels.
  */
 function _transformHistoryLevels(hLevel, currentArea = '') {
-	let mode = 'None',
-		result = []
+	let mode = 'None'
+	const result = []
 
 	if (!_isEmpty(hLevel)) {
 		if ((hLevel.location || '').startsWith('menu-')) mode = 'List'
@@ -612,7 +612,7 @@ export class NavigationContext {
 	 */
 	removeNavigationLevel() {
 		if (!_isEmpty(this.currentLevel)) {
-			let curUId = this.currentLevel.uniqueIdentifier
+			const curUId = this.currentLevel.uniqueIdentifier
 			this.currentLevel.destroy()
 			this.currentLevel = this.currentLevel.previousLevel
 			if (this.currentLevel?.upperLevels?.has(curUId))
@@ -825,7 +825,7 @@ export class NavigationContext {
 	 * @param {object} param0 The fields data
 	 */
 	storeValues({ key, formInfo, fields }) {
-		for (let i in fields) this.storeValue({ key, formInfo, field: fields[i] })
+		for (const i in fields) this.storeValue({ key, formInfo, field: fields[i] })
 	}
 
 	/**

@@ -191,11 +191,12 @@ namespace GenioMVC.ViewModels.Entit
 			crs.SubSets.Add(subfilters);
 
 			// Form field filters
-			if (tableConfig.FieldFilters != null)
-				crs.SubSets.Add(ProcessFieldFilters(tableConfig.FieldFilters));
+			crs.SubSets.Add(ProcessFieldFilters(tableConfig.GlobalFilters));
 
 			if (this.EntitValCodentit != null)
 				crs.Equal(CSGenioAfacil.FldCodentit, this.EntitValCodentit);
+			else
+				tableReload = false;
 
 
 			crs.SubSets.Add(GetCustomizedStaticLimits(StaticLimits));
@@ -325,12 +326,11 @@ namespace GenioMVC.ViewModels.Entit
 
 			FieldRef[] fields = new FieldRef[] { CSGenioAfacil.FldCodfacil, CSGenioAfacil.FldZzstate, CSGenioAfacil.FldIncorpor, CSGenioAfacil.FldName, CSGenioAfacil.FldCodfacty, CSGenioAfacty.FldCodfacty, CSGenioAfacty.FldType, CSGenioAfacil.FldLatitude, CSGenioAfacil.FldLongitud, CSGenioAfacil.FldGeocoord, CSGenioAfacil.FldImage };
 
-
-			// Totalizers
-			List<FieldRef> fieldsWithTotalizers = fields.Where(field => tableConfig.TotalizerColumns.Contains(field.FullName)).ToList();
+			// List of column names that should display totalized (aggregated) values.
+			List<string> totalizerColumns = [];
+			List<FieldRef> fieldsWithTotalizers = [.. fields.Where(field => totalizerColumns.Contains(field.FullName))];
 
 			FieldRef firstVisibleColumn = null;
-
 			if (sorts.Count == 0)
 			{
 				firstVisibleColumn = tableConfig?.GetFirstVisibleColumn(TableAlias);
@@ -522,7 +522,7 @@ namespace GenioMVC.ViewModels.Entit
 
 		private static readonly string[] _fieldsToSerialize =
 		[
-			"Facil", "Facil.ValCodfacil", "Facil.ValZzstate", "Facil.ValIncorpor", "Facil.ValName", "Facty", "Facty.ValType", "Facil.ValLatitude", "Facil.ValLongitud", "Facil.ValGeocoord", "Facil.ValImage", "Facil.ValCodcntry", "Facil.ValCodentit", "Facil.ValCodfacty"
+			"Facil", "Facil.ValCodfacil", "Facil.ValZzstate", "Facil.ValIncorpor", "Facil.ValName", "Facty", "Facty.ValType", "Facil.ValLatitude", "Facil.ValLongitud", "Facil.ValGeocoord", "Facil.ValImage", "Facil.ValCodentit", "Facil.ValCodfacty"
 		];
 
 		private static readonly List<TableSearchColumn> _searchableColumns =

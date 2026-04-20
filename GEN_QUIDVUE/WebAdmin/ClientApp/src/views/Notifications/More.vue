@@ -2,14 +2,6 @@
 	<div>
 		<row>
 			<q-select
-				v-model="model.userRegistration"
-				:items="model.emailPropertiesList"
-				item-value="Value"
-				item-label="Text"
-				:label="Resources.REGISTO_DE_UTILIZADO37378" />
-		</row>
-		<row>
-			<q-select
 				v-model="model.passwordRecovery"
 				:items="model.emailPropertiesList"
 				item-value="Value"

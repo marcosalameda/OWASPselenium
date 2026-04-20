@@ -9,12 +9,13 @@
 			<div
 				v-if="showFormHeader"
 				class="c-action-bar">
-				<h1
+				<component
 					v-if="formControl.uiComponents.header && formInfo.designation"
+					:is="topHeadingTag"
 					:id="formTitleId"
 					class="form-header">
 					{{ formInfo.designation }}
-				</h1>
+				</component>
 
 				<div class="c-action-bar__menu">
 					<template
@@ -40,13 +41,10 @@
 									@click="btn.action">
 									<template v-if="btn.icon">
 										<q-badge-indicator
-											v-if="btn.badge && btn.badge.isVisible"
-											:color="btn.badge.color">
+											:enabled="btn.badge?.isVisible ?? false"
+											:color="btn.badge?.color">
 											<q-icon v-bind="btn.icon" />
 										</q-badge-indicator>
-										<q-icon
-											v-else
-											v-bind="btn.icon" />
 									</template>
 								</q-toggle-group-item>
 							</template>
@@ -97,6 +95,7 @@
 		<q-container
 			fluid
 			data-key="ARMAPESS"
+			:data-identifier="primaryKeyValue"
 			:data-loading="!formInitialDataLoaded || !isActiveForm">
 			<template v-if="formControl.initialized && showFormBody">
 				<q-row v-if="controls.ARMAPESSWPESSNFUNC___.isVisible">
@@ -106,7 +105,8 @@
 						<base-input-structure
 							v-if="controls.ARMAPESSWPESSNFUNC___.isVisible"
 							class="i-text"
-							v-bind="controls.ARMAPESSWPESSNFUNC___"
+							v-bind="controls.ARMAPESSWPESSNFUNC___.wrapperProps"
+							:id="getControlId(controls.ARMAPESSWPESSNFUNC___)"
 							v-on="controls.ARMAPESSWPESSNFUNC___.handlers"
 							:loading="controls.ARMAPESSWPESSNFUNC___.props.loading"
 							:reporting-mode-on="reportingModeCAV"
@@ -114,6 +114,7 @@
 							<q-numeric-input
 								v-if="controls.ARMAPESSWPESSNFUNC___.isVisible"
 								v-bind="controls.ARMAPESSWPESSNFUNC___.props"
+								:id="getControlId(controls.ARMAPESSWPESSNFUNC___)"
 								@update:model-value="model.ValNfunc.fnUpdateValue" />
 						</base-input-structure>
 					</q-col>
@@ -125,7 +126,8 @@
 						<base-input-structure
 							v-if="controls.ARMAPESSWPESSPFOTO___.isVisible"
 							class="q-image"
-							v-bind="controls.ARMAPESSWPESSPFOTO___"
+							v-bind="controls.ARMAPESSWPESSPFOTO___.wrapperProps"
+							:id="getControlId(controls.ARMAPESSWPESSPFOTO___)"
 							v-on="controls.ARMAPESSWPESSPFOTO___.handlers"
 							:loading="controls.ARMAPESSWPESSPFOTO___.props.loading"
 							:reporting-mode-on="reportingModeCAV"
@@ -133,6 +135,7 @@
 							<q-image
 								v-if="controls.ARMAPESSWPESSPFOTO___.isVisible"
 								v-bind="controls.ARMAPESSWPESSPFOTO___.props"
+								:id="getControlId(controls.ARMAPESSWPESSPFOTO___)"
 								v-on="controls.ARMAPESSWPESSPFOTO___.handlers" />
 						</base-input-structure>
 					</q-col>
@@ -144,13 +147,15 @@
 						<base-input-structure
 							v-if="controls.ARMAPESSWPESSNAME____.isVisible"
 							class="i-text"
-							v-bind="controls.ARMAPESSWPESSNAME____"
+							v-bind="controls.ARMAPESSWPESSNAME____.wrapperProps"
+							:id="getControlId(controls.ARMAPESSWPESSNAME____)"
 							v-on="controls.ARMAPESSWPESSNAME____.handlers"
 							:loading="controls.ARMAPESSWPESSNAME____.props.loading"
 							:reporting-mode-on="reportingModeCAV"
 							:suggestion-mode-on="suggestionModeOn">
 							<q-text-field
 								v-bind="controls.ARMAPESSWPESSNAME____.props"
+								:id="getControlId(controls.ARMAPESSWPESSNAME____)"
 								@blur="onBlur(controls.ARMAPESSWPESSNAME____, model.ValName.value)"
 								@change="model.ValName.fnUpdateValueOnChange" />
 						</base-input-structure>
@@ -161,7 +166,8 @@
 						<base-input-structure
 							v-if="controls.ARMAPESSWPESSDATE____.isVisible"
 							class="i-text"
-							v-bind="controls.ARMAPESSWPESSDATE____"
+							v-bind="controls.ARMAPESSWPESSDATE____.wrapperProps"
+							:id="getControlId(controls.ARMAPESSWPESSDATE____)"
 							v-on="controls.ARMAPESSWPESSDATE____.handlers"
 							:loading="controls.ARMAPESSWPESSDATE____.props.loading"
 							:reporting-mode-on="reportingModeCAV"
@@ -169,6 +175,7 @@
 							<q-date-time-picker
 								v-if="controls.ARMAPESSWPESSDATE____.isVisible"
 								v-bind="controls.ARMAPESSWPESSDATE____.props"
+								:id="getControlId(controls.ARMAPESSWPESSDATE____)"
 								:model-value="model.ValDate.value"
 								@reset-icon-click="model.ValDate.fnUpdateValue(model.ValDate.originalValue ?? new Date())"
 								@update:model-value="model.ValDate.fnUpdateValue($event ?? '')" />
@@ -180,7 +187,8 @@
 						<base-input-structure
 							v-if="controls.ARMAPESSWPESSSEX_____.isVisible"
 							class="i-text"
-							v-bind="controls.ARMAPESSWPESSSEX_____"
+							v-bind="controls.ARMAPESSWPESSSEX_____.wrapperProps"
+							:id="getControlId(controls.ARMAPESSWPESSSEX_____)"
 							v-on="controls.ARMAPESSWPESSSEX_____.handlers"
 							:loading="controls.ARMAPESSWPESSSEX_____.props.loading"
 							:reporting-mode-on="reportingModeCAV"
@@ -188,6 +196,7 @@
 							<q-select
 								v-if="controls.ARMAPESSWPESSSEX_____.isVisible"
 								v-bind="controls.ARMAPESSWPESSSEX_____.props"
+								:id="getControlId(controls.ARMAPESSWPESSSEX_____)"
 								@update:model-value="model.ValSex.fnUpdateValue" />
 						</base-input-structure>
 					</q-col>
@@ -199,13 +208,15 @@
 						<base-input-structure
 							v-if="controls.ARMAPESSWPESSNATURALI.isVisible"
 							class="i-text"
-							v-bind="controls.ARMAPESSWPESSNATURALI"
+							v-bind="controls.ARMAPESSWPESSNATURALI.wrapperProps"
+							:id="getControlId(controls.ARMAPESSWPESSNATURALI)"
 							v-on="controls.ARMAPESSWPESSNATURALI.handlers"
 							:loading="controls.ARMAPESSWPESSNATURALI.props.loading"
 							:reporting-mode-on="reportingModeCAV"
 							:suggestion-mode-on="suggestionModeOn">
 							<q-text-field
 								v-bind="controls.ARMAPESSWPESSNATURALI.props"
+								:id="getControlId(controls.ARMAPESSWPESSNATURALI)"
 								@blur="onBlur(controls.ARMAPESSWPESSNATURALI, model.ValNaturali.value)"
 								@change="model.ValNaturali.fnUpdateValueOnChange" />
 						</base-input-structure>
@@ -218,13 +229,15 @@
 						<base-input-structure
 							v-if="controls.ARMAPESSWPESSNACIONAL.isVisible"
 							class="i-text"
-							v-bind="controls.ARMAPESSWPESSNACIONAL"
+							v-bind="controls.ARMAPESSWPESSNACIONAL.wrapperProps"
+							:id="getControlId(controls.ARMAPESSWPESSNACIONAL)"
 							v-on="controls.ARMAPESSWPESSNACIONAL.handlers"
 							:loading="controls.ARMAPESSWPESSNACIONAL.props.loading"
 							:reporting-mode-on="reportingModeCAV"
 							:suggestion-mode-on="suggestionModeOn">
 							<q-text-field
 								v-bind="controls.ARMAPESSWPESSNACIONAL.props"
+								:id="getControlId(controls.ARMAPESSWPESSNACIONAL)"
 								@blur="onBlur(controls.ARMAPESSWPESSNACIONAL, model.ValNacional.value)"
 								@change="model.ValNacional.fnUpdateValueOnChange" />
 						</base-input-structure>
@@ -237,13 +250,15 @@
 						<base-input-structure
 							v-if="controls.ARMAPESSWPESSADRESS__.isVisible"
 							class="i-text"
-							v-bind="controls.ARMAPESSWPESSADRESS__"
+							v-bind="controls.ARMAPESSWPESSADRESS__.wrapperProps"
+							:id="getControlId(controls.ARMAPESSWPESSADRESS__)"
 							v-on="controls.ARMAPESSWPESSADRESS__.handlers"
 							:loading="controls.ARMAPESSWPESSADRESS__.props.loading"
 							:reporting-mode-on="reportingModeCAV"
 							:suggestion-mode-on="suggestionModeOn">
 							<q-text-field
 								v-bind="controls.ARMAPESSWPESSADRESS__.props"
+								:id="getControlId(controls.ARMAPESSWPESSADRESS__)"
 								@blur="onBlur(controls.ARMAPESSWPESSADRESS__, model.ValAdress.value)"
 								@change="model.ValAdress.fnUpdateValueOnChange" />
 						</base-input-structure>
@@ -254,14 +269,16 @@
 						<base-input-structure
 							v-if="controls.ARMAPESSWPESSZIPCODE_.isVisible"
 							class="i-text"
-							v-bind="controls.ARMAPESSWPESSZIPCODE_"
+							v-bind="controls.ARMAPESSWPESSZIPCODE_.wrapperProps"
+							:id="getControlId(controls.ARMAPESSWPESSZIPCODE_)"
 							v-on="controls.ARMAPESSWPESSZIPCODE_.handlers"
 							:loading="controls.ARMAPESSWPESSZIPCODE_.props.loading"
 							:reporting-mode-on="reportingModeCAV"
 							:suggestion-mode-on="suggestionModeOn">
 							<q-mask
 								v-if="controls.ARMAPESSWPESSZIPCODE_.isVisible"
-								v-bind="controls.ARMAPESSWPESSZIPCODE_"
+								v-bind="controls.ARMAPESSWPESSZIPCODE_.props"
+								:id="getControlId(controls.ARMAPESSWPESSZIPCODE_)"
 								:model-value="model.ValZipcode.value"
 								@change="model.ValZipcode.fnUpdateValueOnChange" />
 						</base-input-structure>
@@ -274,13 +291,15 @@
 						<base-input-structure
 							v-if="controls.ARMAPESSWPESSCOUNTRY_.isVisible"
 							class="i-text"
-							v-bind="controls.ARMAPESSWPESSCOUNTRY_"
+							v-bind="controls.ARMAPESSWPESSCOUNTRY_.wrapperProps"
+							:id="getControlId(controls.ARMAPESSWPESSCOUNTRY_)"
 							v-on="controls.ARMAPESSWPESSCOUNTRY_.handlers"
 							:loading="controls.ARMAPESSWPESSCOUNTRY_.props.loading"
 							:reporting-mode-on="reportingModeCAV"
 							:suggestion-mode-on="suggestionModeOn">
 							<q-text-field
 								v-bind="controls.ARMAPESSWPESSCOUNTRY_.props"
+								:id="getControlId(controls.ARMAPESSWPESSCOUNTRY_)"
 								@blur="onBlur(controls.ARMAPESSWPESSCOUNTRY_, model.ValCountry.value)"
 								@change="model.ValCountry.fnUpdateValueOnChange" />
 						</base-input-structure>
@@ -293,14 +312,16 @@
 						<base-input-structure
 							v-if="controls.ARMAPESSWPESSEMAIL___.isVisible"
 							class="i-text"
-							v-bind="controls.ARMAPESSWPESSEMAIL___"
+							v-bind="controls.ARMAPESSWPESSEMAIL___.wrapperProps"
+							:id="getControlId(controls.ARMAPESSWPESSEMAIL___)"
 							v-on="controls.ARMAPESSWPESSEMAIL___.handlers"
 							:loading="controls.ARMAPESSWPESSEMAIL___.props.loading"
 							:reporting-mode-on="reportingModeCAV"
 							:suggestion-mode-on="suggestionModeOn">
 							<q-mask
 								v-if="controls.ARMAPESSWPESSEMAIL___.isVisible"
-								v-bind="controls.ARMAPESSWPESSEMAIL___"
+								v-bind="controls.ARMAPESSWPESSEMAIL___.props"
+								:id="getControlId(controls.ARMAPESSWPESSEMAIL___)"
 								:model-value="model.ValEmail.value"
 								@change="model.ValEmail.fnUpdateValueOnChange" />
 						</base-input-structure>
@@ -313,7 +334,8 @@
 						<base-input-structure
 							v-if="controls.ARMAPESSWPESSCELLPHON.isVisible"
 							class="i-text"
-							v-bind="controls.ARMAPESSWPESSCELLPHON"
+							v-bind="controls.ARMAPESSWPESSCELLPHON.wrapperProps"
+							:id="getControlId(controls.ARMAPESSWPESSCELLPHON)"
 							v-on="controls.ARMAPESSWPESSCELLPHON.handlers"
 							:loading="controls.ARMAPESSWPESSCELLPHON.props.loading"
 							:reporting-mode-on="reportingModeCAV"
@@ -321,6 +343,7 @@
 							<q-numeric-input
 								v-if="controls.ARMAPESSWPESSCELLPHON.isVisible"
 								v-bind="controls.ARMAPESSWPESSCELLPHON.props"
+								:id="getControlId(controls.ARMAPESSWPESSCELLPHON)"
 								@update:model-value="model.ValCellphon.fnUpdateValue" />
 						</base-input-structure>
 					</q-col>
@@ -332,7 +355,8 @@
 						<base-input-structure
 							v-if="controls.ARMAPESSWAREHWAREHDES.isVisible"
 							class="i-text"
-							v-bind="controls.ARMAPESSWAREHWAREHDES"
+							v-bind="controls.ARMAPESSWAREHWAREHDES.wrapperProps"
+							:id="getControlId(controls.ARMAPESSWAREHWAREHDES)"
 							v-on="controls.ARMAPESSWAREHWAREHDES.handlers"
 							:loading="controls.ARMAPESSWAREHWAREHDES.props.loading"
 							:reporting-mode-on="reportingModeCAV"
@@ -340,6 +364,7 @@
 							<q-lookup
 								v-if="controls.ARMAPESSWAREHWAREHDES.isVisible"
 								v-bind="controls.ARMAPESSWAREHWAREHDES.props"
+								:id="getControlId(controls.ARMAPESSWAREHWAREHDES)"
 								v-on="controls.ARMAPESSWAREHWAREHDES.handlers" />
 							<q-see-more-armapesswarehwarehdes
 								v-if="controls.ARMAPESSWAREHWAREHDES.seeMoreIsVisible"
@@ -352,7 +377,7 @@
 		</q-container>
 	</teleport>
 
-	<hr v-if="!isPopup && showFormFooter" />
+	<q-divider v-if="!isPopup && showFormFooter" />
 
 	<teleport
 		v-if="formModalIsReady && showFormFooter"
@@ -761,8 +786,8 @@
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						maxLength: 9,
 						arrayName: 'SEXO',
-						helpShortItem: '',
-						helpDetailedItem: '',
+						helpShortItem: 'None',
+						helpDetailedItem: 'None',
 						controlLimits: [
 						],
 					}, this),
@@ -1290,7 +1315,6 @@
 
 				this.afterControlUpdate(controlField, fieldValue)
 			},
-
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
 // USE /[MANUAL GQT FUNCTIONS_JS ARMAPESS]/
 // eslint-disable-next-line

@@ -47,7 +47,7 @@ namespace CSGenio.business
 			Qfield = new Field(info.Alias, "codmovim", FieldType.KEY_GUID);
 			Qfield.FieldDescription = "";
 			Qfield.FieldSize =  36;
-			Qfield.CavDesignation = "";
+			Qfield.VisivelCav = CavVisibilityType.Nunca;
 
 			Qfield.Dupmsg = "";
 			info.RegisterFieldDB(Qfield);
@@ -67,7 +67,7 @@ namespace CSGenio.business
 			Qfield = new Field(info.Alias, "codequip", FieldType.KEY_GUID);
 			Qfield.FieldDescription = ">EQUIPMENT";
 			Qfield.FieldSize =  36;
-			Qfield.CavDesignation = "_EQUIPMENT12605";
+			Qfield.VisivelCav = CavVisibilityType.Nunca;
 
 			Qfield.Dupmsg = "";
 			info.RegisterFieldDB(Qfield);
@@ -76,7 +76,7 @@ namespace CSGenio.business
 			Qfield = new Field(info.Alias, "codrooms", FieldType.KEY_GUID);
 			Qfield.FieldDescription = ">ROOM";
 			Qfield.FieldSize =  36;
-			Qfield.CavDesignation = "_ROOM54790";
+			Qfield.VisivelCav = CavVisibilityType.Nunca;
 
 			Qfield.Dupmsg = "";
 			info.RegisterFieldDB(Qfield);
@@ -137,16 +137,16 @@ namespace CSGenio.business
 			info.Pathways = new Dictionary<string, string>(14);
 			info.Pathways.Add("rooms","rooms");
 			info.Pathways.Add("equip","equip");
-			info.Pathways.Add("wareh","equip");
 			info.Pathways.Add("decom","equip");
+			info.Pathways.Add("wareh","equip");
 			info.Pathways.Add("tpequ","equip");
 			info.Pathways.Add("room1","equip");
-			info.Pathways.Add("cmpny","equip");
 			info.Pathways.Add("item","equip");
+			info.Pathways.Add("cmpny","equip");
 			info.Pathways.Add("pess1","equip");
 			info.Pathways.Add("famil","equip");
-			info.Pathways.Add("cntry","equip");
 			info.Pathways.Add("gitem","equip");
+			info.Pathways.Add("cntry","equip");
 			info.Pathways.Add("stake","equip");
 			info.Pathways.Add("cate2","equip");
 		}
@@ -175,6 +175,7 @@ namespace CSGenio.business
 				null,
 
 	"today", true));
+
 
 
 			info.InternalOperationFields = new string[] {

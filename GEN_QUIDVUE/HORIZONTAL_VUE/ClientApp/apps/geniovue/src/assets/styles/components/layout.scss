@@ -6,6 +6,10 @@
 #form-container {
 	padding-right: 15px;
 	padding-left: 15px;
+
+	> .q-container {
+		padding: 0;
+	}
 }
 
 .form-flow {
@@ -60,7 +64,7 @@
 	&:not(.control-dynamic-group):not(:has(.c-groupbox)) {
 		align-self: flex-start;
 
-		&:has(.i-button, .i-checkbox) {
+		&:has(.i-button) {
 			align-self: flex-end;
 		}
 
@@ -126,11 +130,6 @@
 }
 
 .control-row-group:has(.control-join-group .i-text .q-help__subtext) {
-	.control-join-group:not(.control-dynamic-group):not(:has(.c-groupbox)):has(.i-checkbox) {
-		align-self: flex-start;
-		margin-top: calc(1.5 * 0.9rem + 0.9rem);
-	}
-
 	.control-join-group:not(.control-dynamic-group):not(:has(.c-groupbox)):has(.i-button) {
 		align-self: flex-start;
 		margin-top: calc(1.5 * 0.9rem);
@@ -209,32 +208,27 @@
 		}
 	}
 
-	&__footer .actions {
-		display: flex;
-		gap: 0.5rem;
-	}
-
-	&-form, &-see-more {
+	&:not(.q-dialog-message) {
 		.q-dialog__header {
 			border-bottom: 1px solid $light;
 			padding-bottom: 1rem;
 		}
+
 		.q-dialog__footer {
 			border-top: 1px solid $light;
 			padding-top: 1rem;
 
 			&-buttons {
-				justify-content: left;
+				@if $btn-align-right {
+					justify-content: flex-end;
+				} @else {
+					justify-content: flex-start;
+				}
 			}
-		}
-	}
 
-	&-see-more {
-		.q-dialog__footer {
-			margin-top: 0;
-
-			&-buttons {
-				justify-content: left;
+			.actions {
+				display: flex;
+				gap: 0.5rem;
 			}
 		}
 	}
@@ -253,7 +247,6 @@
 
 .q-row {
 	--q-row-gutter: var(--q-spacing);
-	flex: 1;
 }
 
 .q-col {
@@ -261,27 +254,33 @@
 	gap: var(--q-spacing);
 	align-items: end;
 
-	// make label content in the same line
+	&-auto {
+		flex: 0 0 auto;
+		width: auto;
+		max-width: 100%;
+	}
+
+	// Make label content in the same line
 	.label-container {
 		display: flex;
 		align-items: center;
 		gap: var(--q-spacing);
 	}
 
-	// makes containers inside q-cols have the height of the col
+	// Make containers inside q-cols have the height of the col
 	.container-fluid,
 	.q-table-list {
 		height: 100%;
 	}
 
-	//Make groupboxes ocupy the whole container (if whole line the q-col container has 100% width as well)
+	// Make groups ocupy the whole container (if whole line the q-col container has 100% width as well)
 	.c-groupbox {
 		width: 100%;
-    height: 100%;
+		height: 100%;
 
-    > .q-container {
-      height: 100%;
-    }
+		> .q-container {
+			height: 100%;
+		}
 	}
 }
 

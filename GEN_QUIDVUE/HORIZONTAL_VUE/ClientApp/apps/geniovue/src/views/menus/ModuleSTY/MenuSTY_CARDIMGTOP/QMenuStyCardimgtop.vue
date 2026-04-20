@@ -3,22 +3,23 @@
 		v-if="menuModalIsReady"
 		:to="`#${uiContainersId.body}`"
 		:disabled="!menuInfo.isPopup">
-		<form
+		<div
 			class="form-horizontal"
 			@submit.prevent>
 			<q-row-container>
 				<q-table
 					v-bind="controls.menu"
 					v-on="controls.menu.handlers">
+					<template #header>
+						<q-table-config
+							:table-ctrl="controls.menu"
+							v-on="controls.menu.handlers">
+						</q-table-config>
+					</template>
 					<!-- USE /[MANUAL GQT CUSTOM_TABLE STY_Menu_CARDIMGTOP]/ -->
 				</q-table>
-
-				<q-table-extra-extension
-					:list-ctrl="controls.menu"
-					:filter-operators="controls.menu.filterOperators"
-					v-on="controls.menu.handlers" />
 			</q-row-container>
-		</form>
+		</div>
 	</teleport>
 
 	<teleport
@@ -176,7 +177,6 @@
 								scrollData: 9,
 								export: 1,
 								array: computed(() => new qProjArrays.QArraySexo(vm.$getResource).elements),
-								arrayType: qProjArrays.QArraySexo.type,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.NumericColumn({
 								order: 4,
@@ -303,7 +303,6 @@
 							searchBarConfig: {
 								visibility: true
 							},
-							filtersVisible: true,
 							allowColumnFilters: true,
 							allowColumnSort: true,
 							crudActions: [
@@ -313,9 +312,7 @@
 									id: 'insert',
 									name: 'insert',
 									title: computed(() => this.Resources.INSERIR43365),
-									icon: {
-										icon: 'add'
-									},
+									icon: { icon: 'add' },
 									isInReadOnly: true,
 									params: {
 										action: vm.openFormAction,
@@ -364,7 +361,7 @@
 								sortOrder: 'asc'
 							}
 						},
-						globalEvents: ['changed-WPESS', 'changed-WAREH'],
+						globalEvents: ['changed-WAREH', 'changed-WPESS'],
 						uuid: '0e99ffff-7adf-43a1-9968-81840cdfb35c',
 						allSelectedRows: 'false',
 						viewModes: [
@@ -403,9 +400,9 @@
 									text: {
 										allowsMultiple: true,
 										sources: [
-											'WPESS.EMAIL',
-											'WPESS.NFUNC',
 											'WPESS.NACIONAL',
+											'WPESS.NFUNC',
+											'WPESS.EMAIL',
 										]
 									},
 									image: {

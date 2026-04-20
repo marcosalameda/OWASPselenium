@@ -186,8 +186,7 @@ namespace GenioMVC.ViewModels.Dilin
 			crs.SubSets.Add(subfilters);
 
 			// Form field filters
-			if (tableConfig.FieldFilters != null)
-				crs.SubSets.Add(ProcessFieldFilters(tableConfig.FieldFilters));
+			crs.SubSets.Add(ProcessFieldFilters(tableConfig.GlobalFilters));
 
 
 			crs.SubSets.Add(GetCustomizedStaticLimits(StaticLimits));
@@ -307,12 +306,11 @@ namespace GenioMVC.ViewModels.Dilin
 
 			FieldRef[] fields = new FieldRef[] { CSGenioAdispa.FldCoddispa, CSGenioAdispa.FldZzstate, CSGenioAdispa.FldDispanr };
 
-
-			// Totalizers
-			List<FieldRef> fieldsWithTotalizers = fields.Where(field => tableConfig.TotalizerColumns.Contains(field.FullName)).ToList();
+			// List of column names that should display totalized (aggregated) values.
+			List<string> totalizerColumns = [];
+			List<FieldRef> fieldsWithTotalizers = [.. fields.Where(field => totalizerColumns.Contains(field.FullName))];
 
 			FieldRef firstVisibleColumn = null;
-
 			if (sorts.Count == 0)
 			{
 				firstVisibleColumn = tableConfig?.GetFirstVisibleColumn(TableAlias);
@@ -490,7 +488,7 @@ namespace GenioMVC.ViewModels.Dilin
 
 		private static readonly string[] _fieldsToSerialize =
 		[
-			"Dispa", "Dispa.ValCoddispa", "Dispa.ValZzstate", "Dispa.ValDispanr", "Dispa.ValCoddisst", "Dispa.ValCodentit", "Dispa.ValCodperso"
+			"Dispa", "Dispa.ValCoddispa", "Dispa.ValZzstate", "Dispa.ValDispanr", "Dispa.ValCodentit", "Dispa.ValCodperso"
 		];
 
 		private static readonly List<TableSearchColumn> _searchableColumns =

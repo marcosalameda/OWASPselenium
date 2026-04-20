@@ -8,12 +8,13 @@
 		<div
 			v-if="showFormHeader"
 			class="c-action-bar">
-			<h1
+			<component
 				v-if="formControl.uiComponents.header && formInfo.designation"
+				:is="topHeadingTag"
 				:id="formTitleId"
 				class="form-header">
 				{{ formInfo.designation }}
-			</h1>
+			</component>
 
 			<div class="c-action-bar__menu">
 				<template
@@ -39,13 +40,10 @@
 								@click="btn.action">
 								<template v-if="btn.icon">
 									<q-badge-indicator
-										v-if="btn.badge && btn.badge.isVisible"
-										:color="btn.badge.color">
+										:enabled="btn.badge?.isVisible ?? false"
+										:color="btn.badge?.color">
 										<q-icon v-bind="btn.icon" />
 									</q-badge-indicator>
-									<q-icon
-										v-else
-										v-bind="btn.icon" />
 								</template>
 							</q-toggle-group-item>
 						</template>
@@ -57,6 +55,7 @@
 		<q-container
 			fluid
 			data-key="WID_COLA"
+			:data-identifier="primaryKeyValue"
 			:data-loading="!formInitialDataLoaded || !isActiveForm">
 			<template v-if="formControl.initialized && showFormBody">
 				<q-row v-if="controls.WID_COLACMPNYLOGO____.isVisible || controls.WID_COLACMPNYDESIGNAT.isVisible">
@@ -66,7 +65,8 @@
 						<base-input-structure
 							v-if="controls.WID_COLACMPNYLOGO____.isVisible"
 							class="q-image"
-							v-bind="controls.WID_COLACMPNYLOGO____"
+							v-bind="controls.WID_COLACMPNYLOGO____.wrapperProps"
+							:id="getControlId(controls.WID_COLACMPNYLOGO____)"
 							v-on="controls.WID_COLACMPNYLOGO____.handlers"
 							:loading="controls.WID_COLACMPNYLOGO____.props.loading"
 							:reporting-mode-on="reportingModeCAV"
@@ -74,6 +74,7 @@
 							<q-image
 								v-if="controls.WID_COLACMPNYLOGO____.isVisible"
 								v-bind="controls.WID_COLACMPNYLOGO____.props"
+								:id="getControlId(controls.WID_COLACMPNYLOGO____)"
 								v-on="controls.WID_COLACMPNYLOGO____.handlers" />
 						</base-input-structure>
 					</q-col>
@@ -83,13 +84,15 @@
 						<base-input-structure
 							v-if="controls.WID_COLACMPNYDESIGNAT.isVisible"
 							class="i-text"
-							v-bind="controls.WID_COLACMPNYDESIGNAT"
+							v-bind="controls.WID_COLACMPNYDESIGNAT.wrapperProps"
+							:id="getControlId(controls.WID_COLACMPNYDESIGNAT)"
 							v-on="controls.WID_COLACMPNYDESIGNAT.handlers"
 							:loading="controls.WID_COLACMPNYDESIGNAT.props.loading"
 							:reporting-mode-on="reportingModeCAV"
 							:suggestion-mode-on="suggestionModeOn">
 							<q-text-field
 								v-bind="controls.WID_COLACMPNYDESIGNAT.props"
+								:id="getControlId(controls.WID_COLACMPNYDESIGNAT)"
 								@blur="onBlur(controls.WID_COLACMPNYDESIGNAT, model.ValDesignat.value)"
 								@change="model.ValDesignat.fnUpdateValueOnChange" />
 						</base-input-structure>
@@ -100,12 +103,13 @@
 						<q-table
 							v-if="controls.WID_COLAPSEUDPESSLIST.isVisible"
 							v-bind="controls.WID_COLAPSEUDPESSLIST"
+							:id="getControlId(controls.WID_COLAPSEUDPESSLIST)"
 							v-on="controls.WID_COLAPSEUDPESSLIST.handlers">
-						<q-table-extra-extension
-							v-if="controls.WID_COLAPSEUDPESSLIST.isVisible"
-							:list-ctrl="controls.WID_COLAPSEUDPESSLIST"
-							:filter-operators="controls.WID_COLAPSEUDPESSLIST.filterOperators"
-							v-on="controls.WID_COLAPSEUDPESSLIST.handlers" />
+							<template #header>
+								<q-table-config
+									:table-ctrl="controls.WID_COLAPSEUDPESSLIST"
+									v-on="controls.WID_COLAPSEUDPESSLIST.handlers" />
+							</template>
 							<!-- USE /[MANUAL GQT CUSTOM_TABLE WID_COLAPSEUDPESSLIST]/ -->
 						</q-table>
 					</q-col>
@@ -464,6 +468,7 @@
 						label: computed(() => this.Resources.PEOPLE34206),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
+						headerLevel: computed(() => this.baseHeadingLevel + 1),
 						controller: 'CMPNY',
 						action: 'Wid_cola_ValPesslist',
 						hasDependencies: false,
@@ -477,6 +482,7 @@
 								label: computed(() => this.Resources.NAME31974),
 								dataLength: 85,
 								scrollData: 30,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.ImageColumn({
 								order: 2,
@@ -488,6 +494,7 @@
 								scrollData: 3,
 								sortable: false,
 								searchable: false,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 3,
@@ -497,6 +504,7 @@
 								label: computed(() => this.Resources.EMAIL25170),
 								dataLength: 254,
 								scrollData: 30,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 4,
@@ -506,6 +514,7 @@
 								label: computed(() => this.Resources.CATEGORY18978),
 								dataLength: 50,
 								scrollData: 30,
+								export: 1,
 								pkColumn: 'ValCodcateg',
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 						],
@@ -524,7 +533,6 @@
 							searchBarConfig: {
 								visibility: false
 							},
-							filtersVisible: false,
 							allowColumnFilters: false,
 							allowColumnSort: true,
 							generalCustomActions: [
@@ -546,7 +554,7 @@
 								sortOrder: 'asc'
 							}
 						},
-						globalEvents: ['changed-PESSO', 'changed-CATEG', 'changed-REGI1', 'changed-CNTRY', 'changed-CMPNY', 'changed-PAIS1'],
+						globalEvents: ['changed-REGI1', 'changed-CNTRY', 'changed-PESSO', 'changed-CATEG', 'changed-PAIS1', 'changed-CMPNY'],
 						uuid: 'Wid_cola_ValPesslist',
 						allSelectedRows: 'false',
 						viewModes: [
@@ -1000,7 +1008,6 @@
 
 				this.afterControlUpdate(controlField, fieldValue)
 			},
-
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
 // USE /[MANUAL GQT FUNCTIONS_JS WID_COLA]/
 // eslint-disable-next-line

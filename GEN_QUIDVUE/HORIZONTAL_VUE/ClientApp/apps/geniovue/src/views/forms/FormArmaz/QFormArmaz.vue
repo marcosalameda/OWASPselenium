@@ -9,12 +9,13 @@
 			<div
 				v-if="showFormHeader"
 				class="c-action-bar">
-				<h1
+				<component
 					v-if="formControl.uiComponents.header && formInfo.designation"
+					:is="topHeadingTag"
 					:id="formTitleId"
 					class="form-header">
 					{{ formInfo.designation }}
-				</h1>
+				</component>
 
 				<div class="c-action-bar__menu">
 					<template
@@ -40,13 +41,10 @@
 									@click="btn.action">
 									<template v-if="btn.icon">
 										<q-badge-indicator
-											v-if="btn.badge && btn.badge.isVisible"
-											:color="btn.badge.color">
+											:enabled="btn.badge?.isVisible ?? false"
+											:color="btn.badge?.color">
 											<q-icon v-bind="btn.icon" />
 										</q-badge-indicator>
-										<q-icon
-											v-else
-											v-bind="btn.icon" />
 									</template>
 								</q-toggle-group-item>
 							</template>
@@ -97,6 +95,7 @@
 		<q-container
 			fluid
 			data-key="ARMAZ"
+			:data-identifier="primaryKeyValue"
 			:data-loading="!formInitialDataLoaded || !isActiveForm">
 			<template v-if="formControl.initialized && showFormBody">
 				<q-row v-if="controls.ARMAZ___WAREHWAREHCOD.isVisible || controls.ARMAZ___WAREHWAREHDES.isVisible">
@@ -106,13 +105,15 @@
 						<base-input-structure
 							v-if="controls.ARMAZ___WAREHWAREHCOD.isVisible"
 							class="i-text"
-							v-bind="controls.ARMAZ___WAREHWAREHCOD"
+							v-bind="controls.ARMAZ___WAREHWAREHCOD.wrapperProps"
+							:id="getControlId(controls.ARMAZ___WAREHWAREHCOD)"
 							v-on="controls.ARMAZ___WAREHWAREHCOD.handlers"
 							:loading="controls.ARMAZ___WAREHWAREHCOD.props.loading"
 							:reporting-mode-on="reportingModeCAV"
 							:suggestion-mode-on="suggestionModeOn">
 							<q-text-field
 								v-bind="controls.ARMAZ___WAREHWAREHCOD.props"
+								:id="getControlId(controls.ARMAZ___WAREHWAREHCOD)"
 								@blur="onBlur(controls.ARMAZ___WAREHWAREHCOD, model.ValWarehcod.value)"
 								@change="model.ValWarehcod.fnUpdateValueOnChange" />
 						</base-input-structure>
@@ -123,13 +124,15 @@
 						<base-input-structure
 							v-if="controls.ARMAZ___WAREHWAREHDES.isVisible"
 							class="i-text"
-							v-bind="controls.ARMAZ___WAREHWAREHDES"
+							v-bind="controls.ARMAZ___WAREHWAREHDES.wrapperProps"
+							:id="getControlId(controls.ARMAZ___WAREHWAREHDES)"
 							v-on="controls.ARMAZ___WAREHWAREHDES.handlers"
 							:loading="controls.ARMAZ___WAREHWAREHDES.props.loading"
 							:reporting-mode-on="reportingModeCAV"
 							:suggestion-mode-on="suggestionModeOn">
 							<q-text-field
 								v-bind="controls.ARMAZ___WAREHWAREHDES.props"
+								:id="getControlId(controls.ARMAZ___WAREHWAREHDES)"
 								@blur="onBlur(controls.ARMAZ___WAREHWAREHDES, model.ValWarehdes.value)"
 								@change="model.ValWarehdes.fnUpdateValueOnChange" />
 						</base-input-structure>
@@ -142,7 +145,8 @@
 						<base-input-structure
 							v-if="controls.ARMAZ___WAREHACTIVITY.isVisible"
 							class="i-text"
-							v-bind="controls.ARMAZ___WAREHACTIVITY"
+							v-bind="controls.ARMAZ___WAREHACTIVITY.wrapperProps"
+							:id="getControlId(controls.ARMAZ___WAREHACTIVITY)"
 							v-on="controls.ARMAZ___WAREHACTIVITY.handlers"
 							:loading="controls.ARMAZ___WAREHACTIVITY.props.loading"
 							:reporting-mode-on="reportingModeCAV"
@@ -150,6 +154,7 @@
 							<q-switch
 								v-if="controls.ARMAZ___WAREHACTIVITY.isVisible"
 								v-bind="controls.ARMAZ___WAREHACTIVITY.props"
+								:id="getControlId(controls.ARMAZ___WAREHACTIVITY)"
 								v-on="controls.ARMAZ___WAREHACTIVITY.handlers" />
 						</base-input-structure>
 					</q-col>
@@ -158,8 +163,9 @@
 						cols="auto">
 						<base-input-structure
 							v-if="controls.ARMAZ___WAREHSHOWRECO.isVisible"
-							class="i-checkbox"
-							v-bind="controls.ARMAZ___WAREHSHOWRECO"
+							class="i-text"
+							v-bind="controls.ARMAZ___WAREHSHOWRECO.wrapperProps"
+							:id="getControlId(controls.ARMAZ___WAREHSHOWRECO)"
 							v-on="controls.ARMAZ___WAREHSHOWRECO.handlers"
 							:loading="controls.ARMAZ___WAREHSHOWRECO.props.loading"
 							:reporting-mode-on="reportingModeCAV"
@@ -168,6 +174,7 @@
 								<q-checkbox
 									v-if="controls.ARMAZ___WAREHSHOWRECO.isVisible"
 									v-bind="controls.ARMAZ___WAREHSHOWRECO.props"
+									:id="getControlId(controls.ARMAZ___WAREHSHOWRECO)"
 									v-on="controls.ARMAZ___WAREHSHOWRECO.handlers" />
 							</template>
 						</base-input-structure>
@@ -180,21 +187,22 @@
 						<q-table
 							v-if="controls.ARMAZ___PSEUDPESSARMA.isVisible"
 							v-bind="controls.ARMAZ___PSEUDPESSARMA"
+							:id="getControlId(controls.ARMAZ___PSEUDPESSARMA)"
 							v-on="controls.ARMAZ___PSEUDPESSARMA.handlers">
+							<template #header>
+								<q-table-config
+									:table-ctrl="controls.ARMAZ___PSEUDPESSARMA"
+									v-on="controls.ARMAZ___PSEUDPESSARMA.handlers" />
+							</template>
 							<!-- USE /[MANUAL GQT CUSTOM_TABLE ARMAZ___PSEUDPESSARMA]/ -->
 						</q-table>
-						<q-table-extra-extension
-							v-if="controls.ARMAZ___PSEUDPESSARMA.isVisible"
-							:list-ctrl="controls.ARMAZ___PSEUDPESSARMA"
-							:filter-operators="controls.ARMAZ___PSEUDPESSARMA.filterOperators"
-							v-on="controls.ARMAZ___PSEUDPESSARMA.handlers" />
 					</q-col>
 				</q-row>
 			</template>
 		</q-container>
 	</teleport>
 
-	<hr v-if="!isPopup && showFormFooter" />
+	<q-divider v-if="!isPopup && showFormFooter" />
 
 	<teleport
 		v-if="formModalIsReady && showFormFooter"
@@ -594,10 +602,11 @@
 					ARMAZ___PSEUDPESSARMA: new fieldControlClass.TableListControl({
 						id: 'ARMAZ___PSEUDPESSARMA',
 						name: 'PESSARMA',
-						size: '',
+						size: 'xxlarge',
 						label: computed(() => this.Resources.EMPLOYEE55452),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
+						headerLevel: computed(() => this.baseHeadingLevel + 1),
 						controller: 'WAREH',
 						action: 'Armaz_ValPessarma',
 						hasDependencies: false,
@@ -623,7 +632,6 @@
 								scrollData: 9,
 								export: 1,
 								array: computed(() => new qProjArrays.QArraySexo(vm.$getResource).elements),
-								arrayType: qProjArrays.QArraySexo.type,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.NumericColumn({
 								order: 3,
@@ -652,7 +660,6 @@
 							searchBarConfig: {
 								visibility: false
 							},
-							filtersVisible: false,
 							allowColumnFilters: false,
 							allowColumnSort: true,
 							crudActions: [
@@ -726,9 +733,7 @@
 									id: 'insert',
 									name: 'insert',
 									title: computed(() => this.Resources.INSERIR43365),
-									icon: {
-										icon: 'add'
-									},
+									icon: { icon: 'add' },
 									isInReadOnly: false,
 									params: {
 										action: vm.openFormAction,
@@ -795,7 +800,7 @@
 						actionIDs: [
 							'ARMAZ___PSEUDEXPOSETB',
 						],
-						globalEvents: ['changed-WPESS', 'changed-WAREH'],
+						globalEvents: ['changed-WAREH', 'changed-WPESS'],
 						uuid: 'Armaz_ValPessarma',
 						allSelectedRows: 'false',
 						controlLimits: [
@@ -1224,7 +1229,6 @@
 
 				this.afterControlUpdate(controlField, fieldValue)
 			},
-
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
 // USE /[MANUAL GQT FUNCTIONS_JS ARMAZ]/
 // eslint-disable-next-line

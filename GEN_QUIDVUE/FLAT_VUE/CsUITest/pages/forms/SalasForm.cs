@@ -10,13 +10,13 @@ public class SalasForm : Form
 	/// <summary>
 	/// Room No.
 	/// </summary>
-	public BaseInputControl RoomsRoomnr => new BaseInputControl(driver, ContainerLocator, "container-SALAS___ROOMSROOMNR__", "#SALAS___ROOMSROOMNR__");
+	public BaseInputControl RoomsRoomnr => new BaseInputControl(driver, ContainerLocator, "container-SALAS___ROOMSROOMNR__" + IdSuffix, "#SALAS___ROOMSROOMNR__" + IdSuffix);
 
 	/// <summary>
 	/// Room Designation
 	/// </summary>
-	public BaseInputControl RoomsDesignat => new BaseInputControl(driver, ContainerLocator, "container-SALAS___ROOMSDESIGNAT", "#SALAS___ROOMSDESIGNAT");
+	public BaseInputControl RoomsDesignat => new BaseInputControl(driver, ContainerLocator, "container-SALAS___ROOMSDESIGNAT" + IdSuffix, "#SALAS___ROOMSDESIGNAT" + IdSuffix);
 
-	public SalasForm(IWebDriver driver, FORM_MODE mode, By? containerLocator = null)
-		: base(driver, mode, "SALAS", containerLocator: containerLocator) { }
+	public SalasForm(IWebDriver driver, FORM_MODE mode, By? containerLocator = null, bool usePkInId = false)
+		: base(driver, mode, "SALAS", containerLocator: containerLocator, usePkInId: usePkInId) { }
 }

@@ -3,22 +3,23 @@
 		v-if="menuModalIsReady"
 		:to="`#${uiContainersId.body}`"
 		:disabled="!menuInfo.isPopup">
-		<form
+		<div
 			class="form-horizontal"
 			@submit.prevent>
 			<q-row-container>
 				<q-table
 					v-bind="controls.menu"
 					v-on="controls.menu.handlers">
+					<template #header>
+						<q-table-config
+							:table-ctrl="controls.menu"
+							v-on="controls.menu.handlers">
+						</q-table-config>
+					</template>
 					<!-- USE /[MANUAL GQT CUSTOM_TABLE WMS_Menu_121]/ -->
 				</q-table>
-
-				<q-table-extra-extension
-					:list-ctrl="controls.menu"
-					:filter-operators="controls.menu.filterOperators"
-					v-on="controls.menu.handlers" />
 			</q-row-container>
-		</form>
+		</div>
 	</teleport>
 
 	<teleport
@@ -232,7 +233,6 @@
 							searchBarConfig: {
 								visibility: true
 							},
-							filtersVisible: true,
 							allowColumnFilters: true,
 							allowColumnSort: true,
 							crudActions: [
@@ -306,9 +306,7 @@
 									id: 'insert',
 									name: 'insert',
 									title: computed(() => this.Resources.INSERIR43365),
-									icon: {
-										icon: 'add'
-									},
+									icon: { icon: 'add' },
 									isInReadOnly: true,
 									params: {
 										action: vm.openFormAction,
@@ -362,22 +360,20 @@
 								id: 'filter_WMS_Menu_121_VERIFICATI',
 								isMultiple: false,
 								items: [
-									{
-										id: 'filter_WMS_Menu_121_VERIFICATI_1',
-										value: computed(() => this.Resources.TO_CHECK57511),
-										key: '1'
-									},
-									{
-										id: 'filter_WMS_Menu_121_VERIFICATI_2',
-										value: computed(() => this.Resources.CHECKED31708),
-										key: '2'
-									},
 								],
-								selected: '1',
-								default: '1'
+								selected: undefined,
+								default: undefined
+							},
+							{
+								id: 'filter_WMS_Menu_121_VERIFICATI',
+								isMultiple: false,
+								items: [
+								],
+								selected: undefined,
+								default: undefined
 							},
 						],
-						globalEvents: ['changed-RECEI', 'changed-ENTIT'],
+						globalEvents: ['changed-ENTIT', 'changed-RECEI'],
 						uuid: 'd5a95839-cfc6-40f7-89d3-b36149d26ab4',
 						allSelectedRows: 'false',
 						headerLevel: 1,

@@ -50,8 +50,10 @@ import {
 	QDocument,
 	QFilter,
 	QFilterCheckbox,
+	QFilterDate,
 	QFilterDropdown,
-	QFilterRadio
+	QFilterRadio,
+	QFilterText
 } from '@quidgest/clientapp/components'
 
 export const components = {
@@ -103,8 +105,10 @@ export const components = {
 	QDocument,
 	QFilter,
 	QFilterCheckbox,
+	QFilterDate,
 	QFilterDropdown,
 	QFilterRadio,
+	QFilterText,
 
 	// Wrapper controls
 	QControlWrapper: defineAsyncComponent(() => import('./ControlWrapper.vue')),
@@ -148,7 +152,6 @@ export const components = {
 	// Render components are used by tables to display fields.
 	// Edit components are used by advanced filters, column filters and editable fields in normal tables
 	// (different than the ones in the editable table lists).
-	QActionList: defineAsyncComponent(() => import('./rendering/QActionList.vue')),
 	QRenderArray: defineAsyncComponent(() => import('./rendering/QRenderArray.vue')),
 	QRenderBoolean: defineAsyncComponent(() => import('./rendering/QRenderBoolean.vue')),
 	QRenderData: defineAsyncComponent(() => import('./rendering/QRenderData.vue')),
@@ -176,12 +179,10 @@ export const components = {
 	QCards: defineAsyncComponent(() => import('./rendering/cards/QCards.vue')),
 	QChart: defineAsyncComponent(() => import('./rendering/chart/QChart.vue')),
 	QCollapsiblerowslist: defineAsyncComponent(() => import('./rendering/QCollapsiblerowslist.vue')),
-	QColorpicker: defineAsyncComponent(() => import('./rendering/QColorpicker.vue')),
 	QMap: defineAsyncComponent(() => import('./rendering/map/QMap.vue')),
 
 	// Table components
 	QTable: defineAsyncComponent(() => import('./table/QTable.vue')),
-	QTableRecordActionsMenu: defineAsyncComponent(() => import('./table/QTableRecordActionsMenu.vue')),
 	QTableSearch: defineAsyncComponent(() => import('./table/QTableSearch.vue')),
 	QTableExport: defineAsyncComponent(() => import('./table/QTableExport.vue')),
 	QTableImport: defineAsyncComponent(() => import('./table/QTableImport.vue')),
@@ -192,11 +193,7 @@ export const components = {
 	QTableChecklistCheckbox: defineAsyncComponent(() => import('./table/QTableChecklistCheckbox.vue')),
 	QTableColumnTotalizers: defineAsyncComponent(() => import('./table/QTableColumnTotalizers.vue')),
 	QTableCurrentFilters: defineAsyncComponent(() => import('./table/QTableCurrentFilters.vue')),
-	QTableActions: defineAsyncComponent(() => import('./table/QTableActions.vue')),
 	QTableConfig: defineAsyncComponent(() => import('./table/QTableConfig.vue')),
-	QTableViews: defineAsyncComponent(() => import('./table/QTableViews.vue')),
-	QTableViewSave: defineAsyncComponent(() => import('./table/QTableViewSave.vue')),
-	QTableExtraExtension: defineAsyncComponent(() => import('./table/QTableExtraExtension.vue')),
 	QTableViewModeConfig: defineAsyncComponent(() => import('./table/QTableViewModeConfig.vue')),
 	QGridTableList: defineAsyncComponent(() => import('./table/QGridTableList.vue')),
 	QCheckListExtension: defineAsyncComponent(() => import('./extensions/CheckListExtension.vue')),
@@ -209,7 +206,7 @@ export const componentNames = Object.keys(components)
 
 export default {
 	install: (app) => {
-		for (let i in components)
+		for (const i in components)
 			app.component(i, components[i])
 	}
 }

@@ -9,12 +9,13 @@
 			<div
 				v-if="showFormHeader"
 				class="c-action-bar">
-				<h1
+				<component
 					v-if="formControl.uiComponents.header && formInfo.designation"
+					:is="topHeadingTag"
 					:id="formTitleId"
 					class="form-header">
 					{{ formInfo.designation }}
-				</h1>
+				</component>
 
 				<div class="c-action-bar__menu">
 					<template
@@ -40,13 +41,10 @@
 									@click="btn.action">
 									<template v-if="btn.icon">
 										<q-badge-indicator
-											v-if="btn.badge && btn.badge.isVisible"
-											:color="btn.badge.color">
+											:enabled="btn.badge?.isVisible ?? false"
+											:color="btn.badge?.color">
 											<q-icon v-bind="btn.icon" />
 										</q-badge-indicator>
-										<q-icon
-											v-else
-											v-bind="btn.icon" />
 									</template>
 								</q-toggle-group-item>
 							</template>
@@ -97,6 +95,7 @@
 		<q-container
 			fluid
 			data-key="DENTR"
+			:data-identifier="primaryKeyValue"
 			:data-loading="!formInitialDataLoaded || !isActiveForm">
 			<template v-if="formControl.initialized && showFormBody">
 				<q-row v-if="controls.DENTR___CNTRYCOUNTRY_.isVisible">
@@ -106,7 +105,8 @@
 						<base-input-structure
 							v-if="controls.DENTR___CNTRYCOUNTRY_.isVisible"
 							class="i-text"
-							v-bind="controls.DENTR___CNTRYCOUNTRY_"
+							v-bind="controls.DENTR___CNTRYCOUNTRY_.wrapperProps"
+							:id="getControlId(controls.DENTR___CNTRYCOUNTRY_)"
 							v-on="controls.DENTR___CNTRYCOUNTRY_.handlers"
 							:loading="controls.DENTR___CNTRYCOUNTRY_.props.loading"
 							:reporting-mode-on="reportingModeCAV"
@@ -114,6 +114,7 @@
 							<q-lookup
 								v-if="controls.DENTR___CNTRYCOUNTRY_.isVisible"
 								v-bind="controls.DENTR___CNTRYCOUNTRY_.props"
+								:id="getControlId(controls.DENTR___CNTRYCOUNTRY_)"
 								v-on="controls.DENTR___CNTRYCOUNTRY_.handlers" />
 							<q-see-more-dentr-cntrycountry
 								v-if="controls.DENTR___CNTRYCOUNTRY_.seeMoreIsVisible"
@@ -129,7 +130,8 @@
 						<base-input-structure
 							v-if="controls.DENTR___CMPNYDESIGNAT.isVisible"
 							class="i-text"
-							v-bind="controls.DENTR___CMPNYDESIGNAT"
+							v-bind="controls.DENTR___CMPNYDESIGNAT.wrapperProps"
+							:id="getControlId(controls.DENTR___CMPNYDESIGNAT)"
 							v-on="controls.DENTR___CMPNYDESIGNAT.handlers"
 							:loading="controls.DENTR___CMPNYDESIGNAT.props.loading"
 							:reporting-mode-on="reportingModeCAV"
@@ -137,6 +139,7 @@
 							<q-lookup
 								v-if="controls.DENTR___CMPNYDESIGNAT.isVisible"
 								v-bind="controls.DENTR___CMPNYDESIGNAT.props"
+								:id="getControlId(controls.DENTR___CMPNYDESIGNAT)"
 								v-on="controls.DENTR___CMPNYDESIGNAT.handlers" />
 							<q-see-more-dentr-cmpnydesignat
 								v-if="controls.DENTR___CMPNYDESIGNAT.seeMoreIsVisible"
@@ -152,7 +155,8 @@
 						<base-input-structure
 							v-if="controls.DENTR___PESSONAME____.isVisible"
 							class="i-text"
-							v-bind="controls.DENTR___PESSONAME____"
+							v-bind="controls.DENTR___PESSONAME____.wrapperProps"
+							:id="getControlId(controls.DENTR___PESSONAME____)"
 							v-on="controls.DENTR___PESSONAME____.handlers"
 							:loading="controls.DENTR___PESSONAME____.props.loading"
 							:reporting-mode-on="reportingModeCAV"
@@ -160,6 +164,7 @@
 							<q-lookup
 								v-if="controls.DENTR___PESSONAME____.isVisible"
 								v-bind="controls.DENTR___PESSONAME____.props"
+								:id="getControlId(controls.DENTR___PESSONAME____)"
 								v-on="controls.DENTR___PESSONAME____.handlers" />
 							<q-see-more-dentr-pessoname
 								v-if="controls.DENTR___PESSONAME____.seeMoreIsVisible"
@@ -175,7 +180,8 @@
 						<base-input-structure
 							v-if="controls.DENTR___WARE1WAREHDES.isVisible"
 							class="i-text"
-							v-bind="controls.DENTR___WARE1WAREHDES"
+							v-bind="controls.DENTR___WARE1WAREHDES.wrapperProps"
+							:id="getControlId(controls.DENTR___WARE1WAREHDES)"
 							v-on="controls.DENTR___WARE1WAREHDES.handlers"
 							:loading="controls.DENTR___WARE1WAREHDES.props.loading"
 							:reporting-mode-on="reportingModeCAV"
@@ -183,6 +189,7 @@
 							<q-lookup
 								v-if="controls.DENTR___WARE1WAREHDES.isVisible"
 								v-bind="controls.DENTR___WARE1WAREHDES.props"
+								:id="getControlId(controls.DENTR___WARE1WAREHDES)"
 								v-on="controls.DENTR___WARE1WAREHDES.handlers" />
 							<q-see-more-dentr-ware1warehdes
 								v-if="controls.DENTR___WARE1WAREHDES.seeMoreIsVisible"
@@ -198,7 +205,8 @@
 						<base-input-structure
 							v-if="controls.DENTR___INDOCDATE____.isVisible"
 							class="i-text"
-							v-bind="controls.DENTR___INDOCDATE____"
+							v-bind="controls.DENTR___INDOCDATE____.wrapperProps"
+							:id="getControlId(controls.DENTR___INDOCDATE____)"
 							v-on="controls.DENTR___INDOCDATE____.handlers"
 							:loading="controls.DENTR___INDOCDATE____.props.loading"
 							:reporting-mode-on="reportingModeCAV"
@@ -206,6 +214,7 @@
 							<q-date-time-picker
 								v-if="controls.DENTR___INDOCDATE____.isVisible"
 								v-bind="controls.DENTR___INDOCDATE____.props"
+								:id="getControlId(controls.DENTR___INDOCDATE____)"
 								:model-value="model.ValDate.value"
 								@reset-icon-click="model.ValDate.fnUpdateValue(model.ValDate.originalValue ?? new Date())"
 								@update:model-value="model.ValDate.fnUpdateValue($event ?? '')" />
@@ -219,7 +228,8 @@
 						<base-input-structure
 							v-if="controls.DENTR___INDOCDOCUMENR.isVisible"
 							class="i-text"
-							v-bind="controls.DENTR___INDOCDOCUMENR"
+							v-bind="controls.DENTR___INDOCDOCUMENR.wrapperProps"
+							:id="getControlId(controls.DENTR___INDOCDOCUMENR)"
 							v-on="controls.DENTR___INDOCDOCUMENR.handlers"
 							:loading="controls.DENTR___INDOCDOCUMENR.props.loading"
 							:reporting-mode-on="reportingModeCAV"
@@ -227,6 +237,7 @@
 							<q-numeric-input
 								v-if="controls.DENTR___INDOCDOCUMENR.isVisible"
 								v-bind="controls.DENTR___INDOCDOCUMENR.props"
+								:id="getControlId(controls.DENTR___INDOCDOCUMENR)"
 								@update:model-value="model.ValDocumenr.fnUpdateValue" />
 						</base-input-structure>
 					</q-col>
@@ -238,7 +249,8 @@
 						<base-input-structure
 							v-if="controls.DENTR___INDOCDHDOCUME.isVisible"
 							class="i-text"
-							v-bind="controls.DENTR___INDOCDHDOCUME"
+							v-bind="controls.DENTR___INDOCDHDOCUME.wrapperProps"
+							:id="getControlId(controls.DENTR___INDOCDHDOCUME)"
 							v-on="controls.DENTR___INDOCDHDOCUME.handlers"
 							:loading="controls.DENTR___INDOCDHDOCUME.props.loading"
 							:reporting-mode-on="reportingModeCAV"
@@ -246,6 +258,7 @@
 							<q-date-time-picker
 								v-if="controls.DENTR___INDOCDHDOCUME.isVisible"
 								v-bind="controls.DENTR___INDOCDHDOCUME.props"
+								:id="getControlId(controls.DENTR___INDOCDHDOCUME)"
 								:model-value="model.ValDhdocume.value"
 								@reset-icon-click="model.ValDhdocume.fnUpdateValue(model.ValDhdocume.originalValue ?? new Date())"
 								@update:model-value="model.ValDhdocume.fnUpdateValue($event ?? '')" />
@@ -259,21 +272,33 @@
 						<q-table
 							v-if="controls.DENTR___PSEUDENTRADAS.isVisible"
 							v-bind="controls.DENTR___PSEUDENTRADAS"
+							:id="getControlId(controls.DENTR___PSEUDENTRADAS)"
 							v-on="controls.DENTR___PSEUDENTRADAS.handlers">
+							<template #header>
+								<q-table-config
+									:table-ctrl="controls.DENTR___PSEUDENTRADAS"
+									v-on="controls.DENTR___PSEUDENTRADAS.handlers" />
+							</template>
+							<template
+								v-if="controls.DENTR___PSEUDENTRADAS.config.hasRowDragAndDrop"
+								#[controls.DENTR___PSEUDENTRADAS.config.defaultColumnSorting.columnName]="{ cellValue, column, row }">
+								<q-edit-numeric
+									:value="cellValue"
+									:table-name="controls.DENTR___PSEUDENTRADAS.config.name"
+									:column-name="column.name"
+									:row-index="row.rowKey"
+									:options="column"
+									@update="controls.DENTR___PSEUDENTRADAS.onTableListRowReorder({ rowKey: row.rowKey, index: $event - 1 })" />
+							</template>
 							<!-- USE /[MANUAL GQT CUSTOM_TABLE DENTR___PSEUDENTRADAS]/ -->
 						</q-table>
-						<q-table-extra-extension
-							v-if="controls.DENTR___PSEUDENTRADAS.isVisible"
-							:list-ctrl="controls.DENTR___PSEUDENTRADAS"
-							:filter-operators="controls.DENTR___PSEUDENTRADAS.filterOperators"
-							v-on="controls.DENTR___PSEUDENTRADAS.handlers" />
 					</q-col>
 				</q-row>
 			</template>
 		</q-container>
 	</teleport>
 
-	<hr v-if="!isPopup && showFormFooter" />
+	<q-divider v-if="!isPopup && showFormFooter" />
 
 	<teleport
 		v-if="formModalIsReady && showFormFooter"
@@ -795,10 +820,11 @@
 					DENTR___PSEUDENTRADAS: new fieldControlClass.TableListControl({
 						id: 'DENTR___PSEUDENTRADAS',
 						name: 'ENTRADAS',
-						size: '',
+						size: 'xxlarge',
 						label: computed(() => this.Resources.ENTRIES32319),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
+						headerLevel: computed(() => this.baseHeadingLevel + 1),
 						controller: 'INDOC',
 						action: 'Dentr_ValEntradas',
 						hasDependencies: false,
@@ -882,7 +908,6 @@
 							searchBarConfig: {
 								visibility: true
 							},
-							filtersVisible: true,
 							allowColumnFilters: true,
 							allowColumnSort: true,
 							crudActions: [
@@ -956,9 +981,7 @@
 									id: 'insert',
 									name: 'insert',
 									title: computed(() => this.Resources.INSERIR43365),
-									icon: {
-										icon: 'add'
-									},
+									icon: { icon: 'add' },
 									isInReadOnly: false,
 									params: {
 										action: vm.openFormAction,
@@ -1478,7 +1501,6 @@
 
 				this.afterControlUpdate(controlField, fieldValue)
 			},
-
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
 // USE /[MANUAL GQT FUNCTIONS_JS DENTR]/
 // eslint-disable-next-line

@@ -83,6 +83,7 @@ export default class ViewModel extends FormViewModelBase
 			field: 'COUNTRY',
 			maxLength: 90,
 			description: computed(() => this.Resources.COUNTRY64133),
+			ignoreFldSubmit: true,
 		}).cloneFrom(values?.TableCntryCountry))
 		this.stopWatchers.push(watch(() => this.TableCntryCountry.value, (newValue, oldValue) => this.onUpdate('cntry.country', this.TableCntryCountry, newValue, oldValue)))
 
@@ -104,6 +105,7 @@ export default class ViewModel extends FormViewModelBase
 			field: 'COUNTRY',
 			maxLength: 90,
 			description: computed(() => this.Resources.COUNTRY64133),
+			ignoreFldSubmit: true,
 		}).cloneFrom(values?.TablePais1Country))
 		this.stopWatchers.push(watch(() => this.TablePais1Country.value, (newValue, oldValue) => this.onUpdate('pais1.country', this.TablePais1Country, newValue, oldValue)))
 	}

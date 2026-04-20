@@ -2,7 +2,7 @@
 	<div
 		class="q-counter-widget"
 		:data-loading="loading">
-		<h5 class="q-counter-widget__title">{{ $props.title }}</h5>
+		<h2 class="q-counter-widget__title">{{ $props.title }}</h2>
 
 		<div class="q-counter-widget__info">
 			<span class="q-counter-widget__value">

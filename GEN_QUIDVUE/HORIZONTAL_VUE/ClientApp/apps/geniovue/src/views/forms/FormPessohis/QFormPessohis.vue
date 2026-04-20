@@ -9,12 +9,13 @@
 			<div
 				v-if="showFormHeader"
 				class="c-action-bar">
-				<h1
+				<component
 					v-if="formControl.uiComponents.header && formInfo.designation"
+					:is="topHeadingTag"
 					:id="formTitleId"
 					class="form-header">
 					{{ formInfo.designation }}
-				</h1>
+				</component>
 
 				<div class="c-action-bar__menu">
 					<template
@@ -40,13 +41,10 @@
 									@click="btn.action">
 									<template v-if="btn.icon">
 										<q-badge-indicator
-											v-if="btn.badge && btn.badge.isVisible"
-											:color="btn.badge.color">
+											:enabled="btn.badge?.isVisible ?? false"
+											:color="btn.badge?.color">
 											<q-icon v-bind="btn.icon" />
 										</q-badge-indicator>
-										<q-icon
-											v-else
-											v-bind="btn.icon" />
 									</template>
 								</q-toggle-group-item>
 							</template>
@@ -97,6 +95,7 @@
 		<q-container
 			fluid
 			data-key="PESSOHIS"
+			:data-identifier="primaryKeyValue"
 			:data-loading="!formInitialDataLoaded || !isActiveForm">
 			<template v-if="formControl.initialized && showFormBody">
 				<q-row v-if="controls.PESSOHISPSEUDFIELD002.isVisible">
@@ -106,14 +105,15 @@
 						<base-input-structure
 							v-if="controls.PESSOHISPSEUDFIELD002.isVisible"
 							class="i-static-text"
-							v-bind="controls.PESSOHISPSEUDFIELD002"
+							v-bind="controls.PESSOHISPSEUDFIELD002.wrapperProps"
+							:id="getControlId(controls.PESSOHISPSEUDFIELD002)"
 							v-on="controls.PESSOHISPSEUDFIELD002.handlers"
 							:loading="controls.PESSOHISPSEUDFIELD002.props.loading"
 							:reporting-mode-on="reportingModeCAV"
 							:suggestion-mode-on="suggestionModeOn">
 							<q-static-text
 								v-if="controls.PESSOHISPSEUDFIELD002.isVisible"
-								id="PESSOHISPSEUDFIELD002"
+								:id="getControlId(controls.PESSOHISPSEUDFIELD002)"
 								:size="controls.PESSOHISPSEUDFIELD002.size"
 								:text="controls.PESSOHISPSEUDFIELD002.label" />
 						</base-input-structure>
@@ -126,7 +126,8 @@
 						<base-input-structure
 							v-if="controls.PESSOHISPESSOIDFUNCIO.isVisible"
 							class="i-text"
-							v-bind="controls.PESSOHISPESSOIDFUNCIO"
+							v-bind="controls.PESSOHISPESSOIDFUNCIO.wrapperProps"
+							:id="getControlId(controls.PESSOHISPESSOIDFUNCIO)"
 							v-on="controls.PESSOHISPESSOIDFUNCIO.handlers"
 							:loading="controls.PESSOHISPESSOIDFUNCIO.props.loading"
 							:reporting-mode-on="reportingModeCAV"
@@ -134,6 +135,7 @@
 							<q-numeric-input
 								v-if="controls.PESSOHISPESSOIDFUNCIO.isVisible"
 								v-bind="controls.PESSOHISPESSOIDFUNCIO.props"
+								:id="getControlId(controls.PESSOHISPESSOIDFUNCIO)"
 								@update:model-value="model.ValIdfuncio.fnUpdateValue" />
 						</base-input-structure>
 					</q-col>
@@ -143,13 +145,15 @@
 						<base-input-structure
 							v-if="controls.PESSOHISPESSONAME____.isVisible"
 							class="i-text"
-							v-bind="controls.PESSOHISPESSONAME____"
+							v-bind="controls.PESSOHISPESSONAME____.wrapperProps"
+							:id="getControlId(controls.PESSOHISPESSONAME____)"
 							v-on="controls.PESSOHISPESSONAME____.handlers"
 							:loading="controls.PESSOHISPESSONAME____.props.loading"
 							:reporting-mode-on="reportingModeCAV"
 							:suggestion-mode-on="suggestionModeOn">
 							<q-text-field
 								v-bind="controls.PESSOHISPESSONAME____.props"
+								:id="getControlId(controls.PESSOHISPESSONAME____)"
 								@blur="onBlur(controls.PESSOHISPESSONAME____, model.ValName.value)"
 								@change="model.ValName.fnUpdateValueOnChange" />
 						</base-input-structure>
@@ -160,21 +164,22 @@
 						<q-table
 							v-if="controls.PESSOHISPSEUDFIELD001.isVisible"
 							v-bind="controls.PESSOHISPSEUDFIELD001"
+							:id="getControlId(controls.PESSOHISPSEUDFIELD001)"
 							v-on="controls.PESSOHISPSEUDFIELD001.handlers">
+							<template #header>
+								<q-table-config
+									:table-ctrl="controls.PESSOHISPSEUDFIELD001"
+									v-on="controls.PESSOHISPSEUDFIELD001.handlers" />
+							</template>
 							<!-- USE /[MANUAL GQT CUSTOM_TABLE PESSOHISPSEUDFIELD001]/ -->
 						</q-table>
-						<q-table-extra-extension
-							v-if="controls.PESSOHISPSEUDFIELD001.isVisible"
-							:list-ctrl="controls.PESSOHISPSEUDFIELD001"
-							:filter-operators="controls.PESSOHISPSEUDFIELD001.filterOperators"
-							v-on="controls.PESSOHISPSEUDFIELD001.handlers" />
 					</q-col>
 				</q-row>
 			</template>
 		</q-container>
 	</teleport>
 
-	<hr v-if="!isPopup && showFormFooter" />
+	<q-divider v-if="!isPopup && showFormFooter" />
 
 	<teleport
 		v-if="formModalIsReady && showFormFooter"
@@ -539,6 +544,7 @@
 						maxIntegers: 6,
 						maxDecimals: 0,
 						isSequencial: true,
+						mustBeFilled: true,
 						controlLimits: [
 						],
 					}, this),
@@ -552,6 +558,7 @@
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						maxLength: 85,
+						mustBeFilled: true,
 						controlLimits: [
 						],
 					}, this),
@@ -562,6 +569,7 @@
 						label: computed(() => this.Resources.HISTORY52142),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
+						headerLevel: computed(() => this.baseHeadingLevel + 1),
 						controller: 'PESSO',
 						action: 'Pessohis_ValField001',
 						hasDependencies: false,
@@ -613,7 +621,6 @@
 							searchBarConfig: {
 								visibility: false
 							},
-							filtersVisible: false,
 							allowColumnFilters: false,
 							allowColumnSort: true,
 							generalCustomActions: [
@@ -635,7 +642,7 @@
 								sortOrder: 'asc'
 							}
 						},
-						globalEvents: ['changed-HPESS', 'changed-CMPNY', 'changed-PESSO'],
+						globalEvents: ['changed-CMPNY', 'changed-PESSO', 'changed-HPESS'],
 						uuid: 'Pessohis_ValField001',
 						allSelectedRows: 'false',
 						controlLimits: [
@@ -1048,7 +1055,6 @@
 
 				this.afterControlUpdate(controlField, fieldValue)
 			},
-
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
 // USE /[MANUAL GQT FUNCTIONS_JS PESSOHIS]/
 // eslint-disable-next-line

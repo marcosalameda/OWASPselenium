@@ -73,6 +73,7 @@ export default class ViewModel extends FormViewModelBase
 			field: 'DESIGNAT',
 			maxLength: 85,
 			description: computed(() => this.Resources.KIND_OF_EQUIPMENT22928),
+			ignoreFldSubmit: true,
 		}).cloneFrom(values?.TableKindeDesignat))
 		this.stopWatchers.push(watch(() => this.TableKindeDesignat.value, (newValue, oldValue) => this.onUpdate('kinde.designat', this.TableKindeDesignat, newValue, oldValue)))
 

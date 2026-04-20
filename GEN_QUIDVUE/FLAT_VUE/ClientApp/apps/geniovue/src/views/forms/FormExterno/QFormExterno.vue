@@ -9,12 +9,13 @@
 			<div
 				v-if="showFormHeader"
 				class="c-action-bar">
-				<h1
+				<component
 					v-if="formControl.uiComponents.header && formInfo.designation"
+					:is="topHeadingTag"
 					:id="formTitleId"
 					class="form-header">
 					{{ formInfo.designation }}
-				</h1>
+				</component>
 
 				<div class="c-action-bar__menu">
 					<template
@@ -40,13 +41,10 @@
 									@click="btn.action">
 									<template v-if="btn.icon">
 										<q-badge-indicator
-											v-if="btn.badge && btn.badge.isVisible"
-											:color="btn.badge.color">
+											:enabled="btn.badge?.isVisible ?? false"
+											:color="btn.badge?.color">
 											<q-icon v-bind="btn.icon" />
 										</q-badge-indicator>
-										<q-icon
-											v-else
-											v-bind="btn.icon" />
 									</template>
 								</q-toggle-group-item>
 							</template>
@@ -97,15 +95,16 @@
 		<q-container
 			fluid
 			data-key="EXTERNO"
+			:data-identifier="primaryKeyValue"
 			:data-loading="!formInitialDataLoaded || !isActiveForm">
 			<template v-if="formControl.initialized && showFormBody">
 				<q-row v-if="controls.EXTERNO_PSEUDNOVOGR01.isVisible">
 					<q-col v-if="controls.EXTERNO_PSEUDNOVOGR01.isVisible">
 						<q-group-box-container
 							v-if="controls.EXTERNO_PSEUDNOVOGR01.isVisible"
-							id="EXTERNO_PSEUDNOVOGR01"
 							v-bind="controls.EXTERNO_PSEUDNOVOGR01"
-							:is-visible="controls.EXTERNO_PSEUDNOVOGR01.isVisible">
+							:id="getControlId(controls.EXTERNO_PSEUDNOVOGR01)"
+							:no-border="controls.EXTERNO_PSEUDNOVOGR01.borderless">
 							<!-- Start EXTERNO_PSEUDNOVOGR01 -->
 							<q-row v-if="controls.EXTERNO_CMPNYDESIGNAT.isVisible">
 								<q-col
@@ -114,7 +113,8 @@
 									<base-input-structure
 										v-if="controls.EXTERNO_CMPNYDESIGNAT.isVisible"
 										class="i-text"
-										v-bind="controls.EXTERNO_CMPNYDESIGNAT"
+										v-bind="controls.EXTERNO_CMPNYDESIGNAT.wrapperProps"
+										:id="getControlId(controls.EXTERNO_CMPNYDESIGNAT)"
 										v-on="controls.EXTERNO_CMPNYDESIGNAT.handlers"
 										:loading="controls.EXTERNO_CMPNYDESIGNAT.props.loading"
 										:reporting-mode-on="reportingModeCAV"
@@ -122,6 +122,7 @@
 										<q-lookup
 											v-if="controls.EXTERNO_CMPNYDESIGNAT.isVisible"
 											v-bind="controls.EXTERNO_CMPNYDESIGNAT.props"
+											:id="getControlId(controls.EXTERNO_CMPNYDESIGNAT)"
 											v-on="controls.EXTERNO_CMPNYDESIGNAT.handlers" />
 										<q-see-more-externo-cmpnydesignat
 											v-if="controls.EXTERNO_CMPNYDESIGNAT.seeMoreIsVisible"
@@ -138,9 +139,9 @@
 					<q-col v-if="controls.EXTERNO_PSEUDNOVOGR02.isVisible">
 						<q-group-box-container
 							v-if="controls.EXTERNO_PSEUDNOVOGR02.isVisible"
-							id="EXTERNO_PSEUDNOVOGR02"
 							v-bind="controls.EXTERNO_PSEUDNOVOGR02"
-							:is-visible="controls.EXTERNO_PSEUDNOVOGR02.isVisible">
+							:id="getControlId(controls.EXTERNO_PSEUDNOVOGR02)"
+							:no-border="controls.EXTERNO_PSEUDNOVOGR02.borderless">
 							<!-- Start EXTERNO_PSEUDNOVOGR02 -->
 							<q-row v-if="controls.EXTERNO_PESSONAME____.isVisible">
 								<q-col
@@ -149,13 +150,15 @@
 									<base-input-structure
 										v-if="controls.EXTERNO_PESSONAME____.isVisible"
 										class="i-text"
-										v-bind="controls.EXTERNO_PESSONAME____"
+										v-bind="controls.EXTERNO_PESSONAME____.wrapperProps"
+										:id="getControlId(controls.EXTERNO_PESSONAME____)"
 										v-on="controls.EXTERNO_PESSONAME____.handlers"
 										:loading="controls.EXTERNO_PESSONAME____.props.loading"
 										:reporting-mode-on="reportingModeCAV"
 										:suggestion-mode-on="suggestionModeOn">
 										<q-text-field
 											v-bind="controls.EXTERNO_PESSONAME____.props"
+											:id="getControlId(controls.EXTERNO_PESSONAME____)"
 											@blur="onBlur(controls.EXTERNO_PESSONAME____, model.ValName.value)"
 											@change="model.ValName.fnUpdateValueOnChange" />
 									</base-input-structure>
@@ -168,7 +171,8 @@
 									<base-input-structure
 										v-if="controls.EXTERNO_PESSOGENDER__.isVisible"
 										class="i-text"
-										v-bind="controls.EXTERNO_PESSOGENDER__"
+										v-bind="controls.EXTERNO_PESSOGENDER__.wrapperProps"
+										:id="getControlId(controls.EXTERNO_PESSOGENDER__)"
 										v-on="controls.EXTERNO_PESSOGENDER__.handlers"
 										:loading="controls.EXTERNO_PESSOGENDER__.props.loading"
 										:reporting-mode-on="reportingModeCAV"
@@ -176,6 +180,7 @@
 										<q-select
 											v-if="controls.EXTERNO_PESSOGENDER__.isVisible"
 											v-bind="controls.EXTERNO_PESSOGENDER__.props"
+											:id="getControlId(controls.EXTERNO_PESSOGENDER__)"
 											@update:model-value="model.ValGender.fnUpdateValue" />
 									</base-input-structure>
 								</q-col>
@@ -188,12 +193,12 @@
 					<q-col v-if="controls.EXTERNO_PSEUDNOVOGR06.isVisible">
 						<q-accordion
 							v-if="controls.EXTERNO_PSEUDNOVOGR06.isVisible"
-							id="EXTERNO_PSEUDNOVOGR06"
+							:id="getControlId(controls.EXTERNO_PSEUDNOVOGR06)"
 							v-model="controls.EXTERNO_PSEUDNOVOGR06.openChild">
 							<!-- Start EXTERNO_PSEUDNOVOGR06 -->
 							<q-accordion-item
 								v-if="controls.EXTERNO_PSEUDNOVOGR03.isVisible"
-								id="EXTERNO_PSEUDNOVOGR03-container"
+								:id="getControlId(controls.EXTERNO_PSEUDNOVOGR03) + '-container'"
 								value="EXTERNO_PSEUDNOVOGR03"
 								:title="controls.EXTERNO_PSEUDNOVOGR03.label">
 								<!-- Start EXTERNO_PSEUDNOVOGR03 -->
@@ -204,13 +209,15 @@
 										<base-input-structure
 											v-if="controls.EXTERNO_PESSOTELEPHON.isVisible"
 											class="i-text"
-											v-bind="controls.EXTERNO_PESSOTELEPHON"
+											v-bind="controls.EXTERNO_PESSOTELEPHON.wrapperProps"
+											:id="getControlId(controls.EXTERNO_PESSOTELEPHON)"
 											v-on="controls.EXTERNO_PESSOTELEPHON.handlers"
 											:loading="controls.EXTERNO_PESSOTELEPHON.props.loading"
 											:reporting-mode-on="reportingModeCAV"
 											:suggestion-mode-on="suggestionModeOn">
 											<q-text-field
 												v-bind="controls.EXTERNO_PESSOTELEPHON.props"
+												:id="getControlId(controls.EXTERNO_PESSOTELEPHON)"
 												@blur="onBlur(controls.EXTERNO_PESSOTELEPHON, model.ValTelephon.value)"
 												@change="model.ValTelephon.fnUpdateValueOnChange" />
 										</base-input-structure>
@@ -221,13 +228,15 @@
 										<base-input-structure
 											v-if="controls.EXTERNO_PESSOEMAIL___.isVisible"
 											class="i-text"
-											v-bind="controls.EXTERNO_PESSOEMAIL___"
+											v-bind="controls.EXTERNO_PESSOEMAIL___.wrapperProps"
+											:id="getControlId(controls.EXTERNO_PESSOEMAIL___)"
 											v-on="controls.EXTERNO_PESSOEMAIL___.handlers"
 											:loading="controls.EXTERNO_PESSOEMAIL___.props.loading"
 											:reporting-mode-on="reportingModeCAV"
 											:suggestion-mode-on="suggestionModeOn">
 											<q-text-field
 												v-bind="controls.EXTERNO_PESSOEMAIL___.props"
+												:id="getControlId(controls.EXTERNO_PESSOEMAIL___)"
 												@blur="onBlur(controls.EXTERNO_PESSOEMAIL___, model.ValEmail.value)"
 												@change="model.ValEmail.fnUpdateValueOnChange" />
 										</base-input-structure>
@@ -237,7 +246,7 @@
 							</q-accordion-item>
 							<q-accordion-item
 								v-if="controls.EXTERNO_PSEUDNOVOGR04.isVisible"
-								id="EXTERNO_PSEUDNOVOGR04-container"
+								:id="getControlId(controls.EXTERNO_PSEUDNOVOGR04) + '-container'"
 								value="EXTERNO_PSEUDNOVOGR04"
 								:title="controls.EXTERNO_PSEUDNOVOGR04.label">
 								<!-- Start EXTERNO_PSEUDNOVOGR04 -->
@@ -248,7 +257,8 @@
 										<base-input-structure
 											v-if="controls.EXTERNO_PESSOPHOTOGRA.isVisible"
 											class="q-image"
-											v-bind="controls.EXTERNO_PESSOPHOTOGRA"
+											v-bind="controls.EXTERNO_PESSOPHOTOGRA.wrapperProps"
+											:id="getControlId(controls.EXTERNO_PESSOPHOTOGRA)"
 											v-on="controls.EXTERNO_PESSOPHOTOGRA.handlers"
 											:loading="controls.EXTERNO_PESSOPHOTOGRA.props.loading"
 											:reporting-mode-on="reportingModeCAV"
@@ -256,6 +266,7 @@
 											<q-image
 												v-if="controls.EXTERNO_PESSOPHOTOGRA.isVisible"
 												v-bind="controls.EXTERNO_PESSOPHOTOGRA.props"
+												:id="getControlId(controls.EXTERNO_PESSOPHOTOGRA)"
 												v-on="controls.EXTERNO_PESSOPHOTOGRA.handlers" />
 										</base-input-structure>
 									</q-col>
@@ -273,14 +284,15 @@
 						<base-input-structure
 							v-if="controls.EXTERNO_PSEUDOBRIGATO.isVisible"
 							class="i-static-text"
-							v-bind="controls.EXTERNO_PSEUDOBRIGATO"
+							v-bind="controls.EXTERNO_PSEUDOBRIGATO.wrapperProps"
+							:id="getControlId(controls.EXTERNO_PSEUDOBRIGATO)"
 							v-on="controls.EXTERNO_PSEUDOBRIGATO.handlers"
 							:loading="controls.EXTERNO_PSEUDOBRIGATO.props.loading"
 							:reporting-mode-on="reportingModeCAV"
 							:suggestion-mode-on="suggestionModeOn">
 							<q-static-text
 								v-if="controls.EXTERNO_PSEUDOBRIGATO.isVisible"
-								id="EXTERNO_PSEUDOBRIGATO"
+								:id="getControlId(controls.EXTERNO_PSEUDOBRIGATO)"
 								:size="controls.EXTERNO_PSEUDOBRIGATO.size"
 								:text="controls.EXTERNO_PSEUDOBRIGATO.label"
 								supports-html />
@@ -291,7 +303,7 @@
 		</q-container>
 	</teleport>
 
-	<hr v-if="!isPopup && showFormFooter" />
+	<q-divider v-if="!isPopup && showFormFooter" />
 
 	<teleport
 		v-if="formModalIsReady && showFormFooter"
@@ -641,6 +653,7 @@
 						label: computed(() => this.Resources.COMPANY20759),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
+						borderless: false,
 						isCollapsible: false,
 						anchored: false,
 						directChildren: ['EXTERNO_CMPNYDESIGNAT'],
@@ -685,9 +698,11 @@
 						label: computed(() => this.Resources.IDENTIFICATION40793),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
+						borderless: false,
 						isCollapsible: false,
 						anchored: false,
 						directChildren: ['EXTERNO_PESSONAME____', 'EXTERNO_PESSOGENDER__'],
+						mustBeFilled: true,
 						controlLimits: [
 						],
 					}, this),
@@ -702,6 +717,7 @@
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'EXTERNO_PSEUDNOVOGR02',
 						maxLength: 85,
+						mustBeFilled: true,
 						controlLimits: [
 						],
 					}, this),
@@ -717,8 +733,8 @@
 						container: 'EXTERNO_PSEUDNOVOGR02',
 						maxLength: 1,
 						arrayName: 'Genero',
-						helpShortItem: '',
-						helpDetailedItem: '',
+						helpShortItem: 'None',
+						helpDetailedItem: 'None',
 						controlLimits: [
 						],
 					}, this),
@@ -744,6 +760,7 @@
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'EXTERNO_PSEUDNOVOGR06',
 						isInAccordion: true,
+						borderless: false,
 						isCollapsible: true,
 						anchored: false,
 						directChildren: ['EXTERNO_PESSOTELEPHON', 'EXTERNO_PESSOEMAIL___'],
@@ -787,6 +804,7 @@
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'EXTERNO_PSEUDNOVOGR06',
 						isInAccordion: true,
+						borderless: false,
 						isCollapsible: true,
 						anchored: false,
 						directChildren: ['EXTERNO_PESSOPHOTOGRA'],
@@ -1234,7 +1252,6 @@
 
 				this.afterControlUpdate(controlField, fieldValue)
 			},
-
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
 // USE /[MANUAL GQT FUNCTIONS_JS EXTERNO]/
 // eslint-disable-next-line

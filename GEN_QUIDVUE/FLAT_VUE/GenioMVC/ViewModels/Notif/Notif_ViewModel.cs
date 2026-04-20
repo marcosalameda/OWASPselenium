@@ -1,20 +1,20 @@
-﻿using JsonIgnoreAttribute = System.Text.Json.Serialization.JsonIgnoreAttribute;
+﻿using CSGenio.business;
+using CSGenio.framework;
+using CSGenio.persistence;
+using GenioMVC.Helpers;
+using GenioMVC.Models.Exception;
+using GenioMVC.Models.Navigation;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Quidgest.Persistence;
+using Quidgest.Persistence.GenericQuery;
+
 using System.Collections;
 using System.Collections.Concurrent;
 using System.Collections.Specialized;
 using System.ComponentModel.DataAnnotations;
 using System.Data;
 using System.Globalization;
-
-using CSGenio.business;
-using CSGenio.framework;
-using CSGenio.persistence;
-using GenioMVC.Helpers;
-using GenioMVC.Models.Exception;
-using GenioMVC.Models.Navigation;
-using Quidgest.Persistence;
-using Quidgest.Persistence.GenericQuery;
+using System.Text.Json.Serialization;
 
 namespace GenioMVC.ViewModels.Notif
 {
@@ -36,6 +36,7 @@ namespace GenioMVC.ViewModels.Notif
 		public string ValCodpesso { get; set; }
 
 		#endregion
+
 		/// <summary>
 		/// Title: "Lending No" | Type: "N"
 		/// </summary>
@@ -95,8 +96,6 @@ namespace GenioMVC.ViewModels.Notif
 		/// </summary>
 		[ValidateSetAccess]
 		public TableDBEdit<GenioMVC.Models.Pess2> TablePess2Name { get; set; }
-
-
 
 		#region Navigations
 		#endregion
@@ -299,12 +298,7 @@ namespace GenioMVC.ViewModels.Notif
 			}
 		}
 
-		/// <summary>
-		/// Sets the value of a single property of the view model based on the provided table and field names.
-		/// </summary>
-		/// <param name="fullFieldName">The full field name in the format "table.field".</param>
-		/// <param name="value">The field value.</param>
-		/// <exception cref="ArgumentNullException">Thrown if <paramref name="fullFieldName"/> is null.</exception>
+		/// <inheritdoc />
 		public override void SetViewModelValue(string fullFieldName, object value)
 		{
 			try
@@ -462,6 +456,7 @@ namespace GenioMVC.ViewModels.Notif
 			Characs = new List<string>();
 
 			Load_Notif___pess2name____(qs, lazyLoad);
+
 // USE /[MANUAL GQT VIEWMODEL_LOADPARTIAL NOTIF]/
 		}
 
@@ -538,10 +533,7 @@ namespace GenioMVC.ViewModels.Notif
 				}
 			}
 
-			TablePess2Name = new TableDBEdit<Models.Pess2>
-			{
-				IsLazyLoad = lazyLoad
-			};
+			TablePess2Name = new TableDBEdit<Models.Pess2>();
 
 			if (lazyLoad)
 			{
@@ -585,7 +577,7 @@ namespace GenioMVC.ViewModels.Notif
 				int numberItems = CSGenio.framework.Configuration.NrRegDBedit;
 				int offset = (page - 1) * numberItems;
 
-				FieldRef[] fields = new FieldRef[] { CSGenioApess2.FldCodpesso, CSGenioApess2.FldName, CSGenioApess2.FldZzstate };
+				FieldRef[] fields = [CSGenioApess2.FldCodpesso, CSGenioApess2.FldName, CSGenioApess2.FldZzstate];
 
 // USE /[MANUAL GQT OVERRQ NOTIF_PESS2NAME]/
 

@@ -3,22 +3,23 @@
 		v-if="menuModalIsReady"
 		:to="`#${uiContainersId.body}`"
 		:disabled="!menuInfo.isPopup">
-		<form
+		<div
 			class="form-horizontal"
 			@submit.prevent>
 			<q-row-container>
 				<q-table
 					v-bind="controls.menu"
 					v-on="controls.menu.handlers">
+					<template #header>
+						<q-table-config
+							:table-ctrl="controls.menu"
+							v-on="controls.menu.handlers">
+						</q-table-config>
+					</template>
 					<!-- USE /[MANUAL GQT CUSTOM_TABLE WMS_Menu_ASSET_CARD]/ -->
 				</q-table>
-
-				<q-table-extra-extension
-					:list-ctrl="controls.menu"
-					:filter-operators="controls.menu.filterOperators"
-					v-on="controls.menu.handlers" />
 			</q-row-container>
-		</form>
+		</div>
 	</teleport>
 
 	<teleport
@@ -155,6 +156,7 @@
 								scrollData: 10,
 								maxDigits: 10,
 								decimalPlaces: 0,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 2,
@@ -164,6 +166,7 @@
 								label: computed(() => this.Resources.IDENTIFICATION_NAME16317),
 								dataLength: 85,
 								scrollData: 30,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 3,
@@ -174,6 +177,7 @@
 								dataLength: 85,
 								scrollData: 30,
 								isVisible: false,
+								export: 1,
 								pkColumn: 'ValCodkinde',
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.ArrayColumn({
@@ -184,8 +188,8 @@
 								label: computed(() => this.Resources.IDENTIFIER_TYPE60623),
 								dataLength: 1,
 								scrollData: 1,
+								export: 1,
 								array: computed(() => new qProjArrays.QArrayIdenttyp(vm.$getResource).elements),
-								arrayType: qProjArrays.QArrayIdenttyp.type,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 5,
@@ -195,6 +199,7 @@
 								label: computed(() => this.Resources.GRAI10374),
 								dataLength: 50,
 								scrollData: 30,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 6,
@@ -204,6 +209,7 @@
 								label: computed(() => this.Resources.GIAI50592),
 								dataLength: 50,
 								scrollData: 30,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.ImageColumn({
 								order: 7,
@@ -215,6 +221,7 @@
 								scrollData: 3,
 								sortable: false,
 								searchable: false,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 8,
@@ -224,6 +231,7 @@
 								label: computed(() => this.Resources.MANUFACTURER50759),
 								dataLength: 85,
 								scrollData: 30,
+								export: 1,
 								pkColumn: 'ValCodentit',
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.HyperLinkColumn({
@@ -234,42 +242,8 @@
 								label: computed(() => this.Resources.WEB_SITE06263),
 								dataLength: 254,
 								scrollData: 30,
+								export: 1,
 								pkColumn: 'ValCodentit',
-							}, computed(() => vm.model), computed(() => vm.internalEvents)),
-							new listColumnTypes.MarkdownColumn({
-								order: 10,
-								name: 'ValDescription',
-								area: 'ASSET',
-								field: 'DESCRIPTION',
-								label: computed(() => this.Resources.DESCRIPTION07383),
-								scrollData: 30,
-							}, computed(() => vm.model), computed(() => vm.internalEvents)),
-							new listColumnTypes.MarkdownColumn({
-								order: 11,
-								name: 'ValLongdesc',
-								area: 'ASSET',
-								field: 'LONGDESC',
-								label: computed(() => this.Resources.DETAILED_DESCRIPTION36560),
-								scrollData: 30,
-								isVisible: false,
-							}, computed(() => vm.model), computed(() => vm.internalEvents)),
-							new listColumnTypes.ArrayColumn({
-								order: 12,
-								multipleValues: true,
-								name: 'AtagsValIcon',
-								area: 'ATAGS',
-								field: 'ICON',
-								label: computed(() => this.Resources.TAGS54909),
-								scrollData: 1,
-								maxDigits: 1,
-								decimalPlaces: 0,
-								sortable: false,
-								searchable: false,
-								export: false,
-								array: computed(() => new qProjArrays.QArrayAssettags(vm.$getResource).elements),
-								arrayType: qProjArrays.QArrayAssettags.type,
-								arrayDisplayMode: 'ID',
-								pkColumn: 'ValCodtags',
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 						],
 						config: {
@@ -279,7 +253,6 @@
 							tableAlias: 'ASSET',
 							tableNamePlural: computed(() => this.Resources.ASSETS12081),
 							viewManagement: 'U',
-							hasTextWrap: true,
 							showLimitsInfo: true,
 							tableTitle: computed(() => this.Resources.EQUIPMENTS06276),
 							showAlternatePagination: true,
@@ -288,7 +261,6 @@
 							searchBarConfig: {
 								visibility: true
 							},
-							filtersVisible: true,
 							allowColumnFilters: true,
 							allowColumnSort: true,
 							crudActions: [
@@ -362,9 +334,7 @@
 									id: 'insert',
 									name: 'insert',
 									title: computed(() => this.Resources.INSERIR43365),
-									icon: {
-										icon: 'add'
-									},
+									icon: { icon: 'add' },
 									isInReadOnly: true,
 									params: {
 										action: vm.openFormAction,
@@ -413,7 +383,7 @@
 								sortOrder: 'asc'
 							}
 						},
-						globalEvents: ['changed-KINDE', 'changed-MANUF', 'changed-ASSET'],
+						globalEvents: ['changed-MANUF', 'changed-KINDE', 'changed-ASSET'],
 						uuid: 'cbba1257-006c-407c-bff6-cb87a80d6f4e',
 						allSelectedRows: 'false',
 						viewModes: [
@@ -452,10 +422,8 @@
 									text: {
 										allowsMultiple: true,
 										sources: [
-											'ASSET.GRAI',
 											'ASSET.GIAI',
-											'ASSET.DESCRIPTION',
-											'ATAGS.ICON',
+											'ASSET.GRAI',
 										]
 									},
 									image: {

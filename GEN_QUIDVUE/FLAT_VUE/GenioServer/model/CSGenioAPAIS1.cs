@@ -47,7 +47,7 @@ namespace CSGenio.business
 			Qfield = new Field(info.Alias, "codcntry", FieldType.KEY_GUID);
 			Qfield.FieldDescription = "";
 			Qfield.FieldSize =  36;
-			Qfield.CavDesignation = "";
+			Qfield.VisivelCav = CavVisibilityType.Nunca;
 
 			Qfield.Dupmsg = "";
 			info.RegisterFieldDB(Qfield);
@@ -102,7 +102,7 @@ namespace CSGenio.business
 			Qfield.FieldDescription = "Flag";
 			Qfield.FieldSize =  3;
 			Qfield.Decimals = 1;
-			Qfield.CavDesignation = "FLAG51937";
+			Qfield.VisivelCav = CavVisibilityType.Nunca;
 
 			Qfield.Dupmsg = "";
 			info.RegisterFieldDB(Qfield);
@@ -121,15 +121,13 @@ namespace CSGenio.business
 		{
 			// Daughters Relations
 			//------------------------------
-			info.ChildTable = new ChildRelation[8];
+			info.ChildTable = new ChildRelation[6];
 			info.ChildTable[0]= new ChildRelation("regio", new String[] {"codcntry","codpais1"}, DeleteProc.NA);
 			info.ChildTable[1]= new ChildRelation("airpt", new String[] {"codcntry"}, DeleteProc.NA);
-			info.ChildTable[2]= new ChildRelation("search", new String[] {"codpais"}, DeleteProc.NA);
-			info.ChildTable[3]= new ChildRelation("cmpny", new String[] {"codcntry"}, DeleteProc.NA);
-			info.ChildTable[4]= new ChildRelation("indoc", new String[] {"codcntry"}, DeleteProc.NA);
-			info.ChildTable[5]= new ChildRelation("propr", new String[] {"codcntry","codpais1"}, DeleteProc.NA);
-			info.ChildTable[6]= new ChildRelation("pesso", new String[] {"codpaise","codcntry"}, DeleteProc.NA);
-			info.ChildTable[7]= new ChildRelation("facil", new String[] {"codcntry"}, DeleteProc.NA);
+			info.ChildTable[2]= new ChildRelation("cmpny", new String[] {"codcntry"}, DeleteProc.NA);
+			info.ChildTable[3]= new ChildRelation("indoc", new String[] {"codcntry"}, DeleteProc.NA);
+			info.ChildTable[4]= new ChildRelation("propr", new String[] {"codcntry","codpais1"}, DeleteProc.NA);
+			info.ChildTable[5]= new ChildRelation("pesso", new String[] {"codpaise","codcntry"}, DeleteProc.NA);
 
 			// Mother Relations
 			//------------------------------

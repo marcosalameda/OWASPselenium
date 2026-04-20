@@ -180,22 +180,6 @@ namespace GenioMVC.Controllers
 			);
 		}
 
-
-
-		/// <summary>
-		/// Recalculate formulas of the "Ware_ws" form. (++, CT, SR, CL and U1)
-		/// </summary>
-		/// <param name="formData">Current form data</param>
-		/// <returns></returns>
-		[HttpPost]
-		public JsonResult RecalculateFormulas_Ware_ws([FromBody]Ware_ws_ViewModel formData)
-		{
-			return GenericRecalculateFormulas(formData, "wareh",
-				(primaryKey) => Models.Wareh.Find(primaryKey, UserContext.Current, "FWARE_WS"),
-				(model) => formData.MapToModel(model as Models.Wareh)
-			);
-		}
-
 		/// <summary>
 		/// Get "See more..." tree structure
 		/// </summary>

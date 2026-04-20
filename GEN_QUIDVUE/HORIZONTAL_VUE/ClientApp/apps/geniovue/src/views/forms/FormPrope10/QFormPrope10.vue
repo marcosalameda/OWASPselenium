@@ -9,12 +9,13 @@
 			<div
 				v-if="showFormHeader"
 				class="c-action-bar">
-				<h1
+				<component
 					v-if="formControl.uiComponents.header && formInfo.designation"
+					:is="topHeadingTag"
 					:id="formTitleId"
 					class="form-header">
 					{{ formInfo.designation }}
-				</h1>
+				</component>
 
 				<div class="c-action-bar__menu">
 					<template
@@ -40,13 +41,10 @@
 									@click="btn.action">
 									<template v-if="btn.icon">
 										<q-badge-indicator
-											v-if="btn.badge && btn.badge.isVisible"
-											:color="btn.badge.color">
+											:enabled="btn.badge?.isVisible ?? false"
+											:color="btn.badge?.color">
 											<q-icon v-bind="btn.icon" />
 										</q-badge-indicator>
-										<q-icon
-											v-else
-											v-bind="btn.icon" />
 									</template>
 								</q-toggle-group-item>
 							</template>
@@ -97,6 +95,7 @@
 		<q-container
 			fluid
 			data-key="PROPE10"
+			:data-identifier="primaryKeyValue"
 			:data-loading="!formInitialDataLoaded || !isActiveForm">
 			<template v-if="formControl.initialized && showFormBody">
 				<q-row v-if="controls.PROPE10_PSEUDMAININF_.isVisible">
@@ -105,9 +104,9 @@
 						cols="auto">
 						<q-group-box-container
 							v-if="controls.PROPE10_PSEUDMAININF_.isVisible"
-							id="PROPE10_PSEUDMAININF_"
 							v-bind="controls.PROPE10_PSEUDMAININF_"
-							:is-visible="controls.PROPE10_PSEUDMAININF_.isVisible">
+							:id="getControlId(controls.PROPE10_PSEUDMAININF_)"
+							:no-border="controls.PROPE10_PSEUDMAININF_.borderless">
 							<!-- Start PROPE10_PSEUDMAININF_ -->
 							<q-row v-if="controls.PROPE10_PROPEPHOTO___.isVisible">
 								<q-col
@@ -116,7 +115,8 @@
 									<base-input-structure
 										v-if="controls.PROPE10_PROPEPHOTO___.isVisible"
 										class="q-image"
-										v-bind="controls.PROPE10_PROPEPHOTO___"
+										v-bind="controls.PROPE10_PROPEPHOTO___.wrapperProps"
+										:id="getControlId(controls.PROPE10_PROPEPHOTO___)"
 										v-on="controls.PROPE10_PROPEPHOTO___.handlers"
 										:loading="controls.PROPE10_PROPEPHOTO___.props.loading"
 										:reporting-mode-on="reportingModeCAV"
@@ -124,6 +124,7 @@
 										<q-image
 											v-if="controls.PROPE10_PROPEPHOTO___.isVisible"
 											v-bind="controls.PROPE10_PROPEPHOTO___.props"
+											:id="getControlId(controls.PROPE10_PROPEPHOTO___)"
 											v-on="controls.PROPE10_PROPEPHOTO___.handlers" />
 									</base-input-structure>
 								</q-col>
@@ -135,13 +136,15 @@
 									<base-input-structure
 										v-if="controls.PROPE10_PROPETITLE___.isVisible"
 										class="i-text"
-										v-bind="controls.PROPE10_PROPETITLE___"
+										v-bind="controls.PROPE10_PROPETITLE___.wrapperProps"
+										:id="getControlId(controls.PROPE10_PROPETITLE___)"
 										v-on="controls.PROPE10_PROPETITLE___.handlers"
 										:loading="controls.PROPE10_PROPETITLE___.props.loading"
 										:reporting-mode-on="reportingModeCAV"
 										:suggestion-mode-on="suggestionModeOn">
 										<q-text-field
 											v-bind="controls.PROPE10_PROPETITLE___.props"
+											:id="getControlId(controls.PROPE10_PROPETITLE___)"
 											@blur="onBlur(controls.PROPE10_PROPETITLE___, model.ValTitle.value)"
 											@change="model.ValTitle.fnUpdateValueOnChange" />
 									</base-input-structure>
@@ -154,7 +157,8 @@
 									<base-input-structure
 										v-if="controls.PROPE10_PROPEPRICE___.isVisible"
 										class="i-text"
-										v-bind="controls.PROPE10_PROPEPRICE___"
+										v-bind="controls.PROPE10_PROPEPRICE___.wrapperProps"
+										:id="getControlId(controls.PROPE10_PROPEPRICE___)"
 										v-on="controls.PROPE10_PROPEPRICE___.handlers"
 										:loading="controls.PROPE10_PROPEPRICE___.props.loading"
 										:reporting-mode-on="reportingModeCAV"
@@ -162,6 +166,7 @@
 										<q-numeric-input
 											v-if="controls.PROPE10_PROPEPRICE___.isVisible"
 											v-bind="controls.PROPE10_PROPEPRICE___.props"
+											:id="getControlId(controls.PROPE10_PROPEPRICE___)"
 											@update:model-value="model.ValPrice.fnUpdateValue" />
 									</base-input-structure>
 								</q-col>
@@ -173,7 +178,8 @@
 									<base-input-structure
 										v-if="controls.PROPE10_PROPEDESCRIPT.isVisible"
 										class="i-textarea"
-										v-bind="controls.PROPE10_PROPEDESCRIPT"
+										v-bind="controls.PROPE10_PROPEDESCRIPT.wrapperProps"
+										:id="getControlId(controls.PROPE10_PROPEDESCRIPT)"
 										v-on="controls.PROPE10_PROPEDESCRIPT.handlers"
 										:loading="controls.PROPE10_PROPEDESCRIPT.props.loading"
 										:reporting-mode-on="reportingModeCAV"
@@ -181,6 +187,7 @@
 										<q-text-area
 											v-if="controls.PROPE10_PROPEDESCRIPT.isVisible"
 											v-bind="controls.PROPE10_PROPEDESCRIPT.props"
+											:id="getControlId(controls.PROPE10_PROPEDESCRIPT)"
 											v-on="controls.PROPE10_PROPEDESCRIPT.handlers" />
 									</base-input-structure>
 								</q-col>
@@ -195,12 +202,12 @@
 						cols="auto">
 						<q-accordion
 							v-if="controls.PROPE10_PSEUDACC01___.isVisible"
-							id="PROPE10_PSEUDACC01___"
+							:id="getControlId(controls.PROPE10_PSEUDACC01___)"
 							v-model="controls.PROPE10_PSEUDACC01___.openChild">
 							<!-- Start PROPE10_PSEUDACC01___ -->
 							<q-accordion-item
 								v-if="controls.PROPE10_PSEUDLOCALIZA.isVisible"
-								id="PROPE10_PSEUDLOCALIZA-container"
+								:id="getControlId(controls.PROPE10_PSEUDLOCALIZA) + '-container'"
 								value="PROPE10_PSEUDLOCALIZA"
 								:title="controls.PROPE10_PSEUDLOCALIZA.label">
 								<!-- Start PROPE10_PSEUDLOCALIZA -->
@@ -211,7 +218,8 @@
 										<base-input-structure
 											v-if="controls.PROPE10_CITY_CITY____.isVisible"
 											class="i-text"
-											v-bind="controls.PROPE10_CITY_CITY____"
+											v-bind="controls.PROPE10_CITY_CITY____.wrapperProps"
+											:id="getControlId(controls.PROPE10_CITY_CITY____)"
 											v-on="controls.PROPE10_CITY_CITY____.handlers"
 											:loading="controls.PROPE10_CITY_CITY____.props.loading"
 											:reporting-mode-on="reportingModeCAV"
@@ -219,6 +227,7 @@
 											<q-lookup
 												v-if="controls.PROPE10_CITY_CITY____.isVisible"
 												v-bind="controls.PROPE10_CITY_CITY____.props"
+												:id="getControlId(controls.PROPE10_CITY_CITY____)"
 												v-on="controls.PROPE10_CITY_CITY____.handlers" />
 											<q-see-more-prope10-city-city
 												v-if="controls.PROPE10_CITY_CITY____.seeMoreIsVisible"
@@ -234,13 +243,15 @@
 										<base-input-structure
 											v-if="controls.PROPE10_CTRY_COUNTRY_.isVisible"
 											class="i-text"
-											v-bind="controls.PROPE10_CTRY_COUNTRY_"
+											v-bind="controls.PROPE10_CTRY_COUNTRY_.wrapperProps"
+											:id="getControlId(controls.PROPE10_CTRY_COUNTRY_)"
 											v-on="controls.PROPE10_CTRY_COUNTRY_.handlers"
 											:loading="controls.PROPE10_CTRY_COUNTRY_.props.loading"
 											:reporting-mode-on="reportingModeCAV"
 											:suggestion-mode-on="suggestionModeOn">
 											<q-text-field
 												v-bind="controls.PROPE10_CTRY_COUNTRY_.props"
+												:id="getControlId(controls.PROPE10_CTRY_COUNTRY_)"
 												@blur="onBlur(controls.PROPE10_CTRY_COUNTRY_, model.CityCtryValCountry.value)"
 												@change="model.CityCtryValCountry.fnUpdateValueOnChange" />
 										</base-input-structure>
@@ -250,7 +261,7 @@
 							</q-accordion-item>
 							<q-accordion-item
 								v-if="controls.PROPE10_PSEUDDETAILS_.isVisible"
-								id="PROPE10_PSEUDDETAILS_-container"
+								:id="getControlId(controls.PROPE10_PSEUDDETAILS_) + '-container'"
 								value="PROPE10_PSEUDDETAILS_"
 								:title="controls.PROPE10_PSEUDDETAILS_.label">
 								<!-- Start PROPE10_PSEUDDETAILS_ -->
@@ -261,7 +272,8 @@
 										<base-input-structure
 											v-if="controls.PROPE10_PROPEBUILDTYP.isVisible"
 											class="i-text"
-											v-bind="controls.PROPE10_PROPEBUILDTYP"
+											v-bind="controls.PROPE10_PROPEBUILDTYP.wrapperProps"
+											:id="getControlId(controls.PROPE10_PROPEBUILDTYP)"
 											v-on="controls.PROPE10_PROPEBUILDTYP.handlers"
 											:loading="controls.PROPE10_PROPEBUILDTYP.props.loading"
 											:reporting-mode-on="reportingModeCAV"
@@ -269,12 +281,14 @@
 											<q-select
 												v-if="controls.PROPE10_PROPEBUILDTYP.isVisible"
 												v-bind="controls.PROPE10_PROPEBUILDTYP.props"
+												:id="getControlId(controls.PROPE10_PROPEBUILDTYP)"
 												@update:model-value="model.ValBuildtyp.fnUpdateValue" />
 										</base-input-structure>
 										<base-input-structure
 											v-if="controls.PROPE10_PROPETYPOLOGY.isVisible"
 											class="i-radio-container"
-											v-bind="controls.PROPE10_PROPETYPOLOGY"
+											v-bind="controls.PROPE10_PROPETYPOLOGY.wrapperProps"
+											:id="getControlId(controls.PROPE10_PROPETYPOLOGY)"
 											v-on="controls.PROPE10_PROPETYPOLOGY.handlers"
 											:label-position="labelAlignment.topleft"
 											:loading="controls.PROPE10_PROPETYPOLOGY.props.loading"
@@ -283,6 +297,7 @@
 											<q-radio-group
 												v-if="controls.PROPE10_PROPETYPOLOGY.isVisible"
 												v-bind="controls.PROPE10_PROPETYPOLOGY.props"
+												:id="getControlId(controls.PROPE10_PROPETYPOLOGY)"
 												v-on="controls.PROPE10_PROPETYPOLOGY.handlers">
 												<q-radio-button
 													v-for="radio in controls.PROPE10_PROPETYPOLOGY.items"
@@ -300,7 +315,8 @@
 										<base-input-structure
 											v-if="controls.PROPE10_PROPESIZE____.isVisible"
 											class="i-text"
-											v-bind="controls.PROPE10_PROPESIZE____"
+											v-bind="controls.PROPE10_PROPESIZE____.wrapperProps"
+											:id="getControlId(controls.PROPE10_PROPESIZE____)"
 											v-on="controls.PROPE10_PROPESIZE____.handlers"
 											:loading="controls.PROPE10_PROPESIZE____.props.loading"
 											:reporting-mode-on="reportingModeCAV"
@@ -308,6 +324,7 @@
 											<q-numeric-input
 												v-if="controls.PROPE10_PROPESIZE____.isVisible"
 												v-bind="controls.PROPE10_PROPESIZE____.props"
+												:id="getControlId(controls.PROPE10_PROPESIZE____)"
 												@update:model-value="model.ValSize.fnUpdateValue" />
 										</base-input-structure>
 									</q-col>
@@ -319,7 +336,8 @@
 										<base-input-structure
 											v-if="controls.PROPE10_PROPEBATHRMS_.isVisible"
 											class="i-text"
-											v-bind="controls.PROPE10_PROPEBATHRMS_"
+											v-bind="controls.PROPE10_PROPEBATHRMS_.wrapperProps"
+											:id="getControlId(controls.PROPE10_PROPEBATHRMS_)"
 											v-on="controls.PROPE10_PROPEBATHRMS_.handlers"
 											:loading="controls.PROPE10_PROPEBATHRMS_.props.loading"
 											:reporting-mode-on="reportingModeCAV"
@@ -327,6 +345,7 @@
 											<q-numeric-input
 												v-if="controls.PROPE10_PROPEBATHRMS_.isVisible"
 												v-bind="controls.PROPE10_PROPEBATHRMS_.props"
+												:id="getControlId(controls.PROPE10_PROPEBATHRMS_)"
 												@update:model-value="model.ValBathrms.fnUpdateValue" />
 										</base-input-structure>
 									</q-col>
@@ -338,13 +357,15 @@
 										<base-input-structure
 											v-if="controls.PROPE10_PROPEYEAR____.isVisible"
 											class="i-text"
-											v-bind="controls.PROPE10_PROPEYEAR____"
+											v-bind="controls.PROPE10_PROPEYEAR____.wrapperProps"
+											:id="getControlId(controls.PROPE10_PROPEYEAR____)"
 											v-on="controls.PROPE10_PROPEYEAR____.handlers"
 											:loading="controls.PROPE10_PROPEYEAR____.props.loading"
 											:reporting-mode-on="reportingModeCAV"
 											:suggestion-mode-on="suggestionModeOn">
 											<q-text-field
 												v-bind="controls.PROPE10_PROPEYEAR____.props"
+												:id="getControlId(controls.PROPE10_PROPEYEAR____)"
 												@blur="onBlur(controls.PROPE10_PROPEYEAR____, model.ValYear.value)"
 												@change="model.ValYear.fnUpdateValueOnChange" />
 										</base-input-structure>
@@ -354,7 +375,7 @@
 							</q-accordion-item>
 							<q-accordion-item
 								v-if="controls.PROPE10_PSEUDAGENTINF.isVisible"
-								id="PROPE10_PSEUDAGENTINF-container"
+								:id="getControlId(controls.PROPE10_PSEUDAGENTINF) + '-container'"
 								value="PROPE10_PSEUDAGENTINF"
 								:title="controls.PROPE10_PSEUDAGENTINF.label">
 								<!-- Start PROPE10_PSEUDAGENTINF -->
@@ -365,7 +386,8 @@
 										<base-input-structure
 											v-if="controls.PROPE10_AGENTNAME____.isVisible"
 											class="i-text"
-											v-bind="controls.PROPE10_AGENTNAME____"
+											v-bind="controls.PROPE10_AGENTNAME____.wrapperProps"
+											:id="getControlId(controls.PROPE10_AGENTNAME____)"
 											v-on="controls.PROPE10_AGENTNAME____.handlers"
 											:loading="controls.PROPE10_AGENTNAME____.props.loading"
 											:reporting-mode-on="reportingModeCAV"
@@ -373,6 +395,7 @@
 											<q-lookup
 												v-if="controls.PROPE10_AGENTNAME____.isVisible"
 												v-bind="controls.PROPE10_AGENTNAME____.props"
+												:id="getControlId(controls.PROPE10_AGENTNAME____)"
 												v-on="controls.PROPE10_AGENTNAME____.handlers" />
 											<q-see-more-prope10-agentname
 												v-if="controls.PROPE10_AGENTNAME____.seeMoreIsVisible"
@@ -388,14 +411,16 @@
 										<base-input-structure
 											v-if="controls.PROPE10_AGENTEMAIL___.isVisible"
 											class="i-text"
-											v-bind="controls.PROPE10_AGENTEMAIL___"
+											v-bind="controls.PROPE10_AGENTEMAIL___.wrapperProps"
+											:id="getControlId(controls.PROPE10_AGENTEMAIL___)"
 											v-on="controls.PROPE10_AGENTEMAIL___.handlers"
 											:loading="controls.PROPE10_AGENTEMAIL___.props.loading"
 											:reporting-mode-on="reportingModeCAV"
 											:suggestion-mode-on="suggestionModeOn">
 											<q-mask
 												v-if="controls.PROPE10_AGENTEMAIL___.isVisible"
-												v-bind="controls.PROPE10_AGENTEMAIL___"
+												v-bind="controls.PROPE10_AGENTEMAIL___.props"
+												:id="getControlId(controls.PROPE10_AGENTEMAIL___)"
 												:model-value="model.AgentValEmail.value"
 												@change="model.AgentValEmail.fnUpdateValueOnChange" />
 										</base-input-structure>
@@ -408,7 +433,8 @@
 										<base-input-structure
 											v-if="controls.PROPE10_AGENTPHOTO___.isVisible"
 											class="q-image"
-											v-bind="controls.PROPE10_AGENTPHOTO___"
+											v-bind="controls.PROPE10_AGENTPHOTO___.wrapperProps"
+											:id="getControlId(controls.PROPE10_AGENTPHOTO___)"
 											v-on="controls.PROPE10_AGENTPHOTO___.handlers"
 											:loading="controls.PROPE10_AGENTPHOTO___.props.loading"
 											:reporting-mode-on="reportingModeCAV"
@@ -416,6 +442,7 @@
 											<q-image
 												v-if="controls.PROPE10_AGENTPHOTO___.isVisible"
 												v-bind="controls.PROPE10_AGENTPHOTO___.props"
+												:id="getControlId(controls.PROPE10_AGENTPHOTO___)"
 												v-on="controls.PROPE10_AGENTPHOTO___.handlers" />
 										</base-input-structure>
 									</q-col>
@@ -431,21 +458,22 @@
 						<q-table
 							v-if="controls.PROPE10_PSEUDPROPCONT.isVisible"
 							v-bind="controls.PROPE10_PSEUDPROPCONT"
+							:id="getControlId(controls.PROPE10_PSEUDPROPCONT)"
 							v-on="controls.PROPE10_PSEUDPROPCONT.handlers">
+							<template #header>
+								<q-table-config
+									:table-ctrl="controls.PROPE10_PSEUDPROPCONT"
+									v-on="controls.PROPE10_PSEUDPROPCONT.handlers" />
+							</template>
 							<!-- USE /[MANUAL GQT CUSTOM_TABLE PROPE10_PSEUDPROPCONT]/ -->
 						</q-table>
-						<q-table-extra-extension
-							v-if="controls.PROPE10_PSEUDPROPCONT.isVisible"
-							:list-ctrl="controls.PROPE10_PSEUDPROPCONT"
-							:filter-operators="controls.PROPE10_PSEUDPROPCONT.filterOperators"
-							v-on="controls.PROPE10_PSEUDPROPCONT.handlers" />
 					</q-col>
 				</q-row>
 			</template>
 		</q-container>
 	</teleport>
 
-	<hr v-if="!isPopup && showFormFooter" />
+	<q-divider v-if="!isPopup && showFormFooter" />
 
 	<teleport
 		v-if="formModalIsReady && showFormFooter"
@@ -796,6 +824,7 @@
 						label: computed(() => this.Resources.INFORMACOES_PRINCIPA43450),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
+						borderless: false,
 						isCollapsible: false,
 						anchored: false,
 						directChildren: ['PROPE10_PROPEPHOTO___', 'PROPE10_PROPETITLE___', 'PROPE10_PROPEPRICE___', 'PROPE10_PROPEDESCRIPT'],
@@ -884,6 +913,7 @@
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'PROPE10_PSEUDACC01___',
 						isInAccordion: true,
+						borderless: false,
 						isCollapsible: true,
 						anchored: false,
 						directChildren: ['PROPE10_CITY_CITY____', 'PROPE10_CTRY_COUNTRY_'],
@@ -945,6 +975,7 @@
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'PROPE10_PSEUDACC01___',
 						isInAccordion: true,
+						borderless: false,
 						isCollapsible: true,
 						anchored: false,
 						directChildren: ['PROPE10_PROPEBUILDTYP', 'PROPE10_PROPETYPOLOGY', 'PROPE10_PROPESIZE____', 'PROPE10_PROPEBATHRMS_', 'PROPE10_PROPEYEAR____'],
@@ -963,8 +994,8 @@
 						container: 'PROPE10_PSEUDDETAILS_',
 						maxLength: 1,
 						arrayName: 'buildtyp',
-						helpShortItem: '',
-						helpDetailedItem: '',
+						helpShortItem: 'None',
+						helpDetailedItem: 'None',
 						controlLimits: [
 						],
 					}, this),
@@ -1037,6 +1068,7 @@
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'PROPE10_PSEUDACC01___',
 						isInAccordion: true,
+						borderless: false,
 						isCollapsible: true,
 						anchored: false,
 						directChildren: ['PROPE10_AGENTNAME____', 'PROPE10_AGENTEMAIL___', 'PROPE10_AGENTPHOTO___'],
@@ -1117,6 +1149,7 @@
 						label: computed(() => this.Resources.CONTACTS55742),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
+						headerLevel: computed(() => this.baseHeadingLevel + 1),
 						controller: 'PROPE',
 						action: 'Prope10_ValPropcont',
 						hasDependencies: false,
@@ -1187,7 +1220,6 @@
 							searchBarConfig: {
 								visibility: false
 							},
-							filtersVisible: false,
 							allowColumnFilters: false,
 							allowColumnSort: true,
 							crudActions: [
@@ -1265,9 +1297,7 @@
 									id: 'insert',
 									name: 'insert',
 									title: computed(() => this.Resources.INSERIR43365),
-									icon: {
-										icon: 'add'
-									},
+									icon: { icon: 'add' },
 									isInReadOnly: false,
 									params: {
 										canExecuteAction: vm.applyChanges,
@@ -1316,7 +1346,7 @@
 								sortOrder: 'asc'
 							}
 						},
-						globalEvents: ['changed-PROPE', 'changed-PROCN'],
+						globalEvents: ['changed-PROCN', 'changed-PROPE'],
 						uuid: 'Prope10_ValPropcont',
 						allSelectedRows: 'false',
 						controlLimits: [
@@ -1748,7 +1778,6 @@
 
 				this.afterControlUpdate(controlField, fieldValue)
 			},
-
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
 // USE /[MANUAL GQT FUNCTIONS_JS PROPE10]/
 // eslint-disable-next-line

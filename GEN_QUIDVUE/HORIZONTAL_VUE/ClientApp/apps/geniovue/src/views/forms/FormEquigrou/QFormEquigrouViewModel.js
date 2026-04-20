@@ -65,6 +65,17 @@ export default class ViewModel extends FormViewModelBase
 		}).cloneFrom(values?.ValCodrooms))
 		this.stopWatchers.push(watch(() => this.ValCodrooms.value, (newValue, oldValue) => this.onUpdate('equip.codrooms', this.ValCodrooms, newValue, oldValue)))
 
+		this.ValCoddeco = reactive(new modelFieldType.ForeignKey({
+			id: 'ValCoddeco',
+			originId: 'ValCoddeco',
+			area: 'EQUIP',
+			field: 'CODDECO',
+			relatedArea: 'DECOM',
+			isFixed: true,
+			description: '',
+		}).cloneFrom(values?.ValCoddeco))
+		this.stopWatchers.push(watch(() => this.ValCoddeco.value, (newValue, oldValue) => this.onUpdate('equip.coddeco', this.ValCoddeco, newValue, oldValue)))
+
 		this.ValCodwareh = reactive(new modelFieldType.ForeignKey({
 			id: 'ValCodwareh',
 			originId: 'ValCodwareh',
@@ -75,17 +86,6 @@ export default class ViewModel extends FormViewModelBase
 			description: '',
 		}).cloneFrom(values?.ValCodwareh))
 		this.stopWatchers.push(watch(() => this.ValCodwareh.value, (newValue, oldValue) => this.onUpdate('equip.codwareh', this.ValCodwareh, newValue, oldValue)))
-
-		this.ValCodempre = reactive(new modelFieldType.ForeignKey({
-			id: 'ValCodempre',
-			originId: 'ValCodempre',
-			area: 'EQUIP',
-			field: 'CODEMPRE',
-			relatedArea: 'CMPNY',
-			isFixed: true,
-			description: computed(() => this.Resources._COMPANY02087),
-		}).cloneFrom(values?.ValCodempre))
-		this.stopWatchers.push(watch(() => this.ValCodempre.value, (newValue, oldValue) => this.onUpdate('equip.codempre', this.ValCodempre, newValue, oldValue)))
 
 		this.ValCoditem = reactive(new modelFieldType.ForeignKey({
 			id: 'ValCoditem',
@@ -98,16 +98,16 @@ export default class ViewModel extends FormViewModelBase
 		}).cloneFrom(values?.ValCoditem))
 		this.stopWatchers.push(watch(() => this.ValCoditem.value, (newValue, oldValue) => this.onUpdate('equip.coditem', this.ValCoditem, newValue, oldValue)))
 
-		this.ValCoddeco = reactive(new modelFieldType.ForeignKey({
-			id: 'ValCoddeco',
-			originId: 'ValCoddeco',
+		this.ValCodempre = reactive(new modelFieldType.ForeignKey({
+			id: 'ValCodempre',
+			originId: 'ValCodempre',
 			area: 'EQUIP',
-			field: 'CODDECO',
-			relatedArea: 'DECOM',
+			field: 'CODEMPRE',
+			relatedArea: 'CMPNY',
 			isFixed: true,
-			description: '',
-		}).cloneFrom(values?.ValCoddeco))
-		this.stopWatchers.push(watch(() => this.ValCoddeco.value, (newValue, oldValue) => this.onUpdate('equip.coddeco', this.ValCoddeco, newValue, oldValue)))
+			description: computed(() => this.Resources._COMPANY02087),
+		}).cloneFrom(values?.ValCodempre))
+		this.stopWatchers.push(watch(() => this.ValCodempre.value, (newValue, oldValue) => this.onUpdate('equip.codempre', this.ValCodempre, newValue, oldValue)))
 
 		/** The used foreign keys. */
 		this.ValCodpess1 = reactive(new modelFieldType.ForeignKey({
@@ -149,6 +149,7 @@ export default class ViewModel extends FormViewModelBase
 			field: 'NAME',
 			maxLength: 85,
 			description: computed(() => this.Resources.NAME31974),
+			ignoreFldSubmit: true,
 		}).cloneFrom(values?.TablePess1Name))
 		this.stopWatchers.push(watch(() => this.TablePess1Name.value, (newValue, oldValue) => this.onUpdate('pess1.name', this.TablePess1Name, newValue, oldValue)))
 
@@ -325,6 +326,7 @@ export default class ViewModel extends FormViewModelBase
 			field: 'TIPOEQUI',
 			maxLength: 50,
 			description: computed(() => this.Resources.TYPE_OF_EQUIPMENT18080),
+			ignoreFldSubmit: true,
 		}).cloneFrom(values?.TableTpequTipoequi))
 		this.stopWatchers.push(watch(() => this.TableTpequTipoequi.value, (newValue, oldValue) => this.onUpdate('tpequ.tipoequi', this.TableTpequTipoequi, newValue, oldValue)))
 

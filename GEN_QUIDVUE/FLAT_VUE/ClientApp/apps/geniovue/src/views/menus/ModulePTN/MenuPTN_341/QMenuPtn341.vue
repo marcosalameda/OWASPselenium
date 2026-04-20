@@ -10,59 +10,61 @@
 				:selected-tab="controls.tabGroup.selectedTab"
 				:is-visible="controls.tabGroup.isVisible"
 				@tab-changed="controls.tabGroup.selectTab($event)">
-				<template #tab-panel>
-					<section v-show="controls.tabGroup.selectedTab === 'firstTab'">
-						<q-row-container is-large>
-							<q-control-wrapper class="row-line-group">
-								<q-table
-									v-bind="controls.firstTable"
-									v-on="controls.firstTable.handlers" />
+				<section v-show="controls.tabGroup.selectedTab === 'firstTab'">
+					<q-row-container is-large>
+						<q-control-wrapper class="row-line-group">
+							<q-table
+								v-bind="controls.firstTable"
+								v-on="controls.firstTable.handlers">
+								<template #header>
+									<q-table-config
+										:table-ctrl="controls.firstTable"
+										v-on="controls.firstTable.handlers" />
+								</template>
+							</q-table>
+						</q-control-wrapper>
+					</q-row-container>
+				</section>
 
-								<q-table-extra-extension
-									:list-ctrl="controls.firstTable"
-									v-on="controls.firstTable.handlers" />
-							</q-control-wrapper>
-						</q-row-container>
-					</section>
+				<section v-show="controls.tabGroup.selectedTab === 'secondTab'">
+					<q-row-container is-large>
+						<q-control-wrapper class="row-line-group">
+							<q-table
+								v-bind="controls.secondTable"
+								v-on="controls.secondTable.handlers">
+								<template #header>
+									<q-table-config
+										:table-ctrl="controls.secondTable"
+										v-on="controls.secondTable.handlers" />
+								</template>
+							</q-table>
+						</q-control-wrapper>
+					</q-row-container>
 
-					<section v-show="controls.tabGroup.selectedTab === 'secondTab'">
-						<q-row-container is-large>
-							<q-control-wrapper class="row-line-group">
-								<q-table
-									v-bind="controls.secondTable"
-									v-on="controls.secondTable.handlers" />
+					<q-row-container is-large>
+						<q-control-wrapper class="row-line-group">
+							<q-button
+								:label="Resources.APLICAR33981"
+								:title="Resources.APLICAR33981"
+								@click="applyChanges">
+								<q-icon icon="bring-forward" />
+							</q-button>
+						</q-control-wrapper>
+					</q-row-container>
 
-								<q-table-extra-extension
-									:list-ctrl="controls.secondTable"
-									v-on="controls.secondTable.handlers" />
-							</q-control-wrapper>
-						</q-row-container>
-
-						<q-row-container is-large>
-							<q-control-wrapper class="row-line-group">
-								<q-button
-									:label="Resources.APLICAR33981"
-									:title="Resources.APLICAR33981"
-									@click="applyChanges">
-									<q-icon icon="bring-forward" />
-								</q-button>
-							</q-control-wrapper>
-						</q-row-container>
-
-						<q-row-container is-large>
-							<q-control-wrapper class="row-line-group">
-								<q-table
-									:rows="selectedItems"
-									:columns="mainTable.columns"
-									:config="controls.thirdTable.config"
-									:total-rows="controls.thirdTable.totalRows"
-									:has-more-pages="controls.thirdTable.hasMorePages"
-									readonly
-									v-on="controls.thirdTable.handlers" />
-							</q-control-wrapper>
-						</q-row-container>
-					</section>
-				</template>
+					<q-row-container is-large>
+						<q-control-wrapper class="row-line-group">
+							<q-table
+								:rows="selectedItems"
+								:columns="mainTable.columns"
+								:config="controls.thirdTable.config"
+								:total-rows="controls.thirdTable.totalRows"
+								:has-more-pages="controls.thirdTable.hasMorePages"
+								readonly
+								v-on="controls.thirdTable.handlers" />
+						</q-control-wrapper>
+					</q-row-container>
+				</section>
 			</q-tab-container>
 		</q-control-wrapper>
 	</q-row-container>
@@ -177,6 +179,7 @@
 								label: computed(() => this.Resources.DESIGNATION35876),
 								dataLength: 85,
 								scrollData: 30,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 						],
 						config: {
@@ -199,7 +202,6 @@
 							searchBarConfig: {
 								visibility: true
 							},
-							filtersVisible: true,
 							allowColumnFilters: true,
 							allowColumnSort: true,
 							generalCustomActions: [
@@ -221,7 +223,7 @@
 								sortOrder: 'asc'
 							}
 						},
-						globalEvents: ['changed-TPEQU', 'changed-ROOM1', 'changed-DECOM', 'changed-PESS1', 'changed-EQUIP', 'changed-CMPNY', 'changed-WAREH', 'changed-ITEM'],
+						globalEvents: ['changed-EQUIP', 'changed-TPEQU', 'changed-ROOM1', 'changed-DECOM', 'changed-PESS1', 'changed-WAREH', 'changed-ITEM', 'changed-CMPNY'],
 						uuid: 'ca3ef0a0-cece-4811-810f-91450c0387b3',
 						allSelectedRows: 'false',
 						headerLevel: 1,
@@ -257,6 +259,7 @@
 								label: computed(() => this.Resources.N_R__ROOM43805),
 								dataLength: 10,
 								scrollData: 10,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 2,
@@ -266,6 +269,7 @@
 								label: computed(() => this.Resources.ROOM_DESIGNATION37895),
 								dataLength: 50,
 								scrollData: 30,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 						],
 						config: {
@@ -288,7 +292,6 @@
 							searchBarConfig: {
 								visibility: true
 							},
-							filtersVisible: true,
 							allowColumnFilters: true,
 							allowColumnSort: true,
 							generalCustomActions: [

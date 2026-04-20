@@ -87,24 +87,6 @@ public class WMS_Menu_ASSET_CARD_RowViewModel : Models.Asset
 				Area = "MANUF",
 				Field = "WEBSITE",
 			},
-			new ListColumn()
-			{
-				Order = 10,
-				Area = "ASSET",
-				Field = "DESCRIPTION",
-			},
-			new ListColumn()
-			{
-				Order = 11,
-				Area = "ASSET",
-				Field = "LONGDESC",
-			},
-			new ListColumn()
-			{
-				Order = 12,
-				Area = "ATAGS",
-				Field = "ICON",
-			},
 		];
 	}
 
@@ -171,13 +153,6 @@ public class WMS_Menu_ASSET_CARD_RowViewModel : Models.Asset
 	/// </summary>
 	[JsonPropertyName("customActions")]
 	public Dictionary<string, ListCustomAction> CustomActions { get; private set; }
-
-	#region Columns from table below
-
-	[ShouldSerialize("Atags.ValIcon")]
-	public List<decimal> AtagsValIcon { get; set; } = [];
-
-	#endregion
 
 	/// <summary>
 	/// The foreground color

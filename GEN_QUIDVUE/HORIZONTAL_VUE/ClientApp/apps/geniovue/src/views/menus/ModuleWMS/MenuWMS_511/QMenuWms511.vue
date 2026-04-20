@@ -3,22 +3,23 @@
 		v-if="menuModalIsReady"
 		:to="`#${uiContainersId.body}`"
 		:disabled="!menuInfo.isPopup">
-		<form
+		<div
 			class="form-horizontal"
 			@submit.prevent>
 			<q-row-container>
 				<q-table
 					v-bind="controls.menu"
 					v-on="controls.menu.handlers">
+					<template #header>
+						<q-table-config
+							:table-ctrl="controls.menu"
+							v-on="controls.menu.handlers">
+						</q-table-config>
+					</template>
 					<!-- USE /[MANUAL GQT CUSTOM_TABLE WMS_Menu_511]/ -->
 				</q-table>
-
-				<q-table-extra-extension
-					:list-ctrl="controls.menu"
-					:filter-operators="controls.menu.filterOperators"
-					v-on="controls.menu.handlers" />
 			</q-row-container>
-		</form>
+		</div>
 	</teleport>
 
 	<teleport
@@ -172,7 +173,7 @@
 								area: 'ENTIT',
 								field: 'REGISTRA',
 								label: computed(() => this.Resources.LEGAL_REGISTRATION04413),
-								dataLength: 30,
+								dataLength: 20,
 								scrollData: 20,
 								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
@@ -182,7 +183,7 @@
 								area: 'ENTIT',
 								field: 'TAXNUMBE',
 								label: computed(() => this.Resources.VAT_NUMBER24236),
-								dataLength: 30,
+								dataLength: 20,
 								scrollData: 20,
 								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
@@ -232,7 +233,7 @@
 								area: 'ENTIT',
 								field: 'IBAN',
 								label: computed(() => this.Resources.IBAN__INTERNATIONAL_45066),
-								dataLength: 33,
+								dataLength: 25,
 								scrollData: 25,
 								isVisible: false,
 								export: 1,
@@ -243,7 +244,7 @@
 								area: 'ENTIT',
 								field: 'BUILDING',
 								label: computed(() => this.Resources.BUILDING_HOUSE_NUMBE20738),
-								dataLength: 25,
+								dataLength: 10,
 								scrollData: 10,
 								isVisible: false,
 								export: 1,
@@ -254,7 +255,7 @@
 								area: 'ENTIT',
 								field: 'STREET',
 								label: computed(() => this.Resources.STREET44324),
-								dataLength: 50,
+								dataLength: 85,
 								scrollData: 30,
 								isVisible: false,
 								export: 1,
@@ -265,7 +266,7 @@
 								area: 'ENTIT',
 								field: 'TOWN',
 								label: computed(() => this.Resources.TOWN_CITY16259),
-								dataLength: 50,
+								dataLength: 85,
 								scrollData: 30,
 								isVisible: false,
 								export: 1,
@@ -276,7 +277,7 @@
 								area: 'ENTIT',
 								field: 'COUNTY',
 								label: computed(() => this.Resources.COUNTY_PROVINCE34285),
-								dataLength: 50,
+								dataLength: 85,
 								scrollData: 30,
 								isVisible: false,
 								export: 1,
@@ -287,7 +288,7 @@
 								area: 'ENTIT',
 								field: 'STATE',
 								label: computed(() => this.Resources.STATE_PROVINCE28516),
-								dataLength: 50,
+								dataLength: 85,
 								scrollData: 30,
 								isVisible: false,
 								export: 1,
@@ -309,7 +310,7 @@
 								area: 'ENTIT',
 								field: 'POSTALCO',
 								label: computed(() => this.Resources.ZIP_POSTAL_CODE55613),
-								dataLength: 10,
+								dataLength: 50,
 								scrollData: 30,
 								isVisible: false,
 								export: 1,
@@ -342,7 +343,7 @@
 								area: 'ENTIT',
 								field: 'CONTACT',
 								label: computed(() => this.Resources.CONTACT_TELEPHONE_NU12694),
-								dataLength: 30,
+								dataLength: 20,
 								scrollData: 20,
 								isVisible: false,
 								export: 1,
@@ -414,14 +415,13 @@
 								isVisible: false,
 								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
-							new listColumnTypes.TextColumn({
+							new listColumnTypes.BooleanColumn({
 								order: 26,
 								name: 'ValOwner',
 								area: 'ENTIT',
 								field: 'OWNER',
 								label: computed(() => this.Resources.OWNER09558),
-								dataLength: 50,
-								scrollData: 30,
+								scrollData: 1,
 								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.BooleanColumn({
@@ -458,7 +458,6 @@
 							searchBarConfig: {
 								visibility: true
 							},
-							filtersVisible: true,
 							allowColumnFilters: true,
 							allowColumnSort: true,
 							crudActions: [
@@ -532,9 +531,7 @@
 									id: 'insert',
 									name: 'insert',
 									title: computed(() => this.Resources.INSERIR43365),
-									icon: {
-										icon: 'add'
-									},
+									icon: { icon: 'add' },
 									isInReadOnly: true,
 									params: {
 										action: vm.openFormAction,
@@ -583,7 +580,7 @@
 								sortOrder: 'asc'
 							}
 						},
-						globalEvents: ['changed-ENTIT', 'changed-FACI1', 'changed-FACI2'],
+						globalEvents: ['changed-ENTIT', 'changed-FACI2', 'changed-FACI1'],
 						uuid: '07a4ae81-9ea2-4709-901d-950c72bb072b',
 						allSelectedRows: 'false',
 						headerLevel: 1,

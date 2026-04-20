@@ -165,12 +165,12 @@ export default {
 		expandDropdownMenu(menu) {
 			// If the menu is an accordion, removes all entries outside the current branch.
 			if (this.isAccordionMenu) {
-				let otherMenus = []
-				for (let menuId of this.menuPath)
+				const otherMenus = []
+				for (const menuId of this.menuPath)
 					if (!menu.Order.startsWith(menuId))
 						otherMenus.push(menuId)
 
-				for (let menuId of otherMenus)
+				for (const menuId of otherMenus)
 					this.removeFromMenuPath(menuId)
 
 				this.removeFromMenuPath(menu.Order)
@@ -260,7 +260,7 @@ export default {
 			{
 				// Get character code for value of the top level menu order
 				// Can be a number or letter
-				let topOrder = menu?.Order?.charCodeAt(0)
+				const topOrder = menu?.Order?.charCodeAt(0)
 
 				// Get numeric value based on the character code
 				// Character code for a number

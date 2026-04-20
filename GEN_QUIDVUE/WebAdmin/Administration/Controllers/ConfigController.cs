@@ -148,6 +148,7 @@ namespace Administration.Controllers
 
                 var decimalSeparator = HardCodedLists.DisplayNumberFormatDecimal.Dot;
                 var groupSeparator = HardCodedLists.DisplayNumberFormatGroup.None;
+				var negativeFormat = HardCodedLists.DisplayNumberFormatNegative.Minus;
                 if (conf.NumberFormat != null)
                 {
                     Enum.TryParse(conf.NumberFormat.DecimalSeparator, out decimalSeparator);
@@ -183,6 +184,21 @@ namespace Administration.Controllers
                             break;
                         default:
                             model.GroupSeparator = HardCodedLists.DisplayNumberFormatGroup.None;
+                            break;
+                    }
+
+                    Enum.TryParse(conf.NumberFormat.NegativeFormat, out negativeFormat);
+                    model.NegativeFormat = negativeFormat;
+                    switch (conf.NumberFormat.NegativeFormat)
+                    {
+                        case "-":
+                            model.NegativeFormat = HardCodedLists.DisplayNumberFormatNegative.Minus;
+                            break;
+                        case "()":
+                            model.NegativeFormat = HardCodedLists.DisplayNumberFormatNegative.Parentheses;
+                            break;
+                        default:
+                            model.NegativeFormat = HardCodedLists.DisplayNumberFormatNegative.Minus;
                             break;
                     }
                 }
@@ -231,6 +247,7 @@ namespace Administration.Controllers
                 model.UrlAPIBackend = conf.ChatBotConfig?.APIEndpoint;
                 model.MCPSecurityMode = conf.ChatBotConfig?.MCPSecurityMode ?? MCPSecurityMode.JWT;
                 model.JWTEncryptionKey = conf.ChatBotConfig?.JWTEncryptionKey;
+                model.UrlMCP = conf.ChatBotConfig?.AppMCPEndpoint;
             }
             catch (Exception e)
             {
@@ -285,14 +302,6 @@ namespace Administration.Controllers
                 model.ConnEncrypt = dataSystem.Schemas[0].ConnEncrypt;
                 model.ConnWithDomainUser = dataSystem.Schemas[0].ConnWithDomainUser;
 
-                //Add GQP shared system
-                var GQPSchema = dataSystem.Schemas.Find(s => s.Id == "GQP");
-                if (GQPSchema != null)
-                {
-                    model.GQP_Schema = GQPSchema.Schema;
-                    model.GQP_ConnEncrypt = GQPSchema.ConnEncrypt;
-                    model.GQP_ConnWithDomainUser = GQPSchema.ConnWithDomainUser;
-                }
                 model.HideYears = conf.omiteAnos.ToUpper() == "S";  //<-- Only this one goes to the conf? does that make sense?
                 model.DbUser = Encoding.Unicode.GetString(Convert.FromBase64String(dataSystem.Login ?? string.Empty));
                 
@@ -556,8 +565,6 @@ namespace Administration.Controllers
                         sysConfiguration.SaveLogDatabaseConfig(model.Log_DbUser, model.Log_DbPsw, model.Log_Server, model.ServerType.ToString(), 
                             model.Log_Schema, model.Log_Port, model.ConnEncrypt, model.ConnWithDomainUser, year);                    
                     }
-                    //Configure Shared Tables
-                    SaveSharedTables(model, sysConfiguration.ReadDatabaseConfig(year));
                     model.AlertType = "success";
                     model.ResultMsg = Resources.Resources.FICHEIRO_DE_CONFIGUR18806 + " " + Resources.Resources.SERA_REDIRECIONADO_E06592;
                 }
@@ -570,41 +577,6 @@ namespace Administration.Controllers
 			return Index(model.ResultMsg, appId, model.AlertType);
         }
 
-        private void SaveSharedTables(Models.ConfigModel model, DataSystemXml db)
-        {
-            ConfigurationXML conf = configManager.GetExistingConfig();
-            DataXml res = null;
-
-            res = db.Schemas.Find(x => x.Id == "GQP");
-            if(res != null)
-            {
-                res.Schema = model.Schema;
-                res.ConnEncrypt = model.ConnEncrypt;
-                res.ConnWithDomainUser = model.ConnWithDomainUser;
-            }
-            else
-            {
-                db.Schemas.Add(new DataXml
-                {
-                    Id = "GQP",
-                    Schema = model.GQP_Schema,
-                    ConnEncrypt = model.GQP_ConnEncrypt,
-                    ConnWithDomainUser = model.GQP_ConnWithDomainUser
-                });
-            }
-
-            int indexDS = conf.DataSystems.FindIndex(confDS => confDS.Name == db.Name);
-            if (indexDS != -1)
-                conf.DataSystems[indexDS] = db;
-            else
-                conf.DataSystems.Add(db);
-
-            //Save configuration
-            configManager.StoreConfig(conf);
-
-            // Reload configuration
-            CSGenio.framework.Configuration.ReadConfiguration(conf);
-        }
 
         [HttpPost]
         public IActionResult SaveIdentityProvider([FromBody]Models.IdentityProviderCfg model)
@@ -1141,6 +1113,7 @@ namespace Administration.Controllers
                 conf.ChatBotConfig.APIEndpoint = model.UrlAPIBackend;
                 conf.ChatBotConfig.MCPSecurityMode = model.MCPSecurityMode;
                 conf.ChatBotConfig.JWTEncryptionKeyDecode = model.JWTEncryptionKey;
+                conf.ChatBotConfig.AppMCPEndpoint = model.UrlMCP;
 
                 conf.QAEnvironment = Convert.ToInt32(model.QAEnvironment);
 
@@ -1172,6 +1145,18 @@ namespace Administration.Controllers
                         break;
                     default: // none
                         conf.NumberFormat.GroupSeparator = "";
+                        break;
+                }
+                switch (model.NegativeFormat.ToString())
+                {
+                    case "Minus":
+                        conf.NumberFormat.NegativeFormat = "-";
+                        break;
+                    case "Parentheses":
+                        conf.NumberFormat.NegativeFormat = "()";
+                        break;
+                    default:
+                        conf.NumberFormat.NegativeFormat = "-";
                         break;
                 }
                 // check if they have the same value

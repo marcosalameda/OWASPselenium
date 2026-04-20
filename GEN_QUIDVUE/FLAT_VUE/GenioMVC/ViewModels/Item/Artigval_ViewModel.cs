@@ -1,20 +1,20 @@
-﻿using JsonIgnoreAttribute = System.Text.Json.Serialization.JsonIgnoreAttribute;
+﻿using CSGenio.business;
+using CSGenio.framework;
+using CSGenio.persistence;
+using GenioMVC.Helpers;
+using GenioMVC.Models.Exception;
+using GenioMVC.Models.Navigation;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Quidgest.Persistence;
+using Quidgest.Persistence.GenericQuery;
+
 using System.Collections;
 using System.Collections.Concurrent;
 using System.Collections.Specialized;
 using System.ComponentModel.DataAnnotations;
 using System.Data;
 using System.Globalization;
-
-using CSGenio.business;
-using CSGenio.framework;
-using CSGenio.persistence;
-using GenioMVC.Helpers;
-using GenioMVC.Models.Exception;
-using GenioMVC.Models.Navigation;
-using Quidgest.Persistence;
-using Quidgest.Persistence.GenericQuery;
+using System.Text.Json.Serialization;
 
 namespace GenioMVC.ViewModels.Item
 {
@@ -40,6 +40,7 @@ namespace GenioMVC.ViewModels.Item
 		public string ValCodwareh { get; set; }
 
 		#endregion
+
 		/// <summary>
 		/// Title: "Image" | Type: "IJ"
 		/// </summary>
@@ -59,11 +60,6 @@ namespace GenioMVC.ViewModels.Item
 		/// Title: "Tipo" | Type: "AC"
 		/// </summary>
 		public string ValItemtype { get; set; }
-		/// <summary>
-		/// Title: "" | Type: "PSEUD"
-		/// </summary>
-		[JsonIgnore]
-		public SelectList List_ValItemtype { get; set; }
 		/// <summary>
 		/// Title: "Code" | Type: "C"
 		/// </summary>
@@ -101,13 +97,6 @@ namespace GenioMVC.ViewModels.Item
 		/// </summary>
 		[ValidateSetAccess]
 		public string ValDisponib { get; set; }
-		/// <summary>
-		/// Title: "" | Type: "PSEUD"
-		/// </summary>
-		[JsonIgnore]
-		public SelectList List_ValDisponib { get; set; }
-
-
 
 		#region Navigations
 		#endregion
@@ -135,6 +124,15 @@ namespace GenioMVC.ViewModels.Item
 		/// <summary>Field: "Code" Tipo: "C"</summary>
 		[ValidateSetAccess]
 		public string GitemValItemgcod { get { return funcGitemValItemgcod != null ? funcGitemValItemgcod() : _auxGitemValItemgcod; } private set { funcGitemValItemgcod = () => value; } }
+		// Field for formula
+		/// <summary>Used only for lazy loading of the GitemValItemdes field</summary>
+		[JsonIgnore]
+		[ValidateSetAccess]
+		public Func<string> funcGitemValItemdes { get; set; }
+		private string _auxGitemValItemdes { get; set; }
+		/// <summary>Field: "Global article" Tipo: "C"</summary>
+		[ValidateSetAccess]
+		public string GitemValItemdes { get { return funcGitemValItemdes != null ? funcGitemValItemdes() : _auxGitemValItemdes; } private set { funcGitemValItemdes = () => value; } }
 
 		#endregion
 
@@ -261,6 +259,7 @@ namespace GenioMVC.ViewModels.Item
 				ValCategory = ViewModelConversion.ToString(m.ValCategory);
 				ValDisponib = ViewModelConversion.ToString(m.ValDisponib);
 				funcGitemValItemgcod = () => ViewModelConversion.ToString(m.Gitem.ValItemgcod);
+				funcGitemValItemdes = () => ViewModelConversion.ToString(m.Gitem.ValItemdes);
 				ValCoditem = ViewModelConversion.ToString(m.ValCoditem);
 			}
 			catch (Exception)
@@ -317,12 +316,7 @@ namespace GenioMVC.ViewModels.Item
 			}
 		}
 
-		/// <summary>
-		/// Sets the value of a single property of the view model based on the provided table and field names.
-		/// </summary>
-		/// <param name="fullFieldName">The full field name in the format "table.field".</param>
-		/// <param name="value">The field value.</param>
-		/// <exception cref="ArgumentNullException">Thrown if <paramref name="fullFieldName"/> is null.</exception>
+		/// <inheritdoc />
 		public override void SetViewModelValue(string fullFieldName, object value)
 		{
 			try
@@ -466,6 +460,7 @@ namespace GenioMVC.ViewModels.Item
 
 			Load_Artigvalgitemitemdes_(qs, lazyLoad);
 			Load_Artigvalwarehwarehdes(qs, lazyLoad);
+
 // USE /[MANUAL GQT VIEWMODEL_LOADPARTIAL ARTIGVAL]/
 		}
 
@@ -541,10 +536,7 @@ namespace GenioMVC.ViewModels.Item
 				}
 			}
 
-			TableGitemItemdes = new TableDBEdit<Models.Gitem>
-			{
-				IsLazyLoad = lazyLoad
-			};
+			TableGitemItemdes = new TableDBEdit<Models.Gitem>();
 
 			if (lazyLoad)
 			{
@@ -588,7 +580,7 @@ namespace GenioMVC.ViewModels.Item
 				int numberItems = CSGenio.framework.Configuration.NrRegDBedit;
 				int offset = (page - 1) * numberItems;
 
-				FieldRef[] fields = new FieldRef[] { CSGenioAgitem.FldCodgitem, CSGenioAgitem.FldItemdes, CSGenioAgitem.FldZzstate };
+				FieldRef[] fields = [CSGenioAgitem.FldCodgitem, CSGenioAgitem.FldItemdes, CSGenioAgitem.FldZzstate];
 
 // USE /[MANUAL GQT OVERRQ ARTIGVAL_GITEMITEMDES]/
 
@@ -732,10 +724,7 @@ namespace GenioMVC.ViewModels.Item
 				}
 			}
 
-			TableWarehWarehdes = new TableDBEdit<Models.Wareh>
-			{
-				IsLazyLoad = lazyLoad
-			};
+			TableWarehWarehdes = new TableDBEdit<Models.Wareh>();
 
 			if (lazyLoad)
 			{
@@ -779,7 +768,7 @@ namespace GenioMVC.ViewModels.Item
 				int numberItems = CSGenio.framework.Configuration.NrRegDBedit;
 				int offset = (page - 1) * numberItems;
 
-				FieldRef[] fields = new FieldRef[] { CSGenioAwareh.FldCodwareh, CSGenioAwareh.FldWarehdes, CSGenioAwareh.FldZzstate };
+				FieldRef[] fields = [CSGenioAwareh.FldCodwareh, CSGenioAwareh.FldWarehdes, CSGenioAwareh.FldZzstate];
 
 // USE /[MANUAL GQT OVERRQ ARTIGVAL_WAREHWAREHDES]/
 
@@ -927,9 +916,9 @@ namespace GenioMVC.ViewModels.Item
 				"item.category" => ViewModelConversion.ToString(modelValue),
 				"item.disponib" => ViewModelConversion.ToString(modelValue),
 				"gitem.itemgcod" => ViewModelConversion.ToString(modelValue),
+				"gitem.itemdes" => ViewModelConversion.ToString(modelValue),
 				"item.coditem" => ViewModelConversion.ToString(modelValue),
 				"gitem.codgitem" => ViewModelConversion.ToString(modelValue),
-				"gitem.itemdes" => ViewModelConversion.ToString(modelValue),
 				"wareh.codwareh" => ViewModelConversion.ToString(modelValue),
 				"wareh.warehdes" => ViewModelConversion.ToString(modelValue),
 				_ => modelValue

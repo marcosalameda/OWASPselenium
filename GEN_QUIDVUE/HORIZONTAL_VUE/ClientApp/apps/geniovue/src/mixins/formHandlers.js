@@ -5,7 +5,6 @@ import _isEmpty from 'lodash-es/isEmpty'
 import _some from 'lodash-es/some'
 
 import { useGenericDataStore } from '@quidgest/clientapp/stores'
-import { useGlobalTablesDataStore } from '@/stores/globalTablesData.js'
 import { useNavDataStore } from '@quidgest/clientapp/stores'
 import { useAiDataStore } from '@quidgest/clientapp/stores'
 
@@ -178,6 +177,14 @@ export default {
 		prefillValues: {
 			type: Object,
 			default: () => ({})
+		},
+
+		/**
+		 * Whether this form is being used multiple times on the same page.
+		 */
+		isMultiple: {
+			type: Boolean,
+			default: false
 		}
 	},
 
@@ -254,18 +261,18 @@ export default {
 		})
 
 		// Override form buttons with buttons received from prop.
-		for (let btnKey in this.buttonsOverride)
+		for (const btnKey in this.buttonsOverride)
 		{
 			const button = this.buttonsOverride[btnKey]
 
-			for (let propKey in button)
+			for (const propKey in button)
 			{
 				delete this.formButtons[btnKey][propKey]
 				this.formButtons[btnKey][propKey] = button[propKey]
 			}
 		}
 
-		if(this.isPopup)
+		if (this.isPopup)
 			this.$eventHub.emit('change-content-active-state', false)
 
 		// Setup of the various listeners for changes to the DB, which will update the respective list whenever changes occur.
@@ -275,6 +282,7 @@ export default {
 		this.$eventHub.on('modal-is-ready', this.setFormModalReady)
 		this.$eventHub.on('form-apply', this.formApplyCallback)
 		this.$eventHub.on('focus-control', this.focusControl)
+		this.$eventHub.on(`reload-${this.formInfo.name}`, this.reloadFormData)
 
 		// If there's alredy a modal for this form, marks the form as ready to be shown.
 		const modalEl = document.getElementById(this.uiContainersId.main)
@@ -308,8 +316,9 @@ export default {
 		this.$eventHub.off('modal-is-ready', this.setFormModalReady)
 		this.$eventHub.off('form-apply', this.formApplyCallback)
 		this.$eventHub.off('focus-control', this.focusControl)
+		this.$eventHub.off(`reload-${this.formInfo.name}`, this.reloadFormData)
 
-		if(this.isPopup)
+		if (this.isPopup)
 			this.$eventHub.emit('change-content-active-state', true)
 
 		this.componentOnLoadProc?.destroy()
@@ -436,7 +445,7 @@ export default {
 
 			if (Array.isArray(this.tableFields))
 			{
-				for (let tableName of this.tableFields)
+				for (const tableName of this.tableFields)
 				{
 					const control = this.controls[tableName]
 					if (control.rowsDirty && Object.keys(control.rowsDirty).length > 0)
@@ -444,7 +453,7 @@ export default {
 				}
 			}
 
-			return this.model.isDirty
+			return this.model?.isDirty ?? false
 		},
 
 		/**
@@ -469,6 +478,14 @@ export default {
 		isWidget()
 		{
 			return this.formInfo.type === 'widget'
+		},
+
+		/**
+		 * True if the form is a filters form, false otherwise.
+		 */
+		isFilters()
+		{
+			return this.formInfo.type === 'filters'
 		},
 
 		/**
@@ -566,15 +583,15 @@ export default {
 			if (!Array.isArray(humanKeyFields) || _isEmpty(humanKeyFields) || typeof this.model !== 'object')
 				return ''
 
-			var humanKey = ''
+			let humanKey = ''
 
-			for (let fieldId of humanKeyFields)
+			for (const fieldId of humanKeyFields)
 			{
-				let field = this.model[fieldId]
+				const field = this.model[fieldId]
 				if (_isEmpty(field))
 					break
 
-				let value = field.displayValue
+				const value = field.displayValue
 
 				if (_isEmpty(value))
 					continue
@@ -601,11 +618,11 @@ export default {
 		 */
 		formButtonSections()
 		{
-			let formModeBtns = {},
+			const formModeBtns = {},
 				formActionBtns = {},
 				formInsertBtns = {}
 
-			for (let i in this.formButtons)
+			for (const i in this.formButtons)
 			{
 				if (this.formButtons[i].type === 'form-mode')
 					formModeBtns[i] = { ...this.formButtons[i] }
@@ -638,6 +655,46 @@ export default {
 		formValues()
 		{
 			return this.getFormValues(this.navigationId)
+		},
+
+		/**
+		 * The level of the of the top heading tag.
+		 */
+		baseHeadingLevel()
+		{
+			const navLevels = this.navigation.convertToCollection()
+			let hasPopup = false
+			let level = 1
+
+			for (const navLevel of navLevels)
+			{
+				// Form type routes, which can be nested
+				if (navLevel.routeType === 'form')
+				{
+					// There should only be 1 popup form at a time
+					// Only 1 level will be added for this
+					if (navLevel.params?.isPopup === 'true')
+						hasPopup = true
+
+					// Each nested form adds a level
+					if (navLevel.isNested)
+						level++
+				}
+			}
+
+			// If sequence has a popup route
+			if (hasPopup)
+				level++
+
+			return level
+		},
+
+		/**
+		 * The top level heading tag name.
+		 */
+		topHeadingTag()
+		{
+			return genericFunctions.getHeadingTagNameByLevel(this.baseHeadingLevel)
 		}
 	},
 
@@ -663,6 +720,33 @@ export default {
 		removeModal,
 
 		isEmpty: genericFunctions.isEmpty,
+
+		/**
+		 * Get an ID based on a string value
+		 * @param {string} baseId The main ID, usually the control identifier
+		 * @returns {string} baseId if the control is in a normal form
+		 * or the baseId with the primary key of the form if the form can be
+		 * used multiple times on a page.
+		 * (ex: Editable tables, multi-forms, extended support forms.)
+		 */
+		getId(baseId)
+		{
+			const isMultiple = this.$props?.isMultiple === true
+			return isMultiple ? `${baseId}_${this.primaryKeyValue}` : baseId
+		},
+
+		/**
+		 * Get the control ID
+		 * @param {object} control A control object
+		 * @returns {string} baseId if the control is in a normal form
+		 * or the baseId with the primary key of the form if the form can be
+		 * used multiple times on a page.
+		 * (ex: Editable tables, multi-forms, extended support forms.)
+		 */
+		getControlId(control)
+		{
+			return this.getId(control.id)
+		},
 
 		/**
 		 * A function called whenever a new modal is ready. If that modal is for the current form,
@@ -696,10 +780,7 @@ export default {
 
 					return !_isEmpty(control) && isVisible && refreshCheck(control)
 				})
-				.map((ctrlId) => {
-					const control = this.controls[ctrlId]
-					return control.reload()
-				})
+				.map((ctrlId) => this.controls[ctrlId].reload())
 
 			await Promise.all(promises)
 		},
@@ -770,7 +851,7 @@ export default {
 		 */
 		setValuesFromStore()
 		{
-			for (let i in this.model)
+			for (const i in this.model)
 			{
 				const field = this.model[i]
 				formFunctions.setValuesFromStore(field, this)
@@ -790,7 +871,7 @@ export default {
 			const areaName = this.formArea
 			const formName = this.formInfo.name
 
-			for (let i in this.controls)
+			for (const i in this.controls)
 			{
 				const container = this.controls[i]
 
@@ -824,7 +905,7 @@ export default {
 		 */
 		resetContainersState()
 		{
-			for (let i in this.controls)
+			for (const i in this.controls)
 			{
 				const container = this.controls[i]
 
@@ -833,7 +914,6 @@ export default {
 				else if (container instanceof fieldControlClass.TabsControl)
 					container.selectFirstTab()
 			}
-
 		},
 
 		/**
@@ -843,10 +923,6 @@ export default {
 		hydrate(rawData)
 		{
 			this.model.hydrate(rawData)
-
-			// Global tables
-			const globalTablesData = useGlobalTablesDataStore()
-			globalTablesData.loadFromViewModel(rawData)
 		},
 
 		/**
@@ -890,7 +966,7 @@ export default {
 		{
 			const validationErrors = {}
 
-			for (let i in this.controls)
+			for (const i in this.controls)
 			{
 				const ctrl = this.controls[i]
 
@@ -936,7 +1012,7 @@ export default {
 			if (!this.isDirty)
 				return
 
-			for (let i in this.model)
+			for (const i in this.model)
 			{
 				const field = this.model[i]
 				// The editable table list data is in memory.
@@ -1014,7 +1090,7 @@ export default {
 		 */
 		parseResponseErrors(data)
 		{
-			let errors = {}
+			const errors = {}
 
 			// Recursively clear any previous server error messages
 			this.model.clearServerErrorMessages()
@@ -1106,9 +1182,6 @@ export default {
 			if (typeof mode !== 'string' || !Object.values(this.formModes).includes(mode.toUpperCase()))
 				return false
 
-			for (let i in this.model)
-				this.model[i].isReady = false
-
 			let params = { id, isNewLocation, prefillValues }
 			if (this.$route.query)
 			{
@@ -1131,7 +1204,9 @@ export default {
 				this.formInitialDataLoaded = true
 
 				// Handles the storing of field values.
-				if (this.storeKey !== null)
+				// If it's a filters form we don't store it's values, because, since the form will be displayed
+				// twice (above the table and inside the configuration popup), it will cause conflicts.
+				if (this.storeKey !== null && !this.isFilters)
 				{
 					this.setValuesFromStore()
 					this.storeValues({
@@ -1229,13 +1304,15 @@ export default {
 
 		/**
 		 * Loads the raw data of the form field from the server.
+		 * @param {string} modelField The identifier of the field
 		 * @returns A promise with the response from the server.
 		 */
 		async fetchFormField(modelField)
 		{
-			const id = this.hasRoute ? (this.$route.params.id || null) : this.id
+			if (typeof modelField !== 'string' || _isEmpty(modelField))
+				return
 
-			this.model[modelField].isReady = false
+			const id = this.hasRoute ? (this.$route.params.id || null) : this.id
 
 			await netAPI.fetchFormFieldData(
 				this.formArea,
@@ -1386,7 +1463,7 @@ export default {
 			if (!shouldSave)
 				return Promise.resolve(false)
 
-			let saveWithWarnResolve;
+			let saveWithWarnResolve
 			const saveWithWarnPromise = new Promise((resolve) => { saveWithWarnResolve = resolve })
 			this.model.allowSavingWithWarnings(canSaveWithWarnings)
 
@@ -1703,7 +1780,7 @@ export default {
 		 */
 		setFormKeys()
 		{
-			for (let key in this.dataApi.keys)
+			for (const key in this.dataApi.keys)
 			{
 				const modelField = this.dataApi.keys[key]
 				this.setFormKey(modelField)
@@ -1897,8 +1974,9 @@ export default {
 					return Promise.resolve(false)
 
 				// Local function to execute common form exit logic.
-				const executeNextAndExit = async () => {
-					this.clearInfoMessages()
+				const executeNextAndExit = async (clearInfoMessages = true) => {
+					if (clearInfoMessages)
+						this.clearInfoMessages()
 					this.model.resetValues()
 
 					if (typeof next === 'function')
@@ -1930,14 +2008,28 @@ export default {
 								? this.parseResponseErrors(response.data.Errors)
 								: {}
 
+							let clearInfoMessages = true
 							if (!response.data.Success)
 							{
 								this.displayErrorMessage(response.data)
 								resolve(false)
 								return
 							}
+							else if (typeof response.data.Data?.Warning === 'string')
+							{
+								// If the record has already been saved somewhere by another process,
+								// we cannot cancel it, but we must allow the user to exit the form.
+								// This way, the warning will only be displayed after the user exits the form.
+								this.clearInfoMessages()
+								this.setInfoMessage({
+									type: messageTypes.W,
+									message: response.data.Data.Warning,
+									pinned: true
+								})
+								clearInfoMessages = false
+							}
 
-							await executeNextAndExit()
+							await executeNextAndExit(clearInfoMessages)
 							resolve(true)
 						},
 						() => {
@@ -1965,6 +2057,10 @@ export default {
 					...this.getExtraNavParams(previouslyRemovedRowKey)
 				}
 
+				// Unbind model events before removing history level. Later cleanup logic would
+				// otherwise trigger field watchers, causing server calls (e.g. "getDependants")
+				// to affect the wrong (previous) history level instead of being discarded.
+				this.model?.unbindEvents()
 				this.formRemoveHistoryLevels((this.currentRouteParams || {}).goBack)
 
 				if (this.isNested)
@@ -1972,6 +2068,42 @@ export default {
 				else
 					await this.navigateTo(this.navigation.currentLevel, options)
 			})
+		},
+
+		/**
+		 * Updates the nested model after all form initialization processes complete.
+		 *
+		 * Collects promises from the form's load process and all field load processes,
+		 * waits for them to resolve, then emits events to notify parent components of
+		 * the form's dirty state and updated model data.
+		 *
+		 * Only executes if this component is nested (isNested === true).
+		 */
+		async updateNestedModel()
+		{
+			if (!this.isNested)
+				return
+
+			const promises = []
+
+			for (const process of this.componentOnLoadProc.processList.processes)
+				promises.push(process.cbPromise)
+
+			for (const fieldId in this.controls)
+			{
+				const field = this.controls[fieldId]
+				// Some field types, like tab groups, don't have associated processes.
+				const fieldProcesses = field.componentOnLoadProc?.processList.processes ?? []
+
+				for (const process of fieldProcesses)
+					promises.push(process.cbPromise)
+			}
+
+			// Wait for all form promises to resolve before emitting the update event.
+			await Promise.all(promises)
+
+			this.$emit('is-form-dirty', { isDirty: this.isDirty, afterFormSave: false })
+			this.$emit('update:nested-model', this.model)
 		},
 
 		/**
@@ -1988,14 +2120,8 @@ export default {
 				field: fieldObject
 			})
 
-			const eventType = fieldObject?.isGlobalFilterField === true ? 'filterChange' : 'fieldChange'
-			this.internalEvents.emit(`${eventType}:${fieldName}`, fieldObject)
-
-			if (this.isNested)
-			{
-				this.$emit('is-form-dirty', { isDirty: this.isDirty, afterFormSave: false })
-				this.$emit('update:nested-model', this.model)
-			}
+			this.internalEvents.emit(`fieldChange:${fieldName}`, fieldObject)
+			this.updateNestedModel()
 		},
 
 		/**
@@ -2078,13 +2204,13 @@ export default {
 			if (!this.model[fieldId])
 				return
 
-			for (let i in this.controls)
+			for (const i in this.controls)
 			{
 				// Note: The real field that has the field errors in the case of Lookup is the foreign key.
 				if (this.controls[i].modelField !== fieldId && this.controls[i].lookupKeyModelField?.name !== fieldId)
 					continue
 
-				let controlId = this.controls[i].id
+				const controlId = this.controls[i].id
 
 				// Will focus on the first visible control it finds that uses the specified model field.
 				if (!formFunctions.fieldIsVisible(this.controls, controlId))
@@ -2519,10 +2645,10 @@ export default {
 			if (to.params.previouslyRemovedRoute !== from.name)
 				this.$nextTick().then(() => this.setFormKeys())
 
-			let isDifferentMode = false;
+			let isDifferentMode = false
 			if (to.params.mode && this.formInfo.mode !== to.params.mode)
 			{
-				isDifferentMode = true;
+				isDifferentMode = true
 				if (to.params.keepAlerts !== 'true')
 					this.clearInfoMessages()
 

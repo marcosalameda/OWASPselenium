@@ -17,7 +17,7 @@
 		<span
 			v-if="!isEmpty(breadcrumb.humanKey) && $app.layout.BreadcrumbsContent === 'detailed'"
 			class="n-breadcrumb__text">
-			> <b>{{ breadcrumb.humanKey }}</b>
+			{{ breadcrumb.humanKey }}
 		</span>
 	</q-router-link>
 </template>

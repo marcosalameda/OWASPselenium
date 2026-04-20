@@ -7,6 +7,7 @@ import _some from 'lodash-es/some'
 import { computed, isReadonly, reactive, unref } from 'vue'
 import { v4 as uuidv4 } from 'uuid'
 
+import { deepUnwrap } from '../../utils/deepUnwrap'
 import { useTracingDataStore } from '../../stores/tracingData'
 import { BlockConditionStack, ClearConditionStack, HideConditionStack } from '../conditionStack'
 import asyncProcM from '../../composables/async'
@@ -36,6 +37,11 @@ export class Base {
 		this.isFixed = false
 		// Indicates if the field is Global Filter field
 		this.isGlobalFilterField = false
+
+		// Properties only defined in lookups
+		this.options = undefined
+		this.hasMore = undefined
+		this.totalRows = undefined
 
 		// This should be a private field, but unfortunately they don't work with proxies:
 		// https://github.com/tc39/proposal-class-fields/issues/106
@@ -146,44 +152,43 @@ export class Base {
 	updateValue(newValue) {
 		let value
 
-		// Prototype. So that it is possible to use the dropdowns that send the object with Text and Value of the option.
+		// Prototype. So that it is possible to use the dropdowns that send the object with key and value of the option.
 		if (!_isEmpty(newValue) && this.type === 'Lookup') {
 			// The initial options list of the dropdown (lazy load - may have one option previously selected).
-			if (Array.isArray(newValue.List)) {
-				let items = newValue.List
+			if (Array.isArray(newValue.list)) {
+				const items = newValue.list
 
-				items = items.map((item) => ({
+				reactive(this).options = items.map((item) => ({
 					key: item.key,
 					// FIXME: review need for computed once i18n is refactored.
 					value: computed(() => this.parseValue(item.value))
 				}))
 
-				reactive(this).options = items
-
 				// If for some reason the selected option is not in the list of options, add it.
 				if (
-					!_isEmpty(newValue.Selected) &&
-					!_some(newValue.List, (option) => option.key === newValue.Selected)
+					!_isEmpty(newValue.selected) &&
+					!_some(newValue.list, (option) => option.key === newValue.selected)
 				) {
 					const selectedItem = {
-						key: newValue.Selected,
+						key: newValue.selected,
 						// FIXME: review need for computed once i18n is refactored.
-						value: computed(() => this.parseValue(newValue.Value))
+						value: computed(() => this.parseValue(newValue.value))
 					}
 
 					reactive(this).options.unshift(selectedItem)
 				}
 
-				// Total rows is unknown if query returned results and response.TotalRows is "0"
-				const isTotalRowsUnknown = newValue.List.length > 0 && newValue.TotalRows === 0
+				// Total rows is unknown if query returned results and totalRows is "0"
+				const totalRows = newValue.pagination?.totalRows ?? 0
+				const isTotalRowsUnknown = newValue.list.length > 0 && totalRows === 0
 
 				reactive(this).totalRows = isTotalRowsUnknown
 					? undefined
-					: Math.max(newValue.TotalRows, items.length)
+					: Math.max(totalRows, this.options.length)
 			}
 
 			// If value is an object
-			if (_has(newValue, 'Value')) value = newValue.Value
+			if (_has(newValue, 'value')) value = newValue.value
 			else value = newValue
 		} else value = newValue
 
@@ -219,7 +224,7 @@ export class Base {
 	 */
 	sanitizeValue(value) {
 		if (!this.isValidType(value)) throw new Error('Unsupported value type.')
-		return value
+		return deepUnwrap(value)
 	}
 
 	/**
@@ -251,9 +256,7 @@ export class Base {
 		this.originalValue =
 			rawDataFieldOriginalValue === undefined
 				? this.cloneValue()
-				: _cloneDeep(rawDataFieldOriginalValue)
-
-		this.isReady = true
+				: deepUnwrap(rawDataFieldOriginalValue)
 	}
 
 	/**
@@ -273,7 +276,14 @@ export class Base {
 						Requires revision for the manwin «BEFORE_LOAD_...» and IF's based on the mode in the Load of the ViewModel.
 			*/
 			if (this.type === 'Lookup' && other.type === 'Lookup' && Array.isArray(other.options))
-				this.hydrate({ Value: other.cloneValue(), List: _cloneDeep(other.options) })
+			{
+				this.hydrate({
+					value: other.cloneValue(),
+					list: deepUnwrap(other.options),
+					totalRows: other.totalRows,
+					hasMore: other.hasMore
+				})
+			}
 			else this.hydrate(other)
 		}
 
@@ -319,7 +329,7 @@ export class Base {
 	 * @returns {boolean} True if the field's value is valid, false otherwise.
 	 */
 	validateValue() {
-		return this.isRequired ? this.value !== this.constructor.EMPTY_VALUE : true
+		return this.isRequired ? !this.isEmpty() : true
 	}
 
 	/**
@@ -329,6 +339,13 @@ export class Base {
 	 */
 	isValidType() {
 		return true
+	}
+
+	/**
+	 * Checks whether the current value of the field is equal to the empty value.
+	 */
+	isEmpty() {
+		return this.value === this.constructor.EMPTY_VALUE
 	}
 
 	/**
@@ -365,16 +382,16 @@ export class Base {
 	 * Destroys this field view model.
 	 */
 	destroy() {
-		this.showWhenConditions?.destroy?.()
+		this.showWhenConditions?.destroy()
 		this.showWhenConditions = null
 
-		this.blockWhenConditions?.destroy?.()
+		this.blockWhenConditions?.destroy()
 		this.blockWhenConditions = null
 
-		this.fillWhenConditions?.destroy?.()
+		this.fillWhenConditions?.destroy()
 		this.fillWhenConditions = null
 
-		this.processMonitor.destroy()
+		this.processMonitor?.destroy()
 		this.processMonitor = null
 
 		if (this.arrayOptions?.length > 0 && !isReadonly(this.arrayOptions))

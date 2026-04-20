@@ -13,7 +13,9 @@
 					{{ order }}
 				</span>
 
-				<h3 v-if="stepData.title || stepData.isRequired">
+				<component
+					v-if="stepData.title || stepData.isRequired"
+					:is="topHeadingTag">
 					<template v-if="stepData.title">
 						<template v-if="stepData.icon"> &nbsp; </template>
 
@@ -25,7 +27,7 @@
 						class="required-step-header">
 						&nbsp;*
 					</span>
-				</h3>
+				</component>
 			</div>
 
 			<div
@@ -46,6 +48,7 @@
 <script>
 	import { defineAsyncComponent } from 'vue'
 
+	import { getHeadingTagNameByLevel } from '@quidgest/clientapp/utils/genericFunctions'
 	import HelpControl from '@/mixins/helpControls.js'
 
 	export default {
@@ -103,6 +106,14 @@
 				type: Object,
 				required: true,
 				validator: (value) => Reflect.has(value, 'route') && Reflect.has(value, 'isRequired')
+			},
+
+			/**
+			 * Top heading level.
+			 */
+			baseHeadingLevel: {
+				type: Number,
+				default: 2
 			}
 		},
 
@@ -151,6 +162,14 @@
 				if (this.id)
 					return this.id + this.stepData.order
 				return null
+			},
+
+			/**
+			 * The top level heading tag name.
+			 */
+			topHeadingTag()
+			{
+				return getHeadingTagNameByLevel(this.baseHeadingLevel)
 			}
 		}
 	}

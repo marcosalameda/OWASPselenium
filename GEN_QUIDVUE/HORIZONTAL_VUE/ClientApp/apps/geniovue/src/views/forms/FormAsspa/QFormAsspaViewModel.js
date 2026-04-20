@@ -83,6 +83,7 @@ export default class ViewModel extends FormViewModelBase
 			field: 'NAME',
 			maxLength: 85,
 			description: computed(() => this.Resources.IDENTIFICATION_NAME16317),
+			ignoreFldSubmit: true,
 		}).cloneFrom(values?.TableAssetName))
 		this.stopWatchers.push(watch(() => this.TableAssetName.value, (newValue, oldValue) => this.onUpdate('asset.name', this.TableAssetName, newValue, oldValue)))
 
@@ -116,6 +117,7 @@ export default class ViewModel extends FormViewModelBase
 			field: 'PARAMETE',
 			maxLength: 50,
 			description: computed(() => this.Resources.PARAMETER41976),
+			ignoreFldSubmit: true,
 		}).cloneFrom(values?.TableParamParamete))
 		this.stopWatchers.push(watch(() => this.TableParamParamete.value, (newValue, oldValue) => this.onUpdate('param.parameter', this.TableParamParamete, newValue, oldValue)))
 

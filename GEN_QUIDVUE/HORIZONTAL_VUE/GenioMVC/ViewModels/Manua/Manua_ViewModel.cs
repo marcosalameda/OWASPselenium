@@ -7,6 +7,7 @@ using GenioMVC.Models.Navigation;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Quidgest.Persistence;
 using Quidgest.Persistence.GenericQuery;
+
 using System.Collections;
 using System.Collections.Concurrent;
 using System.Collections.Specialized;
@@ -35,6 +36,7 @@ namespace GenioMVC.ViewModels.Manua
 		public string ValCodkinde { get; set; }
 
 		#endregion
+
 		/// <summary>
 		/// Title: "Kind of equipment" | Type: "C"
 		/// </summary>
@@ -61,8 +63,6 @@ namespace GenioMVC.ViewModels.Manua
 		/// Title: "Notes" | Type: "MO"
 		/// </summary>
 		public string ValNotes { get; set; }
-
-
 
 		#region Navigations
 		#endregion
@@ -239,12 +239,7 @@ namespace GenioMVC.ViewModels.Manua
 			}
 		}
 
-		/// <summary>
-		/// Sets the value of a single property of the view model based on the provided table and field names.
-		/// </summary>
-		/// <param name="fullFieldName">The full field name in the format "table.field".</param>
-		/// <param name="value">The field value.</param>
-		/// <exception cref="ArgumentNullException">Thrown if <paramref name="fullFieldName"/> is null.</exception>
+		/// <inheritdoc />
 		public override void SetViewModelValue(string fullFieldName, object value)
 		{
 			try
@@ -386,6 +381,7 @@ namespace GenioMVC.ViewModels.Manua
 			Characs = new List<string>();
 
 			Load_Manua___kindedesignat(qs, lazyLoad);
+
 // USE /[MANUAL GQT VIEWMODEL_LOADPARTIAL MANUA]/
 		}
 
@@ -456,10 +452,7 @@ namespace GenioMVC.ViewModels.Manua
 				}
 			}
 
-			TableKindeDesignat = new TableDBEdit<Models.Kinde>
-			{
-				IsLazyLoad = lazyLoad
-			};
+			TableKindeDesignat = new TableDBEdit<Models.Kinde>();
 
 			if (lazyLoad)
 			{

@@ -70,7 +70,7 @@ namespace CSGenio.business
         }
 
 
-        
+
 
         private Dictionary<string, Area> GetUpdateTable(string target)
         {
@@ -126,7 +126,6 @@ namespace CSGenio.business
                     row.change(sp, null);
         }
 
-
         private HashSet<string> GetMetaFields(string area)
         {
             if (!m_metaContext.TryGetValue(area, out var fields))
@@ -137,22 +136,28 @@ namespace CSGenio.business
             return fields;
         }
 
-
         /// <summary>
         /// Adds a single ad-hoc formula to the field sources
         /// </summary>
         /// <param name="f">The formula to register</param>
         public void AddFormulaSources(InternalOperationFormula f)
         {
-            foreach (var arg in f.ByAreaArguments)
-            {
-                var fields = GetMetaFields(arg.AliasName);
-                foreach (var c in arg.FieldNames)
-                    fields.Add(c);
-            }
+            AddFormulaSources(f.ByAreaArguments);
         }
 
-
+        /// <summary>
+        /// Adds the fields in the specified arguments list to the field sources
+        /// </summary>
+        /// <param name="args">The list of arguments</param>
+        public void AddFormulaSources(List<ByAreaArguments> args)
+        {
+            foreach (ByAreaArguments arg in args)
+            {
+                HashSet<string> fields = GetMetaFields(arg.AliasName);
+                foreach (string f in arg.FieldNames)
+                    fields.Add(f);
+            }
+        }
 
         /// <summary>
         /// Makes the context aware of all the default formula sources
@@ -304,7 +309,7 @@ namespace CSGenio.business
             //Verify that the areaField contains the foreign key that corresponds to the primary key
             //field we're looking for, if it doesn't count then you have to go read the database
             string valorChaveEst;
-            
+
             if (area == "glob")
             {
                 lock(m_codglobLock)

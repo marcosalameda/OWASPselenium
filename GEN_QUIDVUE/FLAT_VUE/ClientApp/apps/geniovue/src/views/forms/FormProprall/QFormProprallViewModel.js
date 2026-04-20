@@ -158,6 +158,7 @@ export default class ViewModel extends FormViewModelBase
 			field: 'TPPROPRI',
 			maxLength: 20,
 			description: computed(() => this.Resources.PROPERTY_TYPE51419),
+			ignoreFldSubmit: true,
 		}).cloneFrom(values?.TableTpproTppropri))
 		this.stopWatchers.push(watch(() => this.TableTpproTppropri.value, (newValue, oldValue) => this.onUpdate('tppro.tppropri', this.TableTpproTppropri, newValue, oldValue)))
 
@@ -178,6 +179,7 @@ export default class ViewModel extends FormViewModelBase
 			field: 'COUNTRY',
 			maxLength: 90,
 			description: computed(() => this.Resources.COUNTRY64133),
+			ignoreFldSubmit: true,
 		}).cloneFrom(values?.TableCntryCountry))
 		this.stopWatchers.push(watch(() => this.TableCntryCountry.value, (newValue, oldValue) => this.onUpdate('cntry.country', this.TableCntryCountry, newValue, oldValue)))
 
@@ -189,6 +191,7 @@ export default class ViewModel extends FormViewModelBase
 			field: 'REGIAO',
 			maxLength: 50,
 			description: computed(() => this.Resources.REGION12723),
+			ignoreFldSubmit: true,
 		}).cloneFrom(values?.TableRegioRegiao))
 		this.stopWatchers.push(watch(() => this.TableRegioRegiao.value, (newValue, oldValue) => this.onUpdate('regio.regiao', this.TableRegioRegiao, newValue, oldValue)))
 
@@ -300,6 +303,7 @@ export default class ViewModel extends FormViewModelBase
 			field: 'NAME',
 			maxLength: 85,
 			description: computed(() => this.Resources.NAME31974),
+			ignoreFldSubmit: true,
 		}).cloneFrom(values?.TablePessoName))
 		this.stopWatchers.push(watch(() => this.TablePessoName.value, (newValue, oldValue) => this.onUpdate('pesso.name', this.TablePessoName, newValue, oldValue)))
 	}

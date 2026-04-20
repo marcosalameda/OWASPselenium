@@ -119,7 +119,8 @@ public abstract class AiAgent
                 BuildSystemPrompt(),
                 Configuration.Application.Name,
                 Files,
-                contextData
+                contextData,
+                Configuration.AiConfig.AppMCPEndpoint
             );
         return requestData;
     }

@@ -47,7 +47,7 @@ namespace CSGenio.business
 			Qfield = new Field(info.Alias, "codtabpr", FieldType.KEY_GUID);
 			Qfield.FieldDescription = "";
 			Qfield.FieldSize =  36;
-			Qfield.CavDesignation = "";
+			Qfield.VisivelCav = CavVisibilityType.Nunca;
 
 			Qfield.Dupmsg = "";
 			info.RegisterFieldDB(Qfield);
@@ -56,7 +56,7 @@ namespace CSGenio.business
 			Qfield = new Field(info.Alias, "codtpeq1", FieldType.KEY_GUID);
 			Qfield.FieldDescription = ">TYPE OF EQUIPMENT";
 			Qfield.FieldSize =  36;
-			Qfield.CavDesignation = "_TYPE_OF_EQUIPMENT35057";
+			Qfield.VisivelCav = CavVisibilityType.Nunca;
 
 			Qfield.Dupmsg = "";
 			info.RegisterFieldDB(Qfield);
@@ -134,6 +134,7 @@ namespace CSGenio.business
 
 	"today", true));
 
+
 			info.LastValueArgs.Add( new LastValueArgument("tpequ",
 				new string [] {"precomax"},
 				new string [] {"precohor"},
@@ -141,6 +142,7 @@ namespace CSGenio.business
 				null,
 
 				null, false));
+
 
 
 

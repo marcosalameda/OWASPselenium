@@ -84,9 +84,14 @@ public class ChatbotPage: PageObject
         WebDriverWait waitForStart = new WebDriverWait(driver, TimeSpan.FromSeconds(10));
         waitForStart.Until(c => generatingResponse);
 
-        // Then wait for the notice about generating a response to disappear
-        WebDriverWait waitForFinish = new WebDriverWait(driver, TimeSpan.FromSeconds(10));
-        waitForFinish.Until(c => !generatingResponse);
+        // Then wait for the full response by watching the textarea re-enabled
+        WebDriverWait waitForFinish = new WebDriverWait(driver, TimeSpan.FromSeconds(15));
+        waitForFinish.IgnoreExceptionTypes(typeof(StaleElementReferenceException), typeof(NoSuchElementException));
+        waitForFinish.Until(c =>
+        {
+            IWebElement textarea = container.FindElement(By.CssSelector("textarea"));
+            return textarea.Displayed && textarea.Enabled;
+        });
 
         // Get all the message elements
         IList<IWebElement> messageElements = messagesContainer.FindElements(By.CssSelector(".q-chatbot__message"));

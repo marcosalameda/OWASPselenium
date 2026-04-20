@@ -5,7 +5,13 @@
 		<q-row>
 			<q-table
 				v-bind="listCtrl"
-				v-on="listCtrl.handlers" />
+				v-on="listCtrl.handlers">
+				<template #header>
+					<q-table-config
+						:table-ctrl="listCtrl"
+						v-on="listCtrl.handlers" />
+				</template>
+			</q-table>
 		</q-row>
 	</teleport>
 </template>
@@ -221,6 +227,7 @@
 								label: computed(() => this.Resources.LEGAL_NAME42902),
 								dataLength: 85,
 								scrollData: 85,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 2,
@@ -230,6 +237,7 @@
 								label: computed(() => this.Resources.INITIALS22754),
 								dataLength: 10,
 								scrollData: 10,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 3,
@@ -237,8 +245,9 @@
 								area: 'ENTIT',
 								field: 'TAXNUMBE',
 								label: computed(() => this.Resources.VAT_NUMBER24236),
-								dataLength: 30,
+								dataLength: 20,
 								scrollData: 20,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 4,
@@ -248,6 +257,7 @@
 								label: computed(() => this.Resources.EMAIL25170),
 								dataLength: 254,
 								scrollData: 30,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 5,
@@ -257,6 +267,7 @@
 								label: computed(() => this.Resources.PHONE_NUMBER20774),
 								dataLength: 20,
 								scrollData: 20,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 6,
@@ -264,8 +275,9 @@
 								area: 'ENTIT',
 								field: 'CONTACT',
 								label: computed(() => this.Resources.CONTACT59247),
-								dataLength: 30,
+								dataLength: 20,
 								scrollData: 20,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 7,
@@ -275,6 +287,7 @@
 								label: computed(() => this.Resources.LANGUAGE16872),
 								dataLength: 2,
 								scrollData: 2,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 						],
 						config: {
@@ -291,7 +304,6 @@
 							searchBarConfig: {
 								visibility: true
 							},
-							filtersVisible: true,
 							allowColumnFilters: true,
 							allowColumnSort: true,
 							generalCustomActions: [
@@ -315,7 +327,7 @@
 								sortOrder: 'asc'
 							}
 						},
-						globalEvents: ['changed-FACI1', 'changed-ENTIT', 'changed-FACI2'],
+						globalEvents: ['changed-ENTIT', 'changed-FACI2', 'changed-FACI1'],
 						uuid: 'Recei_Recei_EntitValName',
 						allSelectedRows: 'false',
 						handlers: {

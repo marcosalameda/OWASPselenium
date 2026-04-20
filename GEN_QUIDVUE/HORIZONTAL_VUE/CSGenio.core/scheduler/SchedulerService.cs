@@ -162,7 +162,7 @@ namespace CSGenio.core.scheduler
         private void RunTask(ScheduleState state, CancellationToken stoppingToken)
         {
             //launch the background task
-            state.Running = Task.Run( async () => {
+            var t = Task.Run(async () => {
                 //run the process
                 if(Log.IsDebugEnabled) Log.Debug($"Job {state.Job.Id} started.");
 
@@ -178,19 +178,25 @@ namespace CSGenio.core.scheduler
                     {
                         Log.Error(ex.Message);
                     }
+            }, stoppingToken);
 
-                //when the run ends then mark the task as stopped
+            //the assignment must happen before the continuation is attached
+            //to avoid a race condition where the cleanup runs before state.Running is set
+            state.Running = t;
+
+            //when the run ends then mark the task as stopped
+            _ = t.ContinueWith(_ => {
                 var now = DateTime.UtcNow;
                 state.Running = null;
                 state.LastRun = now;
 
-                //and calculate the next time it should run            
+                //and calculate the next time it should run
                 state.NextRun = state.Cron.GetNextOccurrence(now, TimeZoneInfo.Local) ?? DateTime.MaxValue;
                 if(Log.IsDebugEnabled) Log.Debug($"Job {state.Job.Id} finished at {now} next run at {state.NextRun}");
 
                 //let the scheduler know the states have been updated
                 m_taskEndedEvent.Set();
-            }, stoppingToken);
+            }, TaskScheduler.Default);
         }
     }
 }

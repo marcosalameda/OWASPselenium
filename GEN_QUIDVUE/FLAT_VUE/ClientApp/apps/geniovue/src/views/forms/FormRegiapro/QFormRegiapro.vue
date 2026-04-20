@@ -9,12 +9,13 @@
 			<div
 				v-if="showFormHeader"
 				class="c-action-bar">
-				<h1
+				<component
 					v-if="formControl.uiComponents.header && formInfo.designation"
+					:is="topHeadingTag"
 					:id="formTitleId"
 					class="form-header">
 					{{ formInfo.designation }}
-				</h1>
+				</component>
 
 				<div class="c-action-bar__menu">
 					<template
@@ -40,13 +41,10 @@
 									@click="btn.action">
 									<template v-if="btn.icon">
 										<q-badge-indicator
-											v-if="btn.badge && btn.badge.isVisible"
-											:color="btn.badge.color">
+											:enabled="btn.badge?.isVisible ?? false"
+											:color="btn.badge?.color">
 											<q-icon v-bind="btn.icon" />
 										</q-badge-indicator>
-										<q-icon
-											v-else
-											v-bind="btn.icon" />
 									</template>
 								</q-toggle-group-item>
 							</template>
@@ -97,6 +95,7 @@
 		<q-container
 			fluid
 			data-key="REGIAPRO"
+			:data-identifier="primaryKeyValue"
 			:data-loading="!formInitialDataLoaded || !isActiveForm">
 			<template v-if="formControl.initialized && showFormBody">
 				<q-row v-if="controls.REGIAPROCNTRYCOUNTRY_.isVisible || controls.REGIAPROREGIOREGIAO__.isVisible || controls.REGIAPROPAIS1COUNTRY_.isVisible || controls.REGIAPROPSEUDIMOVEISS.isVisible || controls.REGIAPROPSEUDIMOVEISL.isVisible || controls.REGIAPROPSEUDIMOVEISG.isVisible">
@@ -106,7 +105,8 @@
 						<base-input-structure
 							v-if="controls.REGIAPROCNTRYCOUNTRY_.isVisible"
 							class="i-text"
-							v-bind="controls.REGIAPROCNTRYCOUNTRY_"
+							v-bind="controls.REGIAPROCNTRYCOUNTRY_.wrapperProps"
+							:id="getControlId(controls.REGIAPROCNTRYCOUNTRY_)"
 							v-on="controls.REGIAPROCNTRYCOUNTRY_.handlers"
 							:loading="controls.REGIAPROCNTRYCOUNTRY_.props.loading"
 							:reporting-mode-on="reportingModeCAV"
@@ -114,6 +114,7 @@
 							<q-lookup
 								v-if="controls.REGIAPROCNTRYCOUNTRY_.isVisible"
 								v-bind="controls.REGIAPROCNTRYCOUNTRY_.props"
+								:id="getControlId(controls.REGIAPROCNTRYCOUNTRY_)"
 								v-on="controls.REGIAPROCNTRYCOUNTRY_.handlers" />
 							<q-see-more-regiaprocntrycountry
 								v-if="controls.REGIAPROCNTRYCOUNTRY_.seeMoreIsVisible"
@@ -127,13 +128,15 @@
 						<base-input-structure
 							v-if="controls.REGIAPROREGIOREGIAO__.isVisible"
 							class="i-text"
-							v-bind="controls.REGIAPROREGIOREGIAO__"
+							v-bind="controls.REGIAPROREGIOREGIAO__.wrapperProps"
+							:id="getControlId(controls.REGIAPROREGIOREGIAO__)"
 							v-on="controls.REGIAPROREGIOREGIAO__.handlers"
 							:loading="controls.REGIAPROREGIOREGIAO__.props.loading"
 							:reporting-mode-on="reportingModeCAV"
 							:suggestion-mode-on="suggestionModeOn">
 							<q-text-field
 								v-bind="controls.REGIAPROREGIOREGIAO__.props"
+								:id="getControlId(controls.REGIAPROREGIOREGIAO__)"
 								@blur="onBlur(controls.REGIAPROREGIOREGIAO__, model.ValRegiao.value)"
 								@change="model.ValRegiao.fnUpdateValueOnChange" />
 						</base-input-structure>
@@ -144,7 +147,8 @@
 						<base-input-structure
 							v-if="controls.REGIAPROPAIS1COUNTRY_.isVisible"
 							class="i-text"
-							v-bind="controls.REGIAPROPAIS1COUNTRY_"
+							v-bind="controls.REGIAPROPAIS1COUNTRY_.wrapperProps"
+							:id="getControlId(controls.REGIAPROPAIS1COUNTRY_)"
 							v-on="controls.REGIAPROPAIS1COUNTRY_.handlers"
 							:loading="controls.REGIAPROPAIS1COUNTRY_.props.loading"
 							:reporting-mode-on="reportingModeCAV"
@@ -152,6 +156,7 @@
 							<q-lookup
 								v-if="controls.REGIAPROPAIS1COUNTRY_.isVisible"
 								v-bind="controls.REGIAPROPAIS1COUNTRY_.props"
+								:id="getControlId(controls.REGIAPROPAIS1COUNTRY_)"
 								v-on="controls.REGIAPROPAIS1COUNTRY_.handlers" />
 							<q-see-more-regiapropais1country
 								v-if="controls.REGIAPROPAIS1COUNTRY_.seeMoreIsVisible"
@@ -165,12 +170,13 @@
 						<q-table
 							v-if="controls.REGIAPROPSEUDIMOVEISS.isVisible"
 							v-bind="controls.REGIAPROPSEUDIMOVEISS"
+							:id="getControlId(controls.REGIAPROPSEUDIMOVEISS)"
 							v-on="controls.REGIAPROPSEUDIMOVEISS.handlers">
-						<q-table-extra-extension
-							v-if="controls.REGIAPROPSEUDIMOVEISS.isVisible"
-							:list-ctrl="controls.REGIAPROPSEUDIMOVEISS"
-							:filter-operators="controls.REGIAPROPSEUDIMOVEISS.filterOperators"
-							v-on="controls.REGIAPROPSEUDIMOVEISS.handlers" />
+							<template #header>
+								<q-table-config
+									:table-ctrl="controls.REGIAPROPSEUDIMOVEISS"
+									v-on="controls.REGIAPROPSEUDIMOVEISS.handlers" />
+							</template>
 							<!-- USE /[MANUAL GQT CUSTOM_TABLE REGIAPROPSEUDIMOVEISS]/ -->
 						</q-table>
 					</q-col>
@@ -180,12 +186,13 @@
 						<q-table
 							v-if="controls.REGIAPROPSEUDIMOVEISL.isVisible"
 							v-bind="controls.REGIAPROPSEUDIMOVEISL"
+							:id="getControlId(controls.REGIAPROPSEUDIMOVEISL)"
 							v-on="controls.REGIAPROPSEUDIMOVEISL.handlers">
-						<q-table-extra-extension
-							v-if="controls.REGIAPROPSEUDIMOVEISL.isVisible"
-							:list-ctrl="controls.REGIAPROPSEUDIMOVEISL"
-							:filter-operators="controls.REGIAPROPSEUDIMOVEISL.filterOperators"
-							v-on="controls.REGIAPROPSEUDIMOVEISL.handlers" />
+							<template #header>
+								<q-table-config
+									:table-ctrl="controls.REGIAPROPSEUDIMOVEISL"
+									v-on="controls.REGIAPROPSEUDIMOVEISL.handlers" />
+							</template>
 							<!-- USE /[MANUAL GQT CUSTOM_TABLE REGIAPROPSEUDIMOVEISL]/ -->
 						</q-table>
 					</q-col>
@@ -195,12 +202,13 @@
 						<q-table
 							v-if="controls.REGIAPROPSEUDIMOVEISG.isVisible"
 							v-bind="controls.REGIAPROPSEUDIMOVEISG"
+							:id="getControlId(controls.REGIAPROPSEUDIMOVEISG)"
 							v-on="controls.REGIAPROPSEUDIMOVEISG.handlers">
-						<q-table-extra-extension
-							v-if="controls.REGIAPROPSEUDIMOVEISG.isVisible"
-							:list-ctrl="controls.REGIAPROPSEUDIMOVEISG"
-							:filter-operators="controls.REGIAPROPSEUDIMOVEISG.filterOperators"
-							v-on="controls.REGIAPROPSEUDIMOVEISG.handlers" />
+							<template #header>
+								<q-table-config
+									:table-ctrl="controls.REGIAPROPSEUDIMOVEISG"
+									v-on="controls.REGIAPROPSEUDIMOVEISG.handlers" />
+							</template>
 							<!-- USE /[MANUAL GQT CUSTOM_TABLE REGIAPROPSEUDIMOVEISG]/ -->
 						</q-table>
 					</q-col>
@@ -209,7 +217,7 @@
 		</q-container>
 	</teleport>
 
-	<hr v-if="!isPopup && showFormFooter" />
+	<q-divider v-if="!isPopup && showFormFooter" />
 
 	<teleport
 		v-if="formModalIsReady && showFormFooter"
@@ -627,10 +635,11 @@
 					REGIAPROPSEUDIMOVEISS: new fieldControlClass.TableListControl({
 						id: 'REGIAPROPSEUDIMOVEISS',
 						name: 'IMOVEISS',
-						size: '',
+						size: 'xxlarge',
 						label: computed(() => this.Resources.NON_LIMITED_PROPERTI11098),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
+						headerLevel: computed(() => this.baseHeadingLevel + 1),
 						controller: 'REGIO',
 						action: 'Regiapro_ValImoveiss',
 						hasDependencies: false,
@@ -644,6 +653,7 @@
 								label: computed(() => this.Resources.PROPERTY_NAME18934),
 								dataLength: 85,
 								scrollData: 30,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.CurrencyColumn({
 								order: 2,
@@ -654,6 +664,7 @@
 								scrollData: 12,
 								maxDigits: 9,
 								decimalPlaces: 2,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.ImageColumn({
 								order: 3,
@@ -665,6 +676,7 @@
 								scrollData: 3,
 								sortable: false,
 								searchable: false,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 4,
@@ -673,6 +685,7 @@
 								field: 'DESCRIPT',
 								label: computed(() => this.Resources.DESCRIPTION07383),
 								scrollData: 30,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.GeographicColumn({
 								order: 5,
@@ -684,6 +697,7 @@
 								scrollData: 30,
 								sortable: false,
 								searchable: false,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 6,
@@ -693,6 +707,7 @@
 								label: computed(() => this.Resources.PAIS_PESSOA61621),
 								dataLength: 90,
 								scrollData: 30,
+								export: 1,
 								pkColumn: 'ValCodcntry',
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
@@ -703,6 +718,7 @@
 								label: computed(() => this.Resources.COUNTRY64133),
 								dataLength: 90,
 								scrollData: 30,
+								export: 1,
 								pkColumn: 'ValCodcntry',
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 						],
@@ -721,7 +737,6 @@
 							searchBarConfig: {
 								visibility: false
 							},
-							filtersVisible: false,
 							allowColumnFilters: false,
 							allowColumnSort: true,
 							crudActions: [
@@ -795,9 +810,7 @@
 									id: 'insert',
 									name: 'insert',
 									title: computed(() => this.Resources.INSERIR43365),
-									icon: {
-										icon: 'add'
-									},
+									icon: { icon: 'add' },
 									isInReadOnly: false,
 									params: {
 										action: vm.openFormAction,
@@ -844,7 +857,7 @@
 								sortOrder: 'asc'
 							}
 						},
-						globalEvents: ['changed-REGIO', 'changed-PAIS1', 'changed-CNTRY', 'changed-PESSO', 'changed-PROPR', 'changed-TPPRO'],
+						globalEvents: ['changed-CNTRY', 'changed-REGIO', 'changed-PAIS1', 'changed-PROPR', 'changed-TPPRO', 'changed-PESSO'],
 						uuid: 'Regiapro_ValImoveiss',
 						allSelectedRows: 'false',
 						controlLimits: [
@@ -865,10 +878,11 @@
 					REGIAPROPSEUDIMOVEISL: new fieldControlClass.TableListControl({
 						id: 'REGIAPROPSEUDIMOVEISL',
 						name: 'IMOVEISL',
-						size: '',
+						size: 'xxlarge',
 						label: computed(() => this.Resources.PROPERTIES34868),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
+						headerLevel: computed(() => this.baseHeadingLevel + 1),
 						controller: 'REGIO',
 						action: 'Regiapro_ValImoveisl',
 						hasDependencies: false,
@@ -882,6 +896,7 @@
 								label: computed(() => this.Resources.PROPERTY_NAME18934),
 								dataLength: 85,
 								scrollData: 30,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.CurrencyColumn({
 								order: 2,
@@ -892,6 +907,7 @@
 								scrollData: 12,
 								maxDigits: 9,
 								decimalPlaces: 2,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.ImageColumn({
 								order: 3,
@@ -903,6 +919,7 @@
 								scrollData: 3,
 								sortable: false,
 								searchable: false,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 4,
@@ -911,6 +928,7 @@
 								field: 'DESCRIPT',
 								label: computed(() => this.Resources.DESCRIPTION07383),
 								scrollData: 30,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.GeographicColumn({
 								order: 5,
@@ -922,6 +940,7 @@
 								scrollData: 30,
 								sortable: false,
 								searchable: false,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 6,
@@ -931,6 +950,7 @@
 								label: computed(() => this.Resources.PAIS_PESSOA61621),
 								dataLength: 90,
 								scrollData: 30,
+								export: 1,
 								pkColumn: 'ValCodcntry',
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
@@ -941,6 +961,7 @@
 								label: computed(() => this.Resources.COUNTRY64133),
 								dataLength: 90,
 								scrollData: 30,
+								export: 1,
 								pkColumn: 'ValCodcntry',
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 						],
@@ -959,7 +980,6 @@
 							searchBarConfig: {
 								visibility: false
 							},
-							filtersVisible: false,
 							allowColumnFilters: false,
 							allowColumnSort: true,
 							crudActions: [
@@ -1033,9 +1053,7 @@
 									id: 'insert',
 									name: 'insert',
 									title: computed(() => this.Resources.INSERIR43365),
-									icon: {
-										icon: 'add'
-									},
+									icon: { icon: 'add' },
 									isInReadOnly: false,
 									params: {
 										action: vm.openFormAction,
@@ -1082,7 +1100,7 @@
 								sortOrder: 'asc'
 							}
 						},
-						globalEvents: ['changed-REGIO', 'changed-PAIS1', 'changed-CNTRY', 'changed-PESSO', 'changed-PROPR', 'changed-TPPRO'],
+						globalEvents: ['changed-CNTRY', 'changed-REGIO', 'changed-PAIS1', 'changed-PROPR', 'changed-TPPRO', 'changed-PESSO'],
 						uuid: 'Regiapro_ValImoveisl',
 						allSelectedRows: 'false',
 						controlLimits: [
@@ -1097,10 +1115,11 @@
 					REGIAPROPSEUDIMOVEISG: new fieldControlClass.TableListControl({
 						id: 'REGIAPROPSEUDIMOVEISG',
 						name: 'IMOVEISG',
-						size: '',
+						size: 'xxlarge',
 						label: computed(() => this.Resources.PROPERTIES34868),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
+						headerLevel: computed(() => this.baseHeadingLevel + 1),
 						controller: 'REGIO',
 						action: 'Regiapro_ValImoveisg',
 						hasDependencies: false,
@@ -1114,6 +1133,7 @@
 								label: computed(() => this.Resources.PROPERTY_NAME18934),
 								dataLength: 85,
 								scrollData: 30,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.CurrencyColumn({
 								order: 2,
@@ -1124,6 +1144,7 @@
 								scrollData: 12,
 								maxDigits: 9,
 								decimalPlaces: 2,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.ImageColumn({
 								order: 3,
@@ -1135,6 +1156,7 @@
 								scrollData: 3,
 								sortable: false,
 								searchable: false,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 4,
@@ -1143,6 +1165,7 @@
 								field: 'DESCRIPT',
 								label: computed(() => this.Resources.DESCRIPTION07383),
 								scrollData: 30,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.GeographicColumn({
 								order: 5,
@@ -1154,6 +1177,7 @@
 								scrollData: 30,
 								sortable: false,
 								searchable: false,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 						],
 						config: {
@@ -1170,7 +1194,6 @@
 							searchBarConfig: {
 								visibility: false
 							},
-							filtersVisible: false,
 							allowColumnFilters: false,
 							allowColumnSort: true,
 							crudActions: [
@@ -1244,9 +1267,7 @@
 									id: 'insert',
 									name: 'insert',
 									title: computed(() => this.Resources.INSERIR43365),
-									icon: {
-										icon: 'add'
-									},
+									icon: { icon: 'add' },
 									isInReadOnly: false,
 									params: {
 										action: vm.openFormAction,
@@ -1293,7 +1314,7 @@
 								sortOrder: 'asc'
 							}
 						},
-						globalEvents: ['changed-REGIO', 'changed-PAIS1', 'changed-CNTRY', 'changed-PESSO', 'changed-PROPR', 'changed-TPPRO'],
+						globalEvents: ['changed-CNTRY', 'changed-REGIO', 'changed-PAIS1', 'changed-PROPR', 'changed-TPPRO', 'changed-PESSO'],
 						uuid: 'Regiapro_ValImoveisg',
 						allSelectedRows: 'false',
 						controlLimits: [
@@ -1698,7 +1719,6 @@
 
 				this.afterControlUpdate(controlField, fieldValue)
 			},
-
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
 // USE /[MANUAL GQT FUNCTIONS_JS REGIAPRO]/
 // eslint-disable-next-line

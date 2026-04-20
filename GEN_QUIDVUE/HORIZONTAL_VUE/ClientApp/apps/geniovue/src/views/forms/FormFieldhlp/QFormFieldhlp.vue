@@ -9,12 +9,13 @@
 			<div
 				v-if="showFormHeader"
 				class="c-action-bar">
-				<h1
+				<component
 					v-if="formControl.uiComponents.header && formInfo.designation"
+					:is="topHeadingTag"
 					:id="formTitleId"
 					class="form-header">
 					{{ formInfo.designation }}
-				</h1>
+				</component>
 
 				<div class="c-action-bar__menu">
 					<template
@@ -40,13 +41,10 @@
 									@click="btn.action">
 									<template v-if="btn.icon">
 										<q-badge-indicator
-											v-if="btn.badge && btn.badge.isVisible"
-											:color="btn.badge.color">
+											:enabled="btn.badge?.isVisible ?? false"
+											:color="btn.badge?.color">
 											<q-icon v-bind="btn.icon" />
 										</q-badge-indicator>
-										<q-icon
-											v-else
-											v-bind="btn.icon" />
 									</template>
 								</q-toggle-group-item>
 							</template>
@@ -97,15 +95,16 @@
 		<q-container
 			fluid
 			data-key="FIELDHLP"
+			:data-identifier="primaryKeyValue"
 			:data-loading="!formInitialDataLoaded || !isActiveForm">
 			<template v-if="formControl.initialized && showFormBody">
 				<q-row v-if="controls.FIELDHLPPSEUDNOVOGR02.isVisible || controls.FIELDHLPPSEUDNOVOGR06.isVisible">
 					<q-col v-if="controls.FIELDHLPPSEUDNOVOGR02.isVisible">
 						<q-group-box-container
 							v-if="controls.FIELDHLPPSEUDNOVOGR02.isVisible"
-							id="FIELDHLPPSEUDNOVOGR02"
 							v-bind="controls.FIELDHLPPSEUDNOVOGR02"
-							:is-visible="controls.FIELDHLPPSEUDNOVOGR02.isVisible">
+							:id="getControlId(controls.FIELDHLPPSEUDNOVOGR02)"
+							:no-border="controls.FIELDHLPPSEUDNOVOGR02.borderless">
 							<!-- Start FIELDHLPPSEUDNOVOGR02 -->
 							<q-row v-if="controls.FIELDHLPFLDS_TXTFIELD.isVisible">
 								<q-col
@@ -114,13 +113,15 @@
 									<base-input-structure
 										v-if="controls.FIELDHLPFLDS_TXTFIELD.isVisible"
 										class="i-text"
-										v-bind="controls.FIELDHLPFLDS_TXTFIELD"
+										v-bind="controls.FIELDHLPFLDS_TXTFIELD.wrapperProps"
+										:id="getControlId(controls.FIELDHLPFLDS_TXTFIELD)"
 										v-on="controls.FIELDHLPFLDS_TXTFIELD.handlers"
 										:loading="controls.FIELDHLPFLDS_TXTFIELD.props.loading"
 										:reporting-mode-on="reportingModeCAV"
 										:suggestion-mode-on="suggestionModeOn">
 										<q-text-field
 											v-bind="controls.FIELDHLPFLDS_TXTFIELD.props"
+											:id="getControlId(controls.FIELDHLPFLDS_TXTFIELD)"
 											@blur="onBlur(controls.FIELDHLPFLDS_TXTFIELD, model.ValTxtfield.value)"
 											@change="model.ValTxtfield.fnUpdateValueOnChange" />
 									</base-input-structure>
@@ -133,7 +134,8 @@
 									<base-input-structure
 										v-if="controls.FIELDHLPFLDS_DESCRIP_.isVisible"
 										class="i-textarea"
-										v-bind="controls.FIELDHLPFLDS_DESCRIP_"
+										v-bind="controls.FIELDHLPFLDS_DESCRIP_.wrapperProps"
+										:id="getControlId(controls.FIELDHLPFLDS_DESCRIP_)"
 										v-on="controls.FIELDHLPFLDS_DESCRIP_.handlers"
 										:loading="controls.FIELDHLPFLDS_DESCRIP_.props.loading"
 										:reporting-mode-on="reportingModeCAV"
@@ -141,6 +143,7 @@
 										<q-text-area
 											v-if="controls.FIELDHLPFLDS_DESCRIP_.isVisible"
 											v-bind="controls.FIELDHLPFLDS_DESCRIP_.props"
+											:id="getControlId(controls.FIELDHLPFLDS_DESCRIP_)"
 											v-on="controls.FIELDHLPFLDS_DESCRIP_.handlers" />
 									</base-input-structure>
 								</q-col>
@@ -151,9 +154,9 @@
 					<q-col v-if="controls.FIELDHLPPSEUDNOVOGR06.isVisible">
 						<q-group-box-container
 							v-if="controls.FIELDHLPPSEUDNOVOGR06.isVisible"
-							id="FIELDHLPPSEUDNOVOGR06"
 							v-bind="controls.FIELDHLPPSEUDNOVOGR06"
-							:is-visible="controls.FIELDHLPPSEUDNOVOGR06.isVisible">
+							:id="getControlId(controls.FIELDHLPPSEUDNOVOGR06)"
+							:no-border="controls.FIELDHLPPSEUDNOVOGR06.borderless">
 							<!-- Start FIELDHLPPSEUDNOVOGR06 -->
 							<q-row v-if="controls.FIELDHLPFLDS_PRIMVIAG.isVisible || controls.FIELDHLPFLDS_LOGICENU.isVisible">
 								<q-col
@@ -161,8 +164,9 @@
 									cols="auto">
 									<base-input-structure
 										v-if="controls.FIELDHLPFLDS_PRIMVIAG.isVisible"
-										class="i-checkbox"
-										v-bind="controls.FIELDHLPFLDS_PRIMVIAG"
+										class="i-text"
+										v-bind="controls.FIELDHLPFLDS_PRIMVIAG.wrapperProps"
+										:id="getControlId(controls.FIELDHLPFLDS_PRIMVIAG)"
 										v-on="controls.FIELDHLPFLDS_PRIMVIAG.handlers"
 										:loading="controls.FIELDHLPFLDS_PRIMVIAG.props.loading"
 										:reporting-mode-on="reportingModeCAV"
@@ -171,6 +175,7 @@
 											<q-checkbox
 												v-if="controls.FIELDHLPFLDS_PRIMVIAG.isVisible"
 												v-bind="controls.FIELDHLPFLDS_PRIMVIAG.props"
+												:id="getControlId(controls.FIELDHLPFLDS_PRIMVIAG)"
 												v-on="controls.FIELDHLPFLDS_PRIMVIAG.handlers" />
 										</template>
 									</base-input-structure>
@@ -181,7 +186,8 @@
 									<base-input-structure
 										v-if="controls.FIELDHLPFLDS_LOGICENU.isVisible"
 										class="i-text"
-										v-bind="controls.FIELDHLPFLDS_LOGICENU"
+										v-bind="controls.FIELDHLPFLDS_LOGICENU.wrapperProps"
+										:id="getControlId(controls.FIELDHLPFLDS_LOGICENU)"
 										v-on="controls.FIELDHLPFLDS_LOGICENU.handlers"
 										:loading="controls.FIELDHLPFLDS_LOGICENU.props.loading"
 										:reporting-mode-on="reportingModeCAV"
@@ -189,6 +195,7 @@
 										<q-switch
 											v-if="controls.FIELDHLPFLDS_LOGICENU.isVisible"
 											v-bind="controls.FIELDHLPFLDS_LOGICENU.props"
+											:id="getControlId(controls.FIELDHLPFLDS_LOGICENU)"
 											v-on="controls.FIELDHLPFLDS_LOGICENU.handlers" />
 									</base-input-structure>
 								</q-col>
@@ -200,7 +207,8 @@
 									<base-input-structure
 										v-if="controls.FIELDHLPFLDS_CLASSNUM.isVisible"
 										class="i-text"
-										v-bind="controls.FIELDHLPFLDS_CLASSNUM"
+										v-bind="controls.FIELDHLPFLDS_CLASSNUM.wrapperProps"
+										:id="getControlId(controls.FIELDHLPFLDS_CLASSNUM)"
 										v-on="controls.FIELDHLPFLDS_CLASSNUM.handlers"
 										:loading="controls.FIELDHLPFLDS_CLASSNUM.props.loading"
 										:reporting-mode-on="reportingModeCAV"
@@ -208,6 +216,7 @@
 										<q-select
 											v-if="controls.FIELDHLPFLDS_CLASSNUM.isVisible"
 											v-bind="controls.FIELDHLPFLDS_CLASSNUM.props"
+											:id="getControlId(controls.FIELDHLPFLDS_CLASSNUM)"
 											@update:model-value="model.ValClassnum.fnUpdateValue" />
 									</base-input-structure>
 								</q-col>
@@ -217,7 +226,8 @@
 									<base-input-structure
 										v-if="controls.FIELDHLPFLDS_RADIOB__.isVisible"
 										class="i-radio-container"
-										v-bind="controls.FIELDHLPFLDS_RADIOB__"
+										v-bind="controls.FIELDHLPFLDS_RADIOB__.wrapperProps"
+										:id="getControlId(controls.FIELDHLPFLDS_RADIOB__)"
 										v-on="controls.FIELDHLPFLDS_RADIOB__.handlers"
 										:label-position="labelAlignment.topleft"
 										:loading="controls.FIELDHLPFLDS_RADIOB__.props.loading"
@@ -226,6 +236,7 @@
 										<q-radio-group
 											v-if="controls.FIELDHLPFLDS_RADIOB__.isVisible"
 											v-bind="controls.FIELDHLPFLDS_RADIOB__.props"
+											:id="getControlId(controls.FIELDHLPFLDS_RADIOB__)"
 											v-on="controls.FIELDHLPFLDS_RADIOB__.handlers">
 											<q-radio-button
 												v-for="radio in controls.FIELDHLPFLDS_RADIOB__.items"
@@ -243,14 +254,15 @@
 									<base-input-structure
 										v-if="controls.FIELDHLPPSEUDFIELD002.isVisible"
 										class="i-static-text"
-										v-bind="controls.FIELDHLPPSEUDFIELD002"
+										v-bind="controls.FIELDHLPPSEUDFIELD002.wrapperProps"
+										:id="getControlId(controls.FIELDHLPPSEUDFIELD002)"
 										v-on="controls.FIELDHLPPSEUDFIELD002.handlers"
 										:loading="controls.FIELDHLPPSEUDFIELD002.props.loading"
 										:reporting-mode-on="reportingModeCAV"
 										:suggestion-mode-on="suggestionModeOn">
 										<q-static-text
 											v-if="controls.FIELDHLPPSEUDFIELD002.isVisible"
-											id="FIELDHLPPSEUDFIELD002"
+											:id="getControlId(controls.FIELDHLPPSEUDFIELD002)"
 											:size="controls.FIELDHLPPSEUDFIELD002.size"
 											:text="controls.FIELDHLPPSEUDFIELD002.label" />
 									</base-input-structure>
@@ -261,7 +273,8 @@
 									<base-input-structure
 										v-if="controls.FIELDHLPPSEUDFIELD003.isVisible"
 										class="q-image"
-										v-bind="controls.FIELDHLPPSEUDFIELD003"
+										v-bind="controls.FIELDHLPPSEUDFIELD003.wrapperProps"
+										:id="getControlId(controls.FIELDHLPPSEUDFIELD003)"
 										v-on="controls.FIELDHLPPSEUDFIELD003.handlers"
 										:loading="controls.FIELDHLPPSEUDFIELD003.props.loading"
 										:reporting-mode-on="reportingModeCAV"
@@ -269,6 +282,7 @@
 										<q-image
 											v-if="controls.FIELDHLPPSEUDFIELD003.isVisible"
 											v-bind="controls.FIELDHLPPSEUDFIELD003.props"
+											:id="getControlId(controls.FIELDHLPPSEUDFIELD003)"
 											v-on="controls.FIELDHLPPSEUDFIELD003.handlers" />
 									</base-input-structure>
 								</q-col>
@@ -280,13 +294,15 @@
 									<base-input-structure
 										v-if="controls.FIELDHLPPSEUDFIELD001.isVisible"
 										class="i-text"
-										v-bind="controls.FIELDHLPPSEUDFIELD001"
+										v-bind="controls.FIELDHLPPSEUDFIELD001.wrapperProps"
+										:id="getControlId(controls.FIELDHLPPSEUDFIELD001)"
 										v-on="controls.FIELDHLPPSEUDFIELD001.handlers"
 										:loading="controls.FIELDHLPPSEUDFIELD001.props.loading"
 										:reporting-mode-on="reportingModeCAV"
 										:suggestion-mode-on="suggestionModeOn">
 										<q-text-field
 											v-bind="controls.FIELDHLPPSEUDFIELD001.props"
+											:id="getControlId(controls.FIELDHLPPSEUDFIELD001)"
 											@blur="onBlur(controls.FIELDHLPPSEUDFIELD001, model.PseudValField001.value)"
 											@change="model.PseudValField001.fnUpdateValueOnChange" />
 									</base-input-structure>
@@ -300,9 +316,9 @@
 					<q-col v-if="controls.FIELDHLPPSEUDNOVOGR01.isVisible || controls.FIELDHLPPSEUDNOVOGR03.isVisible">
 						<q-group-box-container
 							v-if="controls.FIELDHLPPSEUDNOVOGR01.isVisible"
-							id="FIELDHLPPSEUDNOVOGR01"
 							v-bind="controls.FIELDHLPPSEUDNOVOGR01"
-							:is-visible="controls.FIELDHLPPSEUDNOVOGR01.isVisible">
+							:id="getControlId(controls.FIELDHLPPSEUDNOVOGR01)"
+							:no-border="controls.FIELDHLPPSEUDNOVOGR01.borderless">
 							<!-- Start FIELDHLPPSEUDNOVOGR01 -->
 							<q-row v-if="controls.FIELDHLPFLDS_YEAR____.isVisible || controls.FIELDHLPFLDS_TIME____.isVisible || controls.FIELDHLPFLDS_DATE____.isVisible || controls.FIELDHLPFLDS_DATETIME.isVisible || controls.FIELDHLPFLDS_DATESECO.isVisible">
 								<q-col
@@ -311,7 +327,8 @@
 									<base-input-structure
 										v-if="controls.FIELDHLPFLDS_YEAR____.isVisible"
 										class="i-text"
-										v-bind="controls.FIELDHLPFLDS_YEAR____"
+										v-bind="controls.FIELDHLPFLDS_YEAR____.wrapperProps"
+										:id="getControlId(controls.FIELDHLPFLDS_YEAR____)"
 										v-on="controls.FIELDHLPFLDS_YEAR____.handlers"
 										:loading="controls.FIELDHLPFLDS_YEAR____.props.loading"
 										:reporting-mode-on="reportingModeCAV"
@@ -319,6 +336,7 @@
 										<q-numeric-input
 											v-if="controls.FIELDHLPFLDS_YEAR____.isVisible"
 											v-bind="controls.FIELDHLPFLDS_YEAR____.props"
+											:id="getControlId(controls.FIELDHLPFLDS_YEAR____)"
 											@update:model-value="model.ValYear.fnUpdateValue" />
 									</base-input-structure>
 								</q-col>
@@ -328,7 +346,8 @@
 									<base-input-structure
 										v-if="controls.FIELDHLPFLDS_TIME____.isVisible"
 										class="i-text"
-										v-bind="controls.FIELDHLPFLDS_TIME____"
+										v-bind="controls.FIELDHLPFLDS_TIME____.wrapperProps"
+										:id="getControlId(controls.FIELDHLPFLDS_TIME____)"
 										v-on="controls.FIELDHLPFLDS_TIME____.handlers"
 										:loading="controls.FIELDHLPFLDS_TIME____.props.loading"
 										:reporting-mode-on="reportingModeCAV"
@@ -336,6 +355,7 @@
 										<q-date-time-picker
 											v-if="controls.FIELDHLPFLDS_TIME____.isVisible"
 											v-bind="controls.FIELDHLPFLDS_TIME____.props"
+											:id="getControlId(controls.FIELDHLPFLDS_TIME____)"
 											:model-value="model.ValTime.value"
 											@reset-icon-click="model.ValTime.fnUpdateValue(model.ValTime.originalValue ?? new Date())"
 											@update:model-value="model.ValTime.fnUpdateValue($event ?? '')" />
@@ -347,7 +367,8 @@
 									<base-input-structure
 										v-if="controls.FIELDHLPFLDS_DATE____.isVisible"
 										class="i-text"
-										v-bind="controls.FIELDHLPFLDS_DATE____"
+										v-bind="controls.FIELDHLPFLDS_DATE____.wrapperProps"
+										:id="getControlId(controls.FIELDHLPFLDS_DATE____)"
 										v-on="controls.FIELDHLPFLDS_DATE____.handlers"
 										:loading="controls.FIELDHLPFLDS_DATE____.props.loading"
 										:reporting-mode-on="reportingModeCAV"
@@ -355,6 +376,7 @@
 										<q-date-time-picker
 											v-if="controls.FIELDHLPFLDS_DATE____.isVisible"
 											v-bind="controls.FIELDHLPFLDS_DATE____.props"
+											:id="getControlId(controls.FIELDHLPFLDS_DATE____)"
 											:model-value="model.ValDate.value"
 											@reset-icon-click="model.ValDate.fnUpdateValue(model.ValDate.originalValue ?? new Date())"
 											@update:model-value="model.ValDate.fnUpdateValue($event ?? '')" />
@@ -366,7 +388,8 @@
 									<base-input-structure
 										v-if="controls.FIELDHLPFLDS_DATETIME.isVisible"
 										class="i-text"
-										v-bind="controls.FIELDHLPFLDS_DATETIME"
+										v-bind="controls.FIELDHLPFLDS_DATETIME.wrapperProps"
+										:id="getControlId(controls.FIELDHLPFLDS_DATETIME)"
 										v-on="controls.FIELDHLPFLDS_DATETIME.handlers"
 										:loading="controls.FIELDHLPFLDS_DATETIME.props.loading"
 										:reporting-mode-on="reportingModeCAV"
@@ -374,6 +397,7 @@
 										<q-date-time-picker
 											v-if="controls.FIELDHLPFLDS_DATETIME.isVisible"
 											v-bind="controls.FIELDHLPFLDS_DATETIME.props"
+											:id="getControlId(controls.FIELDHLPFLDS_DATETIME)"
 											:model-value="model.ValDatetime.value"
 											@reset-icon-click="model.ValDatetime.fnUpdateValue(model.ValDatetime.originalValue ?? new Date())"
 											@update:model-value="model.ValDatetime.fnUpdateValue($event ?? '')" />
@@ -385,7 +409,8 @@
 									<base-input-structure
 										v-if="controls.FIELDHLPFLDS_DATESECO.isVisible"
 										class="i-text"
-										v-bind="controls.FIELDHLPFLDS_DATESECO"
+										v-bind="controls.FIELDHLPFLDS_DATESECO.wrapperProps"
+										:id="getControlId(controls.FIELDHLPFLDS_DATESECO)"
 										v-on="controls.FIELDHLPFLDS_DATESECO.handlers"
 										:loading="controls.FIELDHLPFLDS_DATESECO.props.loading"
 										:reporting-mode-on="reportingModeCAV"
@@ -393,6 +418,7 @@
 										<q-date-time-picker
 											v-if="controls.FIELDHLPFLDS_DATESECO.isVisible"
 											v-bind="controls.FIELDHLPFLDS_DATESECO.props"
+											:id="getControlId(controls.FIELDHLPFLDS_DATESECO)"
 											:model-value="model.ValDateseco.value"
 											@reset-icon-click="model.ValDateseco.fnUpdateValue(model.ValDateseco.originalValue ?? new Date())"
 											@update:model-value="model.ValDateseco.fnUpdateValue($event ?? '')" />
@@ -403,9 +429,9 @@
 						</q-group-box-container>
 						<q-group-box-container
 							v-if="controls.FIELDHLPPSEUDNOVOGR03.isVisible"
-							id="FIELDHLPPSEUDNOVOGR03"
 							v-bind="controls.FIELDHLPPSEUDNOVOGR03"
-							:is-visible="controls.FIELDHLPPSEUDNOVOGR03.isVisible">
+							:id="getControlId(controls.FIELDHLPPSEUDNOVOGR03)"
+							:no-border="controls.FIELDHLPPSEUDNOVOGR03.borderless">
 							<!-- Start FIELDHLPPSEUDNOVOGR03 -->
 							<q-row v-if="controls.FIELDHLPFLDS_DURATION.isVisible || controls.FIELDHLPFLDS_NPASSAGE.isVisible || controls.FIELDHLPFLDS_PRECOBIL.isVisible || controls.FIELDHLPFLDS_PRICE___.isVisible">
 								<q-col
@@ -414,7 +440,8 @@
 									<base-input-structure
 										v-if="controls.FIELDHLPFLDS_DURATION.isVisible"
 										class="i-text"
-										v-bind="controls.FIELDHLPFLDS_DURATION"
+										v-bind="controls.FIELDHLPFLDS_DURATION.wrapperProps"
+										:id="getControlId(controls.FIELDHLPFLDS_DURATION)"
 										v-on="controls.FIELDHLPFLDS_DURATION.handlers"
 										:loading="controls.FIELDHLPFLDS_DURATION.props.loading"
 										:reporting-mode-on="reportingModeCAV"
@@ -422,6 +449,7 @@
 										<q-numeric-input
 											v-if="controls.FIELDHLPFLDS_DURATION.isVisible"
 											v-bind="controls.FIELDHLPFLDS_DURATION.props"
+											:id="getControlId(controls.FIELDHLPFLDS_DURATION)"
 											@update:model-value="model.ValDuration.fnUpdateValue" />
 									</base-input-structure>
 								</q-col>
@@ -431,7 +459,8 @@
 									<base-input-structure
 										v-if="controls.FIELDHLPFLDS_NPASSAGE.isVisible"
 										class="i-text"
-										v-bind="controls.FIELDHLPFLDS_NPASSAGE"
+										v-bind="controls.FIELDHLPFLDS_NPASSAGE.wrapperProps"
+										:id="getControlId(controls.FIELDHLPFLDS_NPASSAGE)"
 										v-on="controls.FIELDHLPFLDS_NPASSAGE.handlers"
 										:loading="controls.FIELDHLPFLDS_NPASSAGE.props.loading"
 										:reporting-mode-on="reportingModeCAV"
@@ -439,6 +468,7 @@
 										<q-numeric-input
 											v-if="controls.FIELDHLPFLDS_NPASSAGE.isVisible"
 											v-bind="controls.FIELDHLPFLDS_NPASSAGE.props"
+											:id="getControlId(controls.FIELDHLPFLDS_NPASSAGE)"
 											@update:model-value="model.ValNpassage.fnUpdateValue" />
 									</base-input-structure>
 								</q-col>
@@ -448,7 +478,8 @@
 									<base-input-structure
 										v-if="controls.FIELDHLPFLDS_PRECOBIL.isVisible"
 										class="i-text"
-										v-bind="controls.FIELDHLPFLDS_PRECOBIL"
+										v-bind="controls.FIELDHLPFLDS_PRECOBIL.wrapperProps"
+										:id="getControlId(controls.FIELDHLPFLDS_PRECOBIL)"
 										v-on="controls.FIELDHLPFLDS_PRECOBIL.handlers"
 										:loading="controls.FIELDHLPFLDS_PRECOBIL.props.loading"
 										:reporting-mode-on="reportingModeCAV"
@@ -456,6 +487,7 @@
 										<q-numeric-input
 											v-if="controls.FIELDHLPFLDS_PRECOBIL.isVisible"
 											v-bind="controls.FIELDHLPFLDS_PRECOBIL.props"
+											:id="getControlId(controls.FIELDHLPFLDS_PRECOBIL)"
 											@update:model-value="model.ValPrecobil.fnUpdateValue" />
 									</base-input-structure>
 								</q-col>
@@ -465,7 +497,8 @@
 									<base-input-structure
 										v-if="controls.FIELDHLPFLDS_PRICE___.isVisible"
 										class="i-text"
-										v-bind="controls.FIELDHLPFLDS_PRICE___"
+										v-bind="controls.FIELDHLPFLDS_PRICE___.wrapperProps"
+										:id="getControlId(controls.FIELDHLPFLDS_PRICE___)"
 										v-on="controls.FIELDHLPFLDS_PRICE___.handlers"
 										:loading="controls.FIELDHLPFLDS_PRICE___.props.loading"
 										:reporting-mode-on="reportingModeCAV"
@@ -473,6 +506,7 @@
 										<q-numeric-input
 											v-if="controls.FIELDHLPFLDS_PRICE___.isVisible"
 											v-bind="controls.FIELDHLPFLDS_PRICE___.props"
+											:id="getControlId(controls.FIELDHLPFLDS_PRICE___)"
 											@update:model-value="model.ValPrice.fnUpdateValue" />
 									</base-input-structure>
 								</q-col>
@@ -485,9 +519,9 @@
 					<q-col v-if="controls.FIELDHLPPSEUDNOVOGR04.isVisible">
 						<q-group-box-container
 							v-if="controls.FIELDHLPPSEUDNOVOGR04.isVisible"
-							id="FIELDHLPPSEUDNOVOGR04"
 							v-bind="controls.FIELDHLPPSEUDNOVOGR04"
-							:is-visible="controls.FIELDHLPPSEUDNOVOGR04.isVisible">
+							:id="getControlId(controls.FIELDHLPPSEUDNOVOGR04)"
+							:no-border="controls.FIELDHLPPSEUDNOVOGR04.borderless">
 							<!-- Start FIELDHLPPSEUDNOVOGR04 -->
 							<q-row v-if="controls.FIELDHLPFLDS_SSNUMBER.isVisible || controls.FIELDHLPFLDS_ZIPFIELD.isVisible || controls.FIELDHLPFLDS_VATNUMBR.isVisible || controls.FIELDHLPFLDS_LICPLATE.isVisible || controls.FIELDHLPFLDS_BANKNMBR.isVisible || controls.FIELDHLPFLDS_EMAILFLD.isVisible || controls.FIELDHLPFLDS_IBANFIEL.isVisible || controls.FIELDHLPFLDS_UPPRTEXT.isVisible">
 								<q-col
@@ -496,14 +530,16 @@
 									<base-input-structure
 										v-if="controls.FIELDHLPFLDS_SSNUMBER.isVisible"
 										class="i-text"
-										v-bind="controls.FIELDHLPFLDS_SSNUMBER"
+										v-bind="controls.FIELDHLPFLDS_SSNUMBER.wrapperProps"
+										:id="getControlId(controls.FIELDHLPFLDS_SSNUMBER)"
 										v-on="controls.FIELDHLPFLDS_SSNUMBER.handlers"
 										:loading="controls.FIELDHLPFLDS_SSNUMBER.props.loading"
 										:reporting-mode-on="reportingModeCAV"
 										:suggestion-mode-on="suggestionModeOn">
 										<q-mask
 											v-if="controls.FIELDHLPFLDS_SSNUMBER.isVisible"
-											v-bind="controls.FIELDHLPFLDS_SSNUMBER"
+											v-bind="controls.FIELDHLPFLDS_SSNUMBER.props"
+											:id="getControlId(controls.FIELDHLPFLDS_SSNUMBER)"
 											:model-value="model.ValSsnumber.value"
 											@change="model.ValSsnumber.fnUpdateValueOnChange" />
 									</base-input-structure>
@@ -514,14 +550,16 @@
 									<base-input-structure
 										v-if="controls.FIELDHLPFLDS_ZIPFIELD.isVisible"
 										class="i-text"
-										v-bind="controls.FIELDHLPFLDS_ZIPFIELD"
+										v-bind="controls.FIELDHLPFLDS_ZIPFIELD.wrapperProps"
+										:id="getControlId(controls.FIELDHLPFLDS_ZIPFIELD)"
 										v-on="controls.FIELDHLPFLDS_ZIPFIELD.handlers"
 										:loading="controls.FIELDHLPFLDS_ZIPFIELD.props.loading"
 										:reporting-mode-on="reportingModeCAV"
 										:suggestion-mode-on="suggestionModeOn">
 										<q-mask
 											v-if="controls.FIELDHLPFLDS_ZIPFIELD.isVisible"
-											v-bind="controls.FIELDHLPFLDS_ZIPFIELD"
+											v-bind="controls.FIELDHLPFLDS_ZIPFIELD.props"
+											:id="getControlId(controls.FIELDHLPFLDS_ZIPFIELD)"
 											:model-value="model.ValZipfield.value"
 											@change="model.ValZipfield.fnUpdateValueOnChange" />
 									</base-input-structure>
@@ -532,14 +570,16 @@
 									<base-input-structure
 										v-if="controls.FIELDHLPFLDS_VATNUMBR.isVisible"
 										class="i-text"
-										v-bind="controls.FIELDHLPFLDS_VATNUMBR"
+										v-bind="controls.FIELDHLPFLDS_VATNUMBR.wrapperProps"
+										:id="getControlId(controls.FIELDHLPFLDS_VATNUMBR)"
 										v-on="controls.FIELDHLPFLDS_VATNUMBR.handlers"
 										:loading="controls.FIELDHLPFLDS_VATNUMBR.props.loading"
 										:reporting-mode-on="reportingModeCAV"
 										:suggestion-mode-on="suggestionModeOn">
 										<q-mask
 											v-if="controls.FIELDHLPFLDS_VATNUMBR.isVisible"
-											v-bind="controls.FIELDHLPFLDS_VATNUMBR"
+											v-bind="controls.FIELDHLPFLDS_VATNUMBR.props"
+											:id="getControlId(controls.FIELDHLPFLDS_VATNUMBR)"
 											:model-value="model.ValVatnumbr.value"
 											@change="model.ValVatnumbr.fnUpdateValueOnChange" />
 									</base-input-structure>
@@ -550,14 +590,16 @@
 									<base-input-structure
 										v-if="controls.FIELDHLPFLDS_LICPLATE.isVisible"
 										class="i-text"
-										v-bind="controls.FIELDHLPFLDS_LICPLATE"
+										v-bind="controls.FIELDHLPFLDS_LICPLATE.wrapperProps"
+										:id="getControlId(controls.FIELDHLPFLDS_LICPLATE)"
 										v-on="controls.FIELDHLPFLDS_LICPLATE.handlers"
 										:loading="controls.FIELDHLPFLDS_LICPLATE.props.loading"
 										:reporting-mode-on="reportingModeCAV"
 										:suggestion-mode-on="suggestionModeOn">
 										<q-mask
 											v-if="controls.FIELDHLPFLDS_LICPLATE.isVisible"
-											v-bind="controls.FIELDHLPFLDS_LICPLATE"
+											v-bind="controls.FIELDHLPFLDS_LICPLATE.props"
+											:id="getControlId(controls.FIELDHLPFLDS_LICPLATE)"
 											:model-value="model.ValLicplate.value"
 											@change="model.ValLicplate.fnUpdateValueOnChange" />
 									</base-input-structure>
@@ -568,14 +610,16 @@
 									<base-input-structure
 										v-if="controls.FIELDHLPFLDS_BANKNMBR.isVisible"
 										class="i-text"
-										v-bind="controls.FIELDHLPFLDS_BANKNMBR"
+										v-bind="controls.FIELDHLPFLDS_BANKNMBR.wrapperProps"
+										:id="getControlId(controls.FIELDHLPFLDS_BANKNMBR)"
 										v-on="controls.FIELDHLPFLDS_BANKNMBR.handlers"
 										:loading="controls.FIELDHLPFLDS_BANKNMBR.props.loading"
 										:reporting-mode-on="reportingModeCAV"
 										:suggestion-mode-on="suggestionModeOn">
 										<q-mask
 											v-if="controls.FIELDHLPFLDS_BANKNMBR.isVisible"
-											v-bind="controls.FIELDHLPFLDS_BANKNMBR"
+											v-bind="controls.FIELDHLPFLDS_BANKNMBR.props"
+											:id="getControlId(controls.FIELDHLPFLDS_BANKNMBR)"
 											:model-value="model.ValBanknmbr.value"
 											@change="model.ValBanknmbr.fnUpdateValueOnChange" />
 									</base-input-structure>
@@ -586,14 +630,16 @@
 									<base-input-structure
 										v-if="controls.FIELDHLPFLDS_EMAILFLD.isVisible"
 										class="i-text"
-										v-bind="controls.FIELDHLPFLDS_EMAILFLD"
+										v-bind="controls.FIELDHLPFLDS_EMAILFLD.wrapperProps"
+										:id="getControlId(controls.FIELDHLPFLDS_EMAILFLD)"
 										v-on="controls.FIELDHLPFLDS_EMAILFLD.handlers"
 										:loading="controls.FIELDHLPFLDS_EMAILFLD.props.loading"
 										:reporting-mode-on="reportingModeCAV"
 										:suggestion-mode-on="suggestionModeOn">
 										<q-mask
 											v-if="controls.FIELDHLPFLDS_EMAILFLD.isVisible"
-											v-bind="controls.FIELDHLPFLDS_EMAILFLD"
+											v-bind="controls.FIELDHLPFLDS_EMAILFLD.props"
+											:id="getControlId(controls.FIELDHLPFLDS_EMAILFLD)"
 											:model-value="model.ValEmailfld.value"
 											@change="model.ValEmailfld.fnUpdateValueOnChange" />
 									</base-input-structure>
@@ -604,14 +650,16 @@
 									<base-input-structure
 										v-if="controls.FIELDHLPFLDS_IBANFIEL.isVisible"
 										class="i-text"
-										v-bind="controls.FIELDHLPFLDS_IBANFIEL"
+										v-bind="controls.FIELDHLPFLDS_IBANFIEL.wrapperProps"
+										:id="getControlId(controls.FIELDHLPFLDS_IBANFIEL)"
 										v-on="controls.FIELDHLPFLDS_IBANFIEL.handlers"
 										:loading="controls.FIELDHLPFLDS_IBANFIEL.props.loading"
 										:reporting-mode-on="reportingModeCAV"
 										:suggestion-mode-on="suggestionModeOn">
 										<q-mask
 											v-if="controls.FIELDHLPFLDS_IBANFIEL.isVisible"
-											v-bind="controls.FIELDHLPFLDS_IBANFIEL"
+											v-bind="controls.FIELDHLPFLDS_IBANFIEL.props"
+											:id="getControlId(controls.FIELDHLPFLDS_IBANFIEL)"
 											:model-value="model.ValIbanfiel.value"
 											@change="model.ValIbanfiel.fnUpdateValueOnChange" />
 									</base-input-structure>
@@ -620,14 +668,16 @@
 									<base-input-structure
 										v-if="controls.FIELDHLPFLDS_UPPRTEXT.isVisible"
 										class="i-text"
-										v-bind="controls.FIELDHLPFLDS_UPPRTEXT"
+										v-bind="controls.FIELDHLPFLDS_UPPRTEXT.wrapperProps"
+										:id="getControlId(controls.FIELDHLPFLDS_UPPRTEXT)"
 										v-on="controls.FIELDHLPFLDS_UPPRTEXT.handlers"
 										:loading="controls.FIELDHLPFLDS_UPPRTEXT.props.loading"
 										:reporting-mode-on="reportingModeCAV"
 										:suggestion-mode-on="suggestionModeOn">
 										<q-mask
 											v-if="controls.FIELDHLPFLDS_UPPRTEXT.isVisible"
-											v-bind="controls.FIELDHLPFLDS_UPPRTEXT"
+											v-bind="controls.FIELDHLPFLDS_UPPRTEXT.props"
+											:id="getControlId(controls.FIELDHLPFLDS_UPPRTEXT)"
 											:model-value="model.ValUpprtext.value"
 											@change="model.ValUpprtext.fnUpdateValueOnChange" />
 									</base-input-structure>
@@ -641,9 +691,9 @@
 					<q-col v-if="controls.FIELDHLPPSEUDNOVOGR05.isVisible">
 						<q-group-box-container
 							v-if="controls.FIELDHLPPSEUDNOVOGR05.isVisible"
-							id="FIELDHLPPSEUDNOVOGR05"
 							v-bind="controls.FIELDHLPPSEUDNOVOGR05"
-							:is-visible="controls.FIELDHLPPSEUDNOVOGR05.isVisible">
+							:id="getControlId(controls.FIELDHLPPSEUDNOVOGR05)"
+							:no-border="controls.FIELDHLPPSEUDNOVOGR05.borderless">
 							<!-- Start FIELDHLPPSEUDNOVOGR05 -->
 							<q-row v-if="controls.FIELDHLPFLDS_PASSFLD_.isVisible">
 								<q-col
@@ -652,13 +702,15 @@
 									<base-input-structure
 										v-if="controls.FIELDHLPFLDS_PASSFLD_.isVisible"
 										class="i-text"
-										v-bind="controls.FIELDHLPFLDS_PASSFLD_"
+										v-bind="controls.FIELDHLPFLDS_PASSFLD_.wrapperProps"
+										:id="getControlId(controls.FIELDHLPFLDS_PASSFLD_)"
 										v-on="controls.FIELDHLPFLDS_PASSFLD_.handlers"
 										:loading="controls.FIELDHLPFLDS_PASSFLD_.props.loading"
 										:reporting-mode-on="reportingModeCAV"
 										:suggestion-mode-on="suggestionModeOn">
 										<q-text-field
 											v-bind="controls.FIELDHLPFLDS_PASSFLD_.props"
+											:id="getControlId(controls.FIELDHLPFLDS_PASSFLD_)"
 											@blur="onBlur(controls.FIELDHLPFLDS_PASSFLD_, model.ValPassfld.value)"
 											@change="model.ValPassfld.fnUpdateValueOnChange" />
 									</base-input-structure>
@@ -671,13 +723,15 @@
 									<base-input-structure
 										v-if="controls.FIELDHLPFLDS_CLRPICKE.isVisible"
 										class="i-text"
-										v-bind="controls.FIELDHLPFLDS_CLRPICKE"
+										v-bind="controls.FIELDHLPFLDS_CLRPICKE.wrapperProps"
+										:id="getControlId(controls.FIELDHLPFLDS_CLRPICKE)"
 										v-on="controls.FIELDHLPFLDS_CLRPICKE.handlers"
 										:loading="controls.FIELDHLPFLDS_CLRPICKE.props.loading"
 										:reporting-mode-on="reportingModeCAV"
 										:suggestion-mode-on="suggestionModeOn">
 										<q-text-field
 											v-bind="controls.FIELDHLPFLDS_CLRPICKE.props"
+											:id="getControlId(controls.FIELDHLPFLDS_CLRPICKE)"
 											@blur="onBlur(controls.FIELDHLPFLDS_CLRPICKE, model.ValClrpicke.value)"
 											@change="model.ValClrpicke.fnUpdateValueOnChange" />
 									</base-input-structure>
@@ -689,9 +743,9 @@
 					<q-col v-if="controls.FIELDHLPPSEUDNOVOGR07.isVisible">
 						<q-group-box-container
 							v-if="controls.FIELDHLPPSEUDNOVOGR07.isVisible"
-							id="FIELDHLPPSEUDNOVOGR07"
 							v-bind="controls.FIELDHLPPSEUDNOVOGR07"
-							:is-visible="controls.FIELDHLPPSEUDNOVOGR07.isVisible">
+							:id="getControlId(controls.FIELDHLPPSEUDNOVOGR07)"
+							:no-border="controls.FIELDHLPPSEUDNOVOGR07.borderless">
 							<!-- Start FIELDHLPPSEUDNOVOGR07 -->
 							<q-row v-if="controls.FIELDHLPFLDS_LOGOEXTE.isVisible">
 								<q-col
@@ -700,7 +754,8 @@
 									<base-input-structure
 										v-if="controls.FIELDHLPFLDS_LOGOEXTE.isVisible"
 										class="q-image"
-										v-bind="controls.FIELDHLPFLDS_LOGOEXTE"
+										v-bind="controls.FIELDHLPFLDS_LOGOEXTE.wrapperProps"
+										:id="getControlId(controls.FIELDHLPFLDS_LOGOEXTE)"
 										v-on="controls.FIELDHLPFLDS_LOGOEXTE.handlers"
 										:loading="controls.FIELDHLPFLDS_LOGOEXTE.props.loading"
 										:reporting-mode-on="reportingModeCAV"
@@ -708,6 +763,7 @@
 										<q-image
 											v-if="controls.FIELDHLPFLDS_LOGOEXTE.isVisible"
 											v-bind="controls.FIELDHLPFLDS_LOGOEXTE.props"
+											:id="getControlId(controls.FIELDHLPFLDS_LOGOEXTE)"
 											v-on="controls.FIELDHLPFLDS_LOGOEXTE.handlers" />
 									</base-input-structure>
 								</q-col>
@@ -719,7 +775,8 @@
 									<base-input-structure
 										v-if="controls.FIELDHLPFLDS_LOGO____.isVisible"
 										class="q-image"
-										v-bind="controls.FIELDHLPFLDS_LOGO____"
+										v-bind="controls.FIELDHLPFLDS_LOGO____.wrapperProps"
+										:id="getControlId(controls.FIELDHLPFLDS_LOGO____)"
 										v-on="controls.FIELDHLPFLDS_LOGO____.handlers"
 										:loading="controls.FIELDHLPFLDS_LOGO____.props.loading"
 										:reporting-mode-on="reportingModeCAV"
@@ -727,6 +784,7 @@
 										<q-image
 											v-if="controls.FIELDHLPFLDS_LOGO____.isVisible"
 											v-bind="controls.FIELDHLPFLDS_LOGO____.props"
+											:id="getControlId(controls.FIELDHLPFLDS_LOGO____)"
 											v-on="controls.FIELDHLPFLDS_LOGO____.handlers" />
 									</base-input-structure>
 								</q-col>
@@ -738,7 +796,8 @@
 									<base-input-structure
 										v-if="controls.FIELDHLPFLDS_ATTACH__.isVisible"
 										class="i-text"
-										v-bind="controls.FIELDHLPFLDS_ATTACH__"
+										v-bind="controls.FIELDHLPFLDS_ATTACH__.wrapperProps"
+										:id="getControlId(controls.FIELDHLPFLDS_ATTACH__)"
 										v-on="controls.FIELDHLPFLDS_ATTACH__.handlers"
 										:loading="controls.FIELDHLPFLDS_ATTACH__.props.loading"
 										:reporting-mode-on="reportingModeCAV"
@@ -746,6 +805,7 @@
 										<q-document
 											v-if="controls.FIELDHLPFLDS_ATTACH__.isVisible"
 											v-bind="controls.FIELDHLPFLDS_ATTACH__.props"
+											:id="getControlId(controls.FIELDHLPFLDS_ATTACH__)"
 											v-on="controls.FIELDHLPFLDS_ATTACH__.handlers" />
 									</base-input-structure>
 								</q-col>
@@ -761,7 +821,8 @@
 						<base-input-structure
 							v-if="controls.FIELDHLPFLDS_CREATDAT.isVisible"
 							class="i-text"
-							v-bind="controls.FIELDHLPFLDS_CREATDAT"
+							v-bind="controls.FIELDHLPFLDS_CREATDAT.wrapperProps"
+							:id="getControlId(controls.FIELDHLPFLDS_CREATDAT)"
 							v-on="controls.FIELDHLPFLDS_CREATDAT.handlers"
 							:loading="controls.FIELDHLPFLDS_CREATDAT.props.loading"
 							:reporting-mode-on="reportingModeCAV"
@@ -769,6 +830,7 @@
 							<q-date-time-picker
 								v-if="controls.FIELDHLPFLDS_CREATDAT.isVisible"
 								v-bind="controls.FIELDHLPFLDS_CREATDAT.props"
+								:id="getControlId(controls.FIELDHLPFLDS_CREATDAT)"
 								:model-value="model.ValCreatdat.value"
 								@reset-icon-click="model.ValCreatdat.fnUpdateValue(model.ValCreatdat.originalValue ?? new Date())"
 								@update:model-value="model.ValCreatdat.fnUpdateValue($event ?? '')" />
@@ -780,13 +842,15 @@
 						<base-input-structure
 							v-if="controls.FIELDHLPFLDS_CREATUSE.isVisible"
 							class="i-text"
-							v-bind="controls.FIELDHLPFLDS_CREATUSE"
+							v-bind="controls.FIELDHLPFLDS_CREATUSE.wrapperProps"
+							:id="getControlId(controls.FIELDHLPFLDS_CREATUSE)"
 							v-on="controls.FIELDHLPFLDS_CREATUSE.handlers"
 							:loading="controls.FIELDHLPFLDS_CREATUSE.props.loading"
 							:reporting-mode-on="reportingModeCAV"
 							:suggestion-mode-on="suggestionModeOn">
 							<q-text-field
 								v-bind="controls.FIELDHLPFLDS_CREATUSE.props"
+								:id="getControlId(controls.FIELDHLPFLDS_CREATUSE)"
 								@blur="onBlur(controls.FIELDHLPFLDS_CREATUSE, model.ValCreatuse.value)"
 								@change="model.ValCreatuse.fnUpdateValueOnChange" />
 						</base-input-structure>
@@ -797,7 +861,8 @@
 						<base-input-structure
 							v-if="controls.FIELDHLPFLDS_CREATINS.isVisible"
 							class="i-text"
-							v-bind="controls.FIELDHLPFLDS_CREATINS"
+							v-bind="controls.FIELDHLPFLDS_CREATINS.wrapperProps"
+							:id="getControlId(controls.FIELDHLPFLDS_CREATINS)"
 							v-on="controls.FIELDHLPFLDS_CREATINS.handlers"
 							:loading="controls.FIELDHLPFLDS_CREATINS.props.loading"
 							:reporting-mode-on="reportingModeCAV"
@@ -805,6 +870,7 @@
 							<q-date-time-picker
 								v-if="controls.FIELDHLPFLDS_CREATINS.isVisible"
 								v-bind="controls.FIELDHLPFLDS_CREATINS.props"
+								:id="getControlId(controls.FIELDHLPFLDS_CREATINS)"
 								:model-value="model.ValCreatins.value"
 								@reset-icon-click="model.ValCreatins.fnUpdateValue(model.ValCreatins.originalValue ?? new Date())"
 								@update:model-value="model.ValCreatins.fnUpdateValue($event ?? '')" />
@@ -816,7 +882,8 @@
 						<base-input-structure
 							v-if="controls.FIELDHLPFLDS_CREATHOU.isVisible"
 							class="i-text"
-							v-bind="controls.FIELDHLPFLDS_CREATHOU"
+							v-bind="controls.FIELDHLPFLDS_CREATHOU.wrapperProps"
+							:id="getControlId(controls.FIELDHLPFLDS_CREATHOU)"
 							v-on="controls.FIELDHLPFLDS_CREATHOU.handlers"
 							:loading="controls.FIELDHLPFLDS_CREATHOU.props.loading"
 							:reporting-mode-on="reportingModeCAV"
@@ -824,6 +891,7 @@
 							<q-date-time-picker
 								v-if="controls.FIELDHLPFLDS_CREATHOU.isVisible"
 								v-bind="controls.FIELDHLPFLDS_CREATHOU.props"
+								:id="getControlId(controls.FIELDHLPFLDS_CREATHOU)"
 								:model-value="model.ValCreathou.value"
 								@reset-icon-click="model.ValCreathou.fnUpdateValue(model.ValCreathou.originalValue ?? new Date())"
 								@update:model-value="model.ValCreathou.fnUpdateValue($event ?? '')" />
@@ -834,7 +902,7 @@
 		</q-container>
 	</teleport>
 
-	<hr v-if="!isPopup && showFormFooter" />
+	<q-divider v-if="!isPopup && showFormFooter" />
 
 	<teleport
 		v-if="formModalIsReady && showFormFooter"
@@ -1209,6 +1277,7 @@
 						label: computed(() => this.Resources.TEXT_INPUTS37770),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
+						borderless: false,
 						isCollapsible: false,
 						anchored: false,
 						directChildren: ['FIELDHLPFLDS_TXTFIELD', 'FIELDHLPFLDS_DESCRIP_'],
@@ -1281,6 +1350,7 @@
 						label: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
+						borderless: false,
 						isCollapsible: false,
 						anchored: false,
 						directChildren: ['FIELDHLPFLDS_PRIMVIAG', 'FIELDHLPFLDS_LOGICENU', 'FIELDHLPFLDS_CLASSNUM', 'FIELDHLPFLDS_RADIOB__', 'FIELDHLPPSEUDFIELD002', 'FIELDHLPPSEUDFIELD003', 'FIELDHLPPSEUDFIELD001'],
@@ -1318,7 +1388,7 @@
 						size: 'mini',
 						helpControl: {
 							shortHelp: {
-								type: 'Tooltip',
+								type: 'subtext',
 								text: computed(() => this.Resources._112049780),
 							},
 							detailedHelp: {
@@ -1361,8 +1431,8 @@
 						maxIntegers: 1,
 						maxDecimals: 0,
 						arrayName: 'CLASSNUM',
-						helpShortItem: '',
-						helpDetailedItem: '',
+						helpShortItem: 'None',
+						helpDetailedItem: 'None',
 						controlLimits: [
 						],
 					}, this),
@@ -1415,7 +1485,7 @@
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'FIELDHLPPSEUDNOVOGR06',
 						icon: {
-							icon: computed(() => `${this.$app.resourcesPath}pexels-polat-eyyüp-albayrak-13933341.jpg?v=3096`),
+							icon: computed(() => `${this.$app.resourcesPath}pexels-polat-eyyüp-albayrak-13933341.jpg?v=2827`),
 							type: 'img',
 						},
 						height: 0,
@@ -1452,6 +1522,7 @@
 						label: computed(() => this.Resources.DATE_TIME_INPUTS06842),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
+						borderless: false,
 						isCollapsible: false,
 						anchored: false,
 						directChildren: ['FIELDHLPFLDS_YEAR____', 'FIELDHLPFLDS_TIME____', 'FIELDHLPFLDS_DATE____', 'FIELDHLPFLDS_DATETIME', 'FIELDHLPFLDS_DATESECO'],
@@ -1466,7 +1537,7 @@
 						size: 'mini',
 						helpControl: {
 							shortHelp: {
-								type: 'Tooltip',
+								type: 'subtext',
 								text: computed(() => this.Resources._111750451),
 							},
 							detailedHelp: {
@@ -1491,7 +1562,7 @@
 						size: 'mini',
 						helpControl: {
 							shortHelp: {
-								type: 'Tooltip',
+								type: 'subtext',
 								text: computed(() => this.Resources._111816434),
 							},
 							detailedHelp: {
@@ -1515,7 +1586,7 @@
 						size: 'small',
 						helpControl: {
 							shortHelp: {
-								type: 'Tooltip',
+								type: 'subtext',
 								text: computed(() => this.Resources._111916541),
 							},
 							detailedHelp: {
@@ -1539,7 +1610,7 @@
 						size: 'medium',
 						helpControl: {
 							shortHelp: {
-								type: 'Tooltip',
+								type: 'subtext',
 								text: computed(() => this.Resources._112049780),
 							},
 							detailedHelp: {
@@ -1563,7 +1634,7 @@
 						size: 'medium',
 						helpControl: {
 							shortHelp: {
-								type: 'Tooltip',
+								type: 'subtext',
 								text: computed(() => this.Resources._112049780),
 							},
 							detailedHelp: {
@@ -1586,6 +1657,7 @@
 						label: computed(() => this.Resources.NUMERIC_INPUTS64739),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
+						borderless: false,
 						isCollapsible: false,
 						anchored: false,
 						directChildren: ['FIELDHLPFLDS_DURATION', 'FIELDHLPFLDS_NPASSAGE', 'FIELDHLPFLDS_PRECOBIL', 'FIELDHLPFLDS_PRICE___'],
@@ -1699,6 +1771,7 @@
 						label: computed(() => this.Resources.INPUTS_WITH_MASKS08900),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
+						borderless: false,
 						isCollapsible: false,
 						anchored: false,
 						directChildren: ['FIELDHLPFLDS_SSNUMBER', 'FIELDHLPFLDS_ZIPFIELD', 'FIELDHLPFLDS_VATNUMBR', 'FIELDHLPFLDS_LICPLATE', 'FIELDHLPFLDS_BANKNMBR', 'FIELDHLPFLDS_EMAILFLD', 'FIELDHLPFLDS_IBANFIEL', 'FIELDHLPFLDS_UPPRTEXT'],
@@ -1713,7 +1786,7 @@
 						size: 'medium',
 						helpControl: {
 							shortHelp: {
-								type: 'Tooltip',
+								type: 'subtext',
 								text: computed(() => this.Resources._112049780),
 							},
 							detailedHelp: {
@@ -1737,7 +1810,7 @@
 						size: 'small',
 						helpControl: {
 							shortHelp: {
-								type: 'Tooltip',
+								type: 'subtext',
 								text: computed(() => this.Resources._112049780),
 							},
 							detailedHelp: {
@@ -1761,7 +1834,7 @@
 						size: 'small',
 						helpControl: {
 							shortHelp: {
-								type: 'Tooltip',
+								type: 'subtext',
 								text: computed(() => this.Resources._112049780),
 							},
 							detailedHelp: {
@@ -1805,7 +1878,7 @@
 						size: 'large',
 						helpControl: {
 							shortHelp: {
-								type: 'Tooltip',
+								type: 'subtext',
 								text: computed(() => this.Resources._112049780),
 							},
 							detailedHelp: {
@@ -1829,7 +1902,7 @@
 						size: 'large',
 						helpControl: {
 							shortHelp: {
-								type: 'Tooltip',
+								type: 'subtext',
 								text: computed(() => this.Resources._112049780),
 							},
 							detailedHelp: {
@@ -1853,7 +1926,7 @@
 						size: 'large',
 						helpControl: {
 							shortHelp: {
-								type: 'Tooltip',
+								type: 'subtext',
 								text: computed(() => this.Resources._112049780),
 							},
 							detailedHelp: {
@@ -1877,7 +1950,7 @@
 						size: 'block',
 						helpControl: {
 							shortHelp: {
-								type: 'Tooltip',
+								type: 'subtext',
 								text: computed(() => this.Resources._112049780),
 							},
 							detailedHelp: {
@@ -1910,6 +1983,7 @@
 						label: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
+						borderless: false,
 						isCollapsible: false,
 						anchored: false,
 						directChildren: ['FIELDHLPFLDS_PASSFLD_', 'FIELDHLPFLDS_CLRPICKE'],
@@ -1971,6 +2045,7 @@
 						label: computed(() => this.Resources.DOCUMENTS14470),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
+						borderless: false,
 						isCollapsible: false,
 						anchored: false,
 						directChildren: ['FIELDHLPFLDS_LOGOEXTE', 'FIELDHLPFLDS_LOGO____', 'FIELDHLPFLDS_ATTACH__'],
@@ -2043,7 +2118,7 @@
 						size: 'small',
 						helpControl: {
 							shortHelp: {
-								type: 'Tooltip',
+								type: 'subtext',
 								text: computed(() => this.Resources._112049780),
 							},
 							detailedHelp: {
@@ -2066,7 +2141,7 @@
 						size: 'medium',
 						helpControl: {
 							shortHelp: {
-								type: 'Tooltip',
+								type: 'subtext',
 								text: computed(() => this.Resources._112049780),
 							},
 							detailedHelp: {
@@ -2089,7 +2164,7 @@
 						size: 'medium',
 						helpControl: {
 							shortHelp: {
-								type: 'Tooltip',
+								type: 'subtext',
 								text: computed(() => this.Resources._112049780),
 							},
 							detailedHelp: {
@@ -2112,7 +2187,7 @@
 						size: 'mini',
 						helpControl: {
 							shortHelp: {
-								type: 'Tooltip',
+								type: 'subtext',
 								text: computed(() => this.Resources._112049780),
 							},
 							detailedHelp: {
@@ -2175,8 +2250,6 @@
 						set ValCodaero(value) { vm.model.ValCodaero.updateValue(value) },
 						get ValCodequip() { return vm.model.ValCodequip.value },
 						set ValCodequip(value) { vm.model.ValCodequip.updateValue(value) },
-						get ValCond() { return vm.model.ValCond.value },
-						set ValCond(value) { vm.model.ValCond.updateValue(value) },
 						get ValConditio() { return vm.model.ValConditio.value },
 						set ValConditio(value) { vm.model.ValConditio.updateValue(value) },
 						get ValCreatdat() { return vm.model.ValCreatdat.value },
@@ -2225,8 +2298,6 @@
 						set ValShwrc(value) { vm.model.ValShwrc.updateValue(value) },
 						get ValSsnumber() { return vm.model.ValSsnumber.value },
 						set ValSsnumber(value) { vm.model.ValSsnumber.updateValue(value) },
-						get ValTblcond() { return vm.model.ValTblcond.value },
-						set ValTblcond(value) { vm.model.ValTblcond.updateValue(value) },
 						get ValTime() { return vm.model.ValTime.value },
 						set ValTime(value) { vm.model.ValTime.updateValue(value) },
 						get ValTxtfield() { return vm.model.ValTxtfield.value },
@@ -2596,7 +2667,6 @@
 
 				this.afterControlUpdate(controlField, fieldValue)
 			},
-
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
 // USE /[MANUAL GQT FUNCTIONS_JS FIELDHLP]/
 // eslint-disable-next-line

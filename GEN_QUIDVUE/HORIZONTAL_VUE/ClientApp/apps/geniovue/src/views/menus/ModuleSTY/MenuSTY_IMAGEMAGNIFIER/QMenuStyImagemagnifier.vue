@@ -3,22 +3,23 @@
 		v-if="menuModalIsReady"
 		:to="`#${uiContainersId.body}`"
 		:disabled="!menuInfo.isPopup">
-		<form
+		<div
 			class="form-horizontal"
 			@submit.prevent>
 			<q-row-container>
 				<q-table
 					v-bind="controls.menu"
 					v-on="controls.menu.handlers">
+					<template #header>
+						<q-table-config
+							:table-ctrl="controls.menu"
+							v-on="controls.menu.handlers">
+						</q-table-config>
+					</template>
 					<!-- USE /[MANUAL GQT CUSTOM_TABLE STY_Menu_IMAGEMAGNIFIER]/ -->
 				</q-table>
-
-				<q-table-extra-extension
-					:list-ctrl="controls.menu"
-					:filter-operators="controls.menu.filterOperators"
-					v-on="controls.menu.handlers" />
 			</q-row-container>
-		</form>
+		</div>
 	</teleport>
 
 	<teleport
@@ -176,7 +177,6 @@
 								scrollData: 9,
 								export: 1,
 								array: computed(() => new qProjArrays.QArraySexo(vm.$getResource).elements),
-								arrayType: qProjArrays.QArraySexo.type,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.NumericColumn({
 								order: 4,
@@ -340,7 +340,6 @@
 							searchBarConfig: {
 								visibility: true
 							},
-							filtersVisible: true,
 							allowColumnFilters: true,
 							allowColumnSort: true,
 							generalCustomActions: [
@@ -380,7 +379,7 @@
 								sortOrder: 'asc'
 							}
 						},
-						globalEvents: ['changed-WPESS', 'changed-WAREH'],
+						globalEvents: ['changed-WAREH', 'changed-WPESS'],
 						uuid: '9113c297-09a6-4691-925e-b000abf7937c',
 						allSelectedRows: 'false',
 						headerLevel: 1,

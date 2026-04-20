@@ -47,7 +47,7 @@ namespace CSGenio.business
 			Qfield = new Field(info.Alias, "codglob", FieldType.KEY_GUID);
 			Qfield.FieldDescription = "";
 			Qfield.FieldSize =  36;
-			Qfield.CavDesignation = "";
+			Qfield.VisivelCav = CavVisibilityType.Nunca;
 
 			Qfield.Dupmsg = "";
 			info.RegisterFieldDB(Qfield);
@@ -561,7 +561,7 @@ namespace CSGenio.business
 			Qfield = new Field(info.Alias, "simbolo", FieldType.IMAGE);
 			Qfield.FieldDescription = "Header";
 			Qfield.FieldSize =  14;
-			Qfield.CavDesignation = "CABECALHO50133";
+			Qfield.VisivelCav = CavVisibilityType.Nunca;
 
 			Qfield.Dupmsg = "";
 			info.RegisterFieldDB(Qfield);
@@ -570,7 +570,7 @@ namespace CSGenio.business
 			Qfield = new Field(info.Alias, "simbolol", FieldType.IMAGE);
 			Qfield.FieldDescription = "Header";
 			Qfield.FieldSize =  14;
-			Qfield.CavDesignation = "CABECALHO50133";
+			Qfield.VisivelCav = CavVisibilityType.Nunca;
 
 			Qfield.Dupmsg = "";
 			info.RegisterFieldDB(Qfield);
@@ -579,7 +579,7 @@ namespace CSGenio.business
 			Qfield = new Field(info.Alias, "footerp", FieldType.IMAGE);
 			Qfield.FieldDescription = "Footer";
 			Qfield.FieldSize =  14;
-			Qfield.CavDesignation = "RODAPE46446";
+			Qfield.VisivelCav = CavVisibilityType.Nunca;
 
 			Qfield.Dupmsg = "";
 			info.RegisterFieldDB(Qfield);
@@ -588,7 +588,7 @@ namespace CSGenio.business
 			Qfield = new Field(info.Alias, "footerl", FieldType.IMAGE);
 			Qfield.FieldDescription = "Footer";
 			Qfield.FieldSize =  14;
-			Qfield.CavDesignation = "RODAPE46446";
+			Qfield.VisivelCav = CavVisibilityType.Nunca;
 
 			Qfield.Dupmsg = "";
 			info.RegisterFieldDB(Qfield);
@@ -597,7 +597,7 @@ namespace CSGenio.business
 			Qfield = new Field(info.Alias, "marcagua", FieldType.IMAGE);
 			Qfield.FieldDescription = "Watermark";
 			Qfield.FieldSize =  14;
-			Qfield.CavDesignation = "MARCA_AGUA18601";
+			Qfield.VisivelCav = CavVisibilityType.Nunca;
 
 			Qfield.Dupmsg = "";
 			info.RegisterFieldDB(Qfield);
@@ -606,7 +606,7 @@ namespace CSGenio.business
 			Qfield = new Field(info.Alias, "logomint", FieldType.IMAGE);
 			Qfield.FieldDescription = "Ministry Logo";
 			Qfield.FieldSize =  14;
-			Qfield.CavDesignation = "LOGOTIPO_MINISTERIO43307";
+			Qfield.VisivelCav = CavVisibilityType.Nunca;
 
 			Qfield.Dupmsg = "";
 			info.RegisterFieldDB(Qfield);
@@ -926,7 +926,7 @@ namespace CSGenio.business
 			Qfield.FieldDescription = "";
 			Qfield.FieldSize =  36;
 			Qfield.MQueue = false;
-			Qfield.CavDesignation = "";
+			Qfield.VisivelCav = CavVisibilityType.Nunca;
 
 			Qfield.Dupmsg = "";
 			info.RegisterFieldDB(Qfield);
@@ -937,7 +937,7 @@ namespace CSGenio.business
 			Qfield.FieldSize =  3;
 			Qfield.MQueue = false;
 			Qfield.Decimals = 1;
-			Qfield.CavDesignation = "LEGEND16814";
+			Qfield.VisivelCav = CavVisibilityType.Nunca;
 
 			Qfield.Dupmsg = "";
 			info.RegisterFieldDB(Qfield);

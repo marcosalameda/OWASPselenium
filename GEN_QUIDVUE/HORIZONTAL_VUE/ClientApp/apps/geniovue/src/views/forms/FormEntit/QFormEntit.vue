@@ -9,12 +9,13 @@
 			<div
 				v-if="showFormHeader"
 				class="c-action-bar">
-				<h1
+				<component
 					v-if="formControl.uiComponents.header && formInfo.designation"
+					:is="topHeadingTag"
 					:id="formTitleId"
 					class="form-header">
 					{{ formInfo.designation }}
-				</h1>
+				</component>
 
 				<div class="c-action-bar__menu">
 					<template
@@ -40,13 +41,10 @@
 									@click="btn.action">
 									<template v-if="btn.icon">
 										<q-badge-indicator
-											v-if="btn.badge && btn.badge.isVisible"
-											:color="btn.badge.color">
+											:enabled="btn.badge?.isVisible ?? false"
+											:color="btn.badge?.color">
 											<q-icon v-bind="btn.icon" />
 										</q-badge-indicator>
-										<q-icon
-											v-else
-											v-bind="btn.icon" />
 									</template>
 								</q-toggle-group-item>
 							</template>
@@ -97,41 +95,44 @@
 		<q-container
 			fluid
 			data-key="ENTIT"
+			:data-identifier="primaryKeyValue"
 			:data-loading="!formInitialDataLoaded || !isActiveForm">
 			<template v-if="formControl.initialized && showFormBody">
-				<q-row v-if="controls.ENTIT___ENTITNAME____.isVisible">
+				<q-row v-if="controls.ENTIT___ENTITNAME____.isVisible || controls.ENTIT___ENTITINITIALS.isVisible || controls.ENTIT___ENTITREGISTRA.isVisible || controls.ENTIT___ENTITTAXNUMBE.isVisible || controls.ENTIT___ENTITEMAIL___.isVisible || controls.ENTIT___ENTITPHONENUM.isVisible || controls.ENTIT___ENTITIBAN____.isVisible || controls.ENTIT___ENTITBUILDING.isVisible || controls.ENTIT___ENTITSTREET__.isVisible || controls.ENTIT___ENTITTOWN____.isVisible || controls.ENTIT___ENTITCOUNTY__.isVisible || controls.ENTIT___ENTITSTATE___.isVisible || controls.ENTIT___ENTITPOBOX___.isVisible || controls.ENTIT___ENTITPOSTALCO.isVisible || controls.ENTIT___ENTITTELEPHON.isVisible || controls.ENTIT___ENTITFAX_____.isVisible || controls.ENTIT___ENTITWEBSITE_.isVisible || controls.ENTIT___ENTITPERSON__.isVisible || controls.ENTIT___ENTITCONTACT_.isVisible || controls.ENTIT___ENTITOWNER___.isVisible || controls.ENTIT___ENTITCARRIER_.isVisible || controls.ENTIT___ENTITSUPPLIER.isVisible || controls.ENTIT___ENTITMANUFACT.isVisible || controls.ENTIT___ENTITFOUNDED_.isVisible || controls.ENTIT___FACI1NAME____.isVisible || controls.ENTIT___FACI2NAME____.isVisible || controls.ENTIT___ENTITLANGUAGE.isVisible || controls.ENTIT___ENTITCURRENCY.isVisible">
 					<q-col
 						v-if="controls.ENTIT___ENTITNAME____.isVisible"
 						cols="auto">
 						<base-input-structure
 							v-if="controls.ENTIT___ENTITNAME____.isVisible"
 							class="i-text"
-							v-bind="controls.ENTIT___ENTITNAME____"
+							v-bind="controls.ENTIT___ENTITNAME____.wrapperProps"
+							:id="getControlId(controls.ENTIT___ENTITNAME____)"
 							v-on="controls.ENTIT___ENTITNAME____.handlers"
 							:loading="controls.ENTIT___ENTITNAME____.props.loading"
 							:reporting-mode-on="reportingModeCAV"
 							:suggestion-mode-on="suggestionModeOn">
 							<q-text-field
 								v-bind="controls.ENTIT___ENTITNAME____.props"
+								:id="getControlId(controls.ENTIT___ENTITNAME____)"
 								@blur="onBlur(controls.ENTIT___ENTITNAME____, model.ValName.value)"
 								@change="model.ValName.fnUpdateValueOnChange" />
 						</base-input-structure>
 					</q-col>
-				</q-row>
-				<q-row v-if="controls.ENTIT___ENTITINITIALS.isVisible || controls.ENTIT___ENTITREGISTRA.isVisible || controls.ENTIT___ENTITTAXNUMBE.isVisible">
 					<q-col
 						v-if="controls.ENTIT___ENTITINITIALS.isVisible"
 						cols="auto">
 						<base-input-structure
 							v-if="controls.ENTIT___ENTITINITIALS.isVisible"
 							class="i-text"
-							v-bind="controls.ENTIT___ENTITINITIALS"
+							v-bind="controls.ENTIT___ENTITINITIALS.wrapperProps"
+							:id="getControlId(controls.ENTIT___ENTITINITIALS)"
 							v-on="controls.ENTIT___ENTITINITIALS.handlers"
 							:loading="controls.ENTIT___ENTITINITIALS.props.loading"
 							:reporting-mode-on="reportingModeCAV"
 							:suggestion-mode-on="suggestionModeOn">
 							<q-text-field
 								v-bind="controls.ENTIT___ENTITINITIALS.props"
+								:id="getControlId(controls.ENTIT___ENTITINITIALS)"
 								@blur="onBlur(controls.ENTIT___ENTITINITIALS, model.ValInitials.value)"
 								@change="model.ValInitials.fnUpdateValueOnChange" />
 						</base-input-structure>
@@ -142,13 +143,15 @@
 						<base-input-structure
 							v-if="controls.ENTIT___ENTITREGISTRA.isVisible"
 							class="i-text"
-							v-bind="controls.ENTIT___ENTITREGISTRA"
+							v-bind="controls.ENTIT___ENTITREGISTRA.wrapperProps"
+							:id="getControlId(controls.ENTIT___ENTITREGISTRA)"
 							v-on="controls.ENTIT___ENTITREGISTRA.handlers"
 							:loading="controls.ENTIT___ENTITREGISTRA.props.loading"
 							:reporting-mode-on="reportingModeCAV"
 							:suggestion-mode-on="suggestionModeOn">
 							<q-text-field
 								v-bind="controls.ENTIT___ENTITREGISTRA.props"
+								:id="getControlId(controls.ENTIT___ENTITREGISTRA)"
 								@blur="onBlur(controls.ENTIT___ENTITREGISTRA, model.ValRegistra.value)"
 								@change="model.ValRegistra.fnUpdateValueOnChange" />
 						</base-input-structure>
@@ -159,89 +162,53 @@
 						<base-input-structure
 							v-if="controls.ENTIT___ENTITTAXNUMBE.isVisible"
 							class="i-text"
-							v-bind="controls.ENTIT___ENTITTAXNUMBE"
+							v-bind="controls.ENTIT___ENTITTAXNUMBE.wrapperProps"
+							:id="getControlId(controls.ENTIT___ENTITTAXNUMBE)"
 							v-on="controls.ENTIT___ENTITTAXNUMBE.handlers"
 							:loading="controls.ENTIT___ENTITTAXNUMBE.props.loading"
 							:reporting-mode-on="reportingModeCAV"
 							:suggestion-mode-on="suggestionModeOn">
 							<q-text-field
 								v-bind="controls.ENTIT___ENTITTAXNUMBE.props"
+								:id="getControlId(controls.ENTIT___ENTITTAXNUMBE)"
 								@blur="onBlur(controls.ENTIT___ENTITTAXNUMBE, model.ValTaxnumbe.value)"
 								@change="model.ValTaxnumbe.fnUpdateValueOnChange" />
 						</base-input-structure>
 					</q-col>
-				</q-row>
-				<q-row v-if="controls.ENTIT___ENTITFOUNDED_.isVisible || controls.ENTIT___ENTITOWNER___.isVisible">
-					<q-col
-						v-if="controls.ENTIT___ENTITFOUNDED_.isVisible"
-						cols="auto">
-						<base-input-structure
-							v-if="controls.ENTIT___ENTITFOUNDED_.isVisible"
-							class="i-text"
-							v-bind="controls.ENTIT___ENTITFOUNDED_"
-							v-on="controls.ENTIT___ENTITFOUNDED_.handlers"
-							:loading="controls.ENTIT___ENTITFOUNDED_.props.loading"
-							:reporting-mode-on="reportingModeCAV"
-							:suggestion-mode-on="suggestionModeOn">
-							<q-date-time-picker
-								v-if="controls.ENTIT___ENTITFOUNDED_.isVisible"
-								v-bind="controls.ENTIT___ENTITFOUNDED_.props"
-								:model-value="model.ValFounded.value"
-								@reset-icon-click="model.ValFounded.fnUpdateValue(model.ValFounded.originalValue ?? new Date())"
-								@update:model-value="model.ValFounded.fnUpdateValue($event ?? '')" />
-						</base-input-structure>
-					</q-col>
-					<q-col
-						v-if="controls.ENTIT___ENTITOWNER___.isVisible"
-						cols="auto">
-						<base-input-structure
-							v-if="controls.ENTIT___ENTITOWNER___.isVisible"
-							class="i-text"
-							v-bind="controls.ENTIT___ENTITOWNER___"
-							v-on="controls.ENTIT___ENTITOWNER___.handlers"
-							:loading="controls.ENTIT___ENTITOWNER___.props.loading"
-							:reporting-mode-on="reportingModeCAV"
-							:suggestion-mode-on="suggestionModeOn">
-							<q-text-field
-								v-bind="controls.ENTIT___ENTITOWNER___.props"
-								@blur="onBlur(controls.ENTIT___ENTITOWNER___, model.ValOwner.value)"
-								@change="model.ValOwner.fnUpdateValueOnChange" />
-						</base-input-structure>
-					</q-col>
-				</q-row>
-				<q-row v-if="controls.ENTIT___ENTITEMAIL___.isVisible">
 					<q-col
 						v-if="controls.ENTIT___ENTITEMAIL___.isVisible"
 						cols="auto">
 						<base-input-structure
 							v-if="controls.ENTIT___ENTITEMAIL___.isVisible"
 							class="i-text"
-							v-bind="controls.ENTIT___ENTITEMAIL___"
+							v-bind="controls.ENTIT___ENTITEMAIL___.wrapperProps"
+							:id="getControlId(controls.ENTIT___ENTITEMAIL___)"
 							v-on="controls.ENTIT___ENTITEMAIL___.handlers"
 							:loading="controls.ENTIT___ENTITEMAIL___.props.loading"
 							:reporting-mode-on="reportingModeCAV"
 							:suggestion-mode-on="suggestionModeOn">
 							<q-text-field
 								v-bind="controls.ENTIT___ENTITEMAIL___.props"
+								:id="getControlId(controls.ENTIT___ENTITEMAIL___)"
 								@blur="onBlur(controls.ENTIT___ENTITEMAIL___, model.ValEmail.value)"
 								@change="model.ValEmail.fnUpdateValueOnChange" />
 						</base-input-structure>
 					</q-col>
-				</q-row>
-				<q-row v-if="controls.ENTIT___ENTITPHONENUM.isVisible || controls.ENTIT___ENTITIBAN____.isVisible">
 					<q-col
 						v-if="controls.ENTIT___ENTITPHONENUM.isVisible"
 						cols="auto">
 						<base-input-structure
 							v-if="controls.ENTIT___ENTITPHONENUM.isVisible"
 							class="i-text"
-							v-bind="controls.ENTIT___ENTITPHONENUM"
+							v-bind="controls.ENTIT___ENTITPHONENUM.wrapperProps"
+							:id="getControlId(controls.ENTIT___ENTITPHONENUM)"
 							v-on="controls.ENTIT___ENTITPHONENUM.handlers"
 							:loading="controls.ENTIT___ENTITPHONENUM.props.loading"
 							:reporting-mode-on="reportingModeCAV"
 							:suggestion-mode-on="suggestionModeOn">
 							<q-text-field
 								v-bind="controls.ENTIT___ENTITPHONENUM.props"
+								:id="getControlId(controls.ENTIT___ENTITPHONENUM)"
 								@blur="onBlur(controls.ENTIT___ENTITPHONENUM, model.ValPhonenum.value)"
 								@change="model.ValPhonenum.fnUpdateValueOnChange" />
 						</base-input-structure>
@@ -252,32 +219,34 @@
 						<base-input-structure
 							v-if="controls.ENTIT___ENTITIBAN____.isVisible"
 							class="i-text"
-							v-bind="controls.ENTIT___ENTITIBAN____"
+							v-bind="controls.ENTIT___ENTITIBAN____.wrapperProps"
+							:id="getControlId(controls.ENTIT___ENTITIBAN____)"
 							v-on="controls.ENTIT___ENTITIBAN____.handlers"
 							:loading="controls.ENTIT___ENTITIBAN____.props.loading"
 							:reporting-mode-on="reportingModeCAV"
 							:suggestion-mode-on="suggestionModeOn">
 							<q-text-field
 								v-bind="controls.ENTIT___ENTITIBAN____.props"
+								:id="getControlId(controls.ENTIT___ENTITIBAN____)"
 								@blur="onBlur(controls.ENTIT___ENTITIBAN____, model.ValIban.value)"
 								@change="model.ValIban.fnUpdateValueOnChange" />
 						</base-input-structure>
 					</q-col>
-				</q-row>
-				<q-row v-if="controls.ENTIT___ENTITBUILDING.isVisible || controls.ENTIT___ENTITSTREET__.isVisible">
 					<q-col
 						v-if="controls.ENTIT___ENTITBUILDING.isVisible"
 						cols="auto">
 						<base-input-structure
 							v-if="controls.ENTIT___ENTITBUILDING.isVisible"
 							class="i-text"
-							v-bind="controls.ENTIT___ENTITBUILDING"
+							v-bind="controls.ENTIT___ENTITBUILDING.wrapperProps"
+							:id="getControlId(controls.ENTIT___ENTITBUILDING)"
 							v-on="controls.ENTIT___ENTITBUILDING.handlers"
 							:loading="controls.ENTIT___ENTITBUILDING.props.loading"
 							:reporting-mode-on="reportingModeCAV"
 							:suggestion-mode-on="suggestionModeOn">
 							<q-text-field
 								v-bind="controls.ENTIT___ENTITBUILDING.props"
+								:id="getControlId(controls.ENTIT___ENTITBUILDING)"
 								@blur="onBlur(controls.ENTIT___ENTITBUILDING, model.ValBuilding.value)"
 								@change="model.ValBuilding.fnUpdateValueOnChange" />
 						</base-input-structure>
@@ -288,89 +257,91 @@
 						<base-input-structure
 							v-if="controls.ENTIT___ENTITSTREET__.isVisible"
 							class="i-text"
-							v-bind="controls.ENTIT___ENTITSTREET__"
+							v-bind="controls.ENTIT___ENTITSTREET__.wrapperProps"
+							:id="getControlId(controls.ENTIT___ENTITSTREET__)"
 							v-on="controls.ENTIT___ENTITSTREET__.handlers"
 							:loading="controls.ENTIT___ENTITSTREET__.props.loading"
 							:reporting-mode-on="reportingModeCAV"
 							:suggestion-mode-on="suggestionModeOn">
 							<q-text-field
 								v-bind="controls.ENTIT___ENTITSTREET__.props"
+								:id="getControlId(controls.ENTIT___ENTITSTREET__)"
 								@blur="onBlur(controls.ENTIT___ENTITSTREET__, model.ValStreet.value)"
 								@change="model.ValStreet.fnUpdateValueOnChange" />
 						</base-input-structure>
 					</q-col>
-				</q-row>
-				<q-row v-if="controls.ENTIT___ENTITTOWN____.isVisible">
 					<q-col
 						v-if="controls.ENTIT___ENTITTOWN____.isVisible"
 						cols="auto">
 						<base-input-structure
 							v-if="controls.ENTIT___ENTITTOWN____.isVisible"
 							class="i-text"
-							v-bind="controls.ENTIT___ENTITTOWN____"
+							v-bind="controls.ENTIT___ENTITTOWN____.wrapperProps"
+							:id="getControlId(controls.ENTIT___ENTITTOWN____)"
 							v-on="controls.ENTIT___ENTITTOWN____.handlers"
 							:loading="controls.ENTIT___ENTITTOWN____.props.loading"
 							:reporting-mode-on="reportingModeCAV"
 							:suggestion-mode-on="suggestionModeOn">
 							<q-text-field
 								v-bind="controls.ENTIT___ENTITTOWN____.props"
+								:id="getControlId(controls.ENTIT___ENTITTOWN____)"
 								@blur="onBlur(controls.ENTIT___ENTITTOWN____, model.ValTown.value)"
 								@change="model.ValTown.fnUpdateValueOnChange" />
 						</base-input-structure>
 					</q-col>
-				</q-row>
-				<q-row v-if="controls.ENTIT___ENTITCOUNTY__.isVisible">
 					<q-col
 						v-if="controls.ENTIT___ENTITCOUNTY__.isVisible"
 						cols="auto">
 						<base-input-structure
 							v-if="controls.ENTIT___ENTITCOUNTY__.isVisible"
 							class="i-text"
-							v-bind="controls.ENTIT___ENTITCOUNTY__"
+							v-bind="controls.ENTIT___ENTITCOUNTY__.wrapperProps"
+							:id="getControlId(controls.ENTIT___ENTITCOUNTY__)"
 							v-on="controls.ENTIT___ENTITCOUNTY__.handlers"
 							:loading="controls.ENTIT___ENTITCOUNTY__.props.loading"
 							:reporting-mode-on="reportingModeCAV"
 							:suggestion-mode-on="suggestionModeOn">
 							<q-text-field
 								v-bind="controls.ENTIT___ENTITCOUNTY__.props"
+								:id="getControlId(controls.ENTIT___ENTITCOUNTY__)"
 								@blur="onBlur(controls.ENTIT___ENTITCOUNTY__, model.ValCounty.value)"
 								@change="model.ValCounty.fnUpdateValueOnChange" />
 						</base-input-structure>
 					</q-col>
-				</q-row>
-				<q-row v-if="controls.ENTIT___ENTITSTATE___.isVisible">
 					<q-col
 						v-if="controls.ENTIT___ENTITSTATE___.isVisible"
 						cols="auto">
 						<base-input-structure
 							v-if="controls.ENTIT___ENTITSTATE___.isVisible"
 							class="i-text"
-							v-bind="controls.ENTIT___ENTITSTATE___"
+							v-bind="controls.ENTIT___ENTITSTATE___.wrapperProps"
+							:id="getControlId(controls.ENTIT___ENTITSTATE___)"
 							v-on="controls.ENTIT___ENTITSTATE___.handlers"
 							:loading="controls.ENTIT___ENTITSTATE___.props.loading"
 							:reporting-mode-on="reportingModeCAV"
 							:suggestion-mode-on="suggestionModeOn">
 							<q-text-field
 								v-bind="controls.ENTIT___ENTITSTATE___.props"
+								:id="getControlId(controls.ENTIT___ENTITSTATE___)"
 								@blur="onBlur(controls.ENTIT___ENTITSTATE___, model.ValState.value)"
 								@change="model.ValState.fnUpdateValueOnChange" />
 						</base-input-structure>
 					</q-col>
-				</q-row>
-				<q-row v-if="controls.ENTIT___ENTITPOBOX___.isVisible || controls.ENTIT___ENTITPOSTALCO.isVisible">
 					<q-col
 						v-if="controls.ENTIT___ENTITPOBOX___.isVisible"
 						cols="auto">
 						<base-input-structure
 							v-if="controls.ENTIT___ENTITPOBOX___.isVisible"
 							class="i-text"
-							v-bind="controls.ENTIT___ENTITPOBOX___"
+							v-bind="controls.ENTIT___ENTITPOBOX___.wrapperProps"
+							:id="getControlId(controls.ENTIT___ENTITPOBOX___)"
 							v-on="controls.ENTIT___ENTITPOBOX___.handlers"
 							:loading="controls.ENTIT___ENTITPOBOX___.props.loading"
 							:reporting-mode-on="reportingModeCAV"
 							:suggestion-mode-on="suggestionModeOn">
 							<q-text-field
 								v-bind="controls.ENTIT___ENTITPOBOX___.props"
+								:id="getControlId(controls.ENTIT___ENTITPOBOX___)"
 								@blur="onBlur(controls.ENTIT___ENTITPOBOX___, model.ValPobox.value)"
 								@change="model.ValPobox.fnUpdateValueOnChange" />
 						</base-input-structure>
@@ -381,32 +352,34 @@
 						<base-input-structure
 							v-if="controls.ENTIT___ENTITPOSTALCO.isVisible"
 							class="i-text"
-							v-bind="controls.ENTIT___ENTITPOSTALCO"
+							v-bind="controls.ENTIT___ENTITPOSTALCO.wrapperProps"
+							:id="getControlId(controls.ENTIT___ENTITPOSTALCO)"
 							v-on="controls.ENTIT___ENTITPOSTALCO.handlers"
 							:loading="controls.ENTIT___ENTITPOSTALCO.props.loading"
 							:reporting-mode-on="reportingModeCAV"
 							:suggestion-mode-on="suggestionModeOn">
 							<q-text-field
 								v-bind="controls.ENTIT___ENTITPOSTALCO.props"
+								:id="getControlId(controls.ENTIT___ENTITPOSTALCO)"
 								@blur="onBlur(controls.ENTIT___ENTITPOSTALCO, model.ValPostalco.value)"
 								@change="model.ValPostalco.fnUpdateValueOnChange" />
 						</base-input-structure>
 					</q-col>
-				</q-row>
-				<q-row v-if="controls.ENTIT___ENTITTELEPHON.isVisible || controls.ENTIT___ENTITFAX_____.isVisible">
 					<q-col
 						v-if="controls.ENTIT___ENTITTELEPHON.isVisible"
 						cols="auto">
 						<base-input-structure
 							v-if="controls.ENTIT___ENTITTELEPHON.isVisible"
 							class="i-text"
-							v-bind="controls.ENTIT___ENTITTELEPHON"
+							v-bind="controls.ENTIT___ENTITTELEPHON.wrapperProps"
+							:id="getControlId(controls.ENTIT___ENTITTELEPHON)"
 							v-on="controls.ENTIT___ENTITTELEPHON.handlers"
 							:loading="controls.ENTIT___ENTITTELEPHON.props.loading"
 							:reporting-mode-on="reportingModeCAV"
 							:suggestion-mode-on="suggestionModeOn">
 							<q-text-field
 								v-bind="controls.ENTIT___ENTITTELEPHON.props"
+								:id="getControlId(controls.ENTIT___ENTITTELEPHON)"
 								@blur="onBlur(controls.ENTIT___ENTITTELEPHON, model.ValTelephon.value)"
 								@change="model.ValTelephon.fnUpdateValueOnChange" />
 						</base-input-structure>
@@ -417,83 +390,105 @@
 						<base-input-structure
 							v-if="controls.ENTIT___ENTITFAX_____.isVisible"
 							class="i-text"
-							v-bind="controls.ENTIT___ENTITFAX_____"
+							v-bind="controls.ENTIT___ENTITFAX_____.wrapperProps"
+							:id="getControlId(controls.ENTIT___ENTITFAX_____)"
 							v-on="controls.ENTIT___ENTITFAX_____.handlers"
 							:loading="controls.ENTIT___ENTITFAX_____.props.loading"
 							:reporting-mode-on="reportingModeCAV"
 							:suggestion-mode-on="suggestionModeOn">
 							<q-text-field
 								v-bind="controls.ENTIT___ENTITFAX_____.props"
+								:id="getControlId(controls.ENTIT___ENTITFAX_____)"
 								@blur="onBlur(controls.ENTIT___ENTITFAX_____, model.ValFax.value)"
 								@change="model.ValFax.fnUpdateValueOnChange" />
 						</base-input-structure>
 					</q-col>
-				</q-row>
-				<q-row v-if="controls.ENTIT___ENTITWEBSITE_.isVisible">
 					<q-col
 						v-if="controls.ENTIT___ENTITWEBSITE_.isVisible"
 						cols="auto">
 						<base-input-structure
 							v-if="controls.ENTIT___ENTITWEBSITE_.isVisible"
 							class="i-text"
-							v-bind="controls.ENTIT___ENTITWEBSITE_"
+							v-bind="controls.ENTIT___ENTITWEBSITE_.wrapperProps"
+							:id="getControlId(controls.ENTIT___ENTITWEBSITE_)"
 							v-on="controls.ENTIT___ENTITWEBSITE_.handlers"
 							:loading="controls.ENTIT___ENTITWEBSITE_.props.loading"
 							:reporting-mode-on="reportingModeCAV"
 							:suggestion-mode-on="suggestionModeOn">
 							<q-text-field
 								v-bind="controls.ENTIT___ENTITWEBSITE_.props"
+								:id="getControlId(controls.ENTIT___ENTITWEBSITE_)"
 								@blur="onBlur(controls.ENTIT___ENTITWEBSITE_, model.ValWebsite.value)"
 								@change="model.ValWebsite.fnUpdateValueOnChange" />
 						</base-input-structure>
 					</q-col>
-				</q-row>
-				<q-row v-if="controls.ENTIT___ENTITPERSON__.isVisible">
 					<q-col
 						v-if="controls.ENTIT___ENTITPERSON__.isVisible"
 						cols="auto">
 						<base-input-structure
 							v-if="controls.ENTIT___ENTITPERSON__.isVisible"
 							class="i-text"
-							v-bind="controls.ENTIT___ENTITPERSON__"
+							v-bind="controls.ENTIT___ENTITPERSON__.wrapperProps"
+							:id="getControlId(controls.ENTIT___ENTITPERSON__)"
 							v-on="controls.ENTIT___ENTITPERSON__.handlers"
 							:loading="controls.ENTIT___ENTITPERSON__.props.loading"
 							:reporting-mode-on="reportingModeCAV"
 							:suggestion-mode-on="suggestionModeOn">
 							<q-text-field
 								v-bind="controls.ENTIT___ENTITPERSON__.props"
+								:id="getControlId(controls.ENTIT___ENTITPERSON__)"
 								@blur="onBlur(controls.ENTIT___ENTITPERSON__, model.ValPerson.value)"
 								@change="model.ValPerson.fnUpdateValueOnChange" />
 						</base-input-structure>
 					</q-col>
-				</q-row>
-				<q-row v-if="controls.ENTIT___ENTITCONTACT_.isVisible">
 					<q-col
 						v-if="controls.ENTIT___ENTITCONTACT_.isVisible"
 						cols="auto">
 						<base-input-structure
 							v-if="controls.ENTIT___ENTITCONTACT_.isVisible"
 							class="i-text"
-							v-bind="controls.ENTIT___ENTITCONTACT_"
+							v-bind="controls.ENTIT___ENTITCONTACT_.wrapperProps"
+							:id="getControlId(controls.ENTIT___ENTITCONTACT_)"
 							v-on="controls.ENTIT___ENTITCONTACT_.handlers"
 							:loading="controls.ENTIT___ENTITCONTACT_.props.loading"
 							:reporting-mode-on="reportingModeCAV"
 							:suggestion-mode-on="suggestionModeOn">
 							<q-text-field
 								v-bind="controls.ENTIT___ENTITCONTACT_.props"
+								:id="getControlId(controls.ENTIT___ENTITCONTACT_)"
 								@blur="onBlur(controls.ENTIT___ENTITCONTACT_, model.ValContact.value)"
 								@change="model.ValContact.fnUpdateValueOnChange" />
 						</base-input-structure>
 					</q-col>
-				</q-row>
-				<q-row v-if="controls.ENTIT___ENTITCARRIER_.isVisible">
+					<q-col
+						v-if="controls.ENTIT___ENTITOWNER___.isVisible"
+						cols="auto">
+						<base-input-structure
+							v-if="controls.ENTIT___ENTITOWNER___.isVisible"
+							class="i-text"
+							v-bind="controls.ENTIT___ENTITOWNER___.wrapperProps"
+							:id="getControlId(controls.ENTIT___ENTITOWNER___)"
+							v-on="controls.ENTIT___ENTITOWNER___.handlers"
+							:loading="controls.ENTIT___ENTITOWNER___.props.loading"
+							:reporting-mode-on="reportingModeCAV"
+							:suggestion-mode-on="suggestionModeOn">
+							<template #label>
+								<q-checkbox
+									v-if="controls.ENTIT___ENTITOWNER___.isVisible"
+									v-bind="controls.ENTIT___ENTITOWNER___.props"
+									:id="getControlId(controls.ENTIT___ENTITOWNER___)"
+									v-on="controls.ENTIT___ENTITOWNER___.handlers" />
+							</template>
+						</base-input-structure>
+					</q-col>
 					<q-col
 						v-if="controls.ENTIT___ENTITCARRIER_.isVisible"
 						cols="auto">
 						<base-input-structure
 							v-if="controls.ENTIT___ENTITCARRIER_.isVisible"
-							class="i-checkbox"
-							v-bind="controls.ENTIT___ENTITCARRIER_"
+							class="i-text"
+							v-bind="controls.ENTIT___ENTITCARRIER_.wrapperProps"
+							:id="getControlId(controls.ENTIT___ENTITCARRIER_)"
 							v-on="controls.ENTIT___ENTITCARRIER_.handlers"
 							:loading="controls.ENTIT___ENTITCARRIER_.props.loading"
 							:reporting-mode-on="reportingModeCAV"
@@ -502,19 +497,19 @@
 								<q-checkbox
 									v-if="controls.ENTIT___ENTITCARRIER_.isVisible"
 									v-bind="controls.ENTIT___ENTITCARRIER_.props"
+									:id="getControlId(controls.ENTIT___ENTITCARRIER_)"
 									v-on="controls.ENTIT___ENTITCARRIER_.handlers" />
 							</template>
 						</base-input-structure>
 					</q-col>
-				</q-row>
-				<q-row v-if="controls.ENTIT___ENTITSUPPLIER.isVisible">
 					<q-col
 						v-if="controls.ENTIT___ENTITSUPPLIER.isVisible"
 						cols="auto">
 						<base-input-structure
 							v-if="controls.ENTIT___ENTITSUPPLIER.isVisible"
-							class="i-checkbox"
-							v-bind="controls.ENTIT___ENTITSUPPLIER"
+							class="i-text"
+							v-bind="controls.ENTIT___ENTITSUPPLIER.wrapperProps"
+							:id="getControlId(controls.ENTIT___ENTITSUPPLIER)"
 							v-on="controls.ENTIT___ENTITSUPPLIER.handlers"
 							:loading="controls.ENTIT___ENTITSUPPLIER.props.loading"
 							:reporting-mode-on="reportingModeCAV"
@@ -523,19 +518,19 @@
 								<q-checkbox
 									v-if="controls.ENTIT___ENTITSUPPLIER.isVisible"
 									v-bind="controls.ENTIT___ENTITSUPPLIER.props"
+									:id="getControlId(controls.ENTIT___ENTITSUPPLIER)"
 									v-on="controls.ENTIT___ENTITSUPPLIER.handlers" />
 							</template>
 						</base-input-structure>
 					</q-col>
-				</q-row>
-				<q-row v-if="controls.ENTIT___ENTITMANUFACT.isVisible">
 					<q-col
 						v-if="controls.ENTIT___ENTITMANUFACT.isVisible"
 						cols="auto">
 						<base-input-structure
 							v-if="controls.ENTIT___ENTITMANUFACT.isVisible"
-							class="i-checkbox"
-							v-bind="controls.ENTIT___ENTITMANUFACT"
+							class="i-text"
+							v-bind="controls.ENTIT___ENTITMANUFACT.wrapperProps"
+							:id="getControlId(controls.ENTIT___ENTITMANUFACT)"
 							v-on="controls.ENTIT___ENTITMANUFACT.handlers"
 							:loading="controls.ENTIT___ENTITMANUFACT.props.loading"
 							:reporting-mode-on="reportingModeCAV"
@@ -544,19 +539,40 @@
 								<q-checkbox
 									v-if="controls.ENTIT___ENTITMANUFACT.isVisible"
 									v-bind="controls.ENTIT___ENTITMANUFACT.props"
+									:id="getControlId(controls.ENTIT___ENTITMANUFACT)"
 									v-on="controls.ENTIT___ENTITMANUFACT.handlers" />
 							</template>
 						</base-input-structure>
 					</q-col>
-				</q-row>
-				<q-row v-if="controls.ENTIT___FACI1NAME____.isVisible || controls.ENTIT___FACI2NAME____.isVisible">
+					<q-col
+						v-if="controls.ENTIT___ENTITFOUNDED_.isVisible"
+						cols="auto">
+						<base-input-structure
+							v-if="controls.ENTIT___ENTITFOUNDED_.isVisible"
+							class="i-text"
+							v-bind="controls.ENTIT___ENTITFOUNDED_.wrapperProps"
+							:id="getControlId(controls.ENTIT___ENTITFOUNDED_)"
+							v-on="controls.ENTIT___ENTITFOUNDED_.handlers"
+							:loading="controls.ENTIT___ENTITFOUNDED_.props.loading"
+							:reporting-mode-on="reportingModeCAV"
+							:suggestion-mode-on="suggestionModeOn">
+							<q-date-time-picker
+								v-if="controls.ENTIT___ENTITFOUNDED_.isVisible"
+								v-bind="controls.ENTIT___ENTITFOUNDED_.props"
+								:id="getControlId(controls.ENTIT___ENTITFOUNDED_)"
+								:model-value="model.ValFounded.value"
+								@reset-icon-click="model.ValFounded.fnUpdateValue(model.ValFounded.originalValue ?? new Date())"
+								@update:model-value="model.ValFounded.fnUpdateValue($event ?? '')" />
+						</base-input-structure>
+					</q-col>
 					<q-col
 						v-if="controls.ENTIT___FACI1NAME____.isVisible"
 						cols="auto">
 						<base-input-structure
 							v-if="controls.ENTIT___FACI1NAME____.isVisible"
 							class="i-text"
-							v-bind="controls.ENTIT___FACI1NAME____"
+							v-bind="controls.ENTIT___FACI1NAME____.wrapperProps"
+							:id="getControlId(controls.ENTIT___FACI1NAME____)"
 							v-on="controls.ENTIT___FACI1NAME____.handlers"
 							:loading="controls.ENTIT___FACI1NAME____.props.loading"
 							:reporting-mode-on="reportingModeCAV"
@@ -564,6 +580,7 @@
 							<q-lookup
 								v-if="controls.ENTIT___FACI1NAME____.isVisible"
 								v-bind="controls.ENTIT___FACI1NAME____.props"
+								:id="getControlId(controls.ENTIT___FACI1NAME____)"
 								v-on="controls.ENTIT___FACI1NAME____.handlers" />
 							<q-see-more-entit-faci1name
 								v-if="controls.ENTIT___FACI1NAME____.seeMoreIsVisible"
@@ -577,7 +594,8 @@
 						<base-input-structure
 							v-if="controls.ENTIT___FACI2NAME____.isVisible"
 							class="i-text"
-							v-bind="controls.ENTIT___FACI2NAME____"
+							v-bind="controls.ENTIT___FACI2NAME____.wrapperProps"
+							:id="getControlId(controls.ENTIT___FACI2NAME____)"
 							v-on="controls.ENTIT___FACI2NAME____.handlers"
 							:loading="controls.ENTIT___FACI2NAME____.props.loading"
 							:reporting-mode-on="reportingModeCAV"
@@ -585,6 +603,7 @@
 							<q-lookup
 								v-if="controls.ENTIT___FACI2NAME____.isVisible"
 								v-bind="controls.ENTIT___FACI2NAME____.props"
+								:id="getControlId(controls.ENTIT___FACI2NAME____)"
 								v-on="controls.ENTIT___FACI2NAME____.handlers" />
 							<q-see-more-entit-faci2name
 								v-if="controls.ENTIT___FACI2NAME____.seeMoreIsVisible"
@@ -592,21 +611,21 @@
 								v-on="controls.ENTIT___FACI2NAME____.handlers" />
 						</base-input-structure>
 					</q-col>
-				</q-row>
-				<q-row v-if="controls.ENTIT___ENTITLANGUAGE.isVisible || controls.ENTIT___ENTITCURRENCY.isVisible">
 					<q-col
 						v-if="controls.ENTIT___ENTITLANGUAGE.isVisible"
 						cols="auto">
 						<base-input-structure
 							v-if="controls.ENTIT___ENTITLANGUAGE.isVisible"
 							class="i-text"
-							v-bind="controls.ENTIT___ENTITLANGUAGE"
+							v-bind="controls.ENTIT___ENTITLANGUAGE.wrapperProps"
+							:id="getControlId(controls.ENTIT___ENTITLANGUAGE)"
 							v-on="controls.ENTIT___ENTITLANGUAGE.handlers"
 							:loading="controls.ENTIT___ENTITLANGUAGE.props.loading"
 							:reporting-mode-on="reportingModeCAV"
 							:suggestion-mode-on="suggestionModeOn">
 							<q-text-field
 								v-bind="controls.ENTIT___ENTITLANGUAGE.props"
+								:id="getControlId(controls.ENTIT___ENTITLANGUAGE)"
 								@blur="onBlur(controls.ENTIT___ENTITLANGUAGE, model.ValLanguage.value)"
 								@change="model.ValLanguage.fnUpdateValueOnChange" />
 						</base-input-structure>
@@ -617,13 +636,15 @@
 						<base-input-structure
 							v-if="controls.ENTIT___ENTITCURRENCY.isVisible"
 							class="i-text"
-							v-bind="controls.ENTIT___ENTITCURRENCY"
+							v-bind="controls.ENTIT___ENTITCURRENCY.wrapperProps"
+							:id="getControlId(controls.ENTIT___ENTITCURRENCY)"
 							v-on="controls.ENTIT___ENTITCURRENCY.handlers"
 							:loading="controls.ENTIT___ENTITCURRENCY.props.loading"
 							:reporting-mode-on="reportingModeCAV"
 							:suggestion-mode-on="suggestionModeOn">
 							<q-text-field
 								v-bind="controls.ENTIT___ENTITCURRENCY.props"
+								:id="getControlId(controls.ENTIT___ENTITCURRENCY)"
 								@blur="onBlur(controls.ENTIT___ENTITCURRENCY, model.ValCurrency.value)"
 								@change="model.ValCurrency.fnUpdateValueOnChange" />
 						</base-input-structure>
@@ -633,7 +654,7 @@
 		</q-container>
 	</teleport>
 
-	<hr v-if="!isPopup && showFormFooter" />
+	<q-divider v-if="!isPopup && showFormFooter" />
 
 	<teleport
 		v-if="formModalIsReady && showFormFooter"
@@ -1013,7 +1034,7 @@
 						label: computed(() => this.Resources.LEGAL_REGISTRATION04413),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						maxLength: 30,
+						maxLength: 20,
 						controlLimits: [
 						],
 					}, this),
@@ -1026,33 +1047,7 @@
 						label: computed(() => this.Resources.VAT_NUMBER24236),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						maxLength: 30,
-						controlLimits: [
-						],
-					}, this),
-					ENTIT___ENTITFOUNDED_: new fieldControlClass.DateControl({
-						modelField: 'ValFounded',
-						valueChangeEvent: 'fieldChange:entit.founded',
-						id: 'ENTIT___ENTITFOUNDED_',
-						name: 'FOUNDED',
-						size: 'small',
-						label: computed(() => this.Resources.FOUNDED_IN54120),
-						placeholder: '',
-						labelPosition: computed(() => this.labelAlignment.topleft),
-						dateTimeType: 'date',
-						controlLimits: [
-						],
-					}, this),
-					ENTIT___ENTITOWNER___: new fieldControlClass.StringControl({
-						modelField: 'ValOwner',
-						valueChangeEvent: 'fieldChange:entit.owner',
-						id: 'ENTIT___ENTITOWNER___',
-						name: 'OWNER',
-						size: 'large',
-						label: computed(() => this.Resources.OWNER09558),
-						placeholder: '',
-						labelPosition: computed(() => this.labelAlignment.topleft),
-						maxLength: 50,
+						maxLength: 20,
 						controlLimits: [
 						],
 					}, this),
@@ -1091,7 +1086,7 @@
 						label: computed(() => this.Resources.IBAN__INTERNATIONAL_45066),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						maxLength: 33,
+						maxLength: 25,
 						controlLimits: [
 						],
 					}, this),
@@ -1104,7 +1099,7 @@
 						label: computed(() => this.Resources.BUILDING_HOUSE_NUMBE20738),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						maxLength: 25,
+						maxLength: 10,
 						controlLimits: [
 						],
 					}, this),
@@ -1117,7 +1112,7 @@
 						label: computed(() => this.Resources.STREET44324),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						maxLength: 50,
+						maxLength: 85,
 						controlLimits: [
 						],
 					}, this),
@@ -1130,7 +1125,7 @@
 						label: computed(() => this.Resources.TOWN_CITY16259),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						maxLength: 50,
+						maxLength: 85,
 						controlLimits: [
 						],
 					}, this),
@@ -1143,7 +1138,7 @@
 						label: computed(() => this.Resources.COUNTY_PROVINCE34285),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						maxLength: 50,
+						maxLength: 85,
 						controlLimits: [
 						],
 					}, this),
@@ -1156,7 +1151,7 @@
 						label: computed(() => this.Resources.STATE_PROVINCE28516),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						maxLength: 50,
+						maxLength: 85,
 						controlLimits: [
 						],
 					}, this),
@@ -1182,7 +1177,7 @@
 						label: computed(() => this.Resources.ZIP_POSTAL_CODE55613),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						maxLength: 10,
+						maxLength: 50,
 						controlLimits: [
 						],
 					}, this),
@@ -1247,7 +1242,19 @@
 						label: computed(() => this.Resources.CONTACT_TELEPHONE_NU12694),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						maxLength: 30,
+						maxLength: 20,
+						controlLimits: [
+						],
+					}, this),
+					ENTIT___ENTITOWNER___: new fieldControlClass.BooleanControl({
+						modelField: 'ValOwner',
+						valueChangeEvent: 'fieldChange:entit.owner',
+						id: 'ENTIT___ENTITOWNER___',
+						name: 'OWNER',
+						size: 'mini',
+						label: computed(() => this.Resources.OWNER09558),
+						placeholder: '',
+						labelPosition: computed(() => this.labelAlignment.right),
 						controlLimits: [
 						],
 					}, this),
@@ -1259,7 +1266,7 @@
 						size: 'mini',
 						label: computed(() => this.Resources.CARRIER64855),
 						placeholder: '',
-						labelPosition: computed(() => this.$app.layout.CheckboxLabelAlignment),
+						labelPosition: computed(() => this.labelAlignment.right),
 						controlLimits: [
 						],
 					}, this),
@@ -1271,7 +1278,7 @@
 						size: 'small',
 						label: computed(() => this.Resources.SUPPLIER17230),
 						placeholder: '',
-						labelPosition: computed(() => this.$app.layout.CheckboxLabelAlignment),
+						labelPosition: computed(() => this.labelAlignment.right),
 						controlLimits: [
 						],
 					}, this),
@@ -1283,7 +1290,20 @@
 						size: 'small',
 						label: computed(() => this.Resources.MANUFACTURER50759),
 						placeholder: '',
-						labelPosition: computed(() => this.$app.layout.CheckboxLabelAlignment),
+						labelPosition: computed(() => this.labelAlignment.right),
+						controlLimits: [
+						],
+					}, this),
+					ENTIT___ENTITFOUNDED_: new fieldControlClass.DateControl({
+						modelField: 'ValFounded',
+						valueChangeEvent: 'fieldChange:entit.founded',
+						id: 'ENTIT___ENTITFOUNDED_',
+						name: 'FOUNDED',
+						size: 'small',
+						label: computed(() => this.Resources.FOUNDED_IN54120),
+						placeholder: '',
+						labelPosition: computed(() => this.labelAlignment.topleft),
+						dateTimeType: 'date',
 						controlLimits: [
 						],
 					}, this),
@@ -1292,7 +1312,7 @@
 						valueChangeEvent: 'fieldChange:faci1.name',
 						id: 'ENTIT___FACI1NAME____',
 						name: 'NAME',
-						size: 'large',
+						size: 'xxlarge',
 						label: computed(() => this.Resources.FACILITY_NAME19514),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
@@ -1321,7 +1341,7 @@
 						valueChangeEvent: 'fieldChange:faci2.name',
 						id: 'ENTIT___FACI2NAME____',
 						name: 'NAME',
-						size: 'medium',
+						size: 'xxlarge',
 						label: computed(() => this.Resources.FACILITY_NAME19514),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
@@ -1350,7 +1370,7 @@
 						valueChangeEvent: 'fieldChange:entit.language',
 						id: 'ENTIT___ENTITLANGUAGE',
 						name: 'LANGUAGE',
-						size: 'medium',
+						size: 'mini',
 						label: computed(() => this.Resources.LANGUAGE16872),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
@@ -1363,7 +1383,7 @@
 						valueChangeEvent: 'fieldChange:entit.currency',
 						id: 'ENTIT___ENTITCURRENCY',
 						name: 'CURRENCY',
-						size: 'medium',
+						size: 'mini',
 						label: computed(() => this.Resources.CURRENCY13881),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
@@ -1811,7 +1831,6 @@
 
 				this.afterControlUpdate(controlField, fieldValue)
 			},
-
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
 // USE /[MANUAL GQT FUNCTIONS_JS ENTIT]/
 // eslint-disable-next-line

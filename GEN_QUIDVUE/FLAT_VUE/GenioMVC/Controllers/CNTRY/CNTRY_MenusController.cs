@@ -28,85 +28,10 @@ namespace GenioMVC.Controllers
 {
 	public partial class CntryController : ControllerBase
 	{
-		private static readonly NavigationLocation ACTION_WMS_MENU_4271 = new NavigationLocation("COUNTRIES64527", "WMS_Menu_4271", "Cntry") { vueRouteName = "menu-WMS_4271" };
 		private static readonly NavigationLocation ACTION_IMO_MENU_131 = new NavigationLocation("COUNTRIES64527", "IMO_Menu_131", "Cntry") { vueRouteName = "menu-IMO_131" };
 		private static readonly NavigationLocation ACTION_IMO_MENU_211 = new NavigationLocation("COUNTRIES64527", "IMO_Menu_211", "Cntry") { vueRouteName = "menu-IMO_211" };
 		private static readonly NavigationLocation ACTION_IMO_MENU_231 = new NavigationLocation("COUNTRIES64527", "IMO_Menu_231", "Cntry") { vueRouteName = "menu-IMO_231" };
 
-
-		//
-		// GET: /Cntry/WMS_Menu_4271
-		[ActionName("WMS_Menu_4271")]
-		[HttpPost]
-		public ActionResult WMS_Menu_4271([FromBody] RequestMenuModel requestModel)
-		{
-			var queryParams = requestModel.QueryParams;
-
-			WMS_Menu_4271_ViewModel model = new(m_userContext);
-
-			CSGenio.core.framework.table.TableConfiguration tableConfig = model.GetTableConfig(
-				requestModel.TableConfiguration,
-				requestModel.UserTableConfigName,
-				requestModel.LoadDefaultView);
-
-			// Determine rows per page
-			tableConfig.RowsPerPage = tableConfig.DetermineRowsPerPage(CSGenio.framework.Configuration.NrRegDBedit, "");
-
-			// Determine what columns have totalizers
-			tableConfig.TotalizerColumns = requestModel.TotalizerColumns;
-
-			// For tables with multiple selection enabled, determine currently selected rows
-			tableConfig.SelectedRows = requestModel.SelectedRows;
-
-			// Add form field filters to the table configuration
-			tableConfig.FieldFilters = requestModel.RelatedFilterValues;
-
-			bool isHomePage = RouteData.Values.ContainsKey("isHomePage") ? (bool)RouteData.Values["isHomePage"] : false;
-			if (isHomePage)
-				Navigation.SetValue("HomePage", "WMS_Menu_4271");
-
-			//If there was a recent operation on this table then force the primary persistence server to be called and ignore the read only feature
-			if (string.IsNullOrEmpty(Navigation.GetStrValue("ForcePrimaryRead_cntry")))
-				UserContext.Current.SetPersistenceReadOnly(true);
-			else
-			{
-				Navigation.DestroyEntry("ForcePrimaryRead_cntry");
-				UserContext.Current.SetPersistenceReadOnly(false);
-			}
-			CSGenio.framework.StatusMessage result = model.CheckPermissions(FormMode.List);
-			if (result.Status.Equals(CSGenio.framework.Status.E))
-				return PermissionError(result.Message);
-
-			NameValueCollection querystring = [];
-			if (queryParams != null && queryParams.Count > 0)
-				querystring.AddRange(queryParams);
-
-			if (!isHomePage &&
-				(Navigation.CurrentLevel == null || !ACTION_WMS_MENU_4271.IsSameAction(Navigation.CurrentLevel.Location)) &&
-				Navigation.CurrentLevel.Location.Action != ACTION_WMS_MENU_4271.Action)
-				CSGenio.framework.Audit.registAction(UserContext.Current.User, Resources.Resources.MENU01948 + " " + Navigation.CurrentLevel.Location.ShortDescription());
-			else if (isHomePage)
-			{
-				CSGenio.framework.Audit.registAction(UserContext.Current.User, Resources.Resources.MENU01948 + " " + ACTION_WMS_MENU_4271.ShortDescription());
-				Navigation.SetValue("HomePageContainsList", true);
-			}
-
-
-
-// USE /[MANUAL WMS MENU_GET 4271]/
-
-			try
-			{
-				model.Load(tableConfig, querystring, Request.IsAjaxRequest());
-			}
-			catch (Exception e)
-			{
-				return JsonERROR(HandleException(e), model);
-			}
-
-
-			return JsonOK(model);
-		}
 
 		//
 		// GET: /Cntry/IMO_Menu_131
@@ -118,6 +43,8 @@ namespace GenioMVC.Controllers
 
 			IMO_Menu_131_ViewModel model = new(m_userContext);
 
+			CSGenio.core.framework.table.legacy.v1.TableConfigurationUpdate.SetFilterShiftValue(model.Uuid, "filter_IMO_Menu_131_ACTIVO", -2);
+
 			CSGenio.core.framework.table.TableConfiguration tableConfig = model.GetTableConfig(
 				requestModel.TableConfiguration,
 				requestModel.UserTableConfigName,
@@ -126,20 +53,11 @@ namespace GenioMVC.Controllers
 			// Determine rows per page
 			tableConfig.RowsPerPage = tableConfig.DetermineRowsPerPage(CSGenio.framework.Configuration.NrRegDBedit, "");
 
-			// Determine what columns have totalizers
-			tableConfig.TotalizerColumns = requestModel.TotalizerColumns;
-
-			// For tables with multiple selection enabled, determine currently selected rows
-			tableConfig.SelectedRows = requestModel.SelectedRows;
-
-			// Add form field filters to the table configuration
-			tableConfig.FieldFilters = requestModel.RelatedFilterValues;
-
 			bool isHomePage = RouteData.Values.ContainsKey("isHomePage") ? (bool)RouteData.Values["isHomePage"] : false;
 			if (isHomePage)
 				Navigation.SetValue("HomePage", "IMO_Menu_131");
 
-			//If there was a recent operation on this table then force the primary persistence server to be called and ignore the read only feature
+			// If there was a recent operation on this table then force the primary persistence server to be called and ignore the read only feature
 			if (string.IsNullOrEmpty(Navigation.GetStrValue("ForcePrimaryRead_cntry")))
 				UserContext.Current.SetPersistenceReadOnly(true);
 			else
@@ -228,7 +146,7 @@ namespace GenioMVC.Controllers
 			// only allow the jump if there are no filters
 			bool hasNoFilters = tableConfig.Filters.Count == 0;
 			bool isFirstDataLoad = (bool)requestModel?.IsFirstLoad;
-			bool isNoRedirect = (bool)requestModel?.noRedirect;
+			bool isNoRedirect = (bool)requestModel?.NoRedirect;
 
 			if (isFirstDataLoad && curRowsCount == 1 && hasNoFilters && model.Menu.Elements.First().ValZzstate == 0 && AllowSkipIfOnlyOne)
 			{
@@ -313,7 +231,9 @@ namespace GenioMVC.Controllers
 
 			IMO_Menu_211_ViewModel model = new(m_userContext);
 
-			CSGenio.core.framework.table.legacy.v1.TableConfigurationUpdate.SetFilterShiftValue(model.Uuid, "filter_IMO_Menu_211_ACTIVO", 0);
+			CSGenio.core.framework.table.legacy.v1.TableConfigurationUpdate.SetFilterShiftValue(model.Uuid, "filter_IMO_Menu_211_ACTIVO", -1);
+			CSGenio.core.framework.table.legacy.v1.TableConfigurationUpdate.SetFilterShiftValue(model.Uuid, "filter_IMO_Menu_211_ACTIVO", -2);
+			CSGenio.core.framework.table.legacy.v1.TableConfigurationUpdate.SetFilterShiftValue(model.Uuid, "filter_IMO_Menu_211_ACTIVO", -3);
 
 			CSGenio.core.framework.table.TableConfiguration tableConfig = model.GetTableConfig(
 				requestModel.TableConfiguration,
@@ -323,20 +243,11 @@ namespace GenioMVC.Controllers
 			// Determine rows per page
 			tableConfig.RowsPerPage = tableConfig.DetermineRowsPerPage(CSGenio.framework.Configuration.NrRegDBedit, "");
 
-			// Determine what columns have totalizers
-			tableConfig.TotalizerColumns = requestModel.TotalizerColumns;
-
-			// For tables with multiple selection enabled, determine currently selected rows
-			tableConfig.SelectedRows = requestModel.SelectedRows;
-
-			// Add form field filters to the table configuration
-			tableConfig.FieldFilters = requestModel.RelatedFilterValues;
-
 			bool isHomePage = RouteData.Values.ContainsKey("isHomePage") ? (bool)RouteData.Values["isHomePage"] : false;
 			if (isHomePage)
 				Navigation.SetValue("HomePage", "IMO_Menu_211");
 
-			//If there was a recent operation on this table then force the primary persistence server to be called and ignore the read only feature
+			// If there was a recent operation on this table then force the primary persistence server to be called and ignore the read only feature
 			if (string.IsNullOrEmpty(Navigation.GetStrValue("ForcePrimaryRead_cntry")))
 				UserContext.Current.SetPersistenceReadOnly(true);
 			else
@@ -496,20 +407,11 @@ namespace GenioMVC.Controllers
 			// Determine rows per page
 			tableConfig.RowsPerPage = tableConfig.DetermineRowsPerPage(CSGenio.framework.Configuration.NrRegDBedit, "");
 
-			// Determine what columns have totalizers
-			tableConfig.TotalizerColumns = requestModel.TotalizerColumns;
-
-			// For tables with multiple selection enabled, determine currently selected rows
-			tableConfig.SelectedRows = requestModel.SelectedRows;
-
-			// Add form field filters to the table configuration
-			tableConfig.FieldFilters = requestModel.RelatedFilterValues;
-
 			bool isHomePage = RouteData.Values.ContainsKey("isHomePage") ? (bool)RouteData.Values["isHomePage"] : false;
 			if (isHomePage)
 				Navigation.SetValue("HomePage", "IMO_Menu_231");
 
-			//If there was a recent operation on this table then force the primary persistence server to be called and ignore the read only feature
+			// If there was a recent operation on this table then force the primary persistence server to be called and ignore the read only feature
 			if (string.IsNullOrEmpty(Navigation.GetStrValue("ForcePrimaryRead_cntry")))
 				UserContext.Current.SetPersistenceReadOnly(true);
 			else

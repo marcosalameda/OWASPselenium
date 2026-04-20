@@ -9,12 +9,13 @@
 			<div
 				v-if="showFormHeader"
 				class="c-action-bar">
-				<h1
+				<component
 					v-if="formControl.uiComponents.header && formInfo.designation"
+					:is="topHeadingTag"
 					:id="formTitleId"
 					class="form-header">
 					{{ formInfo.designation }}
-				</h1>
+				</component>
 
 				<div class="c-action-bar__menu">
 					<template
@@ -40,13 +41,10 @@
 									@click="btn.action">
 									<template v-if="btn.icon">
 										<q-badge-indicator
-											v-if="btn.badge && btn.badge.isVisible"
-											:color="btn.badge.color">
+											:enabled="btn.badge?.isVisible ?? false"
+											:color="btn.badge?.color">
 											<q-icon v-bind="btn.icon" />
 										</q-badge-indicator>
-										<q-icon
-											v-else
-											v-bind="btn.icon" />
 									</template>
 								</q-toggle-group-item>
 							</template>
@@ -97,6 +95,7 @@
 		<q-container
 			fluid
 			data-key="FAMI1"
+			:data-identifier="primaryKeyValue"
 			:data-loading="!formInitialDataLoaded || !isActiveForm">
 			<template v-if="formControl.initialized && showFormBody">
 				<q-row v-if="controls.FAMI1___FAMI1FAMILY__.isVisible">
@@ -106,13 +105,15 @@
 						<base-input-structure
 							v-if="controls.FAMI1___FAMI1FAMILY__.isVisible"
 							class="i-text"
-							v-bind="controls.FAMI1___FAMI1FAMILY__"
+							v-bind="controls.FAMI1___FAMI1FAMILY__.wrapperProps"
+							:id="getControlId(controls.FAMI1___FAMI1FAMILY__)"
 							v-on="controls.FAMI1___FAMI1FAMILY__.handlers"
 							:loading="controls.FAMI1___FAMI1FAMILY__.props.loading"
 							:reporting-mode-on="reportingModeCAV"
 							:suggestion-mode-on="suggestionModeOn">
 							<q-text-field
 								v-bind="controls.FAMI1___FAMI1FAMILY__.props"
+								:id="getControlId(controls.FAMI1___FAMI1FAMILY__)"
 								@blur="onBlur(controls.FAMI1___FAMI1FAMILY__, model.ValFamily.value)"
 								@change="model.ValFamily.fnUpdateValueOnChange" />
 						</base-input-structure>
@@ -125,14 +126,15 @@
 						<q-table
 							v-if="controls.FAMI1___PSEUDTIPOSEQU.isVisible"
 							v-bind="controls.FAMI1___PSEUDTIPOSEQU"
+							:id="getControlId(controls.FAMI1___PSEUDTIPOSEQU)"
 							v-on="controls.FAMI1___PSEUDTIPOSEQU.handlers">
+							<template #header>
+								<q-table-config
+									:table-ctrl="controls.FAMI1___PSEUDTIPOSEQU"
+									v-on="controls.FAMI1___PSEUDTIPOSEQU.handlers" />
+							</template>
 							<!-- USE /[MANUAL GQT CUSTOM_TABLE FAMI1___PSEUDTIPOSEQU]/ -->
 						</q-table>
-						<q-table-extra-extension
-							v-if="controls.FAMI1___PSEUDTIPOSEQU.isVisible"
-							:list-ctrl="controls.FAMI1___PSEUDTIPOSEQU"
-							:filter-operators="controls.FAMI1___PSEUDTIPOSEQU.filterOperators"
-							v-on="controls.FAMI1___PSEUDTIPOSEQU.handlers" />
 					</q-col>
 				</q-row>
 				<q-row v-if="controls.FAMI1___PSEUDTIPOSEQ1.isVisible">
@@ -142,21 +144,22 @@
 						<q-table
 							v-if="controls.FAMI1___PSEUDTIPOSEQ1.isVisible"
 							v-bind="controls.FAMI1___PSEUDTIPOSEQ1"
+							:id="getControlId(controls.FAMI1___PSEUDTIPOSEQ1)"
 							v-on="controls.FAMI1___PSEUDTIPOSEQ1.handlers">
+							<template #header>
+								<q-table-config
+									:table-ctrl="controls.FAMI1___PSEUDTIPOSEQ1"
+									v-on="controls.FAMI1___PSEUDTIPOSEQ1.handlers" />
+							</template>
 							<!-- USE /[MANUAL GQT CUSTOM_TABLE FAMI1___PSEUDTIPOSEQ1]/ -->
 						</q-table>
-						<q-table-extra-extension
-							v-if="controls.FAMI1___PSEUDTIPOSEQ1.isVisible"
-							:list-ctrl="controls.FAMI1___PSEUDTIPOSEQ1"
-							:filter-operators="controls.FAMI1___PSEUDTIPOSEQ1.filterOperators"
-							v-on="controls.FAMI1___PSEUDTIPOSEQ1.handlers" />
 					</q-col>
 				</q-row>
 			</template>
 		</q-container>
 	</teleport>
 
-	<hr v-if="!isPopup && showFormFooter" />
+	<q-divider v-if="!isPopup && showFormFooter" />
 
 	<teleport
 		v-if="formModalIsReady && showFormFooter"
@@ -514,10 +517,11 @@
 					FAMI1___PSEUDTIPOSEQU: new fieldControlClass.TableListControl({
 						id: 'FAMI1___PSEUDTIPOSEQU',
 						name: 'TIPOSEQU',
-						size: '',
+						size: 'xxlarge',
 						label: computed(() => this.Resources.TYPE_OF_EQUIPMENT64921),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
+						headerLevel: computed(() => this.baseHeadingLevel + 1),
 						controller: 'FAMI1',
 						action: 'Fami1_ValTiposequ',
 						hasDependencies: false,
@@ -652,7 +656,6 @@
 							searchBarConfig: {
 								visibility: true
 							},
-							filtersVisible: true,
 							allowColumnFilters: true,
 							allowColumnSort: true,
 							crudActions: [
@@ -726,9 +729,7 @@
 									id: 'insert',
 									name: 'insert',
 									title: computed(() => this.Resources.INSERIR43365),
-									icon: {
-										icon: 'add'
-									},
+									icon: { icon: 'add' },
 									isInReadOnly: false,
 									params: {
 										action: vm.openFormAction,
@@ -775,7 +776,7 @@
 								sortOrder: 'asc'
 							}
 						},
-						globalEvents: ['changed-FAMI1', 'changed-TPEQ1'],
+						globalEvents: ['changed-TPEQ1', 'changed-FAMI1'],
 						uuid: 'Fami1_ValTiposequ',
 						allSelectedRows: 'false',
 						controlLimits: [
@@ -790,10 +791,11 @@
 					FAMI1___PSEUDTIPOSEQ1: new fieldControlClass.TreeTableListControl({
 						id: 'FAMI1___PSEUDTIPOSEQ1',
 						name: 'TIPOSEQ1',
-						size: '',
+						size: 'xxlarge',
 						label: computed(() => this.Resources.TYPE_OF_EQUIPMENT64921),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
+						headerLevel: computed(() => this.baseHeadingLevel + 1),
 						controller: 'FAMI1',
 						action: 'Fami1_ValTiposeq1',
 						hasDependencies: false,
@@ -808,7 +810,6 @@
 								dataLength: 20,
 								scrollData: 20,
 								supportForm: 'TPEQ1',
-								supportFormIsPopup: false,
 								params: {
 									type: 'form',
 									isRoute: true,
@@ -903,9 +904,7 @@
 									id: 'insert',
 									name: 'insert',
 									title: computed(() => this.Resources.INSERIR43365),
-									icon: {
-										icon: 'add'
-									},
+									icon: { icon: 'add' },
 									isInReadOnly: false,
 									params: {
 										action: vm.openFormAction,
@@ -959,7 +958,7 @@
 								sortOrder: 'asc'
 							}
 						},
-						globalEvents: ['changed-FAMI1', 'changed-TPEQ1'],
+						globalEvents: ['changed-TPEQ1', 'changed-FAMI1'],
 						uuid: 'Fami1_ValTiposeq1',
 						allSelectedRows: 'false',
 						controlLimits: [
@@ -1347,7 +1346,6 @@
 
 				this.afterControlUpdate(controlField, fieldValue)
 			},
-
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
 // USE /[MANUAL GQT FUNCTIONS_JS FAMI1]/
 // eslint-disable-next-line

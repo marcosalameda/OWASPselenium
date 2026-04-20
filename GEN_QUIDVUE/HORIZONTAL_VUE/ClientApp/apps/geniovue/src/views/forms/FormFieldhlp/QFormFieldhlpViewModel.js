@@ -456,6 +456,7 @@ export default class ViewModel extends FormViewModelBase
 			field: 'NAME',
 			maxLength: 50,
 			description: computed(() => this.Resources.AIRLINE_NAME55130),
+			ignoreFldSubmit: true,
 		}).cloneFrom(values?.TableAeroName))
 		this.stopWatchers.push(watch(() => this.TableAeroName.value, (newValue, oldValue) => this.onUpdate('aero.name', this.TableAeroName, newValue, oldValue)))
 
@@ -480,29 +481,6 @@ export default class ViewModel extends FormViewModelBase
 			description: computed(() => this.Resources.TEXT_ENUMERATION45668),
 		}).cloneFrom(values?.ValClass))
 		this.stopWatchers.push(watch(() => this.ValClass.value, (newValue, oldValue) => this.onUpdate('flds.class', this.ValClass, newValue, oldValue)))
-
-		/** The form fields used only in formulas. */
-		this.ValTblcond = reactive(new modelFieldType.Boolean({
-			id: 'ValTblcond',
-			originId: 'ValTblcond',
-			area: 'FLDS',
-			field: 'TBLCOND',
-			isFixed: true,
-			description: computed(() => this.Resources.ENFORCE_TABLE_CONDIT17491),
-		}).cloneFrom(values?.ValTblcond))
-		this.stopWatchers.push(watch(() => this.ValTblcond.value, (newValue, oldValue) => this.onUpdate('flds.tblcond', this.ValTblcond, newValue, oldValue)))
-
-		this.ValCond = reactive(new modelFieldType.String({
-			id: 'ValCond',
-			originId: 'ValCond',
-			area: 'FLDS',
-			field: 'COND',
-			maxLength: 8,
-			isFixed: true,
-			arrayOptions: computed(() => new qProjArrays.QArrayAcondtst(vm.$getResource).elements),
-			description: computed(() => this.Resources.FIELD_STATE03599),
-		}).cloneFrom(values?.ValCond))
-		this.stopWatchers.push(watch(() => this.ValCond.value, (newValue, oldValue) => this.onUpdate('flds.cond', this.ValCond, newValue, oldValue)))
 	}
 
 	/**

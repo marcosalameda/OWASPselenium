@@ -7,6 +7,7 @@ using GenioMVC.Models.Navigation;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Quidgest.Persistence;
 using Quidgest.Persistence.GenericQuery;
+
 using System.Collections;
 using System.Collections.Concurrent;
 using System.Collections.Specialized;
@@ -63,6 +64,7 @@ namespace GenioMVC.ViewModels.Equip
 		public string ValCodwareh { get; set; }
 
 		#endregion
+
 		/// <summary>
 		/// Title: "Sequential No.:" | Type: "N"
 		/// </summary>
@@ -92,7 +94,7 @@ namespace GenioMVC.ViewModels.Equip
 		[ValidateSetAccess]
 		public TableDBEdit<GenioMVC.Models.Item> TableItemItemdes { get; set; }
 		/// <summary>
-		/// Title: "Decomission:" | Type: "DT"
+		/// Title: "Decomission:" | Type: "D"
 		/// </summary>
 		[ValidateSetAccess]
 		public DateTime? ValDtdeco { get; set; }
@@ -105,7 +107,7 @@ namespace GenioMVC.ViewModels.Equip
 		/// Title: "Room Designation" | Type: "C"
 		/// </summary>
 		[ValidateSetAccess]
-		public string Room1ValDesignat 
+		public string Room1ValDesignat
 		{
 			get
 			{
@@ -136,11 +138,6 @@ namespace GenioMVC.ViewModels.Equip
 		/// </summary>
 		public decimal ValFrequenc { get; set; }
 		/// <summary>
-		/// Title: "" | Type: "PSEUD"
-		/// </summary>
-		[JsonIgnore]
-		public SelectList List_ValFrequenc { get; set; }
-		/// <summary>
 		/// Title: "Reference" | Type: "DT"
 		/// </summary>
 		public DateTime? ValDtrefere { get; set; }
@@ -160,8 +157,6 @@ namespace GenioMVC.ViewModels.Equip
 		[ValidateSetAccess]
 		public bool ValBought { get; set; }
 
-
-
 		#region Navigations
 		#endregion
 
@@ -179,6 +174,15 @@ namespace GenioMVC.ViewModels.Equip
 
 		#region Fields for formulas
 
+		// Field for formula
+		/// <summary>Used only for lazy loading of the ItemValItemdes field</summary>
+		[JsonIgnore]
+		[ValidateSetAccess]
+		public Func<string> funcItemValItemdes { get; set; }
+		private string _auxItemValItemdes { get; set; }
+		/// <summary>Field: "Article" Tipo: "C"</summary>
+		[ValidateSetAccess]
+		public string ItemValItemdes { get { return funcItemValItemdes != null ? funcItemValItemdes() : _auxItemValItemdes; } private set { funcItemValItemdes = () => value; } }
 
 		#endregion
 
@@ -312,6 +316,7 @@ namespace GenioMVC.ViewModels.Equip
 				ValFirst = ViewModelConversion.ToString(m.ValFirst);
 				ValBefore = ViewModelConversion.ToString(m.ValBefore);
 				ValBought = ViewModelConversion.ToLogic(m.ValBought);
+				funcItemValItemdes = () => ViewModelConversion.ToString(m.Item.ValItemdes);
 				ValCodequip = ViewModelConversion.ToString(m.ValCodequip);
 			}
 			catch (Exception)
@@ -374,12 +379,7 @@ namespace GenioMVC.ViewModels.Equip
 			}
 		}
 
-		/// <summary>
-		/// Sets the value of a single property of the view model based on the provided table and field names.
-		/// </summary>
-		/// <param name="fullFieldName">The full field name in the format "table.field".</param>
-		/// <param name="value">The field value.</param>
-		/// <exception cref="ArgumentNullException">Thrown if <paramref name="fullFieldName"/> is null.</exception>
+		/// <inheritdoc />
 		public override void SetViewModelValue(string fullFieldName, object value)
 		{
 			try
@@ -531,6 +531,7 @@ namespace GenioMVC.ViewModels.Equip
 			Load_Groupbx_warehwarehdes(qs, lazyLoad);
 			Load_Groupbx_item_itemdes_(qs, lazyLoad);
 			Load_Groupbx_room1roomnr__(qs, lazyLoad);
+
 // USE /[MANUAL GQT VIEWMODEL_LOADPARTIAL GROUPBX]/
 		}
 
@@ -607,10 +608,7 @@ namespace GenioMVC.ViewModels.Equip
 				}
 			}
 
-			TableTpequTipoequi = new TableDBEdit<Models.Tpequ>
-			{
-				IsLazyLoad = lazyLoad
-			};
+			TableTpequTipoequi = new TableDBEdit<Models.Tpequ>();
 
 			if (lazyLoad)
 			{
@@ -849,10 +847,7 @@ namespace GenioMVC.ViewModels.Equip
 				}
 			}
 
-			TableWarehWarehdes = new TableDBEdit<Models.Wareh>
-			{
-				IsLazyLoad = lazyLoad
-			};
+			TableWarehWarehdes = new TableDBEdit<Models.Wareh>();
 
 			if (lazyLoad)
 			{
@@ -1043,10 +1038,7 @@ namespace GenioMVC.ViewModels.Equip
 			// Area limit
 			groupbx_item_itemdes_DoLoad &= AddCriteriaAreaLimit(groupbx_item_itemdes_Conds, CSGenio.business.CSGenioAwareh.FldCodwareh, "wareh", this.ValCodwareh, true);
 
-			TableItemItemdes = new TableDBEdit<Models.Item>
-			{
-				IsLazyLoad = lazyLoad
-			};
+			TableItemItemdes = new TableDBEdit<Models.Item>();
 
 			if (lazyLoad)
 			{
@@ -1245,10 +1237,7 @@ namespace GenioMVC.ViewModels.Equip
 				}
 			}
 
-			TableRoom1Roomnr = new TableDBEdit<Models.Room1>
-			{
-				IsLazyLoad = lazyLoad
-			};
+			TableRoom1Roomnr = new TableDBEdit<Models.Room1>();
 
 			if (lazyLoad)
 			{
@@ -1441,13 +1430,13 @@ namespace GenioMVC.ViewModels.Equip
 				"equip.first" => ViewModelConversion.ToString(modelValue),
 				"equip.before" => ViewModelConversion.ToString(modelValue),
 				"equip.bought" => ViewModelConversion.ToLogic(modelValue),
+				"item.itemdes" => ViewModelConversion.ToString(modelValue),
 				"equip.codequip" => ViewModelConversion.ToString(modelValue),
 				"tpequ.codtpequ" => ViewModelConversion.ToString(modelValue),
 				"tpequ.tipoequi" => ViewModelConversion.ToString(modelValue),
 				"wareh.codwareh" => ViewModelConversion.ToString(modelValue),
 				"wareh.warehdes" => ViewModelConversion.ToString(modelValue),
 				"item.coditem" => ViewModelConversion.ToString(modelValue),
-				"item.itemdes" => ViewModelConversion.ToString(modelValue),
 				"room1.codrooms" => ViewModelConversion.ToString(modelValue),
 				"room1.roomnr" => ViewModelConversion.ToString(modelValue),
 				_ => modelValue

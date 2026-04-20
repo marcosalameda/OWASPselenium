@@ -9,12 +9,13 @@
 			<div
 				v-if="showFormHeader"
 				class="c-action-bar">
-				<h1
+				<component
 					v-if="formControl.uiComponents.header && formInfo.designation"
+					:is="topHeadingTag"
 					:id="formTitleId"
 					class="form-header">
 					{{ formInfo.designation }}
-				</h1>
+				</component>
 
 				<div class="c-action-bar__menu">
 					<template
@@ -40,13 +41,10 @@
 									@click="btn.action">
 									<template v-if="btn.icon">
 										<q-badge-indicator
-											v-if="btn.badge && btn.badge.isVisible"
-											:color="btn.badge.color">
+											:enabled="btn.badge?.isVisible ?? false"
+											:color="btn.badge?.color">
 											<q-icon v-bind="btn.icon" />
 										</q-badge-indicator>
-										<q-icon
-											v-else
-											v-bind="btn.icon" />
 									</template>
 								</q-toggle-group-item>
 							</template>
@@ -97,6 +95,7 @@
 		<q-container
 			fluid
 			data-key="KINDE"
+			:data-identifier="primaryKeyValue"
 			:data-loading="!formInitialDataLoaded || !isActiveForm">
 			<template v-if="formControl.initialized && showFormBody">
 				<q-row v-if="controls.KINDE___KINDEDESIGNAT.isVisible">
@@ -106,13 +105,15 @@
 						<base-input-structure
 							v-if="controls.KINDE___KINDEDESIGNAT.isVisible"
 							class="i-text"
-							v-bind="controls.KINDE___KINDEDESIGNAT"
+							v-bind="controls.KINDE___KINDEDESIGNAT.wrapperProps"
+							:id="getControlId(controls.KINDE___KINDEDESIGNAT)"
 							v-on="controls.KINDE___KINDEDESIGNAT.handlers"
 							:loading="controls.KINDE___KINDEDESIGNAT.props.loading"
 							:reporting-mode-on="reportingModeCAV"
 							:suggestion-mode-on="suggestionModeOn">
 							<q-text-field
 								v-bind="controls.KINDE___KINDEDESIGNAT.props"
+								:id="getControlId(controls.KINDE___KINDEDESIGNAT)"
 								@blur="onBlur(controls.KINDE___KINDEDESIGNAT, model.ValDesignat.value)"
 								@change="model.ValDesignat.fnUpdateValueOnChange" />
 						</base-input-structure>
@@ -125,14 +126,15 @@
 						<q-table
 							v-if="controls.KINDE___PSEUDPARAMETE.isVisible"
 							v-bind="controls.KINDE___PSEUDPARAMETE"
+							:id="getControlId(controls.KINDE___PSEUDPARAMETE)"
 							v-on="controls.KINDE___PSEUDPARAMETE.handlers">
+							<template #header>
+								<q-table-config
+									:table-ctrl="controls.KINDE___PSEUDPARAMETE"
+									v-on="controls.KINDE___PSEUDPARAMETE.handlers" />
+							</template>
 							<!-- USE /[MANUAL GQT CUSTOM_TABLE KINDE___PSEUDPARAMETE]/ -->
 						</q-table>
-						<q-table-extra-extension
-							v-if="controls.KINDE___PSEUDPARAMETE.isVisible"
-							:list-ctrl="controls.KINDE___PSEUDPARAMETE"
-							:filter-operators="controls.KINDE___PSEUDPARAMETE.filterOperators"
-							v-on="controls.KINDE___PSEUDPARAMETE.handlers" />
 					</q-col>
 				</q-row>
 				<q-row v-if="controls.KINDE___PSEUDMANUALS_.isVisible">
@@ -142,21 +144,22 @@
 						<q-table
 							v-if="controls.KINDE___PSEUDMANUALS_.isVisible"
 							v-bind="controls.KINDE___PSEUDMANUALS_"
+							:id="getControlId(controls.KINDE___PSEUDMANUALS_)"
 							v-on="controls.KINDE___PSEUDMANUALS_.handlers">
+							<template #header>
+								<q-table-config
+									:table-ctrl="controls.KINDE___PSEUDMANUALS_"
+									v-on="controls.KINDE___PSEUDMANUALS_.handlers" />
+							</template>
 							<!-- USE /[MANUAL GQT CUSTOM_TABLE KINDE___PSEUDMANUALS_]/ -->
 						</q-table>
-						<q-table-extra-extension
-							v-if="controls.KINDE___PSEUDMANUALS_.isVisible"
-							:list-ctrl="controls.KINDE___PSEUDMANUALS_"
-							:filter-operators="controls.KINDE___PSEUDMANUALS_.filterOperators"
-							v-on="controls.KINDE___PSEUDMANUALS_.handlers" />
 					</q-col>
 				</q-row>
 			</template>
 		</q-container>
 	</teleport>
 
-	<hr v-if="!isPopup && showFormFooter" />
+	<q-divider v-if="!isPopup && showFormFooter" />
 
 	<teleport
 		v-if="formModalIsReady && showFormFooter"
@@ -514,10 +517,11 @@
 					KINDE___PSEUDPARAMETE: new fieldControlClass.TableListControl({
 						id: 'KINDE___PSEUDPARAMETE',
 						name: 'PARAMETE',
-						size: '',
+						size: 'xlarge',
 						label: computed(() => this.Resources.PARAMETERS28294),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
+						headerLevel: computed(() => this.baseHeadingLevel + 1),
 						controller: 'KINDE',
 						action: 'Kinde_ValParamete',
 						hasDependencies: false,
@@ -543,7 +547,6 @@
 								scrollData: 1,
 								export: 1,
 								array: computed(() => new qProjArrays.QArrayDatatype(vm.$getResource).elements),
-								arrayType: qProjArrays.QArrayDatatype.type,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.ArrayColumn({
 								order: 3,
@@ -556,7 +559,6 @@
 								decimalPlaces: 0,
 								export: 1,
 								array: computed(() => new qProjArrays.QArrayDecplace(vm.$getResource).elements),
-								arrayType: qProjArrays.QArrayDecplace.type,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 						],
 						config: {
@@ -574,7 +576,6 @@
 							searchBarConfig: {
 								visibility: false
 							},
-							filtersVisible: false,
 							allowColumnFilters: false,
 							allowColumnSort: true,
 							crudActions: [
@@ -648,9 +649,7 @@
 									id: 'insert',
 									name: 'insert',
 									title: computed(() => this.Resources.INSERIR43365),
-									icon: {
-										icon: 'add'
-									},
+									icon: { icon: 'add' },
 									isInReadOnly: false,
 									params: {
 										action: vm.openFormAction,
@@ -697,7 +696,7 @@
 								sortOrder: 'asc'
 							}
 						},
-						globalEvents: ['changed-PARAM', 'changed-KINDE'],
+						globalEvents: ['changed-KINDE', 'changed-PARAM'],
 						uuid: 'Kinde_ValParamete',
 						allSelectedRows: 'false',
 						controlLimits: [
@@ -712,10 +711,11 @@
 					KINDE___PSEUDMANUALS_: new fieldControlClass.TableListControl({
 						id: 'KINDE___PSEUDMANUALS_',
 						name: 'MANUALS',
-						size: '',
+						size: 'xxlarge',
 						label: computed(() => this.Resources.MANUALS14730),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
+						headerLevel: computed(() => this.baseHeadingLevel + 1),
 						controller: 'KINDE',
 						action: 'Kinde_ValManuals',
 						hasDependencies: false,
@@ -768,7 +768,6 @@
 							searchBarConfig: {
 								visibility: false
 							},
-							filtersVisible: false,
 							allowColumnFilters: false,
 							allowColumnSort: true,
 							crudActions: [
@@ -842,9 +841,7 @@
 									id: 'insert',
 									name: 'insert',
 									title: computed(() => this.Resources.INSERIR43365),
-									icon: {
-										icon: 'add'
-									},
+									icon: { icon: 'add' },
 									isInReadOnly: false,
 									params: {
 										action: vm.openFormAction,
@@ -891,7 +888,7 @@
 								sortOrder: 'asc'
 							}
 						},
-						globalEvents: ['changed-KINDE', 'changed-MANUA'],
+						globalEvents: ['changed-MANUA', 'changed-KINDE'],
 						uuid: 'Kinde_ValManuals',
 						allSelectedRows: 'false',
 						controlLimits: [
@@ -1279,7 +1276,6 @@
 
 				this.afterControlUpdate(controlField, fieldValue)
 			},
-
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
 // USE /[MANUAL GQT FUNCTIONS_JS KINDE]/
 // eslint-disable-next-line

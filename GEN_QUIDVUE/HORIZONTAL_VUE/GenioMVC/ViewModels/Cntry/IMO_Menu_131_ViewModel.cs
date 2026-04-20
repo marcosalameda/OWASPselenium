@@ -189,7 +189,7 @@ namespace GenioMVC.ViewModels.Cntry
 			{
 				new Exports.QColumn(CSGenioAcntry.FldCountry, FieldType.TEXT, Resources.Resources.COUNTRY64133, 90, 0, true),
 				new Exports.QColumn(CSGenioAcntry.FldActive, FieldType.LOGIC, Resources.Resources.ACTIVE03270, 1, 0, true),
-				new Exports.QColumn(CSGenioAcntry.FldCodigonr, FieldType.TEXT, Resources.Resources.NUMERIC_ISO_316620341, 3, 0, true),
+				new Exports.QColumn(CSGenioAcntry.FldCodigonr, FieldType.TEXT, Resources.Resources.NUMERIC19292, 3, 0, true),
 				new Exports.QColumn(CSGenioAcntry.FldAlfa2, FieldType.TEXT, Resources.Resources.ALPHABETIC_232435, 2, 0, true),
 				new Exports.QColumn(CSGenioAcntry.FldAlfa3, FieldType.TEXT, Resources.Resources.ALPHABETIC_316640, 3, 0, true),
 				new Exports.QColumn(CSGenioAcntry.FldFlag, FieldType.IMAGE, Resources.Resources.FLAG51937, 3, 1, true),
@@ -215,7 +215,7 @@ namespace GenioMVC.ViewModels.Cntry
 			// Set table name (used in getting searchable column names)
 			Menu.TableName = TableAlias;
 
-			Menu.SetFilters(false, false);
+			Menu.SetFilters(false, true);
 
 			crs.SubSets.Add(ProcessSearchFilters(Menu, GetSearchColumns(tableConfig.ColumnConfigurations), tableConfig));
 
@@ -223,9 +223,21 @@ namespace GenioMVC.ViewModels.Cntry
 			//Subfilters
 			CriteriaSet subfilters = CriteriaSet.And();
 
+			if (!tableConfig.GroupFilters.ContainsKey("filter_IMO_Menu_131_ACTIVO"))
+			{
+				string defaultValue = "";
+				tableConfig.Filters.Add(new GroupFilter { Key = "filter_IMO_Menu_131_ACTIVO", Value = defaultValue });
+			}
+
+			{
+				var groupFilters = CriteriaSet.Or();
+				subfilters.SubSets.Add(groupFilters);
+			}
 
 			crs.SubSets.Add(subfilters);
 
+			// Form field filters
+			crs.SubSets.Add(ProcessFieldFilters(tableConfig.GlobalFilters));
 
 			crs.SubSets.Add(GetCustomizedStaticLimits(StaticLimits));
 
@@ -366,12 +378,11 @@ namespace GenioMVC.ViewModels.Cntry
 
 			FieldRef[] fields = new FieldRef[] { CSGenioAcntry.FldCodcntry, CSGenioAcntry.FldZzstate, CSGenioAcntry.FldCountry, CSGenioAcntry.FldActive, CSGenioAcntry.FldCodigonr, CSGenioAcntry.FldAlfa2, CSGenioAcntry.FldAlfa3, CSGenioAcntry.FldFlag };
 
-
-			// Totalizers
-			List<FieldRef> fieldsWithTotalizers = fields.Where(field => tableConfig.TotalizerColumns.Contains(field.FullName)).ToList();
+			// List of column names that should display totalized (aggregated) values.
+			List<string> totalizerColumns = [];
+			List<FieldRef> fieldsWithTotalizers = [.. fields.Where(field => totalizerColumns.Contains(field.FullName))];
 
 			FieldRef firstVisibleColumn = null;
-
 			if (sorts.Count == 0)
 			{
 				firstVisibleColumn = tableConfig?.GetFirstVisibleColumn(TableAlias);

@@ -7,6 +7,7 @@ using GenioMVC.Models.Navigation;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Quidgest.Persistence;
 using Quidgest.Persistence.GenericQuery;
+
 using System.Collections;
 using System.Collections.Concurrent;
 using System.Collections.Specialized;
@@ -47,6 +48,7 @@ namespace GenioMVC.ViewModels.Outpu
 		public string ValCodwareh { get; set; }
 
 		#endregion
+
 		/// <summary>
 		/// Title: "Document No." | Type: "N"
 		/// </summary>
@@ -56,7 +58,7 @@ namespace GenioMVC.ViewModels.Outpu
 		/// Title: "" | Type: "CE"
 		/// </summary>
 		[ValidateSetAccess]
-		public string OutptValCodwareh 
+		public string OutptValCodwareh
 		{
 			get
 			{
@@ -92,8 +94,6 @@ namespace GenioMVC.ViewModels.Outpu
 		/// </summary>
 		[ValidateSetAccess]
 		public TableDBEdit<GenioMVC.Models.Oudoc> TableOudocNrdocsda { get; set; }
-
-
 
 		#region Navigations
 		#endregion
@@ -281,12 +281,7 @@ namespace GenioMVC.ViewModels.Outpu
 			}
 		}
 
-		/// <summary>
-		/// Sets the value of a single property of the view model based on the provided table and field names.
-		/// </summary>
-		/// <param name="fullFieldName">The full field name in the format "table.field".</param>
-		/// <param name="value">The field value.</param>
-		/// <exception cref="ArgumentNullException">Thrown if <paramref name="fullFieldName"/> is null.</exception>
+		/// <inheritdoc />
 		public override void SetViewModelValue(string fullFieldName, object value)
 		{
 			try
@@ -429,6 +424,7 @@ namespace GenioMVC.ViewModels.Outpu
 			Load_Ldsai___warehwarehdes(qs, lazyLoad);
 			Load_Ldsai___item_itemdes_(qs, lazyLoad);
 			Load_Ldsai___oudocnrdocsda(qs, lazyLoad);
+
 // USE /[MANUAL GQT VIEWMODEL_LOADPARTIAL LDSAI]/
 		}
 
@@ -498,10 +494,7 @@ namespace GenioMVC.ViewModels.Outpu
 				}
 			}
 
-			TableOutptDocumenr = new TableDBEdit<Models.Outpt>
-			{
-				IsLazyLoad = lazyLoad
-			};
+			TableOutptDocumenr = new TableDBEdit<Models.Outpt>();
 
 			if (lazyLoad)
 			{
@@ -689,10 +682,7 @@ namespace GenioMVC.ViewModels.Outpu
 				}
 			}
 
-			TableWarehWarehdes = new TableDBEdit<Models.Wareh>
-			{
-				IsLazyLoad = lazyLoad
-			};
+			TableWarehWarehdes = new TableDBEdit<Models.Wareh>();
 
 			if (lazyLoad)
 			{
@@ -883,10 +873,7 @@ namespace GenioMVC.ViewModels.Outpu
 			// Area limit
 			ldsai___item_itemdes_DoLoad &= AddCriteriaAreaLimit(ldsai___item_itemdes_Conds, CSGenio.business.CSGenioAwareh.FldCodwareh, "wareh", this.ValCodwareh, true);
 
-			TableItemItemdes = new TableDBEdit<Models.Item>
-			{
-				IsLazyLoad = lazyLoad
-			};
+			TableItemItemdes = new TableDBEdit<Models.Item>();
 
 			if (lazyLoad)
 			{
@@ -1085,10 +1072,7 @@ namespace GenioMVC.ViewModels.Outpu
 				}
 			}
 
-			TableOudocNrdocsda = new TableDBEdit<Models.Oudoc>
-			{
-				IsLazyLoad = lazyLoad
-			};
+			TableOudocNrdocsda = new TableDBEdit<Models.Oudoc>();
 
 			if (lazyLoad)
 			{

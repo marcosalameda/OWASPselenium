@@ -31,7 +31,8 @@
 						:is-vertical="isVertical"
 						:is-required="isRequired"
 						:show-title="showTitle"
-						:step-data="stepList[selectedStep - 1]">
+						:step-data="stepList[selectedStep - 1]"
+						:base-heading-level="baseHeadingLevel">
 						<slot></slot>
 					</q-wizard-content>
 				</div>
@@ -171,6 +172,14 @@
 				type: Object,
 				validator: (value) => validateTexts(DEFAULT_TEXTS, value),
 				default: () => DEFAULT_TEXTS
+			},
+
+			/**
+			 * Top heading level.
+			 */
+			baseHeadingLevel: {
+				type: Number,
+				default: 2
 			}
 		},
 

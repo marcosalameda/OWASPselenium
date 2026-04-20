@@ -58,12 +58,12 @@ namespace GenioMVC.Controllers
 
 				string area = "pess1";
 				var limitation = new List<ReportLimitParameter>();
+
 				// This find is necessary to check: if the value exists, if the record is invalid, and if the user can view it (EPH).
 				string id = Navigation.GetStrValue(area);
-				var record = Models.Pess1.Find(id, UserContext.Current, fieldsToSerialize: new string[] { "zzstate" });
+				var record = Models.Pess1.Find(id, UserContext.Current);
 				if (record == null || record.ValZzstate != 0)
 					throw new FrameworkException(Resources.Resources.NAO_E_POSSIVEL_ACEDE59423, "PTN_Report_3H11", "Cannot access the specified record");
-
 
 				string[] historicFieldNames = new string[1]{"pess1"};
 				string[] historicFieldValues = new string[1]{Navigation.GetStrValue("pess1")};
@@ -104,12 +104,12 @@ namespace GenioMVC.Controllers
 
 				string area = "pess1";
 				var limitation = new List<ReportLimitParameter>();
+
 				// This find is necessary to check: if the value exists, if the record is invalid, and if the user can view it (EPH).
 				string id = Navigation.GetStrValue(area);
-				var record = Models.Pess1.Find(id, UserContext.Current, fieldsToSerialize: new string[] { "zzstate" });
+				var record = Models.Pess1.Find(id, UserContext.Current);
 				if (record == null || record.ValZzstate != 0)
 					throw new FrameworkException(Resources.Resources.NAO_E_POSSIVEL_ACEDE59423, "PTN_Report_5111", "Cannot access the specified record");
-
 
 				string[] historicFieldNames = new string[1]{"pess1"};
 				string[] historicFieldValues = new string[1]{Navigation.GetStrValue("pess1")};
@@ -150,12 +150,12 @@ namespace GenioMVC.Controllers
 
 				string area = "pess1";
 				var limitation = new List<ReportLimitParameter>();
+
 				// This find is necessary to check: if the value exists, if the record is invalid, and if the user can view it (EPH).
 				string id = Navigation.GetStrValue(area);
-				var record = Models.Pess1.Find(id, UserContext.Current, fieldsToSerialize: new string[] { "zzstate" });
+				var record = Models.Pess1.Find(id, UserContext.Current);
 				if (record == null || record.ValZzstate != 0)
 					throw new FrameworkException(Resources.Resources.NAO_E_POSSIVEL_ACEDE59423, "PTN_Report_52111", "Cannot access the specified record");
-
 
 				string[] historicFieldNames = new string[1]{"pess1"};
 				string[] historicFieldValues = new string[1]{Navigation.GetStrValue("pess1")};
@@ -195,12 +195,13 @@ namespace GenioMVC.Controllers
 
 				string area = "pess1";
 				var limitation = new List<ReportLimitParameter>();
+				string reportExportFileName = "comodatos";
+
 				// This find is necessary to check: if the value exists, if the record is invalid, and if the user can view it (EPH).
 				string id = Navigation.GetStrValue(area);
-				var record = Models.Pess1.Find(id, UserContext.Current, fieldsToSerialize: new string[] { "zzstate" });
+				var record = Models.Pess1.Find(id, UserContext.Current);
 				if (record == null || record.ValZzstate != 0)
 					throw new FrameworkException(Resources.Resources.NAO_E_POSSIVEL_ACEDE59423, "PTN_Report_52211", "Cannot access the specified record");
-
 
 				string[] historicFieldNames = new string[1]{"pess1"};
 				string[] historicFieldValues = new string[1]{Navigation.GetStrValue("pess1")};
@@ -213,13 +214,10 @@ namespace GenioMVC.Controllers
 
 
 // USE /[MANUAL GQT BEFORE_EXECUTE_REPORT 52211]/
-				List<string> allowedReportFormats = new List<string> { "PDF" };
-				if (requestModel.Format != null && !allowedReportFormats.Contains(requestModel.Format))
-					throw new Exception(Resources.Resources.O_FORMATO_DE_RELATOR01134);
 
 				string reportFormat = requestModel.Format != null ? ReportSSRS.GetExportType(requestModel.Format) : "PDF";
 				ReportSSRS_Result result;
-				using (var renderer = new ReportSSRS(reportFullPath, reportFileName, reportFullPath, isServerReports, UserContext.Current.PersistentSupport))
+				using (var renderer = new ReportSSRS(reportFullPath, reportExportFileName, reportFullPath, isServerReports, UserContext.Current.PersistentSupport))
 				{
 					// MH (11/10/2017) - Report Server credentials
 					if (Configuration.SSRSServer.ContainsCredentials())
@@ -231,7 +229,7 @@ namespace GenioMVC.Controllers
 
 // USE /[MANUAL GQT OVERRIDE_REPORT 52211]/
 
-				string fileName = "\"" + "comodatos." + result.FileNameExtension + "\"";
+				string fileName = "\"" + result.FileName + "." + result.FileNameExtension + "\"";
 				return File(result.File, result.MimeType, fileName);
 			}
 			catch (Exception e)
@@ -259,12 +257,13 @@ namespace GenioMVC.Controllers
 
 				string area = "pess1";
 				var limitation = new List<ReportLimitParameter>();
+				string reportExportFileName = "comodatos";
+
 				// This find is necessary to check: if the value exists, if the record is invalid, and if the user can view it (EPH).
 				string id = Navigation.GetStrValue(area);
-				var record = Models.Pess1.Find(id, UserContext.Current, fieldsToSerialize: new string[] { "zzstate" });
+				var record = Models.Pess1.Find(id, UserContext.Current);
 				if (record == null || record.ValZzstate != 0)
 					throw new FrameworkException(Resources.Resources.NAO_E_POSSIVEL_ACEDE59423, "PTN_Report_52311", "Cannot access the specified record");
-
 
 				string[] historicFieldNames = new string[1]{"pess1"};
 				string[] historicFieldValues = new string[1]{Navigation.GetStrValue("pess1")};
@@ -277,13 +276,10 @@ namespace GenioMVC.Controllers
 
 
 // USE /[MANUAL GQT BEFORE_EXECUTE_REPORT 52311]/
-				List<string> allowedReportFormats = new List<string> { "DOC" };
-				if (requestModel.Format != null && !allowedReportFormats.Contains(requestModel.Format))
-					throw new Exception(Resources.Resources.O_FORMATO_DE_RELATOR01134);
 
 				string reportFormat = requestModel.Format != null ? ReportSSRS.GetExportType(requestModel.Format) : "WORDOPENXML";
 				ReportSSRS_Result result;
-				using (var renderer = new ReportSSRS(reportFullPath, reportFileName, reportFullPath, isServerReports, UserContext.Current.PersistentSupport))
+				using (var renderer = new ReportSSRS(reportFullPath, reportExportFileName, reportFullPath, isServerReports, UserContext.Current.PersistentSupport))
 				{
 					// MH (11/10/2017) - Report Server credentials
 					if (Configuration.SSRSServer.ContainsCredentials())
@@ -295,71 +291,7 @@ namespace GenioMVC.Controllers
 
 // USE /[MANUAL GQT OVERRIDE_REPORT 52311]/
 
-				string fileName = "\"" + "comodatos." + result.FileNameExtension + "\"";
-				return File(result.File, result.MimeType, fileName);
-			}
-			catch (Exception e)
-			{
-				CSGenio.framework.Log.Error("Erro_Report: " + e.Message + "; " + (e.InnerException != null ? e.InnerException.Message : ""));
-				if (!preview)
-					return Json(new { Success = false, Message = Resources.Resources.FALHA_AO_GERAR_O_REL63109 + " -- " + e.Message }, "application/json");
-				return JsonERROR(Resources.Resources.OCORREU_UM_ERRO_INES30674);
-			}
-		}
-
-		public ActionResult PTN_Report_5311([FromBody]RequestReportModel requestModel)
-		{
-			var allSelected = requestModel.AllSelected;
-			bool preview = false;
-			try
-			{
-				var isServerReports = !Configuration.SSRSServer.isLocalReports;
-				var reportName = "comodatos";
-				var reportFileName = reportName + (isServerReports ? "" : ".rdlc");
-				var reportPath = isServerReports ? Configuration.SSRSServer.path : Configuration.PathReports;
-				var reportFullPath = reportPath + (isServerReports ? "/" : "\\") + reportFileName;
-				if (isServerReports)
-					reportFullPath = (reportFullPath.StartsWith("/") ? "" : "/") + reportFullPath;
-
-				string area = "pess1";
-				var limitation = new List<ReportLimitParameter>();
-				// This find is necessary to check: if the value exists, if the record is invalid, and if the user can view it (EPH).
-				string id = Navigation.GetStrValue(area);
-				var record = Models.Pess1.Find(id, UserContext.Current, fieldsToSerialize: new string[] { "zzstate" });
-				if (record == null || record.ValZzstate != 0)
-					throw new FrameworkException(Resources.Resources.NAO_E_POSSIVEL_ACEDE59423, "PTN_Report_5311", "Cannot access the specified record");
-
-
-				string[] historicFieldNames = new string[1]{"pess1"};
-				string[] historicFieldValues = new string[1]{Navigation.GetStrValue("pess1")};
-				Dictionary<string, string> arrayFieldsList = new Dictionary<string, string>();
-
-				string[] globFields = new string[1]{"glob.pricolor"};
-
-				string[] specialFormulasFields = new string[0]{};
-				string[] areasReport = new string[0]{};
-
-
-// USE /[MANUAL GQT BEFORE_EXECUTE_REPORT 5311]/
-				List<string> allowedReportFormats = new List<string> { "XLSX", "PDF" };
-				if (requestModel.Format != null && !allowedReportFormats.Contains(requestModel.Format))
-					throw new Exception(Resources.Resources.O_FORMATO_DE_RELATOR01134);
-
-				string reportFormat = requestModel.Format != null ? ReportSSRS.GetExportType(requestModel.Format) : "EXCELOPENXML";
-				ReportSSRS_Result result;
-				using (var renderer = new ReportSSRS(reportFullPath, reportFileName, reportFullPath, isServerReports, UserContext.Current.PersistentSupport))
-				{
-					// MH (11/10/2017) - Report Server credentials
-					if (Configuration.SSRSServer.ContainsCredentials())
-						renderer.SetServerCredentials(Configuration.SSRSServer.UsernameDecode, Configuration.SSRSServer.PasswordDecode, Configuration.SSRSServer.Domain);
-
-					renderer.ConstructReport(UserContext.Current.User, area, historicFieldNames, historicFieldValues, globFields, areasReport, limitation.ToArray(), specialFormulasFields);
-					result = renderer.Render(reportFormat);
-				}
-
-// USE /[MANUAL GQT OVERRIDE_REPORT 5311]/
-
-				string fileName = "\"" + "comodatos." + result.FileNameExtension + "\"";
+				string fileName = "\"" + result.FileName + "." + result.FileNameExtension + "\"";
 				return File(result.File, result.MimeType, fileName);
 			}
 			catch (Exception e)
@@ -436,7 +368,7 @@ namespace GenioMVC.Controllers
 			}
 
 			if (result != null)
-				return JsonOK(new { List = result.List, TotalRows = result.Pagination.TotalRows, Selected = result.Selected, Value = result.Value });
+				return JsonOK(result);
 			return JsonERROR("Not found any valid result");
 		}
 

@@ -4,6 +4,7 @@
 		:id="rowKey !== undefined ? `${tableName}_${rowKey}` : `${tableName}_all`"
 		:disabled="disabled"
 		:readonly="readonly"
+		:size="checkBoxSize"
 		:title="title"
 		:data-table-action-selected="rowKey ? false : null"
 		tabindex="-1"
@@ -11,6 +12,8 @@
 </template>
 
 <script setup lang="ts">
+	import type QCheckboxLabelSize from '@quidgest/ui/components'
+
 	/**
 	 * Typed props for QTableChecklistCheckbox
 	 */
@@ -32,9 +35,14 @@
 
 		/** Text for the title attribute. */
 		title?: string
+
+		/** Check box size */
+		checkBoxSize?: QCheckboxLabelSize
 	}
 
-	const props = defineProps<QTableChecklistCheckboxProps>()
+	const props = withDefaults(defineProps<QTableChecklistCheckboxProps>(), {
+		checkBoxSize: 'regular'
+	})
 
 	const emit = defineEmits<{
 		(e: 'toggle-row-selected'): void

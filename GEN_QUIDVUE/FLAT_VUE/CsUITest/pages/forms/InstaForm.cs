@@ -10,19 +10,19 @@ public class InstaForm : Form
 	/// <summary>
 	/// Equipment
 	/// </summary>
-	public CollapsibleZoneControl PseudNovogr01 => new CollapsibleZoneControl(driver, ContainerLocator, "#INSTA___PSEUDNOVOGR01-container");
+	public CollapsibleZoneControl PseudNovogr01 => new CollapsibleZoneControl(driver, ContainerLocator, "#INSTA___PSEUDNOVOGR01" + IdSuffix + "-container");
 
 	/// <summary>
 	/// Type of equipment
 	/// </summary>
-	public LookupControl TpequTipoequi => new LookupControl(driver, ContainerLocator, "container-INSTA___TPEQUTIPOEQUI");
-	public SeeMorePage TpequTipoequiSeeMorePage => new SeeMorePage(driver, "INSTA", "INSTA___TPEQUTIPOEQUI");
+	public LookupControl TpequTipoequi => new LookupControl(driver, ContainerLocator, "container-INSTA___TPEQUTIPOEQUI" + IdSuffix);
+	public SeeMorePage TpequTipoequiSeeMorePage => new SeeMorePage(driver, "INSTA", "INSTA___TPEQUTIPOEQUI" + IdSuffix);
 
 	/// <summary>
 	/// Registration No.
 	/// </summary>
-	public LookupControl EquipRegistnr => new LookupControl(driver, ContainerLocator, "container-INSTA___EQUIPREGISTNR");
-	public SeeMorePage EquipRegistnrSeeMorePage => new SeeMorePage(driver, "INSTA", "INSTA___EQUIPREGISTNR");
+	public LookupControl EquipRegistnr => new LookupControl(driver, ContainerLocator, "container-INSTA___EQUIPREGISTNR" + IdSuffix);
+	public SeeMorePage EquipRegistnrSeeMorePage => new SeeMorePage(driver, "INSTA", "INSTA___EQUIPREGISTNR" + IdSuffix);
 
 	/// <summary>
 	/// Designation:
@@ -37,43 +37,43 @@ public class InstaForm : Form
 	/// <summary>
 	/// Cost
 	/// </summary>
-	public CollapsibleZoneControl PseudNovogr02 => new CollapsibleZoneControl(driver, ContainerLocator, "#INSTA___PSEUDNOVOGR02-container");
+	public CollapsibleZoneControl PseudNovogr02 => new CollapsibleZoneControl(driver, ContainerLocator, "#INSTA___PSEUDNOVOGR02" + IdSuffix + "-container");
 
 	/// <summary>
 	/// Since:
 	/// </summary>
-	public DateInputControl InstaSince => new DateInputControl(driver, ContainerLocator, "#INSTA___INSTASINCE___", "dd/MM/yyyy HH:mm");
+	public DateInputControl InstaSince => new DateInputControl(driver, ContainerLocator, "#INSTA___INSTASINCE___" + IdSuffix, "dd/MM/yyyy HH:mm");
 
 	/// <summary>
 	/// Until
 	/// </summary>
-	public DateInputControl InstaUntil => new DateInputControl(driver, ContainerLocator, "#INSTA___INSTAUNTIL___", "dd/MM/yyyy HH:mm");
+	public DateInputControl InstaUntil => new DateInputControl(driver, ContainerLocator, "#INSTA___INSTAUNTIL___" + IdSuffix, "dd/MM/yyyy HH:mm");
 
 	/// <summary>
 	/// Quantity of hours:
 	/// </summary>
-	public BaseInputControl InstaHours => new BaseInputControl(driver, ContainerLocator, "container-INSTA___INSTAHOURS___", "#INSTA___INSTAHOURS___");
+	public BaseInputControl InstaHours => new BaseInputControl(driver, ContainerLocator, "container-INSTA___INSTAHOURS___" + IdSuffix, "#INSTA___INSTAHOURS___" + IdSuffix);
 
 	/// <summary>
 	/// Price per hour:
 	/// </summary>
-	public BaseInputControl InstaPrecohor => new BaseInputControl(driver, ContainerLocator, "container-INSTA___INSTAPRECOHOR", "#INSTA___INSTAPRECOHOR");
+	public BaseInputControl InstaPrecohor => new BaseInputControl(driver, ContainerLocator, "container-INSTA___INSTAPRECOHOR" + IdSuffix, "#INSTA___INSTAPRECOHOR" + IdSuffix);
 
 	/// <summary>
 	/// Value:
 	/// </summary>
-	public BaseInputControl InstaValue => new BaseInputControl(driver, ContainerLocator, "container-INSTA___INSTAVALUE___", "#INSTA___INSTAVALUE___");
+	public BaseInputControl InstaValue => new BaseInputControl(driver, ContainerLocator, "container-INSTA___INSTAVALUE___" + IdSuffix, "#INSTA___INSTAVALUE___" + IdSuffix);
 
 	/// <summary>
 	/// LOCAL
 	/// </summary>
-	public CollapsibleZoneControl PseudNovogr03 => new CollapsibleZoneControl(driver, ContainerLocator, "#INSTA___PSEUDNOVOGR03-container");
+	public CollapsibleZoneControl PseudNovogr03 => new CollapsibleZoneControl(driver, ContainerLocator, "#INSTA___PSEUDNOVOGR03" + IdSuffix + "-container");
 
 	/// <summary>
 	/// Geographic Coordinates
 	/// </summary>
-	public BaseInputControl InstaCoordgeo => new BaseInputControl(driver, ContainerLocator, "container-INSTA___INSTACOORDGEO", "#INSTA___INSTACOORDGEO");
+	public BaseInputControl InstaCoordgeo => new BaseInputControl(driver, ContainerLocator, "container-INSTA___INSTACOORDGEO" + IdSuffix, "#INSTA___INSTACOORDGEO" + IdSuffix);
 
-	public InstaForm(IWebDriver driver, FORM_MODE mode, By? containerLocator = null)
-		: base(driver, mode, "INSTA", containerLocator: containerLocator) { }
+	public InstaForm(IWebDriver driver, FORM_MODE mode, By? containerLocator = null, bool usePkInId = false)
+		: base(driver, mode, "INSTA", containerLocator: containerLocator, usePkInId: usePkInId) { }
 }

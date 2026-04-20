@@ -9,12 +9,13 @@
 			<div
 				v-if="showFormHeader"
 				class="c-action-bar">
-				<h1
+				<component
 					v-if="formControl.uiComponents.header && formInfo.designation"
+					:is="topHeadingTag"
 					:id="formTitleId"
 					class="form-header">
 					{{ formInfo.designation }}
-				</h1>
+				</component>
 
 				<div class="c-action-bar__menu">
 					<template
@@ -40,13 +41,10 @@
 									@click="btn.action">
 									<template v-if="btn.icon">
 										<q-badge-indicator
-											v-if="btn.badge && btn.badge.isVisible"
-											:color="btn.badge.color">
+											:enabled="btn.badge?.isVisible ?? false"
+											:color="btn.badge?.color">
 											<q-icon v-bind="btn.icon" />
 										</q-badge-indicator>
-										<q-icon
-											v-else
-											v-bind="btn.icon" />
 									</template>
 								</q-toggle-group-item>
 							</template>
@@ -97,6 +95,7 @@
 		<q-container
 			fluid
 			data-key="LNHPD"
+			:data-identifier="primaryKeyValue"
 			:data-loading="!formInitialDataLoaded || !isActiveForm">
 			<template v-if="formControl.initialized && showFormBody">
 				<q-row v-if="controls.LNHPD___PEDIDNRPEDIDO.isVisible">
@@ -106,7 +105,8 @@
 						<base-input-structure
 							v-if="controls.LNHPD___PEDIDNRPEDIDO.isVisible"
 							class="i-text"
-							v-bind="controls.LNHPD___PEDIDNRPEDIDO"
+							v-bind="controls.LNHPD___PEDIDNRPEDIDO.wrapperProps"
+							:id="getControlId(controls.LNHPD___PEDIDNRPEDIDO)"
 							v-on="controls.LNHPD___PEDIDNRPEDIDO.handlers"
 							:loading="controls.LNHPD___PEDIDNRPEDIDO.props.loading"
 							:reporting-mode-on="reportingModeCAV"
@@ -114,6 +114,7 @@
 							<q-lookup
 								v-if="controls.LNHPD___PEDIDNRPEDIDO.isVisible"
 								v-bind="controls.LNHPD___PEDIDNRPEDIDO.props"
+								:id="getControlId(controls.LNHPD___PEDIDNRPEDIDO)"
 								v-on="controls.LNHPD___PEDIDNRPEDIDO.handlers" />
 							<q-see-more-lnhpd-pedidnrpedido
 								v-if="controls.LNHPD___PEDIDNRPEDIDO.seeMoreIsVisible"
@@ -129,7 +130,8 @@
 						<base-input-structure
 							v-if="controls.LNHPD___LNHPDLINE____.isVisible"
 							class="i-text"
-							v-bind="controls.LNHPD___LNHPDLINE____"
+							v-bind="controls.LNHPD___LNHPDLINE____.wrapperProps"
+							:id="getControlId(controls.LNHPD___LNHPDLINE____)"
 							v-on="controls.LNHPD___LNHPDLINE____.handlers"
 							:loading="controls.LNHPD___LNHPDLINE____.props.loading"
 							:reporting-mode-on="reportingModeCAV"
@@ -137,6 +139,7 @@
 							<q-numeric-input
 								v-if="controls.LNHPD___LNHPDLINE____.isVisible"
 								v-bind="controls.LNHPD___LNHPDLINE____.props"
+								:id="getControlId(controls.LNHPD___LNHPDLINE____)"
 								@update:model-value="model.ValLine.fnUpdateValue" />
 						</base-input-structure>
 					</q-col>
@@ -146,7 +149,8 @@
 						<base-input-structure
 							v-if="controls.LNHPD___TPEQUTIPOEQUI.isVisible"
 							class="i-text"
-							v-bind="controls.LNHPD___TPEQUTIPOEQUI"
+							v-bind="controls.LNHPD___TPEQUTIPOEQUI.wrapperProps"
+							:id="getControlId(controls.LNHPD___TPEQUTIPOEQUI)"
 							v-on="controls.LNHPD___TPEQUTIPOEQUI.handlers"
 							:loading="controls.LNHPD___TPEQUTIPOEQUI.props.loading"
 							:reporting-mode-on="reportingModeCAV"
@@ -154,6 +158,7 @@
 							<q-lookup
 								v-if="controls.LNHPD___TPEQUTIPOEQUI.isVisible"
 								v-bind="controls.LNHPD___TPEQUTIPOEQUI.props"
+								:id="getControlId(controls.LNHPD___TPEQUTIPOEQUI)"
 								v-on="controls.LNHPD___TPEQUTIPOEQUI.handlers" />
 							<q-see-more-lnhpd-tpequtipoequi
 								v-if="controls.LNHPD___TPEQUTIPOEQUI.seeMoreIsVisible"
@@ -163,7 +168,8 @@
 						<base-input-structure
 							v-if="controls.LNHPD___PSEUDDESCONJU.isVisible"
 							class="i-button"
-							v-bind="controls.LNHPD___PSEUDDESCONJU"
+							v-bind="controls.LNHPD___PSEUDDESCONJU.wrapperProps"
+							:id="getControlId(controls.LNHPD___PSEUDDESCONJU)"
 							v-on="controls.LNHPD___PSEUDDESCONJU.handlers"
 							:loading="controls.LNHPD___PSEUDDESCONJU.props.loading"
 							:reporting-mode-on="reportingModeCAV"
@@ -171,6 +177,7 @@
 							<q-button
 								v-if="controls.LNHPD___PSEUDDESCONJU.isVisible"
 								v-bind="controls.LNHPD___PSEUDDESCONJU.props"
+								:id="getControlId(controls.LNHPD___PSEUDDESCONJU)"
 								@click="controls.LNHPD___PSEUDDESCONJU.action($event)">
 								<q-icon v-bind="controls.LNHPD___PSEUDDESCONJU.icon" />
 							</q-button>
@@ -184,7 +191,8 @@
 						<base-input-structure
 							v-if="controls.LNHPD___LNHPDQUANTIDA.isVisible"
 							class="i-text"
-							v-bind="controls.LNHPD___LNHPDQUANTIDA"
+							v-bind="controls.LNHPD___LNHPDQUANTIDA.wrapperProps"
+							:id="getControlId(controls.LNHPD___LNHPDQUANTIDA)"
 							v-on="controls.LNHPD___LNHPDQUANTIDA.handlers"
 							:loading="controls.LNHPD___LNHPDQUANTIDA.props.loading"
 							:reporting-mode-on="reportingModeCAV"
@@ -192,6 +200,7 @@
 							<q-numeric-input
 								v-if="controls.LNHPD___LNHPDQUANTIDA.isVisible"
 								v-bind="controls.LNHPD___LNHPDQUANTIDA.props"
+								:id="getControlId(controls.LNHPD___LNHPDQUANTIDA)"
 								@update:model-value="model.ValQuantida.fnUpdateValue" />
 						</base-input-structure>
 					</q-col>
@@ -203,7 +212,8 @@
 						<base-input-structure
 							v-if="controls.LNHPD___LNHPDQUANTDEC.isVisible"
 							class="i-text"
-							v-bind="controls.LNHPD___LNHPDQUANTDEC"
+							v-bind="controls.LNHPD___LNHPDQUANTDEC.wrapperProps"
+							:id="getControlId(controls.LNHPD___LNHPDQUANTDEC)"
 							v-on="controls.LNHPD___LNHPDQUANTDEC.handlers"
 							:loading="controls.LNHPD___LNHPDQUANTDEC.props.loading"
 							:reporting-mode-on="reportingModeCAV"
@@ -211,6 +221,7 @@
 							<q-numeric-input
 								v-if="controls.LNHPD___LNHPDQUANTDEC.isVisible"
 								v-bind="controls.LNHPD___LNHPDQUANTDEC.props"
+								:id="getControlId(controls.LNHPD___LNHPDQUANTDEC)"
 								@update:model-value="model.ValQuantdec.fnUpdateValue" />
 						</base-input-structure>
 					</q-col>
@@ -222,21 +233,22 @@
 						<q-table
 							v-if="controls.LNHPD___PSEUDDESAGREG.isVisible"
 							v-bind="controls.LNHPD___PSEUDDESAGREG"
+							:id="getControlId(controls.LNHPD___PSEUDDESAGREG)"
 							v-on="controls.LNHPD___PSEUDDESAGREG.handlers">
+							<template #header>
+								<q-table-config
+									:table-ctrl="controls.LNHPD___PSEUDDESAGREG"
+									v-on="controls.LNHPD___PSEUDDESAGREG.handlers" />
+							</template>
 							<!-- USE /[MANUAL GQT CUSTOM_TABLE LNHPD___PSEUDDESAGREG]/ -->
 						</q-table>
-						<q-table-extra-extension
-							v-if="controls.LNHPD___PSEUDDESAGREG.isVisible"
-							:list-ctrl="controls.LNHPD___PSEUDDESAGREG"
-							:filter-operators="controls.LNHPD___PSEUDDESAGREG.filterOperators"
-							v-on="controls.LNHPD___PSEUDDESAGREG.handlers" />
 					</q-col>
 				</q-row>
 			</template>
 		</q-container>
 	</teleport>
 
-	<hr v-if="!isPopup && showFormFooter" />
+	<q-divider v-if="!isPopup && showFormFooter" />
 
 	<teleport
 		v-if="formModalIsReady && showFormFooter"
@@ -660,7 +672,7 @@
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						icon: {
-							icon: computed(() => `${this.$app.resourcesPath}ok.ico?v=3096`),
+							icon: computed(() => `${this.$app.resourcesPath}ok.ico?v=2827`),
 							type: 'img',
 							role: 'presentation',
 						},
@@ -726,10 +738,11 @@
 					LNHPD___PSEUDDESAGREG: new fieldControlClass.TableListControl({
 						id: 'LNHPD___PSEUDDESAGREG',
 						name: 'DESAGREG',
-						size: '',
+						size: 'xxlarge',
 						label: computed(() => this.Resources.BREAKDOWN_60448),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
+						headerLevel: computed(() => this.baseHeadingLevel + 1),
 						controller: 'LNHPD',
 						action: 'Lnhpd_ValDesagreg',
 						hasDependencies: false,
@@ -813,7 +826,6 @@
 							searchBarConfig: {
 								visibility: false
 							},
-							filtersVisible: false,
 							allowColumnFilters: false,
 							allowColumnSort: true,
 							crudActions: [
@@ -887,9 +899,7 @@
 									id: 'insert',
 									name: 'insert',
 									title: computed(() => this.Resources.INSERIR43365),
-									icon: {
-										icon: 'add'
-									},
+									icon: { icon: 'add' },
 									isInReadOnly: false,
 									params: {
 										action: vm.openFormAction,
@@ -936,7 +946,7 @@
 								sortOrder: 'asc'
 							}
 						},
-						globalEvents: ['changed-LNHDE', 'changed-LNHPD', 'changed-PEDID', 'changed-LNHAG', 'changed-TPEQ1'],
+						globalEvents: ['changed-LNHDE', 'changed-TPEQ1', 'changed-PEDID', 'changed-LNHAG', 'changed-LNHPD'],
 						uuid: 'Lnhpd_ValDesagreg',
 						allSelectedRows: 'false',
 						controlLimits: [
@@ -1343,7 +1353,6 @@
 
 				this.afterControlUpdate(controlField, fieldValue)
 			},
-
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
 // USE /[MANUAL GQT FUNCTIONS_JS LNHPD]/
 // eslint-disable-next-line

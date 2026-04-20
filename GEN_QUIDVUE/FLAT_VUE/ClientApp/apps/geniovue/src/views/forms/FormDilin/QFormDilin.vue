@@ -9,12 +9,13 @@
 			<div
 				v-if="showFormHeader"
 				class="c-action-bar">
-				<h1
+				<component
 					v-if="formControl.uiComponents.header && formInfo.designation"
+					:is="topHeadingTag"
 					:id="formTitleId"
 					class="form-header">
 					{{ formInfo.designation }}
-				</h1>
+				</component>
 
 				<div class="c-action-bar__menu">
 					<template
@@ -40,13 +41,10 @@
 									@click="btn.action">
 									<template v-if="btn.icon">
 										<q-badge-indicator
-											v-if="btn.badge && btn.badge.isVisible"
-											:color="btn.badge.color">
+											:enabled="btn.badge?.isVisible ?? false"
+											:color="btn.badge?.color">
 											<q-icon v-bind="btn.icon" />
 										</q-badge-indicator>
-										<q-icon
-											v-else
-											v-bind="btn.icon" />
 									</template>
 								</q-toggle-group-item>
 							</template>
@@ -97,6 +95,7 @@
 		<q-container
 			fluid
 			data-key="DILIN"
+			:data-identifier="primaryKeyValue"
 			:data-loading="!formInitialDataLoaded || !isActiveForm">
 			<template v-if="formControl.initialized && showFormBody">
 				<q-row v-if="controls.DILIN___DISPADISPANR_.isVisible || controls.DILIN___DILINLINENUMB.isVisible">
@@ -106,7 +105,8 @@
 						<base-input-structure
 							v-if="controls.DILIN___DISPADISPANR_.isVisible"
 							class="i-text"
-							v-bind="controls.DILIN___DISPADISPANR_"
+							v-bind="controls.DILIN___DISPADISPANR_.wrapperProps"
+							:id="getControlId(controls.DILIN___DISPADISPANR_)"
 							v-on="controls.DILIN___DISPADISPANR_.handlers"
 							:loading="controls.DILIN___DISPADISPANR_.props.loading"
 							:reporting-mode-on="reportingModeCAV"
@@ -114,6 +114,7 @@
 							<q-lookup
 								v-if="controls.DILIN___DISPADISPANR_.isVisible"
 								v-bind="controls.DILIN___DISPADISPANR_.props"
+								:id="getControlId(controls.DILIN___DISPADISPANR_)"
 								v-on="controls.DILIN___DISPADISPANR_.handlers" />
 							<q-see-more-dilin-dispadispanr
 								v-if="controls.DILIN___DISPADISPANR_.seeMoreIsVisible"
@@ -127,7 +128,8 @@
 						<base-input-structure
 							v-if="controls.DILIN___DILINLINENUMB.isVisible"
 							class="i-text"
-							v-bind="controls.DILIN___DILINLINENUMB"
+							v-bind="controls.DILIN___DILINLINENUMB.wrapperProps"
+							:id="getControlId(controls.DILIN___DILINLINENUMB)"
 							v-on="controls.DILIN___DILINLINENUMB.handlers"
 							:loading="controls.DILIN___DILINLINENUMB.props.loading"
 							:reporting-mode-on="reportingModeCAV"
@@ -135,6 +137,7 @@
 							<q-numeric-input
 								v-if="controls.DILIN___DILINLINENUMB.isVisible"
 								v-bind="controls.DILIN___DILINLINENUMB.props"
+								:id="getControlId(controls.DILIN___DILINLINENUMB)"
 								@update:model-value="model.ValLinenumb.fnUpdateValue" />
 						</base-input-structure>
 					</q-col>
@@ -146,7 +149,8 @@
 						<base-input-structure
 							v-if="controls.DILIN___PRODUPRODUCT_.isVisible"
 							class="i-text"
-							v-bind="controls.DILIN___PRODUPRODUCT_"
+							v-bind="controls.DILIN___PRODUPRODUCT_.wrapperProps"
+							:id="getControlId(controls.DILIN___PRODUPRODUCT_)"
 							v-on="controls.DILIN___PRODUPRODUCT_.handlers"
 							:loading="controls.DILIN___PRODUPRODUCT_.props.loading"
 							:reporting-mode-on="reportingModeCAV"
@@ -154,6 +158,7 @@
 							<q-lookup
 								v-if="controls.DILIN___PRODUPRODUCT_.isVisible"
 								v-bind="controls.DILIN___PRODUPRODUCT_.props"
+								:id="getControlId(controls.DILIN___PRODUPRODUCT_)"
 								v-on="controls.DILIN___PRODUPRODUCT_.handlers" />
 							<q-see-more-dilin-produproduct
 								v-if="controls.DILIN___PRODUPRODUCT_.seeMoreIsVisible"
@@ -169,7 +174,8 @@
 						<base-input-structure
 							v-if="controls.DILIN___DILINORDERED_.isVisible"
 							class="i-text"
-							v-bind="controls.DILIN___DILINORDERED_"
+							v-bind="controls.DILIN___DILINORDERED_.wrapperProps"
+							:id="getControlId(controls.DILIN___DILINORDERED_)"
 							v-on="controls.DILIN___DILINORDERED_.handlers"
 							:loading="controls.DILIN___DILINORDERED_.props.loading"
 							:reporting-mode-on="reportingModeCAV"
@@ -177,6 +183,7 @@
 							<q-numeric-input
 								v-if="controls.DILIN___DILINORDERED_.isVisible"
 								v-bind="controls.DILIN___DILINORDERED_.props"
+								:id="getControlId(controls.DILIN___DILINORDERED_)"
 								@update:model-value="model.ValOrdered.fnUpdateValue" />
 						</base-input-structure>
 					</q-col>
@@ -186,7 +193,8 @@
 						<base-input-structure
 							v-if="controls.DILIN___DILINDELIVERE.isVisible"
 							class="i-text"
-							v-bind="controls.DILIN___DILINDELIVERE"
+							v-bind="controls.DILIN___DILINDELIVERE.wrapperProps"
+							:id="getControlId(controls.DILIN___DILINDELIVERE)"
 							v-on="controls.DILIN___DILINDELIVERE.handlers"
 							:loading="controls.DILIN___DILINDELIVERE.props.loading"
 							:reporting-mode-on="reportingModeCAV"
@@ -194,6 +202,7 @@
 							<q-numeric-input
 								v-if="controls.DILIN___DILINDELIVERE.isVisible"
 								v-bind="controls.DILIN___DILINDELIVERE.props"
+								:id="getControlId(controls.DILIN___DILINDELIVERE)"
 								@update:model-value="model.ValDelivere.fnUpdateValue" />
 						</base-input-structure>
 					</q-col>
@@ -203,7 +212,8 @@
 						<base-input-structure
 							v-if="controls.DILIN___DILINOUTSTAND.isVisible"
 							class="i-text"
-							v-bind="controls.DILIN___DILINOUTSTAND"
+							v-bind="controls.DILIN___DILINOUTSTAND.wrapperProps"
+							:id="getControlId(controls.DILIN___DILINOUTSTAND)"
 							v-on="controls.DILIN___DILINOUTSTAND.handlers"
 							:loading="controls.DILIN___DILINOUTSTAND.props.loading"
 							:reporting-mode-on="reportingModeCAV"
@@ -211,6 +221,7 @@
 							<q-numeric-input
 								v-if="controls.DILIN___DILINOUTSTAND.isVisible"
 								v-bind="controls.DILIN___DILINOUTSTAND.props"
+								:id="getControlId(controls.DILIN___DILINOUTSTAND)"
 								@update:model-value="model.ValOutstand.fnUpdateValue" />
 						</base-input-structure>
 					</q-col>
@@ -219,7 +230,7 @@
 		</q-container>
 	</teleport>
 
-	<hr v-if="!isPopup && showFormFooter" />
+	<q-divider v-if="!isPopup && showFormFooter" />
 
 	<teleport
 		v-if="formModalIsReady && showFormFooter"
@@ -1075,7 +1086,6 @@
 
 				this.afterControlUpdate(controlField, fieldValue)
 			},
-
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
 // USE /[MANUAL GQT FUNCTIONS_JS DILIN]/
 // eslint-disable-next-line

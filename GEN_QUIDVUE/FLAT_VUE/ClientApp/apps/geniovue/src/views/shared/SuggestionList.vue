@@ -31,10 +31,7 @@
 
 				tableConfig: {
 					showFooter: false,
-					allowColumnConfiguration: false,
-					globalSearch: {
-						visibility: false
-					}
+					allowColumnConfiguration: false
 				},
 
 				tableColumns: [

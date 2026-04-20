@@ -9,12 +9,13 @@
 			<div
 				v-if="showFormHeader"
 				class="c-action-bar">
-				<h1
+				<component
 					v-if="formControl.uiComponents.header && formInfo.designation"
+					:is="topHeadingTag"
 					:id="formTitleId"
 					class="form-header">
 					{{ formInfo.designation }}
-				</h1>
+				</component>
 
 				<div class="c-action-bar__menu">
 					<template
@@ -40,13 +41,10 @@
 									@click="btn.action">
 									<template v-if="btn.icon">
 										<q-badge-indicator
-											v-if="btn.badge && btn.badge.isVisible"
-											:color="btn.badge.color">
+											:enabled="btn.badge?.isVisible ?? false"
+											:color="btn.badge?.color">
 											<q-icon v-bind="btn.icon" />
 										</q-badge-indicator>
-										<q-icon
-											v-else
-											v-bind="btn.icon" />
 									</template>
 								</q-toggle-group-item>
 							</template>
@@ -97,6 +95,7 @@
 		<q-container
 			fluid
 			data-key="ROIGI"
+			:data-identifier="primaryKeyValue"
 			:data-loading="!formInitialDataLoaded || !isActiveForm">
 			<template v-if="formControl.initialized && showFormBody">
 				<q-row v-if="controls.ROIGI___ROGL1TITLE___.isVisible">
@@ -106,7 +105,8 @@
 						<base-input-structure
 							v-if="controls.ROIGI___ROGL1TITLE___.isVisible"
 							class="i-text"
-							v-bind="controls.ROIGI___ROGL1TITLE___"
+							v-bind="controls.ROIGI___ROGL1TITLE___.wrapperProps"
+							:id="getControlId(controls.ROIGI___ROGL1TITLE___)"
 							v-on="controls.ROIGI___ROGL1TITLE___.handlers"
 							:loading="controls.ROIGI___ROGL1TITLE___.props.loading"
 							:reporting-mode-on="reportingModeCAV"
@@ -114,6 +114,7 @@
 							<q-lookup
 								v-if="controls.ROIGI___ROGL1TITLE___.isVisible"
 								v-bind="controls.ROIGI___ROGL1TITLE___.props"
+								:id="getControlId(controls.ROIGI___ROGL1TITLE___)"
 								v-on="controls.ROIGI___ROGL1TITLE___.handlers" />
 							<q-see-more-roigi-rogl1title
 								v-if="controls.ROIGI___ROGL1TITLE___.seeMoreIsVisible"
@@ -129,7 +130,8 @@
 						<base-input-structure
 							v-if="controls.ROIGI___ROIGIORDER___.isVisible"
 							class="i-text"
-							v-bind="controls.ROIGI___ROIGIORDER___"
+							v-bind="controls.ROIGI___ROIGIORDER___.wrapperProps"
+							:id="getControlId(controls.ROIGI___ROIGIORDER___)"
 							v-on="controls.ROIGI___ROIGIORDER___.handlers"
 							:loading="controls.ROIGI___ROIGIORDER___.props.loading"
 							:reporting-mode-on="reportingModeCAV"
@@ -137,18 +139,21 @@
 							<q-numeric-input
 								v-if="controls.ROIGI___ROIGIORDER___.isVisible"
 								v-bind="controls.ROIGI___ROIGIORDER___.props"
+								:id="getControlId(controls.ROIGI___ROIGIORDER___)"
 								@update:model-value="model.ValOrder.fnUpdateValue" />
 						</base-input-structure>
 						<base-input-structure
 							v-if="controls.ROIGI___ROIGITITLE___.isVisible"
 							class="i-text"
-							v-bind="controls.ROIGI___ROIGITITLE___"
+							v-bind="controls.ROIGI___ROIGITITLE___.wrapperProps"
+							:id="getControlId(controls.ROIGI___ROIGITITLE___)"
 							v-on="controls.ROIGI___ROIGITITLE___.handlers"
 							:loading="controls.ROIGI___ROIGITITLE___.props.loading"
 							:reporting-mode-on="reportingModeCAV"
 							:suggestion-mode-on="suggestionModeOn">
 							<q-text-field
 								v-bind="controls.ROIGI___ROIGITITLE___.props"
+								:id="getControlId(controls.ROIGI___ROIGITITLE___)"
 								@blur="onBlur(controls.ROIGI___ROIGITITLE___, model.ValTitle.value)"
 								@change="model.ValTitle.fnUpdateValueOnChange" />
 						</base-input-structure>
@@ -158,7 +163,7 @@
 		</q-container>
 	</teleport>
 
-	<hr v-if="!isPopup && showFormFooter" />
+	<q-divider v-if="!isPopup && showFormFooter" />
 
 	<teleport
 		v-if="formModalIsReady && showFormFooter"
@@ -942,7 +947,6 @@
 
 				this.afterControlUpdate(controlField, fieldValue)
 			},
-
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
 // USE /[MANUAL GQT FUNCTIONS_JS ROIGI]/
 // eslint-disable-next-line

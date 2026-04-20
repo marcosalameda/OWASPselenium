@@ -13,6 +13,7 @@
 				:parent-form-mode="rowComponentProps.parentFormMode"
 				:parent-table-permissions="rowComponentProps.permissions"
 				:actions-placement="rowComponentProps.actionsPlacement"
+				is-multiple
 				v-bind="formProps"
 				@close="(...args) => formClose(...args)"
 				@edit="(...args) => $emit('edit', ...args)"
@@ -98,14 +99,6 @@
 			id: {
 				type: String,
 				required: true
-			},
-
-			/**
-			 * Whether or not the form is currently visible.
-			 */
-			isVisible: {
-				type: Boolean,
-				default: true
 			},
 
 			/**

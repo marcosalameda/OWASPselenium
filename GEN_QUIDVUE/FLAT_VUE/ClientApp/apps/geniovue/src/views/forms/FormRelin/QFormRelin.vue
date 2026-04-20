@@ -9,12 +9,13 @@
 			<div
 				v-if="showFormHeader"
 				class="c-action-bar">
-				<h1
+				<component
 					v-if="formControl.uiComponents.header && formInfo.designation"
+					:is="topHeadingTag"
 					:id="formTitleId"
 					class="form-header">
 					{{ formInfo.designation }}
-				</h1>
+				</component>
 
 				<div class="c-action-bar__menu">
 					<template
@@ -40,13 +41,10 @@
 									@click="btn.action">
 									<template v-if="btn.icon">
 										<q-badge-indicator
-											v-if="btn.badge && btn.badge.isVisible"
-											:color="btn.badge.color">
+											:enabled="btn.badge?.isVisible ?? false"
+											:color="btn.badge?.color">
 											<q-icon v-bind="btn.icon" />
 										</q-badge-indicator>
-										<q-icon
-											v-else
-											v-bind="btn.icon" />
 									</template>
 								</q-toggle-group-item>
 							</template>
@@ -97,15 +95,16 @@
 		<q-container
 			fluid
 			data-key="RELIN"
+			:data-identifier="primaryKeyValue"
 			:data-loading="!formInitialDataLoaded || !isActiveForm">
 			<template v-if="formControl.initialized && showFormBody">
 				<q-row v-if="controls.RELIN___PSEUDNOVOGR01.isVisible">
 					<q-col v-if="controls.RELIN___PSEUDNOVOGR01.isVisible">
 						<q-group-box-container
 							v-if="controls.RELIN___PSEUDNOVOGR01.isVisible"
-							id="RELIN___PSEUDNOVOGR01"
 							v-bind="controls.RELIN___PSEUDNOVOGR01"
-							:is-visible="controls.RELIN___PSEUDNOVOGR01.isVisible">
+							:id="getControlId(controls.RELIN___PSEUDNOVOGR01)"
+							:no-border="controls.RELIN___PSEUDNOVOGR01.borderless">
 							<!-- Start RELIN___PSEUDNOVOGR01 -->
 							<q-row v-if="controls.RELIN___RECEINUMBER__.isVisible || controls.RELIN___ENTITNAME____.isVisible">
 								<q-col
@@ -114,7 +113,8 @@
 									<base-input-structure
 										v-if="controls.RELIN___RECEINUMBER__.isVisible"
 										class="i-text"
-										v-bind="controls.RELIN___RECEINUMBER__"
+										v-bind="controls.RELIN___RECEINUMBER__.wrapperProps"
+										:id="getControlId(controls.RELIN___RECEINUMBER__)"
 										v-on="controls.RELIN___RECEINUMBER__.handlers"
 										:loading="controls.RELIN___RECEINUMBER__.props.loading"
 										:reporting-mode-on="reportingModeCAV"
@@ -122,6 +122,7 @@
 										<q-lookup
 											v-if="controls.RELIN___RECEINUMBER__.isVisible"
 											v-bind="controls.RELIN___RECEINUMBER__.props"
+											:id="getControlId(controls.RELIN___RECEINUMBER__)"
 											v-on="controls.RELIN___RECEINUMBER__.handlers" />
 										<q-see-more-relin-receinumber
 											v-if="controls.RELIN___RECEINUMBER__.seeMoreIsVisible"
@@ -135,13 +136,15 @@
 									<base-input-structure
 										v-if="controls.RELIN___ENTITNAME____.isVisible"
 										class="i-text"
-										v-bind="controls.RELIN___ENTITNAME____"
+										v-bind="controls.RELIN___ENTITNAME____.wrapperProps"
+										:id="getControlId(controls.RELIN___ENTITNAME____)"
 										v-on="controls.RELIN___ENTITNAME____.handlers"
 										:loading="controls.RELIN___ENTITNAME____.props.loading"
 										:reporting-mode-on="reportingModeCAV"
 										:suggestion-mode-on="suggestionModeOn">
 										<q-text-field
 											v-bind="controls.RELIN___ENTITNAME____.props"
+											:id="getControlId(controls.RELIN___ENTITNAME____)"
 											@blur="onBlur(controls.RELIN___ENTITNAME____, model.EntitValName.value)"
 											@change="model.EntitValName.fnUpdateValueOnChange" />
 									</base-input-structure>
@@ -155,9 +158,9 @@
 					<q-col v-if="controls.RELIN___PSEUDNOVOGR02.isVisible">
 						<q-group-box-container
 							v-if="controls.RELIN___PSEUDNOVOGR02.isVisible"
-							id="RELIN___PSEUDNOVOGR02"
 							v-bind="controls.RELIN___PSEUDNOVOGR02"
-							:is-visible="controls.RELIN___PSEUDNOVOGR02.isVisible">
+							:id="getControlId(controls.RELIN___PSEUDNOVOGR02)"
+							:no-border="controls.RELIN___PSEUDNOVOGR02.borderless">
 							<!-- Start RELIN___PSEUDNOVOGR02 -->
 							<q-row v-if="controls.RELIN___RELINLINENUMB.isVisible">
 								<q-col
@@ -166,7 +169,8 @@
 									<base-input-structure
 										v-if="controls.RELIN___RELINLINENUMB.isVisible"
 										class="i-text"
-										v-bind="controls.RELIN___RELINLINENUMB"
+										v-bind="controls.RELIN___RELINLINENUMB.wrapperProps"
+										:id="getControlId(controls.RELIN___RELINLINENUMB)"
 										v-on="controls.RELIN___RELINLINENUMB.handlers"
 										:loading="controls.RELIN___RELINLINENUMB.props.loading"
 										:reporting-mode-on="reportingModeCAV"
@@ -174,6 +178,7 @@
 										<q-numeric-input
 											v-if="controls.RELIN___RELINLINENUMB.isVisible"
 											v-bind="controls.RELIN___RELINLINENUMB.props"
+											:id="getControlId(controls.RELIN___RELINLINENUMB)"
 											@update:model-value="model.ValLinenumb.fnUpdateValue" />
 									</base-input-structure>
 								</q-col>
@@ -185,7 +190,8 @@
 									<base-input-structure
 										v-if="controls.RELIN___PRODUPRODUCT_.isVisible"
 										class="i-text"
-										v-bind="controls.RELIN___PRODUPRODUCT_"
+										v-bind="controls.RELIN___PRODUPRODUCT_.wrapperProps"
+										:id="getControlId(controls.RELIN___PRODUPRODUCT_)"
 										v-on="controls.RELIN___PRODUPRODUCT_.handlers"
 										:loading="controls.RELIN___PRODUPRODUCT_.props.loading"
 										:reporting-mode-on="reportingModeCAV"
@@ -193,6 +199,7 @@
 										<q-lookup
 											v-if="controls.RELIN___PRODUPRODUCT_.isVisible"
 											v-bind="controls.RELIN___PRODUPRODUCT_.props"
+											:id="getControlId(controls.RELIN___PRODUPRODUCT_)"
 											v-on="controls.RELIN___PRODUPRODUCT_.handlers" />
 										<q-see-more-relin-produproduct
 											v-if="controls.RELIN___PRODUPRODUCT_.seeMoreIsVisible"
@@ -208,7 +215,8 @@
 									<base-input-structure
 										v-if="controls.RELIN___RELINORDERED_.isVisible"
 										class="i-text"
-										v-bind="controls.RELIN___RELINORDERED_"
+										v-bind="controls.RELIN___RELINORDERED_.wrapperProps"
+										:id="getControlId(controls.RELIN___RELINORDERED_)"
 										v-on="controls.RELIN___RELINORDERED_.handlers"
 										:loading="controls.RELIN___RELINORDERED_.props.loading"
 										:reporting-mode-on="reportingModeCAV"
@@ -216,6 +224,7 @@
 										<q-numeric-input
 											v-if="controls.RELIN___RELINORDERED_.isVisible"
 											v-bind="controls.RELIN___RELINORDERED_.props"
+											:id="getControlId(controls.RELIN___RELINORDERED_)"
 											@update:model-value="model.ValOrdered.fnUpdateValue" />
 									</base-input-structure>
 								</q-col>
@@ -225,7 +234,8 @@
 									<base-input-structure
 										v-if="controls.RELIN___RELINRECEIVED.isVisible"
 										class="i-text"
-										v-bind="controls.RELIN___RELINRECEIVED"
+										v-bind="controls.RELIN___RELINRECEIVED.wrapperProps"
+										:id="getControlId(controls.RELIN___RELINRECEIVED)"
 										v-on="controls.RELIN___RELINRECEIVED.handlers"
 										:loading="controls.RELIN___RELINRECEIVED.props.loading"
 										:reporting-mode-on="reportingModeCAV"
@@ -233,6 +243,7 @@
 										<q-numeric-input
 											v-if="controls.RELIN___RELINRECEIVED.isVisible"
 											v-bind="controls.RELIN___RELINRECEIVED.props"
+											:id="getControlId(controls.RELIN___RELINRECEIVED)"
 											@update:model-value="model.ValReceived.fnUpdateValue" />
 									</base-input-structure>
 								</q-col>
@@ -242,7 +253,8 @@
 									<base-input-structure
 										v-if="controls.RELIN___RELINOUTSTAND.isVisible"
 										class="i-text"
-										v-bind="controls.RELIN___RELINOUTSTAND"
+										v-bind="controls.RELIN___RELINOUTSTAND.wrapperProps"
+										:id="getControlId(controls.RELIN___RELINOUTSTAND)"
 										v-on="controls.RELIN___RELINOUTSTAND.handlers"
 										:loading="controls.RELIN___RELINOUTSTAND.props.loading"
 										:reporting-mode-on="reportingModeCAV"
@@ -250,6 +262,7 @@
 										<q-numeric-input
 											v-if="controls.RELIN___RELINOUTSTAND.isVisible"
 											v-bind="controls.RELIN___RELINOUTSTAND.props"
+											:id="getControlId(controls.RELIN___RELINOUTSTAND)"
 											@update:model-value="model.ValOutstand.fnUpdateValue" />
 									</base-input-structure>
 								</q-col>
@@ -262,7 +275,7 @@
 		</q-container>
 	</teleport>
 
-	<hr v-if="!isPopup && showFormFooter" />
+	<q-divider v-if="!isPopup && showFormFooter" />
 
 	<teleport
 		v-if="formModalIsReady && showFormFooter"
@@ -613,6 +626,7 @@
 						label: computed(() => this.Resources.RECEIPT15218),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
+						borderless: false,
 						isCollapsible: false,
 						anchored: false,
 						directChildren: ['RELIN___RECEINUMBER__', 'RELIN___ENTITNAME____'],
@@ -674,6 +688,7 @@
 						label: computed(() => this.Resources.RECEIPT_LINE60287),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
+						borderless: false,
 						isCollapsible: false,
 						anchored: false,
 						directChildren: ['RELIN___RELINLINENUMB', 'RELIN___PRODUPRODUCT_', 'RELIN___RELINORDERED_', 'RELIN___RELINRECEIVED', 'RELIN___RELINOUTSTAND'],
@@ -1179,7 +1194,6 @@
 
 				this.afterControlUpdate(controlField, fieldValue)
 			},
-
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
 // USE /[MANUAL GQT FUNCTIONS_JS RELIN]/
 // eslint-disable-next-line

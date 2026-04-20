@@ -68,7 +68,6 @@ namespace GenioMVC.ViewModels.Propr
 			get
 			{
 				CriteriaSet conds = CriteriaSet.And();
-				conds.Equal(CSGenioApropr.FldCodcntry, Navigation.GetValue("cntry"));
 
 				return conds;
 			}
@@ -224,6 +223,8 @@ namespace GenioMVC.ViewModels.Propr
 
 			crs.SubSets.Add(subfilters);
 
+			// Form field filters
+			crs.SubSets.Add(ProcessFieldFilters(tableConfig.GlobalFilters));
 
 			crs.SubSets.Add(GetCustomizedStaticLimits(StaticLimits));
 
@@ -355,12 +356,11 @@ namespace GenioMVC.ViewModels.Propr
 
 			FieldRef[] fields = new FieldRef[] { CSGenioApropr.FldCodpropr, CSGenioApropr.FldZzstate, CSGenioApropr.FldName, CSGenioApropr.FldPrecoest, CSGenioApropr.FldCodtppro, CSGenioAtppro.FldCodtppro, CSGenioAtppro.FldTppropri, CSGenioApropr.FldEndereco, CSGenioApropr.FldLocalida, CSGenioApropr.FldCodregia, CSGenioAregio.FldCodregia, CSGenioAregio.FldRegiao, CSGenioApropr.FldPostalco, CSGenioApropr.FldPostallo, CSGenioApropr.FldCodcntry, CSGenioAcntry.FldCodcntry, CSGenioAcntry.FldCountry, CSGenioApropr.FldMobilada, CSGenioApropr.FldQtd_wc, CSGenioApropr.FldQtdquart, CSGenioApropr.FldM2, CSGenioApropr.FldDtdispon, CSGenioApropr.FldPhotogra, CSGenioApropr.FldDescript };
 
-
-			// Totalizers
-			List<FieldRef> fieldsWithTotalizers = fields.Where(field => tableConfig.TotalizerColumns.Contains(field.FullName)).ToList();
+			// List of column names that should display totalized (aggregated) values.
+			List<string> totalizerColumns = [];
+			List<FieldRef> fieldsWithTotalizers = [.. fields.Where(field => totalizerColumns.Contains(field.FullName))];
 
 			FieldRef firstVisibleColumn = null;
-
 			if (sorts.Count == 0)
 			{
 				firstVisibleColumn = tableConfig?.GetFirstVisibleColumn(TableAlias);

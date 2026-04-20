@@ -47,7 +47,7 @@ namespace CSGenio.business
 			Qfield = new Field(info.Alias, "codregra", FieldType.KEY_GUID);
 			Qfield.FieldDescription = "";
 			Qfield.FieldSize =  36;
-			Qfield.CavDesignation = "";
+			Qfield.VisivelCav = CavVisibilityType.Nunca;
 
 			Qfield.Dupmsg = "";
 			info.RegisterFieldDB(Qfield);
@@ -87,16 +87,6 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "codup_rules", FieldType.KEY_GUID);
-			Qfield.FieldDescription = "";
-			Qfield.FieldSize =  36;
-			Qfield.MQueue = false;
-			Qfield.CavDesignation = "";
-
-			Qfield.Dupmsg = "";
-			info.RegisterFieldDB(Qfield);
-
-			//- - - - - - - - - - - - - - - - - - -
 			Qfield = new Field(info.Alias, "zzstate", FieldType.INTEGER);
 			Qfield.FieldDescription = "Estado da ficha";
 			info.RegisterFieldDB(Qfield);
@@ -110,13 +100,10 @@ namespace CSGenio.business
 		{
 			// Daughters Relations
 			//------------------------------
-			info.ChildTable = new ChildRelation[1];
-			info.ChildTable[0]= new ChildRelation("down_rules", new String[] {"codregra"}, DeleteProc.NA);
 
 			// Mother Relations
 			//------------------------------
 			info.ParentTables = new Dictionary<string, Relation>();
-			info.ParentTables.Add("up_rules", new Relation("GQT", "gqtrules", "rules", "codregra", "codup_rules", "GQT", "gqtup_rules", "up_rules", "codup_rules", "codup_rules"));
 		}
 
 		/// <summary>
@@ -126,8 +113,7 @@ namespace CSGenio.business
 		{
 			// Pathways
 			//------------------------------
-			info.Pathways = new Dictionary<string, string>(1);
-			info.Pathways.Add("up_rules","up_rules");
+			info.Pathways = new Dictionary<string, string>(0);
 		}
 
 		/// <summary>
@@ -390,17 +376,6 @@ namespace CSGenio.business
 			set { insertNameValueField(FldLocal, value); }
 		}
 
-		/// <summary>Field : "" Tipo: "CE" Formula:  ""</summary>
-		public static FieldRef FldCodup_rules { get { return m_fldCodup_rules; } }
-		private static FieldRef m_fldCodup_rules = new FieldRef("rules", "codup_rules");
-
-		/// <summary>Field : "" Tipo: "CE" Formula:  ""</summary>
-		public string ValCodup_rules
-		{
-			get { return (string)returnValueField(FldCodup_rules); }
-			set { insertNameValueField(FldCodup_rules, value); }
-		}
-
 		/// <summary>Field : "ZZSTATE" Type: "INT" Formula:  ""</summary>
 		public static FieldRef FldZzstate { get { return m_fldZzstate; } }
 		private static FieldRef m_fldZzstate = new FieldRef("rules", "zzstate");
@@ -498,7 +473,7 @@ namespace CSGenio.business
 		// USE /[MANUAL GQT TABAUX RULES]/
 
      
-      
+     
 
 	}
 }

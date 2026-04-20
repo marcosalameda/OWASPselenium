@@ -1,14 +1,18 @@
 ﻿using CSGenio.framework;
 using GenioMVC.Helpers;
 using GenioMVC.Helpers.Culture;
+using GenioMVC.Helpers.Menus;
 using GenioMVC.Models.Navigation;
 
 namespace GenioMVC;
 
 public class UserContextService : IUserContextService
 {
-	public UserContextService(IHttpContextAccessor context, IConfiguration configuration)
+	private readonly IMenuLoader _menuLoader;
+
+	public UserContextService(IHttpContextAccessor context, IConfiguration configuration, IMenuLoader menuLoader)
 	{
+		_menuLoader = menuLoader;
 		var httpContext = context.HttpContext;
 		if (httpContext is null)
 			throw new ArgumentNullException(nameof(httpContext));
@@ -21,7 +25,7 @@ public class UserContextService : IUserContextService
 
 		// Note: When a SameIP security policy is active this kind of Location resetting is invalid
 		// In fact the user should be forbidden to continue to use the application, needing to log out of his previous location to login to the new one.
-		var user = Current.User;
+		User user = Current.User;
 		user.Location = httpContext.GetIpAddress();
 
 		// Extract transient state from the routing data
@@ -98,8 +102,9 @@ public class UserContextService : IUserContextService
 
 	private string ValidateInputModule(string module)
 	{
-		var modules = GenioMVC.Helpers.Menus.Menus.AvailableModules(Current);
-		if (modules.Exists(x => x.ID == module))
+		var conditionValidator = new MenuConditionValidator(Current);
+		var menuService = new UserMenuService(_menuLoader, conditionValidator, Current.User);
+		if (menuService.UserHasAccessToModule(module))
 			return module;
 		return "Public";
 	}

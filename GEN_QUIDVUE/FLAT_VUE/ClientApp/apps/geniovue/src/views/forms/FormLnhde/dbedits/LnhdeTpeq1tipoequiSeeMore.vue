@@ -7,7 +7,7 @@
 				v-if="!isTreeMode"
 				v-bind="listCtrl"
 				v-on="listCtrl.handlers">
-				<template #tableTitle>
+				<template #title>
 					<q-toggle-group
 						v-model="currentMode"
 						required
@@ -20,12 +20,17 @@
 						</q-toggle-group-item>
 					</q-toggle-group>
 				</template>
+				<template #header>
+					<q-table-config
+						:table-ctrl="listCtrl"
+						v-on="listCtrl.handlers" />
+				</template>
 			</q-table>
 			<q-table
 				v-else
 				v-bind="treeListCtrl"
 				v-on="treeListCtrl.handlers">
-				<template #tableTitle>
+				<template #title>
 					<q-toggle-group
 						v-model="currentMode"
 						required
@@ -37,6 +42,11 @@
 							<q-icon icon="view-options" />
 						</q-toggle-group-item>
 					</q-toggle-group>
+				</template>
+				<template #header>
+					<q-table-config
+						:table-ctrl="treeListCtrl"
+						v-on="treeListCtrl.handlers" />
 				</template>
 			</q-table>
 		</q-row>
@@ -148,13 +158,8 @@
 					action: 'GetTreeSeeMore',
 					config: {
 						actionsPlacement: 'left',
-						generalActionsPlacement: 'below',
 						showFooter: true,
-						filtersVisible: false,
 						allowColumnSort: false,
-						globalSearch: {
-							visibility: false
-						},
 						rowClickActionInternal: null
 					}
 				}), this)
@@ -313,6 +318,7 @@
 								label: computed(() => this.Resources.CODE49225),
 								dataLength: 20,
 								scrollData: 20,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 2,
@@ -322,6 +328,7 @@
 								label: computed(() => this.Resources.TYPE_OF_EQUIPMENT18080),
 								dataLength: 50,
 								scrollData: 50,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 						],
 						config: {
@@ -339,7 +346,6 @@
 							searchBarConfig: {
 								visibility: true
 							},
-							filtersVisible: true,
 							allowColumnFilters: true,
 							allowColumnSort: true,
 							generalCustomActions: [

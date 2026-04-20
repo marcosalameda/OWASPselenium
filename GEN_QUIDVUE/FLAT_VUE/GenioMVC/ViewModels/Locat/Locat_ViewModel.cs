@@ -1,20 +1,20 @@
-﻿using JsonIgnoreAttribute = System.Text.Json.Serialization.JsonIgnoreAttribute;
+﻿using CSGenio.business;
+using CSGenio.framework;
+using CSGenio.persistence;
+using GenioMVC.Helpers;
+using GenioMVC.Models.Exception;
+using GenioMVC.Models.Navigation;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Quidgest.Persistence;
+using Quidgest.Persistence.GenericQuery;
+
 using System.Collections;
 using System.Collections.Concurrent;
 using System.Collections.Specialized;
 using System.ComponentModel.DataAnnotations;
 using System.Data;
 using System.Globalization;
-
-using CSGenio.business;
-using CSGenio.framework;
-using CSGenio.persistence;
-using GenioMVC.Helpers;
-using GenioMVC.Models.Exception;
-using GenioMVC.Models.Navigation;
-using Quidgest.Persistence;
-using Quidgest.Persistence.GenericQuery;
+using System.Text.Json.Serialization;
 
 namespace GenioMVC.ViewModels.Locat
 {
@@ -40,6 +40,7 @@ namespace GenioMVC.ViewModels.Locat
 		public string ValCodfacil { get; set; }
 
 		#endregion
+
 		/// <summary>
 		/// Title: "Legal name" | Type: "C"
 		/// </summary>
@@ -54,8 +55,6 @@ namespace GenioMVC.ViewModels.Locat
 		/// Title: "Global Location Number" | Type: "C"
 		/// </summary>
 		public string ValGln { get; set; }
-
-
 
 		#region Navigations
 		#endregion
@@ -228,12 +227,7 @@ namespace GenioMVC.ViewModels.Locat
 			}
 		}
 
-		/// <summary>
-		/// Sets the value of a single property of the view model based on the provided table and field names.
-		/// </summary>
-		/// <param name="fullFieldName">The full field name in the format "table.field".</param>
-		/// <param name="value">The field value.</param>
-		/// <exception cref="ArgumentNullException">Thrown if <paramref name="fullFieldName"/> is null.</exception>
+		/// <inheritdoc />
 		public override void SetViewModelValue(string fullFieldName, object value)
 		{
 			try
@@ -365,6 +359,7 @@ namespace GenioMVC.ViewModels.Locat
 
 			Load_Locat___entitname____(qs, lazyLoad);
 			Load_Locat___facilname____(qs, lazyLoad);
+
 // USE /[MANUAL GQT VIEWMODEL_LOADPARTIAL LOCAT]/
 		}
 
@@ -435,10 +430,7 @@ namespace GenioMVC.ViewModels.Locat
 				}
 			}
 
-			TableEntitName = new TableDBEdit<Models.Entit>
-			{
-				IsLazyLoad = lazyLoad
-			};
+			TableEntitName = new TableDBEdit<Models.Entit>();
 
 			if (lazyLoad)
 			{
@@ -482,7 +474,7 @@ namespace GenioMVC.ViewModels.Locat
 				int numberItems = CSGenio.framework.Configuration.NrRegDBedit;
 				int offset = (page - 1) * numberItems;
 
-				FieldRef[] fields = new FieldRef[] { CSGenioAentit.FldCodentit, CSGenioAentit.FldName, CSGenioAentit.FldInitials, CSGenioAentit.FldZzstate };
+				FieldRef[] fields = [CSGenioAentit.FldCodentit, CSGenioAentit.FldName, CSGenioAentit.FldInitials, CSGenioAentit.FldZzstate];
 
 // USE /[MANUAL GQT OVERRQ LOCAT_ENTITNAME]/
 
@@ -629,10 +621,7 @@ namespace GenioMVC.ViewModels.Locat
 			// Area limit
 			locat___facilname____DoLoad &= AddCriteriaAreaLimit(locat___facilname____Conds, CSGenio.business.CSGenioAentit.FldCodentit, "entit", this.ValCodentit, true);
 
-			TableFacilName = new TableDBEdit<Models.Facil>
-			{
-				IsLazyLoad = lazyLoad
-			};
+			TableFacilName = new TableDBEdit<Models.Facil>();
 
 			if (lazyLoad)
 			{
@@ -679,7 +668,7 @@ namespace GenioMVC.ViewModels.Locat
 				int numberItems = CSGenio.framework.Configuration.NrRegDBedit;
 				int offset = (page - 1) * numberItems;
 
-				FieldRef[] fields = new FieldRef[] { CSGenioAfacil.FldCodfacil, CSGenioAfacil.FldName, CSGenioAfacil.FldZzstate };
+				FieldRef[] fields = [CSGenioAfacil.FldCodfacil, CSGenioAfacil.FldName, CSGenioAfacil.FldZzstate];
 
 // USE /[MANUAL GQT OVERRQ LOCAT_FACILNAME]/
 

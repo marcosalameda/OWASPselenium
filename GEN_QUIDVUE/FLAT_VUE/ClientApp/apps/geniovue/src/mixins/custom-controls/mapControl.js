@@ -55,7 +55,7 @@ export default class MapControl extends CustomControl
 		// Tokens might be necessary to access some layers from external services.
 		const tokens = {}
 
-		for (let externalLayer of viewMode.groups.externalLayer)
+		for (const externalLayer of viewMode.groups.externalLayer)
 		{
 			const externalLayerId = externalLayer.externalLayerConfig?.value
 
@@ -237,7 +237,7 @@ export default class MapControl extends CustomControl
 	 */
 	hydrateValues(viewMode)
 	{
-		for (let mappedValue of viewMode.mappedValues)
+		for (const mappedValue of viewMode.mappedValues)
 		{
 			if (!Array.isArray(mappedValue.geographicData))
 				continue
@@ -375,6 +375,18 @@ export default class MapControl extends CustomControl
 			})
 		}
 
+		const getImageSize = (mapImg) => {
+			return new Promise((resolve, reject) => {
+				const img = new Image()
+				img.onload = () => resolve({
+					width: img.width,
+					height: img.height
+				})
+				img.onerror = reject
+				img.src = mapImg
+			})
+		}
+
 		const mapSize = this.map.getSize()
 		let mapBase64Img = null
 
@@ -387,8 +399,13 @@ export default class MapControl extends CustomControl
 		}).then(async (mapImg) => {
 			this.setControlsVisibility(true)
 
-			// If it's a portrait and the width is greater than the height, then we need to rotate it.
-			if (isPortrait && mapSize.x > mapSize.y || !isPortrait && mapSize.x < mapSize.y)
+			const imageSize = await getImageSize(mapImg)
+
+			const shouldRotate =
+				(isPortrait && imageSize.width > imageSize.height) ||
+				(!isPortrait && imageSize.width < imageSize.height)
+
+			if (shouldRotate)
 				mapBase64Img = await getAndRotateMapImg(mapImg)
 			else
 				mapBase64Img = mapImg

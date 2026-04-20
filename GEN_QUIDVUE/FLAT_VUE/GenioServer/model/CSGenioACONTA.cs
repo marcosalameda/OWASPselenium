@@ -47,7 +47,7 @@ namespace CSGenio.business
 			Qfield = new Field(info.Alias, "codconta", FieldType.KEY_GUID);
 			Qfield.FieldDescription = "";
 			Qfield.FieldSize =  36;
-			Qfield.CavDesignation = "";
+			Qfield.VisivelCav = CavVisibilityType.Nunca;
 
 			Qfield.Dupmsg = "";
 			info.RegisterFieldDB(Qfield);
@@ -56,7 +56,7 @@ namespace CSGenio.business
 			Qfield = new Field(info.Alias, "codpesso", FieldType.KEY_GUID);
 			Qfield.FieldDescription = "";
 			Qfield.FieldSize =  36;
-			Qfield.CavDesignation = "";
+			Qfield.VisivelCav = CavVisibilityType.Nunca;
 
 			Qfield.Dupmsg = "";
 			info.RegisterFieldDB(Qfield);
@@ -65,7 +65,7 @@ namespace CSGenio.business
 			Qfield = new Field(info.Alias, "codgenre", FieldType.KEY_GUID);
 			Qfield.FieldDescription = "";
 			Qfield.FieldSize =  36;
-			Qfield.CavDesignation = "";
+			Qfield.VisivelCav = CavVisibilityType.Nunca;
 
 			Qfield.Dupmsg = "";
 			info.RegisterFieldDB(Qfield);
@@ -74,7 +74,7 @@ namespace CSGenio.business
 			Qfield = new Field(info.Alias, "codtpcon", FieldType.KEY_GUID);
 			Qfield.FieldDescription = "Contact type";
 			Qfield.FieldSize =  36;
-			Qfield.CavDesignation = "CONTACT_TYPE65233";
+			Qfield.VisivelCav = CavVisibilityType.Nunca;
 
 			Qfield.Dupmsg = "";
 			info.RegisterFieldDB(Qfield);
@@ -122,10 +122,10 @@ namespace CSGenio.business
 			info.Pathways.Add("genre","genre");
 			info.Pathways.Add("tpcon","tpcon");
 			info.Pathways.Add("pesso","pesso");
-			info.Pathways.Add("categ","pesso");
 			info.Pathways.Add("cntry","pesso");
-			info.Pathways.Add("cmpny","pesso");
+			info.Pathways.Add("categ","pesso");
 			info.Pathways.Add("pais1","pesso");
+			info.Pathways.Add("cmpny","pesso");
 			info.Pathways.Add("regi1","pesso");
 		}
 

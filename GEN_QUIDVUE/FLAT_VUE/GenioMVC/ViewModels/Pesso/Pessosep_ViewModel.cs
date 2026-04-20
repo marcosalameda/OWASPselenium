@@ -1,20 +1,20 @@
-﻿using JsonIgnoreAttribute = System.Text.Json.Serialization.JsonIgnoreAttribute;
+﻿using CSGenio.business;
+using CSGenio.framework;
+using CSGenio.persistence;
+using GenioMVC.Helpers;
+using GenioMVC.Models.Exception;
+using GenioMVC.Models.Navigation;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Quidgest.Persistence;
+using Quidgest.Persistence.GenericQuery;
+
 using System.Collections;
 using System.Collections.Concurrent;
 using System.Collections.Specialized;
 using System.ComponentModel.DataAnnotations;
 using System.Data;
 using System.Globalization;
-
-using CSGenio.business;
-using CSGenio.framework;
-using CSGenio.persistence;
-using GenioMVC.Helpers;
-using GenioMVC.Models.Exception;
-using GenioMVC.Models.Navigation;
-using Quidgest.Persistence;
-using Quidgest.Persistence.GenericQuery;
+using System.Text.Json.Serialization;
 
 namespace GenioMVC.ViewModels.Pesso
 {
@@ -56,6 +56,7 @@ namespace GenioMVC.ViewModels.Pesso
 		public string ValCodregia { get; set; }
 
 		#endregion
+
 		/// <summary>
 		/// Title: "Employee No." | Type: "N"
 		/// </summary>
@@ -72,11 +73,6 @@ namespace GenioMVC.ViewModels.Pesso
 		/// Title: "Gender" | Type: "AC"
 		/// </summary>
 		public string ValGender { get; set; }
-		/// <summary>
-		/// Title: "" | Type: "PSEUD"
-		/// </summary>
-		[JsonIgnore]
-		public SelectList List_ValGender { get; set; }
 		/// <summary>
 		/// Title: "Intern" | Type: "L"
 		/// </summary>
@@ -96,19 +92,6 @@ namespace GenioMVC.ViewModels.Pesso
 		[ValidateSetAccess]
 		public DateTime? ValDtultcat { get; set; }
 		/// <summary>
-		/// Title: "Curriculum" | Type: "IB"
-		/// </summary>
-		[Document("ValCurricul", false, false, false, DocumentViewTypeMode.Preview)]
-		public string ValCurricul { get; set; }
-		/// <summary>
-		/// Title: "" | Type: "PSEUD"
-		/// </summary>
-		public string ValCurriculfk { get; set; }
-		/// <summary>
-		/// Title: "" | Type: "PSEUD"
-		/// </summary>
-		public DocumsProperties_ViewModel ValCurriculPropertiesVM { get; set; }
-		/// <summary>
 		/// Title: "Designation" | Type: "C"
 		/// </summary>
 		[ValidateSetAccess]
@@ -126,8 +109,6 @@ namespace GenioMVC.ViewModels.Pesso
 		/// </summary>
 		[ImageThumbnailJsonConverter(100, 50)]
 		public GenioMVC.Models.ImageModel ValPhotogra { get; set; }
-
-
 
 		#region Navigations
 		#endregion
@@ -275,8 +256,6 @@ namespace GenioMVC.ViewModels.Pesso
 				ValInterna = ViewModelConversion.ToLogic(m.ValInterna);
 				ValExterna = ViewModelConversion.ToLogic(m.ValExterna);
 				ValDtultcat = ViewModelConversion.ToDateTime(m.ValDtultcat);
-				ValCurricul = ViewModelConversion.ToString(m.ValCurricul);
-				ValCurriculfk = ViewModelConversion.ToString(m.ValCurriculfk);
 				ValTelephon = ViewModelConversion.ToString(m.ValTelephon);
 				ValEmail = ViewModelConversion.ToString(m.ValEmail);
 				ValPhotogra = ViewModelConversion.ToImage(m.ValPhotogra);
@@ -314,8 +293,6 @@ namespace GenioMVC.ViewModels.Pesso
 				m.ValGender = ViewModelConversion.ToString(ValGender);
 				m.ValInterna = ViewModelConversion.ToLogic(ValInterna);
 				m.ValExterna = ViewModelConversion.ToLogic(ValExterna);
-				m.ValCurricul = ViewModelConversion.ToString(ValCurricul);
-				m.ValCurriculfk = ViewModelConversion.ToString(ValCurriculfk);
 				m.ValTelephon = ViewModelConversion.ToString(ValTelephon);
 				m.ValEmail = ViewModelConversion.ToString(ValEmail);
 				if (ValPhotogra == null || !ValPhotogra.IsThumbnail)
@@ -343,12 +320,7 @@ namespace GenioMVC.ViewModels.Pesso
 			}
 		}
 
-		/// <summary>
-		/// Sets the value of a single property of the view model based on the provided table and field names.
-		/// </summary>
-		/// <param name="fullFieldName">The full field name in the format "table.field".</param>
-		/// <param name="value">The field value.</param>
-		/// <exception cref="ArgumentNullException">Thrown if <paramref name="fullFieldName"/> is null.</exception>
+		/// <inheritdoc />
 		public override void SetViewModelValue(string fullFieldName, object value)
 		{
 			try
@@ -379,9 +351,6 @@ namespace GenioMVC.ViewModels.Pesso
 						break;
 					case "pesso.externa":
 						this.ValExterna = ViewModelConversion.ToLogic(_value);
-						break;
-					case "pesso.curricul":
-						this.ValCurricul = ViewModelConversion.ToString(_value);
 						break;
 					case "pesso.telephon":
 						this.ValTelephon = ViewModelConversion.ToString(_value);
@@ -477,14 +446,6 @@ namespace GenioMVC.ViewModels.Pesso
 
 		protected override void LoadDocumentsProperties(Models.Pesso row)
 		{
-			try
-			{
-				ValCurriculPropertiesVM = row.GetInfoDoc("ValCurricul");
-			}
-			catch (Exception)
-			{
-				ValCurriculPropertiesVM = new DocumsProperties_ViewModel(m_userContext);
-			}
 		}
 
 		/// <summary>
@@ -512,6 +473,7 @@ namespace GenioMVC.ViewModels.Pesso
 
 			Load_Pessosepcategcategory(qs, lazyLoad);
 			Load_Pessos00cmpnydesignat(qs, lazyLoad);
+
 // USE /[MANUAL GQT VIEWMODEL_LOADPARTIAL PESSOSEP]/
 		}
 
@@ -527,6 +489,8 @@ namespace GenioMVC.ViewModels.Pesso
 			CrudViewModelFieldValidator validator = new(m_userContext.User.Language);
 
 			validator.StringLength("ValName", Resources.Resources.NAME_23841, ValName, 85);
+
+			validator.Required("ValName", Resources.Resources.NAME_23841, ViewModelConversion.ToString(ValName), FieldType.TEXT.GetFormatting());
 			validator.StringLength("ValTelephon", Resources.Resources.TELEPHONE28697, ValTelephon, 20);
 			validator.StringLength("ValEmail", Resources.Resources.EMAIL_44228, ValEmail, 254);
 
@@ -584,10 +548,7 @@ namespace GenioMVC.ViewModels.Pesso
 				}
 			}
 
-			TableCategCategory = new TableDBEdit<Models.Categ>
-			{
-				IsLazyLoad = lazyLoad
-			};
+			TableCategCategory = new TableDBEdit<Models.Categ>();
 
 			if (lazyLoad)
 			{
@@ -632,7 +593,7 @@ namespace GenioMVC.ViewModels.Pesso
 				int numberItems = CSGenio.framework.Configuration.NrRegDBedit;
 				int offset = (page - 1) * numberItems;
 
-				FieldRef[] fields = new FieldRef[] { CSGenioAcateg.FldCodcateg, CSGenioAcateg.FldCategoria, CSGenioAcateg.FldAbbreviation, CSGenioAcateg.FldZzstate };
+				FieldRef[] fields = [CSGenioAcateg.FldCodcateg, CSGenioAcateg.FldCategoria, CSGenioAcateg.FldAbbreviation, CSGenioAcateg.FldZzstate];
 
 // USE /[MANUAL GQT OVERRQ PESSOSEP_CATEGCATEGORY]/
 
@@ -775,10 +736,7 @@ namespace GenioMVC.ViewModels.Pesso
 				}
 			}
 
-			TableCmpnyDesignat = new TableDBEdit<Models.Cmpny>
-			{
-				IsLazyLoad = lazyLoad
-			};
+			TableCmpnyDesignat = new TableDBEdit<Models.Cmpny>();
 
 			if (lazyLoad)
 			{
@@ -825,7 +783,7 @@ namespace GenioMVC.ViewModels.Pesso
 				int numberItems = CSGenio.framework.Configuration.NrRegDBedit;
 				int offset = (page - 1) * numberItems;
 
-				FieldRef[] fields = new FieldRef[] { CSGenioAcmpny.FldCodempre, CSGenioAcmpny.FldDesignat, CSGenioAcmpny.FldAcronym, CSGenioAcmpny.FldNif, CSGenioAcmpny.FldTelephon, CSGenioAcmpny.FldEmail, CSGenioAcmpny.FldLogo, CSGenioAcmpny.FldZzstate };
+				FieldRef[] fields = [CSGenioAcmpny.FldCodempre, CSGenioAcmpny.FldDesignat, CSGenioAcmpny.FldAcronym, CSGenioAcmpny.FldNif, CSGenioAcmpny.FldTelephon, CSGenioAcmpny.FldEmail, CSGenioAcmpny.FldLogo, CSGenioAcmpny.FldZzstate];
 
 // USE /[MANUAL GQT OVERRQ PESSOS00_CMPNYDESIGNAT]/
 
@@ -966,7 +924,6 @@ namespace GenioMVC.ViewModels.Pesso
 				"pesso.interna" => ViewModelConversion.ToLogic(modelValue),
 				"pesso.externa" => ViewModelConversion.ToLogic(modelValue),
 				"pesso.dtultcat" => ViewModelConversion.ToDateTime(modelValue),
-				"pesso.curricul" => ViewModelConversion.ToString(modelValue),
 				"pesso.telephon" => ViewModelConversion.ToString(modelValue),
 				"pesso.email" => ViewModelConversion.ToString(modelValue),
 				"pesso.photogra" => ViewModelConversion.ToImage(modelValue),

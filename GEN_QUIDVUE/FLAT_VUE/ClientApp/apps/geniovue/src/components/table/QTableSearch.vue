@@ -2,16 +2,17 @@
 	<div class="q-table-search">
 		<q-input-group
 			ref="globalSearch"
-			size="xlarge">
+			size="block">
 			<q-text-field
 				v-model="searchValue"
-				role="searchbox"
 				class="q-table-search__field"
-				:placeholder="placeholder"
+				role="searchbox"
+				:aria-label="texts.searchText"
 				:disabled="disabled || searchableColumns.length === 0"
+				:placeholder="placeholder"
 				@focusin="showDropdown"
-				@keydown.enter="searchByColumn(defaultSearchColumn, searchValue)"
-				@keydown.down="focusOptionsList">
+				@keydown.down="focusOptionsList"
+				@keydown.enter="searchByColumn(defaultSearchColumn, searchValue)">
 				<template
 					v-if="isClearBtnVisible"
 					#append>
@@ -28,37 +29,6 @@
 				</template>
 			</q-text-field>
 
-			<q-overlay
-				v-model="showOptions"
-				spy
-				non-modal
-				scroll-lock
-				trigger="manual"
-				placement="bottom-start"
-				width="anchor"
-				:anchor="$refs.globalSearch?.$el"
-				:offset="2">
-				<q-list
-					ref="optionsList"
-					selectable
-					tabindex="-1"
-					:items="options"
-					@update:model-value="onSearchOption">
-					<template #item="{ item }">
-						<span :data-testid="item.id">
-							{{ texts.searchText }}
-							<component
-								:is="item.key < 0 ? 'v-fragment' : 'span'"
-								class="q-table-search__column">
-								{{ item.label }}
-							</component>
-							{{ texts.forText }}:
-							<strong>{{ searchValue }}</strong>
-						</span>
-					</template>
-				</q-list>
-			</q-overlay>
-
 			<template #append>
 				<template v-if="showRefreshButton">
 					<q-button
@@ -69,7 +39,7 @@
 					</q-button>
 				</template>
 
-				<slot name="extra-buttons"></slot>
+				<slot name="extra-buttons" />
 			</template>
 		</q-input-group>
 
@@ -80,6 +50,38 @@
 			{{ message }}
 		</div>
 	</div>
+
+	<q-overlay
+		v-model="showOptions"
+		non-modal
+		scroll-lock
+		spy
+		placement="bottom-start"
+		trigger="manual"
+		width="anchor"
+		:anchor="$refs.globalSearch?.$el"
+		:offset="2">
+		<q-list
+			class="q-table-search__options"
+			ref="optionsList"
+			selectable
+			tabindex="-1"
+			:items="options"
+			@update:model-value="onSearchOption">
+			<template #item="{ item }">
+				<span :data-testid="item.id">
+					{{ texts.searchText }}
+					<component
+						:is="item.key < 0 ? 'v-fragment' : 'span'"
+						class="q-table-search__column">
+						{{ item.label }}
+					</component>
+					{{ texts.forText }}:
+					<strong>{{ searchValue }}</strong>
+				</span>
+			</template>
+		</q-list>
+	</q-overlay>
 </template>
 
 <script>
@@ -92,18 +94,7 @@
 			/**
 			 * The default search column.
 			 */
-			defaultSearchColumn: {
-				type: Object,
-				required: true
-			},
-
-			/**
-			 * An object containing signals for managing the state and interactivity of the search component.
-			 */
-			signal: {
-				type: Object,
-				default: () => ({})
-			},
+			defaultSearchColumn: Object,
 
 			/**
 			 * An array of columns that can be individually searched.
@@ -222,7 +213,7 @@
 			searchByColumn(column, value) {
 				this.hideDropdown()
 
-				if (this.disabled)
+				if (this.disabled || column === null || column === undefined)
 					return
 
 				// Prevent creation of empty filters
@@ -279,22 +270,12 @@
 			 * Sets the focus on the options list.
 			 */
 			focusOptionsList() {
-				this.$refs.optionsList?.$el.focus()
-			}
-		},
+				const el = this.$refs.optionsList?.$el
+				if (!el)
+					return
 
-		watch: {
-			signal: {
-				handler(newValue) {
-					for (const key in newValue) {
-						switch (key) {
-							case 'resetQuery':
-								if (newValue.resetQuery) this.resetQuery()
-								break
-						}
-					}
-				},
-				deep: true
+				el.focus()
+				requestAnimationFrame(() => el.scrollTo({ top: 0 }))
 			}
 		}
 	}

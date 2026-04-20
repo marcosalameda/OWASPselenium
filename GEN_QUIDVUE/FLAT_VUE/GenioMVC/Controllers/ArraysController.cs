@@ -11,7 +11,6 @@ namespace GenioMVC.Controllers
 	{
         public ArraysController(UserContextService userContext) : base(userContext) { }
 
-
 		/// <summary>
 		/// Gets the array "s_module".
 		/// </summary>
@@ -41,5 +40,6 @@ namespace GenioMVC.Controllers
 		{
 			return Json(ArrayS_tpproc.Serialize(UserContext.Current.User.Language));
 		}
+
 	}
 }

@@ -9,12 +9,13 @@
 			<div
 				v-if="showFormHeader"
 				class="c-action-bar">
-				<h1
+				<component
 					v-if="formControl.uiComponents.header && formInfo.designation"
+					:is="topHeadingTag"
 					:id="formTitleId"
 					class="form-header">
 					{{ formInfo.designation }}
-				</h1>
+				</component>
 
 				<div class="c-action-bar__menu">
 					<template
@@ -40,13 +41,10 @@
 									@click="btn.action">
 									<template v-if="btn.icon">
 										<q-badge-indicator
-											v-if="btn.badge && btn.badge.isVisible"
-											:color="btn.badge.color">
+											:enabled="btn.badge?.isVisible ?? false"
+											:color="btn.badge?.color">
 											<q-icon v-bind="btn.icon" />
 										</q-badge-indicator>
-										<q-icon
-											v-else
-											v-bind="btn.icon" />
 									</template>
 								</q-toggle-group-item>
 							</template>
@@ -97,6 +95,7 @@
 		<q-container
 			fluid
 			data-key="REGRA"
+			:data-identifier="primaryKeyValue"
 			:data-loading="!formInitialDataLoaded || !isActiveForm">
 			<template v-if="formControl.initialized && showFormBody">
 				<q-row v-if="controls.REGRA___RULESTIPOCOND.isVisible || controls.REGRA___RULESDESCRIPT.isVisible || controls.REGRA___RULESLOCAL___.isVisible">
@@ -106,7 +105,8 @@
 						<base-input-structure
 							v-if="controls.REGRA___RULESTIPOCOND.isVisible"
 							class="i-text"
-							v-bind="controls.REGRA___RULESTIPOCOND"
+							v-bind="controls.REGRA___RULESTIPOCOND.wrapperProps"
+							:id="getControlId(controls.REGRA___RULESTIPOCOND)"
 							v-on="controls.REGRA___RULESTIPOCOND.handlers"
 							:loading="controls.REGRA___RULESTIPOCOND.props.loading"
 							:reporting-mode-on="reportingModeCAV"
@@ -114,6 +114,7 @@
 							<q-select
 								v-if="controls.REGRA___RULESTIPOCOND.isVisible"
 								v-bind="controls.REGRA___RULESTIPOCOND.props"
+								:id="getControlId(controls.REGRA___RULESTIPOCOND)"
 								@update:model-value="model.ValTipocond.fnUpdateValue" />
 						</base-input-structure>
 					</q-col>
@@ -123,13 +124,15 @@
 						<base-input-structure
 							v-if="controls.REGRA___RULESDESCRIPT.isVisible"
 							class="i-text"
-							v-bind="controls.REGRA___RULESDESCRIPT"
+							v-bind="controls.REGRA___RULESDESCRIPT.wrapperProps"
+							:id="getControlId(controls.REGRA___RULESDESCRIPT)"
 							v-on="controls.REGRA___RULESDESCRIPT.handlers"
 							:loading="controls.REGRA___RULESDESCRIPT.props.loading"
 							:reporting-mode-on="reportingModeCAV"
 							:suggestion-mode-on="suggestionModeOn">
 							<q-text-field
 								v-bind="controls.REGRA___RULESDESCRIPT.props"
+								:id="getControlId(controls.REGRA___RULESDESCRIPT)"
 								@blur="onBlur(controls.REGRA___RULESDESCRIPT, model.ValDescript.value)"
 								@change="model.ValDescript.fnUpdateValueOnChange" />
 						</base-input-structure>
@@ -140,7 +143,8 @@
 						<base-input-structure
 							v-if="controls.REGRA___RULESLOCAL___.isVisible"
 							class="i-text"
-							v-bind="controls.REGRA___RULESLOCAL___"
+							v-bind="controls.REGRA___RULESLOCAL___.wrapperProps"
+							:id="getControlId(controls.REGRA___RULESLOCAL___)"
 							v-on="controls.REGRA___RULESLOCAL___.handlers"
 							:loading="controls.REGRA___RULESLOCAL___.props.loading"
 							:reporting-mode-on="reportingModeCAV"
@@ -148,30 +152,8 @@
 							<q-select
 								v-if="controls.REGRA___RULESLOCAL___.isVisible"
 								v-bind="controls.REGRA___RULESLOCAL___.props"
+								:id="getControlId(controls.REGRA___RULESLOCAL___)"
 								@update:model-value="model.ValLocal.fnUpdateValue" />
-						</base-input-structure>
-					</q-col>
-				</q-row>
-				<q-row v-if="controls.REGRA__UP_RULES__DESCRIPT.isVisible">
-					<q-col
-						v-if="controls.REGRA__UP_RULES__DESCRIPT.isVisible"
-						cols="auto">
-						<base-input-structure
-							v-if="controls.REGRA__UP_RULES__DESCRIPT.isVisible"
-							class="i-text"
-							v-bind="controls.REGRA__UP_RULES__DESCRIPT"
-							v-on="controls.REGRA__UP_RULES__DESCRIPT.handlers"
-							:loading="controls.REGRA__UP_RULES__DESCRIPT.props.loading"
-							:reporting-mode-on="reportingModeCAV"
-							:suggestion-mode-on="suggestionModeOn">
-							<q-lookup
-								v-if="controls.REGRA__UP_RULES__DESCRIPT.isVisible"
-								v-bind="controls.REGRA__UP_RULES__DESCRIPT.props"
-								v-on="controls.REGRA__UP_RULES__DESCRIPT.handlers" />
-							<q-see-more-regra-up-rules-descript
-								v-if="controls.REGRA__UP_RULES__DESCRIPT.seeMoreIsVisible"
-								v-bind="controls.REGRA__UP_RULES__DESCRIPT.seeMoreParams"
-								v-on="controls.REGRA__UP_RULES__DESCRIPT.handlers" />
 						</base-input-structure>
 					</q-col>
 				</q-row>
@@ -179,7 +161,7 @@
 		</q-container>
 	</teleport>
 
-	<hr v-if="!isPopup && showFormFooter" />
+	<q-divider v-if="!isPopup && showFormFooter" />
 
 	<teleport
 		v-if="formModalIsReady && showFormFooter"
@@ -246,7 +228,6 @@
 		name: 'QFormRegra',
 
 		components: {
-			QSeeMoreRegraUpRulesDescript: defineAsyncComponent(() => import('@/views/forms/FormRegra/dbedits/RegraUpRulesDescriptSeeMore.vue')),
 		},
 
 		mixins: [
@@ -389,22 +370,6 @@
 						isSelected: computed(() => vm.formModes.new === vm.formInfo.mode),
 						isVisible: computed(() => vm.authData.isAllowed && vm.formModes.duplicate !== vm.formInfo.mode),
 						action: vm.changeToInsertMode
-					},
-					applyBtn: {
-						id: 'apply-btn',
-						icon: {
-							icon: 'apply',
-							type: 'svg'
-						},
-						type: 'form-action',
-						text: computed(() => vm.Resources[hardcodedTexts.apply]),
-						classes: [],
-						showInHeader: true,
-						showInFooter: true,
-						isActive: true,
-						isVisible: computed(() => vm.authData.isAllowed && vm.isEditable),
-						disabled: false,
-						action: () => vm.applyChanges(true)
 					},
 					repeatInsertBtn: {
 						id: 'repeat-insert-btn',
@@ -549,8 +514,8 @@
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						maxLength: 1,
 						arrayName: 'tipoCond',
-						helpShortItem: '',
-						helpDetailedItem: '',
+						helpShortItem: 'None',
+						helpDetailedItem: 'None',
 						controlLimits: [
 						],
 					}, this),
@@ -596,38 +561,8 @@
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						maxLength: 1,
 						arrayName: 'aLocRegr',
-						helpShortItem: '',
-						helpDetailedItem: '',
-						controlLimits: [
-						],
-					}, this),
-					REGRA__UP_RULES__DESCRIPT: new fieldControlClass.LookupControl({
-						modelField: 'TableUp_rulesDescript',
-						valueChangeEvent: 'fieldChange:up_rules.descript',
-						id: 'REGRA__UP_RULES__DESCRIPT',
-						name: 'DESCRIPT',
-						size: 'xxlarge',
-						label: computed(() => this.Resources.DESCRIPTION07383),
-						placeholder: '',
-						labelPosition: computed(() => this.labelAlignment.topleft),
-						externalCallbacks: {
-							getModelField: vm.getModelField,
-							getModelFieldValue: vm.getModelFieldValue,
-							setModelFieldValue: vm.setModelFieldValue
-						},
-						externalProperties: {
-							modelKeys: computed(() => vm.modelKeys)
-						},
-						lookupKeyModelField: {
-							name: 'ValCodup_rules',
-							dependencyEvent: 'fieldChange:rules.codup_rules'
-						},
-						dependentFields: () => ({
-							set 'up_rules.codup_rules'(value) { vm.model.ValCodup_rules.updateValue(value) },
-							set 'up_rules.descript'(value) { vm.model.TableUp_rulesDescript.updateValue(value) },
-						}),
-						insertEnabled: true,
-						supportForm: 'UP_RULES',
+						helpShortItem: 'None',
+						helpDetailedItem: 'None',
 						controlLimits: [
 						],
 					}, this),
@@ -654,8 +589,6 @@
 				 */
 				dataApi: {
 					Rules: {
-						get ValCodup_rules() { return vm.model.ValCodup_rules.value },
-						set ValCodup_rules(value) { vm.model.ValCodup_rules.updateValue(value) },
 						get ValDescript() { return vm.model.ValDescript.value },
 						set ValDescript(value) { vm.model.ValDescript.updateValue(value) },
 						get ValLocal() { return vm.model.ValLocal.value },
@@ -663,15 +596,9 @@
 						get ValTipocond() { return vm.model.ValTipocond.value },
 						set ValTipocond(value) { vm.model.ValTipocond.updateValue(value) },
 					},
-					Up_rules: {
-						get ValDescript() { return vm.model.TableUp_rulesDescript.value },
-						set ValDescript(value) { vm.model.TableUp_rulesDescript.updateValue(value) },
-					},
 					keys: {
 						/** The primary key of the RULES table */
 						get rules() { return vm.model.ValCodregra },
-						/** The foreign key to the UP_RULES table */
-						get up_rules() { return vm.model.ValCodup_rules },
 					},
 					get extraProperties() { return vm.model.extraProperties },
 				},
@@ -1017,7 +944,6 @@
 
 				this.afterControlUpdate(controlField, fieldValue)
 			},
-
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
 // USE /[MANUAL GQT FUNCTIONS_JS REGRA]/
 // eslint-disable-next-line

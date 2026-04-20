@@ -83,6 +83,7 @@ export default class ViewModel extends FormViewModelBase
 			field: 'SUBCATEG',
 			maxLength: 50,
 			description: computed(() => this.Resources.SUB_CATEGORIA15612),
+			ignoreFldSubmit: true,
 		}).cloneFrom(values?.TableSbcatSubcateg))
 		this.stopWatchers.push(watch(() => this.TableSbcatSubcateg.value, (newValue, oldValue) => this.onUpdate('sbcat.subcateg', this.TableSbcatSubcateg, newValue, oldValue)))
 	}

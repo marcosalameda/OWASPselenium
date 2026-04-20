@@ -188,50 +188,31 @@ namespace GenioMVC.ViewModels.Equip
 			//Subfilters
 			CriteriaSet subfilters = CriteriaSet.And();
 
-			if (!tableConfig.GroupFilters.ContainsKey("filter_Accordi_Pess1ValName_FILTER1"))
+			if (!tableConfig.GroupFilters.ContainsKey("filter_Accordi_Pess1ValName_"))
 			{
 				string defaultValue = "";
-				tableConfig.Filters.Add(new GroupFilter { Key = "filter_Accordi_Pess1ValName_FILTER1", Value = defaultValue });
+				tableConfig.Filters.Add(new GroupFilter { Key = "filter_Accordi_Pess1ValName_", Value = defaultValue });
 			}
 
 			{
 				var groupFilters = CriteriaSet.Or();
-				bool filter_Accordi_Pess1ValName_FILTER1_1 = false;
-				if (tableConfig.GroupFilters.ContainsKey("filter_Accordi_Pess1ValName_FILTER1"))
-					filter_Accordi_Pess1ValName_FILTER1_1 = tableConfig.GroupFilters["filter_Accordi_Pess1ValName_FILTER1"].Contains("1");
-				if (filter_Accordi_Pess1ValName_FILTER1_1)
-				{
-					groupFilters.Equal(CSGenioApess1.FldGender, "F");
-
-				}
-
 				subfilters.SubSets.Add(groupFilters);
 			}
-			if (!tableConfig.GroupFilters.ContainsKey("filter_Accordi_Pess1ValName_FILTER2"))
+			if (!tableConfig.GroupFilters.ContainsKey("filter_Accordi_Pess1ValName_"))
 			{
 				string defaultValue = "";
-				tableConfig.Filters.Add(new GroupFilter { Key = "filter_Accordi_Pess1ValName_FILTER2", Value = defaultValue });
+				tableConfig.Filters.Add(new GroupFilter { Key = "filter_Accordi_Pess1ValName_", Value = defaultValue });
 			}
 
 			{
 				var groupFilters = CriteriaSet.Or();
-				bool filter_Accordi_Pess1ValName_FILTER2_1 = false;
-				if (tableConfig.GroupFilters.ContainsKey("filter_Accordi_Pess1ValName_FILTER2"))
-					filter_Accordi_Pess1ValName_FILTER2_1 = tableConfig.GroupFilters["filter_Accordi_Pess1ValName_FILTER2"].Contains("1");
-				if (filter_Accordi_Pess1ValName_FILTER2_1)
-				{
-					groupFilters.Equal(CSGenioApess1.FldGender, "M");
-
-				}
-
 				subfilters.SubSets.Add(groupFilters);
 			}
 
 			crs.SubSets.Add(subfilters);
 
 			// Form field filters
-			if (tableConfig.FieldFilters != null)
-				crs.SubSets.Add(ProcessFieldFilters(tableConfig.FieldFilters));
+			crs.SubSets.Add(ProcessFieldFilters(tableConfig.GlobalFilters));
 
 
 			crs.SubSets.Add(GetCustomizedStaticLimits(StaticLimits));
@@ -359,12 +340,11 @@ namespace GenioMVC.ViewModels.Equip
 
 			FieldRef[] fields = new FieldRef[] { CSGenioApess1.FldCodpesso, CSGenioApess1.FldZzstate, CSGenioApess1.FldName };
 
-
-			// Totalizers
-			List<FieldRef> fieldsWithTotalizers = fields.Where(field => tableConfig.TotalizerColumns.Contains(field.FullName)).ToList();
+			// List of column names that should display totalized (aggregated) values.
+			List<string> totalizerColumns = [];
+			List<FieldRef> fieldsWithTotalizers = [.. fields.Where(field => totalizerColumns.Contains(field.FullName))];
 
 			FieldRef firstVisibleColumn = null;
-
 			if (sorts.Count == 0)
 			{
 				firstVisibleColumn = tableConfig?.GetFirstVisibleColumn(TableAlias);

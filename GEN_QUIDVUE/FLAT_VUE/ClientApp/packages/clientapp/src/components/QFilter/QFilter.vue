@@ -1,11 +1,13 @@
 <template>
-	<component
-		v-if="!props.loading"
-		:is="filterComponent"
-		class="q-filter"
-		v-bind="props"
-		v-model="model" />
+	<div class="q-filter">
+		<component
+			v-if="!props.loading"
+			:is="filterComponent"
+			v-bind="props"
+			v-model="model" />
+	</div>
 </template>
+
 <script setup lang="ts">
 	// Types
 	import type { FilterValue, QFilterGenericProps } from './types'
@@ -20,14 +22,5 @@
 	const model = defineModel<FilterValue>()
 
 	/** Defines the rendered filter component, based on the selected viewmode. */
-	const filterComponent = computed(() => {
-		switch (props.viewMode) {
-			case 'checkbox':
-				return 'q-filter-checkbox'
-			case 'radio':
-				return 'q-filter-radio'
-			default:
-				return 'q-filter-dropdown'
-		}
-	})
+	const filterComponent = computed(() => `q-filter-${props.viewMode}`)
 </script>

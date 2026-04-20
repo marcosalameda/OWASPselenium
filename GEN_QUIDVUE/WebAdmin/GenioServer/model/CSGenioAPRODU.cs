@@ -47,7 +47,7 @@ namespace CSGenio.business
 			Qfield = new Field(info.Alias, "codprodu", FieldType.KEY_GUID);
 			Qfield.FieldDescription = "";
 			Qfield.FieldSize =  36;
-			Qfield.CavDesignation = "";
+			Qfield.VisivelCav = CavVisibilityType.Nunca;
 
 			Qfield.Dupmsg = "";
 			info.RegisterFieldDB(Qfield);
@@ -57,7 +57,7 @@ namespace CSGenio.business
 			Qfield.FieldDescription = ">>LOCATION";
 			Qfield.FieldSize =  36;
 			Qfield.MQueue = false;
-			Qfield.CavDesignation = "__LOCATION45198";
+			Qfield.VisivelCav = CavVisibilityType.Nunca;
 
 			Qfield.Dupmsg = "";
 			info.RegisterFieldDB(Qfield);
@@ -67,7 +67,7 @@ namespace CSGenio.business
 			Qfield.FieldDescription = ">>LOCATION EXTENSION";
 			Qfield.FieldSize =  36;
 			Qfield.MQueue = false;
-			Qfield.CavDesignation = "__LOCATION_EXTENSION43450";
+			Qfield.VisivelCav = CavVisibilityType.Nunca;
 
 			Qfield.Dupmsg = "";
 			info.RegisterFieldDB(Qfield);
@@ -187,7 +187,7 @@ namespace CSGenio.business
 			Qfield.FieldSize =  3;
 			Qfield.MQueue = false;
 			Qfield.Decimals = 1;
-			Qfield.CavDesignation = "IMAGE65174";
+			Qfield.VisivelCav = CavVisibilityType.Nunca;
 
 			Qfield.Dupmsg = "";
 			info.RegisterFieldDB(Qfield);
@@ -237,15 +237,14 @@ namespace CSGenio.business
 		{
 			// Pathways
 			//------------------------------
-			info.Pathways = new Dictionary<string, string>(8);
+			info.Pathways = new Dictionary<string, string>(7);
 			info.Pathways.Add("locat","locat");
 			info.Pathways.Add("lcext","lcext");
 			info.Pathways.Add("facil","locat");
 			info.Pathways.Add("entit","locat");
-			info.Pathways.Add("cntry","locat");
 			info.Pathways.Add("facty","locat");
-			info.Pathways.Add("faci1","locat");
 			info.Pathways.Add("faci2","locat");
+			info.Pathways.Add("faci1","locat");
 		}
 
 		/// <summary>

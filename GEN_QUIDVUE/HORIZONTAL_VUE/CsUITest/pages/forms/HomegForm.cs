@@ -12,6 +12,6 @@ public class HomegForm : Form
 	/// </summary>
 	public IWebElement GlobHome => throw new NotImplementedException();
 
-	public HomegForm(IWebDriver driver, FORM_MODE mode, By? containerLocator = null)
-		: base(driver, mode, "HOMEG", containerLocator: containerLocator) { }
+	public HomegForm(IWebDriver driver, FORM_MODE mode, By? containerLocator = null, bool usePkInId = false)
+		: base(driver, mode, "HOMEG", containerLocator: containerLocator, usePkInId: usePkInId) { }
 }

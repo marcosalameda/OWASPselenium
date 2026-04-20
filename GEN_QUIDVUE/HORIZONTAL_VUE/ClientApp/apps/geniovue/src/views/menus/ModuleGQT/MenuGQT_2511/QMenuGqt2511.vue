@@ -10,59 +10,61 @@
 				:selected-tab="controls.tabGroup.selectedTab"
 				:is-visible="controls.tabGroup.isVisible"
 				@tab-changed="controls.tabGroup.selectTab($event)">
-				<template #tab-panel>
-					<section v-show="controls.tabGroup.selectedTab === 'firstTab'">
-						<q-row-container is-large>
-							<q-control-wrapper class="row-line-group">
-								<q-table
-									v-bind="controls.firstTable"
-									v-on="controls.firstTable.handlers" />
+				<section v-show="controls.tabGroup.selectedTab === 'firstTab'">
+					<q-row-container is-large>
+						<q-control-wrapper class="row-line-group">
+							<q-table
+								v-bind="controls.firstTable"
+								v-on="controls.firstTable.handlers">
+								<template #header>
+									<q-table-config
+										:table-ctrl="controls.firstTable"
+										v-on="controls.firstTable.handlers" />
+								</template>
+							</q-table>
+						</q-control-wrapper>
+					</q-row-container>
+				</section>
 
-								<q-table-extra-extension
-									:list-ctrl="controls.firstTable"
-									v-on="controls.firstTable.handlers" />
-							</q-control-wrapper>
-						</q-row-container>
-					</section>
+				<section v-show="controls.tabGroup.selectedTab === 'secondTab'">
+					<q-row-container is-large>
+						<q-control-wrapper class="row-line-group">
+							<q-table
+								v-bind="controls.secondTable"
+								v-on="controls.secondTable.handlers">
+								<template #header>
+									<q-table-config
+										:table-ctrl="controls.secondTable"
+										v-on="controls.secondTable.handlers" />
+								</template>
+							</q-table>
+						</q-control-wrapper>
+					</q-row-container>
 
-					<section v-show="controls.tabGroup.selectedTab === 'secondTab'">
-						<q-row-container is-large>
-							<q-control-wrapper class="row-line-group">
-								<q-table
-									v-bind="controls.secondTable"
-									v-on="controls.secondTable.handlers" />
+					<q-row-container is-large>
+						<q-control-wrapper class="row-line-group">
+							<q-button
+								:label="Resources.APLICAR33981"
+								:title="Resources.APLICAR33981"
+								@click="applyChanges">
+								<q-icon icon="bring-forward" />
+							</q-button>
+						</q-control-wrapper>
+					</q-row-container>
 
-								<q-table-extra-extension
-									:list-ctrl="controls.secondTable"
-									v-on="controls.secondTable.handlers" />
-							</q-control-wrapper>
-						</q-row-container>
-
-						<q-row-container is-large>
-							<q-control-wrapper class="row-line-group">
-								<q-button
-									:label="Resources.APLICAR33981"
-									:title="Resources.APLICAR33981"
-									@click="applyChanges">
-									<q-icon icon="bring-forward" />
-								</q-button>
-							</q-control-wrapper>
-						</q-row-container>
-
-						<q-row-container is-large>
-							<q-control-wrapper class="row-line-group">
-								<q-table
-									:rows="selectedItems"
-									:columns="mainTable.columns"
-									:config="controls.thirdTable.config"
-									:total-rows="controls.thirdTable.totalRows"
-									:has-more-pages="controls.thirdTable.hasMorePages"
-									readonly
-									v-on="controls.thirdTable.handlers" />
-							</q-control-wrapper>
-						</q-row-container>
-					</section>
-				</template>
+					<q-row-container is-large>
+						<q-control-wrapper class="row-line-group">
+							<q-table
+								:rows="selectedItems"
+								:columns="mainTable.columns"
+								:config="controls.thirdTable.config"
+								:total-rows="controls.thirdTable.totalRows"
+								:has-more-pages="controls.thirdTable.hasMorePages"
+								readonly
+								v-on="controls.thirdTable.handlers" />
+						</q-control-wrapper>
+					</q-row-container>
+				</section>
 			</q-tab-container>
 		</q-control-wrapper>
 	</q-row-container>
@@ -205,7 +207,6 @@
 							searchBarConfig: {
 								visibility: true
 							},
-							filtersVisible: true,
 							allowColumnFilters: true,
 							allowColumnSort: true,
 							crudActions: [
@@ -279,9 +280,7 @@
 									id: 'insert',
 									name: 'insert',
 									title: computed(() => this.Resources.INSERIR43365),
-									icon: {
-										icon: 'add'
-									},
+									icon: { icon: 'add' },
 									isInReadOnly: true,
 									params: {
 										action: vm.openFormAction,
@@ -377,7 +376,6 @@
 							searchBarConfig: {
 								visibility: true
 							},
-							filtersVisible: true,
 							allowColumnFilters: true,
 							allowColumnSort: true,
 							crudActions: [
@@ -451,9 +449,7 @@
 									id: 'insert',
 									name: 'insert',
 									title: computed(() => this.Resources.INSERIR43365),
-									icon: {
-										icon: 'add'
-									},
+									icon: { icon: 'add' },
 									isInReadOnly: true,
 									params: {
 										action: vm.openFormAction,

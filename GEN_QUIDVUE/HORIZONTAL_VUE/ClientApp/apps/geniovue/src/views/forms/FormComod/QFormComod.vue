@@ -9,12 +9,13 @@
 			<div
 				v-if="showFormHeader"
 				class="c-action-bar">
-				<h1
+				<component
 					v-if="formControl.uiComponents.header && formInfo.designation"
+					:is="topHeadingTag"
 					:id="formTitleId"
 					class="form-header">
 					{{ formInfo.designation }}
-				</h1>
+				</component>
 
 				<div class="c-action-bar__menu">
 					<template
@@ -40,13 +41,10 @@
 									@click="btn.action">
 									<template v-if="btn.icon">
 										<q-badge-indicator
-											v-if="btn.badge && btn.badge.isVisible"
-											:color="btn.badge.color">
+											:enabled="btn.badge?.isVisible ?? false"
+											:color="btn.badge?.color">
 											<q-icon v-bind="btn.icon" />
 										</q-badge-indicator>
-										<q-icon
-											v-else
-											v-bind="btn.icon" />
 									</template>
 								</q-toggle-group-item>
 							</template>
@@ -97,6 +95,7 @@
 		<q-container
 			fluid
 			data-key="COMOD"
+			:data-identifier="primaryKeyValue"
 			:data-loading="!formInitialDataLoaded || !isActiveForm">
 			<template v-if="formControl.initialized && showFormBody">
 				<q-row v-if="controls.COMOD___PESS1NAME____.isVisible">
@@ -106,7 +105,8 @@
 						<base-input-structure
 							v-if="controls.COMOD___PESS1NAME____.isVisible"
 							class="i-text"
-							v-bind="controls.COMOD___PESS1NAME____"
+							v-bind="controls.COMOD___PESS1NAME____.wrapperProps"
+							:id="getControlId(controls.COMOD___PESS1NAME____)"
 							v-on="controls.COMOD___PESS1NAME____.handlers"
 							:loading="controls.COMOD___PESS1NAME____.props.loading"
 							:reporting-mode-on="reportingModeCAV"
@@ -114,6 +114,7 @@
 							<q-lookup
 								v-if="controls.COMOD___PESS1NAME____.isVisible"
 								v-bind="controls.COMOD___PESS1NAME____.props"
+								:id="getControlId(controls.COMOD___PESS1NAME____)"
 								v-on="controls.COMOD___PESS1NAME____.handlers" />
 							<q-see-more-comod-pess1name
 								v-if="controls.COMOD___PESS1NAME____.seeMoreIsVisible"
@@ -129,7 +130,8 @@
 						<base-input-structure
 							v-if="controls.COMOD___PESS2NAME____.isVisible"
 							class="i-text"
-							v-bind="controls.COMOD___PESS2NAME____"
+							v-bind="controls.COMOD___PESS2NAME____.wrapperProps"
+							:id="getControlId(controls.COMOD___PESS2NAME____)"
 							v-on="controls.COMOD___PESS2NAME____.handlers"
 							:loading="controls.COMOD___PESS2NAME____.props.loading"
 							:reporting-mode-on="reportingModeCAV"
@@ -137,6 +139,7 @@
 							<q-lookup
 								v-if="controls.COMOD___PESS2NAME____.isVisible"
 								v-bind="controls.COMOD___PESS2NAME____.props"
+								:id="getControlId(controls.COMOD___PESS2NAME____)"
 								v-on="controls.COMOD___PESS2NAME____.handlers" />
 							<q-see-more-comod-pess2name
 								v-if="controls.COMOD___PESS2NAME____.seeMoreIsVisible"
@@ -150,7 +153,8 @@
 						<base-input-structure
 							v-if="controls.COMOD___EQUIPREGISTNR.isVisible"
 							class="i-text"
-							v-bind="controls.COMOD___EQUIPREGISTNR"
+							v-bind="controls.COMOD___EQUIPREGISTNR.wrapperProps"
+							:id="getControlId(controls.COMOD___EQUIPREGISTNR)"
 							v-on="controls.COMOD___EQUIPREGISTNR.handlers"
 							:loading="controls.COMOD___EQUIPREGISTNR.props.loading"
 							:reporting-mode-on="reportingModeCAV"
@@ -158,6 +162,7 @@
 							<q-lookup
 								v-if="controls.COMOD___EQUIPREGISTNR.isVisible"
 								v-bind="controls.COMOD___EQUIPREGISTNR.props"
+								:id="getControlId(controls.COMOD___EQUIPREGISTNR)"
 								v-on="controls.COMOD___EQUIPREGISTNR.handlers" />
 							<q-see-more-comod-equipregistnr
 								v-if="controls.COMOD___EQUIPREGISTNR.seeMoreIsVisible"
@@ -173,13 +178,15 @@
 						<base-input-structure
 							v-if="controls.COMOD___EQUIPDESIGNAT.isVisible"
 							class="i-text"
-							v-bind="controls.COMOD___EQUIPDESIGNAT"
+							v-bind="controls.COMOD___EQUIPDESIGNAT.wrapperProps"
+							:id="getControlId(controls.COMOD___EQUIPDESIGNAT)"
 							v-on="controls.COMOD___EQUIPDESIGNAT.handlers"
 							:loading="controls.COMOD___EQUIPDESIGNAT.props.loading"
 							:reporting-mode-on="reportingModeCAV"
 							:suggestion-mode-on="suggestionModeOn">
 							<q-text-field
 								v-bind="controls.COMOD___EQUIPDESIGNAT.props"
+								:id="getControlId(controls.COMOD___EQUIPDESIGNAT)"
 								@blur="onBlur(controls.COMOD___EQUIPDESIGNAT, model.EquipValDesignat.value)"
 								@change="model.EquipValDesignat.fnUpdateValueOnChange" />
 						</base-input-structure>
@@ -190,14 +197,16 @@
 						<base-input-structure
 							v-if="controls.COMOD___EQUIPFREQUENC.isVisible"
 							class="i-text"
-							v-bind="controls.COMOD___EQUIPFREQUENC"
+							v-bind="controls.COMOD___EQUIPFREQUENC.wrapperProps"
+							:id="getControlId(controls.COMOD___EQUIPFREQUENC)"
 							v-on="controls.COMOD___EQUIPFREQUENC.handlers"
 							:loading="controls.COMOD___EQUIPFREQUENC.props.loading"
 							:reporting-mode-on="reportingModeCAV"
 							:suggestion-mode-on="suggestionModeOn">
 							<q-select
 								v-if="controls.COMOD___EQUIPFREQUENC.isVisible"
-								v-bind="controls.COMOD___EQUIPFREQUENC.props" />
+								v-bind="controls.COMOD___EQUIPFREQUENC.props"
+								:id="getControlId(controls.COMOD___EQUIPFREQUENC)" />
 						</base-input-structure>
 					</q-col>
 				</q-row>
@@ -208,7 +217,8 @@
 						<base-input-structure
 							v-if="controls.COMOD___LENDILENDINNR.isVisible"
 							class="i-text"
-							v-bind="controls.COMOD___LENDILENDINNR"
+							v-bind="controls.COMOD___LENDILENDINNR.wrapperProps"
+							:id="getControlId(controls.COMOD___LENDILENDINNR)"
 							v-on="controls.COMOD___LENDILENDINNR.handlers"
 							:loading="controls.COMOD___LENDILENDINNR.props.loading"
 							:reporting-mode-on="reportingModeCAV"
@@ -216,6 +226,7 @@
 							<q-numeric-input
 								v-if="controls.COMOD___LENDILENDINNR.isVisible"
 								v-bind="controls.COMOD___LENDILENDINNR.props"
+								:id="getControlId(controls.COMOD___LENDILENDINNR)"
 								@update:model-value="model.ValLendinnr.fnUpdateValue" />
 						</base-input-structure>
 					</q-col>
@@ -225,7 +236,8 @@
 						<base-input-structure
 							v-if="controls.COMOD___LENDISTART___.isVisible"
 							class="i-text"
-							v-bind="controls.COMOD___LENDISTART___"
+							v-bind="controls.COMOD___LENDISTART___.wrapperProps"
+							:id="getControlId(controls.COMOD___LENDISTART___)"
 							v-on="controls.COMOD___LENDISTART___.handlers"
 							:loading="controls.COMOD___LENDISTART___.props.loading"
 							:reporting-mode-on="reportingModeCAV"
@@ -233,6 +245,7 @@
 							<q-date-time-picker
 								v-if="controls.COMOD___LENDISTART___.isVisible"
 								v-bind="controls.COMOD___LENDISTART___.props"
+								:id="getControlId(controls.COMOD___LENDISTART___)"
 								:model-value="model.ValStart.value"
 								@reset-icon-click="model.ValStart.fnUpdateValue(model.ValStart.originalValue ?? new Date())"
 								@update:model-value="model.ValStart.fnUpdateValue($event ?? '')" />
@@ -244,7 +257,8 @@
 						<base-input-structure
 							v-if="controls.COMOD___LENDIWARNDT__.isVisible"
 							class="i-text"
-							v-bind="controls.COMOD___LENDIWARNDT__"
+							v-bind="controls.COMOD___LENDIWARNDT__.wrapperProps"
+							:id="getControlId(controls.COMOD___LENDIWARNDT__)"
 							v-on="controls.COMOD___LENDIWARNDT__.handlers"
 							:loading="controls.COMOD___LENDIWARNDT__.props.loading"
 							:reporting-mode-on="reportingModeCAV"
@@ -252,6 +266,7 @@
 							<q-date-time-picker
 								v-if="controls.COMOD___LENDIWARNDT__.isVisible"
 								v-bind="controls.COMOD___LENDIWARNDT__.props"
+								:id="getControlId(controls.COMOD___LENDIWARNDT__)"
 								:model-value="model.ValWarndt.value"
 								@reset-icon-click="model.ValWarndt.fnUpdateValue(model.ValWarndt.originalValue ?? new Date())"
 								@update:model-value="model.ValWarndt.fnUpdateValue($event ?? '')" />
@@ -263,7 +278,8 @@
 						<base-input-structure
 							v-if="controls.COMOD___LENDIEND_____.isVisible"
 							class="i-text"
-							v-bind="controls.COMOD___LENDIEND_____"
+							v-bind="controls.COMOD___LENDIEND_____.wrapperProps"
+							:id="getControlId(controls.COMOD___LENDIEND_____)"
 							v-on="controls.COMOD___LENDIEND_____.handlers"
 							:loading="controls.COMOD___LENDIEND_____.props.loading"
 							:reporting-mode-on="reportingModeCAV"
@@ -271,6 +287,7 @@
 							<q-date-time-picker
 								v-if="controls.COMOD___LENDIEND_____.isVisible"
 								v-bind="controls.COMOD___LENDIEND_____.props"
+								:id="getControlId(controls.COMOD___LENDIEND_____)"
 								:model-value="model.ValEnd.value"
 								@reset-icon-click="model.ValEnd.fnUpdateValue(model.ValEnd.originalValue ?? new Date())"
 								@update:model-value="model.ValEnd.fnUpdateValue($event ?? '')" />
@@ -284,7 +301,8 @@
 						<base-input-structure
 							v-if="controls.COMOD___LENDIOBSERVAT.isVisible"
 							class="i-textarea"
-							v-bind="controls.COMOD___LENDIOBSERVAT"
+							v-bind="controls.COMOD___LENDIOBSERVAT.wrapperProps"
+							:id="getControlId(controls.COMOD___LENDIOBSERVAT)"
 							v-on="controls.COMOD___LENDIOBSERVAT.handlers"
 							:loading="controls.COMOD___LENDIOBSERVAT.props.loading"
 							:reporting-mode-on="reportingModeCAV"
@@ -292,6 +310,7 @@
 							<q-text-area
 								v-if="controls.COMOD___LENDIOBSERVAT.isVisible"
 								v-bind="controls.COMOD___LENDIOBSERVAT.props"
+								:id="getControlId(controls.COMOD___LENDIOBSERVAT)"
 								v-on="controls.COMOD___LENDIOBSERVAT.handlers" />
 						</base-input-structure>
 					</q-col>
@@ -300,7 +319,7 @@
 		</q-container>
 	</teleport>
 
-	<hr v-if="!isPopup && showFormFooter" />
+	<q-divider v-if="!isPopup && showFormFooter" />
 
 	<teleport
 		v-if="formModalIsReady && showFormFooter"
@@ -653,7 +672,7 @@
 						size: 'xxlarge',
 						helpControl: {
 							shortHelp: {
-								type: 'Tooltip',
+								type: 'subtext',
 								text: computed(() => this.Resources._114828953),
 							},
 							detailedHelp: {
@@ -691,7 +710,7 @@
 						size: 'xxlarge',
 						helpControl: {
 							shortHelp: {
-								type: 'Tooltip',
+								type: 'subtext',
 								text: computed(() => this.Resources.____210674),
 							},
 						},
@@ -725,7 +744,7 @@
 						size: 'medium',
 						helpControl: {
 							shortHelp: {
-								type: 'Tooltip',
+								type: 'subtext',
 								text: computed(() => this.Resources.____409508),
 							},
 						},
@@ -787,7 +806,7 @@
 						size: 'medium',
 						helpControl: {
 							shortHelp: {
-								type: 'Tooltip',
+								type: 'subtext',
 								text: computed(() => this.Resources.___1438719),
 							},
 						},
@@ -797,8 +816,8 @@
 						maxIntegers: 2,
 						maxDecimals: 0,
 						arrayName: 'FreqEmpr',
-						helpShortItem: '',
-						helpDetailedItem: '',
+						helpShortItem: 'None',
+						helpDetailedItem: 'None',
 						controlLimits: [
 						],
 					}, this),
@@ -1288,7 +1307,6 @@
 
 				this.afterControlUpdate(controlField, fieldValue)
 			},
-
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
 // USE /[MANUAL GQT FUNCTIONS_JS COMOD]/
 // eslint-disable-next-line

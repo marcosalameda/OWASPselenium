@@ -27,6 +27,7 @@ namespace CSGenio.reporting
     {
         public string MimeType;
         public string Encoding;
+        public string FileName;
         public string FileNameExtension;
         public string[] Streams;
         public Warning[] Warnings;
@@ -332,6 +333,7 @@ namespace CSGenio.reporting
         public ReportSSRS_Result Render(string exportType)
         {
             var result = new ReportSSRS_Result();
+            result.FileName = downloadFileName;
             if (!this.isServerReport)
             {
 #if NETFRAMEWORK

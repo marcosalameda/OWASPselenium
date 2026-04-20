@@ -95,6 +95,7 @@ export default class ViewModel extends FormViewModelBase
 			field: 'TIPOEQUI',
 			maxLength: 50,
 			description: computed(() => this.Resources.TYPE_OF_EQUIPMENT18080),
+			ignoreFldSubmit: true,
 		}).cloneFrom(values?.TableTpequTipoequi))
 		this.stopWatchers.push(watch(() => this.TableTpequTipoequi.value, (newValue, oldValue) => this.onUpdate('tpequ.tipoequi', this.TableTpequTipoequi, newValue, oldValue)))
 
@@ -117,6 +118,7 @@ export default class ViewModel extends FormViewModelBase
 			field: 'TIPOEQUI',
 			maxLength: 50,
 			description: computed(() => this.Resources.TYPE_OF_EQUIPMENT18080),
+			ignoreFldSubmit: true,
 		}).cloneFrom(values?.TableTpeq1Tipoequi))
 		this.stopWatchers.push(watch(() => this.TableTpeq1Tipoequi.value, (newValue, oldValue) => this.onUpdate('tpeq1.tipoequi', this.TableTpeq1Tipoequi, newValue, oldValue)))
 

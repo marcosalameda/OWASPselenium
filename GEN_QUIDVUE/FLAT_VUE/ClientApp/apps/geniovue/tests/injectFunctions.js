@@ -10,8 +10,8 @@ import listFunctions from '@/mixins/listFunctions'
  */
 export function extractFilename(fileName)
 {
-	let path = fileName.split('/');
-	let namelist = path[path.length - 1].split('.')
+	const path = fileName.split('/');
+	const namelist = path[path.length - 1].split('.')
 	return namelist[0]
 }
 
@@ -128,7 +128,7 @@ export function isTotalizerColumn(column) {
  */
 export function isRowChecked(row, rowsChecked = {})
 {
-	for (let x in rowsChecked)
+	for (const x in rowsChecked)
 		if (x.toString() === row.rowKey.toString())
 			return true
 	return false
@@ -205,14 +205,14 @@ export function getCellDataDisplay()
  */
 export function getRowCellDataTitles(table, row, columns, options, texts)
 {
-	var cellTitles = {}
+	const cellTitles = {}
 
 	if (options !== undefined)
 		options = {}
 
-	for (let col in columns)
+	for (const col in columns)
 	{
-		let column = columns[col]
+		const column = columns[col]
 
 		if (this.isDragAndDropColumn(column))
 			cellTitles[column.name] = texts.rowDragAndDropTitle
@@ -230,7 +230,7 @@ export function getRowCellDataTitles(table, row, columns, options, texts)
  */
 export function isRowSelected(row, rowsSelected)
 {
-	for (let x in rowsSelected)
+	for (const x in rowsSelected)
 		if (x.toString() === row.rowKey.toString())
 			return true
 	return false
@@ -240,18 +240,14 @@ export function isRowSelected(row, rowsSelected)
  * Toggle selecting/deselecting single row
  * @param row {Object}
  */
-export function toggleRowSelectSingle(row, linkRowsSelectedAndChecked = undefined)
+export function toggleRowSelectSingle(row)
 {
-	var val = ''
+	let val = ''
 	//If row is already selected, remove from selected rows
 	if (this.isRowSelected(row))
 		val += 'unselect-row'
 	else
 		val = ['unselect-all-rows', 'select-row']
-
-	//FOR: Linking rows selected by clicking on the row and rows checked by checkboxes
-	if (linkRowsSelectedAndChecked)
-		return [val, 'check-selected-rows']
 	return val
 }
 
@@ -259,18 +255,14 @@ export function toggleRowSelectSingle(row, linkRowsSelectedAndChecked = undefine
  * Toggle selecting/deselecting row (add to or remove from selected rows array)
  * @param row {Object}
  */
-export function toggleRowSelectMultiple(row, linkRowsSelectedAndChecked = undefined)
+export function toggleRowSelectMultiple(row)
 {
 	//If row is already selected, remove from selected rows
-	var val = ''
+	let val = ''
 	if (this.isRowSelected(row))
 		val += 'unselect-row'
 	else
 		val +='select-row'
-
-	//FOR: Linking rows selected by clicking on the row and rows checked by checkboxes
-	if (linkRowsSelectedAndChecked)
-		return [val, 'check-selected-rows']
 	return val
 }
 
@@ -313,15 +305,6 @@ export function executeRowClickAction(row, rowClickActionInternal = undefined, r
 	return { rowKey: row.rowKey }
 }
 
-/**
- * Full column name
- * @param {object} column
- */
-export function columnFullName(column)
-{
-	return listFunctions.columnFullName(column)
-}
-
 export default {
 	extractFilename,
 	getValueFromRow,
@@ -346,6 +329,5 @@ export default {
 	toggleRowSelectSingle,
 	toggleRowSelectMultiple,
 	rowWithoutChildren,
-	executeRowClickAction,
-	columnFullName
+	executeRowClickAction
 }

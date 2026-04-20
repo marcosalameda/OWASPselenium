@@ -95,6 +95,7 @@ export default class ViewModel extends FormViewModelBase
 			field: 'DESIGNAT',
 			maxLength: 85,
 			description: computed(() => this.Resources.DESIGNATION35876),
+			ignoreFldSubmit: true,
 		}).cloneFrom(values?.TableCmpnyDesignat))
 		this.stopWatchers.push(watch(() => this.TableCmpnyDesignat.value, (newValue, oldValue) => this.onUpdate('cmpny.designat', this.TableCmpnyDesignat, newValue, oldValue)))
 
@@ -106,6 +107,7 @@ export default class ViewModel extends FormViewModelBase
 			field: 'DESIGNAT',
 			maxLength: 85,
 			description: computed(() => this.Resources.DESIGNATION35876),
+			ignoreFldSubmit: true,
 		}).cloneFrom(values?.TableStakeDesignat))
 		this.stopWatchers.push(watch(() => this.TableStakeDesignat.value, (newValue, oldValue) => this.onUpdate('stake.designat', this.TableStakeDesignat, newValue, oldValue)))
 

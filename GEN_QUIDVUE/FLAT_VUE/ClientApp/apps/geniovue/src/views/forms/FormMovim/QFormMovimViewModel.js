@@ -92,6 +92,7 @@ export default class ViewModel extends FormViewModelBase
 			field: 'REGISTNR',
 			maxLength: 6,
 			description: computed(() => this.Resources.NO__REGISTER04207),
+			ignoreFldSubmit: true,
 		}).cloneFrom(values?.TableEquipRegistnr))
 		this.stopWatchers.push(watch(() => this.TableEquipRegistnr.value, (newValue, oldValue) => this.onUpdate('equip.registnr', this.TableEquipRegistnr, newValue, oldValue)))
 
@@ -103,6 +104,7 @@ export default class ViewModel extends FormViewModelBase
 			field: 'ROOMNR',
 			maxLength: 10,
 			description: computed(() => this.Resources.N_R__ROOM43805),
+			ignoreFldSubmit: true,
 		}).cloneFrom(values?.TableRoomsRoomnr))
 		this.stopWatchers.push(watch(() => this.TableRoomsRoomnr.value, (newValue, oldValue) => this.onUpdate('rooms.roomnr', this.TableRoomsRoomnr, newValue, oldValue)))
 

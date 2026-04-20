@@ -10,15 +10,15 @@ public class PworgForm : Form
 	/// <summary>
 	/// Name
 	/// </summary>
-	public LookupControl PswNome => new LookupControl(driver, ContainerLocator, "container-PWORG___PSW__NOME____");
-	public SeeMorePage PswNomeSeeMorePage => new SeeMorePage(driver, "PWORG", "PWORG___PSW__NOME____");
+	public LookupControl PswNome => new LookupControl(driver, ContainerLocator, "container-PWORG___PSW__NOME____" + IdSuffix);
+	public SeeMorePage PswNomeSeeMorePage => new SeeMorePage(driver, "PWORG", "PWORG___PSW__NOME____" + IdSuffix);
 
 	/// <summary>
 	/// Organization
 	/// </summary>
-	public LookupControl OrganOrganiza => new LookupControl(driver, ContainerLocator, "container-PWORG___ORGANORGANIZA");
-	public SeeMorePage OrganOrganizaSeeMorePage => new SeeMorePage(driver, "PWORG", "PWORG___ORGANORGANIZA");
+	public LookupControl OrganOrganiza => new LookupControl(driver, ContainerLocator, "container-PWORG___ORGANORGANIZA" + IdSuffix);
+	public SeeMorePage OrganOrganizaSeeMorePage => new SeeMorePage(driver, "PWORG", "PWORG___ORGANORGANIZA" + IdSuffix);
 
-	public PworgForm(IWebDriver driver, FORM_MODE mode, By? containerLocator = null)
-		: base(driver, mode, "PWORG", containerLocator: containerLocator) { }
+	public PworgForm(IWebDriver driver, FORM_MODE mode, By? containerLocator = null, bool usePkInId = false)
+		: base(driver, mode, "PWORG", containerLocator: containerLocator, usePkInId: usePkInId) { }
 }

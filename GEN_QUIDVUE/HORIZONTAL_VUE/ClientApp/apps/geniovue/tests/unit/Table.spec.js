@@ -238,7 +238,7 @@ describe('QTable.vue', () => {
 
 		// Get index of column with scroll
 		const columnIdx = columnsScroll.findIndex(obj => obj.scrollData !== undefined)
-		var domColumnIdx = columnIdx
+		let domColumnIdx = columnIdx
 		// Account for extra column if table has checklist
 		if (tableTest.config.rowsCheckable !== undefined && tableTest.config.rowsCheckable !== false)
 			domColumnIdx++
@@ -249,7 +249,7 @@ describe('QTable.vue', () => {
 		// Get rows
 		const rows = await wrapper.getAllByTestId('table-row')
 
-		var cells = []
+		let cells = []
 		cells = await within(rows[rowIdx]).queryAllByRole('cell')
 		expect(cells[domColumnIdx + 1]).toHaveTextContent('thing (...)')
 	})

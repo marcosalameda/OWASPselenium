@@ -88,16 +88,14 @@ export function ReadProviderConfig(type, config, ProviderTypeList) {
         return tempConfig;
 
     let provider = ProviderTypeList.find(x => x.TypeFullName == type);
-    if (!provider)
-        return tempConfig;
+	if (!provider || !provider?.Options?.length) 
+		return tempConfig;	
 
-    //create the temporary value array that the UI will need to supply editors for
-    tempConfig = provider.Options.map(o => ({
-		PValue: config[o.PropertyName],
-        ...o
-    }));
-
-    return tempConfig;
+	//create the temporary value array that the UI will need to supply editors for
+	return provider.Options.map(option => ({
+		...option,
+		PValue: config?.[option.PropertyName] ?? ''
+	}));
 }
 
 export function WriteProviderConfig(tempConfig, type, ProviderTypeList) {

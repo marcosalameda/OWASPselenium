@@ -96,6 +96,7 @@ export default class ViewModel extends FormViewModelBase
 			maxDigits: 10,
 			decimalDigits: 0,
 			description: computed(() => this.Resources.RECEIPT_NUMBER31380),
+			ignoreFldSubmit: true,
 		}).cloneFrom(values?.TableReceiNumber))
 		this.stopWatchers.push(watch(() => this.TableReceiNumber.value, (newValue, oldValue) => this.onUpdate('recei.number', this.TableReceiNumber, newValue, oldValue)))
 
@@ -129,6 +130,7 @@ export default class ViewModel extends FormViewModelBase
 			field: 'PRODUCT',
 			maxLength: 85,
 			description: computed(() => this.Resources.PRODUCT12880),
+			ignoreFldSubmit: true,
 		}).cloneFrom(values?.TableProduProduct))
 		this.stopWatchers.push(watch(() => this.TableProduProduct.value, (newValue, oldValue) => this.onUpdate('produ.product', this.TableProduProduct, newValue, oldValue)))
 

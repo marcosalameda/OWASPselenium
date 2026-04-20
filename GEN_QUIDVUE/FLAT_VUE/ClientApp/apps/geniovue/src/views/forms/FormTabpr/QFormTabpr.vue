@@ -9,12 +9,13 @@
 			<div
 				v-if="showFormHeader"
 				class="c-action-bar">
-				<h1
+				<component
 					v-if="formControl.uiComponents.header && formInfo.designation"
+					:is="topHeadingTag"
 					:id="formTitleId"
 					class="form-header">
 					{{ formInfo.designation }}
-				</h1>
+				</component>
 
 				<div class="c-action-bar__menu">
 					<template
@@ -40,13 +41,10 @@
 									@click="btn.action">
 									<template v-if="btn.icon">
 										<q-badge-indicator
-											v-if="btn.badge && btn.badge.isVisible"
-											:color="btn.badge.color">
+											:enabled="btn.badge?.isVisible ?? false"
+											:color="btn.badge?.color">
 											<q-icon v-bind="btn.icon" />
 										</q-badge-indicator>
-										<q-icon
-											v-else
-											v-bind="btn.icon" />
 									</template>
 								</q-toggle-group-item>
 							</template>
@@ -97,15 +95,16 @@
 		<q-container
 			fluid
 			data-key="TABPR"
+			:data-identifier="primaryKeyValue"
 			:data-loading="!formInitialDataLoaded || !isActiveForm">
 			<template v-if="formControl.initialized && showFormBody">
 				<q-row v-if="controls.TABPR___PSEUDNOVOGR01.isVisible">
 					<q-col v-if="controls.TABPR___PSEUDNOVOGR01.isVisible">
 						<q-group-box-container
 							v-if="controls.TABPR___PSEUDNOVOGR01.isVisible"
-							id="TABPR___PSEUDNOVOGR01"
 							v-bind="controls.TABPR___PSEUDNOVOGR01"
-							:is-visible="controls.TABPR___PSEUDNOVOGR01.isVisible">
+							:id="getControlId(controls.TABPR___PSEUDNOVOGR01)"
+							:no-border="controls.TABPR___PSEUDNOVOGR01.borderless">
 							<!-- Start TABPR___PSEUDNOVOGR01 -->
 							<q-row v-if="controls.TABPR___TPEQUTIPOEQUI.isVisible">
 								<q-col
@@ -114,7 +113,8 @@
 									<base-input-structure
 										v-if="controls.TABPR___TPEQUTIPOEQUI.isVisible"
 										class="i-text"
-										v-bind="controls.TABPR___TPEQUTIPOEQUI"
+										v-bind="controls.TABPR___TPEQUTIPOEQUI.wrapperProps"
+										:id="getControlId(controls.TABPR___TPEQUTIPOEQUI)"
 										v-on="controls.TABPR___TPEQUTIPOEQUI.handlers"
 										:loading="controls.TABPR___TPEQUTIPOEQUI.props.loading"
 										:reporting-mode-on="reportingModeCAV"
@@ -122,6 +122,7 @@
 										<q-lookup
 											v-if="controls.TABPR___TPEQUTIPOEQUI.isVisible"
 											v-bind="controls.TABPR___TPEQUTIPOEQUI.props"
+											:id="getControlId(controls.TABPR___TPEQUTIPOEQUI)"
 											v-on="controls.TABPR___TPEQUTIPOEQUI.handlers" />
 										<q-see-more-tabpr-tpequtipoequi
 											v-if="controls.TABPR___TPEQUTIPOEQUI.seeMoreIsVisible"
@@ -137,7 +138,8 @@
 									<base-input-structure
 										v-if="controls.TABPR___TABPRSINCE___.isVisible"
 										class="i-text"
-										v-bind="controls.TABPR___TABPRSINCE___"
+										v-bind="controls.TABPR___TABPRSINCE___.wrapperProps"
+										:id="getControlId(controls.TABPR___TABPRSINCE___)"
 										v-on="controls.TABPR___TABPRSINCE___.handlers"
 										:loading="controls.TABPR___TABPRSINCE___.props.loading"
 										:reporting-mode-on="reportingModeCAV"
@@ -145,6 +147,7 @@
 										<q-date-time-picker
 											v-if="controls.TABPR___TABPRSINCE___.isVisible"
 											v-bind="controls.TABPR___TABPRSINCE___.props"
+											:id="getControlId(controls.TABPR___TABPRSINCE___)"
 											:model-value="model.ValSince.value"
 											@reset-icon-click="model.ValSince.fnUpdateValue(model.ValSince.originalValue ?? new Date())"
 											@update:model-value="model.ValSince.fnUpdateValue($event ?? '')" />
@@ -156,7 +159,8 @@
 									<base-input-structure
 										v-if="controls.TABPR___TABPRPRECOHOR.isVisible"
 										class="i-text"
-										v-bind="controls.TABPR___TABPRPRECOHOR"
+										v-bind="controls.TABPR___TABPRPRECOHOR.wrapperProps"
+										:id="getControlId(controls.TABPR___TABPRPRECOHOR)"
 										v-on="controls.TABPR___TABPRPRECOHOR.handlers"
 										:loading="controls.TABPR___TABPRPRECOHOR.props.loading"
 										:reporting-mode-on="reportingModeCAV"
@@ -164,6 +168,7 @@
 										<q-numeric-input
 											v-if="controls.TABPR___TABPRPRECOHOR.isVisible"
 											v-bind="controls.TABPR___TABPRPRECOHOR.props"
+											:id="getControlId(controls.TABPR___TABPRPRECOHOR)"
 											@update:model-value="model.ValPrecohor.fnUpdateValue" />
 									</base-input-structure>
 								</q-col>
@@ -176,7 +181,7 @@
 		</q-container>
 	</teleport>
 
-	<hr v-if="!isPopup && showFormFooter" />
+	<q-divider v-if="!isPopup && showFormFooter" />
 
 	<teleport
 		v-if="formModalIsReady && showFormFooter"
@@ -526,6 +531,7 @@
 						label: computed(() => this.Resources.TABLE_PRICE06259),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
+						borderless: false,
 						isCollapsible: false,
 						anchored: false,
 						directChildren: ['TABPR___TPEQUTIPOEQUI', 'TABPR___TABPRSINCE___', 'TABPR___TABPRPRECOHOR'],
@@ -977,7 +983,6 @@
 
 				this.afterControlUpdate(controlField, fieldValue)
 			},
-
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
 // USE /[MANUAL GQT FUNCTIONS_JS TABPR]/
 // eslint-disable-next-line

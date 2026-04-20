@@ -9,12 +9,13 @@
 			<div
 				v-if="showFormHeader"
 				class="c-action-bar">
-				<h1
+				<component
 					v-if="formControl.uiComponents.header && formInfo.designation"
+					:is="topHeadingTag"
 					:id="formTitleId"
 					class="form-header">
 					{{ formInfo.designation }}
-				</h1>
+				</component>
 
 				<div class="c-action-bar__menu">
 					<template
@@ -40,13 +41,10 @@
 									@click="btn.action">
 									<template v-if="btn.icon">
 										<q-badge-indicator
-											v-if="btn.badge && btn.badge.isVisible"
-											:color="btn.badge.color">
+											:enabled="btn.badge?.isVisible ?? false"
+											:color="btn.badge?.color">
 											<q-icon v-bind="btn.icon" />
 										</q-badge-indicator>
-										<q-icon
-											v-else
-											v-bind="btn.icon" />
 									</template>
 								</q-toggle-group-item>
 							</template>
@@ -97,15 +95,16 @@
 		<q-container
 			fluid
 			data-key="TPCON"
+			:data-identifier="primaryKeyValue"
 			:data-loading="!formInitialDataLoaded || !isActiveForm">
 			<template v-if="formControl.initialized && showFormBody">
 				<q-row v-if="controls.TPCON___PSEUDNOVOGR01.isVisible">
 					<q-col v-if="controls.TPCON___PSEUDNOVOGR01.isVisible">
 						<q-group-box-container
 							v-if="controls.TPCON___PSEUDNOVOGR01.isVisible"
-							id="TPCON___PSEUDNOVOGR01"
 							v-bind="controls.TPCON___PSEUDNOVOGR01"
-							:is-visible="controls.TPCON___PSEUDNOVOGR01.isVisible">
+							:id="getControlId(controls.TPCON___PSEUDNOVOGR01)"
+							:no-border="controls.TPCON___PSEUDNOVOGR01.borderless">
 							<!-- Start TPCON___PSEUDNOVOGR01 -->
 							<q-row v-if="controls.TPCON___GENREGENDER__.isVisible">
 								<q-col
@@ -114,7 +113,8 @@
 									<base-input-structure
 										v-if="controls.TPCON___GENREGENDER__.isVisible"
 										class="i-text"
-										v-bind="controls.TPCON___GENREGENDER__"
+										v-bind="controls.TPCON___GENREGENDER__.wrapperProps"
+										:id="getControlId(controls.TPCON___GENREGENDER__)"
 										v-on="controls.TPCON___GENREGENDER__.handlers"
 										:loading="controls.TPCON___GENREGENDER__.props.loading"
 										:reporting-mode-on="reportingModeCAV"
@@ -122,6 +122,7 @@
 										<q-lookup
 											v-if="controls.TPCON___GENREGENDER__.isVisible"
 											v-bind="controls.TPCON___GENREGENDER__.props"
+											:id="getControlId(controls.TPCON___GENREGENDER__)"
 											v-on="controls.TPCON___GENREGENDER__.handlers" />
 										<q-see-more-tpcon-genregender
 											v-if="controls.TPCON___GENREGENDER__.seeMoreIsVisible"
@@ -137,13 +138,15 @@
 									<base-input-structure
 										v-if="controls.TPCON___TPCONTIPOCONT.isVisible"
 										class="i-text"
-										v-bind="controls.TPCON___TPCONTIPOCONT"
+										v-bind="controls.TPCON___TPCONTIPOCONT.wrapperProps"
+										:id="getControlId(controls.TPCON___TPCONTIPOCONT)"
 										v-on="controls.TPCON___TPCONTIPOCONT.handlers"
 										:loading="controls.TPCON___TPCONTIPOCONT.props.loading"
 										:reporting-mode-on="reportingModeCAV"
 										:suggestion-mode-on="suggestionModeOn">
 										<q-text-field
 											v-bind="controls.TPCON___TPCONTIPOCONT.props"
+											:id="getControlId(controls.TPCON___TPCONTIPOCONT)"
 											@blur="onBlur(controls.TPCON___TPCONTIPOCONT, model.ValTipocont.value)"
 											@change="model.ValTipocont.fnUpdateValueOnChange" />
 									</base-input-structure>
@@ -157,7 +160,7 @@
 		</q-container>
 	</teleport>
 
-	<hr v-if="!isPopup && showFormFooter" />
+	<q-divider v-if="!isPopup && showFormFooter" />
 
 	<teleport
 		v-if="formModalIsReady && showFormFooter"
@@ -507,6 +510,7 @@
 						label: computed(() => this.Resources.CONTACT_TYPE40756),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
+						borderless: false,
 						isCollapsible: false,
 						anchored: false,
 						directChildren: ['TPCON___GENREGENDER__', 'TPCON___TPCONTIPOCONT'],
@@ -941,7 +945,6 @@
 
 				this.afterControlUpdate(controlField, fieldValue)
 			},
-
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
 // USE /[MANUAL GQT FUNCTIONS_JS TPCON]/
 // eslint-disable-next-line

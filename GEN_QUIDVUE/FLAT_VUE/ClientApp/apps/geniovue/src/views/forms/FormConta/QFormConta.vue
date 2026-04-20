@@ -9,12 +9,13 @@
 			<div
 				v-if="showFormHeader"
 				class="c-action-bar">
-				<h1
+				<component
 					v-if="formControl.uiComponents.header && formInfo.designation"
+					:is="topHeadingTag"
 					:id="formTitleId"
 					class="form-header">
 					{{ formInfo.designation }}
-				</h1>
+				</component>
 
 				<div class="c-action-bar__menu">
 					<template
@@ -40,13 +41,10 @@
 									@click="btn.action">
 									<template v-if="btn.icon">
 										<q-badge-indicator
-											v-if="btn.badge && btn.badge.isVisible"
-											:color="btn.badge.color">
+											:enabled="btn.badge?.isVisible ?? false"
+											:color="btn.badge?.color">
 											<q-icon v-bind="btn.icon" />
 										</q-badge-indicator>
-										<q-icon
-											v-else
-											v-bind="btn.icon" />
 									</template>
 								</q-toggle-group-item>
 							</template>
@@ -97,6 +95,7 @@
 		<q-container
 			fluid
 			data-key="CONTA"
+			:data-identifier="primaryKeyValue"
 			:data-loading="!formInitialDataLoaded || !isActiveForm">
 			<template v-if="formControl.initialized && showFormBody">
 				<q-row v-if="controls.CONTA___PESSONAME____.isVisible || controls.CONTA___GENREGENDER__.isVisible || controls.CONTA___TPCONTIPOCONT.isVisible">
@@ -106,7 +105,8 @@
 						<base-input-structure
 							v-if="controls.CONTA___PESSONAME____.isVisible"
 							class="i-text"
-							v-bind="controls.CONTA___PESSONAME____"
+							v-bind="controls.CONTA___PESSONAME____.wrapperProps"
+							:id="getControlId(controls.CONTA___PESSONAME____)"
 							v-on="controls.CONTA___PESSONAME____.handlers"
 							:loading="controls.CONTA___PESSONAME____.props.loading"
 							:reporting-mode-on="reportingModeCAV"
@@ -114,6 +114,7 @@
 							<q-lookup
 								v-if="controls.CONTA___PESSONAME____.isVisible"
 								v-bind="controls.CONTA___PESSONAME____.props"
+								:id="getControlId(controls.CONTA___PESSONAME____)"
 								v-on="controls.CONTA___PESSONAME____.handlers" />
 							<q-see-more-conta-pessoname
 								v-if="controls.CONTA___PESSONAME____.seeMoreIsVisible"
@@ -127,7 +128,8 @@
 						<base-input-structure
 							v-if="controls.CONTA___GENREGENDER__.isVisible"
 							class="i-text"
-							v-bind="controls.CONTA___GENREGENDER__"
+							v-bind="controls.CONTA___GENREGENDER__.wrapperProps"
+							:id="getControlId(controls.CONTA___GENREGENDER__)"
 							v-on="controls.CONTA___GENREGENDER__.handlers"
 							:loading="controls.CONTA___GENREGENDER__.props.loading"
 							:reporting-mode-on="reportingModeCAV"
@@ -135,6 +137,7 @@
 							<q-lookup
 								v-if="controls.CONTA___GENREGENDER__.isVisible"
 								v-bind="controls.CONTA___GENREGENDER__.props"
+								:id="getControlId(controls.CONTA___GENREGENDER__)"
 								v-on="controls.CONTA___GENREGENDER__.handlers" />
 							<q-see-more-conta-genregender
 								v-if="controls.CONTA___GENREGENDER__.seeMoreIsVisible"
@@ -148,7 +151,8 @@
 						<base-input-structure
 							v-if="controls.CONTA___TPCONTIPOCONT.isVisible"
 							class="i-text"
-							v-bind="controls.CONTA___TPCONTIPOCONT"
+							v-bind="controls.CONTA___TPCONTIPOCONT.wrapperProps"
+							:id="getControlId(controls.CONTA___TPCONTIPOCONT)"
 							v-on="controls.CONTA___TPCONTIPOCONT.handlers"
 							:loading="controls.CONTA___TPCONTIPOCONT.props.loading"
 							:reporting-mode-on="reportingModeCAV"
@@ -156,6 +160,7 @@
 							<q-lookup
 								v-if="controls.CONTA___TPCONTIPOCONT.isVisible"
 								v-bind="controls.CONTA___TPCONTIPOCONT.props"
+								:id="getControlId(controls.CONTA___TPCONTIPOCONT)"
 								v-on="controls.CONTA___TPCONTIPOCONT.handlers" />
 							<q-see-more-conta-tpcontipocont
 								v-if="controls.CONTA___TPCONTIPOCONT.seeMoreIsVisible"
@@ -171,13 +176,15 @@
 						<base-input-structure
 							v-if="controls.CONTA___CONTACONTACTO.isVisible"
 							class="i-text"
-							v-bind="controls.CONTA___CONTACONTACTO"
+							v-bind="controls.CONTA___CONTACONTACTO.wrapperProps"
+							:id="getControlId(controls.CONTA___CONTACONTACTO)"
 							v-on="controls.CONTA___CONTACONTACTO.handlers"
 							:loading="controls.CONTA___CONTACONTACTO.props.loading"
 							:reporting-mode-on="reportingModeCAV"
 							:suggestion-mode-on="suggestionModeOn">
 							<q-text-field
 								v-bind="controls.CONTA___CONTACONTACTO.props"
+								:id="getControlId(controls.CONTA___CONTACONTACTO)"
 								@blur="onBlur(controls.CONTA___CONTACONTACTO, model.ValContacto.value)"
 								@change="model.ValContacto.fnUpdateValueOnChange" />
 						</base-input-structure>
@@ -187,7 +194,7 @@
 		</q-container>
 	</teleport>
 
-	<hr v-if="!isPopup && showFormFooter" />
+	<q-divider v-if="!isPopup && showFormFooter" />
 
 	<teleport
 		v-if="formModalIsReady && showFormFooter"
@@ -1033,7 +1040,6 @@
 
 				this.afterControlUpdate(controlField, fieldValue)
 			},
-
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
 // USE /[MANUAL GQT FUNCTIONS_JS CONTA]/
 // eslint-disable-next-line

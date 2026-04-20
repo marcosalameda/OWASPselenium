@@ -17,6 +17,7 @@
 				variant="text"
 				class="c-alert__dismissible"
 				size="small"
+				:aria-label="texts.close"
 				@click="dismissMessage">
 				<q-icon icon="close" />
 			</q-button>
@@ -41,7 +42,10 @@
 </template>
 
 <script>
+	import { computed } from 'vue'
 	import isEmpty from 'lodash-es/isEmpty'
+
+	import hardcodedTexts from '@/hardcodedTexts.js'
 
 	import { messageTypes } from '@quidgest/clientapp/constants/enums'
 
@@ -128,7 +132,10 @@
 		data()
 		{
 			return {
-				timeoutId: null
+				timeoutId: null,
+				texts: {
+					close: computed(() => this.Resources[hardcodedTexts.close])
+				}
 			}
 		},
 

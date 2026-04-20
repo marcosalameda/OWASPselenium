@@ -47,7 +47,7 @@ namespace CSGenio.business
 			Qfield = new Field(info.Alias, "codinpgr", FieldType.KEY_GUID);
 			Qfield.FieldDescription = "";
 			Qfield.FieldSize =  36;
-			Qfield.CavDesignation = "";
+			Qfield.VisivelCav = CavVisibilityType.Nunca;
 
 			Qfield.Dupmsg = "";
 			info.RegisterFieldDB(Qfield);
@@ -71,6 +71,10 @@ namespace CSGenio.business
 			Qfield.CavDesignation = "VAT_NUMBER24236";
 
 			Qfield.Dupmsg = "";
+			Qfield.FillingRule = (rule) =>
+			{
+				return Validation.validateNC(rule);
+			};
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -

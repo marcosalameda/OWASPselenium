@@ -1,6 +1,5 @@
-﻿using JsonIgnoreAttribute = System.Text.Json.Serialization.JsonIgnoreAttribute;
-using JsonPropertyName = System.Text.Json.Serialization.JsonPropertyNameAttribute;
-using SelectList = Microsoft.AspNetCore.Mvc.Rendering.SelectList;
+﻿using SelectList = Microsoft.AspNetCore.Mvc.Rendering.SelectList;
+using System.Text.Json.Serialization;
 
 using CSGenio.business;
 using CSGenio.framework;
@@ -64,7 +63,7 @@ namespace GenioMVC.ViewModels
 
 		public void SetTotalizers(List<Totalizer> totalizers)
 		{
-			Totalizers = new List<Totalizer>(totalizers);
+			Totalizers = [.. totalizers];
 		}
 
 		public void SetSort(string column, string direction)
@@ -80,13 +79,14 @@ namespace GenioMVC.ViewModels
 
 	public class TableDBEdit<A> : TablePartial<A>
 	{
+		[JsonPropertyName("list")]
 		public SelectList List { get; set; }
 
+		[JsonPropertyName("selected")]
 		public string Selected { get; set; }
 
+		[JsonPropertyName("value")]
 		public object Value { get; set; }
-
-		public bool IsLazyLoad { get; set; }
 
 		public TableDBEdit() : base()
 		{

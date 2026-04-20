@@ -3,22 +3,23 @@
 		v-if="menuModalIsReady"
 		:to="`#${uiContainersId.body}`"
 		:disabled="!menuInfo.isPopup">
-		<form
+		<div
 			class="form-horizontal"
 			@submit.prevent>
 			<q-row-container>
 				<q-table
 					v-bind="controls.menu"
 					v-on="controls.menu.handlers">
+					<template #header>
+						<q-table-config
+							:table-ctrl="controls.menu"
+							v-on="controls.menu.handlers">
+						</q-table-config>
+					</template>
 					<!-- USE /[MANUAL GQT CUSTOM_TABLE PTN_Menu_3131]/ -->
 				</q-table>
-
-				<q-table-extra-extension
-					:list-ctrl="controls.menu"
-					:filter-operators="controls.menu.filterOperators"
-					v-on="controls.menu.handlers" />
 			</q-row-container>
-		</form>
+		</div>
 	</teleport>
 
 	<teleport
@@ -269,7 +270,6 @@
 								scrollData: 1,
 								export: 1,
 								array: computed(() => new qProjArrays.QArrayTypet(vm.$getResource).elements),
-								arrayType: qProjArrays.QArrayTypet.type,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.ArrayColumn({
 								order: 13,
@@ -282,7 +282,6 @@
 								decimalPlaces: 0,
 								export: 1,
 								array: computed(() => new qProjArrays.QArrayTypen(vm.$getResource).elements),
-								arrayType: qProjArrays.QArrayTypen.type,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 						],
 						config: {
@@ -291,17 +290,15 @@
 							pkColumn: 'ValCodtblb',
 							tableAlias: 'TBLB',
 							tableNamePlural: computed(() => this.Resources.TABLES__BASIC_TYPES_29665),
-							viewManagement: 'S',
+							viewManagement: 'U',
 							showLimitsInfo: true,
 							tableTitle: computed(() => this.Resources.TABLES__BASIC_TYPES_29665),
-							perPageOptions: [20,25,30],
-							showAlternatePagination: true,
+							showRecordCount: true,
 							permissions: {
 							},
 							searchBarConfig: {
 								visibility: true
 							},
-							filtersVisible: true,
 							allowColumnFilters: true,
 							allowColumnSort: true,
 							crudActions: [
@@ -375,9 +372,7 @@
 									id: 'insert',
 									name: 'insert',
 									title: computed(() => this.Resources.INSERIR43365),
-									icon: {
-										icon: 'add'
-									},
+									icon: { icon: 'add' },
 									isInReadOnly: true,
 									params: {
 										action: vm.openFormAction,
@@ -428,7 +423,7 @@
 								sortOrder: 'asc'
 							}
 						},
-						globalEvents: ['changed-TBLB', 'changed-GRPB'],
+						globalEvents: ['changed-GRPB', 'changed-TBLB'],
 						uuid: '3fd77cd2-766d-43a4-b089-f0a2b4bfc9d9',
 						allSelectedRows: 'false',
 						headerLevel: 1,

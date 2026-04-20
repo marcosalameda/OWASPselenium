@@ -9,12 +9,13 @@
 			<div
 				v-if="showFormHeader"
 				class="c-action-bar">
-				<h1
+				<component
 					v-if="formControl.uiComponents.header && formInfo.designation"
+					:is="topHeadingTag"
 					:id="formTitleId"
 					class="form-header">
 					{{ formInfo.designation }}
-				</h1>
+				</component>
 
 				<div class="c-action-bar__menu">
 					<template
@@ -40,13 +41,10 @@
 									@click="btn.action">
 									<template v-if="btn.icon">
 										<q-badge-indicator
-											v-if="btn.badge && btn.badge.isVisible"
-											:color="btn.badge.color">
+											:enabled="btn.badge?.isVisible ?? false"
+											:color="btn.badge?.color">
 											<q-icon v-bind="btn.icon" />
 										</q-badge-indicator>
-										<q-icon
-											v-else
-											v-bind="btn.icon" />
 									</template>
 								</q-toggle-group-item>
 							</template>
@@ -97,6 +95,7 @@
 		<q-container
 			fluid
 			data-key="TBLB"
+			:data-identifier="primaryKeyValue"
 			:data-loading="!formInitialDataLoaded || !isActiveForm">
 			<template v-if="formControl.initialized && showFormBody">
 				<q-row v-if="controls.TBLB____TBLB_TEXT____.isVisible">
@@ -106,13 +105,15 @@
 						<base-input-structure
 							v-if="controls.TBLB____TBLB_TEXT____.isVisible"
 							class="i-text"
-							v-bind="controls.TBLB____TBLB_TEXT____"
+							v-bind="controls.TBLB____TBLB_TEXT____.wrapperProps"
+							:id="getControlId(controls.TBLB____TBLB_TEXT____)"
 							v-on="controls.TBLB____TBLB_TEXT____.handlers"
 							:loading="controls.TBLB____TBLB_TEXT____.props.loading"
 							:reporting-mode-on="reportingModeCAV"
 							:suggestion-mode-on="suggestionModeOn">
 							<q-text-field
 								v-bind="controls.TBLB____TBLB_TEXT____.props"
+								:id="getControlId(controls.TBLB____TBLB_TEXT____)"
 								@blur="onBlur(controls.TBLB____TBLB_TEXT____, model.ValText.value)"
 								@change="model.ValText.fnUpdateValueOnChange" />
 						</base-input-structure>
@@ -125,7 +126,8 @@
 						<base-input-structure
 							v-if="controls.TBLB____TBLB_TEXTML__.isVisible"
 							class="i-textarea"
-							v-bind="controls.TBLB____TBLB_TEXTML__"
+							v-bind="controls.TBLB____TBLB_TEXTML__.wrapperProps"
+							:id="getControlId(controls.TBLB____TBLB_TEXTML__)"
 							v-on="controls.TBLB____TBLB_TEXTML__.handlers"
 							:loading="controls.TBLB____TBLB_TEXTML__.props.loading"
 							:reporting-mode-on="reportingModeCAV"
@@ -133,6 +135,7 @@
 							<q-text-area
 								v-if="controls.TBLB____TBLB_TEXTML__.isVisible"
 								v-bind="controls.TBLB____TBLB_TEXTML__.props"
+								:id="getControlId(controls.TBLB____TBLB_TEXTML__)"
 								v-on="controls.TBLB____TBLB_TEXTML__.handlers" />
 						</base-input-structure>
 					</q-col>
@@ -144,7 +147,8 @@
 						<base-input-structure
 							v-if="controls.TBLB____TBLB_NUMINT__.isVisible"
 							class="i-text"
-							v-bind="controls.TBLB____TBLB_NUMINT__"
+							v-bind="controls.TBLB____TBLB_NUMINT__.wrapperProps"
+							:id="getControlId(controls.TBLB____TBLB_NUMINT__)"
 							v-on="controls.TBLB____TBLB_NUMINT__.handlers"
 							:loading="controls.TBLB____TBLB_NUMINT__.props.loading"
 							:reporting-mode-on="reportingModeCAV"
@@ -152,6 +156,7 @@
 							<q-numeric-input
 								v-if="controls.TBLB____TBLB_NUMINT__.isVisible"
 								v-bind="controls.TBLB____TBLB_NUMINT__.props"
+								:id="getControlId(controls.TBLB____TBLB_NUMINT__)"
 								@update:model-value="model.ValNumint.fnUpdateValue" />
 						</base-input-structure>
 					</q-col>
@@ -163,7 +168,8 @@
 						<base-input-structure
 							v-if="controls.TBLB____TBLB_NUMDEC__.isVisible"
 							class="i-text"
-							v-bind="controls.TBLB____TBLB_NUMDEC__"
+							v-bind="controls.TBLB____TBLB_NUMDEC__.wrapperProps"
+							:id="getControlId(controls.TBLB____TBLB_NUMDEC__)"
 							v-on="controls.TBLB____TBLB_NUMDEC__.handlers"
 							:loading="controls.TBLB____TBLB_NUMDEC__.props.loading"
 							:reporting-mode-on="reportingModeCAV"
@@ -171,6 +177,7 @@
 							<q-numeric-input
 								v-if="controls.TBLB____TBLB_NUMDEC__.isVisible"
 								v-bind="controls.TBLB____TBLB_NUMDEC__.props"
+								:id="getControlId(controls.TBLB____TBLB_NUMDEC__)"
 								@update:model-value="model.ValNumdec.fnUpdateValue" />
 						</base-input-structure>
 					</q-col>
@@ -182,7 +189,8 @@
 						<base-input-structure
 							v-if="controls.TBLB____TBLB_CURINT__.isVisible"
 							class="i-text"
-							v-bind="controls.TBLB____TBLB_CURINT__"
+							v-bind="controls.TBLB____TBLB_CURINT__.wrapperProps"
+							:id="getControlId(controls.TBLB____TBLB_CURINT__)"
 							v-on="controls.TBLB____TBLB_CURINT__.handlers"
 							:loading="controls.TBLB____TBLB_CURINT__.props.loading"
 							:reporting-mode-on="reportingModeCAV"
@@ -190,6 +198,7 @@
 							<q-numeric-input
 								v-if="controls.TBLB____TBLB_CURINT__.isVisible"
 								v-bind="controls.TBLB____TBLB_CURINT__.props"
+								:id="getControlId(controls.TBLB____TBLB_CURINT__)"
 								@update:model-value="model.ValCurint.fnUpdateValue" />
 						</base-input-structure>
 					</q-col>
@@ -201,7 +210,8 @@
 						<base-input-structure
 							v-if="controls.TBLB____TBLB_CURDEC__.isVisible"
 							class="i-text"
-							v-bind="controls.TBLB____TBLB_CURDEC__"
+							v-bind="controls.TBLB____TBLB_CURDEC__.wrapperProps"
+							:id="getControlId(controls.TBLB____TBLB_CURDEC__)"
 							v-on="controls.TBLB____TBLB_CURDEC__.handlers"
 							:loading="controls.TBLB____TBLB_CURDEC__.props.loading"
 							:reporting-mode-on="reportingModeCAV"
@@ -209,6 +219,7 @@
 							<q-numeric-input
 								v-if="controls.TBLB____TBLB_CURDEC__.isVisible"
 								v-bind="controls.TBLB____TBLB_CURDEC__.props"
+								:id="getControlId(controls.TBLB____TBLB_CURDEC__)"
 								@update:model-value="model.ValCurdec.fnUpdateValue" />
 						</base-input-structure>
 					</q-col>
@@ -219,8 +230,9 @@
 						cols="auto">
 						<base-input-structure
 							v-if="controls.TBLB____TBLB_BOOL____.isVisible"
-							class="i-checkbox"
-							v-bind="controls.TBLB____TBLB_BOOL____"
+							class="i-text"
+							v-bind="controls.TBLB____TBLB_BOOL____.wrapperProps"
+							:id="getControlId(controls.TBLB____TBLB_BOOL____)"
 							v-on="controls.TBLB____TBLB_BOOL____.handlers"
 							:loading="controls.TBLB____TBLB_BOOL____.props.loading"
 							:reporting-mode-on="reportingModeCAV"
@@ -229,6 +241,7 @@
 								<q-checkbox
 									v-if="controls.TBLB____TBLB_BOOL____.isVisible"
 									v-bind="controls.TBLB____TBLB_BOOL____.props"
+									:id="getControlId(controls.TBLB____TBLB_BOOL____)"
 									v-on="controls.TBLB____TBLB_BOOL____.handlers" />
 							</template>
 						</base-input-structure>
@@ -241,7 +254,8 @@
 						<base-input-structure
 							v-if="controls.TBLB____TBLB_DATE____.isVisible"
 							class="i-text"
-							v-bind="controls.TBLB____TBLB_DATE____"
+							v-bind="controls.TBLB____TBLB_DATE____.wrapperProps"
+							:id="getControlId(controls.TBLB____TBLB_DATE____)"
 							v-on="controls.TBLB____TBLB_DATE____.handlers"
 							:loading="controls.TBLB____TBLB_DATE____.props.loading"
 							:reporting-mode-on="reportingModeCAV"
@@ -249,6 +263,7 @@
 							<q-date-time-picker
 								v-if="controls.TBLB____TBLB_DATE____.isVisible"
 								v-bind="controls.TBLB____TBLB_DATE____.props"
+								:id="getControlId(controls.TBLB____TBLB_DATE____)"
 								:model-value="model.ValDate.value"
 								@reset-icon-click="model.ValDate.fnUpdateValue(model.ValDate.originalValue ?? new Date())"
 								@update:model-value="model.ValDate.fnUpdateValue($event ?? '')" />
@@ -262,7 +277,8 @@
 						<base-input-structure
 							v-if="controls.TBLB____TBLB_DATETM__.isVisible"
 							class="i-text"
-							v-bind="controls.TBLB____TBLB_DATETM__"
+							v-bind="controls.TBLB____TBLB_DATETM__.wrapperProps"
+							:id="getControlId(controls.TBLB____TBLB_DATETM__)"
 							v-on="controls.TBLB____TBLB_DATETM__.handlers"
 							:loading="controls.TBLB____TBLB_DATETM__.props.loading"
 							:reporting-mode-on="reportingModeCAV"
@@ -270,6 +286,7 @@
 							<q-date-time-picker
 								v-if="controls.TBLB____TBLB_DATETM__.isVisible"
 								v-bind="controls.TBLB____TBLB_DATETM__.props"
+								:id="getControlId(controls.TBLB____TBLB_DATETM__)"
 								:model-value="model.ValDatetm.value"
 								@reset-icon-click="model.ValDatetm.fnUpdateValue(model.ValDatetm.originalValue ?? new Date())"
 								@update:model-value="model.ValDatetm.fnUpdateValue($event ?? '')" />
@@ -283,7 +300,8 @@
 						<base-input-structure
 							v-if="controls.TBLB____TBLB_DATETS__.isVisible"
 							class="i-text"
-							v-bind="controls.TBLB____TBLB_DATETS__"
+							v-bind="controls.TBLB____TBLB_DATETS__.wrapperProps"
+							:id="getControlId(controls.TBLB____TBLB_DATETS__)"
 							v-on="controls.TBLB____TBLB_DATETS__.handlers"
 							:loading="controls.TBLB____TBLB_DATETS__.props.loading"
 							:reporting-mode-on="reportingModeCAV"
@@ -291,6 +309,7 @@
 							<q-date-time-picker
 								v-if="controls.TBLB____TBLB_DATETS__.isVisible"
 								v-bind="controls.TBLB____TBLB_DATETS__.props"
+								:id="getControlId(controls.TBLB____TBLB_DATETS__)"
 								:model-value="model.ValDatets.value"
 								@reset-icon-click="model.ValDatets.fnUpdateValue(model.ValDatets.originalValue ?? new Date())"
 								@update:model-value="model.ValDatets.fnUpdateValue($event ?? '')" />
@@ -304,7 +323,8 @@
 						<base-input-structure
 							v-if="controls.TBLB____TBLB_TIMEHM__.isVisible"
 							class="i-text"
-							v-bind="controls.TBLB____TBLB_TIMEHM__"
+							v-bind="controls.TBLB____TBLB_TIMEHM__.wrapperProps"
+							:id="getControlId(controls.TBLB____TBLB_TIMEHM__)"
 							v-on="controls.TBLB____TBLB_TIMEHM__.handlers"
 							:loading="controls.TBLB____TBLB_TIMEHM__.props.loading"
 							:reporting-mode-on="reportingModeCAV"
@@ -312,6 +332,7 @@
 							<q-date-time-picker
 								v-if="controls.TBLB____TBLB_TIMEHM__.isVisible"
 								v-bind="controls.TBLB____TBLB_TIMEHM__.props"
+								:id="getControlId(controls.TBLB____TBLB_TIMEHM__)"
 								:model-value="model.ValTimehm.value"
 								@reset-icon-click="model.ValTimehm.fnUpdateValue(model.ValTimehm.originalValue ?? new Date())"
 								@update:model-value="model.ValTimehm.fnUpdateValue($event ?? '')" />
@@ -325,7 +346,8 @@
 						<base-input-structure
 							v-if="controls.TBLB____TBLB_ENUMT___.isVisible"
 							class="i-text"
-							v-bind="controls.TBLB____TBLB_ENUMT___"
+							v-bind="controls.TBLB____TBLB_ENUMT___.wrapperProps"
+							:id="getControlId(controls.TBLB____TBLB_ENUMT___)"
 							v-on="controls.TBLB____TBLB_ENUMT___.handlers"
 							:loading="controls.TBLB____TBLB_ENUMT___.props.loading"
 							:reporting-mode-on="reportingModeCAV"
@@ -333,6 +355,7 @@
 							<q-select
 								v-if="controls.TBLB____TBLB_ENUMT___.isVisible"
 								v-bind="controls.TBLB____TBLB_ENUMT___.props"
+								:id="getControlId(controls.TBLB____TBLB_ENUMT___)"
 								@update:model-value="model.ValEnumt.fnUpdateValue" />
 						</base-input-structure>
 					</q-col>
@@ -344,7 +367,8 @@
 						<base-input-structure
 							v-if="controls.TBLB____TBLB_ENUMN___.isVisible"
 							class="i-text"
-							v-bind="controls.TBLB____TBLB_ENUMN___"
+							v-bind="controls.TBLB____TBLB_ENUMN___.wrapperProps"
+							:id="getControlId(controls.TBLB____TBLB_ENUMN___)"
 							v-on="controls.TBLB____TBLB_ENUMN___.handlers"
 							:loading="controls.TBLB____TBLB_ENUMN___.props.loading"
 							:reporting-mode-on="reportingModeCAV"
@@ -352,6 +376,7 @@
 							<q-select
 								v-if="controls.TBLB____TBLB_ENUMN___.isVisible"
 								v-bind="controls.TBLB____TBLB_ENUMN___.props"
+								:id="getControlId(controls.TBLB____TBLB_ENUMN___)"
 								@update:model-value="model.ValEnumn.fnUpdateValue" />
 						</base-input-structure>
 					</q-col>
@@ -360,7 +385,7 @@
 		</q-container>
 	</teleport>
 
-	<hr v-if="!isPopup && showFormFooter" />
+	<q-divider v-if="!isPopup && showFormFooter" />
 
 	<teleport
 		v-if="formModalIsReady && showFormFooter"
@@ -861,8 +886,8 @@
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						maxLength: 1,
 						arrayName: 'typet',
-						helpShortItem: '',
-						helpDetailedItem: '',
+						helpShortItem: 'None',
+						helpDetailedItem: 'None',
 						controlLimits: [
 						],
 					}, this),
@@ -878,8 +903,8 @@
 						maxIntegers: 1,
 						maxDecimals: 0,
 						arrayName: 'typen',
-						helpShortItem: '',
-						helpDetailedItem: '',
+						helpShortItem: 'None',
+						helpDetailedItem: 'None',
 						controlLimits: [
 						],
 					}, this),
@@ -1285,7 +1310,6 @@
 
 				this.afterControlUpdate(controlField, fieldValue)
 			},
-
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
 // USE /[MANUAL GQT FUNCTIONS_JS TBLB]/
 // eslint-disable-next-line

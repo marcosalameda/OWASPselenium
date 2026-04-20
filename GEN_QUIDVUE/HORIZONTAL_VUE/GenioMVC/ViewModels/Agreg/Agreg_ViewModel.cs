@@ -7,6 +7,7 @@ using GenioMVC.Models.Navigation;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Quidgest.Persistence;
 using Quidgest.Persistence.GenericQuery;
+
 using System.Collections;
 using System.Collections.Concurrent;
 using System.Collections.Specialized;
@@ -41,6 +42,7 @@ namespace GenioMVC.ViewModels.Agreg
 		public string ValCodyear { get; set; }
 
 		#endregion
+
 		/// <summary>
 		/// Title: "Project" | Type: "C"
 		/// </summary>
@@ -56,8 +58,6 @@ namespace GenioMVC.ViewModels.Agreg
 		/// </summary>
 		[ValidateSetAccess]
 		public decimal? ValValue { get; set; }
-
-
 
 		#region Navigations
 		#endregion
@@ -238,12 +238,7 @@ namespace GenioMVC.ViewModels.Agreg
 			}
 		}
 
-		/// <summary>
-		/// Sets the value of a single property of the view model based on the provided table and field names.
-		/// </summary>
-		/// <param name="fullFieldName">The full field name in the format "table.field".</param>
-		/// <param name="value">The field value.</param>
-		/// <exception cref="ArgumentNullException">Thrown if <paramref name="fullFieldName"/> is null.</exception>
+		/// <inheritdoc />
 		public override void SetViewModelValue(string fullFieldName, object value)
 		{
 			try
@@ -366,6 +361,7 @@ namespace GenioMVC.ViewModels.Agreg
 
 			Load_Agreg___projeprojecto(qs, lazyLoad);
 			Load_Agreg___year_year____(qs, lazyLoad);
+
 // USE /[MANUAL GQT VIEWMODEL_LOADPARTIAL AGREG]/
 		}
 
@@ -435,10 +431,7 @@ namespace GenioMVC.ViewModels.Agreg
 				}
 			}
 
-			TableProjeProjecto = new TableDBEdit<Models.Proje>
-			{
-				IsLazyLoad = lazyLoad
-			};
+			TableProjeProjecto = new TableDBEdit<Models.Proje>();
 
 			if (lazyLoad)
 			{
@@ -625,10 +618,7 @@ namespace GenioMVC.ViewModels.Agreg
 				}
 			}
 
-			TableYearYear = new TableDBEdit<Models.Year>
-			{
-				IsLazyLoad = lazyLoad
-			};
+			TableYearYear = new TableDBEdit<Models.Year>();
 
 			if (lazyLoad)
 			{

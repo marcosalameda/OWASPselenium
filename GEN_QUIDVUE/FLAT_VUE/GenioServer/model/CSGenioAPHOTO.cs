@@ -47,7 +47,7 @@ namespace CSGenio.business
 			Qfield = new Field(info.Alias, "codphoto", FieldType.KEY_GUID);
 			Qfield.FieldDescription = "";
 			Qfield.FieldSize =  36;
-			Qfield.CavDesignation = "";
+			Qfield.VisivelCav = CavVisibilityType.Nunca;
 
 			Qfield.Dupmsg = "";
 			info.RegisterFieldDB(Qfield);
@@ -56,7 +56,7 @@ namespace CSGenio.business
 			Qfield = new Field(info.Alias, "codequip", FieldType.KEY_GUID);
 			Qfield.FieldDescription = "";
 			Qfield.FieldSize =  36;
-			Qfield.CavDesignation = "";
+			Qfield.VisivelCav = CavVisibilityType.Nunca;
 
 			Qfield.Dupmsg = "";
 			info.RegisterFieldDB(Qfield);
@@ -66,7 +66,7 @@ namespace CSGenio.business
 			Qfield.FieldDescription = "Photo";
 			Qfield.FieldSize =  3;
 			Qfield.Decimals = 1;
-			Qfield.CavDesignation = "PHOTO51874";
+			Qfield.VisivelCav = CavVisibilityType.Nunca;
 
 			Qfield.Dupmsg = "";
 			info.RegisterFieldDB(Qfield);
@@ -123,12 +123,12 @@ namespace CSGenio.business
 			info.Pathways.Add("wareh","equip");
 			info.Pathways.Add("tpequ","equip");
 			info.Pathways.Add("room1","equip");
-			info.Pathways.Add("cmpny","equip");
 			info.Pathways.Add("item","equip");
+			info.Pathways.Add("cmpny","equip");
 			info.Pathways.Add("pess1","equip");
 			info.Pathways.Add("famil","equip");
-			info.Pathways.Add("cntry","equip");
 			info.Pathways.Add("gitem","equip");
+			info.Pathways.Add("cntry","equip");
 			info.Pathways.Add("stake","equip");
 			info.Pathways.Add("cate2","equip");
 		}
@@ -152,6 +152,7 @@ namespace CSGenio.business
 				null,
 
 	"today", true));
+
 
 
 

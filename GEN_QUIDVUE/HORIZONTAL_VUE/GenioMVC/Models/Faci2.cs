@@ -110,11 +110,6 @@ namespace GenioMVC.Models
 		[GeographicAttribute("GG")]
 		public string ValGeocoord { get { return klass.ValGeocoord; } set { klass.ValGeocoord = value; } }
 
-		[DisplayName(">> Country")]
-		/// <summary>Field : ">> Country" Tipo: "CF" Formula:  ""</summary>
-		[ShouldSerialize("Faci2.ValCodcntry")]
-		public string ValCodcntry { get { return klass.ValCodcntry; } set { klass.ValCodcntry = value; } }
-
 		[DisplayName("ZZSTATE")]
 		[ShouldSerialize("Faci2.ValZzstate")]
 		/// <summary>Field: "ZZSTATE", Type: "INT", Formula: ""</summary>

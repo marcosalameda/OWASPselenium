@@ -30,14 +30,21 @@ export class GridTableListValue {
 	}
 
 	/**
-	 * A list of the rows that aren't dirty.
+	 * A list of the elements that are empty and serve only as placeholder (should always be one).
 	 */
 	get emptyRows() {
 		return this.newElements.filter((row) => !row.isDirty)
 	}
 
 	/**
-	 * Whether the row is dirty.
+	 * The number of elements.
+	 */
+	get rowCount() {
+		return this.elements.length + this.newElements.length - this.emptyRows.length
+	}
+
+	/**
+	 * Whether the grid is dirty.
 	 */
 	get isDirty() {
 		return _some([
@@ -347,10 +354,17 @@ export class GridTableList extends Base {
 	}
 
 	/**
-	 * The rows in the grid that are not dirty.
+	 * A list of the elements that are empty and serve only as placeholder (should always be one).
 	 */
 	get emptyRows() {
 		return this.value.emptyRows
+	}
+
+	/**
+	 * The number of elements.
+	 */
+	get rowCount() {
+		return this.value.rowCount
 	}
 
 	/**

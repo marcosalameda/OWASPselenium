@@ -57,7 +57,7 @@ export class Document extends Base {
 					if (request.data?.Success) {
 						this.tickets = {}
 
-						for (let i in data.tickets) {
+						for (const i in data.tickets) {
 							const t = data.tickets[i]
 							this.tickets[t.id] = t.ticket
 						}

@@ -9,12 +9,13 @@
 			<div
 				v-if="showFormHeader"
 				class="c-action-bar">
-				<h1
+				<component
 					v-if="formControl.uiComponents.header && formInfo.designation"
+					:is="topHeadingTag"
 					:id="formTitleId"
 					class="form-header">
 					{{ formInfo.designation }}
-				</h1>
+				</component>
 
 				<div class="c-action-bar__menu">
 					<template
@@ -40,13 +41,10 @@
 									@click="btn.action">
 									<template v-if="btn.icon">
 										<q-badge-indicator
-											v-if="btn.badge && btn.badge.isVisible"
-											:color="btn.badge.color">
+											:enabled="btn.badge?.isVisible ?? false"
+											:color="btn.badge?.color">
 											<q-icon v-bind="btn.icon" />
 										</q-badge-indicator>
-										<q-icon
-											v-else
-											v-bind="btn.icon" />
 									</template>
 								</q-toggle-group-item>
 							</template>
@@ -97,6 +95,7 @@
 		<q-container
 			fluid
 			data-key="ATTAC"
+			:data-identifier="primaryKeyValue"
 			:data-loading="!formInitialDataLoaded || !isActiveForm">
 			<template v-if="formControl.initialized && showFormBody">
 				<q-row v-if="controls.ATTAC___ASSETNAME____.isVisible || controls.ATTAC___ATTACATTACHED.isVisible || controls.ATTAC___ATTACNOTE____.isVisible || controls.ATTAC___ATTACDOCUMENT.isVisible">
@@ -106,7 +105,8 @@
 						<base-input-structure
 							v-if="controls.ATTAC___ASSETNAME____.isVisible"
 							class="i-text"
-							v-bind="controls.ATTAC___ASSETNAME____"
+							v-bind="controls.ATTAC___ASSETNAME____.wrapperProps"
+							:id="getControlId(controls.ATTAC___ASSETNAME____)"
 							v-on="controls.ATTAC___ASSETNAME____.handlers"
 							:loading="controls.ATTAC___ASSETNAME____.props.loading"
 							:reporting-mode-on="reportingModeCAV"
@@ -114,6 +114,7 @@
 							<q-lookup
 								v-if="controls.ATTAC___ASSETNAME____.isVisible"
 								v-bind="controls.ATTAC___ASSETNAME____.props"
+								:id="getControlId(controls.ATTAC___ASSETNAME____)"
 								v-on="controls.ATTAC___ASSETNAME____.handlers" />
 							<q-see-more-attac-assetname
 								v-if="controls.ATTAC___ASSETNAME____.seeMoreIsVisible"
@@ -127,7 +128,8 @@
 						<base-input-structure
 							v-if="controls.ATTAC___ATTACATTACHED.isVisible"
 							class="i-text"
-							v-bind="controls.ATTAC___ATTACATTACHED"
+							v-bind="controls.ATTAC___ATTACATTACHED.wrapperProps"
+							:id="getControlId(controls.ATTAC___ATTACATTACHED)"
 							v-on="controls.ATTAC___ATTACATTACHED.handlers"
 							:loading="controls.ATTAC___ATTACATTACHED.props.loading"
 							:reporting-mode-on="reportingModeCAV"
@@ -135,6 +137,7 @@
 							<q-date-time-picker
 								v-if="controls.ATTAC___ATTACATTACHED.isVisible"
 								v-bind="controls.ATTAC___ATTACATTACHED.props"
+								:id="getControlId(controls.ATTAC___ATTACATTACHED)"
 								:model-value="model.ValAttached.value"
 								@reset-icon-click="model.ValAttached.fnUpdateValue(model.ValAttached.originalValue ?? new Date())"
 								@update:model-value="model.ValAttached.fnUpdateValue($event ?? '')" />
@@ -146,7 +149,8 @@
 						<base-input-structure
 							v-if="controls.ATTAC___ATTACNOTE____.isVisible"
 							class="i-textarea"
-							v-bind="controls.ATTAC___ATTACNOTE____"
+							v-bind="controls.ATTAC___ATTACNOTE____.wrapperProps"
+							:id="getControlId(controls.ATTAC___ATTACNOTE____)"
 							v-on="controls.ATTAC___ATTACNOTE____.handlers"
 							:loading="controls.ATTAC___ATTACNOTE____.props.loading"
 							:reporting-mode-on="reportingModeCAV"
@@ -154,6 +158,7 @@
 							<q-text-area
 								v-if="controls.ATTAC___ATTACNOTE____.isVisible"
 								v-bind="controls.ATTAC___ATTACNOTE____.props"
+								:id="getControlId(controls.ATTAC___ATTACNOTE____)"
 								v-on="controls.ATTAC___ATTACNOTE____.handlers" />
 						</base-input-structure>
 					</q-col>
@@ -163,7 +168,8 @@
 						<base-input-structure
 							v-if="controls.ATTAC___ATTACDOCUMENT.isVisible"
 							class="i-text"
-							v-bind="controls.ATTAC___ATTACDOCUMENT"
+							v-bind="controls.ATTAC___ATTACDOCUMENT.wrapperProps"
+							:id="getControlId(controls.ATTAC___ATTACDOCUMENT)"
 							v-on="controls.ATTAC___ATTACDOCUMENT.handlers"
 							:loading="controls.ATTAC___ATTACDOCUMENT.props.loading"
 							:reporting-mode-on="reportingModeCAV"
@@ -171,6 +177,7 @@
 							<q-document
 								v-if="controls.ATTAC___ATTACDOCUMENT.isVisible"
 								v-bind="controls.ATTAC___ATTACDOCUMENT.props"
+								:id="getControlId(controls.ATTAC___ATTACDOCUMENT)"
 								v-on="controls.ATTAC___ATTACDOCUMENT.handlers" />
 						</base-input-structure>
 					</q-col>
@@ -179,7 +186,7 @@
 		</q-container>
 	</teleport>
 
-	<hr v-if="!isPopup && showFormFooter" />
+	<q-divider v-if="!isPopup && showFormFooter" />
 
 	<teleport
 		v-if="formModalIsReady && showFormFooter"
@@ -978,7 +985,6 @@
 
 				this.afterControlUpdate(controlField, fieldValue)
 			},
-
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
 // USE /[MANUAL GQT FUNCTIONS_JS ATTAC]/
 // eslint-disable-next-line

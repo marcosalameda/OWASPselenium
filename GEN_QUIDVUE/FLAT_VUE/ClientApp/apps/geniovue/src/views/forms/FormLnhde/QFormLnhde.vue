@@ -9,12 +9,13 @@
 			<div
 				v-if="showFormHeader"
 				class="c-action-bar">
-				<h1
+				<component
 					v-if="formControl.uiComponents.header && formInfo.designation"
+					:is="topHeadingTag"
 					:id="formTitleId"
 					class="form-header">
 					{{ formInfo.designation }}
-				</h1>
+				</component>
 
 				<div class="c-action-bar__menu">
 					<template
@@ -40,13 +41,10 @@
 									@click="btn.action">
 									<template v-if="btn.icon">
 										<q-badge-indicator
-											v-if="btn.badge && btn.badge.isVisible"
-											:color="btn.badge.color">
+											:enabled="btn.badge?.isVisible ?? false"
+											:color="btn.badge?.color">
 											<q-icon v-bind="btn.icon" />
 										</q-badge-indicator>
-										<q-icon
-											v-else
-											v-bind="btn.icon" />
 									</template>
 								</q-toggle-group-item>
 							</template>
@@ -97,6 +95,7 @@
 		<q-container
 			fluid
 			data-key="LNHDE"
+			:data-identifier="primaryKeyValue"
 			:data-loading="!formInitialDataLoaded || !isActiveForm">
 			<template v-if="formControl.initialized && showFormBody">
 				<q-row v-if="controls.LNHDE___PEDIDNRPEDIDO.isVisible || controls.LNHDE___LNHPDLINE____.isVisible || controls.LNHDE___LNHDEORDEM___.isVisible || controls.LNHDE___TPEQ1TIPOEQUI.isVisible || controls.LNHDE___LNHDEQUANTIDA.isVisible || controls.LNHDE___LNHDEQUANTDEC.isVisible">
@@ -106,7 +105,8 @@
 						<base-input-structure
 							v-if="controls.LNHDE___PEDIDNRPEDIDO.isVisible"
 							class="i-text"
-							v-bind="controls.LNHDE___PEDIDNRPEDIDO"
+							v-bind="controls.LNHDE___PEDIDNRPEDIDO.wrapperProps"
+							:id="getControlId(controls.LNHDE___PEDIDNRPEDIDO)"
 							v-on="controls.LNHDE___PEDIDNRPEDIDO.handlers"
 							:loading="controls.LNHDE___PEDIDNRPEDIDO.props.loading"
 							:reporting-mode-on="reportingModeCAV"
@@ -114,6 +114,7 @@
 							<q-lookup
 								v-if="controls.LNHDE___PEDIDNRPEDIDO.isVisible"
 								v-bind="controls.LNHDE___PEDIDNRPEDIDO.props"
+								:id="getControlId(controls.LNHDE___PEDIDNRPEDIDO)"
 								v-on="controls.LNHDE___PEDIDNRPEDIDO.handlers" />
 							<q-see-more-lnhde-pedidnrpedido
 								v-if="controls.LNHDE___PEDIDNRPEDIDO.seeMoreIsVisible"
@@ -123,7 +124,8 @@
 						<base-input-structure
 							v-if="controls.LNHDE___LNHPDLINE____.isVisible"
 							class="i-text"
-							v-bind="controls.LNHDE___LNHPDLINE____"
+							v-bind="controls.LNHDE___LNHPDLINE____.wrapperProps"
+							:id="getControlId(controls.LNHDE___LNHPDLINE____)"
 							v-on="controls.LNHDE___LNHPDLINE____.handlers"
 							:loading="controls.LNHDE___LNHPDLINE____.props.loading"
 							:reporting-mode-on="reportingModeCAV"
@@ -131,6 +133,7 @@
 							<q-lookup
 								v-if="controls.LNHDE___LNHPDLINE____.isVisible"
 								v-bind="controls.LNHDE___LNHPDLINE____.props"
+								:id="getControlId(controls.LNHDE___LNHPDLINE____)"
 								v-on="controls.LNHDE___LNHPDLINE____.handlers" />
 							<q-see-more-lnhde-lnhpdline
 								v-if="controls.LNHDE___LNHPDLINE____.seeMoreIsVisible"
@@ -144,7 +147,8 @@
 						<base-input-structure
 							v-if="controls.LNHDE___LNHDEORDEM___.isVisible"
 							class="i-text"
-							v-bind="controls.LNHDE___LNHDEORDEM___"
+							v-bind="controls.LNHDE___LNHDEORDEM___.wrapperProps"
+							:id="getControlId(controls.LNHDE___LNHDEORDEM___)"
 							v-on="controls.LNHDE___LNHDEORDEM___.handlers"
 							:loading="controls.LNHDE___LNHDEORDEM___.props.loading"
 							:reporting-mode-on="reportingModeCAV"
@@ -152,12 +156,14 @@
 							<q-numeric-input
 								v-if="controls.LNHDE___LNHDEORDEM___.isVisible"
 								v-bind="controls.LNHDE___LNHDEORDEM___.props"
+								:id="getControlId(controls.LNHDE___LNHDEORDEM___)"
 								@update:model-value="model.ValOrdem.fnUpdateValue" />
 						</base-input-structure>
 						<base-input-structure
 							v-if="controls.LNHDE___TPEQ1TIPOEQUI.isVisible"
 							class="i-text"
-							v-bind="controls.LNHDE___TPEQ1TIPOEQUI"
+							v-bind="controls.LNHDE___TPEQ1TIPOEQUI.wrapperProps"
+							:id="getControlId(controls.LNHDE___TPEQ1TIPOEQUI)"
 							v-on="controls.LNHDE___TPEQ1TIPOEQUI.handlers"
 							:loading="controls.LNHDE___TPEQ1TIPOEQUI.props.loading"
 							:reporting-mode-on="reportingModeCAV"
@@ -165,6 +171,7 @@
 							<q-lookup
 								v-if="controls.LNHDE___TPEQ1TIPOEQUI.isVisible"
 								v-bind="controls.LNHDE___TPEQ1TIPOEQUI.props"
+								:id="getControlId(controls.LNHDE___TPEQ1TIPOEQUI)"
 								v-on="controls.LNHDE___TPEQ1TIPOEQUI.handlers" />
 							<q-see-more-lnhde-tpeq1tipoequi
 								v-if="controls.LNHDE___TPEQ1TIPOEQUI.seeMoreIsVisible"
@@ -174,7 +181,8 @@
 						<base-input-structure
 							v-if="controls.LNHDE___LNHDEQUANTIDA.isVisible"
 							class="i-text"
-							v-bind="controls.LNHDE___LNHDEQUANTIDA"
+							v-bind="controls.LNHDE___LNHDEQUANTIDA.wrapperProps"
+							:id="getControlId(controls.LNHDE___LNHDEQUANTIDA)"
 							v-on="controls.LNHDE___LNHDEQUANTIDA.handlers"
 							:loading="controls.LNHDE___LNHDEQUANTIDA.props.loading"
 							:reporting-mode-on="reportingModeCAV"
@@ -182,12 +190,14 @@
 							<q-numeric-input
 								v-if="controls.LNHDE___LNHDEQUANTIDA.isVisible"
 								v-bind="controls.LNHDE___LNHDEQUANTIDA.props"
+								:id="getControlId(controls.LNHDE___LNHDEQUANTIDA)"
 								@update:model-value="model.ValQuantida.fnUpdateValue" />
 						</base-input-structure>
 						<base-input-structure
 							v-if="controls.LNHDE___LNHDEQUANTDEC.isVisible"
 							class="i-text"
-							v-bind="controls.LNHDE___LNHDEQUANTDEC"
+							v-bind="controls.LNHDE___LNHDEQUANTDEC.wrapperProps"
+							:id="getControlId(controls.LNHDE___LNHDEQUANTDEC)"
 							v-on="controls.LNHDE___LNHDEQUANTDEC.handlers"
 							:loading="controls.LNHDE___LNHDEQUANTDEC.props.loading"
 							:reporting-mode-on="reportingModeCAV"
@@ -195,6 +205,7 @@
 							<q-numeric-input
 								v-if="controls.LNHDE___LNHDEQUANTDEC.isVisible"
 								v-bind="controls.LNHDE___LNHDEQUANTDEC.props"
+								:id="getControlId(controls.LNHDE___LNHDEQUANTDEC)"
 								@update:model-value="model.ValQuantdec.fnUpdateValue" />
 						</base-input-structure>
 					</q-col>
@@ -206,13 +217,15 @@
 						<base-input-structure
 							v-if="controls.LNHDE___LNHDECODE____.isVisible"
 							class="i-text"
-							v-bind="controls.LNHDE___LNHDECODE____"
+							v-bind="controls.LNHDE___LNHDECODE____.wrapperProps"
+							:id="getControlId(controls.LNHDE___LNHDECODE____)"
 							v-on="controls.LNHDE___LNHDECODE____.handlers"
 							:loading="controls.LNHDE___LNHDECODE____.props.loading"
 							:reporting-mode-on="reportingModeCAV"
 							:suggestion-mode-on="suggestionModeOn">
 							<q-text-field
 								v-bind="controls.LNHDE___LNHDECODE____.props"
+								:id="getControlId(controls.LNHDE___LNHDECODE____)"
 								@blur="onBlur(controls.LNHDE___LNHDECODE____, model.ValCode.value)"
 								@change="model.ValCode.fnUpdateValueOnChange" />
 						</base-input-structure>
@@ -225,7 +238,8 @@
 						<base-input-structure
 							v-if="controls.LNHDE___LNHDEDESCRIPT.isVisible"
 							class="i-textarea"
-							v-bind="controls.LNHDE___LNHDEDESCRIPT"
+							v-bind="controls.LNHDE___LNHDEDESCRIPT.wrapperProps"
+							:id="getControlId(controls.LNHDE___LNHDEDESCRIPT)"
 							v-on="controls.LNHDE___LNHDEDESCRIPT.handlers"
 							:loading="controls.LNHDE___LNHDEDESCRIPT.props.loading"
 							:reporting-mode-on="reportingModeCAV"
@@ -233,6 +247,7 @@
 							<q-text-area
 								v-if="controls.LNHDE___LNHDEDESCRIPT.isVisible"
 								v-bind="controls.LNHDE___LNHDEDESCRIPT.props"
+								:id="getControlId(controls.LNHDE___LNHDEDESCRIPT)"
 								v-on="controls.LNHDE___LNHDEDESCRIPT.handlers" />
 						</base-input-structure>
 					</q-col>
@@ -244,13 +259,15 @@
 						<base-input-structure
 							v-if="controls.LNHDE___LNHDEURL_____.isVisible"
 							class="i-text"
-							v-bind="controls.LNHDE___LNHDEURL_____"
+							v-bind="controls.LNHDE___LNHDEURL_____.wrapperProps"
+							:id="getControlId(controls.LNHDE___LNHDEURL_____)"
 							v-on="controls.LNHDE___LNHDEURL_____.handlers"
 							:loading="controls.LNHDE___LNHDEURL_____.props.loading"
 							:reporting-mode-on="reportingModeCAV"
 							:suggestion-mode-on="suggestionModeOn">
 							<q-text-field
 								v-bind="controls.LNHDE___LNHDEURL_____.props"
+								:id="getControlId(controls.LNHDE___LNHDEURL_____)"
 								@blur="onBlur(controls.LNHDE___LNHDEURL_____, model.ValUrl.value)"
 								@change="model.ValUrl.fnUpdateValueOnChange" />
 						</base-input-structure>
@@ -263,12 +280,13 @@
 						<q-table
 							v-if="controls.LNHDE___PSEUDLNPROPS_.isVisible"
 							v-bind="controls.LNHDE___PSEUDLNPROPS_"
+							:id="getControlId(controls.LNHDE___PSEUDLNPROPS_)"
 							v-on="controls.LNHDE___PSEUDLNPROPS_.handlers">
-						<q-table-extra-extension
-							v-if="controls.LNHDE___PSEUDLNPROPS_.isVisible"
-							:list-ctrl="controls.LNHDE___PSEUDLNPROPS_"
-							:filter-operators="controls.LNHDE___PSEUDLNPROPS_.filterOperators"
-							v-on="controls.LNHDE___PSEUDLNPROPS_.handlers" />
+							<template #header>
+								<q-table-config
+									:table-ctrl="controls.LNHDE___PSEUDLNPROPS_"
+									v-on="controls.LNHDE___PSEUDLNPROPS_.handlers" />
+							</template>
 							<!-- USE /[MANUAL GQT CUSTOM_TABLE LNHDE___PSEUDLNPROPS_]/ -->
 						</q-table>
 					</q-col>
@@ -277,7 +295,7 @@
 		</q-container>
 	</teleport>
 
-	<hr v-if="!isPopup && showFormFooter" />
+	<q-divider v-if="!isPopup && showFormFooter" />
 
 	<teleport
 		v-if="formModalIsReady && showFormFooter"
@@ -809,6 +827,7 @@
 						label: computed(() => this.Resources.EQUIPMENT_GROUPINGS20350),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
+						headerLevel: computed(() => this.baseHeadingLevel + 1),
 						controller: 'LNHDE',
 						action: 'Lnhde_ValLnprops',
 						hasDependencies: false,
@@ -822,6 +841,7 @@
 								label: computed(() => this.Resources.NAME31974),
 								dataLength: 50,
 								scrollData: 30,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 						],
 						config: {
@@ -839,7 +859,6 @@
 							searchBarConfig: {
 								visibility: false
 							},
-							filtersVisible: false,
 							allowColumnFilters: false,
 							allowColumnSort: true,
 							crudActions: [
@@ -913,9 +932,7 @@
 									id: 'insert',
 									name: 'insert',
 									title: computed(() => this.Resources.INSERIR43365),
-									icon: {
-										icon: 'add'
-									},
+									icon: { icon: 'add' },
 									isInReadOnly: false,
 									params: {
 										action: vm.openFormAction,
@@ -1389,7 +1406,6 @@
 
 				this.afterControlUpdate(controlField, fieldValue)
 			},
-
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
 // USE /[MANUAL GQT FUNCTIONS_JS LNHDE]/
 // eslint-disable-next-line

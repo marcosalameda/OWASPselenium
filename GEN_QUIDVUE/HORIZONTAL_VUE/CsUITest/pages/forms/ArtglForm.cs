@@ -10,18 +10,18 @@ public class ArtglForm : PopupForm
 	/// <summary>
 	/// Global Item
 	/// </summary>
-	public BaseInputControl GitemItemdes => new BaseInputControl(driver, ContainerLocator, "container-ARTGL___GITEMITEMDES_", "#ARTGL___GITEMITEMDES_");
+	public BaseInputControl GitemItemdes => new BaseInputControl(driver, ContainerLocator, "container-ARTGL___GITEMITEMDES_" + IdSuffix, "#ARTGL___GITEMITEMDES_" + IdSuffix);
 
 	/// <summary>
 	/// Code
 	/// </summary>
-	public BaseInputControl GitemItemgcod => new BaseInputControl(driver, ContainerLocator, "container-ARTGL___GITEMITEMGCOD", "#ARTGL___GITEMITEMGCOD");
+	public BaseInputControl GitemItemgcod => new BaseInputControl(driver, ContainerLocator, "container-ARTGL___GITEMITEMGCOD" + IdSuffix, "#ARTGL___GITEMITEMGCOD" + IdSuffix);
 
 	/// <summary>
 	/// Catalog
 	/// </summary>
-	public DocumentControl GitemDocument => new DocumentControl(driver, ContainerLocator, "ARTGL___GITEMDOCUMENT-container");
+	public DocumentControl GitemDocument => new DocumentControl(driver, ContainerLocator, "ARTGL___GITEMDOCUMENT-container" + IdSuffix);
 
-	public ArtglForm(IWebDriver driver, FORM_MODE mode, By? containerLocator = null)
-		: base(driver, mode, "ARTGL") { }
+	public ArtglForm(IWebDriver driver, FORM_MODE mode, By? containerLocator = null, bool usePkInId = false)
+		: base(driver, mode, "ARTGL", usePkInId: usePkInId) { }
 }

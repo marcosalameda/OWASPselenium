@@ -210,6 +210,8 @@ namespace GenioMVC.ViewModels.Anexd
 
 			crs.SubSets.Add(subfilters);
 
+			// Form field filters
+			crs.SubSets.Add(ProcessFieldFilters(tableConfig.GlobalFilters));
 
 			crs.SubSets.Add(GetCustomizedStaticLimits(StaticLimits));
 
@@ -338,12 +340,11 @@ namespace GenioMVC.ViewModels.Anexd
 
 			FieldRef[] fields = new FieldRef[] { CSGenioAanexd.FldCodanexd, CSGenioAanexd.FldZzstate, CSGenioAanexd.FldCodequip, CSGenioAequip.FldCodequip, CSGenioAequip.FldRegistnr, CSGenioAanexd.FldDthranex, CSGenioAanexd.FldTitle, CSGenioAanexd.FldDocument, CSGenioAanexd.FldDocumentfk, CSGenioAanexd.FldCodlang, CSGenioAlangu.FldCodlang, CSGenioAlangu.FldLangua, CSGenioAanexd.FldTittradu };
 
-
-			// Totalizers
-			List<FieldRef> fieldsWithTotalizers = fields.Where(field => tableConfig.TotalizerColumns.Contains(field.FullName)).ToList();
+			// List of column names that should display totalized (aggregated) values.
+			List<string> totalizerColumns = [];
+			List<FieldRef> fieldsWithTotalizers = [.. fields.Where(field => totalizerColumns.Contains(field.FullName))];
 
 			FieldRef firstVisibleColumn = null;
-
 			if (sorts.Count == 0)
 			{
 				firstVisibleColumn = tableConfig?.GetFirstVisibleColumn(TableAlias);
@@ -558,7 +559,7 @@ namespace GenioMVC.ViewModels.Anexd
 
 		private static readonly string[] _fieldsToSerialize =
 		[
-			"Anexd", "Anexd.ValCodanexd", "Anexd.ValZzstate", "Equip", "Equip.ValRegistnr", "Anexd.ValDthranex", "Anexd.ValTitle", "Anexd.ValDocument", "Langu", "Langu.ValLangua", "Anexd.ValTittradu", "Equip.ValCodequip", "Anexd.ValCodequip", "Anexd.ValCodlang"
+			"Anexd", "Anexd.ValCodanexd", "Anexd.ValZzstate", "Equip", "Equip.ValRegistnr", "Anexd.ValDthranex", "Anexd.ValTitle", "Anexd.ValDocument", "Langu", "Langu.ValLangua", "Anexd.ValTittradu", "Anexd.ValCodequip", "Anexd.ValCodlang"
 		];
 
 		private static readonly List<TableSearchColumn> _searchableColumns =

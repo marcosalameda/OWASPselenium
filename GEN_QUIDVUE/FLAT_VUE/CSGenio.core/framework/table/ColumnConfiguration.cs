@@ -66,16 +66,18 @@ public class ColumnConfiguration
 	public int Exportability { get; set; }
 
 	/// <summary>
-	/// Extracts the table name from a field name in the format [TABLE].Val[COLUMN] or Val[COLUMN].
+	/// Extracts the table name from a field name in the format [TABLE].[TABLE].Val[COLUMN] or [TABLE].Val[COLUMN] or Val[COLUMN].
 	/// </summary>
 	/// <param name="mainTableName">The name of the main table to use as fallback when no table prefix is found.</param>
-	/// <param name="name">The full field name in the format "[TABLE].Val[COLUMN]" or "Val[COLUMN]".</param>
+	/// <param name="name">The full field name in the format "[TABLE].[TABLE].Val[COLUMN]", "[TABLE].Val[COLUMN]", or "Val[COLUMN]".</param>
 	/// <returns>
-	/// The table name in lowercase. Returns the main table name if no table prefix is found.
+	/// The table name (second-to-last segment) in lowercase. Returns the main table name if no table prefix is found.
 	/// Returns null if either input parameter is null or empty.
 	/// </returns>
 	/// <remarks>
 	/// This method parses field names to determine which table the field belongs to.
+	/// If the field name contains multiple table prefixes separated by dots (e.g., "Proje.Entit.ValName"),
+	/// it extracts the second-to-last segment as the table name.
 	/// If the field name doesn't contain a table prefix (no dot separator), it assumes
 	/// the field belongs to the main table.
 	/// </remarks>
@@ -84,7 +86,10 @@ public class ColumnConfiguration
 	/// string tableName = ColumnConfiguration.GetTableName("users", "profiles.ValName");
 	/// // Returns: "profiles"
 	///
-	/// string tableName2 = ColumnConfiguration.GetTableName("users", "ValEmail");
+	/// string tableName2 = ColumnConfiguration.GetTableName("users", "Proje.Entit.ValName");
+	/// // Returns: "entit"
+	///
+	/// string tableName3 = ColumnConfiguration.GetTableName("users", "ValEmail");
 	/// // Returns: "users"
 	/// </code>
 	/// </example>
@@ -93,14 +98,18 @@ public class ColumnConfiguration
 		if (string.IsNullOrEmpty(mainTableName) || string.IsNullOrEmpty(name))
 			return null;
 
-		int sepIndex = name.IndexOf('.');
+		int sepIndex = name.LastIndexOf('.');
 
 		// If the table name is empty, the field is in the main table
 		if (sepIndex == -1)
 			return mainTableName;
 
-		// Table name is everything before '.'
-		return name.Substring(0, sepIndex).ToLowerInvariant();
+		// Table name is everything before the last '.'
+		int secondLastSepIndex = name.LastIndexOf('.', sepIndex - 1);
+
+		return secondLastSepIndex == -1
+			? name.Substring(0, sepIndex).ToLowerInvariant()
+			: name.Substring(secondLastSepIndex + 1, sepIndex - secondLastSepIndex - 1).ToLowerInvariant();
 	}
 
 	/// <summary>

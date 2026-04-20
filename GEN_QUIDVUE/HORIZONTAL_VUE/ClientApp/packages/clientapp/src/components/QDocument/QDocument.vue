@@ -1,8 +1,7 @@
 <template>
 	<div
 		:id="`${props.id}-container`"
-		class="q-document"
-		:class="{ 'q-document--readonly': readonly }">
+		:class="['q-document', { 'q-document--readonly': readonly }]">
 		<q-input-group
 			:size="props.size"
 			class="q-document__input">
@@ -15,10 +14,12 @@
 				@click="handleInputClick" />
 
 			<!-- Dropdown actions -->
-			<q-action-list
-				:groups="groups"
-				:items="items"
-				@click="handleDropdownClick" />
+			<template #append>
+				<q-action-list
+					:groups="groups"
+					:items="items"
+					@click="handleDropdownClick" />
+			</template>
 		</q-input-group>
 
 		<!-- Invisible input used to attach files -->
@@ -203,6 +204,8 @@
 	 * Triggers the file attach window.
 	 */
 	async function attachFile(): Promise<void> {
+		if (props.readonly) return
+
 		// Clears the input before updating (doens't work without this if the model is filed already)
 		await nextTick(() => fileAttachRef.value?.click())
 	}

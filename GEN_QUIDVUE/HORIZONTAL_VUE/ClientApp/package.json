@@ -7,7 +7,8 @@
     "clean": "rimraf temp .eslintcache && pnpm -r clean",
     "build": "pnpm build:packages && pnpm build:app",
     "build:app": "pnpm --filter=geniovue.js build",
-		"build:packages": "pnpm --filter @quidgest/* run build",
+    "build:packages": "pnpm --filter @quidgest/* run build",
+    "build:no-color": "node build-no-colors.cjs",
     "type-check": "pnpm -r type-check",
     "format": "prettier --check --cache .",
     "format:fix": "prettier --write --cache .",
@@ -52,12 +53,13 @@
   },
   "pnpm": {
     "overrides": {
+      "@microsoft/api-extractor": "7.56.3",
       "@quidgest/ui": "catalog:",
       "pinia": "catalog:",
+      "rollup": "4.53.3",
       "vite": "catalog:",
       "vue": "catalog:",
-      "vue-router": "catalog:",
-      "rollup": "4.53.3"
+      "vue-router": "catalog:"
     }
   }
 }

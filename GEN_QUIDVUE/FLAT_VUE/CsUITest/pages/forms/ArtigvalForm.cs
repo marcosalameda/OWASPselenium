@@ -10,65 +10,65 @@ public class ArtigvalForm : PopupForm
 	/// <summary>
 	/// Image
 	/// </summary>
-	public BaseInputControl ItemImage => new BaseInputControl(driver, ContainerLocator, "container-ARTIGVALITEM_IMAGE___", "#ARTIGVALITEM_IMAGE___");
+	public BaseInputControl ItemImage => new BaseInputControl(driver, ContainerLocator, "container-ARTIGVALITEM_IMAGE___" + IdSuffix, "#ARTIGVALITEM_IMAGE___" + IdSuffix);
 
 	/// <summary>
 	/// Global Item
 	/// </summary>
-	public LookupControl GitemItemdes => new LookupControl(driver, ContainerLocator, "container-ARTIGVALGITEMITEMDES_");
-	public SeeMorePage GitemItemdesSeeMorePage => new SeeMorePage(driver, "ARTIGVAL", "ARTIGVALGITEMITEMDES_");
+	public LookupControl GitemItemdes => new LookupControl(driver, ContainerLocator, "container-ARTIGVALGITEMITEMDES_" + IdSuffix);
+	public SeeMorePage GitemItemdesSeeMorePage => new SeeMorePage(driver, "ARTIGVAL", "ARTIGVALGITEMITEMDES_" + IdSuffix);
 
 	/// <summary>
 	/// Warehouse
 	/// </summary>
-	public LookupControl WarehWarehdes => new LookupControl(driver, ContainerLocator, "container-ARTIGVALWAREHWAREHDES");
-	public SeeMorePage WarehWarehdesSeeMorePage => new SeeMorePage(driver, "ARTIGVAL", "ARTIGVALWAREHWAREHDES");
+	public LookupControl WarehWarehdes => new LookupControl(driver, ContainerLocator, "container-ARTIGVALWAREHWAREHDES" + IdSuffix);
+	public SeeMorePage WarehWarehdesSeeMorePage => new SeeMorePage(driver, "ARTIGVAL", "ARTIGVALWAREHWAREHDES" + IdSuffix);
 
 	/// <summary>
 	/// Tipo
 	/// </summary>
-	public EnumControl ItemItemtype => new EnumControl(driver, ContainerLocator, "container-ARTIGVALITEM_ITEMTYPE");
+	public EnumControl ItemItemtype => new EnumControl(driver, ContainerLocator, "container-ARTIGVALITEM_ITEMTYPE" + IdSuffix);
 
 	/// <summary>
 	/// Code
 	/// </summary>
-	public BaseInputControl ItemItemcod => new BaseInputControl(driver, ContainerLocator, "container-ARTIGVALITEM_ITEMCOD_", "#ARTIGVALITEM_ITEMCOD_");
+	public BaseInputControl ItemItemcod => new BaseInputControl(driver, ContainerLocator, "container-ARTIGVALITEM_ITEMCOD_" + IdSuffix, "#ARTIGVALITEM_ITEMCOD_" + IdSuffix);
 
 	/// <summary>
 	/// Item
 	/// </summary>
-	public BaseInputControl ItemItemdes => new BaseInputControl(driver, ContainerLocator, "container-ARTIGVALITEM_ITEMDES_", "#ARTIGVALITEM_ITEMDES_");
+	public BaseInputControl ItemItemdes => new BaseInputControl(driver, ContainerLocator, "container-ARTIGVALITEM_ITEMDES_" + IdSuffix, "#ARTIGVALITEM_ITEMDES_" + IdSuffix);
 
 	/// <summary>
 	/// Date
 	/// </summary>
-	public DateInputControl ItemDate => new DateInputControl(driver, ContainerLocator, "#ARTIGVALITEM_DATE____");
+	public DateInputControl ItemDate => new DateInputControl(driver, ContainerLocator, "#ARTIGVALITEM_DATE____" + IdSuffix);
 
 	/// <summary>
 	/// Entries
 	/// </summary>
-	public BaseInputControl ItemEntries => new BaseInputControl(driver, ContainerLocator, "container-ARTIGVALITEM_ENTRIES_", "#ARTIGVALITEM_ENTRIES_");
+	public BaseInputControl ItemEntries => new BaseInputControl(driver, ContainerLocator, "container-ARTIGVALITEM_ENTRIES_" + IdSuffix, "#ARTIGVALITEM_ENTRIES_" + IdSuffix);
 
 	/// <summary>
 	/// Output:
 	/// </summary>
-	public BaseInputControl ItemExits => new BaseInputControl(driver, ContainerLocator, "container-ARTIGVALITEM_EXITS___", "#ARTIGVALITEM_EXITS___");
+	public BaseInputControl ItemExits => new BaseInputControl(driver, ContainerLocator, "container-ARTIGVALITEM_EXITS___" + IdSuffix, "#ARTIGVALITEM_EXITS___" + IdSuffix);
 
 	/// <summary>
 	/// Existence
 	/// </summary>
-	public BaseInputControl ItemExistenc => new BaseInputControl(driver, ContainerLocator, "container-ARTIGVALITEM_EXISTENC", "#ARTIGVALITEM_EXISTENC");
+	public BaseInputControl ItemExistenc => new BaseInputControl(driver, ContainerLocator, "container-ARTIGVALITEM_EXISTENC" + IdSuffix, "#ARTIGVALITEM_EXISTENC" + IdSuffix);
 
 	/// <summary>
 	/// Categorization
 	/// </summary>
-	public BaseInputControl ItemCategory => new BaseInputControl(driver, ContainerLocator, "container-ARTIGVALITEM_CATEGORY", "#ARTIGVALITEM_CATEGORY");
+	public BaseInputControl ItemCategory => new BaseInputControl(driver, ContainerLocator, "container-ARTIGVALITEM_CATEGORY" + IdSuffix, "#ARTIGVALITEM_CATEGORY" + IdSuffix);
 
 	/// <summary>
 	/// Availability
 	/// </summary>
-	public BaseInputControl ItemDisponib => new BaseInputControl(driver, ContainerLocator, "container-ARTIGVALITEM_DISPONIB", "#ARTIGVALITEM_DISPONIB");
+	public BaseInputControl ItemDisponib => new BaseInputControl(driver, ContainerLocator, "container-ARTIGVALITEM_DISPONIB" + IdSuffix, "#ARTIGVALITEM_DISPONIB" + IdSuffix);
 
-	public ArtigvalForm(IWebDriver driver, FORM_MODE mode, By? containerLocator = null)
-		: base(driver, mode, "ARTIGVAL") { }
+	public ArtigvalForm(IWebDriver driver, FORM_MODE mode, By? containerLocator = null, bool usePkInId = false)
+		: base(driver, mode, "ARTIGVAL", usePkInId: usePkInId) { }
 }

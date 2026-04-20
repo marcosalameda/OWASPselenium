@@ -9,12 +9,13 @@
 			<div
 				v-if="showFormHeader"
 				class="c-action-bar">
-				<h1
+				<component
 					v-if="formControl.uiComponents.header && formInfo.designation"
+					:is="topHeadingTag"
 					:id="formTitleId"
 					class="form-header">
 					{{ formInfo.designation }}
-				</h1>
+				</component>
 
 				<div class="c-action-bar__menu">
 					<template
@@ -40,13 +41,10 @@
 									@click="btn.action">
 									<template v-if="btn.icon">
 										<q-badge-indicator
-											v-if="btn.badge && btn.badge.isVisible"
-											:color="btn.badge.color">
+											:enabled="btn.badge?.isVisible ?? false"
+											:color="btn.badge?.color">
 											<q-icon v-bind="btn.icon" />
 										</q-badge-indicator>
-										<q-icon
-											v-else
-											v-bind="btn.icon" />
 									</template>
 								</q-toggle-group-item>
 							</template>
@@ -97,6 +95,7 @@
 		<q-container
 			fluid
 			data-key="ARTIG"
+			:data-identifier="primaryKeyValue"
 			:data-loading="!formInitialDataLoaded || !isActiveForm">
 			<template v-if="formControl.initialized && showFormBody">
 				<q-row v-if="controls.ARTIG___PSEUDNOVOGR02.isVisible">
@@ -105,9 +104,9 @@
 						cols="auto">
 						<q-group-box-container
 							v-if="controls.ARTIG___PSEUDNOVOGR02.isVisible"
-							id="ARTIG___PSEUDNOVOGR02"
 							v-bind="controls.ARTIG___PSEUDNOVOGR02"
-							:is-visible="controls.ARTIG___PSEUDNOVOGR02.isVisible">
+							:id="getControlId(controls.ARTIG___PSEUDNOVOGR02)"
+							:no-border="controls.ARTIG___PSEUDNOVOGR02.borderless">
 							<!-- Start ARTIG___PSEUDNOVOGR02 -->
 							<q-row v-if="controls.ARTIG___WAREHWAREHDES.isVisible">
 								<q-col
@@ -116,7 +115,8 @@
 									<base-input-structure
 										v-if="controls.ARTIG___WAREHWAREHDES.isVisible"
 										class="i-text"
-										v-bind="controls.ARTIG___WAREHWAREHDES"
+										v-bind="controls.ARTIG___WAREHWAREHDES.wrapperProps"
+										:id="getControlId(controls.ARTIG___WAREHWAREHDES)"
 										v-on="controls.ARTIG___WAREHWAREHDES.handlers"
 										:loading="controls.ARTIG___WAREHWAREHDES.props.loading"
 										:reporting-mode-on="reportingModeCAV"
@@ -124,6 +124,7 @@
 										<q-lookup
 											v-if="controls.ARTIG___WAREHWAREHDES.isVisible"
 											v-bind="controls.ARTIG___WAREHWAREHDES.props"
+											:id="getControlId(controls.ARTIG___WAREHWAREHDES)"
 											v-on="controls.ARTIG___WAREHWAREHDES.handlers" />
 										<q-see-more-artig-warehwarehdes
 											v-if="controls.ARTIG___WAREHWAREHDES.seeMoreIsVisible"
@@ -140,9 +141,9 @@
 					<q-col v-if="controls.ARTIG___PSEUDNOVOGR01.isVisible">
 						<q-group-box-container
 							v-if="controls.ARTIG___PSEUDNOVOGR01.isVisible"
-							id="ARTIG___PSEUDNOVOGR01"
 							v-bind="controls.ARTIG___PSEUDNOVOGR01"
-							:is-visible="controls.ARTIG___PSEUDNOVOGR01.isVisible">
+							:id="getControlId(controls.ARTIG___PSEUDNOVOGR01)"
+							:no-border="controls.ARTIG___PSEUDNOVOGR01.borderless">
 							<!-- Start ARTIG___PSEUDNOVOGR01 -->
 							<q-row v-if="controls.ARTIG___GITEMITEMGCOD.isVisible || controls.ARTIG___GITEMITEMDES_.isVisible">
 								<q-col
@@ -151,13 +152,15 @@
 									<base-input-structure
 										v-if="controls.ARTIG___GITEMITEMGCOD.isVisible"
 										class="i-text"
-										v-bind="controls.ARTIG___GITEMITEMGCOD"
+										v-bind="controls.ARTIG___GITEMITEMGCOD.wrapperProps"
+										:id="getControlId(controls.ARTIG___GITEMITEMGCOD)"
 										v-on="controls.ARTIG___GITEMITEMGCOD.handlers"
 										:loading="controls.ARTIG___GITEMITEMGCOD.props.loading"
 										:reporting-mode-on="reportingModeCAV"
 										:suggestion-mode-on="suggestionModeOn">
 										<q-text-field
 											v-bind="controls.ARTIG___GITEMITEMGCOD.props"
+											:id="getControlId(controls.ARTIG___GITEMITEMGCOD)"
 											@blur="onBlur(controls.ARTIG___GITEMITEMGCOD, model.GitemValItemgcod.value)"
 											@change="model.GitemValItemgcod.fnUpdateValueOnChange" />
 									</base-input-structure>
@@ -168,7 +171,8 @@
 									<base-input-structure
 										v-if="controls.ARTIG___GITEMITEMDES_.isVisible"
 										class="i-text"
-										v-bind="controls.ARTIG___GITEMITEMDES_"
+										v-bind="controls.ARTIG___GITEMITEMDES_.wrapperProps"
+										:id="getControlId(controls.ARTIG___GITEMITEMDES_)"
 										v-on="controls.ARTIG___GITEMITEMDES_.handlers"
 										:loading="controls.ARTIG___GITEMITEMDES_.props.loading"
 										:reporting-mode-on="reportingModeCAV"
@@ -176,6 +180,7 @@
 										<q-lookup
 											v-if="controls.ARTIG___GITEMITEMDES_.isVisible"
 											v-bind="controls.ARTIG___GITEMITEMDES_.props"
+											:id="getControlId(controls.ARTIG___GITEMITEMDES_)"
 											v-on="controls.ARTIG___GITEMITEMDES_.handlers" />
 										<q-see-more-artig-gitemitemdes
 											v-if="controls.ARTIG___GITEMITEMDES_.seeMoreIsVisible"
@@ -192,9 +197,9 @@
 					<q-col v-if="controls.ARTIG___PSEUDNOVOGR07.isVisible">
 						<q-group-box-container
 							v-if="controls.ARTIG___PSEUDNOVOGR07.isVisible"
-							id="ARTIG___PSEUDNOVOGR07"
 							v-bind="controls.ARTIG___PSEUDNOVOGR07"
-							:is-visible="controls.ARTIG___PSEUDNOVOGR07.isVisible">
+							:id="getControlId(controls.ARTIG___PSEUDNOVOGR07)"
+							:no-border="controls.ARTIG___PSEUDNOVOGR07.borderless">
 							<!-- Start ARTIG___PSEUDNOVOGR07 -->
 							<q-row v-if="controls.ARTIG___ITEM_ITEMCOD_.isVisible || controls.ARTIG___ITEM_ITEMDES_.isVisible || controls.ARTIG___ITEM_VALID___.isVisible">
 								<q-col
@@ -203,13 +208,15 @@
 									<base-input-structure
 										v-if="controls.ARTIG___ITEM_ITEMCOD_.isVisible"
 										class="i-text"
-										v-bind="controls.ARTIG___ITEM_ITEMCOD_"
+										v-bind="controls.ARTIG___ITEM_ITEMCOD_.wrapperProps"
+										:id="getControlId(controls.ARTIG___ITEM_ITEMCOD_)"
 										v-on="controls.ARTIG___ITEM_ITEMCOD_.handlers"
 										:loading="controls.ARTIG___ITEM_ITEMCOD_.props.loading"
 										:reporting-mode-on="reportingModeCAV"
 										:suggestion-mode-on="suggestionModeOn">
 										<q-text-field
 											v-bind="controls.ARTIG___ITEM_ITEMCOD_.props"
+											:id="getControlId(controls.ARTIG___ITEM_ITEMCOD_)"
 											@blur="onBlur(controls.ARTIG___ITEM_ITEMCOD_, model.ValItemcod.value)"
 											@change="model.ValItemcod.fnUpdateValueOnChange" />
 									</base-input-structure>
@@ -220,13 +227,15 @@
 									<base-input-structure
 										v-if="controls.ARTIG___ITEM_ITEMDES_.isVisible"
 										class="i-text"
-										v-bind="controls.ARTIG___ITEM_ITEMDES_"
+										v-bind="controls.ARTIG___ITEM_ITEMDES_.wrapperProps"
+										:id="getControlId(controls.ARTIG___ITEM_ITEMDES_)"
 										v-on="controls.ARTIG___ITEM_ITEMDES_.handlers"
 										:loading="controls.ARTIG___ITEM_ITEMDES_.props.loading"
 										:reporting-mode-on="reportingModeCAV"
 										:suggestion-mode-on="suggestionModeOn">
 										<q-text-field
 											v-bind="controls.ARTIG___ITEM_ITEMDES_.props"
+											:id="getControlId(controls.ARTIG___ITEM_ITEMDES_)"
 											@blur="onBlur(controls.ARTIG___ITEM_ITEMDES_, model.ValItemdes.value)"
 											@change="model.ValItemdes.fnUpdateValueOnChange" />
 									</base-input-structure>
@@ -236,8 +245,9 @@
 									cols="auto">
 									<base-input-structure
 										v-if="controls.ARTIG___ITEM_VALID___.isVisible"
-										class="i-checkbox"
-										v-bind="controls.ARTIG___ITEM_VALID___"
+										class="i-text"
+										v-bind="controls.ARTIG___ITEM_VALID___.wrapperProps"
+										:id="getControlId(controls.ARTIG___ITEM_VALID___)"
 										v-on="controls.ARTIG___ITEM_VALID___.handlers"
 										:loading="controls.ARTIG___ITEM_VALID___.props.loading"
 										:reporting-mode-on="reportingModeCAV"
@@ -246,6 +256,7 @@
 											<q-checkbox
 												v-if="controls.ARTIG___ITEM_VALID___.isVisible"
 												v-bind="controls.ARTIG___ITEM_VALID___.props"
+												:id="getControlId(controls.ARTIG___ITEM_VALID___)"
 												v-on="controls.ARTIG___ITEM_VALID___.handlers" />
 										</template>
 									</base-input-structure>
@@ -258,7 +269,8 @@
 									<base-input-structure
 										v-if="controls.ARTIG___ITEM_ITEMTYPE.isVisible"
 										class="i-text"
-										v-bind="controls.ARTIG___ITEM_ITEMTYPE"
+										v-bind="controls.ARTIG___ITEM_ITEMTYPE.wrapperProps"
+										:id="getControlId(controls.ARTIG___ITEM_ITEMTYPE)"
 										v-on="controls.ARTIG___ITEM_ITEMTYPE.handlers"
 										:loading="controls.ARTIG___ITEM_ITEMTYPE.props.loading"
 										:reporting-mode-on="reportingModeCAV"
@@ -266,6 +278,7 @@
 										<q-select
 											v-if="controls.ARTIG___ITEM_ITEMTYPE.isVisible"
 											v-bind="controls.ARTIG___ITEM_ITEMTYPE.props"
+											:id="getControlId(controls.ARTIG___ITEM_ITEMTYPE)"
 											@update:model-value="model.ValItemtype.fnUpdateValue" />
 									</base-input-structure>
 								</q-col>
@@ -277,7 +290,8 @@
 									<base-input-structure
 										v-if="controls.ARTIG___ITEM_ENTRIES_.isVisible"
 										class="i-text"
-										v-bind="controls.ARTIG___ITEM_ENTRIES_"
+										v-bind="controls.ARTIG___ITEM_ENTRIES_.wrapperProps"
+										:id="getControlId(controls.ARTIG___ITEM_ENTRIES_)"
 										v-on="controls.ARTIG___ITEM_ENTRIES_.handlers"
 										:loading="controls.ARTIG___ITEM_ENTRIES_.props.loading"
 										:reporting-mode-on="reportingModeCAV"
@@ -285,6 +299,7 @@
 										<q-numeric-input
 											v-if="controls.ARTIG___ITEM_ENTRIES_.isVisible"
 											v-bind="controls.ARTIG___ITEM_ENTRIES_.props"
+											:id="getControlId(controls.ARTIG___ITEM_ENTRIES_)"
 											@update:model-value="model.ValEntries.fnUpdateValue" />
 									</base-input-structure>
 								</q-col>
@@ -294,7 +309,8 @@
 									<base-input-structure
 										v-if="controls.ARTIG___ITEM_EXITS___.isVisible"
 										class="i-text"
-										v-bind="controls.ARTIG___ITEM_EXITS___"
+										v-bind="controls.ARTIG___ITEM_EXITS___.wrapperProps"
+										:id="getControlId(controls.ARTIG___ITEM_EXITS___)"
 										v-on="controls.ARTIG___ITEM_EXITS___.handlers"
 										:loading="controls.ARTIG___ITEM_EXITS___.props.loading"
 										:reporting-mode-on="reportingModeCAV"
@@ -302,6 +318,7 @@
 										<q-numeric-input
 											v-if="controls.ARTIG___ITEM_EXITS___.isVisible"
 											v-bind="controls.ARTIG___ITEM_EXITS___.props"
+											:id="getControlId(controls.ARTIG___ITEM_EXITS___)"
 											@update:model-value="model.ValExits.fnUpdateValue" />
 									</base-input-structure>
 								</q-col>
@@ -311,7 +328,8 @@
 									<base-input-structure
 										v-if="controls.ARTIG___ITEM_EXISTENC.isVisible"
 										class="i-text"
-										v-bind="controls.ARTIG___ITEM_EXISTENC"
+										v-bind="controls.ARTIG___ITEM_EXISTENC.wrapperProps"
+										:id="getControlId(controls.ARTIG___ITEM_EXISTENC)"
 										v-on="controls.ARTIG___ITEM_EXISTENC.handlers"
 										:loading="controls.ARTIG___ITEM_EXISTENC.props.loading"
 										:reporting-mode-on="reportingModeCAV"
@@ -319,6 +337,7 @@
 										<q-numeric-input
 											v-if="controls.ARTIG___ITEM_EXISTENC.isVisible"
 											v-bind="controls.ARTIG___ITEM_EXISTENC.props"
+											:id="getControlId(controls.ARTIG___ITEM_EXISTENC)"
 											@update:model-value="model.ValExistenc.fnUpdateValue" />
 									</base-input-structure>
 								</q-col>
@@ -328,14 +347,16 @@
 									<base-input-structure
 										v-if="controls.ARTIG___ITEM_DISPONIB.isVisible"
 										class="i-text"
-										v-bind="controls.ARTIG___ITEM_DISPONIB"
+										v-bind="controls.ARTIG___ITEM_DISPONIB.wrapperProps"
+										:id="getControlId(controls.ARTIG___ITEM_DISPONIB)"
 										v-on="controls.ARTIG___ITEM_DISPONIB.handlers"
 										:loading="controls.ARTIG___ITEM_DISPONIB.props.loading"
 										:reporting-mode-on="reportingModeCAV"
 										:suggestion-mode-on="suggestionModeOn">
 										<q-select
 											v-if="controls.ARTIG___ITEM_DISPONIB.isVisible"
-											v-bind="controls.ARTIG___ITEM_DISPONIB.props" />
+											v-bind="controls.ARTIG___ITEM_DISPONIB.props"
+											:id="getControlId(controls.ARTIG___ITEM_DISPONIB)" />
 									</base-input-structure>
 								</q-col>
 							</q-row>
@@ -343,8 +364,8 @@
 								<q-col v-if="controls.ARTIG___PSEUDNOVOGR08.isVisible">
 									<q-group-collapsible
 										v-if="controls.ARTIG___PSEUDNOVOGR08.isVisible"
-										id="ARTIG___PSEUDNOVOGR08"
 										v-bind="controls.ARTIG___PSEUDNOVOGR08"
+										:id="getControlId(controls.ARTIG___PSEUDNOVOGR08)"
 										v-on="controls.ARTIG___PSEUDNOVOGR08.handlers">
 										<!-- Start ARTIG___PSEUDNOVOGR08 -->
 										<q-row v-if="controls.ARTIG___ITEM_IMAGE___.isVisible">
@@ -354,7 +375,8 @@
 												<base-input-structure
 													v-if="controls.ARTIG___ITEM_IMAGE___.isVisible"
 													class="q-image"
-													v-bind="controls.ARTIG___ITEM_IMAGE___"
+													v-bind="controls.ARTIG___ITEM_IMAGE___.wrapperProps"
+													:id="getControlId(controls.ARTIG___ITEM_IMAGE___)"
 													v-on="controls.ARTIG___ITEM_IMAGE___.handlers"
 													:loading="controls.ARTIG___ITEM_IMAGE___.props.loading"
 													:reporting-mode-on="reportingModeCAV"
@@ -362,6 +384,7 @@
 													<q-image
 														v-if="controls.ARTIG___ITEM_IMAGE___.isVisible"
 														v-bind="controls.ARTIG___ITEM_IMAGE___.props"
+														:id="getControlId(controls.ARTIG___ITEM_IMAGE___)"
 														v-on="controls.ARTIG___ITEM_IMAGE___.handlers" />
 												</base-input-structure>
 											</q-col>
@@ -378,12 +401,12 @@
 					<q-col v-if="controls.ARTIG___PSEUDNOVOGR05.isVisible">
 						<q-accordion
 							v-if="controls.ARTIG___PSEUDNOVOGR05.isVisible"
-							id="ARTIG___PSEUDNOVOGR05"
+							:id="getControlId(controls.ARTIG___PSEUDNOVOGR05)"
 							v-model="controls.ARTIG___PSEUDNOVOGR05.openChild">
 							<!-- Start ARTIG___PSEUDNOVOGR05 -->
 							<q-accordion-item
 								v-if="controls.ARTIG___PSEUDNOVOGR03.isVisible"
-								id="ARTIG___PSEUDNOVOGR03-container"
+								:id="getControlId(controls.ARTIG___PSEUDNOVOGR03) + '-container'"
 								value="ARTIG___PSEUDNOVOGR03"
 								:title="controls.ARTIG___PSEUDNOVOGR03.label">
 								<!-- Start ARTIG___PSEUDNOVOGR03 -->
@@ -394,21 +417,22 @@
 										<q-table
 											v-if="controls.ARTIG___PSEUDCONTACOR.isVisible"
 											v-bind="controls.ARTIG___PSEUDCONTACOR"
+											:id="getControlId(controls.ARTIG___PSEUDCONTACOR)"
 											v-on="controls.ARTIG___PSEUDCONTACOR.handlers">
+											<template #header>
+												<q-table-config
+													:table-ctrl="controls.ARTIG___PSEUDCONTACOR"
+													v-on="controls.ARTIG___PSEUDCONTACOR.handlers" />
+											</template>
 											<!-- USE /[MANUAL GQT CUSTOM_TABLE ARTIG___PSEUDCONTACOR]/ -->
 										</q-table>
-										<q-table-extra-extension
-											v-if="controls.ARTIG___PSEUDCONTACOR.isVisible"
-											:list-ctrl="controls.ARTIG___PSEUDCONTACOR"
-											:filter-operators="controls.ARTIG___PSEUDCONTACOR.filterOperators"
-											v-on="controls.ARTIG___PSEUDCONTACOR.handlers" />
 									</q-col>
 								</q-row>
 								<!-- End ARTIG___PSEUDNOVOGR03 -->
 							</q-accordion-item>
 							<q-accordion-item
 								v-if="controls.ARTIG___PSEUDNOVOGR04.isVisible"
-								id="ARTIG___PSEUDNOVOGR04-container"
+								:id="getControlId(controls.ARTIG___PSEUDNOVOGR04) + '-container'"
 								value="ARTIG___PSEUDNOVOGR04"
 								:title="controls.ARTIG___PSEUDNOVOGR04.label">
 								<!-- Start ARTIG___PSEUDNOVOGR04 -->
@@ -419,14 +443,15 @@
 										<q-table
 											v-if="controls.ARTIG___PSEUDLENTRADA.isVisible"
 											v-bind="controls.ARTIG___PSEUDLENTRADA"
+											:id="getControlId(controls.ARTIG___PSEUDLENTRADA)"
 											v-on="controls.ARTIG___PSEUDLENTRADA.handlers">
+											<template #header>
+												<q-table-config
+													:table-ctrl="controls.ARTIG___PSEUDLENTRADA"
+													v-on="controls.ARTIG___PSEUDLENTRADA.handlers" />
+											</template>
 											<!-- USE /[MANUAL GQT CUSTOM_TABLE ARTIG___PSEUDLENTRADA]/ -->
 										</q-table>
-										<q-table-extra-extension
-											v-if="controls.ARTIG___PSEUDLENTRADA.isVisible"
-											:list-ctrl="controls.ARTIG___PSEUDLENTRADA"
-											:filter-operators="controls.ARTIG___PSEUDLENTRADA.filterOperators"
-											v-on="controls.ARTIG___PSEUDLENTRADA.handlers" />
 									</q-col>
 								</q-row>
 								<q-row v-if="controls.ARTIG___PSEUDLSAIDAS_.isVisible">
@@ -436,14 +461,15 @@
 										<q-table
 											v-if="controls.ARTIG___PSEUDLSAIDAS_.isVisible"
 											v-bind="controls.ARTIG___PSEUDLSAIDAS_"
+											:id="getControlId(controls.ARTIG___PSEUDLSAIDAS_)"
 											v-on="controls.ARTIG___PSEUDLSAIDAS_.handlers">
+											<template #header>
+												<q-table-config
+													:table-ctrl="controls.ARTIG___PSEUDLSAIDAS_"
+													v-on="controls.ARTIG___PSEUDLSAIDAS_.handlers" />
+											</template>
 											<!-- USE /[MANUAL GQT CUSTOM_TABLE ARTIG___PSEUDLSAIDAS_]/ -->
 										</q-table>
-										<q-table-extra-extension
-											v-if="controls.ARTIG___PSEUDLSAIDAS_.isVisible"
-											:list-ctrl="controls.ARTIG___PSEUDLSAIDAS_"
-											:filter-operators="controls.ARTIG___PSEUDLSAIDAS_.filterOperators"
-											v-on="controls.ARTIG___PSEUDLSAIDAS_.handlers" />
 									</q-col>
 								</q-row>
 								<!-- End ARTIG___PSEUDNOVOGR04 -->
@@ -458,8 +484,8 @@
 						cols="auto">
 						<q-group-collapsible
 							v-if="controls.ARTIG___PSEUDNOVOGR06.isVisible"
-							id="ARTIG___PSEUDNOVOGR06"
 							v-bind="controls.ARTIG___PSEUDNOVOGR06"
+							:id="getControlId(controls.ARTIG___PSEUDNOVOGR06)"
 							v-on="controls.ARTIG___PSEUDNOVOGR06.handlers">
 							<!-- Start ARTIG___PSEUDNOVOGR06 -->
 							<q-row v-if="controls.ARTIG___PSEUDCATEGORI.isVisible || controls.ARTIG___PSEUDESCCATEG.isVisible">
@@ -469,25 +495,27 @@
 									<q-table
 										v-if="controls.ARTIG___PSEUDCATEGORI.isVisible"
 										v-bind="controls.ARTIG___PSEUDCATEGORI"
+										:id="getControlId(controls.ARTIG___PSEUDCATEGORI)"
 										v-on="controls.ARTIG___PSEUDCATEGORI.handlers">
+										<template #header>
+											<q-table-config
+												:table-ctrl="controls.ARTIG___PSEUDCATEGORI"
+												v-on="controls.ARTIG___PSEUDCATEGORI.handlers" />
+										</template>
 										<!-- USE /[MANUAL GQT CUSTOM_TABLE ARTIG___PSEUDCATEGORI]/ -->
 									</q-table>
-									<q-table-extra-extension
-										v-if="controls.ARTIG___PSEUDCATEGORI.isVisible"
-										:list-ctrl="controls.ARTIG___PSEUDCATEGORI"
-										:filter-operators="controls.ARTIG___PSEUDCATEGORI.filterOperators"
-										v-on="controls.ARTIG___PSEUDCATEGORI.handlers" />
 									<base-input-structure
 										v-if="controls.ARTIG___PSEUDESCCATEG.isVisible"
 										class="i-text"
-										v-bind="controls.ARTIG___PSEUDESCCATEG"
+										v-bind="controls.ARTIG___PSEUDESCCATEG.wrapperProps"
+										:id="getControlId(controls.ARTIG___PSEUDESCCATEG)"
 										v-on="controls.ARTIG___PSEUDESCCATEG.handlers"
 										:loading="controls.ARTIG___PSEUDESCCATEG.props.loading"
 										:reporting-mode-on="reportingModeCAV"
 										:suggestion-mode-on="suggestionModeOn">
 										<q-check-list-extension
 											v-if="controls.ARTIG___PSEUDESCCATEG.isVisible"
-											id="ARTIG___PSEUDESCCATEG"
+											:id="getControlId(controls.ARTIG___PSEUDESCCATEG)"
 											:options="controls.ARTIG___PSEUDCATEGORI.rows"
 											:search-column-name="controls.ARTIG___PSEUDCATEGORI.columnsOriginal[0].name"
 											:search-column-label="controls.ARTIG___PSEUDCATEGORI.columnsOriginal[0].label"
@@ -507,14 +535,15 @@
 									<q-table
 										v-if="controls.ARTIG___PSEUDCATEGOR_.isVisible"
 										v-bind="controls.ARTIG___PSEUDCATEGOR_"
+										:id="getControlId(controls.ARTIG___PSEUDCATEGOR_)"
 										v-on="controls.ARTIG___PSEUDCATEGOR_.handlers">
+										<template #header>
+											<q-table-config
+												:table-ctrl="controls.ARTIG___PSEUDCATEGOR_"
+												v-on="controls.ARTIG___PSEUDCATEGOR_.handlers" />
+										</template>
 										<!-- USE /[MANUAL GQT CUSTOM_TABLE ARTIG___PSEUDCATEGOR_]/ -->
 									</q-table>
-									<q-table-extra-extension
-										v-if="controls.ARTIG___PSEUDCATEGOR_.isVisible"
-										:list-ctrl="controls.ARTIG___PSEUDCATEGOR_"
-										:filter-operators="controls.ARTIG___PSEUDCATEGOR_.filterOperators"
-										v-on="controls.ARTIG___PSEUDCATEGOR_.handlers" />
 								</q-col>
 							</q-row>
 							<q-row v-if="controls.ARTIG___ITEM_CATEGORY.isVisible">
@@ -524,7 +553,8 @@
 									<base-input-structure
 										v-if="controls.ARTIG___ITEM_CATEGORY.isVisible"
 										class="i-textarea"
-										v-bind="controls.ARTIG___ITEM_CATEGORY"
+										v-bind="controls.ARTIG___ITEM_CATEGORY.wrapperProps"
+										:id="getControlId(controls.ARTIG___ITEM_CATEGORY)"
 										v-on="controls.ARTIG___ITEM_CATEGORY.handlers"
 										:loading="controls.ARTIG___ITEM_CATEGORY.props.loading"
 										:reporting-mode-on="reportingModeCAV"
@@ -532,6 +562,7 @@
 										<q-text-area
 											v-if="controls.ARTIG___ITEM_CATEGORY.isVisible"
 											v-bind="controls.ARTIG___ITEM_CATEGORY.props"
+											:id="getControlId(controls.ARTIG___ITEM_CATEGORY)"
 											v-on="controls.ARTIG___ITEM_CATEGORY.handlers" />
 									</base-input-structure>
 								</q-col>
@@ -547,7 +578,8 @@
 						<base-input-structure
 							v-if="controls.ARTIG___ITEM_DATE____.isVisible"
 							class="i-text"
-							v-bind="controls.ARTIG___ITEM_DATE____"
+							v-bind="controls.ARTIG___ITEM_DATE____.wrapperProps"
+							:id="getControlId(controls.ARTIG___ITEM_DATE____)"
 							v-on="controls.ARTIG___ITEM_DATE____.handlers"
 							:loading="controls.ARTIG___ITEM_DATE____.props.loading"
 							:reporting-mode-on="reportingModeCAV"
@@ -555,6 +587,7 @@
 							<q-date-time-picker
 								v-if="controls.ARTIG___ITEM_DATE____.isVisible"
 								v-bind="controls.ARTIG___ITEM_DATE____.props"
+								:id="getControlId(controls.ARTIG___ITEM_DATE____)"
 								:model-value="model.ValDate.value"
 								@reset-icon-click="model.ValDate.fnUpdateValue(model.ValDate.originalValue ?? new Date())"
 								@update:model-value="model.ValDate.fnUpdateValue($event ?? '')" />
@@ -565,7 +598,7 @@
 		</q-container>
 	</teleport>
 
-	<hr v-if="!isPopup && showFormFooter" />
+	<q-divider v-if="!isPopup && showFormFooter" />
 
 	<teleport
 		v-if="formModalIsReady && showFormFooter"
@@ -1010,6 +1043,7 @@
 						label: computed(() => this.Resources.WAREHOUSE51864),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
+						borderless: false,
 						isCollapsible: false,
 						anchored: false,
 						directChildren: ['ARTIG___WAREHWAREHDES'],
@@ -1024,6 +1058,7 @@
 						label: computed(() => this.Resources.GLOBAL_ITEM49586),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
+						borderless: false,
 						isCollapsible: false,
 						anchored: false,
 						directChildren: ['ARTIG___GITEMITEMGCOD', 'ARTIG___GITEMITEMDES_'],
@@ -1070,8 +1105,8 @@
 						container: 'ARTIG___PSEUDNOVOGR07',
 						maxLength: 1,
 						arrayName: 'TipoArti',
-						helpShortItem: '',
-						helpDetailedItem: '',
+						helpShortItem: 'None',
+						helpDetailedItem: 'None',
 						controlLimits: [
 						],
 					}, this),
@@ -1130,6 +1165,7 @@
 						label: computed(() => this.Resources.ITEM40802),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
+						borderless: false,
 						isCollapsible: false,
 						anchored: false,
 						directChildren: ['ARTIG___ITEM_ITEMCOD_', 'ARTIG___ITEM_ITEMDES_', 'ARTIG___ITEM_VALID___', 'ARTIG___ITEM_ITEMTYPE', 'ARTIG___ITEM_ENTRIES_', 'ARTIG___ITEM_EXITS___', 'ARTIG___ITEM_EXISTENC', 'ARTIG___ITEM_DISPONIB', 'ARTIG___PSEUDNOVOGR08'],
@@ -1146,6 +1182,7 @@
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'ARTIG___PSEUDNOVOGR05',
 						isInAccordion: true,
+						borderless: false,
 						isCollapsible: true,
 						anchored: false,
 						directChildren: ['ARTIG___PSEUDCONTACOR'],
@@ -1155,7 +1192,7 @@
 					ARTIG___PSEUDCONTACOR: new fieldControlClass.TableListControl({
 						id: 'ARTIG___PSEUDCONTACOR',
 						name: 'CONTACOR',
-						size: '',
+						size: 'xxlarge',
 						helpControl: {
 							shortHelp: {
 								type: 'Subtitle',
@@ -1170,6 +1207,7 @@
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'ARTIG___PSEUDNOVOGR03',
+						headerLevel: computed(() => this.baseHeadingLevel + 1),
 						controller: 'ITEM',
 						action: 'Artig_ValContacor',
 						hasDependencies: false,
@@ -1254,7 +1292,6 @@
 							searchBarConfig: {
 								visibility: true
 							},
-							filtersVisible: true,
 							allowColumnFilters: true,
 							allowColumnSort: true,
 							generalCustomActions: [
@@ -1276,7 +1313,7 @@
 								sortOrder: 'asc'
 							}
 						},
-						globalEvents: ['changed-INDOC', 'changed-CCORR', 'changed-ITEM'],
+						globalEvents: ['changed-ITEM', 'changed-CCORR', 'changed-INDOC'],
 						uuid: 'Artig_ValContacor',
 						allSelectedRows: 'false',
 						controlLimits: [
@@ -1297,6 +1334,7 @@
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'ARTIG___PSEUDNOVOGR05',
 						isInAccordion: true,
+						borderless: false,
 						isCollapsible: true,
 						anchored: false,
 						directChildren: ['ARTIG___PSEUDLENTRADA', 'ARTIG___PSEUDLSAIDAS_'],
@@ -1306,11 +1344,12 @@
 					ARTIG___PSEUDLENTRADA: new fieldControlClass.TableListControl({
 						id: 'ARTIG___PSEUDLENTRADA',
 						name: 'LENTRADA',
-						size: '',
+						size: 'xxlarge',
 						label: computed(() => this.Resources.ENTRIES32319),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'ARTIG___PSEUDNOVOGR04',
+						headerLevel: computed(() => this.baseHeadingLevel + 1),
 						controller: 'ITEM',
 						action: 'Artig_ValLentrada',
 						hasDependencies: true,
@@ -1334,7 +1373,6 @@
 								label: computed(() => this.Resources.DOCUMENT_NO_30174),
 								scrollData: 10,
 								supportForm: 'DENTR',
-								supportFormIsPopup: false,
 								params: {
 									type: 'form',
 									isRoute: true,
@@ -1385,7 +1423,6 @@
 							searchBarConfig: {
 								visibility: true
 							},
-							filtersVisible: true,
 							allowColumnFilters: true,
 							allowColumnSort: true,
 							crudActions: [
@@ -1459,9 +1496,7 @@
 									id: 'insert',
 									name: 'insert',
 									title: computed(() => this.Resources.INSERIR43365),
-									icon: {
-										icon: 'add'
-									},
+									icon: { icon: 'add' },
 									isInReadOnly: false,
 									params: {
 										action: vm.openFormAction,
@@ -1527,11 +1562,12 @@
 					ARTIG___PSEUDLSAIDAS_: new fieldControlClass.TableListControl({
 						id: 'ARTIG___PSEUDLSAIDAS_',
 						name: 'LSAIDAS',
-						size: '',
+						size: 'xxlarge',
 						label: computed(() => this.Resources.OUTPUT_10769),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'ARTIG___PSEUDNOVOGR04',
+						headerLevel: computed(() => this.baseHeadingLevel + 1),
 						controller: 'ITEM',
 						action: 'Artig_ValLsaidas',
 						hasDependencies: true,
@@ -1555,7 +1591,6 @@
 								label: computed(() => this.Resources.DOCUMENT_NO_30174),
 								scrollData: 10,
 								supportForm: 'DSAID',
-								supportFormIsPopup: false,
 								params: {
 									type: 'form',
 									isRoute: true,
@@ -1606,7 +1641,6 @@
 							searchBarConfig: {
 								visibility: true
 							},
-							filtersVisible: true,
 							allowColumnFilters: true,
 							allowColumnSort: true,
 							crudActions: [
@@ -1680,9 +1714,7 @@
 									id: 'insert',
 									name: 'insert',
 									title: computed(() => this.Resources.INSERIR43365),
-									icon: {
-										icon: 'add'
-									},
+									icon: { icon: 'add' },
 									isInReadOnly: false,
 									params: {
 										action: vm.openFormAction,
@@ -1733,7 +1765,7 @@
 								sortOrder: 'desc'
 							}
 						},
-						globalEvents: ['changed-WAREH', 'changed-OUDOC', 'changed-OUTPU', 'changed-OUTPT', 'changed-ITEM', 'changed-WARE1'],
+						globalEvents: ['changed-ITEM', 'changed-OUDOC', 'changed-WAREH', 'changed-OUTPU', 'changed-OUTPT', 'changed-WARE1'],
 						uuid: 'Artig_ValLsaidas',
 						allSelectedRows: 'false',
 						controlLimits: [
@@ -1761,11 +1793,12 @@
 					ARTIG___PSEUDCATEGORI: new fieldControlClass.MultipleValuesControl({
 						id: 'ARTIG___PSEUDCATEGORI',
 						name: 'CATEGORI',
-						size: '',
+						size: 'large',
 						label: computed(() => this.Resources.CATEGORIZATION17554),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'ARTIG___PSEUDNOVOGR06',
+						headerLevel: computed(() => this.baseHeadingLevel + 1),
 						controller: 'ITEM',
 						action: 'Artig_List_Categori',
 						hasDependencies: false,
@@ -1862,11 +1895,12 @@
 					ARTIG___PSEUDCATEGOR_: new fieldControlClass.MultipleValuesControl({
 						id: 'ARTIG___PSEUDCATEGOR_',
 						name: 'CATEGOR',
-						size: '',
+						size: 'large',
 						label: computed(() => this.Resources.FILTERED_CHECKLIST06261),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'ARTIG___PSEUDNOVOGR06',
+						headerLevel: computed(() => this.baseHeadingLevel + 1),
 						controller: 'ITEM',
 						action: 'Artig_List_Categor',
 						hasDependencies: false,
@@ -2014,8 +2048,8 @@
 						isFormulaBlocked: true,
 						maxLength: 1,
 						arrayName: 'dsiponib',
-						helpShortItem: '',
-						helpDetailedItem: '',
+						helpShortItem: 'None',
+						helpDetailedItem: 'None',
 						controlLimits: [
 						],
 					}, this),
@@ -2472,7 +2506,6 @@
 
 				this.afterControlUpdate(controlField, fieldValue)
 			},
-
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
 // USE /[MANUAL GQT FUNCTIONS_JS ARTIG]/
 // eslint-disable-next-line

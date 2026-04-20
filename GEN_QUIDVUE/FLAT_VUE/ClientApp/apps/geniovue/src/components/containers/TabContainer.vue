@@ -14,7 +14,7 @@
 					ref="tabButtons"
 					borderless
 					:id="getTabComponentId(tab)"
-					:data-testid="getTabComponentId(tab)"
+					:data-testid="`tab-container-${tab.id}`"
 					:disabled="tab.isBlocked"
 					:class="[{ active: selectedTab === tab.id }, 'nav-item']"
 					:style="{ cursor: selectedTab === tab.id ? 'text' : 'pointer' }"
@@ -29,8 +29,7 @@
 					@keydown.stop.prevent.home="selectTabIndex(0)"
 					@keydown.stop.prevent.end="selectTabIndex(selectableTabs.length - 1)">
 					<span
-						:id="`tab_link_${tab.id}`"
-						:data-testid="`tab_link_${tab.id}`"
+						:id="`${controlId}-tab-content-${tab.id}`"
 						:data-val-required="tab.isRequired"
 						:class="[
 							{
@@ -62,7 +61,7 @@
 				<q-subtitle-help
 					v-if="activeTab.helpControl"
 					:help-control="activeTab.helpControl" />
-				<slot name="tab-panel"></slot>
+				<slot />
 			</div>
 		</div>
 	</div>
@@ -140,7 +139,7 @@
 		data()
 		{
 			return {
-				controlId: this.id || `tab-container-${this._.uid}`
+				controlId: this.id || `tabs-container-${this._.uid}`
 			}
 		},
 
@@ -208,7 +207,7 @@
 			 */
 			getTabComponentId(tab)
 			{
-				return `tab-container-${tab.id}`
+				return `${this.controlId}-tab-${tab.id}`
 			},
 
 			/**

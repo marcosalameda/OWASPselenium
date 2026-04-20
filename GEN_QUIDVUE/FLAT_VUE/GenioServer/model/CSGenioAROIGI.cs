@@ -47,7 +47,7 @@ namespace CSGenio.business
 			Qfield = new Field(info.Alias, "codroigi", FieldType.KEY_GUID);
 			Qfield.FieldDescription = "";
 			Qfield.FieldSize =  36;
-			Qfield.CavDesignation = "";
+			Qfield.VisivelCav = CavVisibilityType.Nunca;
 
 			Qfield.Dupmsg = "";
 			info.RegisterFieldDB(Qfield);
@@ -57,7 +57,7 @@ namespace CSGenio.business
 			Qfield.FieldDescription = "";
 			Qfield.FieldSize =  36;
 			Qfield.MQueue = false;
-			Qfield.CavDesignation = "";
+			Qfield.VisivelCav = CavVisibilityType.Nunca;
 
 			Qfield.Dupmsg = "";
 			info.RegisterFieldDB(Qfield);
@@ -383,10 +383,10 @@ namespace CSGenio.business
 
 			// ROW_REORDERING
 			CriteriaSet criteria = CriteriaSet.And();
+			var prefixField = DBFields[FldCodrogl1.Field];
 			// For key fields, an empty prefix means 'no value', so we normalise it to null
 			// to generate a WHERE ... IS NULL filter. For non-empty values, we convert the
 			// prefix to a database-safe value (e.g. Guid) before applying the equality filter.
-			var prefixField = DBFields[FldCodrogl1.Field];
 			object prefixRealValue = prefixField.isEmptyValue(ValCodrogl1) ? null : QueryUtils.ToValidDbValue(ValCodrogl1, prefixField);
 			criteria.Equal(FldCodrogl1, prefixRealValue);
 			sp.ReorderSequence(this, DBFields[FldOrder.Field], criteria);

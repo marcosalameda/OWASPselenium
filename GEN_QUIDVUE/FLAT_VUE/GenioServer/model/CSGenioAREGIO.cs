@@ -47,7 +47,7 @@ namespace CSGenio.business
 			Qfield = new Field(info.Alias, "codregia", FieldType.KEY_GUID);
 			Qfield.FieldDescription = "";
 			Qfield.FieldSize =  36;
-			Qfield.CavDesignation = "";
+			Qfield.VisivelCav = CavVisibilityType.Nunca;
 
 			Qfield.Dupmsg = "";
 			info.RegisterFieldDB(Qfield);
@@ -56,7 +56,7 @@ namespace CSGenio.business
 			Qfield = new Field(info.Alias, "codcntry", FieldType.KEY_GUID);
 			Qfield.FieldDescription = "";
 			Qfield.FieldSize =  36;
-			Qfield.CavDesignation = "";
+			Qfield.VisivelCav = CavVisibilityType.Nunca;
 
 			Qfield.Dupmsg = "";
 			info.RegisterFieldDB(Qfield);
@@ -75,7 +75,7 @@ namespace CSGenio.business
 			Qfield.FieldDescription = "";
 			Qfield.FieldSize =  36;
 			Qfield.MQueue = false;
-			Qfield.CavDesignation = "";
+			Qfield.VisivelCav = CavVisibilityType.Nunca;
 
 			Qfield.Dupmsg = "";
 			info.RegisterFieldDB(Qfield);
@@ -94,11 +94,10 @@ namespace CSGenio.business
 		{
 			// Daughters Relations
 			//------------------------------
-			info.ChildTable = new ChildRelation[4];
-			info.ChildTable[0]= new ChildRelation("search", new String[] {"codregia"}, DeleteProc.NA);
-			info.ChildTable[1]= new ChildRelation("propr", new String[] {"codregia"}, DeleteProc.NA);
-			info.ChildTable[2]= new ChildRelation("pwreg", new String[] {"codregia"}, DeleteProc.NA);
-			info.ChildTable[3]= new ChildRelation("pesso", new String[] {"codregia"}, DeleteProc.NA);
+			info.ChildTable = new ChildRelation[3];
+			info.ChildTable[0]= new ChildRelation("propr", new String[] {"codregia"}, DeleteProc.NA);
+			info.ChildTable[1]= new ChildRelation("pwreg", new String[] {"codregia"}, DeleteProc.NA);
+			info.ChildTable[2]= new ChildRelation("pesso", new String[] {"codregia"}, DeleteProc.NA);
 
 			// Mother Relations
 			//------------------------------

@@ -9,12 +9,13 @@
 			<div
 				v-if="showFormHeader"
 				class="c-action-bar">
-				<h1
+				<component
 					v-if="formControl.uiComponents.header && formInfo.designation"
+					:is="topHeadingTag"
 					:id="formTitleId"
 					class="form-header">
 					{{ formInfo.designation }}
-				</h1>
+				</component>
 
 				<div class="c-action-bar__menu">
 					<template
@@ -40,13 +41,10 @@
 									@click="btn.action">
 									<template v-if="btn.icon">
 										<q-badge-indicator
-											v-if="btn.badge && btn.badge.isVisible"
-											:color="btn.badge.color">
+											:enabled="btn.badge?.isVisible ?? false"
+											:color="btn.badge?.color">
 											<q-icon v-bind="btn.icon" />
 										</q-badge-indicator>
-										<q-icon
-											v-else
-											v-bind="btn.icon" />
 									</template>
 								</q-toggle-group-item>
 							</template>
@@ -97,15 +95,16 @@
 		<q-container
 			fluid
 			data-key="TPEQU"
+			:data-identifier="primaryKeyValue"
 			:data-loading="!formInitialDataLoaded || !isActiveForm">
 			<template v-if="formControl.initialized && showFormBody">
 				<q-row v-if="controls.TPEQU___PSEUDNOVOGR01.isVisible">
 					<q-col v-if="controls.TPEQU___PSEUDNOVOGR01.isVisible">
 						<q-group-box-container
 							v-if="controls.TPEQU___PSEUDNOVOGR01.isVisible"
-							id="TPEQU___PSEUDNOVOGR01"
 							v-bind="controls.TPEQU___PSEUDNOVOGR01"
-							:is-visible="controls.TPEQU___PSEUDNOVOGR01.isVisible">
+							:id="getControlId(controls.TPEQU___PSEUDNOVOGR01)"
+							:no-border="controls.TPEQU___PSEUDNOVOGR01.borderless">
 							<!-- Start TPEQU___PSEUDNOVOGR01 -->
 							<q-row v-if="controls.TPEQU___FAMILFAMILY__.isVisible || controls.TPEQU___TPEQUTIPOEQUI.isVisible || controls.TPEQU___TPEQUTPEQUCOD.isVisible || controls.TPEQU___TPEQUNIVEL___.isVisible || controls.TPEQU___TPEQUTPEQUPAI.isVisible">
 								<q-col
@@ -114,7 +113,8 @@
 									<base-input-structure
 										v-if="controls.TPEQU___FAMILFAMILY__.isVisible"
 										class="i-text"
-										v-bind="controls.TPEQU___FAMILFAMILY__"
+										v-bind="controls.TPEQU___FAMILFAMILY__.wrapperProps"
+										:id="getControlId(controls.TPEQU___FAMILFAMILY__)"
 										v-on="controls.TPEQU___FAMILFAMILY__.handlers"
 										:loading="controls.TPEQU___FAMILFAMILY__.props.loading"
 										:reporting-mode-on="reportingModeCAV"
@@ -122,6 +122,7 @@
 										<q-lookup
 											v-if="controls.TPEQU___FAMILFAMILY__.isVisible"
 											v-bind="controls.TPEQU___FAMILFAMILY__.props"
+											:id="getControlId(controls.TPEQU___FAMILFAMILY__)"
 											v-on="controls.TPEQU___FAMILFAMILY__.handlers" />
 										<q-see-more-tpequ-familfamily
 											v-if="controls.TPEQU___FAMILFAMILY__.seeMoreIsVisible"
@@ -135,13 +136,15 @@
 									<base-input-structure
 										v-if="controls.TPEQU___TPEQUTIPOEQUI.isVisible"
 										class="i-text"
-										v-bind="controls.TPEQU___TPEQUTIPOEQUI"
+										v-bind="controls.TPEQU___TPEQUTIPOEQUI.wrapperProps"
+										:id="getControlId(controls.TPEQU___TPEQUTIPOEQUI)"
 										v-on="controls.TPEQU___TPEQUTIPOEQUI.handlers"
 										:loading="controls.TPEQU___TPEQUTIPOEQUI.props.loading"
 										:reporting-mode-on="reportingModeCAV"
 										:suggestion-mode-on="suggestionModeOn">
 										<q-text-field
 											v-bind="controls.TPEQU___TPEQUTIPOEQUI.props"
+											:id="getControlId(controls.TPEQU___TPEQUTIPOEQUI)"
 											@blur="onBlur(controls.TPEQU___TPEQUTIPOEQUI, model.ValTipoequi.value)"
 											@change="model.ValTipoequi.fnUpdateValueOnChange" />
 									</base-input-structure>
@@ -152,13 +155,15 @@
 									<base-input-structure
 										v-if="controls.TPEQU___TPEQUTPEQUCOD.isVisible"
 										class="i-text"
-										v-bind="controls.TPEQU___TPEQUTPEQUCOD"
+										v-bind="controls.TPEQU___TPEQUTPEQUCOD.wrapperProps"
+										:id="getControlId(controls.TPEQU___TPEQUTPEQUCOD)"
 										v-on="controls.TPEQU___TPEQUTPEQUCOD.handlers"
 										:loading="controls.TPEQU___TPEQUTPEQUCOD.props.loading"
 										:reporting-mode-on="reportingModeCAV"
 										:suggestion-mode-on="suggestionModeOn">
 										<q-text-field
 											v-bind="controls.TPEQU___TPEQUTPEQUCOD.props"
+											:id="getControlId(controls.TPEQU___TPEQUTPEQUCOD)"
 											@blur="onBlur(controls.TPEQU___TPEQUTPEQUCOD, model.ValTpequcod.value)"
 											@change="model.ValTpequcod.fnUpdateValueOnChange" />
 									</base-input-structure>
@@ -169,7 +174,8 @@
 									<base-input-structure
 										v-if="controls.TPEQU___TPEQUNIVEL___.isVisible"
 										class="i-text"
-										v-bind="controls.TPEQU___TPEQUNIVEL___"
+										v-bind="controls.TPEQU___TPEQUNIVEL___.wrapperProps"
+										:id="getControlId(controls.TPEQU___TPEQUNIVEL___)"
 										v-on="controls.TPEQU___TPEQUNIVEL___.handlers"
 										:loading="controls.TPEQU___TPEQUNIVEL___.props.loading"
 										:reporting-mode-on="reportingModeCAV"
@@ -177,6 +183,7 @@
 										<q-numeric-input
 											v-if="controls.TPEQU___TPEQUNIVEL___.isVisible"
 											v-bind="controls.TPEQU___TPEQUNIVEL___.props"
+											:id="getControlId(controls.TPEQU___TPEQUNIVEL___)"
 											@update:model-value="model.ValNivel.fnUpdateValue" />
 									</base-input-structure>
 								</q-col>
@@ -186,13 +193,15 @@
 									<base-input-structure
 										v-if="controls.TPEQU___TPEQUTPEQUPAI.isVisible"
 										class="i-text"
-										v-bind="controls.TPEQU___TPEQUTPEQUPAI"
+										v-bind="controls.TPEQU___TPEQUTPEQUPAI.wrapperProps"
+										:id="getControlId(controls.TPEQU___TPEQUTPEQUPAI)"
 										v-on="controls.TPEQU___TPEQUTPEQUPAI.handlers"
 										:loading="controls.TPEQU___TPEQUTPEQUPAI.props.loading"
 										:reporting-mode-on="reportingModeCAV"
 										:suggestion-mode-on="suggestionModeOn">
 										<q-text-field
 											v-bind="controls.TPEQU___TPEQUTPEQUPAI.props"
+											:id="getControlId(controls.TPEQU___TPEQUTPEQUPAI)"
 											@blur="onBlur(controls.TPEQU___TPEQUTPEQUPAI, model.ValTpequpai.value)"
 											@change="model.ValTpequpai.fnUpdateValueOnChange" />
 									</base-input-structure>
@@ -205,7 +214,8 @@
 									<base-input-structure
 										v-if="controls.TPEQU___TPEQUQTDEQUIP.isVisible"
 										class="i-text"
-										v-bind="controls.TPEQU___TPEQUQTDEQUIP"
+										v-bind="controls.TPEQU___TPEQUQTDEQUIP.wrapperProps"
+										:id="getControlId(controls.TPEQU___TPEQUQTDEQUIP)"
 										v-on="controls.TPEQU___TPEQUQTDEQUIP.handlers"
 										:loading="controls.TPEQU___TPEQUQTDEQUIP.props.loading"
 										:reporting-mode-on="reportingModeCAV"
@@ -213,6 +223,7 @@
 										<q-numeric-input
 											v-if="controls.TPEQU___TPEQUQTDEQUIP.isVisible"
 											v-bind="controls.TPEQU___TPEQUQTDEQUIP.props"
+											:id="getControlId(controls.TPEQU___TPEQUQTDEQUIP)"
 											@update:model-value="model.ValQtdequip.fnUpdateValue" />
 									</base-input-structure>
 								</q-col>
@@ -225,12 +236,12 @@
 					<q-col v-if="controls.TPEQU___PSEUDNOVOGR05.isVisible">
 						<q-accordion
 							v-if="controls.TPEQU___PSEUDNOVOGR05.isVisible"
-							id="TPEQU___PSEUDNOVOGR05"
+							:id="getControlId(controls.TPEQU___PSEUDNOVOGR05)"
 							v-model="controls.TPEQU___PSEUDNOVOGR05.openChild">
 							<!-- Start TPEQU___PSEUDNOVOGR05 -->
 							<q-accordion-item
 								v-if="controls.TPEQU___PSEUDNOVOGR04.isVisible"
-								id="TPEQU___PSEUDNOVOGR04-container"
+								:id="getControlId(controls.TPEQU___PSEUDNOVOGR04) + '-container'"
 								value="TPEQU___PSEUDNOVOGR04"
 								:title="controls.TPEQU___PSEUDNOVOGR04.label">
 								<!-- Start TPEQU___PSEUDNOVOGR04 -->
@@ -240,8 +251,9 @@
 										cols="auto">
 										<base-input-structure
 											v-if="controls.TPEQU___TPEQUKIT_____.isVisible"
-											class="i-checkbox"
-											v-bind="controls.TPEQU___TPEQUKIT_____"
+											class="i-text"
+											v-bind="controls.TPEQU___TPEQUKIT_____.wrapperProps"
+											:id="getControlId(controls.TPEQU___TPEQUKIT_____)"
 											v-on="controls.TPEQU___TPEQUKIT_____.handlers"
 											:loading="controls.TPEQU___TPEQUKIT_____.props.loading"
 											:reporting-mode-on="reportingModeCAV"
@@ -250,6 +262,7 @@
 												<q-checkbox
 													v-if="controls.TPEQU___TPEQUKIT_____.isVisible"
 													v-bind="controls.TPEQU___TPEQUKIT_____.props"
+													:id="getControlId(controls.TPEQU___TPEQUKIT_____)"
 													v-on="controls.TPEQU___TPEQUKIT_____.handlers" />
 											</template>
 										</base-input-structure>
@@ -262,12 +275,13 @@
 										<q-table
 											v-if="controls.TPEQU___PSEUDCOMPONEN.isVisible"
 											v-bind="controls.TPEQU___PSEUDCOMPONEN"
+											:id="getControlId(controls.TPEQU___PSEUDCOMPONEN)"
 											v-on="controls.TPEQU___PSEUDCOMPONEN.handlers">
-										<q-table-extra-extension
-											v-if="controls.TPEQU___PSEUDCOMPONEN.isVisible"
-											:list-ctrl="controls.TPEQU___PSEUDCOMPONEN"
-											:filter-operators="controls.TPEQU___PSEUDCOMPONEN.filterOperators"
-											v-on="controls.TPEQU___PSEUDCOMPONEN.handlers" />
+											<template #header>
+												<q-table-config
+													:table-ctrl="controls.TPEQU___PSEUDCOMPONEN"
+													v-on="controls.TPEQU___PSEUDCOMPONEN.handlers" />
+											</template>
 											<!-- USE /[MANUAL GQT CUSTOM_TABLE TPEQU___PSEUDCOMPONEN]/ -->
 										</q-table>
 									</q-col>
@@ -276,7 +290,7 @@
 							</q-accordion-item>
 							<q-accordion-item
 								v-if="controls.TPEQU___PSEUDNOVOGR03.isVisible"
-								id="TPEQU___PSEUDNOVOGR03-container"
+								:id="getControlId(controls.TPEQU___PSEUDNOVOGR03) + '-container'"
 								value="TPEQU___PSEUDNOVOGR03"
 								:title="controls.TPEQU___PSEUDNOVOGR03.label">
 								<!-- Start TPEQU___PSEUDNOVOGR03 -->
@@ -287,7 +301,8 @@
 										<base-input-structure
 											v-if="controls.TPEQU___TPEQUPRECOMAX.isVisible"
 											class="i-text"
-											v-bind="controls.TPEQU___TPEQUPRECOMAX"
+											v-bind="controls.TPEQU___TPEQUPRECOMAX.wrapperProps"
+											:id="getControlId(controls.TPEQU___TPEQUPRECOMAX)"
 											v-on="controls.TPEQU___TPEQUPRECOMAX.handlers"
 											:loading="controls.TPEQU___TPEQUPRECOMAX.props.loading"
 											:reporting-mode-on="reportingModeCAV"
@@ -295,6 +310,7 @@
 											<q-numeric-input
 												v-if="controls.TPEQU___TPEQUPRECOMAX.isVisible"
 												v-bind="controls.TPEQU___TPEQUPRECOMAX.props"
+												:id="getControlId(controls.TPEQU___TPEQUPRECOMAX)"
 												@update:model-value="model.ValPrecomax.fnUpdateValue" />
 										</base-input-structure>
 									</q-col>
@@ -304,7 +320,8 @@
 										<base-input-structure
 											v-if="controls.TPEQU___TPEQUPRECOULT.isVisible"
 											class="i-text"
-											v-bind="controls.TPEQU___TPEQUPRECOULT"
+											v-bind="controls.TPEQU___TPEQUPRECOULT.wrapperProps"
+											:id="getControlId(controls.TPEQU___TPEQUPRECOULT)"
 											v-on="controls.TPEQU___TPEQUPRECOULT.handlers"
 											:loading="controls.TPEQU___TPEQUPRECOULT.props.loading"
 											:reporting-mode-on="reportingModeCAV"
@@ -312,6 +329,7 @@
 											<q-numeric-input
 												v-if="controls.TPEQU___TPEQUPRECOULT.isVisible"
 												v-bind="controls.TPEQU___TPEQUPRECOULT.props"
+												:id="getControlId(controls.TPEQU___TPEQUPRECOULT)"
 												@update:model-value="model.ValPrecoult.fnUpdateValue" />
 										</base-input-structure>
 									</q-col>
@@ -321,7 +339,8 @@
 										<base-input-structure
 											v-if="controls.TPEQU___TPEQUSINCE___.isVisible"
 											class="i-text"
-											v-bind="controls.TPEQU___TPEQUSINCE___"
+											v-bind="controls.TPEQU___TPEQUSINCE___.wrapperProps"
+											:id="getControlId(controls.TPEQU___TPEQUSINCE___)"
 											v-on="controls.TPEQU___TPEQUSINCE___.handlers"
 											:loading="controls.TPEQU___TPEQUSINCE___.props.loading"
 											:reporting-mode-on="reportingModeCAV"
@@ -329,6 +348,7 @@
 											<q-date-time-picker
 												v-if="controls.TPEQU___TPEQUSINCE___.isVisible"
 												v-bind="controls.TPEQU___TPEQUSINCE___.props"
+												:id="getControlId(controls.TPEQU___TPEQUSINCE___)"
 												:model-value="model.ValSince.value"
 												@reset-icon-click="model.ValSince.fnUpdateValue(model.ValSince.originalValue ?? new Date())"
 												@update:model-value="model.ValSince.fnUpdateValue($event ?? '')" />
@@ -340,12 +360,13 @@
 										<q-table
 											v-if="controls.TPEQU___PSEUDEVOLUCAO.isVisible"
 											v-bind="controls.TPEQU___PSEUDEVOLUCAO"
+											:id="getControlId(controls.TPEQU___PSEUDEVOLUCAO)"
 											v-on="controls.TPEQU___PSEUDEVOLUCAO.handlers">
-										<q-table-extra-extension
-											v-if="controls.TPEQU___PSEUDEVOLUCAO.isVisible"
-											:list-ctrl="controls.TPEQU___PSEUDEVOLUCAO"
-											:filter-operators="controls.TPEQU___PSEUDEVOLUCAO.filterOperators"
-											v-on="controls.TPEQU___PSEUDEVOLUCAO.handlers" />
+											<template #header>
+												<q-table-config
+													:table-ctrl="controls.TPEQU___PSEUDEVOLUCAO"
+													v-on="controls.TPEQU___PSEUDEVOLUCAO.handlers" />
+											</template>
 											<!-- USE /[MANUAL GQT CUSTOM_TABLE TPEQU___PSEUDEVOLUCAO]/ -->
 										</q-table>
 									</q-col>
@@ -354,7 +375,7 @@
 							</q-accordion-item>
 							<q-accordion-item
 								v-if="controls.TPEQU___PSEUDNOVOGR02.isVisible"
-								id="TPEQU___PSEUDNOVOGR02-container"
+								:id="getControlId(controls.TPEQU___PSEUDNOVOGR02) + '-container'"
 								value="TPEQU___PSEUDNOVOGR02"
 								:title="controls.TPEQU___PSEUDNOVOGR02.label">
 								<!-- Start TPEQU___PSEUDNOVOGR02 -->
@@ -365,13 +386,15 @@
 										<base-input-structure
 											v-if="controls.TPEQU___TPEQUBACKCOLO.isVisible"
 											class="i-text"
-											v-bind="controls.TPEQU___TPEQUBACKCOLO"
+											v-bind="controls.TPEQU___TPEQUBACKCOLO.wrapperProps"
+											:id="getControlId(controls.TPEQU___TPEQUBACKCOLO)"
 											v-on="controls.TPEQU___TPEQUBACKCOLO.handlers"
 											:loading="controls.TPEQU___TPEQUBACKCOLO.props.loading"
 											:reporting-mode-on="reportingModeCAV"
 											:suggestion-mode-on="suggestionModeOn">
 											<q-text-field
 												v-bind="controls.TPEQU___TPEQUBACKCOLO.props"
+												:id="getControlId(controls.TPEQU___TPEQUBACKCOLO)"
 												@blur="onBlur(controls.TPEQU___TPEQUBACKCOLO, model.ValBackcolo.value)"
 												@change="model.ValBackcolo.fnUpdateValueOnChange" />
 										</base-input-structure>
@@ -382,13 +405,15 @@
 										<base-input-structure
 											v-if="controls.TPEQU___TPEQUCORLETRA.isVisible"
 											class="i-text"
-											v-bind="controls.TPEQU___TPEQUCORLETRA"
+											v-bind="controls.TPEQU___TPEQUCORLETRA.wrapperProps"
+											:id="getControlId(controls.TPEQU___TPEQUCORLETRA)"
 											v-on="controls.TPEQU___TPEQUCORLETRA.handlers"
 											:loading="controls.TPEQU___TPEQUCORLETRA.props.loading"
 											:reporting-mode-on="reportingModeCAV"
 											:suggestion-mode-on="suggestionModeOn">
 											<q-text-field
 												v-bind="controls.TPEQU___TPEQUCORLETRA.props"
+												:id="getControlId(controls.TPEQU___TPEQUCORLETRA)"
 												@blur="onBlur(controls.TPEQU___TPEQUCORLETRA, model.ValCorletra.value)"
 												@change="model.ValCorletra.fnUpdateValueOnChange" />
 										</base-input-structure>
@@ -398,7 +423,7 @@
 							</q-accordion-item>
 							<q-accordion-item
 								v-if="controls.TPEQU___PSEUDNOVOGR06.isVisible"
-								id="TPEQU___PSEUDNOVOGR06-container"
+								:id="getControlId(controls.TPEQU___PSEUDNOVOGR06) + '-container'"
 								value="TPEQU___PSEUDNOVOGR06"
 								:title="controls.TPEQU___PSEUDNOVOGR06.label">
 								<!-- Start TPEQU___PSEUDNOVOGR06 -->
@@ -409,12 +434,13 @@
 										<q-table
 											v-if="controls.TPEQU___PSEUDINSTALAC.isVisible"
 											v-bind="controls.TPEQU___PSEUDINSTALAC"
+											:id="getControlId(controls.TPEQU___PSEUDINSTALAC)"
 											v-on="controls.TPEQU___PSEUDINSTALAC.handlers">
-										<q-table-extra-extension
-											v-if="controls.TPEQU___PSEUDINSTALAC.isVisible"
-											:list-ctrl="controls.TPEQU___PSEUDINSTALAC"
-											:filter-operators="controls.TPEQU___PSEUDINSTALAC.filterOperators"
-											v-on="controls.TPEQU___PSEUDINSTALAC.handlers" />
+											<template #header>
+												<q-table-config
+													:table-ctrl="controls.TPEQU___PSEUDINSTALAC"
+													v-on="controls.TPEQU___PSEUDINSTALAC.handlers" />
+											</template>
 											<!-- USE /[MANUAL GQT CUSTOM_TABLE TPEQU___PSEUDINSTALAC]/ -->
 										</q-table>
 									</q-col>
@@ -424,12 +450,13 @@
 										<q-table
 											v-if="controls.TPEQU___PSEUDINSTALA1.isVisible"
 											v-bind="controls.TPEQU___PSEUDINSTALA1"
+											:id="getControlId(controls.TPEQU___PSEUDINSTALA1)"
 											v-on="controls.TPEQU___PSEUDINSTALA1.handlers">
-										<q-table-extra-extension
-											v-if="controls.TPEQU___PSEUDINSTALA1.isVisible"
-											:list-ctrl="controls.TPEQU___PSEUDINSTALA1"
-											:filter-operators="controls.TPEQU___PSEUDINSTALA1.filterOperators"
-											v-on="controls.TPEQU___PSEUDINSTALA1.handlers" />
+											<template #header>
+												<q-table-config
+													:table-ctrl="controls.TPEQU___PSEUDINSTALA1"
+													v-on="controls.TPEQU___PSEUDINSTALA1.handlers" />
+											</template>
 											<!-- USE /[MANUAL GQT CUSTOM_TABLE TPEQU___PSEUDINSTALA1]/ -->
 										</q-table>
 									</q-col>
@@ -447,7 +474,8 @@
 						<base-input-structure
 							v-if="controls.TPEQU___PSEUDUNICO___.isVisible"
 							class="i-button"
-							v-bind="controls.TPEQU___PSEUDUNICO___"
+							v-bind="controls.TPEQU___PSEUDUNICO___.wrapperProps"
+							:id="getControlId(controls.TPEQU___PSEUDUNICO___)"
 							v-on="controls.TPEQU___PSEUDUNICO___.handlers"
 							:loading="controls.TPEQU___PSEUDUNICO___.props.loading"
 							:reporting-mode-on="reportingModeCAV"
@@ -455,6 +483,7 @@
 							<q-button
 								v-if="controls.TPEQU___PSEUDUNICO___.isVisible"
 								v-bind="controls.TPEQU___PSEUDUNICO___.props"
+								:id="getControlId(controls.TPEQU___PSEUDUNICO___)"
 								@click="controls.TPEQU___PSEUDUNICO___.action($event)">
 								<q-icon v-bind="controls.TPEQU___PSEUDUNICO___.icon" />
 							</q-button>
@@ -465,7 +494,7 @@
 		</q-container>
 	</teleport>
 
-	<hr v-if="!isPopup && showFormFooter" />
+	<q-divider v-if="!isPopup && showFormFooter" />
 
 	<teleport
 		v-if="formModalIsReady && showFormFooter"
@@ -831,6 +860,7 @@
 						label: computed(() => this.Resources.IDENTIFICATION40793),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
+						borderless: false,
 						isCollapsible: false,
 						anchored: false,
 						directChildren: ['TPEQU___FAMILFAMILY__', 'TPEQU___TPEQUTIPOEQUI', 'TPEQU___TPEQUTPEQUCOD', 'TPEQU___TPEQUNIVEL___', 'TPEQU___TPEQUTPEQUPAI', 'TPEQU___TPEQUQTDEQUIP'],
@@ -933,6 +963,7 @@
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'TPEQU___PSEUDNOVOGR05',
 						isInAccordion: true,
+						borderless: false,
 						isCollapsible: true,
 						anchored: false,
 						directChildren: ['TPEQU___TPEQUKIT_____', 'TPEQU___PSEUDCOMPONEN'],
@@ -1044,11 +1075,12 @@
 					TPEQU___PSEUDCOMPONEN: new fieldControlClass.TableListControl({
 						id: 'TPEQU___PSEUDCOMPONEN',
 						name: 'COMPONEN',
-						size: '',
+						size: 'xxlarge',
 						label: computed(() => this.Resources.COMPONENTES_DO_KIT59823),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'TPEQU___PSEUDNOVOGR04',
+						headerLevel: computed(() => this.baseHeadingLevel + 1),
 						controller: 'TPEQU',
 						action: 'Tpequ_ValComponen',
 						hasDependencies: false,
@@ -1063,6 +1095,7 @@
 								scrollData: 5,
 								maxDigits: 3,
 								decimalPlaces: 1,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 2,
@@ -1072,6 +1105,7 @@
 								label: computed(() => this.Resources.TYPE_OF_EQUIPMENT18080),
 								dataLength: 50,
 								scrollData: 50,
+								export: 1,
 								pkColumn: 'ValCodtpequ',
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.NumericColumn({
@@ -1083,6 +1117,7 @@
 								scrollData: 3,
 								maxDigits: 3,
 								decimalPlaces: 0,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 4,
@@ -1091,6 +1126,7 @@
 								field: 'DESCRIPT',
 								label: computed(() => this.Resources.DESCRIPTION07383),
 								scrollData: 30,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 5,
@@ -1100,6 +1136,7 @@
 								label: computed(() => this.Resources.CODE49225),
 								dataLength: 10,
 								scrollData: 10,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.HyperLinkColumn({
 								order: 6,
@@ -1109,6 +1146,7 @@
 								label: computed(() => this.Resources.SITE06486),
 								dataLength: 250,
 								scrollData: 30,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 						],
 						config: {
@@ -1126,7 +1164,6 @@
 							searchBarConfig: {
 								visibility: false
 							},
-							filtersVisible: false,
 							allowColumnFilters: false,
 							allowColumnSort: true,
 							crudActions: [
@@ -1204,9 +1241,7 @@
 									id: 'insert',
 									name: 'insert',
 									title: computed(() => this.Resources.INSERIR43365),
-									icon: {
-										icon: 'add'
-									},
+									icon: { icon: 'add' },
 									isInReadOnly: false,
 									params: {
 										canExecuteAction: vm.applyChanges,
@@ -1255,7 +1290,7 @@
 								sortOrder: 'asc'
 							}
 						},
-						globalEvents: ['changed-TPEQ1', 'changed-CMPKI', 'changed-TPEQU'],
+						globalEvents: ['changed-TPEQ1', 'changed-TPEQU', 'changed-CMPKI'],
 						uuid: 'Tpequ_ValComponen',
 						allSelectedRows: 'false',
 						controlLimits: [
@@ -1276,6 +1311,7 @@
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'TPEQU___PSEUDNOVOGR05',
 						isInAccordion: true,
+						borderless: false,
 						isCollapsible: true,
 						anchored: false,
 						directChildren: ['TPEQU___TPEQUPRECOMAX', 'TPEQU___TPEQUPRECOULT', 'TPEQU___TPEQUSINCE___', 'TPEQU___PSEUDEVOLUCAO'],
@@ -1285,11 +1321,12 @@
 					TPEQU___PSEUDEVOLUCAO: new fieldControlClass.TableListControl({
 						id: 'TPEQU___PSEUDEVOLUCAO',
 						name: 'EVOLUCAO',
-						size: '',
+						size: 'large',
 						label: computed(() => this.Resources.C51806),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'TPEQU___PSEUDNOVOGR03',
+						headerLevel: computed(() => this.baseHeadingLevel + 1),
 						controller: 'TPEQU',
 						action: 'Tpequ_ValEvolucao',
 						hasDependencies: true,
@@ -1303,6 +1340,7 @@
 								label: computed(() => this.Resources.SINCE47259),
 								scrollData: 16,
 								dateTimeType: 'dateTime',
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.CurrencyColumn({
 								order: 2,
@@ -1313,6 +1351,7 @@
 								scrollData: 16,
 								maxDigits: 9,
 								decimalPlaces: 2,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 						],
 						config: {
@@ -1330,7 +1369,6 @@
 							searchBarConfig: {
 								visibility: false
 							},
-							filtersVisible: false,
 							allowColumnFilters: false,
 							allowColumnSort: true,
 							crudActions: [
@@ -1408,9 +1446,7 @@
 									id: 'insert',
 									name: 'insert',
 									title: computed(() => this.Resources.INSERIR43365),
-									icon: {
-										icon: 'add'
-									},
+									icon: { icon: 'add' },
 									isInReadOnly: false,
 									params: {
 										canExecuteAction: vm.applyChanges,
@@ -1480,6 +1516,7 @@
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'TPEQU___PSEUDNOVOGR05',
 						isInAccordion: true,
+						borderless: false,
 						isCollapsible: true,
 						anchored: false,
 						directChildren: ['TPEQU___TPEQUBACKCOLO', 'TPEQU___TPEQUCORLETRA'],
@@ -1494,7 +1531,7 @@
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						icon: {
-							icon: computed(() => `${this.$app.resourcesPath}ok.ico?v=3090`),
+							icon: computed(() => `${this.$app.resourcesPath}ok.ico?v=2827`),
 							type: 'img',
 							role: 'presentation',
 						},
@@ -1542,6 +1579,7 @@
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'TPEQU___PSEUDNOVOGR05',
 						isInAccordion: true,
+						borderless: false,
 						isCollapsible: true,
 						anchored: false,
 						directChildren: ['TPEQU___PSEUDINSTALAC', 'TPEQU___PSEUDINSTALA1'],
@@ -1551,11 +1589,12 @@
 					TPEQU___PSEUDINSTALAC: new fieldControlClass.TableListControl({
 						id: 'TPEQU___PSEUDINSTALAC',
 						name: 'INSTALAC',
-						size: '',
+						size: 'xxlarge',
 						label: computed(() => this.Resources.FACILITIES_23844),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'TPEQU___PSEUDNOVOGR06',
+						headerLevel: computed(() => this.baseHeadingLevel + 1),
 						controller: 'TPEQU',
 						action: 'Tpequ_ValInstalac',
 						hasDependencies: false,
@@ -1569,6 +1608,7 @@
 								label: computed(() => this.Resources.SCHEDULING24801),
 								dataLength: 85,
 								scrollData: 30,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.DateColumn({
 								order: 2,
@@ -1578,6 +1618,7 @@
 								label: computed(() => this.Resources.BEGINNING18124),
 								scrollData: 16,
 								dateTimeType: 'dateTime',
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.DateColumn({
 								order: 3,
@@ -1587,6 +1628,7 @@
 								label: computed(() => this.Resources.END47577),
 								scrollData: 16,
 								dateTimeType: 'dateTime',
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 4,
@@ -1595,6 +1637,7 @@
 								field: 'DESCRIPT',
 								label: computed(() => this.Resources.DESCRIPTION07383),
 								scrollData: 30,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.BooleanColumn({
 								order: 5,
@@ -1603,6 +1646,7 @@
 								field: 'ALLDAY',
 								label: computed(() => this.Resources.ALL_DAY18496),
 								scrollData: 1,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.DateColumn({
 								order: 6,
@@ -1612,6 +1656,7 @@
 								label: computed(() => this.Resources.SINCE47259),
 								scrollData: 16,
 								dateTimeType: 'dateTime',
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.DateColumn({
 								order: 7,
@@ -1621,6 +1666,7 @@
 								label: computed(() => this.Resources.UNTIL39173),
 								scrollData: 16,
 								dateTimeType: 'dateTime',
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.NumericColumn({
 								order: 8,
@@ -1631,6 +1677,7 @@
 								scrollData: 10,
 								maxDigits: 7,
 								decimalPlaces: 2,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.CurrencyColumn({
 								order: 9,
@@ -1641,6 +1688,7 @@
 								scrollData: 12,
 								maxDigits: 9,
 								decimalPlaces: 2,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.CurrencyColumn({
 								order: 10,
@@ -1651,6 +1699,7 @@
 								scrollData: 12,
 								maxDigits: 9,
 								decimalPlaces: 2,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.GeographicColumn({
 								order: 11,
@@ -1662,6 +1711,7 @@
 								scrollData: 30,
 								sortable: false,
 								searchable: false,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 						],
 						config: {
@@ -1679,7 +1729,6 @@
 							searchBarConfig: {
 								visibility: false
 							},
-							filtersVisible: false,
 							allowColumnFilters: false,
 							allowColumnSort: true,
 							crudActions: [
@@ -1757,9 +1806,7 @@
 									id: 'insert',
 									name: 'insert',
 									title: computed(() => this.Resources.INSERIR43365),
-									icon: {
-										icon: 'add'
-									},
+									icon: { icon: 'add' },
 									isInReadOnly: false,
 									params: {
 										canExecuteAction: vm.applyChanges,
@@ -1823,11 +1870,12 @@
 					TPEQU___PSEUDINSTALA1: new fieldControlClass.TableListControl({
 						id: 'TPEQU___PSEUDINSTALA1',
 						name: 'INSTALA1',
-						size: '',
+						size: 'xxlarge',
 						label: computed(() => this.Resources.MAP_WITH_FACILITIES_33619),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'TPEQU___PSEUDNOVOGR06',
+						headerLevel: computed(() => this.baseHeadingLevel + 1),
 						controller: 'TPEQU',
 						action: 'Tpequ_ValInstala1',
 						hasDependencies: false,
@@ -1841,6 +1889,7 @@
 								label: computed(() => this.Resources.SCHEDULING24801),
 								dataLength: 85,
 								scrollData: 30,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.DateColumn({
 								order: 2,
@@ -1850,6 +1899,7 @@
 								label: computed(() => this.Resources.BEGINNING18124),
 								scrollData: 16,
 								dateTimeType: 'dateTime',
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.DateColumn({
 								order: 3,
@@ -1859,6 +1909,7 @@
 								label: computed(() => this.Resources.END47577),
 								scrollData: 16,
 								dateTimeType: 'dateTime',
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 4,
@@ -1867,6 +1918,7 @@
 								field: 'DESCRIPT',
 								label: computed(() => this.Resources.DESCRIPTION07383),
 								scrollData: 30,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.BooleanColumn({
 								order: 5,
@@ -1875,6 +1927,7 @@
 								field: 'ALLDAY',
 								label: computed(() => this.Resources.ALL_DAY18496),
 								scrollData: 1,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.DateColumn({
 								order: 6,
@@ -1884,6 +1937,7 @@
 								label: computed(() => this.Resources.SINCE47259),
 								scrollData: 16,
 								dateTimeType: 'dateTime',
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.DateColumn({
 								order: 7,
@@ -1893,6 +1947,7 @@
 								label: computed(() => this.Resources.UNTIL39173),
 								scrollData: 16,
 								dateTimeType: 'dateTime',
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.NumericColumn({
 								order: 8,
@@ -1903,6 +1958,7 @@
 								scrollData: 10,
 								maxDigits: 7,
 								decimalPlaces: 2,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.CurrencyColumn({
 								order: 9,
@@ -1913,6 +1969,7 @@
 								scrollData: 12,
 								maxDigits: 9,
 								decimalPlaces: 2,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.CurrencyColumn({
 								order: 10,
@@ -1923,6 +1980,7 @@
 								scrollData: 12,
 								maxDigits: 9,
 								decimalPlaces: 2,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.GeographicColumn({
 								order: 11,
@@ -1934,6 +1992,7 @@
 								scrollData: 30,
 								sortable: false,
 								searchable: false,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 						],
 						config: {
@@ -1951,7 +2010,6 @@
 							searchBarConfig: {
 								visibility: false
 							},
-							filtersVisible: false,
 							allowColumnFilters: false,
 							allowColumnSort: true,
 							generalCustomActions: [
@@ -1993,7 +2051,7 @@
 						size: 'medium',
 						helpControl: {
 							shortHelp: {
-								type: 'Subtext',
+								type: 'subtext',
 								text: computed(() => this.Resources.____615950),
 							},
 						},
@@ -2033,38 +2091,6 @@
 				]),
 
 				timelineFields: readonly([
-				]),
-
-				triggers: readonly([
-					{
-						id: 'UPDATE_FORMULAS',
-						event: 'P',
-						periodicity: 50,
-						condition: () => {
-							return netAPI.postData(
-								'Tpequ',
-								'TPEQU_UPDATE_FORMULAS_TriggerCondition',
-								this.model.serverObjModel,
-								undefined,
-								undefined,
-								undefined,
-								this.model.navigationId)
-						},
-						execute: () => {
-							vm.TPEQU_FormTriggers_UPDATE_FORMULAS_1(vm.primaryKeyValue)
-						}
-					},
-					{
-						id: 'FILLTYPEEQUIP',
-						event: 'PG',
-						condition: () => {
-							// Formula: isEmptyC([TPEQU->TIPOEQUI])
-							return (this.model.ValTipoequi.value === '')
-						},
-						execute: () => {
-							vm.TPEQU_FormTriggers_FILLTYPEEQUIP_1(vm.primaryKeyValue)
-						}
-					},
 				]),
 
 				/**
@@ -2451,86 +2477,6 @@
 
 				this.afterControlUpdate(controlField, fieldValue)
 			},
-
-			/**
-			 * Client-side component of action #1 (RECALC) of trigger UPDATE_FORMULAS.
-			 * @param {string} id The primary key of the record
-			 */
-			// eslint-disable-next-line @typescript-eslint/no-unused-vars
-			async TPEQU_FormTriggers_UPDATE_FORMULAS_1(id)
-			{
-				try
-				{
-					const data = await netAPI.postData(
-						'TPEQU',
-						'TPEQU_FormTriggers_UPDATE_FORMULAS_1',
-						this.model.serverObjModel,
-						undefined,
-						undefined,
-						undefined,
-						this.navigationId)
-
-					if (typeof data.success !== 'string' || typeof data.message !== 'string')
-						throw new Error('Invalid data structure.')
-
-					const result = qEnums.messageTypes[data.success]
-
-					if (!this.isEmpty(result))
-					{
-						if (result !== 'error')
-						{
-							const buttons = {
-								confirm: {
-									label: this.Resources.OK15819
-								}
-							}
-
-							genericFunctions.displayMessage(data.message, result, null, buttons)
-						}
-						else
-							genericFunctions.displayMessage(data.message, 'error')
-					}
-					else
-					{
-						this.$eventTracker.addError({
-							origin: 'Trigger UPDATE_FORMULAS',
-							message: 'Routine "TPEQU_FormTriggers" finished execution with an unknown result type: ' + data.success
-						})
-					}
-				}
-				catch (e)
-				{
-					genericFunctions.displayMessage(this.Resources.NAO_FOI_POSSIVEL_CON65121, 'error')
-					this.$eventTracker.addError({
-						origin: 'Trigger UPDATE_FORMULAS (catch)',
-						message: e.toString()
-					})
-				}
-			},
-
-			/**
-			 * Client-side component of action #1 (FLDUPDT) of trigger FILLTYPEEQUIP.
-			 * @param {string} id The primary key of the record
-			 */
-			// eslint-disable-next-line @typescript-eslint/no-unused-vars
-			async TPEQU_FormTriggers_FILLTYPEEQUIP_1(id)
-			{
-				// eslint-disable-next-line @typescript-eslint/no-unused-vars
-				const vm = this
-
-				const actionFormula = () => {
-					// Formula: "*undefined*"
-					return "*undefined*"
-				}
-
-				// Compute the value using the data available on the client-side.
-				const value = await actionFormula()
-
-				// Update the value on the client-side.
-				if (typeof value !== 'undefined')
-					this.model.ValTipoequi.updateValue(value)
-			},
-
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
 // USE /[MANUAL GQT FUNCTIONS_JS TPEQU]/
 // eslint-disable-next-line

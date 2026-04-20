@@ -47,7 +47,7 @@ namespace CSGenio.business
 			Qfield = new Field(info.Alias, "codfacil", FieldType.KEY_GUID);
 			Qfield.FieldDescription = "";
 			Qfield.FieldSize =  36;
-			Qfield.CavDesignation = "";
+			Qfield.VisivelCav = CavVisibilityType.Nunca;
 
 			Qfield.Dupmsg = "";
 			info.RegisterFieldDB(Qfield);
@@ -57,7 +57,7 @@ namespace CSGenio.business
 			Qfield.FieldDescription = "";
 			Qfield.FieldSize =  36;
 			Qfield.MQueue = false;
-			Qfield.CavDesignation = "";
+			Qfield.VisivelCav = CavVisibilityType.Nunca;
 
 			Qfield.Dupmsg = "";
 			info.RegisterFieldDB(Qfield);
@@ -109,7 +109,7 @@ namespace CSGenio.business
 			Qfield = new Field(info.Alias, "codfacty", FieldType.KEY_GUID);
 			Qfield.FieldDescription = ">>Facility type";
 			Qfield.FieldSize =  36;
-			Qfield.CavDesignation = "__FACILITY_TYPE27254";
+			Qfield.VisivelCav = CavVisibilityType.Nunca;
 
 			Qfield.Dupmsg = "";
 			info.RegisterFieldDB(Qfield);
@@ -119,7 +119,7 @@ namespace CSGenio.business
 			Qfield.FieldDescription = "Image";
 			Qfield.FieldSize =  3;
 			Qfield.Decimals = 1;
-			Qfield.CavDesignation = "IMAGE65174";
+			Qfield.VisivelCav = CavVisibilityType.Nunca;
 
 			Qfield.Dupmsg = "";
 			info.RegisterFieldDB(Qfield);
@@ -161,7 +161,7 @@ namespace CSGenio.business
 			Qfield = new Field(info.Alias, "geocoori", FieldType.GEOGRAPHY_POINT);
 			Qfield.FieldDescription = "Geographical coordinate";
 			Qfield.FieldSize =  50;
-			Qfield.CavDesignation = "GEOGRAPHICAL_COORDIN45869";
+			Qfield.VisivelCav = CavVisibilityType.Nunca;
 
 			Qfield.Dupmsg = "";
 			info.RegisterFieldDB(Qfield);
@@ -171,7 +171,7 @@ namespace CSGenio.business
 			Qfield.FieldDescription = "Geographical coordinate";
 			Qfield.FieldSize =  50;
 			Qfield.MQueue = false;
-			Qfield.CavDesignation = "GEOGRAPHICAL_COORDIN45869";
+			Qfield.VisivelCav = CavVisibilityType.Nunca;
 
 			Qfield.Dupmsg = "";
 			argumentsListByArea = new List<ByAreaArguments>();
@@ -179,15 +179,6 @@ namespace CSGenio.business
 			Qfield.Formula = new InternalOperationFormula(argumentsListByArea, 4, delegate(object[] args, User user, string module, PersistentSupport sp) {
 				return ((((string)args[0])=="L")?(new GlobalFunctions(user,module,sp).GetGeoFromLatLng(((decimal)args[1]),((decimal)args[2]))):(((string)args[3])));
 			});
-			info.RegisterFieldDB(Qfield);
-
-			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "codcntry", FieldType.KEY_GUID);
-			Qfield.FieldDescription = ">> Country";
-			Qfield.FieldSize =  36;
-			Qfield.CavDesignation = "___COUNTRY10061";
-
-			Qfield.Dupmsg = "";
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
@@ -517,17 +508,6 @@ namespace CSGenio.business
 			set { insertNameValueField(FldGeocoord, value); }
 		}
 
-		/// <summary>Field : ">> Country" Tipo: "CF" Formula:  ""</summary>
-		public static FieldRef FldCodcntry { get { return m_fldCodcntry; } }
-		private static FieldRef m_fldCodcntry = new FieldRef("faci1", "codcntry");
-
-		/// <summary>Field : ">> Country" Tipo: "CF" Formula:  ""</summary>
-		public string ValCodcntry
-		{
-			get { return (string)returnValueField(FldCodcntry); }
-			set { insertNameValueField(FldCodcntry, value); }
-		}
-
 		/// <summary>Field : "ZZSTATE" Type: "INT" Formula:  ""</summary>
 		public static FieldRef FldZzstate { get { return m_fldZzstate; } }
 		private static FieldRef m_fldZzstate = new FieldRef("faci1", "zzstate");
@@ -625,7 +605,7 @@ namespace CSGenio.business
 		// USE /[MANUAL GQT TABAUX FACI1]/
 
      
-               
+              
 
 	}
 }

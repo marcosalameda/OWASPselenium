@@ -47,7 +47,7 @@ namespace CSGenio.business
 			Qfield = new Field(info.Alias, "codprogr", FieldType.KEY_GUID);
 			Qfield.FieldDescription = "";
 			Qfield.FieldSize =  36;
-			Qfield.CavDesignation = "";
+			Qfield.VisivelCav = CavVisibilityType.Nunca;
 
 			Qfield.Dupmsg = "";
 			info.RegisterFieldDB(Qfield);
@@ -56,7 +56,7 @@ namespace CSGenio.business
 			Qfield = new Field(info.Alias, "codpesso", FieldType.KEY_GUID);
 			Qfield.FieldDescription = ">PERSON";
 			Qfield.FieldSize =  36;
-			Qfield.CavDesignation = "_PERSON28337";
+			Qfield.VisivelCav = CavVisibilityType.Nunca;
 
 			Qfield.Dupmsg = "";
 			info.RegisterFieldDB(Qfield);
@@ -65,7 +65,7 @@ namespace CSGenio.business
 			Qfield = new Field(info.Alias, "codcateg", FieldType.KEY_GUID);
 			Qfield.FieldDescription = ">CATEGORy";
 			Qfield.FieldSize =  36;
-			Qfield.CavDesignation = "_CATEGORY37591";
+			Qfield.VisivelCav = CavVisibilityType.Nunca;
 
 			Qfield.Dupmsg = "";
 			info.RegisterFieldDB(Qfield);
@@ -184,12 +184,13 @@ namespace CSGenio.business
 			//Actualiza as seguintes rotinas de ultimo Qvalue:
 			info.LastValueArgs = new List<LastValueArgument>();
 			info.LastValueArgs.Add( new LastValueArgument("pesso",
-				new string [] {"dtultcat","codcateg"},
-				new string [] {"since","codcateg"},
+				new string [] {"codcateg","dtultcat"},
+				new string [] {"codcateg","since"},
 				"since",
 				null,
 
 	"today", true));
+
 
 
 			info.InternalOperationFields = new string[] {

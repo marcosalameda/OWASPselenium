@@ -3,7 +3,6 @@
 		borderless
 		class="removecaret dropdown-toggle"
 		:label="texts.importButtonTitle"
-		:title="texts.importButtonTitle"
 		@click="fnShowImportPopup">
 		<q-icon icon="file-import" />
 	</q-button>
@@ -21,7 +20,7 @@
 				<q-icon :icon="messageIcon" />
 			</div>
 
-			<h5>{{ dataImportResponse.msg }}</h5>
+			<h2>{{ dataImportResponse.msg }}</h2>
 
 			<div
 				v-for="(line, index) in dataImportResponse.lines"
@@ -49,10 +48,12 @@
 					:style="uploadStyles">
 					<span class="upload-text">{{ texts.dropToUpload }}</span>
 				</div>
-				<div v-else>
-					<li>{{ texts.downloadTemplateText }}</li>
-					<li>{{ texts.fillTemplateFileText }}</li>
-					<li>{{ texts.importTemplateFileText }}</li>
+				<template v-else>
+					<ul>
+						<li>{{ texts.downloadTemplateText }}</li>
+						<li>{{ texts.fillTemplateFileText }}</li>
+						<li>{{ texts.importTemplateFileText }}</li>
+					</ul>
 
 					<q-button
 						aria-expanded="false"
@@ -63,7 +64,7 @@
 						@click="$emit('export-template', templateOptions[0].id)">
 						<q-icon icon="file-import" />
 					</q-button>
-				</div>
+				</template>
 
 				<input
 					type="file"

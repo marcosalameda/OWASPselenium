@@ -47,7 +47,7 @@ namespace CSGenio.business
 			Qfield = new Field(info.Alias, "codoutpu", FieldType.KEY_GUID);
 			Qfield.FieldDescription = "";
 			Qfield.FieldSize =  36;
-			Qfield.CavDesignation = "";
+			Qfield.VisivelCav = CavVisibilityType.Nunca;
 
 			Qfield.Dupmsg = "";
 			info.RegisterFieldDB(Qfield);
@@ -56,7 +56,7 @@ namespace CSGenio.business
 			Qfield = new Field(info.Alias, "codoutpt", FieldType.KEY_GUID);
 			Qfield.FieldDescription = "";
 			Qfield.FieldSize =  36;
-			Qfield.CavDesignation = "";
+			Qfield.VisivelCav = CavVisibilityType.Nunca;
 
 			Qfield.Dupmsg = "";
 			info.RegisterFieldDB(Qfield);
@@ -81,7 +81,7 @@ namespace CSGenio.business
 			Qfield = new Field(info.Alias, "codwareh", FieldType.KEY_GUID);
 			Qfield.FieldDescription = ">WAREHOUSE";
 			Qfield.FieldSize =  36;
-			Qfield.CavDesignation = "_WAREHOUSE19861";
+			Qfield.VisivelCav = CavVisibilityType.Nunca;
 
 			Qfield.Dupmsg = "";
 			argumentsListByArea= new List<ByAreaArguments>();
@@ -96,7 +96,7 @@ namespace CSGenio.business
 			Qfield = new Field(info.Alias, "coditem", FieldType.KEY_GUID);
 			Qfield.FieldDescription = ">ARTICLE";
 			Qfield.FieldSize =  36;
-			Qfield.CavDesignation = "_ARTICLE38266";
+			Qfield.VisivelCav = CavVisibilityType.Nunca;
 
 			Qfield.Dupmsg = "";
 			info.RegisterFieldDB(Qfield);
@@ -115,7 +115,7 @@ namespace CSGenio.business
 			Qfield = new Field(info.Alias, "coddocsd", FieldType.KEY_GUID);
 			Qfield.FieldDescription = ">EXIT DOCUMENT";
 			Qfield.FieldSize =  36;
-			Qfield.CavDesignation = "_EXIT_DOCUMENT48701";
+			Qfield.VisivelCav = CavVisibilityType.Nunca;
 
 			Qfield.Dupmsg = "";
 			info.RegisterFieldDB(Qfield);
@@ -491,10 +491,10 @@ namespace CSGenio.business
 
 			// ROW_REORDERING
 			CriteriaSet criteria = CriteriaSet.And();
+			var prefixField = DBFields[FldCodoutpt.Field];
 			// For key fields, an empty prefix means 'no value', so we normalise it to null
 			// to generate a WHERE ... IS NULL filter. For non-empty values, we convert the
 			// prefix to a database-safe value (e.g. Guid) before applying the equality filter.
-			var prefixField = DBFields[FldCodoutpt.Field];
 			object prefixRealValue = prefixField.isEmptyValue(ValCodoutpt) ? null : QueryUtils.ToValidDbValue(ValCodoutpt, prefixField);
 			criteria.Equal(FldCodoutpt, prefixRealValue);
 			sp.ReorderSequence(this, DBFields[FldLine.Field], criteria);

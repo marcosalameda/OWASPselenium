@@ -10,29 +10,29 @@ public class DsaidForm : Form
 	/// <summary>
 	/// Warehouse
 	/// </summary>
-	public LookupControl Ware1Warehdes => new LookupControl(driver, ContainerLocator, "container-DSAID___WARE1WAREHDES");
-	public SeeMorePage Ware1WarehdesSeeMorePage => new SeeMorePage(driver, "DSAID", "DSAID___WARE1WAREHDES");
+	public LookupControl Ware1Warehdes => new LookupControl(driver, ContainerLocator, "container-DSAID___WARE1WAREHDES" + IdSuffix);
+	public SeeMorePage Ware1WarehdesSeeMorePage => new SeeMorePage(driver, "DSAID", "DSAID___WARE1WAREHDES" + IdSuffix);
 
 	/// <summary>
 	/// No:
 	/// </summary>
-	public BaseInputControl OutptDocumenr => new BaseInputControl(driver, ContainerLocator, "container-DSAID___OUTPTDOCUMENR", "#DSAID___OUTPTDOCUMENR");
+	public BaseInputControl OutptDocumenr => new BaseInputControl(driver, ContainerLocator, "container-DSAID___OUTPTDOCUMENR" + IdSuffix, "#DSAID___OUTPTDOCUMENR" + IdSuffix);
 
 	/// <summary>
 	/// Date:
 	/// </summary>
-	public DateInputControl OutptDhdocume => new DateInputControl(driver, ContainerLocator, "#DSAID___OUTPTDHDOCUME", "dd/MM/yyyy HH:mm");
+	public DateInputControl OutptDhdocume => new DateInputControl(driver, ContainerLocator, "#DSAID___OUTPTDHDOCUME" + IdSuffix, "dd/MM/yyyy HH:mm");
 
 	/// <summary>
 	/// Output:
 	/// </summary>
-	public ListControl PseudSaidas => new ListControl(driver, ContainerLocator, "#DSAID___PSEUDSAIDAS__");
+	public ListControl PseudSaidas => new ListControl(driver, ContainerLocator, "#DSAID___PSEUDSAIDAS__" + IdSuffix);
 
 	/// <summary>
 	/// New Output
 	/// </summary>
-	public ButtonControl PseudSaida => new ButtonControl(driver, ContainerLocator, "#DSAID___PSEUDSAIDA___");
+	public ButtonControl PseudSaida => new ButtonControl(driver, ContainerLocator, "#DSAID___PSEUDSAIDA___" + IdSuffix);
 
-	public DsaidForm(IWebDriver driver, FORM_MODE mode, By? containerLocator = null)
-		: base(driver, mode, "DSAID", containerLocator: containerLocator) { }
+	public DsaidForm(IWebDriver driver, FORM_MODE mode, By? containerLocator = null, bool usePkInId = false)
+		: base(driver, mode, "DSAID", containerLocator: containerLocator, usePkInId: usePkInId) { }
 }

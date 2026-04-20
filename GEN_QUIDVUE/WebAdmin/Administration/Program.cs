@@ -20,7 +20,6 @@ using CSGenio.core.di;
 // Setup the GenioServer services
 //---------------------------------
 CSGenio.GenioDIDefault.Use();
-CSGenio.business.ElasticsearchQueriesExtra.Use();
 
 //---------------------------------
 // Setup the WebServer services

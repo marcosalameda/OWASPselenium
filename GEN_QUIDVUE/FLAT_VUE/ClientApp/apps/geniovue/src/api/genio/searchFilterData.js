@@ -135,7 +135,7 @@ export class SearchFilterConditionOperators
 		this.fnResources = null
 		const opTypes = ['text', 'num', 'bool', 'date', 'enum']
 		opTypes.forEach((opType) => {
-			for (let operator in this[opType])
+			for (const operator in this[opType])
 			{
 				if (this[opType][operator] instanceof SearchFilterOperator)
 					this[opType][operator].destroy()
@@ -151,29 +151,20 @@ export function getWithTranslation(fnResources)
 
 export function searchBarOperator(dataType, searchValue)
 {
-	let condOperator = ''
 	switch (dataType)
 	{
 		case 'text':
-			condOperator = 'CON'
-			break
+			return 'CON'
 		case 'num':
 		case 'date':
-			condOperator = 'EQ'
-			break
+			return 'EQ'
 		case 'bool':
-			if (searchValue?.toUpperCase() === 'TRUE')
-				condOperator = 'TRUE'
-			else if (searchValue?.toUpperCase() === 'FALSE')
-				condOperator = 'FALSE'
-			else
-				condOperator = 'TRUE'
-			break
+			return searchValue?.toUpperCase() === 'FALSE' ? 'FALSE' : 'TRUE'
 		case 'enum':
-			condOperator = 'IS'
-			break
+			return 'IS'
 	}
-	return condOperator
+
+	return ''
 }
 
 export function defaultValue(column)

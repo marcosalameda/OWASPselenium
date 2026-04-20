@@ -395,53 +395,71 @@ namespace GenioMVC.ViewModels
 			return searchColumn.Visible;
 		}
 
-		virtual protected List<Field> GlobalFilters { get; }
+		protected virtual List<Field> GlobalFilters { get; }
 
 		/// <summary>
 		/// Process the form field filters that affect a table list.
 		/// </summary>
-		/// <param name="filterValues">Dictionary of filter fields and their respective values. e.g. { area.field: "filterValue" }</param>
-		/// <returns>The set of conditions determined by the filter values</returns>
-		protected CriteriaSet ProcessFieldFilters(Dictionary<string, object> filterValues)
+		/// <param name="fieldFilters">Dictionary of global filter fields and their respective values.</param>
+		/// <returns>The set of conditions determined by the filter values.</returns>
+		protected CriteriaSet ProcessFieldFilters(Dictionary<string, IGlobalFilter> fieldFilters)
 		{
 			CriteriaSet criteria = CriteriaSet.And();
 
-			if (GlobalFilters != null && filterValues?.Count > 0)
+			if (GlobalFilters == null || fieldFilters == null || fieldFilters.Count == 0)
+				return criteria;
+
+			foreach (Field field in GlobalFilters)
 			{
-				foreach (var field in GlobalFilters)
+				if (fieldFilters.TryGetValue(field.FullName, out IGlobalFilter filter))
 				{
-					if(filterValues.TryGetValue(field.FullName, out object filterValue))
+					ColumnReference colRef = new(field.Alias, field.Name);
+					if (filter.Value is ICollection collection)
 					{
-						ColumnReference colRef = new (field.Alias, field.Name);
-                        if (filterValue is IEnumerable<object> enumerable && filterValue is not string)
+						if (collection.Count == 0)
+							continue;
+
+						if (field.FieldType == FieldType.ARRAY_NUMERIC ||
+							field.FieldType == FieldType.ARRAY_TEXT ||
+							field.FieldType == FieldType.ARRAY_LOGIC)
 						{
-                            if (!enumerable.Any())
-                                continue;
+							// If the filter is an array of multiple values, process each one into an "Or" criteria set
+							CriteriaSet orCriteria = CriteriaSet.Or();
+							foreach (object val in collection)
+								orCriteria.Equal(colRef, QueryUtils.ToValidDbValue(val, field));
 
-                            // If the filter is an array of multiple values, process each one into an "Or" criteria set
-                            CriteriaSet orCriteria = CriteriaSet.Or();
-                            foreach (var val in enumerable)
-                                orCriteria.Equal(colRef, QueryUtils.ToValidDbValue(val, field));
+							criteria.SubSets.Add(orCriteria);
+						}
+						else if (field.FieldType == FieldType.DATE ||
+							field.FieldType == FieldType.DATETIME ||
+							field.FieldType == FieldType.DATETIMESECONDS ||
+							field.FieldType == FieldType.TIME_HOURS)
+						{
+							List<object> range = [.. collection];
+							CriteriaSet between = CriteriaSet.And();
 
-                            criteria.SubSets.Add(orCriteria);
-                        }
-                        else
-                        {
-                            object filterVal = QueryUtils.ToValidDbValue(filterValue, field);
-                            // If empty, should not filter anything.
-                            if (field.isEmptyValue(filterVal))
-                                continue;
+							between.GreaterOrEqual(colRef, range[0]);
+							between.LesserOrEqual(colRef, range[1]);
 
-							if (field.FieldType == FieldType.TEXT || field.FieldType == FieldType.MEMO)
-							{
-								// TODO: the default should probably be a "startsWith", but for now we're using a "contains",
-								// to be compatible with the default search of table lists.
-								criteria.Like(colRef, $"%{filterVal}%");
-							}
-							else
-	                            criteria.Equal(colRef, filterVal);
-                        }
-                    }
+							criteria.SubSets.Add(between);
+						}
+					}
+					else
+					{
+						object filterVal = QueryUtils.ToValidDbValue(filter.Value, field);
+						// If empty, should not filter anything.
+						if (field.isEmptyValue(filterVal) && !filter.IsArrayOption(filterVal))
+							continue;
+
+						if (field.FieldType == FieldType.TEXT || field.FieldType == FieldType.MEMO)
+						{
+							// TODO: the default should probably be a "startsWith", but for now we're using a "contains",
+							// to be compatible with the default search of table lists.
+							criteria.Like(colRef, $"%{filterVal}%");
+						}
+						else
+							criteria.Equal(colRef, filterVal);
+					}
 				}
 			}
 
@@ -1125,10 +1143,10 @@ namespace GenioMVC.ViewModels
 			var histValue = Navigation.GetValue(area);
 			var value = GenFunctions.emptyG(histValue) == 1 ? fieldValue : histValue;
 
-            // If the key value is empty, try the key that comes from the global filter
+			// If the key value is empty, try the key that comes from the global filter
 			// (usually only applied between global filters of the Lookup type).
-            if (tryByGlobalFilter && GenFunctions.emptyG(value) == 1)
-                value = Navigation.CurrentLevel.GetEntry<string>($"global-filter-{area}");
+			if (tryByGlobalFilter && GenFunctions.emptyG(value) == 1)
+				value = Navigation.CurrentLevel.GetEntry<string>($"global-filter-{area}");
 
 			// Add an 'In' condition if the value is an array
 			if (value is Array arrayValue)
@@ -1408,7 +1426,7 @@ namespace GenioMVC.ViewModels
 					nav_limit_area = this_limit_field.ToString();
 
 				//if limit_field is refering to a related area, then update model to the correct parent
-				string parent_table_name = model_limit_area.ParentTables.Where(x => x.Value.SourceRelField == field.Name).Select(x => x.Key).FirstOrDefault();
+				string parent_table_name = model_limit_area.ParentTables.Where(x => x.Value.SourceRelField == field.Name).Select(x => x.Value.AliasTargetTab).FirstOrDefault();
 				if (parent_table_name != null)
 				{//double check this case!
 					CSGenio.business.Area parent_area = CSGenio.business.Area.createArea(parent_table_name, m_userContext.User, m_userContext.User.CurrentModule);
@@ -1616,6 +1634,13 @@ namespace GenioMVC.ViewModels
 
 	public static class ViewModelConversion
 	{
+		public static List<T> ToList<T>(object value)
+		{
+			return value is IEnumerable collection
+				? [.. collection.Cast<T>()]
+				: [];
+		}
+
 		public static decimal ToDouble(object value)
 		{
 			return DBConversion.ToNumeric(value);

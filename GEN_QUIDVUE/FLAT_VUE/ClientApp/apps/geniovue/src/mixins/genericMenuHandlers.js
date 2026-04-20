@@ -282,10 +282,10 @@ export default {
 			if (_isEmpty(this.controls) || _isEmpty(actionData) || _isEmpty(actionData.rowsSelected))
 				return
 
-			var data = []
+			const data = []
 
 			// Convert the selected row keys from object to list.
-			for (let key in actionData.rowsSelected)
+			for (const key in actionData.rowsSelected)
 				if (actionData.rowsSelected[key])
 					data.push(key)
 

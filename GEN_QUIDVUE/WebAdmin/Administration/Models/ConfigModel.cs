@@ -70,15 +70,6 @@ namespace Administration.Models
         [Display(Name = "UTILIZADOR_DE_DOMINI41043", ResourceType = typeof(Resources.Resources))]
         public bool Log_ConnWithDomainUser { get; set; }
 
-        [Display(Name = "GQP shared tables")]
-        [Required]
-        public string GQP_Schema { get; set; }
-        
-        [Display(Name = "ENCRIPTAR_LIGACAO12834", ResourceType = typeof(Resources.Resources))]
-        public bool GQP_ConnEncrypt { get; set; }
-
-        [Display(Name = "UTILIZADOR_DE_DOMINI41043", ResourceType = typeof(Resources.Resources))]
-        public bool GQP_ConnWithDomainUser { get; set; }
 
 
         [Display(Name = "O_ANO_DEFAULT_NAO_ES52509", ResourceType = typeof(Resources.Resources))]
@@ -151,6 +142,9 @@ namespace Administration.Models
 		[Display(Name = "SEPARADOR_DE_GRUPO26735", ResourceType = typeof(Resources.Resources))]
         public HardCodedLists.DisplayNumberFormatGroup GroupSeparator { get; set; }
 
+		[Display(Name = "FORMATO_DE_NUMERO_NE41581", ResourceType = typeof(Resources.Resources))]
+        public HardCodedLists.DisplayNumberFormatNegative NegativeFormat { get; set; }
+
         [Display(Name = "MOTOR_DE_PESQUISA__E50766", ResourceType = typeof(Resources.Resources))]
         public List<CoreCfg> Cores { get; set; }
 
@@ -174,6 +168,8 @@ namespace Administration.Models
         public Dictionary<string, PathCfg> Paths { get; set; }
 
         public string UrlAPIBackend { get; set; }
+
+        public string UrlMCP { get; set; }
 
         public MCPSecurityMode MCPSecurityMode { get; set; }
 
@@ -208,6 +204,7 @@ namespace Administration.Models
                     PasswordAlgorithms = AuxFunctions.ToSelectList<DisplayPasswordAlgorithms>(),
                     DecimalSeparator = AuxFunctions.ToSelectList<HardCodedLists.DisplayNumberFormatDecimal>(),
                     GroupSeparator = AuxFunctions.ToSelectList<HardCodedLists.DisplayNumberFormatGroup>(),
+                    NegativeFormat = AuxFunctions.ToSelectList<HardCodedLists.DisplayNumberFormatNegative>(),
                     DisplayUserType = AuxFunctions.ToSelectList<DisplayUserType>(),
                     IdentityProviderTypeList = IdentityProviderCfg.TypeList(),
                     RoleProviderTypeList = RoleProviderCfg.TypeList(),
@@ -256,11 +253,11 @@ namespace Administration.Models
     }
 
     public enum DisplayAuthenticationMode
-    {
-        [Display(Name = "REJEITAR_NA_PRIMEIRA49925", ResourceType = typeof(Resources.Resources))]
-        RejectOnFirstFail,
+    {        
         [Display(Name = "ACEITAR_AO_PRIMEIRO_40557", ResourceType = typeof(Resources.Resources))]
-        AcceptOnFirstSucess
+        AcceptOnFirstSucess,
+        [Display(Name = "UM_BOTAO_POR_PROVIDE48545", ResourceType = typeof(Resources.Resources))]
+        OneButtonPerProvider
     }
 
     public enum DisplayMultisessionMode

@@ -9,12 +9,13 @@
 			<div
 				v-if="showFormHeader"
 				class="c-action-bar">
-				<h1
+				<component
 					v-if="formControl.uiComponents.header && formInfo.designation"
+					:is="topHeadingTag"
 					:id="formTitleId"
 					class="form-header">
 					{{ formInfo.designation }}
-				</h1>
+				</component>
 
 				<div class="c-action-bar__menu">
 					<template
@@ -40,13 +41,10 @@
 									@click="btn.action">
 									<template v-if="btn.icon">
 										<q-badge-indicator
-											v-if="btn.badge && btn.badge.isVisible"
-											:color="btn.badge.color">
+											:enabled="btn.badge?.isVisible ?? false"
+											:color="btn.badge?.color">
 											<q-icon v-bind="btn.icon" />
 										</q-badge-indicator>
-										<q-icon
-											v-else
-											v-bind="btn.icon" />
 									</template>
 								</q-toggle-group-item>
 							</template>
@@ -97,6 +95,7 @@
 		<q-container
 			fluid
 			data-key="ARTGL"
+			:data-identifier="primaryKeyValue"
 			:data-loading="!formInitialDataLoaded || !isActiveForm">
 			<template v-if="formControl.initialized && showFormBody">
 				<q-row v-if="controls.ARTGL___GITEMITEMDES_.isVisible || controls.ARTGL___GITEMITEMGCOD.isVisible || controls.ARTGL___GITEMDOCUMENT.isVisible">
@@ -106,13 +105,15 @@
 						<base-input-structure
 							v-if="controls.ARTGL___GITEMITEMDES_.isVisible"
 							class="i-text"
-							v-bind="controls.ARTGL___GITEMITEMDES_"
+							v-bind="controls.ARTGL___GITEMITEMDES_.wrapperProps"
+							:id="getControlId(controls.ARTGL___GITEMITEMDES_)"
 							v-on="controls.ARTGL___GITEMITEMDES_.handlers"
 							:loading="controls.ARTGL___GITEMITEMDES_.props.loading"
 							:reporting-mode-on="reportingModeCAV"
 							:suggestion-mode-on="suggestionModeOn">
 							<q-text-field
 								v-bind="controls.ARTGL___GITEMITEMDES_.props"
+								:id="getControlId(controls.ARTGL___GITEMITEMDES_)"
 								@blur="onBlur(controls.ARTGL___GITEMITEMDES_, model.ValItemdes.value)"
 								@change="model.ValItemdes.fnUpdateValueOnChange" />
 						</base-input-structure>
@@ -123,13 +124,15 @@
 						<base-input-structure
 							v-if="controls.ARTGL___GITEMITEMGCOD.isVisible"
 							class="i-text"
-							v-bind="controls.ARTGL___GITEMITEMGCOD"
+							v-bind="controls.ARTGL___GITEMITEMGCOD.wrapperProps"
+							:id="getControlId(controls.ARTGL___GITEMITEMGCOD)"
 							v-on="controls.ARTGL___GITEMITEMGCOD.handlers"
 							:loading="controls.ARTGL___GITEMITEMGCOD.props.loading"
 							:reporting-mode-on="reportingModeCAV"
 							:suggestion-mode-on="suggestionModeOn">
 							<q-text-field
 								v-bind="controls.ARTGL___GITEMITEMGCOD.props"
+								:id="getControlId(controls.ARTGL___GITEMITEMGCOD)"
 								@blur="onBlur(controls.ARTGL___GITEMITEMGCOD, model.ValItemgcod.value)"
 								@change="model.ValItemgcod.fnUpdateValueOnChange" />
 						</base-input-structure>
@@ -140,7 +143,8 @@
 						<base-input-structure
 							v-if="controls.ARTGL___GITEMDOCUMENT.isVisible"
 							class="i-text"
-							v-bind="controls.ARTGL___GITEMDOCUMENT"
+							v-bind="controls.ARTGL___GITEMDOCUMENT.wrapperProps"
+							:id="getControlId(controls.ARTGL___GITEMDOCUMENT)"
 							v-on="controls.ARTGL___GITEMDOCUMENT.handlers"
 							:loading="controls.ARTGL___GITEMDOCUMENT.props.loading"
 							:reporting-mode-on="reportingModeCAV"
@@ -148,6 +152,7 @@
 							<q-document
 								v-if="controls.ARTGL___GITEMDOCUMENT.isVisible"
 								v-bind="controls.ARTGL___GITEMDOCUMENT.props"
+								:id="getControlId(controls.ARTGL___GITEMDOCUMENT)"
 								v-on="controls.ARTGL___GITEMDOCUMENT.handlers" />
 						</base-input-structure>
 					</q-col>
@@ -156,7 +161,7 @@
 		</q-container>
 	</teleport>
 
-	<hr v-if="!isPopup && showFormFooter" />
+	<q-divider v-if="!isPopup && showFormFooter" />
 
 	<teleport
 		v-if="formModalIsReady && showFormFooter"
@@ -533,7 +538,7 @@
 						size: 'xxlarge',
 						helpControl: {
 							shortHelp: {
-								type: 'Tooltip',
+								type: 'subtext',
 								text: computed(() => this.Resources.___1537256),
 							},
 							detailedHelp: {
@@ -928,7 +933,6 @@
 
 				this.afterControlUpdate(controlField, fieldValue)
 			},
-
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
 // USE /[MANUAL GQT FUNCTIONS_JS ARTGL]/
 // eslint-disable-next-line

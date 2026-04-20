@@ -7,6 +7,7 @@ using GenioMVC.Models.Navigation;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Quidgest.Persistence;
 using Quidgest.Persistence.GenericQuery;
+
 using System.Collections;
 using System.Collections.Concurrent;
 using System.Collections.Specialized;
@@ -35,6 +36,7 @@ namespace GenioMVC.ViewModels.Param
 		public string ValCodkinde { get; set; }
 
 		#endregion
+
 		/// <summary>
 		/// Title: "Kind of equipment" | Type: "C"
 		/// </summary>
@@ -49,21 +51,9 @@ namespace GenioMVC.ViewModels.Param
 		/// </summary>
 		public string ValDatatype { get; set; }
 		/// <summary>
-		/// Title: "" | Type: "PSEUD"
-		/// </summary>
-		[JsonIgnore]
-		public SelectList List_ValDatatype { get; set; }
-		/// <summary>
 		/// Title: "Decimal places" | Type: "AN"
 		/// </summary>
 		public decimal ValDecimalplaces { get; set; }
-		/// <summary>
-		/// Title: "" | Type: "PSEUD"
-		/// </summary>
-		[JsonIgnore]
-		public SelectList List_ValDecimalplaces { get; set; }
-
-
 
 		#region Navigations
 		#endregion
@@ -238,12 +228,7 @@ namespace GenioMVC.ViewModels.Param
 			}
 		}
 
-		/// <summary>
-		/// Sets the value of a single property of the view model based on the provided table and field names.
-		/// </summary>
-		/// <param name="fullFieldName">The full field name in the format "table.field".</param>
-		/// <param name="value">The field value.</param>
-		/// <exception cref="ArgumentNullException">Thrown if <paramref name="fullFieldName"/> is null.</exception>
+		/// <inheritdoc />
 		public override void SetViewModelValue(string fullFieldName, object value)
 		{
 			try
@@ -377,6 +362,7 @@ namespace GenioMVC.ViewModels.Param
 			Characs = new List<string>();
 
 			Load_Param___kindedesignat(qs, lazyLoad);
+
 // USE /[MANUAL GQT VIEWMODEL_LOADPARTIAL PARAM]/
 		}
 
@@ -447,10 +433,7 @@ namespace GenioMVC.ViewModels.Param
 				}
 			}
 
-			TableKindeDesignat = new TableDBEdit<Models.Kinde>
-			{
-				IsLazyLoad = lazyLoad
-			};
+			TableKindeDesignat = new TableDBEdit<Models.Kinde>();
 
 			if (lazyLoad)
 			{

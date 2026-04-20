@@ -9,12 +9,13 @@
 			<div
 				v-if="showFormHeader"
 				class="c-action-bar">
-				<h1
+				<component
 					v-if="formControl.uiComponents.header && formInfo.designation"
+					:is="topHeadingTag"
 					:id="formTitleId"
 					class="form-header">
 					{{ formInfo.designation }}
-				</h1>
+				</component>
 
 				<div class="c-action-bar__menu">
 					<template
@@ -40,13 +41,10 @@
 									@click="btn.action">
 									<template v-if="btn.icon">
 										<q-badge-indicator
-											v-if="btn.badge && btn.badge.isVisible"
-											:color="btn.badge.color">
+											:enabled="btn.badge?.isVisible ?? false"
+											:color="btn.badge?.color">
 											<q-icon v-bind="btn.icon" />
 										</q-badge-indicator>
-										<q-icon
-											v-else
-											v-bind="btn.icon" />
 									</template>
 								</q-toggle-group-item>
 							</template>
@@ -97,6 +95,7 @@
 		<q-container
 			fluid
 			data-key="PERSO"
+			:data-identifier="primaryKeyValue"
 			:data-loading="!formInitialDataLoaded || !isActiveForm">
 			<template v-if="formControl.initialized && showFormBody">
 				<q-row v-if="controls.PERSO___PSEUDNOVOGR01.isVisible">
@@ -105,9 +104,9 @@
 						cols="auto">
 						<q-group-box-container
 							v-if="controls.PERSO___PSEUDNOVOGR01.isVisible"
-							id="PERSO___PSEUDNOVOGR01"
 							v-bind="controls.PERSO___PSEUDNOVOGR01"
-							:is-visible="controls.PERSO___PSEUDNOVOGR01.isVisible">
+							:id="getControlId(controls.PERSO___PSEUDNOVOGR01)"
+							:no-border="controls.PERSO___PSEUDNOVOGR01.borderless">
 							<!-- Start PERSO___PSEUDNOVOGR01 -->
 							<q-row v-if="controls.PERSO___PSEUDNOVOGR04.isVisible || controls.PERSO___PSEUDNOVOGR05.isVisible">
 								<q-col
@@ -115,10 +114,9 @@
 									cols="auto">
 									<q-group-box-container
 										v-if="controls.PERSO___PSEUDNOVOGR04.isVisible"
-										id="PERSO___PSEUDNOVOGR04"
 										v-bind="controls.PERSO___PSEUDNOVOGR04"
-										no-border
-										:is-visible="controls.PERSO___PSEUDNOVOGR04.isVisible">
+										:id="getControlId(controls.PERSO___PSEUDNOVOGR04)"
+										:no-border="controls.PERSO___PSEUDNOVOGR04.borderless">
 										<!-- Start PERSO___PSEUDNOVOGR04 -->
 										<q-row v-if="controls.PERSO___PERSOPHOTO___.isVisible">
 											<q-col
@@ -127,7 +125,8 @@
 												<base-input-structure
 													v-if="controls.PERSO___PERSOPHOTO___.isVisible"
 													class="q-image"
-													v-bind="controls.PERSO___PERSOPHOTO___"
+													v-bind="controls.PERSO___PERSOPHOTO___.wrapperProps"
+													:id="getControlId(controls.PERSO___PERSOPHOTO___)"
 													v-on="controls.PERSO___PERSOPHOTO___.handlers"
 													:loading="controls.PERSO___PERSOPHOTO___.props.loading"
 													:reporting-mode-on="reportingModeCAV"
@@ -135,6 +134,7 @@
 													<q-image
 														v-if="controls.PERSO___PERSOPHOTO___.isVisible"
 														v-bind="controls.PERSO___PERSOPHOTO___.props"
+														:id="getControlId(controls.PERSO___PERSOPHOTO___)"
 														v-on="controls.PERSO___PERSOPHOTO___.handlers" />
 												</base-input-structure>
 											</q-col>
@@ -147,10 +147,9 @@
 									cols="auto">
 									<q-group-box-container
 										v-if="controls.PERSO___PSEUDNOVOGR05.isVisible"
-										id="PERSO___PSEUDNOVOGR05"
 										v-bind="controls.PERSO___PSEUDNOVOGR05"
-										no-border
-										:is-visible="controls.PERSO___PSEUDNOVOGR05.isVisible">
+										:id="getControlId(controls.PERSO___PSEUDNOVOGR05)"
+										:no-border="controls.PERSO___PSEUDNOVOGR05.borderless">
 										<!-- Start PERSO___PSEUDNOVOGR05 -->
 										<q-row v-if="controls.PERSO___PERSONAME____.isVisible">
 											<q-col
@@ -159,13 +158,15 @@
 												<base-input-structure
 													v-if="controls.PERSO___PERSONAME____.isVisible"
 													class="i-text"
-													v-bind="controls.PERSO___PERSONAME____"
+													v-bind="controls.PERSO___PERSONAME____.wrapperProps"
+													:id="getControlId(controls.PERSO___PERSONAME____)"
 													v-on="controls.PERSO___PERSONAME____.handlers"
 													:loading="controls.PERSO___PERSONAME____.props.loading"
 													:reporting-mode-on="reportingModeCAV"
 													:suggestion-mode-on="suggestionModeOn">
 													<q-text-field
 														v-bind="controls.PERSO___PERSONAME____.props"
+														:id="getControlId(controls.PERSO___PERSONAME____)"
 														@blur="onBlur(controls.PERSO___PERSONAME____, model.ValName.value)"
 														@change="model.ValName.fnUpdateValueOnChange" />
 												</base-input-structure>
@@ -178,13 +179,15 @@
 												<base-input-structure
 													v-if="controls.PERSO___PERSOIDENTIFI.isVisible"
 													class="i-text"
-													v-bind="controls.PERSO___PERSOIDENTIFI"
+													v-bind="controls.PERSO___PERSOIDENTIFI.wrapperProps"
+													:id="getControlId(controls.PERSO___PERSOIDENTIFI)"
 													v-on="controls.PERSO___PERSOIDENTIFI.handlers"
 													:loading="controls.PERSO___PERSOIDENTIFI.props.loading"
 													:reporting-mode-on="reportingModeCAV"
 													:suggestion-mode-on="suggestionModeOn">
 													<q-text-field
 														v-bind="controls.PERSO___PERSOIDENTIFI.props"
+														:id="getControlId(controls.PERSO___PERSOIDENTIFI)"
 														@blur="onBlur(controls.PERSO___PERSOIDENTIFI, model.ValIdentifi.value)"
 														@change="model.ValIdentifi.fnUpdateValueOnChange" />
 												</base-input-structure>
@@ -197,7 +200,8 @@
 												<base-input-structure
 													v-if="controls.PERSO___PERSOGENDER__.isVisible"
 													class="i-text"
-													v-bind="controls.PERSO___PERSOGENDER__"
+													v-bind="controls.PERSO___PERSOGENDER__.wrapperProps"
+													:id="getControlId(controls.PERSO___PERSOGENDER__)"
 													v-on="controls.PERSO___PERSOGENDER__.handlers"
 													:loading="controls.PERSO___PERSOGENDER__.props.loading"
 													:reporting-mode-on="reportingModeCAV"
@@ -205,6 +209,7 @@
 													<q-select
 														v-if="controls.PERSO___PERSOGENDER__.isVisible"
 														v-bind="controls.PERSO___PERSOGENDER__.props"
+														:id="getControlId(controls.PERSO___PERSOGENDER__)"
 														@update:model-value="model.ValGender.fnUpdateValue" />
 												</base-input-structure>
 											</q-col>
@@ -216,13 +221,15 @@
 												<base-input-structure
 													v-if="controls.PERSO___PERSOEMAIL___.isVisible"
 													class="i-text"
-													v-bind="controls.PERSO___PERSOEMAIL___"
+													v-bind="controls.PERSO___PERSOEMAIL___.wrapperProps"
+													:id="getControlId(controls.PERSO___PERSOEMAIL___)"
 													v-on="controls.PERSO___PERSOEMAIL___.handlers"
 													:loading="controls.PERSO___PERSOEMAIL___.props.loading"
 													:reporting-mode-on="reportingModeCAV"
 													:suggestion-mode-on="suggestionModeOn">
 													<q-text-field
 														v-bind="controls.PERSO___PERSOEMAIL___.props"
+														:id="getControlId(controls.PERSO___PERSOEMAIL___)"
 														@blur="onBlur(controls.PERSO___PERSOEMAIL___, model.ValEmail.value)"
 														@change="model.ValEmail.fnUpdateValueOnChange" />
 												</base-input-structure>
@@ -242,9 +249,9 @@
 						cols="auto">
 						<q-group-box-container
 							v-if="controls.PERSO___PSEUDNOVOGR02.isVisible"
-							id="PERSO___PSEUDNOVOGR02"
 							v-bind="controls.PERSO___PSEUDNOVOGR02"
-							:is-visible="controls.PERSO___PSEUDNOVOGR02.isVisible">
+							:id="getControlId(controls.PERSO___PSEUDNOVOGR02)"
+							:no-border="controls.PERSO___PSEUDNOVOGR02.borderless">
 							<!-- Start PERSO___PSEUDNOVOGR02 -->
 							<q-row v-if="controls.PERSO___PERSODOB_____.isVisible || controls.PERSO___PERSOTOB_____.isVisible || controls.PERSO___PERSOYEAR____.isVisible || controls.PERSO___PERSOMONTH___.isVisible">
 								<q-col
@@ -253,7 +260,8 @@
 									<base-input-structure
 										v-if="controls.PERSO___PERSODOB_____.isVisible"
 										class="i-text"
-										v-bind="controls.PERSO___PERSODOB_____"
+										v-bind="controls.PERSO___PERSODOB_____.wrapperProps"
+										:id="getControlId(controls.PERSO___PERSODOB_____)"
 										v-on="controls.PERSO___PERSODOB_____.handlers"
 										:loading="controls.PERSO___PERSODOB_____.props.loading"
 										:reporting-mode-on="reportingModeCAV"
@@ -261,6 +269,7 @@
 										<q-date-time-picker
 											v-if="controls.PERSO___PERSODOB_____.isVisible"
 											v-bind="controls.PERSO___PERSODOB_____.props"
+											:id="getControlId(controls.PERSO___PERSODOB_____)"
 											:model-value="model.ValDob.value"
 											@reset-icon-click="model.ValDob.fnUpdateValue(model.ValDob.originalValue ?? new Date())"
 											@update:model-value="model.ValDob.fnUpdateValue($event ?? '')" />
@@ -272,7 +281,8 @@
 									<base-input-structure
 										v-if="controls.PERSO___PERSOTOB_____.isVisible"
 										class="i-text"
-										v-bind="controls.PERSO___PERSOTOB_____"
+										v-bind="controls.PERSO___PERSOTOB_____.wrapperProps"
+										:id="getControlId(controls.PERSO___PERSOTOB_____)"
 										v-on="controls.PERSO___PERSOTOB_____.handlers"
 										:loading="controls.PERSO___PERSOTOB_____.props.loading"
 										:reporting-mode-on="reportingModeCAV"
@@ -280,6 +290,7 @@
 										<q-date-time-picker
 											v-if="controls.PERSO___PERSOTOB_____.isVisible"
 											v-bind="controls.PERSO___PERSOTOB_____.props"
+											:id="getControlId(controls.PERSO___PERSOTOB_____)"
 											:model-value="model.ValTob.value"
 											@reset-icon-click="model.ValTob.fnUpdateValue(model.ValTob.originalValue ?? new Date())"
 											@update:model-value="model.ValTob.fnUpdateValue($event ?? '')" />
@@ -291,7 +302,8 @@
 									<base-input-structure
 										v-if="controls.PERSO___PERSOYEAR____.isVisible"
 										class="i-text"
-										v-bind="controls.PERSO___PERSOYEAR____"
+										v-bind="controls.PERSO___PERSOYEAR____.wrapperProps"
+										:id="getControlId(controls.PERSO___PERSOYEAR____)"
 										v-on="controls.PERSO___PERSOYEAR____.handlers"
 										:loading="controls.PERSO___PERSOYEAR____.props.loading"
 										:reporting-mode-on="reportingModeCAV"
@@ -299,6 +311,7 @@
 										<q-numeric-input
 											v-if="controls.PERSO___PERSOYEAR____.isVisible"
 											v-bind="controls.PERSO___PERSOYEAR____.props"
+											:id="getControlId(controls.PERSO___PERSOYEAR____)"
 											@update:model-value="model.ValYear.fnUpdateValue" />
 									</base-input-structure>
 								</q-col>
@@ -308,7 +321,8 @@
 									<base-input-structure
 										v-if="controls.PERSO___PERSOMONTH___.isVisible"
 										class="i-text"
-										v-bind="controls.PERSO___PERSOMONTH___"
+										v-bind="controls.PERSO___PERSOMONTH___.wrapperProps"
+										:id="getControlId(controls.PERSO___PERSOMONTH___)"
 										v-on="controls.PERSO___PERSOMONTH___.handlers"
 										:loading="controls.PERSO___PERSOMONTH___.props.loading"
 										:reporting-mode-on="reportingModeCAV"
@@ -316,6 +330,7 @@
 										<q-select
 											v-if="controls.PERSO___PERSOMONTH___.isVisible"
 											v-bind="controls.PERSO___PERSOMONTH___.props"
+											:id="getControlId(controls.PERSO___PERSOMONTH___)"
 											@update:model-value="model.ValMonth.fnUpdateValue" />
 									</base-input-structure>
 								</q-col>
@@ -331,13 +346,15 @@
 						<base-input-structure
 							v-if="controls.PERSO___PERSOCREATUSR.isVisible"
 							class="i-text"
-							v-bind="controls.PERSO___PERSOCREATUSR"
+							v-bind="controls.PERSO___PERSOCREATUSR.wrapperProps"
+							:id="getControlId(controls.PERSO___PERSOCREATUSR)"
 							v-on="controls.PERSO___PERSOCREATUSR.handlers"
 							:loading="controls.PERSO___PERSOCREATUSR.props.loading"
 							:reporting-mode-on="reportingModeCAV"
 							:suggestion-mode-on="suggestionModeOn">
 							<q-text-field
 								v-bind="controls.PERSO___PERSOCREATUSR.props"
+								:id="getControlId(controls.PERSO___PERSOCREATUSR)"
 								@blur="onBlur(controls.PERSO___PERSOCREATUSR, model.ValCreatusr.value)"
 								@change="model.ValCreatusr.fnUpdateValueOnChange" />
 						</base-input-structure>
@@ -348,7 +365,8 @@
 						<base-input-structure
 							v-if="controls.PERSO___PERSOCREATDAT.isVisible"
 							class="i-text"
-							v-bind="controls.PERSO___PERSOCREATDAT"
+							v-bind="controls.PERSO___PERSOCREATDAT.wrapperProps"
+							:id="getControlId(controls.PERSO___PERSOCREATDAT)"
 							v-on="controls.PERSO___PERSOCREATDAT.handlers"
 							:loading="controls.PERSO___PERSOCREATDAT.props.loading"
 							:reporting-mode-on="reportingModeCAV"
@@ -356,6 +374,7 @@
 							<q-date-time-picker
 								v-if="controls.PERSO___PERSOCREATDAT.isVisible"
 								v-bind="controls.PERSO___PERSOCREATDAT.props"
+								:id="getControlId(controls.PERSO___PERSOCREATDAT)"
 								:model-value="model.ValCreatdat.value"
 								@reset-icon-click="model.ValCreatdat.fnUpdateValue(model.ValCreatdat.originalValue ?? new Date())"
 								@update:model-value="model.ValCreatdat.fnUpdateValue($event ?? '')" />
@@ -367,13 +386,15 @@
 						<base-input-structure
 							v-if="controls.PERSO___PERSOMODIFUSR.isVisible"
 							class="i-text"
-							v-bind="controls.PERSO___PERSOMODIFUSR"
+							v-bind="controls.PERSO___PERSOMODIFUSR.wrapperProps"
+							:id="getControlId(controls.PERSO___PERSOMODIFUSR)"
 							v-on="controls.PERSO___PERSOMODIFUSR.handlers"
 							:loading="controls.PERSO___PERSOMODIFUSR.props.loading"
 							:reporting-mode-on="reportingModeCAV"
 							:suggestion-mode-on="suggestionModeOn">
 							<q-text-field
 								v-bind="controls.PERSO___PERSOMODIFUSR.props"
+								:id="getControlId(controls.PERSO___PERSOMODIFUSR)"
 								@blur="onBlur(controls.PERSO___PERSOMODIFUSR, model.ValModifusr.value)"
 								@change="model.ValModifusr.fnUpdateValueOnChange" />
 						</base-input-structure>
@@ -384,7 +405,8 @@
 						<base-input-structure
 							v-if="controls.PERSO___PERSOMODIFDAT.isVisible"
 							class="i-text"
-							v-bind="controls.PERSO___PERSOMODIFDAT"
+							v-bind="controls.PERSO___PERSOMODIFDAT.wrapperProps"
+							:id="getControlId(controls.PERSO___PERSOMODIFDAT)"
 							v-on="controls.PERSO___PERSOMODIFDAT.handlers"
 							:loading="controls.PERSO___PERSOMODIFDAT.props.loading"
 							:reporting-mode-on="reportingModeCAV"
@@ -392,6 +414,7 @@
 							<q-date-time-picker
 								v-if="controls.PERSO___PERSOMODIFDAT.isVisible"
 								v-bind="controls.PERSO___PERSOMODIFDAT.props"
+								:id="getControlId(controls.PERSO___PERSOMODIFDAT)"
 								:model-value="model.ValModifdat.value"
 								@reset-icon-click="model.ValModifdat.fnUpdateValue(model.ValModifdat.originalValue ?? new Date())"
 								@update:model-value="model.ValModifdat.fnUpdateValue($event ?? '')" />
@@ -402,7 +425,7 @@
 		</q-container>
 	</teleport>
 
-	<hr v-if="!isPopup && showFormFooter" />
+	<q-divider v-if="!isPopup && showFormFooter" />
 
 	<teleport
 		v-if="formModalIsReady && showFormFooter"
@@ -751,6 +774,7 @@
 						label: computed(() => this.Resources.IDENTIFICATION37731),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
+						borderless: false,
 						isCollapsible: false,
 						anchored: false,
 						directChildren: ['PERSO___PSEUDNOVOGR04', 'PERSO___PSEUDNOVOGR05'],
@@ -765,6 +789,7 @@
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'PERSO___PSEUDNOVOGR01',
+						borderless: true,
 						isCollapsible: false,
 						anchored: false,
 						directChildren: ['PERSO___PERSOPHOTO___'],
@@ -795,6 +820,7 @@
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'PERSO___PSEUDNOVOGR01',
+						borderless: true,
 						isCollapsible: false,
 						anchored: false,
 						directChildren: ['PERSO___PERSONAME____', 'PERSO___PERSOIDENTIFI', 'PERSO___PERSOGENDER__', 'PERSO___PERSOEMAIL___'],
@@ -841,8 +867,8 @@
 						container: 'PERSO___PSEUDNOVOGR05',
 						maxLength: 1,
 						arrayName: 'Gender',
-						helpShortItem: '',
-						helpDetailedItem: '',
+						helpShortItem: 'None',
+						helpDetailedItem: 'None',
 						controlLimits: [
 						],
 					}, this),
@@ -867,6 +893,7 @@
 						label: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
+						borderless: false,
 						isCollapsible: false,
 						anchored: false,
 						directChildren: ['PERSO___PERSODOB_____', 'PERSO___PERSOTOB_____', 'PERSO___PERSOYEAR____', 'PERSO___PERSOMONTH___'],
@@ -929,8 +956,8 @@
 						maxIntegers: 2,
 						maxDecimals: 0,
 						arrayName: 'Months',
-						helpShortItem: '',
-						helpDetailedItem: '',
+						helpShortItem: 'None',
+						helpDetailedItem: 'None',
 						controlLimits: [
 						],
 					}, this),
@@ -1388,7 +1415,6 @@
 
 				this.afterControlUpdate(controlField, fieldValue)
 			},
-
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
 // USE /[MANUAL GQT FUNCTIONS_JS PERSO]/
 // eslint-disable-next-line

@@ -9,12 +9,13 @@
 			<div
 				v-if="showFormHeader"
 				class="c-action-bar">
-				<h1
+				<component
 					v-if="formControl.uiComponents.header && formInfo.designation"
+					:is="topHeadingTag"
 					:id="formTitleId"
 					class="form-header">
 					{{ formInfo.designation }}
-				</h1>
+				</component>
 
 				<div class="c-action-bar__menu">
 					<template
@@ -40,13 +41,10 @@
 									@click="btn.action">
 									<template v-if="btn.icon">
 										<q-badge-indicator
-											v-if="btn.badge && btn.badge.isVisible"
-											:color="btn.badge.color">
+											:enabled="btn.badge?.isVisible ?? false"
+											:color="btn.badge?.color">
 											<q-icon v-bind="btn.icon" />
 										</q-badge-indicator>
-										<q-icon
-											v-else
-											v-bind="btn.icon" />
 									</template>
 								</q-toggle-group-item>
 							</template>
@@ -97,6 +95,7 @@
 		<q-container
 			fluid
 			data-key="GROUPBX"
+			:data-identifier="primaryKeyValue"
 			:data-loading="!formInitialDataLoaded || !isActiveForm">
 			<template v-if="formControl.initialized && showFormBody">
 				<q-row v-if="controls.GROUPBX_PSEUDNOVOGR01.isVisible">
@@ -105,9 +104,9 @@
 						cols="auto">
 						<q-group-box-container
 							v-if="controls.GROUPBX_PSEUDNOVOGR01.isVisible"
-							id="GROUPBX_PSEUDNOVOGR01"
 							v-bind="controls.GROUPBX_PSEUDNOVOGR01"
-							:is-visible="controls.GROUPBX_PSEUDNOVOGR01.isVisible">
+							:id="getControlId(controls.GROUPBX_PSEUDNOVOGR01)"
+							:no-border="controls.GROUPBX_PSEUDNOVOGR01.borderless">
 							<!-- Start GROUPBX_PSEUDNOVOGR01 -->
 							<q-row v-if="controls.GROUPBX_EQUIPSEQUENNR.isVisible || controls.GROUPBX_EQUIPREGISTNR.isVisible">
 								<q-col
@@ -116,7 +115,8 @@
 									<base-input-structure
 										v-if="controls.GROUPBX_EQUIPSEQUENNR.isVisible"
 										class="i-text"
-										v-bind="controls.GROUPBX_EQUIPSEQUENNR"
+										v-bind="controls.GROUPBX_EQUIPSEQUENNR.wrapperProps"
+										:id="getControlId(controls.GROUPBX_EQUIPSEQUENNR)"
 										v-on="controls.GROUPBX_EQUIPSEQUENNR.handlers"
 										:loading="controls.GROUPBX_EQUIPSEQUENNR.props.loading"
 										:reporting-mode-on="reportingModeCAV"
@@ -124,6 +124,7 @@
 										<q-numeric-input
 											v-if="controls.GROUPBX_EQUIPSEQUENNR.isVisible"
 											v-bind="controls.GROUPBX_EQUIPSEQUENNR.props"
+											:id="getControlId(controls.GROUPBX_EQUIPSEQUENNR)"
 											@update:model-value="model.ValSequennr.fnUpdateValue" />
 									</base-input-structure>
 								</q-col>
@@ -133,13 +134,15 @@
 									<base-input-structure
 										v-if="controls.GROUPBX_EQUIPREGISTNR.isVisible"
 										class="i-text"
-										v-bind="controls.GROUPBX_EQUIPREGISTNR"
+										v-bind="controls.GROUPBX_EQUIPREGISTNR.wrapperProps"
+										:id="getControlId(controls.GROUPBX_EQUIPREGISTNR)"
 										v-on="controls.GROUPBX_EQUIPREGISTNR.handlers"
 										:loading="controls.GROUPBX_EQUIPREGISTNR.props.loading"
 										:reporting-mode-on="reportingModeCAV"
 										:suggestion-mode-on="suggestionModeOn">
 										<q-text-field
 											v-bind="controls.GROUPBX_EQUIPREGISTNR.props"
+											:id="getControlId(controls.GROUPBX_EQUIPREGISTNR)"
 											@blur="onBlur(controls.GROUPBX_EQUIPREGISTNR, model.ValRegistnr.value)"
 											@change="model.ValRegistnr.fnUpdateValueOnChange" />
 									</base-input-structure>
@@ -152,7 +155,8 @@
 									<base-input-structure
 										v-if="controls.GROUPBX_TPEQUTIPOEQUI.isVisible"
 										class="i-text"
-										v-bind="controls.GROUPBX_TPEQUTIPOEQUI"
+										v-bind="controls.GROUPBX_TPEQUTIPOEQUI.wrapperProps"
+										:id="getControlId(controls.GROUPBX_TPEQUTIPOEQUI)"
 										v-on="controls.GROUPBX_TPEQUTIPOEQUI.handlers"
 										:loading="controls.GROUPBX_TPEQUTIPOEQUI.props.loading"
 										:reporting-mode-on="reportingModeCAV"
@@ -160,6 +164,7 @@
 										<q-lookup
 											v-if="controls.GROUPBX_TPEQUTIPOEQUI.isVisible"
 											v-bind="controls.GROUPBX_TPEQUTIPOEQUI.props"
+											:id="getControlId(controls.GROUPBX_TPEQUTIPOEQUI)"
 											v-on="controls.GROUPBX_TPEQUTIPOEQUI.handlers" />
 										<q-see-more-groupbx-tpequtipoequi
 											v-if="controls.GROUPBX_TPEQUTIPOEQUI.seeMoreIsVisible"
@@ -175,13 +180,15 @@
 									<base-input-structure
 										v-if="controls.GROUPBX_EQUIPSITEFABR.isVisible"
 										class="i-text"
-										v-bind="controls.GROUPBX_EQUIPSITEFABR"
+										v-bind="controls.GROUPBX_EQUIPSITEFABR.wrapperProps"
+										:id="getControlId(controls.GROUPBX_EQUIPSITEFABR)"
 										v-on="controls.GROUPBX_EQUIPSITEFABR.handlers"
 										:loading="controls.GROUPBX_EQUIPSITEFABR.props.loading"
 										:reporting-mode-on="reportingModeCAV"
 										:suggestion-mode-on="suggestionModeOn">
 										<q-text-field
 											v-bind="controls.GROUPBX_EQUIPSITEFABR.props"
+											:id="getControlId(controls.GROUPBX_EQUIPSITEFABR)"
 											@blur="onBlur(controls.GROUPBX_EQUIPSITEFABR, model.ValSitefabr.value)"
 											@change="model.ValSitefabr.fnUpdateValueOnChange" />
 									</base-input-structure>
@@ -194,7 +201,8 @@
 									<base-input-structure
 										v-if="controls.GROUPBX_WAREHWAREHDES.isVisible"
 										class="i-text"
-										v-bind="controls.GROUPBX_WAREHWAREHDES"
+										v-bind="controls.GROUPBX_WAREHWAREHDES.wrapperProps"
+										:id="getControlId(controls.GROUPBX_WAREHWAREHDES)"
 										v-on="controls.GROUPBX_WAREHWAREHDES.handlers"
 										:loading="controls.GROUPBX_WAREHWAREHDES.props.loading"
 										:reporting-mode-on="reportingModeCAV"
@@ -202,6 +210,7 @@
 										<q-lookup
 											v-if="controls.GROUPBX_WAREHWAREHDES.isVisible"
 											v-bind="controls.GROUPBX_WAREHWAREHDES.props"
+											:id="getControlId(controls.GROUPBX_WAREHWAREHDES)"
 											v-on="controls.GROUPBX_WAREHWAREHDES.handlers" />
 										<q-see-more-groupbx-warehwarehdes
 											v-if="controls.GROUPBX_WAREHWAREHDES.seeMoreIsVisible"
@@ -217,7 +226,8 @@
 									<base-input-structure
 										v-if="controls.GROUPBX_ITEM_ITEMDES_.isVisible"
 										class="i-text"
-										v-bind="controls.GROUPBX_ITEM_ITEMDES_"
+										v-bind="controls.GROUPBX_ITEM_ITEMDES_.wrapperProps"
+										:id="getControlId(controls.GROUPBX_ITEM_ITEMDES_)"
 										v-on="controls.GROUPBX_ITEM_ITEMDES_.handlers"
 										:loading="controls.GROUPBX_ITEM_ITEMDES_.props.loading"
 										:reporting-mode-on="reportingModeCAV"
@@ -225,6 +235,7 @@
 										<q-lookup
 											v-if="controls.GROUPBX_ITEM_ITEMDES_.isVisible"
 											v-bind="controls.GROUPBX_ITEM_ITEMDES_.props"
+											:id="getControlId(controls.GROUPBX_ITEM_ITEMDES_)"
 											v-on="controls.GROUPBX_ITEM_ITEMDES_.handlers" />
 										<q-see-more-groupbx-item-itemdes
 											v-if="controls.GROUPBX_ITEM_ITEMDES_.seeMoreIsVisible"
@@ -241,9 +252,9 @@
 					<q-col v-if="controls.GROUPBX_PSEUDNOVOGR02.isVisible">
 						<q-group-box-container
 							v-if="controls.GROUPBX_PSEUDNOVOGR02.isVisible"
-							id="GROUPBX_PSEUDNOVOGR02"
 							v-bind="controls.GROUPBX_PSEUDNOVOGR02"
-							:is-visible="controls.GROUPBX_PSEUDNOVOGR02.isVisible">
+							:id="getControlId(controls.GROUPBX_PSEUDNOVOGR02)"
+							:no-border="controls.GROUPBX_PSEUDNOVOGR02.borderless">
 							<!-- Start GROUPBX_PSEUDNOVOGR02 -->
 							<q-row v-if="controls.GROUPBX_EQUIPDTDECO__.isVisible || controls.GROUPBX_ROOM1ROOMNR__.isVisible">
 								<q-col
@@ -252,7 +263,8 @@
 									<base-input-structure
 										v-if="controls.GROUPBX_EQUIPDTDECO__.isVisible"
 										class="i-text"
-										v-bind="controls.GROUPBX_EQUIPDTDECO__"
+										v-bind="controls.GROUPBX_EQUIPDTDECO__.wrapperProps"
+										:id="getControlId(controls.GROUPBX_EQUIPDTDECO__)"
 										v-on="controls.GROUPBX_EQUIPDTDECO__.handlers"
 										:loading="controls.GROUPBX_EQUIPDTDECO__.props.loading"
 										:reporting-mode-on="reportingModeCAV"
@@ -260,6 +272,7 @@
 										<q-date-time-picker
 											v-if="controls.GROUPBX_EQUIPDTDECO__.isVisible"
 											v-bind="controls.GROUPBX_EQUIPDTDECO__.props"
+											:id="getControlId(controls.GROUPBX_EQUIPDTDECO__)"
 											:model-value="model.ValDtdeco.value"
 											@reset-icon-click="model.ValDtdeco.fnUpdateValue(model.ValDtdeco.originalValue ?? new Date())"
 											@update:model-value="model.ValDtdeco.fnUpdateValue($event ?? '')" />
@@ -271,7 +284,8 @@
 									<base-input-structure
 										v-if="controls.GROUPBX_ROOM1ROOMNR__.isVisible"
 										class="i-text"
-										v-bind="controls.GROUPBX_ROOM1ROOMNR__"
+										v-bind="controls.GROUPBX_ROOM1ROOMNR__.wrapperProps"
+										:id="getControlId(controls.GROUPBX_ROOM1ROOMNR__)"
 										v-on="controls.GROUPBX_ROOM1ROOMNR__.handlers"
 										:loading="controls.GROUPBX_ROOM1ROOMNR__.props.loading"
 										:reporting-mode-on="reportingModeCAV"
@@ -279,6 +293,7 @@
 										<q-lookup
 											v-if="controls.GROUPBX_ROOM1ROOMNR__.isVisible"
 											v-bind="controls.GROUPBX_ROOM1ROOMNR__.props"
+											:id="getControlId(controls.GROUPBX_ROOM1ROOMNR__)"
 											v-on="controls.GROUPBX_ROOM1ROOMNR__.handlers" />
 									</base-input-structure>
 								</q-col>
@@ -290,13 +305,15 @@
 									<base-input-structure
 										v-if="controls.GROUPBX_ROOM1DESIGNAT.isVisible"
 										class="i-text"
-										v-bind="controls.GROUPBX_ROOM1DESIGNAT"
+										v-bind="controls.GROUPBX_ROOM1DESIGNAT.wrapperProps"
+										:id="getControlId(controls.GROUPBX_ROOM1DESIGNAT)"
 										v-on="controls.GROUPBX_ROOM1DESIGNAT.handlers"
 										:loading="controls.GROUPBX_ROOM1DESIGNAT.props.loading"
 										:reporting-mode-on="reportingModeCAV"
 										:suggestion-mode-on="suggestionModeOn">
 										<q-text-field
 											v-bind="controls.GROUPBX_ROOM1DESIGNAT.props"
+											:id="getControlId(controls.GROUPBX_ROOM1DESIGNAT)"
 											@blur="onBlur(controls.GROUPBX_ROOM1DESIGNAT, model.Room1ValDesignat.value)"
 											@change="model.Room1ValDesignat.fnUpdateValueOnChange" />
 									</base-input-structure>
@@ -309,13 +326,15 @@
 									<base-input-structure
 										v-if="controls.GROUPBX_EQUIPDESIGNAT.isVisible"
 										class="i-text"
-										v-bind="controls.GROUPBX_EQUIPDESIGNAT"
+										v-bind="controls.GROUPBX_EQUIPDESIGNAT.wrapperProps"
+										:id="getControlId(controls.GROUPBX_EQUIPDESIGNAT)"
 										v-on="controls.GROUPBX_EQUIPDESIGNAT.handlers"
 										:loading="controls.GROUPBX_EQUIPDESIGNAT.props.loading"
 										:reporting-mode-on="reportingModeCAV"
 										:suggestion-mode-on="suggestionModeOn">
 										<q-text-field
 											v-bind="controls.GROUPBX_EQUIPDESIGNAT.props"
+											:id="getControlId(controls.GROUPBX_EQUIPDESIGNAT)"
 											@blur="onBlur(controls.GROUPBX_EQUIPDESIGNAT, model.ValDesignat.value)"
 											@change="model.ValDesignat.fnUpdateValueOnChange" />
 									</base-input-structure>
@@ -328,7 +347,8 @@
 									<base-input-structure
 										v-if="controls.GROUPBX_EQUIPDTAQUISI.isVisible"
 										class="i-text"
-										v-bind="controls.GROUPBX_EQUIPDTAQUISI"
+										v-bind="controls.GROUPBX_EQUIPDTAQUISI.wrapperProps"
+										:id="getControlId(controls.GROUPBX_EQUIPDTAQUISI)"
 										v-on="controls.GROUPBX_EQUIPDTAQUISI.handlers"
 										:loading="controls.GROUPBX_EQUIPDTAQUISI.props.loading"
 										:reporting-mode-on="reportingModeCAV"
@@ -336,6 +356,7 @@
 										<q-date-time-picker
 											v-if="controls.GROUPBX_EQUIPDTAQUISI.isVisible"
 											v-bind="controls.GROUPBX_EQUIPDTAQUISI.props"
+											:id="getControlId(controls.GROUPBX_EQUIPDTAQUISI)"
 											:model-value="model.ValDtaquisi.value"
 											@reset-icon-click="model.ValDtaquisi.fnUpdateValue(model.ValDtaquisi.originalValue ?? new Date())"
 											@update:model-value="model.ValDtaquisi.fnUpdateValue($event ?? '')" />
@@ -347,7 +368,8 @@
 									<base-input-structure
 										v-if="controls.GROUPBX_EQUIPVALORTOT.isVisible"
 										class="i-text"
-										v-bind="controls.GROUPBX_EQUIPVALORTOT"
+										v-bind="controls.GROUPBX_EQUIPVALORTOT.wrapperProps"
+										:id="getControlId(controls.GROUPBX_EQUIPVALORTOT)"
 										v-on="controls.GROUPBX_EQUIPVALORTOT.handlers"
 										:loading="controls.GROUPBX_EQUIPVALORTOT.props.loading"
 										:reporting-mode-on="reportingModeCAV"
@@ -355,6 +377,7 @@
 										<q-numeric-input
 											v-if="controls.GROUPBX_EQUIPVALORTOT.isVisible"
 											v-bind="controls.GROUPBX_EQUIPVALORTOT.props"
+											:id="getControlId(controls.GROUPBX_EQUIPVALORTOT)"
 											@update:model-value="model.ValValortot.fnUpdateValue" />
 									</base-input-structure>
 								</q-col>
@@ -364,7 +387,8 @@
 									<base-input-structure
 										v-if="controls.GROUPBX_EQUIPFREQUENC.isVisible"
 										class="i-text"
-										v-bind="controls.GROUPBX_EQUIPFREQUENC"
+										v-bind="controls.GROUPBX_EQUIPFREQUENC.wrapperProps"
+										:id="getControlId(controls.GROUPBX_EQUIPFREQUENC)"
 										v-on="controls.GROUPBX_EQUIPFREQUENC.handlers"
 										:loading="controls.GROUPBX_EQUIPFREQUENC.props.loading"
 										:reporting-mode-on="reportingModeCAV"
@@ -372,6 +396,7 @@
 										<q-select
 											v-if="controls.GROUPBX_EQUIPFREQUENC.isVisible"
 											v-bind="controls.GROUPBX_EQUIPFREQUENC.props"
+											:id="getControlId(controls.GROUPBX_EQUIPFREQUENC)"
 											@update:model-value="model.ValFrequenc.fnUpdateValue" />
 									</base-input-structure>
 								</q-col>
@@ -383,7 +408,8 @@
 									<base-input-structure
 										v-if="controls.GROUPBX_EQUIPDTREFERE.isVisible"
 										class="i-text"
-										v-bind="controls.GROUPBX_EQUIPDTREFERE"
+										v-bind="controls.GROUPBX_EQUIPDTREFERE.wrapperProps"
+										:id="getControlId(controls.GROUPBX_EQUIPDTREFERE)"
 										v-on="controls.GROUPBX_EQUIPDTREFERE.handlers"
 										:loading="controls.GROUPBX_EQUIPDTREFERE.props.loading"
 										:reporting-mode-on="reportingModeCAV"
@@ -391,6 +417,7 @@
 										<q-date-time-picker
 											v-if="controls.GROUPBX_EQUIPDTREFERE.isVisible"
 											v-bind="controls.GROUPBX_EQUIPDTREFERE.props"
+											:id="getControlId(controls.GROUPBX_EQUIPDTREFERE)"
 											:model-value="model.ValDtrefere.value"
 											@reset-icon-click="model.ValDtrefere.fnUpdateValue(model.ValDtrefere.originalValue ?? new Date())"
 											@update:model-value="model.ValDtrefere.fnUpdateValue($event ?? '')" />
@@ -402,13 +429,15 @@
 									<base-input-structure
 										v-if="controls.GROUPBX_EQUIPFIRST___.isVisible"
 										class="i-text"
-										v-bind="controls.GROUPBX_EQUIPFIRST___"
+										v-bind="controls.GROUPBX_EQUIPFIRST___.wrapperProps"
+										:id="getControlId(controls.GROUPBX_EQUIPFIRST___)"
 										v-on="controls.GROUPBX_EQUIPFIRST___.handlers"
 										:loading="controls.GROUPBX_EQUIPFIRST___.props.loading"
 										:reporting-mode-on="reportingModeCAV"
 										:suggestion-mode-on="suggestionModeOn">
 										<q-text-field
 											v-bind="controls.GROUPBX_EQUIPFIRST___.props"
+											:id="getControlId(controls.GROUPBX_EQUIPFIRST___)"
 											@blur="onBlur(controls.GROUPBX_EQUIPFIRST___, model.ValFirst.value)"
 											@change="model.ValFirst.fnUpdateValueOnChange" />
 									</base-input-structure>
@@ -419,13 +448,15 @@
 									<base-input-structure
 										v-if="controls.GROUPBX_EQUIPBEFORE__.isVisible"
 										class="i-text"
-										v-bind="controls.GROUPBX_EQUIPBEFORE__"
+										v-bind="controls.GROUPBX_EQUIPBEFORE__.wrapperProps"
+										:id="getControlId(controls.GROUPBX_EQUIPBEFORE__)"
 										v-on="controls.GROUPBX_EQUIPBEFORE__.handlers"
 										:loading="controls.GROUPBX_EQUIPBEFORE__.props.loading"
 										:reporting-mode-on="reportingModeCAV"
 										:suggestion-mode-on="suggestionModeOn">
 										<q-text-field
 											v-bind="controls.GROUPBX_EQUIPBEFORE__.props"
+											:id="getControlId(controls.GROUPBX_EQUIPBEFORE__)"
 											@blur="onBlur(controls.GROUPBX_EQUIPBEFORE__, model.ValBefore.value)"
 											@change="model.ValBefore.fnUpdateValueOnChange" />
 									</base-input-structure>
@@ -437,8 +468,9 @@
 									cols="auto">
 									<base-input-structure
 										v-if="controls.GROUPBX_EQUIPBOUGHT__.isVisible"
-										class="i-checkbox"
-										v-bind="controls.GROUPBX_EQUIPBOUGHT__"
+										class="i-text"
+										v-bind="controls.GROUPBX_EQUIPBOUGHT__.wrapperProps"
+										:id="getControlId(controls.GROUPBX_EQUIPBOUGHT__)"
 										v-on="controls.GROUPBX_EQUIPBOUGHT__.handlers"
 										:loading="controls.GROUPBX_EQUIPBOUGHT__.props.loading"
 										:reporting-mode-on="reportingModeCAV"
@@ -447,6 +479,7 @@
 											<q-checkbox
 												v-if="controls.GROUPBX_EQUIPBOUGHT__.isVisible"
 												v-bind="controls.GROUPBX_EQUIPBOUGHT__.props"
+												:id="getControlId(controls.GROUPBX_EQUIPBOUGHT__)"
 												v-on="controls.GROUPBX_EQUIPBOUGHT__.handlers" />
 										</template>
 									</base-input-structure>
@@ -460,7 +493,7 @@
 		</q-container>
 	</teleport>
 
-	<hr v-if="!isPopup && showFormFooter" />
+	<q-divider v-if="!isPopup && showFormFooter" />
 
 	<teleport
 		v-if="formModalIsReady && showFormFooter"
@@ -812,6 +845,7 @@
 						label: computed(() => this.Resources.WHOLE_LINE_OFF30708),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
+						borderless: false,
 						isCollapsible: false,
 						anchored: false,
 						directChildren: ['GROUPBX_EQUIPSEQUENNR', 'GROUPBX_EQUIPREGISTNR', 'GROUPBX_TPEQUTIPOEQUI', 'GROUPBX_EQUIPSITEFABR', 'GROUPBX_WAREHWAREHDES', 'GROUPBX_ITEM_ITEMDES_'],
@@ -965,6 +999,7 @@
 						label: computed(() => this.Resources.WHOLE_LINE_ON08702),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
+						borderless: false,
 						isCollapsible: false,
 						anchored: false,
 						directChildren: ['GROUPBX_EQUIPDTDECO__', 'GROUPBX_ROOM1ROOMNR__', 'GROUPBX_ROOM1DESIGNAT', 'GROUPBX_EQUIPDESIGNAT', 'GROUPBX_EQUIPDTAQUISI', 'GROUPBX_EQUIPVALORTOT', 'GROUPBX_EQUIPFREQUENC', 'GROUPBX_EQUIPDTREFERE', 'GROUPBX_EQUIPFIRST___', 'GROUPBX_EQUIPBEFORE__', 'GROUPBX_EQUIPBOUGHT__'],
@@ -982,7 +1017,7 @@
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'GROUPBX_PSEUDNOVOGR02',
 						isFormulaBlocked: true,
-						dateTimeType: 'dateTime',
+						dateTimeType: 'date',
 						controlLimits: [
 						],
 					}, this),
@@ -1086,7 +1121,7 @@
 						size: 'small',
 						helpControl: {
 							shortHelp: {
-								type: 'Tooltip',
+								type: 'subtext',
 								text: computed(() => this.Resources.___1438719),
 							},
 						},
@@ -1097,8 +1132,8 @@
 						maxIntegers: 2,
 						maxDecimals: 0,
 						arrayName: 'FreqEmpr',
-						helpShortItem: '',
-						helpDetailedItem: '',
+						helpShortItem: 'None',
+						helpDetailedItem: 'None',
 						controlLimits: [
 						],
 					}, this),
@@ -1604,7 +1639,6 @@
 
 				this.afterControlUpdate(controlField, fieldValue)
 			},
-
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
 // USE /[MANUAL GQT FUNCTIONS_JS GROUPBX]/
 // eslint-disable-next-line

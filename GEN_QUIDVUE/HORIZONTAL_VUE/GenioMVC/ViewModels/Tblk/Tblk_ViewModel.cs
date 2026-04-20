@@ -7,6 +7,7 @@ using GenioMVC.Models.Navigation;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Quidgest.Persistence;
 using Quidgest.Persistence.GenericQuery;
+
 using System.Collections;
 using System.Collections.Concurrent;
 using System.Collections.Specialized;
@@ -39,6 +40,7 @@ namespace GenioMVC.ViewModels.Tblk
 		public string ValFkey2 { get; set; }
 
 		#endregion
+
 		/// <summary>
 		/// Title: "Name" | Type: "C"
 		/// </summary>
@@ -53,8 +55,6 @@ namespace GenioMVC.ViewModels.Tblk
 		/// </summary>
 		[ValidateSetAccess]
 		public TableDBEdit<GenioMVC.Models.Trsb> TableTrsbName { get; set; }
-
-
 
 		#region Navigations
 		#endregion
@@ -227,12 +227,7 @@ namespace GenioMVC.ViewModels.Tblk
 			}
 		}
 
-		/// <summary>
-		/// Sets the value of a single property of the view model based on the provided table and field names.
-		/// </summary>
-		/// <param name="fullFieldName">The full field name in the format "table.field".</param>
-		/// <param name="value">The field value.</param>
-		/// <exception cref="ArgumentNullException">Thrown if <paramref name="fullFieldName"/> is null.</exception>
+		/// <inheritdoc />
 		public override void SetViewModelValue(string fullFieldName, object value)
 		{
 			try
@@ -364,6 +359,7 @@ namespace GenioMVC.ViewModels.Tblk
 
 			Load_Tblk____grpb_name____(qs, lazyLoad);
 			Load_Tblk____trsb_name____(qs, lazyLoad);
+
 // USE /[MANUAL GQT VIEWMODEL_LOADPARTIAL TBLK]/
 		}
 
@@ -434,10 +430,7 @@ namespace GenioMVC.ViewModels.Tblk
 				}
 			}
 
-			TableGrpbName = new TableDBEdit<Models.Grpb>
-			{
-				IsLazyLoad = lazyLoad
-			};
+			TableGrpbName = new TableDBEdit<Models.Grpb>();
 
 			if (lazyLoad)
 			{
@@ -624,10 +617,7 @@ namespace GenioMVC.ViewModels.Tblk
 				}
 			}
 
-			TableTrsbName = new TableDBEdit<Models.Trsb>
-			{
-				IsLazyLoad = lazyLoad
-			};
+			TableTrsbName = new TableDBEdit<Models.Trsb>();
 
 			if (lazyLoad)
 			{

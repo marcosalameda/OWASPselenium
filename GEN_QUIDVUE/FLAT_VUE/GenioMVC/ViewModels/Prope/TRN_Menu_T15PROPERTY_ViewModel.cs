@@ -65,7 +65,6 @@ namespace GenioMVC.ViewModels.Prope
 			get
 			{
 				CriteriaSet conds = CriteriaSet.And();
-				conds.Equal(CSGenioAprope.FldCodagent, Navigation.GetValue("agent"));
 
 				return conds;
 			}
@@ -195,20 +194,20 @@ namespace GenioMVC.ViewModels.Prope
 		{
 			columns = new List<Exports.QColumn>()
 			{
-				new Exports.QColumn(CSGenioAprope.FldTitle, FieldType.TEXT, Resources.Resources.TITLE21885, 50, 0, true, "aparttyp"),
-				new Exports.QColumn(CSGenioAprope.FldPrice, FieldType.CURRENCY, Resources.Resources.PRICE06900, 11, 2, true, "aparttyp"),
-				new Exports.QColumn(CSGenioAprope.FldPhoto, FieldType.IMAGE, Resources.Resources.MAIN_PHOTO18723, 3, 1, true, "aparttyp"),
-				new Exports.QColumn(CSGenioAprope.FldSize, FieldType.NUMERIC, Resources.Resources.SIZE__M2_57059, 15, 0, true, "aparttyp"),
-				new Exports.QColumn(CSGenioAprope.FldBathrms, FieldType.NUMERIC, Resources.Resources.NUMBER_OF_BATHROOMS64857, 2, 0, true, "aparttyp"),
-				new Exports.QColumn(CSGenioAprope.FldYear, FieldType.TEXT, Resources.Resources.YEAR_BUILT55277, 50, 0, true, "aparttyp"),
-				new Exports.QColumn(CSGenioAprope.FldDescript, FieldType.MEMO, Resources.Resources.DESCRIPTION07383, 500, 0, true, "aparttyp"),
-				new Exports.QColumn(CSGenioAprope.FldBuildtyp, FieldType.ARRAY_TEXT, Resources.Resources.BUILDING_TYPE57152, 1, 0, true, "aparttyp"),
+				new Exports.QColumn(CSGenioAprope.FldTitle, FieldType.TEXT, Resources.Resources.TITLE21885, 50, 0, true),
+				new Exports.QColumn(CSGenioAprope.FldPrice, FieldType.CURRENCY, Resources.Resources.PRICE06900, 11, 2, true),
+				new Exports.QColumn(CSGenioAprope.FldPhoto, FieldType.IMAGE, Resources.Resources.MAIN_PHOTO18723, 3, 1, true),
+				new Exports.QColumn(CSGenioAprope.FldSize, FieldType.NUMERIC, Resources.Resources.SIZE__M2_57059, 15, 0, true),
+				new Exports.QColumn(CSGenioAprope.FldBathrms, FieldType.NUMERIC, Resources.Resources.NUMBER_OF_BATHROOMS64857, 2, 0, true),
+				new Exports.QColumn(CSGenioAprope.FldYear, FieldType.TEXT, Resources.Resources.YEAR_BUILT55277, 50, 0, true),
+				new Exports.QColumn(CSGenioAprope.FldDescript, FieldType.MEMO, Resources.Resources.DESCRIPTION07383, 500, 0, true),
+				new Exports.QColumn(CSGenioAprope.FldBuildtyp, FieldType.ARRAY_TEXT, Resources.Resources.BUILDING_TYPE57152, 1, 0, true, "buildtyp"),
 				new Exports.QColumn(CSGenioAprope.FldTypology, FieldType.ARRAY_NUMERIC, Resources.Resources.TYPOLOGY11991, 1, 0, true, "aparttyp"),
-				new Exports.QColumn(CSGenioAprope.FldOrder, FieldType.NUMERIC, Resources.Resources.ORDER39632, 15, 0, true, "aparttyp"),
-				new Exports.QColumn(CSGenioAprope.FldGrndsize, FieldType.NUMERIC, Resources.Resources.GROUND_SIZE62055, 15, 0, true, "aparttyp"),
-				new Exports.QColumn(CSGenioAprope.FldFloornum, FieldType.NUMERIC, Resources.Resources.FLOOR_NUMBER26169, 3, 0, true, "aparttyp"),
-				new Exports.QColumn(CSGenioAagent.FldName, FieldType.TEXT, Resources.Resources.NAME31974, 30, 0, true, "aparttyp"),
-				new Exports.QColumn(CSGenioAcity.FldCity, FieldType.TEXT, Resources.Resources.CITY42505, 30, 0, true, "aparttyp"),
+				new Exports.QColumn(CSGenioAprope.FldOrder, FieldType.NUMERIC, Resources.Resources.ORDER39632, 15, 0, true),
+				new Exports.QColumn(CSGenioAprope.FldGrndsize, FieldType.NUMERIC, Resources.Resources.GROUND_SIZE62055, 15, 0, true),
+				new Exports.QColumn(CSGenioAprope.FldFloornum, FieldType.NUMERIC, Resources.Resources.FLOOR_NUMBER26169, 3, 0, true),
+				new Exports.QColumn(CSGenioAagent.FldName, FieldType.TEXT, Resources.Resources.NAME31974, 30, 0, true),
+				new Exports.QColumn(CSGenioAcity.FldCity, FieldType.TEXT, Resources.Resources.CITY42505, 30, 0, true),
 			};
 		}
 
@@ -242,6 +241,8 @@ namespace GenioMVC.ViewModels.Prope
 
 			crs.SubSets.Add(subfilters);
 
+			// Form field filters
+			crs.SubSets.Add(ProcessFieldFilters(tableConfig.GlobalFilters));
 
 			crs.SubSets.Add(GetCustomizedStaticLimits(StaticLimits));
 
@@ -373,12 +374,11 @@ namespace GenioMVC.ViewModels.Prope
 
 			FieldRef[] fields = new FieldRef[] { CSGenioAprope.FldCodprope, CSGenioAprope.FldZzstate, CSGenioAprope.FldTitle, CSGenioAprope.FldPrice, CSGenioAprope.FldPhoto, CSGenioAprope.FldCodagent, CSGenioAagent.FldCodagent, CSGenioAagent.FldName, CSGenioAprope.FldSize, CSGenioAprope.FldBathrms, CSGenioAprope.FldYear, CSGenioAprope.FldDescript, CSGenioAprope.FldCodcity, CSGenioAcity.FldCodcity, CSGenioAcity.FldCity, CSGenioAprope.FldBuildtyp, CSGenioAprope.FldTypology };
 
-
-			// Totalizers
-			List<FieldRef> fieldsWithTotalizers = fields.Where(field => tableConfig.TotalizerColumns.Contains(field.FullName)).ToList();
+			// List of column names that should display totalized (aggregated) values.
+			List<string> totalizerColumns = [];
+			List<FieldRef> fieldsWithTotalizers = [.. fields.Where(field => totalizerColumns.Contains(field.FullName))];
 
 			FieldRef firstVisibleColumn = null;
-
 			if (sorts.Count == 0)
 			{
 				firstVisibleColumn = tableConfig?.GetFirstVisibleColumn(TableAlias);

@@ -92,6 +92,7 @@ namespace CSGenio.business.async
 
         private void UpdateExistingAndAddNewWorks(List<Process> processes, PersistentSupport sp, User user)
         {
+            Log.Debug("Updating existing schedulled processes");
             foreach (var process in processes)
             {
                 var existing = _works.Find(x => x.Process.ValCodascpr == process.ValCodascpr);
@@ -102,7 +103,19 @@ namespace CSGenio.business.async
                 }
                 else
                 {
-                    AddNewWork(process, sp, user);
+                    try
+                    {
+                        using (Log.SetContext("ProcessId", process.ValId))
+                        {
+                            var newWork = LoadWork(process, sp, user);
+                            _works.Add(newWork);
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        // Log the error and continue processing other works
+                        Log.Error($"Error loading work for process {process.ValId}: {ex.Message}");                        
+                    }
                 }
             }
         }
@@ -115,12 +128,12 @@ namespace CSGenio.business.async
             }
         }
 
-        private void AddNewWork(Process process, PersistentSupport sp, User user)
+        private GenioWork LoadWork(Process process, PersistentSupport sp, User user)
         {
             var job = _jobFinder.ObtainJob(process);
             job.FillArguments(sp, user, process);
             job.SetPartitionPolicies();
-            _works.Add(new GenioWork(process, job));
+            return new GenioWork(process, job);
         }
 
         private void ReorderWorks()

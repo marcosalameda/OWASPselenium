@@ -134,7 +134,7 @@
 			
 			menuId()
 			{
-				return this.module + this.menu.Id
+				return this.module + this.menu.Id + '_MOBILE'
 			},
 
 			subMenuId()

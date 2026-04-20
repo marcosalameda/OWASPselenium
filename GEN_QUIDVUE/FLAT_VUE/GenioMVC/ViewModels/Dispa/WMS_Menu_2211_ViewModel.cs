@@ -34,7 +34,7 @@ namespace GenioMVC.ViewModels.Dispa
 
 		/// <inheritdoc/>
 		[JsonPropertyName("uuid")]
-		public override string Uuid => "cfbb1913-41cc-44c3-9c1e-563789f3471f";
+		public override string Uuid => "26adf4c3-c69b-49c3-9b58-2dd6e756779a";
 
 		/// <inheritdoc/>
 		protected override string[] FieldsToSerialize => _fieldsToSerialize;
@@ -57,7 +57,7 @@ namespace GenioMVC.ViewModels.Dispa
 				CriteriaSet conditions = CriteriaSet.And();
 				// Limitations
 				// Limit "SC"
-				conditions.Equal(CSGenioAdispa.FldIsprepar, "0");
+				conditions.Equal(CSGenioAdispa.FldIsprepar, "1");
 
 				return conditions;
 			}
@@ -213,6 +213,8 @@ namespace GenioMVC.ViewModels.Dispa
 
 			crs.SubSets.Add(subfilters);
 
+			// Form field filters
+			crs.SubSets.Add(ProcessFieldFilters(tableConfig.GlobalFilters));
 
 			crs.SubSets.Add(GetCustomizedStaticLimits(StaticLimits));
 
@@ -342,12 +344,11 @@ namespace GenioMVC.ViewModels.Dispa
 
 			FieldRef[] fields = new FieldRef[] { CSGenioAdispa.FldCoddispa, CSGenioAdispa.FldZzstate, CSGenioAdispa.FldDispadt, CSGenioAdispa.FldDispanr, CSGenioAdispa.FldCodentit, CSGenioAentit.FldCodentit, CSGenioAentit.FldName };
 
-
-			// Totalizers
-			List<FieldRef> fieldsWithTotalizers = fields.Where(field => tableConfig.TotalizerColumns.Contains(field.FullName)).ToList();
+			// List of column names that should display totalized (aggregated) values.
+			List<string> totalizerColumns = [];
+			List<FieldRef> fieldsWithTotalizers = [.. fields.Where(field => totalizerColumns.Contains(field.FullName))];
 
 			FieldRef firstVisibleColumn = null;
-
 			if (sorts.Count == 0)
 			{
 				firstVisibleColumn = tableConfig?.GetFirstVisibleColumn(TableAlias);
@@ -376,13 +377,13 @@ namespace GenioMVC.ViewModels.Dispa
 			//Current Area = "DISPA"
 			//1st Area Limit: "DISPA"
 			//1st Area Field: "ISPREPAR"
-			//1st Area Value: "0"
+			//1st Area Value: "1"
 			{
 				Limit limit = new Limit();
 				limit.TipoLimite = LimitType.SC;
 				limit.NaoAplicaSeNulo = false;
 				CSGenioAdispa model_limit_area = new CSGenioAdispa(m_userContext.User);
-				string limit_field = "isprepar", limit_field_value = "0";
+				string limit_field = "isprepar", limit_field_value = "1";
 				object this_limit_field = Navigation.GetStrValue(limit_field_value);
 				Limit_Filler(ref limit, model_limit_area, limit_field, limit_field_value, this_limit_field, LimitAreaType.AreaLimita);
 				if (!this.TableLimits.Contains(limit, limitComparer)) //to avoid repetitions (i.e: DB and EPH applying same limit)
@@ -558,7 +559,7 @@ namespace GenioMVC.ViewModels.Dispa
 
 		private static readonly string[] _fieldsToSerialize =
 		[
-			"Dispa", "Dispa.ValCoddispa", "Dispa.ValZzstate", "Dispa.ValDispadt", "Dispa.ValDispanr", "Entit", "Entit.ValName", "Dispa.ValCoddisst", "Dispa.ValCodentit", "Dispa.ValCodperso"
+			"Dispa", "Dispa.ValCoddispa", "Dispa.ValZzstate", "Dispa.ValDispadt", "Dispa.ValDispanr", "Entit", "Entit.ValName", "Dispa.ValCodentit", "Dispa.ValCodperso"
 		];
 
 		private static readonly List<TableSearchColumn> _searchableColumns =

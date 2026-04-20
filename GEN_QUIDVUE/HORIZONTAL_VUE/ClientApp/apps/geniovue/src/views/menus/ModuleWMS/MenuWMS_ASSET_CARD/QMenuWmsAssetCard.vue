@@ -3,22 +3,23 @@
 		v-if="menuModalIsReady"
 		:to="`#${uiContainersId.body}`"
 		:disabled="!menuInfo.isPopup">
-		<form
+		<div
 			class="form-horizontal"
 			@submit.prevent>
 			<q-row-container>
 				<q-table
 					v-bind="controls.menu"
 					v-on="controls.menu.handlers">
+					<template #header>
+						<q-table-config
+							:table-ctrl="controls.menu"
+							v-on="controls.menu.handlers">
+						</q-table-config>
+					</template>
 					<!-- USE /[MANUAL GQT CUSTOM_TABLE WMS_Menu_ASSET_CARD]/ -->
 				</q-table>
-
-				<q-table-extra-extension
-					:list-ctrl="controls.menu"
-					:filter-operators="controls.menu.filterOperators"
-					v-on="controls.menu.handlers" />
 			</q-row-container>
-		</form>
+		</div>
 	</teleport>
 
 	<teleport
@@ -189,7 +190,6 @@
 								scrollData: 1,
 								export: 1,
 								array: computed(() => new qProjArrays.QArrayIdenttyp(vm.$getResource).elements),
-								arrayType: qProjArrays.QArrayIdenttyp.type,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 5,
@@ -245,43 +245,6 @@
 								export: 1,
 								pkColumn: 'ValCodentit',
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
-							new listColumnTypes.MarkdownColumn({
-								order: 10,
-								name: 'ValDescription',
-								area: 'ASSET',
-								field: 'DESCRIPTION',
-								label: computed(() => this.Resources.DESCRIPTION07383),
-								scrollData: 30,
-								export: 1,
-							}, computed(() => vm.model), computed(() => vm.internalEvents)),
-							new listColumnTypes.MarkdownColumn({
-								order: 11,
-								name: 'ValLongdesc',
-								area: 'ASSET',
-								field: 'LONGDESC',
-								label: computed(() => this.Resources.DETAILED_DESCRIPTION36560),
-								scrollData: 30,
-								isVisible: false,
-								export: 1,
-							}, computed(() => vm.model), computed(() => vm.internalEvents)),
-							new listColumnTypes.ArrayColumn({
-								order: 12,
-								multipleValues: true,
-								name: 'AtagsValIcon',
-								area: 'ATAGS',
-								field: 'ICON',
-								label: computed(() => this.Resources.TAGS54909),
-								scrollData: 1,
-								maxDigits: 1,
-								decimalPlaces: 0,
-								sortable: false,
-								searchable: false,
-								export: 0,
-								array: computed(() => new qProjArrays.QArrayAssettags(vm.$getResource).elements),
-								arrayType: qProjArrays.QArrayAssettags.type,
-								arrayDisplayMode: 'ID',
-								pkColumn: 'ValCodtags',
-							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 						],
 						config: {
 							name: 'WMS_Menu_ASSET_CARD',
@@ -290,7 +253,6 @@
 							tableAlias: 'ASSET',
 							tableNamePlural: computed(() => this.Resources.ASSETS12081),
 							viewManagement: 'U',
-							hasTextWrap: true,
 							showLimitsInfo: true,
 							tableTitle: computed(() => this.Resources.EQUIPMENTS06276),
 							showAlternatePagination: true,
@@ -299,7 +261,6 @@
 							searchBarConfig: {
 								visibility: true
 							},
-							filtersVisible: true,
 							allowColumnFilters: true,
 							allowColumnSort: true,
 							crudActions: [
@@ -373,9 +334,7 @@
 									id: 'insert',
 									name: 'insert',
 									title: computed(() => this.Resources.INSERIR43365),
-									icon: {
-										icon: 'add'
-									},
+									icon: { icon: 'add' },
 									isInReadOnly: true,
 									params: {
 										action: vm.openFormAction,
@@ -424,7 +383,7 @@
 								sortOrder: 'asc'
 							}
 						},
-						globalEvents: ['changed-KINDE', 'changed-ASSET', 'changed-MANUF'],
+						globalEvents: ['changed-MANUF', 'changed-KINDE', 'changed-ASSET'],
 						uuid: 'cbba1257-006c-407c-bff6-cb87a80d6f4e',
 						allSelectedRows: 'false',
 						viewModes: [
@@ -463,10 +422,8 @@
 									text: {
 										allowsMultiple: true,
 										sources: [
-											'ASSET.GRAI',
 											'ASSET.GIAI',
-											'ASSET.DESCRIPTION',
-											'ATAGS.ICON',
+											'ASSET.GRAI',
 										]
 									},
 									image: {

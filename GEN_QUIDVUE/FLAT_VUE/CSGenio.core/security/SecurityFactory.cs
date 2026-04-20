@@ -135,9 +135,7 @@ namespace GenioServer.security
 				foreach (IIdentityProvider provider in m_idProviders)
 				{
 					id = provider.Authenticate(credential);
-
-					if (AuthenticationMode == AuthenticationMode.RejectOnFirstFail && id == null)
-						break;
+					
 					if (AuthenticationMode == AuthenticationMode.AcceptOnFirstSucess && id != null)
 						break;
 				}

@@ -176,6 +176,7 @@ export default class ViewModel extends FormViewModelBase
 			field: 'CATEGORY',
 			maxLength: 50,
 			description: computed(() => this.Resources.CATEGORY18978),
+			ignoreFldSubmit: true,
 		}).cloneFrom(values?.TableCategCategory))
 		this.stopWatchers.push(watch(() => this.TableCategCategory.value, (newValue, oldValue) => this.onUpdate('categ.categoria', this.TableCategCategory, newValue, oldValue)))
 
@@ -189,38 +190,6 @@ export default class ViewModel extends FormViewModelBase
 		}).cloneFrom(values?.ValDtultcat))
 		this.stopWatchers.push(watch(() => this.ValDtultcat.value, (newValue, oldValue) => this.onUpdate('pesso.dtultcat', this.ValDtultcat, newValue, oldValue)))
 
-		this.ValCurricul = reactive(new modelFieldType.Document({
-			id: 'ValCurricul',
-			originId: 'ValCurricul',
-			area: 'PESSO',
-			field: 'CURRICUL',
-			properties: computed(() => this.ValCurriculPropertiesVM),
-			documentFK: computed(() => this.ValCurriculfk),
-			currentDocument: computed(() => this.ValCurriculData),
-			description: computed(() => this.Resources.CURRICULUM51182),
-		}).cloneFrom(values?.ValCurricul))
-		this.stopWatchers.push(watch(() => this.ValCurricul.value, (newValue, oldValue) => this.onUpdate('pesso.curricul', this.ValCurricul, newValue, oldValue)))
-
-		this.ValCurriculPropertiesVM = reactive(new modelFieldType.Base({
-			id: 'ValCurriculPropertiesVM',
-			area: 'PESSO',
-			field: 'CURRICULDOCUM',
-			ignoreFldSubmit: true
-		}).cloneFrom(values?.ValCurriculPropertiesVM))
-		this.ValCurriculfk = reactive(new modelFieldType.String({
-			id: 'ValCurriculfk',
-			area: 'PESSO',
-			field: 'CURRICULFK'
-		}).cloneFrom(values?.ValCurriculfk))
-		this.stopWatchers.push(watch(() => this.ValCurriculfk.value, (newValue, oldValue) => this.onUpdate('pesso.curriculfk', this.ValCurriculfk, newValue, oldValue)))
-		this.ValCurriculData = reactive(new modelFieldType.DocumentData({
-			id: 'ValCurriculData',
-			area: 'PESSO',
-			field: 'CURRICULDATA',
-			ignoreFldSubmit: true
-		}).cloneFrom(values?.ValCurriculData))
-		this.stopWatchers.push(watch(() => this.ValCurriculData.value, (newValue, oldValue) => this.onUpdate('pesso.curriculdata', this.ValCurriculData, newValue, oldValue), { deep: true }))
-
 		this.TableCmpnyDesignat = reactive(new modelFieldType.String({
 			type: 'Lookup',
 			id: 'TableCmpnyDesignat',
@@ -229,6 +198,7 @@ export default class ViewModel extends FormViewModelBase
 			field: 'DESIGNAT',
 			maxLength: 85,
 			description: computed(() => this.Resources.DESIGNATION35876),
+			ignoreFldSubmit: true,
 		}).cloneFrom(values?.TableCmpnyDesignat))
 		this.stopWatchers.push(watch(() => this.TableCmpnyDesignat.value, (newValue, oldValue) => this.onUpdate('cmpny.designat', this.TableCmpnyDesignat, newValue, oldValue)))
 

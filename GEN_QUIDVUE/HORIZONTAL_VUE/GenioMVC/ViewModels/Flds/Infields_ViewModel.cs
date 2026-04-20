@@ -7,6 +7,7 @@ using GenioMVC.Models.Navigation;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Quidgest.Persistence;
 using Quidgest.Persistence.GenericQuery;
+
 using System.Collections;
 using System.Collections.Concurrent;
 using System.Collections.Specialized;
@@ -41,6 +42,7 @@ namespace GenioMVC.ViewModels.Flds
 		public string ValCodequip { get; set; }
 
 		#endregion
+
 		/// <summary>
 		/// Title: "Text Field" | Type: "C"
 		/// </summary>
@@ -134,11 +136,6 @@ namespace GenioMVC.ViewModels.Flds
 		/// </summary>
 		public int ValLogicenu { get; set; }
 		/// <summary>
-		/// Title: "" | Type: "PSEUD"
-		/// </summary>
-		[JsonIgnore]
-		public SelectList List_ValLogicenu { get; set; }
-		/// <summary>
 		/// Title: "Created by" | Type: "ON"
 		/// </summary>
 		[ValidateSetAccess]
@@ -162,13 +159,6 @@ namespace GenioMVC.ViewModels.Flds
 		/// Title: "Radio Btn" | Type: "AC"
 		/// </summary>
 		public string ValRadiob { get; set; }
-		/// <summary>
-		/// Title: "" | Type: "PSEUD"
-		/// </summary>
-		[JsonIgnore]
-		public SelectList List_ValRadiob { get; set; }
-
-
 
 		#region Navigations
 		#endregion
@@ -187,14 +177,6 @@ namespace GenioMVC.ViewModels.Flds
 
 		#region Fields for formulas
 
-		// Field for formula
-		/// <summary>Field: "Enforce table conditions" Tipo: "L"</summary>
-		[ValidateSetAccess]
-		public bool ValTblcond { get; set; }
-		// Field for formula
-		/// <summary>Field: "Field state" Tipo: "AC"</summary>
-		[ValidateSetAccess]
-		public string ValCond { get; set; }
 
 		#endregion
 
@@ -338,8 +320,6 @@ namespace GenioMVC.ViewModels.Flds
 				ValCreatins = ViewModelConversion.ToDateTime(m.ValCreatins);
 				ValCreathou = ViewModelConversion.ToString(m.ValCreathou);
 				ValRadiob = ViewModelConversion.ToString(m.ValRadiob);
-				ValTblcond = ViewModelConversion.ToLogic(m.ValTblcond);
-				ValCond = ViewModelConversion.ToString(m.ValCond);
 				ValCodflds = ViewModelConversion.ToString(m.ValCodflds);
 			}
 			catch (Exception)
@@ -405,8 +385,6 @@ namespace GenioMVC.ViewModels.Flds
 				m.ValCreatdat = ViewModelConversion.ToDateTime(ValCreatdat);
 				m.ValCreatins = ViewModelConversion.ToDateTime(ValCreatins);
 				m.ValCreathou = ViewModelConversion.ToString(ValCreathou);
-				m.ValTblcond = ViewModelConversion.ToLogic(ValTblcond);
-				m.ValCond = ViewModelConversion.ToString(ValCond);
 			}
 			catch (Exception)
 			{
@@ -415,12 +393,7 @@ namespace GenioMVC.ViewModels.Flds
 			}
 		}
 
-		/// <summary>
-		/// Sets the value of a single property of the view model based on the provided table and field names.
-		/// </summary>
-		/// <param name="fullFieldName">The full field name in the format "table.field".</param>
-		/// <param name="value">The field value.</param>
-		/// <exception cref="ArgumentNullException">Thrown if <paramref name="fullFieldName"/> is null.</exception>
+		/// <inheritdoc />
 		public override void SetViewModelValue(string fullFieldName, object value)
 		{
 			try
@@ -613,6 +586,7 @@ namespace GenioMVC.ViewModels.Flds
 			// Add characteristics
 			Characs = new List<string>();
 
+
 // USE /[MANUAL GQT VIEWMODEL_LOADPARTIAL INFIELDS]/
 		}
 
@@ -709,8 +683,6 @@ namespace GenioMVC.ViewModels.Flds
 				"flds.creatins" => ViewModelConversion.ToDateTime(modelValue),
 				"flds.creathou" => ViewModelConversion.ToString(modelValue),
 				"flds.radiob" => ViewModelConversion.ToString(modelValue),
-				"flds.tblcond" => ViewModelConversion.ToLogic(modelValue),
-				"flds.cond" => ViewModelConversion.ToString(modelValue),
 				"flds.codflds" => ViewModelConversion.ToString(modelValue),
 				_ => modelValue
 			};

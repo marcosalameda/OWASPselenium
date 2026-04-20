@@ -47,7 +47,7 @@ namespace CSGenio.business
 			Qfield = new Field(info.Alias, "codtradu", FieldType.KEY_GUID);
 			Qfield.FieldDescription = "";
 			Qfield.FieldSize =  36;
-			Qfield.CavDesignation = "";
+			Qfield.VisivelCav = CavVisibilityType.Nunca;
 
 			Qfield.Dupmsg = "";
 			info.RegisterFieldDB(Qfield);
@@ -65,7 +65,7 @@ namespace CSGenio.business
 			Qfield = new Field(info.Alias, "codidio1", FieldType.KEY_GUID);
 			Qfield.FieldDescription = "language";
 			Qfield.FieldSize =  36;
-			Qfield.CavDesignation = "LANGUAGE33172";
+			Qfield.VisivelCav = CavVisibilityType.Nunca;
 
 			Qfield.Dupmsg = "";
 			info.RegisterFieldDB(Qfield);
@@ -83,7 +83,7 @@ namespace CSGenio.business
 			Qfield = new Field(info.Alias, "codidio2", FieldType.KEY_GUID);
 			Qfield.FieldDescription = "Language";
 			Qfield.FieldSize =  36;
-			Qfield.CavDesignation = "LANGUAGE16872";
+			Qfield.VisivelCav = CavVisibilityType.Nunca;
 
 			Qfield.Dupmsg = "";
 			info.RegisterFieldDB(Qfield);

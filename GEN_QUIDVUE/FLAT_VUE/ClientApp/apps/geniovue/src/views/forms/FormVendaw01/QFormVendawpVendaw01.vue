@@ -9,12 +9,13 @@
 			<div
 				v-if="showFormHeader"
 				class="c-action-bar">
-				<h1
+				<component
 					v-if="formControl.uiComponents.header && formInfo.designation"
+					:is="topHeadingTag"
 					:id="formTitleId"
 					class="form-header">
 					{{ formInfo.designation }}
-				</h1>
+				</component>
 
 				<div class="c-action-bar__menu">
 					<template
@@ -40,13 +41,10 @@
 									@click="btn.action">
 									<template v-if="btn.icon">
 										<q-badge-indicator
-											v-if="btn.badge && btn.badge.isVisible"
-											:color="btn.badge.color">
+											:enabled="btn.badge?.isVisible ?? false"
+											:color="btn.badge?.color">
 											<q-icon v-bind="btn.icon" />
 										</q-badge-indicator>
-										<q-icon
-											v-else
-											v-bind="btn.icon" />
 									</template>
 								</q-toggle-group-item>
 							</template>
@@ -97,6 +95,7 @@
 		<q-container
 			fluid
 			data-key="VENDAW01"
+			:data-identifier="primaryKeyValue"
 			:data-loading="!formInitialDataLoaded || !isActiveForm">
 			<template v-if="formControl.initialized && showFormBody">
 				<q-row v-if="controls.VENDAWP_PSEUDFASES___.isVisible">
@@ -105,9 +104,10 @@
 						cols="auto">
 						<q-wizard
 							v-if="controls.VENDAWP_PSEUDFASES___.isVisible"
-							id="VENDAWP_PSEUDFASES___"
 							:is-required="controls.VENDAWP_PSEUDFASES___.isRequired"
+							:base-heading-level="baseHeadingLevel + 1"
 							v-bind="controls.VENDAWP_PSEUDFASES___.wizardData"
+							:id="getControlId(controls.VENDAWP_PSEUDFASES___)"
 							v-on="controls.VENDAWP_PSEUDFASES___.handlers">
 							<!-- Start VENDAWP_PSEUDFASES___ -->
 							<q-row v-if="controls.VENDAW01ORGANORGANIZA.isVisible">
@@ -117,7 +117,8 @@
 									<base-input-structure
 										v-if="controls.VENDAW01ORGANORGANIZA.isVisible"
 										class="i-text"
-										v-bind="controls.VENDAW01ORGANORGANIZA"
+										v-bind="controls.VENDAW01ORGANORGANIZA.wrapperProps"
+										:id="getControlId(controls.VENDAW01ORGANORGANIZA)"
 										v-on="controls.VENDAW01ORGANORGANIZA.handlers"
 										:loading="controls.VENDAW01ORGANORGANIZA.props.loading"
 										:reporting-mode-on="reportingModeCAV"
@@ -125,6 +126,7 @@
 										<q-lookup
 											v-if="controls.VENDAW01ORGANORGANIZA.isVisible"
 											v-bind="controls.VENDAW01ORGANORGANIZA.props"
+											:id="getControlId(controls.VENDAW01ORGANORGANIZA)"
 											v-on="controls.VENDAW01ORGANORGANIZA.handlers" />
 										<q-see-more-vendaw01organorganiza
 											v-if="controls.VENDAW01ORGANORGANIZA.seeMoreIsVisible"
@@ -137,9 +139,9 @@
 								<q-col v-if="controls.VENDAW01PSEUDNOVOGR01.isVisible">
 									<q-group-box-container
 										v-if="controls.VENDAW01PSEUDNOVOGR01.isVisible"
-										id="VENDAW01PSEUDNOVOGR01"
 										v-bind="controls.VENDAW01PSEUDNOVOGR01"
-										:is-visible="controls.VENDAW01PSEUDNOVOGR01.isVisible">
+										:id="getControlId(controls.VENDAW01PSEUDNOVOGR01)"
+										:no-border="controls.VENDAW01PSEUDNOVOGR01.borderless">
 										<!-- Start VENDAW01PSEUDNOVOGR01 -->
 										<q-row v-if="controls.VENDAW01SALE_IDENTIFI.isVisible">
 											<q-col
@@ -148,13 +150,15 @@
 												<base-input-structure
 													v-if="controls.VENDAW01SALE_IDENTIFI.isVisible"
 													class="i-text"
-													v-bind="controls.VENDAW01SALE_IDENTIFI"
+													v-bind="controls.VENDAW01SALE_IDENTIFI.wrapperProps"
+													:id="getControlId(controls.VENDAW01SALE_IDENTIFI)"
 													v-on="controls.VENDAW01SALE_IDENTIFI.handlers"
 													:loading="controls.VENDAW01SALE_IDENTIFI.props.loading"
 													:reporting-mode-on="reportingModeCAV"
 													:suggestion-mode-on="suggestionModeOn">
 													<q-text-field
 														v-bind="controls.VENDAW01SALE_IDENTIFI.props"
+														:id="getControlId(controls.VENDAW01SALE_IDENTIFI)"
 														@blur="onBlur(controls.VENDAW01SALE_IDENTIFI, model.ValIdentifi.value)"
 														@change="model.ValIdentifi.fnUpdateValueOnChange" />
 												</base-input-structure>
@@ -167,13 +171,15 @@
 												<base-input-structure
 													v-if="controls.VENDAW01SALE_POTCOMPR.isVisible"
 													class="i-text"
-													v-bind="controls.VENDAW01SALE_POTCOMPR"
+													v-bind="controls.VENDAW01SALE_POTCOMPR.wrapperProps"
+													:id="getControlId(controls.VENDAW01SALE_POTCOMPR)"
 													v-on="controls.VENDAW01SALE_POTCOMPR.handlers"
 													:loading="controls.VENDAW01SALE_POTCOMPR.props.loading"
 													:reporting-mode-on="reportingModeCAV"
 													:suggestion-mode-on="suggestionModeOn">
 													<q-text-field
 														v-bind="controls.VENDAW01SALE_POTCOMPR.props"
+														:id="getControlId(controls.VENDAW01SALE_POTCOMPR)"
 														@blur="onBlur(controls.VENDAW01SALE_POTCOMPR, model.ValPotcompr.value)"
 														@change="model.ValPotcompr.fnUpdateValueOnChange" />
 												</base-input-structure>
@@ -183,8 +189,9 @@
 												cols="auto">
 												<base-input-structure
 													v-if="controls.VENDAW01SALE_PROSPECC.isVisible"
-													class="i-checkbox"
-													v-bind="controls.VENDAW01SALE_PROSPECC"
+													class="i-text"
+													v-bind="controls.VENDAW01SALE_PROSPECC.wrapperProps"
+													:id="getControlId(controls.VENDAW01SALE_PROSPECC)"
 													v-on="controls.VENDAW01SALE_PROSPECC.handlers"
 													:loading="controls.VENDAW01SALE_PROSPECC.props.loading"
 													:reporting-mode-on="reportingModeCAV"
@@ -193,6 +200,7 @@
 														<q-checkbox
 															v-if="controls.VENDAW01SALE_PROSPECC.isVisible"
 															v-bind="controls.VENDAW01SALE_PROSPECC.props"
+															:id="getControlId(controls.VENDAW01SALE_PROSPECC)"
 															v-on="controls.VENDAW01SALE_PROSPECC.handlers" />
 													</template>
 												</base-input-structure>
@@ -210,7 +218,7 @@
 		</q-container>
 	</teleport>
 
-	<hr v-if="!isPopup && showFormFooter" />
+	<q-divider v-if="!isPopup && showFormFooter" />
 
 	<teleport
 		v-if="formModalIsReady && showFormFooter"
@@ -725,6 +733,7 @@
 						label: computed(() => this.Resources.PROSPECTING26583),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
+						borderless: false,
 						isCollapsible: false,
 						anchored: false,
 						directChildren: ['VENDAW01SALE_IDENTIFI', 'VENDAW01SALE_POTCOMPR', 'VENDAW01SALE_PROSPECC'],
@@ -1173,7 +1182,6 @@
 
 				this.afterControlUpdate(controlField, fieldValue)
 			},
-
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
 // USE /[MANUAL GQT FUNCTIONS_JS VENDAW01]/
 // eslint-disable-next-line

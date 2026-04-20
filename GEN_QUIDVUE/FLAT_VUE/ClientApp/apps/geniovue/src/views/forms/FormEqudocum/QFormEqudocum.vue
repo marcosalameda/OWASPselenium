@@ -9,12 +9,13 @@
 			<div
 				v-if="showFormHeader"
 				class="c-action-bar">
-				<h1
+				<component
 					v-if="formControl.uiComponents.header && formInfo.designation"
+					:is="topHeadingTag"
 					:id="formTitleId"
 					class="form-header">
 					{{ formInfo.designation }}
-				</h1>
+				</component>
 
 				<div class="c-action-bar__menu">
 					<template
@@ -40,13 +41,10 @@
 									@click="btn.action">
 									<template v-if="btn.icon">
 										<q-badge-indicator
-											v-if="btn.badge && btn.badge.isVisible"
-											:color="btn.badge.color">
+											:enabled="btn.badge?.isVisible ?? false"
+											:color="btn.badge?.color">
 											<q-icon v-bind="btn.icon" />
 										</q-badge-indicator>
-										<q-icon
-											v-else
-											v-bind="btn.icon" />
 									</template>
 								</q-toggle-group-item>
 							</template>
@@ -97,6 +95,7 @@
 		<q-container
 			fluid
 			data-key="EQUDOCUM"
+			:data-identifier="primaryKeyValue"
 			:data-loading="!formInitialDataLoaded || !isActiveForm">
 			<template v-if="formControl.initialized && showFormBody">
 				<q-row v-if="controls.EQUDOCUMEQUIPDESIGNAT.isVisible || controls.EQUDOCUMPSEUDBTN_ANEX.isVisible">
@@ -106,13 +105,15 @@
 						<base-input-structure
 							v-if="controls.EQUDOCUMEQUIPDESIGNAT.isVisible"
 							class="i-text"
-							v-bind="controls.EQUDOCUMEQUIPDESIGNAT"
+							v-bind="controls.EQUDOCUMEQUIPDESIGNAT.wrapperProps"
+							:id="getControlId(controls.EQUDOCUMEQUIPDESIGNAT)"
 							v-on="controls.EQUDOCUMEQUIPDESIGNAT.handlers"
 							:loading="controls.EQUDOCUMEQUIPDESIGNAT.props.loading"
 							:reporting-mode-on="reportingModeCAV"
 							:suggestion-mode-on="suggestionModeOn">
 							<q-text-field
 								v-bind="controls.EQUDOCUMEQUIPDESIGNAT.props"
+								:id="getControlId(controls.EQUDOCUMEQUIPDESIGNAT)"
 								@blur="onBlur(controls.EQUDOCUMEQUIPDESIGNAT, model.ValDesignat.value)"
 								@change="model.ValDesignat.fnUpdateValueOnChange" />
 						</base-input-structure>
@@ -123,7 +124,8 @@
 						<base-input-structure
 							v-if="controls.EQUDOCUMPSEUDBTN_ANEX.isVisible"
 							class="i-button"
-							v-bind="controls.EQUDOCUMPSEUDBTN_ANEX"
+							v-bind="controls.EQUDOCUMPSEUDBTN_ANEX.wrapperProps"
+							:id="getControlId(controls.EQUDOCUMPSEUDBTN_ANEX)"
 							v-on="controls.EQUDOCUMPSEUDBTN_ANEX.handlers"
 							:loading="controls.EQUDOCUMPSEUDBTN_ANEX.props.loading"
 							:reporting-mode-on="reportingModeCAV"
@@ -131,6 +133,7 @@
 							<q-button
 								v-if="controls.EQUDOCUMPSEUDBTN_ANEX.isVisible"
 								v-bind="controls.EQUDOCUMPSEUDBTN_ANEX.props"
+								:id="getControlId(controls.EQUDOCUMPSEUDBTN_ANEX)"
 								@click="controls.EQUDOCUMPSEUDBTN_ANEX.action($event)">
 								<q-icon v-bind="controls.EQUDOCUMPSEUDBTN_ANEX.icon" />
 							</q-button>
@@ -144,12 +147,13 @@
 						<q-table
 							v-if="controls.EQUDOCUMPSEUDLISANEX_.isVisible"
 							v-bind="controls.EQUDOCUMPSEUDLISANEX_"
+							:id="getControlId(controls.EQUDOCUMPSEUDLISANEX_)"
 							v-on="controls.EQUDOCUMPSEUDLISANEX_.handlers">
-						<q-table-extra-extension
-							v-if="controls.EQUDOCUMPSEUDLISANEX_.isVisible"
-							:list-ctrl="controls.EQUDOCUMPSEUDLISANEX_"
-							:filter-operators="controls.EQUDOCUMPSEUDLISANEX_.filterOperators"
-							v-on="controls.EQUDOCUMPSEUDLISANEX_.handlers" />
+							<template #header>
+								<q-table-config
+									:table-ctrl="controls.EQUDOCUMPSEUDLISANEX_"
+									v-on="controls.EQUDOCUMPSEUDLISANEX_.handlers" />
+							</template>
 							<!-- USE /[MANUAL GQT CUSTOM_TABLE EQUDOCUMPSEUDLISANEX_]/ -->
 						</q-table>
 					</q-col>
@@ -158,7 +162,7 @@
 		</q-container>
 	</teleport>
 
-	<hr v-if="!isPopup && showFormFooter" />
+	<q-divider v-if="!isPopup && showFormFooter" />
 
 	<teleport
 		v-if="formModalIsReady && showFormFooter"
@@ -541,7 +545,7 @@
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						icon: {
-							icon: computed(() => `${this.$app.resourcesPath}ok.ico?v=3090`),
+							icon: computed(() => `${this.$app.resourcesPath}ok.ico?v=2827`),
 							type: 'img',
 							role: 'presentation',
 						},
@@ -570,7 +574,7 @@
 					EQUDOCUMPSEUDLISANEX_: new fieldControlClass.TableListControl({
 						id: 'EQUDOCUMPSEUDLISANEX_',
 						name: 'LISANEX',
-						size: '',
+						size: 'xxlarge',
 						helpControl: {
 							shortHelp: {
 								type: 'Subtitle',
@@ -584,6 +588,7 @@
 						label: computed(() => this.Resources.DIGITAL_ATTACHEMENTS44886),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
+						headerLevel: computed(() => this.baseHeadingLevel + 1),
 						controller: 'EQUIP',
 						action: 'Equdocum_ValLisanex',
 						hasDependencies: false,
@@ -597,6 +602,7 @@
 								label: computed(() => this.Resources.ATTACHED26247),
 								scrollData: 16,
 								dateTimeType: 'dateTime',
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 2,
@@ -606,6 +612,7 @@
 								label: computed(() => this.Resources.TITLE21885),
 								dataLength: 85,
 								scrollData: 30,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.DocumentColumn({
 								order: 3,
@@ -616,6 +623,7 @@
 								dataLength: 260,
 								scrollData: 30,
 								sortable: false,
+								export: 1,
 								viewType: qEnums.documentViewTypeMode.print,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
@@ -626,6 +634,7 @@
 								label: computed(() => this.Resources.TRANSLATED_TITLE58577),
 								dataLength: 85,
 								scrollData: 30,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 5,
@@ -635,6 +644,7 @@
 								label: computed(() => this.Resources.REFERENCE28402),
 								dataLength: 50,
 								scrollData: 30,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 						],
 						config: {
@@ -652,7 +662,6 @@
 							searchBarConfig: {
 								visibility: false
 							},
-							filtersVisible: false,
 							allowColumnFilters: false,
 							allowColumnSort: true,
 							crudActions: [
@@ -726,9 +735,7 @@
 									id: 'insert',
 									name: 'insert',
 									title: computed(() => this.Resources.INSERIR43365),
-									icon: {
-										icon: 'add'
-									},
+									icon: { icon: 'add' },
 									isInReadOnly: false,
 									params: {
 										action: vm.openFormAction,
@@ -767,22 +774,6 @@
 									fnKeySelector: (row) => row.Fields.ValCodanexd,
 									isPopup: false
 								},
-							},
-							insertCondition: {
-								// eslint-disable-next-line @typescript-eslint/no-unused-vars
-								fnFormula(params)
-								{
-									return netAPI.postData(
-										'Anexd',
-										'ANEXD_InsertCondition',
-										this.serverObjModel,
-										undefined,
-										undefined,
-										undefined,
-										this.navigationId)
-								},
-								dependencyEvents: ['fieldChange:equip.codequip'],
-								isServerRecalc: false,
 							},
 							defaultSearchColumnName: 'ValTitle',
 							defaultSearchColumnNameOriginal: 'ValTitle',
@@ -845,6 +836,8 @@
 						set ValDesignat(value) { vm.model.ValDesignat.updateValue(value) },
 						get ValRegistnr() { return vm.model.ValRegistnr.value },
 						set ValRegistnr(value) { vm.model.ValRegistnr.updateValue(value) },
+						get ValSequennr() { return vm.model.ValSequennr.value },
+						set ValSequennr(value) { vm.model.ValSequennr.updateValue(value) },
 					},
 					Item: {
 						get ValItemdes() { return vm.model.ItemValItemdes.value },
@@ -1212,7 +1205,6 @@
 
 				this.afterControlUpdate(controlField, fieldValue)
 			},
-
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
 // USE /[MANUAL GQT FUNCTIONS_JS EQUDOCUM]/
 // eslint-disable-next-line

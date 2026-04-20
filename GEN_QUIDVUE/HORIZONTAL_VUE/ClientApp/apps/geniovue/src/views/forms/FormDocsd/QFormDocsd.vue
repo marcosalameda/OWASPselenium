@@ -9,12 +9,13 @@
 			<div
 				v-if="showFormHeader"
 				class="c-action-bar">
-				<h1
+				<component
 					v-if="formControl.uiComponents.header && formInfo.designation"
+					:is="topHeadingTag"
 					:id="formTitleId"
 					class="form-header">
 					{{ formInfo.designation }}
-				</h1>
+				</component>
 
 				<div class="c-action-bar__menu">
 					<template
@@ -40,13 +41,10 @@
 									@click="btn.action">
 									<template v-if="btn.icon">
 										<q-badge-indicator
-											v-if="btn.badge && btn.badge.isVisible"
-											:color="btn.badge.color">
+											:enabled="btn.badge?.isVisible ?? false"
+											:color="btn.badge?.color">
 											<q-icon v-bind="btn.icon" />
 										</q-badge-indicator>
-										<q-icon
-											v-else
-											v-bind="btn.icon" />
 									</template>
 								</q-toggle-group-item>
 							</template>
@@ -97,6 +95,7 @@
 		<q-container
 			fluid
 			data-key="DOCSD"
+			:data-identifier="primaryKeyValue"
 			:data-loading="!formInitialDataLoaded || !isActiveForm">
 			<template v-if="formControl.initialized && showFormBody">
 				<q-row v-if="controls.DOCSD___OUDOCNRDOCSDA.isVisible || controls.DOCSD___OUDOCDTDOCSDA.isVisible">
@@ -106,7 +105,8 @@
 						<base-input-structure
 							v-if="controls.DOCSD___OUDOCNRDOCSDA.isVisible"
 							class="i-text"
-							v-bind="controls.DOCSD___OUDOCNRDOCSDA"
+							v-bind="controls.DOCSD___OUDOCNRDOCSDA.wrapperProps"
+							:id="getControlId(controls.DOCSD___OUDOCNRDOCSDA)"
 							v-on="controls.DOCSD___OUDOCNRDOCSDA.handlers"
 							:loading="controls.DOCSD___OUDOCNRDOCSDA.props.loading"
 							:reporting-mode-on="reportingModeCAV"
@@ -114,6 +114,7 @@
 							<q-numeric-input
 								v-if="controls.DOCSD___OUDOCNRDOCSDA.isVisible"
 								v-bind="controls.DOCSD___OUDOCNRDOCSDA.props"
+								:id="getControlId(controls.DOCSD___OUDOCNRDOCSDA)"
 								@update:model-value="model.ValNrdocsda.fnUpdateValue" />
 						</base-input-structure>
 					</q-col>
@@ -123,7 +124,8 @@
 						<base-input-structure
 							v-if="controls.DOCSD___OUDOCDTDOCSDA.isVisible"
 							class="i-text"
-							v-bind="controls.DOCSD___OUDOCDTDOCSDA"
+							v-bind="controls.DOCSD___OUDOCDTDOCSDA.wrapperProps"
+							:id="getControlId(controls.DOCSD___OUDOCDTDOCSDA)"
 							v-on="controls.DOCSD___OUDOCDTDOCSDA.handlers"
 							:loading="controls.DOCSD___OUDOCDTDOCSDA.props.loading"
 							:reporting-mode-on="reportingModeCAV"
@@ -131,6 +133,7 @@
 							<q-date-time-picker
 								v-if="controls.DOCSD___OUDOCDTDOCSDA.isVisible"
 								v-bind="controls.DOCSD___OUDOCDTDOCSDA.props"
+								:id="getControlId(controls.DOCSD___OUDOCDTDOCSDA)"
 								:model-value="model.ValDtdocsda.value"
 								@reset-icon-click="model.ValDtdocsda.fnUpdateValue(model.ValDtdocsda.originalValue ?? new Date())"
 								@update:model-value="model.ValDtdocsda.fnUpdateValue($event ?? '')" />
@@ -144,13 +147,15 @@
 						<base-input-structure
 							v-if="controls.DOCSD___OUDOCTITLE___.isVisible"
 							class="i-text"
-							v-bind="controls.DOCSD___OUDOCTITLE___"
+							v-bind="controls.DOCSD___OUDOCTITLE___.wrapperProps"
+							:id="getControlId(controls.DOCSD___OUDOCTITLE___)"
 							v-on="controls.DOCSD___OUDOCTITLE___.handlers"
 							:loading="controls.DOCSD___OUDOCTITLE___.props.loading"
 							:reporting-mode-on="reportingModeCAV"
 							:suggestion-mode-on="suggestionModeOn">
 							<q-text-field
 								v-bind="controls.DOCSD___OUDOCTITLE___.props"
+								:id="getControlId(controls.DOCSD___OUDOCTITLE___)"
 								@blur="onBlur(controls.DOCSD___OUDOCTITLE___, model.ValTitle.value)"
 								@change="model.ValTitle.fnUpdateValueOnChange" />
 						</base-input-structure>
@@ -160,7 +165,7 @@
 		</q-container>
 	</teleport>
 
-	<hr v-if="!isPopup && showFormFooter" />
+	<q-divider v-if="!isPopup && showFormFooter" />
 
 	<teleport
 		v-if="formModalIsReady && showFormFooter"
@@ -922,7 +927,6 @@
 
 				this.afterControlUpdate(controlField, fieldValue)
 			},
-
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
 // USE /[MANUAL GQT FUNCTIONS_JS DOCSD]/
 // eslint-disable-next-line

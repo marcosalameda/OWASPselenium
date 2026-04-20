@@ -889,12 +889,12 @@
 	},
 	simpleUsageMethods: {
 		runAction(eventName, emittedAction) {
-			var str = eventName + ':\n [' + JSON.stringify(emittedAction)
+			let str = eventName + ':\n [' + JSON.stringify(emittedAction)
 			str += ']'
 			alert(str)
 		},
 		displayEmit(emittedAction) {
-			var str = JSON.stringify(emittedAction)
+			const str = JSON.stringify(emittedAction)
 			alert(str)
 		},
 		formAction(emittedAction) {

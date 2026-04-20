@@ -7,6 +7,7 @@ using GenioMVC.Models.Navigation;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Quidgest.Persistence;
 using Quidgest.Persistence.GenericQuery;
+
 using System.Collections;
 using System.Collections.Concurrent;
 using System.Collections.Specialized;
@@ -29,21 +30,13 @@ namespace GenioMVC.ViewModels.Rules
 		public bool MsqActive { get; set; } = false;
 
 		#region Foreign keys
-		/// <summary>
-		/// Title: "Description" | Type: "CE"
-		/// </summary>
-		public string ValCodup_rules { get; set; }
 
 		#endregion
+
 		/// <summary>
 		/// Title: "Condition type" | Type: "AC"
 		/// </summary>
 		public string ValTipocond { get; set; }
-		/// <summary>
-		/// Title: "" | Type: "PSEUD"
-		/// </summary>
-		[JsonIgnore]
-		public SelectList List_ValTipocond { get; set; }
 		/// <summary>
 		/// Title: "Description" | Type: "C"
 		/// </summary>
@@ -52,18 +45,6 @@ namespace GenioMVC.ViewModels.Rules
 		/// Title: "Local onde executa" | Type: "AC"
 		/// </summary>
 		public string ValLocal { get; set; }
-		/// <summary>
-		/// Title: "" | Type: "PSEUD"
-		/// </summary>
-		[JsonIgnore]
-		public SelectList List_ValLocal { get; set; }
-		/// <summary>
-		/// Title: "Description" | Type: "C"
-		/// </summary>
-		[ValidateSetAccess]
-		public TableDBEdit<GenioMVC.Models.Up_rules> TableUp_rulesDescript { get; set; }
-
-
 
 		#region Navigations
 		#endregion
@@ -306,7 +287,6 @@ namespace GenioMVC.ViewModels.Rules
 
 			try
 			{
-				ValCodup_rules = ViewModelConversion.ToString(m.ValCodup_rules);
 				ValTipocond = ViewModelConversion.ToString(m.ValTipocond);
 				ValDescript = ViewModelConversion.ToString(m.ValDescript);
 				ValLocal = ViewModelConversion.ToString(m.ValLocal);
@@ -336,7 +316,6 @@ namespace GenioMVC.ViewModels.Rules
 
 			try
 			{
-				m.ValCodup_rules = ViewModelConversion.ToString(ValCodup_rules);
 				m.ValTipocond = ViewModelConversion.ToString(ValTipocond);
 				m.ValDescript = ViewModelConversion.ToString(ValDescript);
 				m.ValLocal = ViewModelConversion.ToString(ValLocal);
@@ -349,12 +328,7 @@ namespace GenioMVC.ViewModels.Rules
 			}
 		}
 
-		/// <summary>
-		/// Sets the value of a single property of the view model based on the provided table and field names.
-		/// </summary>
-		/// <param name="fullFieldName">The full field name in the format "table.field".</param>
-		/// <param name="value">The field value.</param>
-		/// <exception cref="ArgumentNullException">Thrown if <paramref name="fullFieldName"/> is null.</exception>
+		/// <inheritdoc />
 		public override void SetViewModelValue(string fullFieldName, object value)
 		{
 			try
@@ -365,9 +339,6 @@ namespace GenioMVC.ViewModels.Rules
 
 				switch (fullFieldName)
 				{
-					case "rules.codup_rules":
-						this.ValCodup_rules = ViewModelConversion.ToString(_value);
-						break;
 					case "rules.tipocond":
 						this.ValTipocond = ViewModelConversion.ToString(_value);
 						break;
@@ -487,7 +458,7 @@ namespace GenioMVC.ViewModels.Rules
 			// Add characteristics
 			Characs = new List<string>();
 
-			Load_Regra__up_rules__descript(qs, lazyLoad);
+
 // USE /[MANUAL GQT VIEWMODEL_LOADPARTIAL REGRA]/
 		}
 
@@ -540,207 +511,14 @@ namespace GenioMVC.ViewModels.Rules
 		{
 		}
 
-		/// <summary>
-		/// TableUp_rulesDescript -> (DB)
-		/// </summary>
-		/// <param name="qs"></param>
-		/// <param name="lazyLoad">Lazy loading of dropdown items</param>
-		public void Load_Regra__up_rules__descript(NameValueCollection qs, bool lazyLoad = false)
-		{
-			bool regra__up_rules__descriptDoLoad = true;
-			CriteriaSet regra__up_rules__descriptConds = CriteriaSet.And();
-			{
-				object hValue = Navigation.GetValue("up_rules", true);
-				if (hValue != null && !(hValue is Array) && !string.IsNullOrEmpty(Convert.ToString(hValue)))
-				{
-					regra__up_rules__descriptConds.Equal(CSGenioAup_rules.FldCodup_rules, hValue);
-					this.ValCodup_rules = DBConversion.ToString(hValue);
-				}
-			}
-
-			TableUp_rulesDescript = new TableDBEdit<Models.Up_rules>
-			{
-				IsLazyLoad = lazyLoad
-			};
-
-			if (lazyLoad)
-			{
-				if (Navigation.CurrentLevel.GetEntry("RETURN_up_rules") != null)
-				{
-					this.ValCodup_rules = Navigation.GetStrValue("RETURN_up_rules");
-					Navigation.CurrentLevel.SetEntry("RETURN_up_rules", null);
-				}
-				FillDependant_RegraTableUp_rulesDescript(lazyLoad);
-				return;
-			}
-
-			if (regra__up_rules__descriptDoLoad)
-			{
-				List<ColumnSort> sorts = [];
-				ColumnSort requestedSort = GetRequestSort(TableUp_rulesDescript, "sTableUp_rulesDescript", "dTableUp_rulesDescript", qs, "up_rules");
-				if (requestedSort != null)
-					sorts.Add(requestedSort);
-				sorts.Add(new ColumnSort(new ColumnReference(CSGenioAup_rules.FldDescript), SortOrder.Ascending));
-
-				string query = "";
-				if (!string.IsNullOrEmpty(qs["TableUp_rulesDescript_tableFilters"]))
-					TableUp_rulesDescript.TableFilters = bool.Parse(qs["TableUp_rulesDescript_tableFilters"]);
-				else
-					TableUp_rulesDescript.TableFilters = false;
-
-				query = qs["qTableUp_rulesDescript"];
-
-				//RS 26.07.2016 O preenchimento da lista de ajuda dos Dbedits passa a basear-se apenas no campo do próprio DbEdit
-				// O interface de pesquisa rápida não fica coerente quando se visualiza apenas uma coluna mas a pesquisa faz matching com 5 ou 6 colunas diferentes
-				//  tornando confuso to o user porque determinada row foi devolvida quando o Qresult não mostra como o matching foi feito
-				CriteriaSet search_filters = CriteriaSet.And();
-				if (!string.IsNullOrEmpty(query))
-				{
-					search_filters.Like(CSGenioAup_rules.FldDescript, query + "%");
-				}
-				regra__up_rules__descriptConds.SubSet(search_filters);
-
-				string tryParsePage = qs["pTableUp_rulesDescript"] != null ? qs["pTableUp_rulesDescript"].ToString() : "1";
-				int page = !string.IsNullOrEmpty(tryParsePage) ? int.Parse(tryParsePage) : 1;
-				int numberItems = CSGenio.framework.Configuration.NrRegDBedit;
-				int offset = (page - 1) * numberItems;
-
-				FieldRef[] fields = [CSGenioAup_rules.FldCodup_rules, CSGenioAup_rules.FldDescript, CSGenioAup_rules.FldZzstate];
-
-// USE /[MANUAL GQT OVERRQ REGRA_UP_RULESDESCRIPT]/
-
-				// Limitation by Zzstate
-				/*
-					Records that are currently being inserted or duplicated will also be included.
-					Client-side persistence will try to fill the "text" value of that option.
-				*/
-				if (Navigation.checkFormMode("up_rules", FormMode.New) || Navigation.checkFormMode("up_rules", FormMode.Duplicate))
-					regra__up_rules__descriptConds.SubSet(CriteriaSet.Or()
-						.Equal(CSGenioAup_rules.FldZzstate, 0)
-						.Equal(CSGenioAup_rules.FldCodup_rules, Navigation.GetStrValue("up_rules")));
-				else
-					regra__up_rules__descriptConds.Criterias.Add(new Criteria(new ColumnReference(CSGenioAup_rules.FldZzstate), CriteriaOperator.Equal, 0));
-
-				FieldRef firstVisibleColumn = new FieldRef("up_rules", "descript");
-				ListingMVC<CSGenioAup_rules> listing = Models.ModelBase.Where<CSGenioAup_rules>(m_userContext, false, regra__up_rules__descriptConds, fields, offset, numberItems, sorts, "LED_REGRA__UP_RULES__DESCRIPT", true, false, firstVisibleColumn: firstVisibleColumn);
-
-				TableUp_rulesDescript.SetPagination(page, numberItems, listing.HasMore, listing.GetTotal, listing.TotalRecords);
-				TableUp_rulesDescript.Query = query;
-				TableUp_rulesDescript.Elements = listing.RowsForViewModel((r) => new GenioMVC.Models.Up_rules(m_userContext, r, true, _fieldsToSerialize_REGRA__UP_RULES__DESCRIPT));
-
-				//created by [ MH ] at [ 14.04.2016 ] - Foi alterada a forma de retornar a key do novo registo inserido / editado no form de apoio do DBEdit.
-				//last update by [ MH ] at [ 10.05.2016 ] - Validação se key encontra-se no level atual, as chaves dos niveis anteriores devem ser ignorados.
-				if (Navigation.CurrentLevel.GetEntry("RETURN_up_rules") != null)
-				{
-					this.ValCodup_rules = Navigation.GetStrValue("RETURN_up_rules");
-					Navigation.CurrentLevel.SetEntry("RETURN_up_rules", null);
-				}
-
-				TableUp_rulesDescript.List = new SelectList(TableUp_rulesDescript.Elements.ToSelectList(x => x.ValDescript, x => x.ValCodup_rules,  x => x.ValCodup_rules == this.ValCodup_rules), "Value", "Text", this.ValCodup_rules);
-				FillDependant_RegraTableUp_rulesDescript();
-			}
-		}
-
-		/// <summary>
-		/// Get Dependant fields values -> TableUp_rulesDescript (DB)
-		/// </summary>
-		/// <param name="PKey">Primary Key of Up_rules</param>
-		public ConcurrentDictionary<string, object> GetDependant_RegraTableUp_rulesDescript(string PKey)
-		{
-			FieldRef[] refDependantFields = [CSGenioAup_rules.FldCodup_rules, CSGenioAup_rules.FldDescript];
-
-			var returnEmptyDependants = false;
-			CriteriaSet wherecodition = CriteriaSet.And();
-
-			// Return default values
-			if (GenFunctions.emptyG(PKey) == 1)
-				returnEmptyDependants = true;
-
-			// Check if the limit(s) is filled if exists
-			// - - - - - - - - - - - - - - - - - - - - -
-
-			if (returnEmptyDependants)
-				return GetViewModelFieldValues(refDependantFields);
-
-			PersistentSupport sp = m_userContext.PersistentSupport;
-			User u = m_userContext.User;
-
-			CSGenioAup_rules tempArea = new(u);
-
-			// Fields to select
-			SelectQuery querySelect = new();
-			querySelect.PageSize(1);
-			foreach (FieldRef field in refDependantFields)
-				querySelect.Select(field);
-
-			querySelect.From(tempArea.QSystem, tempArea.TableName, tempArea.Alias)
-				.Where(wherecodition.Equal(CSGenioAup_rules.FldCodup_rules, PKey));
-
-			string[] dependantFields = refDependantFields.Select(f => f.FullName).ToArray();
-			QueryUtils.SetInnerJoins(dependantFields, null, tempArea, querySelect);
-
-			ArrayList values = sp.executeReaderOneRow(querySelect);
-			bool useDefaults = values.Count == 0;
-
-			if (useDefaults)
-				return GetViewModelFieldValues(refDependantFields);
-			return GetViewModelFieldValues(refDependantFields, values);
-		}
-
-		/// <summary>
-		/// Fill Dependant fields values -> TableUp_rulesDescript (DB)
-		/// </summary>
-		/// <param name="lazyLoad">Lazy loading of dropdown items</param>
-		public void FillDependant_RegraTableUp_rulesDescript(bool lazyLoad = false)
-		{
-			var row = GetDependant_RegraTableUp_rulesDescript(this.ValCodup_rules);
-			try
-			{
-
-				// Fill List fields
-				this.ValCodup_rules = ViewModelConversion.ToString(row["up_rules.codup_rules"]);
-				TableUp_rulesDescript.Value = (string)row["up_rules.descript"];
-				if (GenFunctions.emptyG(this.ValCodup_rules) == 1)
-				{
-					this.ValCodup_rules = "";
-					TableUp_rulesDescript.Value = "";
-					Navigation.ClearValue("up_rules");
-				}
-				else if (lazyLoad)
-				{
-					TableUp_rulesDescript.SetPagination(1, 0, false, false, 1);
-					TableUp_rulesDescript.List = new SelectList(new List<SelectListItem>()
-					{
-						new SelectListItem
-						{
-							Value = Convert.ToString(this.ValCodup_rules),
-							Text = Convert.ToString(TableUp_rulesDescript.Value),
-							Selected = true
-						}
-					}, "Value", "Text", this.ValCodup_rules);
-				}
-
-				TableUp_rulesDescript.Selected = this.ValCodup_rules;
-			}
-			catch (Exception ex)
-			{
-				CSGenio.framework.Log.Error(string.Format("FillDependant_Error (TableUp_rulesDescript): {0}; {1}", ex.Message, ex.InnerException != null ? ex.InnerException.Message : ""));
-			}
-		}
-
-		private readonly string[] _fieldsToSerialize_REGRA__UP_RULES__DESCRIPT = ["Up_rules", "Up_rules.ValCodup_rules", "Up_rules.ValZzstate", "Up_rules.ValDescript", "Up_rules.ValLocal", "Up_rules.ValAllow_all"];
-
 		protected override object GetViewModelValue(string identifier, object modelValue)
 		{
 			return identifier switch
 			{
-				"rules.codup_rules" => ViewModelConversion.ToString(modelValue),
 				"rules.tipocond" => ViewModelConversion.ToString(modelValue),
 				"rules.descript" => ViewModelConversion.ToString(modelValue),
 				"rules.local" => ViewModelConversion.ToString(modelValue),
 				"rules.codregra" => ViewModelConversion.ToString(modelValue),
-				"up_rules.codup_rules" => ViewModelConversion.ToString(modelValue),
-				"up_rules.descript" => ViewModelConversion.ToString(modelValue),
 				_ => modelValue
 			};
 		}

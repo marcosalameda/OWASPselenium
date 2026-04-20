@@ -47,7 +47,7 @@ namespace CSGenio.business
 			Qfield = new Field(info.Alias, "codmessa", FieldType.KEY_GUID);
 			Qfield.FieldDescription = "";
 			Qfield.FieldSize =  36;
-			Qfield.CavDesignation = "";
+			Qfield.VisivelCav = CavVisibilityType.Nunca;
 
 			Qfield.Dupmsg = "";
 			info.RegisterFieldDB(Qfield);
@@ -140,7 +140,7 @@ namespace CSGenio.business
 			Qfield = new Field(info.Alias, "codentit", FieldType.KEY_GUID);
 			Qfield.FieldDescription = "'Entity'";
 			Qfield.FieldSize =  36;
-			Qfield.CavDesignation = "_ENTITY_22923";
+			Qfield.VisivelCav = CavVisibilityType.Nunca;
 
 			Qfield.Dupmsg = "";
 			info.RegisterFieldDB(Qfield);
@@ -150,7 +150,7 @@ namespace CSGenio.business
 			Qfield.FieldDescription = "'Person'";
 			Qfield.FieldSize =  36;
 			Qfield.MQueue = false;
-			Qfield.CavDesignation = "_PERSON_09109";
+			Qfield.VisivelCav = CavVisibilityType.Nunca;
 
 			Qfield.Dupmsg = "";
 			info.RegisterFieldDB(Qfield);
@@ -198,8 +198,8 @@ namespace CSGenio.business
 			info.Pathways = new Dictionary<string, string>(4);
 			info.Pathways.Add("perso","perso");
 			info.Pathways.Add("entit","entit");
-			info.Pathways.Add("faci1","entit");
 			info.Pathways.Add("faci2","entit");
+			info.Pathways.Add("faci1","entit");
 		}
 
 		/// <summary>

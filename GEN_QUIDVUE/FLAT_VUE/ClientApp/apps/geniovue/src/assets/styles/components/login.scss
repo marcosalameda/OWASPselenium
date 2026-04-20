@@ -46,8 +46,12 @@
 		color: $white;
 		font-weight: 500;
 
-		p {
+		h1 {
 			padding-top: 1rem;
+			margin-bottom: 1rem;
+			font-size: 1.35rem;
+			font-weight: 500;
+			line-height: 1.5;
 		}
 
 		img {

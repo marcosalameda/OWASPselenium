@@ -9,12 +9,13 @@
 			<div
 				v-if="showFormHeader"
 				class="c-action-bar">
-				<h1
+				<component
 					v-if="formControl.uiComponents.header && formInfo.designation"
+					:is="topHeadingTag"
 					:id="formTitleId"
 					class="form-header">
 					{{ formInfo.designation }}
-				</h1>
+				</component>
 
 				<div class="c-action-bar__menu">
 					<template
@@ -40,13 +41,10 @@
 									@click="btn.action">
 									<template v-if="btn.icon">
 										<q-badge-indicator
-											v-if="btn.badge && btn.badge.isVisible"
-											:color="btn.badge.color">
+											:enabled="btn.badge?.isVisible ?? false"
+											:color="btn.badge?.color">
 											<q-icon v-bind="btn.icon" />
 										</q-badge-indicator>
-										<q-icon
-											v-else
-											v-bind="btn.icon" />
 									</template>
 								</q-toggle-group-item>
 							</template>
@@ -97,6 +95,7 @@
 		<q-container
 			fluid
 			data-key="PROJE"
+			:data-identifier="primaryKeyValue"
 			:data-loading="!formInitialDataLoaded || !isActiveForm">
 			<template v-if="formControl.initialized && showFormBody">
 				<q-row v-if="controls.PROJE___PROJEPROJECTO.isVisible || controls.PROJE___YEAR1YEAR____.isVisible">
@@ -106,13 +105,15 @@
 						<base-input-structure
 							v-if="controls.PROJE___PROJEPROJECTO.isVisible"
 							class="i-text"
-							v-bind="controls.PROJE___PROJEPROJECTO"
+							v-bind="controls.PROJE___PROJEPROJECTO.wrapperProps"
+							:id="getControlId(controls.PROJE___PROJEPROJECTO)"
 							v-on="controls.PROJE___PROJEPROJECTO.handlers"
 							:loading="controls.PROJE___PROJEPROJECTO.props.loading"
 							:reporting-mode-on="reportingModeCAV"
 							:suggestion-mode-on="suggestionModeOn">
 							<q-text-field
 								v-bind="controls.PROJE___PROJEPROJECTO.props"
+								:id="getControlId(controls.PROJE___PROJEPROJECTO)"
 								@blur="onBlur(controls.PROJE___PROJEPROJECTO, model.ValProjecto.value)"
 								@change="model.ValProjecto.fnUpdateValueOnChange" />
 						</base-input-structure>
@@ -123,7 +124,8 @@
 						<base-input-structure
 							v-if="controls.PROJE___YEAR1YEAR____.isVisible"
 							class="i-text"
-							v-bind="controls.PROJE___YEAR1YEAR____"
+							v-bind="controls.PROJE___YEAR1YEAR____.wrapperProps"
+							:id="getControlId(controls.PROJE___YEAR1YEAR____)"
 							v-on="controls.PROJE___YEAR1YEAR____.handlers"
 							:loading="controls.PROJE___YEAR1YEAR____.props.loading"
 							:reporting-mode-on="reportingModeCAV"
@@ -131,6 +133,7 @@
 							<q-lookup
 								v-if="controls.PROJE___YEAR1YEAR____.isVisible"
 								v-bind="controls.PROJE___YEAR1YEAR____.props"
+								:id="getControlId(controls.PROJE___YEAR1YEAR____)"
 								v-on="controls.PROJE___YEAR1YEAR____.handlers" />
 							<q-see-more-proje-year1year
 								v-if="controls.PROJE___YEAR1YEAR____.seeMoreIsVisible"
@@ -146,7 +149,8 @@
 						<base-input-structure
 							v-if="controls.PROJE___PROJEPRIMEIRO.isVisible"
 							class="i-text"
-							v-bind="controls.PROJE___PROJEPRIMEIRO"
+							v-bind="controls.PROJE___PROJEPRIMEIRO.wrapperProps"
+							:id="getControlId(controls.PROJE___PROJEPRIMEIRO)"
 							v-on="controls.PROJE___PROJEPRIMEIRO.handlers"
 							:loading="controls.PROJE___PROJEPRIMEIRO.props.loading"
 							:reporting-mode-on="reportingModeCAV"
@@ -154,6 +158,7 @@
 							<q-numeric-input
 								v-if="controls.PROJE___PROJEPRIMEIRO.isVisible"
 								v-bind="controls.PROJE___PROJEPRIMEIRO.props"
+								:id="getControlId(controls.PROJE___PROJEPRIMEIRO)"
 								@update:model-value="model.ValPrimeiro.fnUpdateValue" />
 						</base-input-structure>
 					</q-col>
@@ -163,7 +168,8 @@
 						<base-input-structure
 							v-if="controls.PROJE___PROJEBEFORE__.isVisible"
 							class="i-text"
-							v-bind="controls.PROJE___PROJEBEFORE__"
+							v-bind="controls.PROJE___PROJEBEFORE__.wrapperProps"
+							:id="getControlId(controls.PROJE___PROJEBEFORE__)"
 							v-on="controls.PROJE___PROJEBEFORE__.handlers"
 							:loading="controls.PROJE___PROJEBEFORE__.props.loading"
 							:reporting-mode-on="reportingModeCAV"
@@ -171,6 +177,7 @@
 							<q-numeric-input
 								v-if="controls.PROJE___PROJEBEFORE__.isVisible"
 								v-bind="controls.PROJE___PROJEBEFORE__.props"
+								:id="getControlId(controls.PROJE___PROJEBEFORE__)"
 								@update:model-value="model.ValBefore.fnUpdateValue" />
 						</base-input-structure>
 					</q-col>
@@ -180,7 +187,8 @@
 						<base-input-structure
 							v-if="controls.PROJE___PROJEFOLLOWIN.isVisible"
 							class="i-text"
-							v-bind="controls.PROJE___PROJEFOLLOWIN"
+							v-bind="controls.PROJE___PROJEFOLLOWIN.wrapperProps"
+							:id="getControlId(controls.PROJE___PROJEFOLLOWIN)"
 							v-on="controls.PROJE___PROJEFOLLOWIN.handlers"
 							:loading="controls.PROJE___PROJEFOLLOWIN.props.loading"
 							:reporting-mode-on="reportingModeCAV"
@@ -188,6 +196,7 @@
 							<q-numeric-input
 								v-if="controls.PROJE___PROJEFOLLOWIN.isVisible"
 								v-bind="controls.PROJE___PROJEFOLLOWIN.props"
+								:id="getControlId(controls.PROJE___PROJEFOLLOWIN)"
 								@update:model-value="model.ValFollowin.fnUpdateValue" />
 						</base-input-structure>
 					</q-col>
@@ -197,7 +206,8 @@
 						<base-input-structure
 							v-if="controls.PROJE___PROJEULTIMO__.isVisible"
 							class="i-text"
-							v-bind="controls.PROJE___PROJEULTIMO__"
+							v-bind="controls.PROJE___PROJEULTIMO__.wrapperProps"
+							:id="getControlId(controls.PROJE___PROJEULTIMO__)"
 							v-on="controls.PROJE___PROJEULTIMO__.handlers"
 							:loading="controls.PROJE___PROJEULTIMO__.props.loading"
 							:reporting-mode-on="reportingModeCAV"
@@ -205,6 +215,7 @@
 							<q-numeric-input
 								v-if="controls.PROJE___PROJEULTIMO__.isVisible"
 								v-bind="controls.PROJE___PROJEULTIMO__.props"
+								:id="getControlId(controls.PROJE___PROJEULTIMO__)"
 								@update:model-value="model.ValUltimo.fnUpdateValue" />
 						</base-input-structure>
 					</q-col>
@@ -216,7 +227,8 @@
 						<base-input-structure
 							v-if="controls.PROJE___PROJESALDO1__.isVisible"
 							class="i-text"
-							v-bind="controls.PROJE___PROJESALDO1__"
+							v-bind="controls.PROJE___PROJESALDO1__.wrapperProps"
+							:id="getControlId(controls.PROJE___PROJESALDO1__)"
 							v-on="controls.PROJE___PROJESALDO1__.handlers"
 							:loading="controls.PROJE___PROJESALDO1__.props.loading"
 							:reporting-mode-on="reportingModeCAV"
@@ -224,6 +236,7 @@
 							<q-numeric-input
 								v-if="controls.PROJE___PROJESALDO1__.isVisible"
 								v-bind="controls.PROJE___PROJESALDO1__.props"
+								:id="getControlId(controls.PROJE___PROJESALDO1__)"
 								@update:model-value="model.ValSaldo1.fnUpdateValue" />
 						</base-input-structure>
 					</q-col>
@@ -233,7 +246,8 @@
 						<base-input-structure
 							v-if="controls.PROJE___PROJESALDO2__.isVisible"
 							class="i-text"
-							v-bind="controls.PROJE___PROJESALDO2__"
+							v-bind="controls.PROJE___PROJESALDO2__.wrapperProps"
+							:id="getControlId(controls.PROJE___PROJESALDO2__)"
 							v-on="controls.PROJE___PROJESALDO2__.handlers"
 							:loading="controls.PROJE___PROJESALDO2__.props.loading"
 							:reporting-mode-on="reportingModeCAV"
@@ -241,6 +255,7 @@
 							<q-numeric-input
 								v-if="controls.PROJE___PROJESALDO2__.isVisible"
 								v-bind="controls.PROJE___PROJESALDO2__.props"
+								:id="getControlId(controls.PROJE___PROJESALDO2__)"
 								@update:model-value="model.ValSaldo2.fnUpdateValue" />
 						</base-input-structure>
 					</q-col>
@@ -252,14 +267,15 @@
 						<q-table
 							v-if="controls.PROJE___PSEUDDESPESAS.isVisible"
 							v-bind="controls.PROJE___PSEUDDESPESAS"
+							:id="getControlId(controls.PROJE___PSEUDDESPESAS)"
 							v-on="controls.PROJE___PSEUDDESPESAS.handlers">
+							<template #header>
+								<q-table-config
+									:table-ctrl="controls.PROJE___PSEUDDESPESAS"
+									v-on="controls.PROJE___PSEUDDESPESAS.handlers" />
+							</template>
 							<!-- USE /[MANUAL GQT CUSTOM_TABLE PROJE___PSEUDDESPESAS]/ -->
 						</q-table>
-						<q-table-extra-extension
-							v-if="controls.PROJE___PSEUDDESPESAS.isVisible"
-							:list-ctrl="controls.PROJE___PSEUDDESPESAS"
-							:filter-operators="controls.PROJE___PSEUDDESPESAS.filterOperators"
-							v-on="controls.PROJE___PSEUDDESPESAS.handlers" />
 					</q-col>
 				</q-row>
 				<q-row v-if="controls.PROJE___PSEUDAGREGADO.isVisible">
@@ -269,21 +285,22 @@
 						<q-table
 							v-if="controls.PROJE___PSEUDAGREGADO.isVisible"
 							v-bind="controls.PROJE___PSEUDAGREGADO"
+							:id="getControlId(controls.PROJE___PSEUDAGREGADO)"
 							v-on="controls.PROJE___PSEUDAGREGADO.handlers">
+							<template #header>
+								<q-table-config
+									:table-ctrl="controls.PROJE___PSEUDAGREGADO"
+									v-on="controls.PROJE___PSEUDAGREGADO.handlers" />
+							</template>
 							<!-- USE /[MANUAL GQT CUSTOM_TABLE PROJE___PSEUDAGREGADO]/ -->
 						</q-table>
-						<q-table-extra-extension
-							v-if="controls.PROJE___PSEUDAGREGADO.isVisible"
-							:list-ctrl="controls.PROJE___PSEUDAGREGADO"
-							:filter-operators="controls.PROJE___PSEUDAGREGADO.filterOperators"
-							v-on="controls.PROJE___PSEUDAGREGADO.handlers" />
 					</q-col>
 				</q-row>
 			</template>
 		</q-container>
 	</teleport>
 
-	<hr v-if="!isPopup && showFormFooter" />
+	<q-divider v-if="!isPopup && showFormFooter" />
 
 	<teleport
 		v-if="formModalIsReady && showFormFooter"
@@ -760,10 +777,11 @@
 					PROJE___PSEUDDESPESAS: new fieldControlClass.TableListControl({
 						id: 'PROJE___PSEUDDESPESAS',
 						name: 'DESPESAS',
-						size: '',
+						size: 'xxlarge',
 						label: computed(() => this.Resources.EXPENSES11381),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
+						headerLevel: computed(() => this.baseHeadingLevel + 1),
 						controller: 'PROJE',
 						action: 'Proje_ValDespesas',
 						hasDependencies: false,
@@ -817,7 +835,6 @@
 							searchBarConfig: {
 								visibility: false
 							},
-							filtersVisible: false,
 							allowColumnFilters: false,
 							allowColumnSort: true,
 							crudActions: [
@@ -891,9 +908,7 @@
 									id: 'insert',
 									name: 'insert',
 									title: computed(() => this.Resources.INSERIR43365),
-									icon: {
-										icon: 'add'
-									},
+									icon: { icon: 'add' },
 									isInReadOnly: false,
 									params: {
 										action: vm.openFormAction,
@@ -940,7 +955,7 @@
 								sortOrder: 'asc'
 							}
 						},
-						globalEvents: ['changed-YEAR', 'changed-PROJE', 'changed-AGREG', 'changed-EXPEN'],
+						globalEvents: ['changed-PROJE', 'changed-YEAR', 'changed-AGREG', 'changed-EXPEN'],
 						uuid: 'Proje_ValDespesas',
 						allSelectedRows: 'false',
 						controlLimits: [
@@ -955,10 +970,11 @@
 					PROJE___PSEUDAGREGADO: new fieldControlClass.TableListControl({
 						id: 'PROJE___PSEUDAGREGADO',
 						name: 'AGREGADO',
-						size: '',
+						size: 'medium',
 						label: computed(() => this.Resources.DECOMISSION_BY_YEAR07152),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
+						headerLevel: computed(() => this.baseHeadingLevel + 1),
 						controller: 'PROJE',
 						action: 'Proje_ValAgregado',
 						hasDependencies: false,
@@ -1002,7 +1018,6 @@
 							searchBarConfig: {
 								visibility: false
 							},
-							filtersVisible: false,
 							allowColumnFilters: false,
 							allowColumnSort: true,
 							crudActions: [
@@ -1076,9 +1091,7 @@
 									id: 'insert',
 									name: 'insert',
 									title: computed(() => this.Resources.INSERIR43365),
-									icon: {
-										icon: 'add'
-									},
+									icon: { icon: 'add' },
 									isInReadOnly: false,
 									params: {
 										action: vm.openFormAction,
@@ -1125,7 +1138,7 @@
 								sortOrder: 'asc'
 							}
 						},
-						globalEvents: ['changed-AGREG', 'changed-YEAR', 'changed-PROJE'],
+						globalEvents: ['changed-PROJE', 'changed-AGREG', 'changed-YEAR'],
 						uuid: 'Proje_ValAgregado',
 						allSelectedRows: 'false',
 						controlLimits: [
@@ -1533,7 +1546,6 @@
 
 				this.afterControlUpdate(controlField, fieldValue)
 			},
-
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
 // USE /[MANUAL GQT FUNCTIONS_JS PROJE]/
 // eslint-disable-next-line

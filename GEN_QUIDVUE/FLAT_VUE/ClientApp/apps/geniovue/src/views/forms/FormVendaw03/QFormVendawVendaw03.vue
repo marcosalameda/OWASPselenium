@@ -9,12 +9,13 @@
 			<div
 				v-if="showFormHeader"
 				class="c-action-bar">
-				<h1
+				<component
 					v-if="formControl.uiComponents.header && formInfo.designation"
+					:is="topHeadingTag"
 					:id="formTitleId"
 					class="form-header">
 					{{ formInfo.designation }}
-				</h1>
+				</component>
 
 				<div class="c-action-bar__menu">
 					<template
@@ -40,13 +41,10 @@
 									@click="btn.action">
 									<template v-if="btn.icon">
 										<q-badge-indicator
-											v-if="btn.badge && btn.badge.isVisible"
-											:color="btn.badge.color">
+											:enabled="btn.badge?.isVisible ?? false"
+											:color="btn.badge?.color">
 											<q-icon v-bind="btn.icon" />
 										</q-badge-indicator>
-										<q-icon
-											v-else
-											v-bind="btn.icon" />
 									</template>
 								</q-toggle-group-item>
 							</template>
@@ -97,6 +95,7 @@
 		<q-container
 			fluid
 			data-key="VENDAW03"
+			:data-identifier="primaryKeyValue"
 			:data-loading="!formInitialDataLoaded || !isActiveForm">
 			<template v-if="formControl.initialized && showFormBody">
 				<q-row v-if="controls.VENDAW__PSEUDFASES___.isVisible">
@@ -105,18 +104,19 @@
 						cols="auto">
 						<q-wizard
 							v-if="controls.VENDAW__PSEUDFASES___.isVisible"
-							id="VENDAW__PSEUDFASES___"
 							:is-required="controls.VENDAW__PSEUDFASES___.isRequired"
+							:base-heading-level="baseHeadingLevel + 1"
 							v-bind="controls.VENDAW__PSEUDFASES___.wizardData"
+							:id="getControlId(controls.VENDAW__PSEUDFASES___)"
 							v-on="controls.VENDAW__PSEUDFASES___.handlers">
 							<!-- Start VENDAW__PSEUDFASES___ -->
 							<q-row v-if="controls.VENDAW03PSEUDNOVOGR03.isVisible">
 								<q-col v-if="controls.VENDAW03PSEUDNOVOGR03.isVisible">
 									<q-group-box-container
 										v-if="controls.VENDAW03PSEUDNOVOGR03.isVisible"
-										id="VENDAW03PSEUDNOVOGR03"
 										v-bind="controls.VENDAW03PSEUDNOVOGR03"
-										:is-visible="controls.VENDAW03PSEUDNOVOGR03.isVisible">
+										:id="getControlId(controls.VENDAW03PSEUDNOVOGR03)"
+										:no-border="controls.VENDAW03PSEUDNOVOGR03.borderless">
 										<!-- Start VENDAW03PSEUDNOVOGR03 -->
 										<q-row v-if="controls.VENDAW03SALE_PREABORD.isVisible || controls.VENDAW03SALE_HOMEWORK.isVisible">
 											<q-col
@@ -125,7 +125,8 @@
 												<base-input-structure
 													v-if="controls.VENDAW03SALE_PREABORD.isVisible"
 													class="i-text"
-													v-bind="controls.VENDAW03SALE_PREABORD"
+													v-bind="controls.VENDAW03SALE_PREABORD.wrapperProps"
+													:id="getControlId(controls.VENDAW03SALE_PREABORD)"
 													v-on="controls.VENDAW03SALE_PREABORD.handlers"
 													:loading="controls.VENDAW03SALE_PREABORD.props.loading"
 													:reporting-mode-on="reportingModeCAV"
@@ -133,6 +134,7 @@
 													<q-date-time-picker
 														v-if="controls.VENDAW03SALE_PREABORD.isVisible"
 														v-bind="controls.VENDAW03SALE_PREABORD.props"
+														:id="getControlId(controls.VENDAW03SALE_PREABORD)"
 														:model-value="model.ValPreabord.value"
 														@reset-icon-click="model.ValPreabord.fnUpdateValue(model.ValPreabord.originalValue ?? new Date())"
 														@update:model-value="model.ValPreabord.fnUpdateValue($event ?? '')" />
@@ -143,8 +145,9 @@
 												cols="auto">
 												<base-input-structure
 													v-if="controls.VENDAW03SALE_HOMEWORK.isVisible"
-													class="i-checkbox"
-													v-bind="controls.VENDAW03SALE_HOMEWORK"
+													class="i-text"
+													v-bind="controls.VENDAW03SALE_HOMEWORK.wrapperProps"
+													:id="getControlId(controls.VENDAW03SALE_HOMEWORK)"
 													v-on="controls.VENDAW03SALE_HOMEWORK.handlers"
 													:loading="controls.VENDAW03SALE_HOMEWORK.props.loading"
 													:reporting-mode-on="reportingModeCAV"
@@ -153,6 +156,7 @@
 														<q-checkbox
 															v-if="controls.VENDAW03SALE_HOMEWORK.isVisible"
 															v-bind="controls.VENDAW03SALE_HOMEWORK.props"
+															:id="getControlId(controls.VENDAW03SALE_HOMEWORK)"
 															v-on="controls.VENDAW03SALE_HOMEWORK.handlers" />
 													</template>
 												</base-input-structure>
@@ -170,7 +174,7 @@
 		</q-container>
 	</teleport>
 
-	<hr v-if="!isPopup && showFormFooter" />
+	<q-divider v-if="!isPopup && showFormFooter" />
 
 	<teleport
 		v-if="formModalIsReady && showFormFooter"
@@ -641,6 +645,7 @@
 						label: computed(() => this.Resources.PRE_APPROACH58979),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
+						borderless: false,
 						isCollapsible: false,
 						anchored: false,
 						directChildren: ['VENDAW03SALE_PREABORD', 'VENDAW03SALE_HOMEWORK'],
@@ -1071,7 +1076,6 @@
 
 				this.afterControlUpdate(controlField, fieldValue)
 			},
-
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
 // USE /[MANUAL GQT FUNCTIONS_JS VENDAW03]/
 // eslint-disable-next-line

@@ -10,14 +10,14 @@
 					:icon="rowStateIcon" />
 
 				<q-button
-					v-if="hasMessages"
+					v-if="hasMessages && !showMessages"
 					variant="text"
 					@click="toggleErrors">
 					<q-icon :icon="expandIcon" />
 				</q-button>
 			</div>
 
-			<template v-if="hasMessages">
+			<template v-if="hasMessages && !showMessages">
 				<q-badge :color="badgeColor">
 					{{ numMessages }}
 				</q-badge>
@@ -33,32 +33,34 @@
 					v-if="showCustomActions"
 					name="actions.prepend" />
 
-				<q-button
-					v-if="showDeleteBtn"
-					data-testid="delete"
-					variant="text"
-					:title="texts.delete"
-					@click="markForDeletion">
-					<q-icon icon="delete" />
-				</q-button>
+				<slot name="actions">
+					<q-button
+						v-if="showDeleteBtn"
+						data-testid="delete"
+						variant="text"
+						:title="texts.delete"
+						@click="markForDeletion">
+						<q-icon icon="delete" />
+					</q-button>
 
-				<q-button
-					v-if="showRemoveBtn"
-					data-testid="delete"
-					variant="text"
-					:title="texts.remove"
-					@click="markForDeletion">
-					<q-icon icon="remove-sign" />
-				</q-button>
+					<q-button
+						v-if="showRemoveBtn"
+						data-testid="delete"
+						variant="text"
+						:title="texts.remove"
+						@click="markForDeletion">
+						<q-icon icon="remove-sign" />
+					</q-button>
 
-				<q-button
-					v-if="showUndoBtn"
-					data-testid="undo"
-					variant="text"
-					:title="texts.restore"
-					@click="undoMarkForDeletion">
-					<q-icon icon="undo" />
-				</q-button>
+					<q-button
+						v-if="showUndoBtn"
+						data-testid="undo"
+						variant="text"
+						:title="texts.restore"
+						@click="undoMarkForDeletion">
+						<q-icon icon="undo" />
+					</q-button>
+				</slot>
 
 				<slot
 					v-if="showCustomActions"
@@ -95,6 +97,14 @@
 			 * The id of the row.
 			 */
 			id: String,
+
+			/**
+			 * Whether the error/warning messages should always be visible.
+			 */
+			showMessages: {
+				type: Boolean,
+				default: false
+			},
 
 			/**
 			 * The initial state of the editable table list row.
@@ -153,7 +163,6 @@
 		data()
 		{
 			return {
-				markedForDeletion: false,
 				expandIcon: 'expand',
 				expandSVG: 'expand',
 				collapseSVG: 'collapse'
@@ -174,11 +183,11 @@
 			 */
 			state()
 			{
-				if (this.markedForDeletion || this.isDeletedState)
+				if (this.isDeletedState)
 					return 'DELETED'
-				else if (this.nestedModel.hasServerErrorMessages)
+				else if (this.nestedModel.serverErrorMessages?.length > 0)
 					return 'ERRORS'
-				else if (this.nestedModel.hasServerWarningMessages)
+				else if (this.nestedModel.serverWarningMessages?.length > 0)
 					return 'WARNINGS'
 				else if (this.nestedModel.serverInfoMessages?.length > 0)
 					return 'INFO'
@@ -298,7 +307,6 @@
 			 */
 			markForDeletion()
 			{
-				this.markedForDeletion = true
 				this.$emit('mark-for-deletion')
 			},
 
@@ -307,7 +315,6 @@
 			 */
 			undoMarkForDeletion()
 			{
-				this.markedForDeletion = false
 				this.$emit('undo-deletion')
 			},
 

@@ -106,6 +106,12 @@ public class PersistedTableConfiguration
 	/// </summary>
 	[JsonPropertyName("filters")]
 	public List<ITableFilter> Filters { get; set; } = [];
+
+	/// <summary>
+	/// Gets or sets form field global filters that are external to the table.
+	/// </summary>
+	[JsonPropertyName("globalFilters")]
+	public Dictionary<string, IGlobalFilter> GlobalFilters { get; set; } = [];
 }
 
 /// <summary>
@@ -134,23 +140,10 @@ public class TableConfiguration : PersistedTableConfiguration, ITableConfigurati
 	public int Page { get; set; } = 1;
 
 	/// <summary>
-	/// Gets or sets the list of column names that should display totalized (aggregated) values.
-	/// </summary>
-	[JsonPropertyName("totalizerColumns")]
-	public List<string> TotalizerColumns { get; set; } = [];
-
-	/// <summary>
 	/// Gets or sets the list of currently selected row identifiers.
 	/// </summary>
 	[JsonPropertyName("selectedRows")]
 	public List<string> SelectedRows { get; set; } = [];
-
-	/// <summary>
-	/// Gets or sets form field filters that are external to the table (not serialized to JSON).
-	/// These filters originate from form fields rather than the table configuration itself.
-	/// </summary>
-	[JsonIgnore]
-	public Dictionary<string, object> FieldFilters { get; set; } = [];
 
 	/// <summary>
 	/// Gets a collection of all column-based search filters.
@@ -289,12 +282,24 @@ public class TableConfiguration : PersistedTableConfiguration, ITableConfigurati
 	/// <inheritdoc/>
 	public virtual string SerializeAsJson()
 	{
+		// Create a temporary copy with only unique global filters for persistence
+		PersistedTableConfiguration tempConfig = new()
+		{
+			DefaultSearchColumn = DefaultSearchColumn,
+			LineBreak = LineBreak,
+			RowsPerPage = RowsPerPage,
+			ActiveViewMode = ActiveViewMode,
+			ColumnConfigurations = ColumnConfigurations,
+			Filters = Filters,
+			GlobalFilters = GlobalFilters.Where(kvp => kvp.Value.IsUnique).ToDictionary(kvp => kvp.Key, kvp => kvp.Value)
+		};
+
 		// Serialize only the properties that should be saved and ignore null values
 		JsonSerializerOptions serializerOptions = new()
 		{
 			DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull
 		};
-		return JsonSerializer.Serialize<PersistedTableConfiguration>(this, serializerOptions);
+		return JsonSerializer.Serialize(tempConfig, serializerOptions);
 	}
 
 	/// <summary>

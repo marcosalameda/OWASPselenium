@@ -5,7 +5,13 @@
 		<q-row>
 			<q-table
 				v-bind="listCtrl"
-				v-on="listCtrl.handlers" />
+				v-on="listCtrl.handlers">
+				<template #header>
+					<q-table-config
+						:table-ctrl="listCtrl"
+						v-on="listCtrl.handlers" />
+				</template>
+			</q-table>
 		</q-row>
 	</teleport>
 </template>
@@ -239,7 +245,6 @@
 							searchBarConfig: {
 								visibility: true
 							},
-							filtersVisible: true,
 							allowColumnFilters: true,
 							allowColumnSort: true,
 							generalCustomActions: [
@@ -263,7 +268,7 @@
 								sortOrder: 'asc'
 							}
 						},
-						globalEvents: ['changed-DISPA', 'changed-ENTIT', 'changed-DISST', 'changed-PERSO'],
+						globalEvents: ['changed-PERSO', 'changed-DISPA', 'changed-ENTIT'],
 						uuid: 'Dilin_Dilin_DispaValDispanr',
 						allSelectedRows: 'false',
 						handlers: {

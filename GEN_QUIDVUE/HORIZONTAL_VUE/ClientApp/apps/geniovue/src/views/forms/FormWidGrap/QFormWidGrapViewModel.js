@@ -42,7 +42,6 @@ export default class ViewModel extends FormViewModelBase
 				setFile: 'SetFileWid_grap'
 			}
 		})
-
 	}
 
 	/**

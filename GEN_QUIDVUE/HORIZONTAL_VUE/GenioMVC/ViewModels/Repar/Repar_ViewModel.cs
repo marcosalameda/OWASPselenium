@@ -7,6 +7,7 @@ using GenioMVC.Models.Navigation;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Quidgest.Persistence;
 using Quidgest.Persistence.GenericQuery;
+
 using System.Collections;
 using System.Collections.Concurrent;
 using System.Collections.Specialized;
@@ -53,6 +54,7 @@ namespace GenioMVC.ViewModels.Repar
 		public string ValCodespec { get; set; }
 
 		#endregion
+
 		/// <summary>
 		/// Title: "Registration No." | Type: "C"
 		/// </summary>
@@ -62,7 +64,7 @@ namespace GenioMVC.ViewModels.Repar
 		/// Title: "Designation" | Type: "C"
 		/// </summary>
 		[ValidateSetAccess]
-		public string EquipValDesignat 
+		public string EquipValDesignat
 		{
 			get
 			{
@@ -78,9 +80,9 @@ namespace GenioMVC.ViewModels.Repar
 		/// <summary>
 		/// Title: "Photo" | Type: "IJ"
 		/// </summary>
-		[ImageThumbnailJsonConverter(30, 50)]
+		[ImageThumbnailJsonConverter(100, 50)]
 		[ValidateSetAccess]
-		public GenioMVC.Models.ImageModel EquipValPhotogra 
+		public GenioMVC.Models.ImageModel EquipValPhotogra
 		{
 			get
 			{
@@ -106,11 +108,6 @@ namespace GenioMVC.ViewModels.Repar
 		/// </summary>
 		public string ValTipoarea { get; set; }
 		/// <summary>
-		/// Title: "" | Type: "PSEUD"
-		/// </summary>
-		[JsonIgnore]
-		public SelectList List_ValTipoarea { get; set; }
-		/// <summary>
 		/// Title: "Specialty" | Type: "C"
 		/// </summary>
 		[ValidateSetAccess]
@@ -128,8 +125,6 @@ namespace GenioMVC.ViewModels.Repar
 		/// Title: "Spent in Hours" | Type: "N"
 		/// </summary>
 		public decimal? ValHours { get; set; }
-
-
 
 		#region Navigations
 		#endregion
@@ -336,12 +331,7 @@ namespace GenioMVC.ViewModels.Repar
 			}
 		}
 
-		/// <summary>
-		/// Sets the value of a single property of the view model based on the provided table and field names.
-		/// </summary>
-		/// <param name="fullFieldName">The full field name in the format "table.field".</param>
-		/// <param name="value">The field value.</param>
-		/// <exception cref="ArgumentNullException">Thrown if <paramref name="fullFieldName"/> is null.</exception>
+		/// <inheritdoc />
 		public override void SetViewModelValue(string fullFieldName, object value)
 		{
 			try
@@ -489,6 +479,7 @@ namespace GenioMVC.ViewModels.Repar
 			Load_Repar___equipregistnr(qs, lazyLoad);
 			Load_Repar___speciespecial(qs, lazyLoad);
 			Load_Repar___pessoname____(qs, lazyLoad);
+
 // USE /[MANUAL GQT VIEWMODEL_LOADPARTIAL REPAR]/
 		}
 
@@ -559,10 +550,7 @@ namespace GenioMVC.ViewModels.Repar
 				}
 			}
 
-			TableEquipRegistnr = new TableDBEdit<Models.Equip>
-			{
-				IsLazyLoad = lazyLoad
-			};
+			TableEquipRegistnr = new TableDBEdit<Models.Equip>();
 
 			if (lazyLoad)
 			{
@@ -757,10 +745,7 @@ namespace GenioMVC.ViewModels.Repar
 				CSGenio.business.CSGenioAspeci.FldAreatecn,
 				this.ValTipoarea);
 
-			TableSpeciEspecial = new TableDBEdit<Models.Speci>
-			{
-				IsLazyLoad = lazyLoad
-			};
+			TableSpeciEspecial = new TableDBEdit<Models.Speci>();
 
 			if (lazyLoad)
 			{
@@ -969,10 +954,7 @@ namespace GenioMVC.ViewModels.Repar
 			else
 				repar___pessoname____DoLoad = false;
 
-			TablePessoName = new TableDBEdit<Models.Pesso>
-			{
-				IsLazyLoad = lazyLoad
-			};
+			TablePessoName = new TableDBEdit<Models.Pesso>();
 
 			if (lazyLoad)
 			{

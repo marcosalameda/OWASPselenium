@@ -26,14 +26,12 @@
 
 		emits: ['update', 'loaded'],
 
-		components: {},
-
 		props: {
 			/**
 			 * The current selected value of the enumeration.
 			 */
 			value: {
-				type: [String, Array],
+				type: [String, Number, Array],
 				default: ''
 			},
 

@@ -9,12 +9,13 @@
 			<div
 				v-if="showFormHeader"
 				class="c-action-bar">
-				<h1
+				<component
 					v-if="formControl.uiComponents.header && formInfo.designation"
+					:is="topHeadingTag"
 					:id="formTitleId"
 					class="form-header">
 					{{ formInfo.designation }}
-				</h1>
+				</component>
 
 				<div class="c-action-bar__menu">
 					<template
@@ -40,13 +41,10 @@
 									@click="btn.action">
 									<template v-if="btn.icon">
 										<q-badge-indicator
-											v-if="btn.badge && btn.badge.isVisible"
-											:color="btn.badge.color">
+											:enabled="btn.badge?.isVisible ?? false"
+											:color="btn.badge?.color">
 											<q-icon v-bind="btn.icon" />
 										</q-badge-indicator>
-										<q-icon
-											v-else
-											v-bind="btn.icon" />
 									</template>
 								</q-toggle-group-item>
 							</template>
@@ -97,6 +95,7 @@
 		<q-container
 			fluid
 			data-key="ABATEREQ"
+			:data-identifier="primaryKeyValue"
 			:data-loading="!formInitialDataLoaded || !isActiveForm">
 			<template v-if="formControl.initialized && showFormBody">
 				<q-row v-if="controls.ABATEREQPSEUDREQTEXT_.isVisible">
@@ -106,14 +105,15 @@
 						<base-input-structure
 							v-if="controls.ABATEREQPSEUDREQTEXT_.isVisible"
 							class="i-static-text"
-							v-bind="controls.ABATEREQPSEUDREQTEXT_"
+							v-bind="controls.ABATEREQPSEUDREQTEXT_.wrapperProps"
+							:id="getControlId(controls.ABATEREQPSEUDREQTEXT_)"
 							v-on="controls.ABATEREQPSEUDREQTEXT_.handlers"
 							:loading="controls.ABATEREQPSEUDREQTEXT_.props.loading"
 							:reporting-mode-on="reportingModeCAV"
 							:suggestion-mode-on="suggestionModeOn">
 							<q-static-text
 								v-if="controls.ABATEREQPSEUDREQTEXT_.isVisible"
-								id="ABATEREQPSEUDREQTEXT_"
+								:id="getControlId(controls.ABATEREQPSEUDREQTEXT_)"
 								:size="controls.ABATEREQPSEUDREQTEXT_.size"
 								:text="controls.ABATEREQPSEUDREQTEXT_.label" />
 						</base-input-structure>
@@ -126,7 +126,8 @@
 						<base-input-structure
 							v-if="controls.ABATEREQDECOMDECOMNR_.isVisible"
 							class="i-text"
-							v-bind="controls.ABATEREQDECOMDECOMNR_"
+							v-bind="controls.ABATEREQDECOMDECOMNR_.wrapperProps"
+							:id="getControlId(controls.ABATEREQDECOMDECOMNR_)"
 							v-on="controls.ABATEREQDECOMDECOMNR_.handlers"
 							:loading="controls.ABATEREQDECOMDECOMNR_.props.loading"
 							:reporting-mode-on="reportingModeCAV"
@@ -134,6 +135,7 @@
 							<q-numeric-input
 								v-if="controls.ABATEREQDECOMDECOMNR_.isVisible"
 								v-bind="controls.ABATEREQDECOMDECOMNR_.props"
+								:id="getControlId(controls.ABATEREQDECOMDECOMNR_)"
 								@update:model-value="model.ValDecomnr.fnUpdateValue" />
 						</base-input-structure>
 					</q-col>
@@ -144,8 +146,8 @@
 						cols="auto">
 						<q-group-collapsible
 							v-if="controls.ABATEREQPSEUDCOLLAPSE.isVisible"
-							id="ABATEREQPSEUDCOLLAPSE"
 							v-bind="controls.ABATEREQPSEUDCOLLAPSE"
+							:id="getControlId(controls.ABATEREQPSEUDCOLLAPSE)"
 							v-on="controls.ABATEREQPSEUDCOLLAPSE.handlers">
 							<!-- Start ABATEREQPSEUDCOLLAPSE -->
 							<q-row v-if="controls.ABATEREQDECOMNOTE____.isVisible">
@@ -155,7 +157,8 @@
 									<base-input-structure
 										v-if="controls.ABATEREQDECOMNOTE____.isVisible"
 										class="i-textarea"
-										v-bind="controls.ABATEREQDECOMNOTE____"
+										v-bind="controls.ABATEREQDECOMNOTE____.wrapperProps"
+										:id="getControlId(controls.ABATEREQDECOMNOTE____)"
 										v-on="controls.ABATEREQDECOMNOTE____.handlers"
 										:loading="controls.ABATEREQDECOMNOTE____.props.loading"
 										:reporting-mode-on="reportingModeCAV"
@@ -163,6 +166,7 @@
 										<q-text-area
 											v-if="controls.ABATEREQDECOMNOTE____.isVisible"
 											v-bind="controls.ABATEREQDECOMNOTE____.props"
+											:id="getControlId(controls.ABATEREQDECOMNOTE____)"
 											v-on="controls.ABATEREQDECOMNOTE____.handlers" />
 									</base-input-structure>
 								</q-col>
@@ -177,41 +181,41 @@
 						cols="auto">
 						<q-tab-container
 							v-if="controls.formTabs.isVisible"
-							id="q-tabs-ABATEREQ"
+							:id="getId('q-tabs-ABATEREQ')"
 							v-bind="controls.formTabs.props"
 							@tab-changed="controls.formTabs.selectTab($event)">
-							<template #tab-panel>
-								<section
-									v-if="controls.ABATEREQPSEUDABATETAB.isVisible"
-									v-show="controls.formTabs.selectedTab === 'ABATEREQPSEUDABATETAB'">
-									<div
-										id="ABATEREQPSEUDABATETAB"
-										role="tabpanel"
-										aria-labelledby="tab-container-ABATEREQPSEUDABATETAB">
-										<q-row v-if="controls.ABATETABDECOMDTDECO__.isVisible">
-											<q-col
+							<section
+								v-if="controls.ABATEREQPSEUDABATETAB.isVisible"
+								v-show="controls.formTabs.selectedTab === 'ABATEREQPSEUDABATETAB'">
+								<div
+									id="ABATEREQPSEUDABATETAB"
+									role="tabpanel"
+									aria-labelledby="q-tabs-ABATEREQ-tab-ABATEREQPSEUDABATETAB">
+									<q-row v-if="controls.ABATETABDECOMDTDECO__.isVisible">
+										<q-col
+											v-if="controls.ABATETABDECOMDTDECO__.isVisible"
+											cols="auto">
+											<base-input-structure
 												v-if="controls.ABATETABDECOMDTDECO__.isVisible"
-												cols="auto">
-												<base-input-structure
+												class="i-text"
+												v-bind="controls.ABATETABDECOMDTDECO__.wrapperProps"
+												:id="getControlId(controls.ABATETABDECOMDTDECO__)"
+												v-on="controls.ABATETABDECOMDTDECO__.handlers"
+												:loading="controls.ABATETABDECOMDTDECO__.props.loading"
+												:reporting-mode-on="reportingModeCAV"
+												:suggestion-mode-on="suggestionModeOn">
+												<q-date-time-picker
 													v-if="controls.ABATETABDECOMDTDECO__.isVisible"
-													class="i-text"
-													v-bind="controls.ABATETABDECOMDTDECO__"
-													v-on="controls.ABATETABDECOMDTDECO__.handlers"
-													:loading="controls.ABATETABDECOMDTDECO__.props.loading"
-													:reporting-mode-on="reportingModeCAV"
-													:suggestion-mode-on="suggestionModeOn">
-													<q-date-time-picker
-														v-if="controls.ABATETABDECOMDTDECO__.isVisible"
-														v-bind="controls.ABATETABDECOMDTDECO__.props"
-														:model-value="model.ValDtdeco.value"
-														@reset-icon-click="model.ValDtdeco.fnUpdateValue(model.ValDtdeco.originalValue ?? new Date())"
-														@update:model-value="model.ValDtdeco.fnUpdateValue($event ?? '')" />
-												</base-input-structure>
-											</q-col>
-										</q-row>
-									</div>
-								</section>
-							</template>
+													v-bind="controls.ABATETABDECOMDTDECO__.props"
+													:id="getControlId(controls.ABATETABDECOMDTDECO__)"
+													:model-value="model.ValDtdeco.value"
+													@reset-icon-click="model.ValDtdeco.fnUpdateValue(model.ValDtdeco.originalValue ?? new Date())"
+													@update:model-value="model.ValDtdeco.fnUpdateValue($event ?? '')" />
+											</base-input-structure>
+										</q-col>
+									</q-row>
+								</div>
+							</section>
 						</q-tab-container>
 					</q-col>
 				</q-row>
@@ -219,7 +223,7 @@
 		</q-container>
 	</teleport>
 
-	<hr v-if="!isPopup && showFormFooter" />
+	<q-divider v-if="!isPopup && showFormFooter" />
 
 	<teleport
 		v-if="formModalIsReady && showFormFooter"
@@ -1031,7 +1035,6 @@
 
 				this.afterControlUpdate(controlField, fieldValue)
 			},
-
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
 // USE /[MANUAL GQT FUNCTIONS_JS ABATEREQ]/
 // eslint-disable-next-line

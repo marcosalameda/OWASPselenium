@@ -4,20 +4,20 @@ public class TableFilterPage : PageObject
 {
     private string tableId;
 
-    private string id => "q-modal-config";
+    private string modal => ".q-table-config";
 
     private string valueControlId => tableId + "_filters_0_0_0";
 
     /// <summary>
     /// Dropdown container element
     /// </summary>
-    private IWebElement popupContainer => driver.FindElement(By.Id(id));
+    private IWebElement popupContainer => GetElement(driver, By.CssSelector(modal));
 
     private string searchType => GetElement(popupContainer, By.CssSelector("[data-search-type]"))?.GetAttribute("data-search-type");
 
-    public EnumControl Field => new(driver, By.Id(id), By.CssSelector("[data-control-type='field'] .q-field"));
+    public EnumControl Field => new(driver, By.CssSelector(modal), By.CssSelector("[data-control-type='field'] .q-field"));
 
-    public EnumControl Operation => new(driver, By.Id(id), By.CssSelector("[data-control-type='operator'] .q-field"));
+    public EnumControl Operation => new(driver, By.CssSelector(modal), By.CssSelector("[data-control-type='operator'] .q-field"));
 
     public InputControl Value
     {
@@ -25,19 +25,19 @@ public class TableFilterPage : PageObject
         {
             return searchType switch
             {
-                "date" => new DateInputControl(driver, By.Id(id), "[data-control-type='value'] .q-field"),
-                _ => new BaseInputControl(driver, By.Id(id), "container-" + valueControlId, "#" + valueControlId)
+                "date" => new DateInputControl(driver, By.CssSelector(modal), "[data-control-type='value'] .q-field"),
+                _ => new BaseInputControl(driver, By.CssSelector(modal), "container-" + valueControlId, "#" + valueControlId)
             };
         }
     }
 
-    public ButtonControl Create => new(driver, By.Id(id), "[data-testid='filter-create']");
+    public ButtonControl Create => new(driver, By.CssSelector(modal), "[data-testid='filter-create']");
 
-    public ButtonControl RemoveAll => new(driver, By.Id(id), "[data-testid='filter-remove']");
+    public ButtonControl RemoveAll => new(driver, By.CssSelector(modal), "[data-testid='filter-remove']");
 
-    public ButtonControl Save => new(driver, By.Id(id), "[data-testid='filter-save']");
+    public IWebElement Save => GetElement(driver, By.Id("apply-config-btn"));
 
-    public ButtonControl Cancel => new(driver, By.Id(id), "[data-testid='filter-cancel']");
+    public IWebElement Cancel => GetElement(driver, By.Id("cancel-config-btn"));
 
     public TableFilterPage(IWebDriver driver, string tableId) : base(driver)
     {

@@ -7,6 +7,7 @@ using GenioMVC.Models.Navigation;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Quidgest.Persistence;
 using Quidgest.Persistence.GenericQuery;
+
 using System.Collections;
 using System.Collections.Concurrent;
 using System.Collections.Specialized;
@@ -68,7 +69,6 @@ namespace GenioMVC.ViewModels.Equip
 		#endregion
 
 
-
 		#region Navigations
 		#endregion
 
@@ -90,6 +90,10 @@ namespace GenioMVC.ViewModels.Equip
 		/// <summary>Field: "No. register" Tipo: "C"</summary>
 		[ValidateSetAccess]
 		public string ValRegistnr { get; set; }
+		// Field for formula
+		/// <summary>Field: "Sequential no." Tipo: "N"</summary>
+		[ValidateSetAccess]
+		public decimal? ValSequennr { get; set; }
 
 		#endregion
 
@@ -211,6 +215,7 @@ namespace GenioMVC.ViewModels.Equip
 				ValCodtpequ = ViewModelConversion.ToString(m.ValCodtpequ);
 				ValCodwareh = ViewModelConversion.ToString(m.ValCodwareh);
 				ValRegistnr = ViewModelConversion.ToString(m.ValRegistnr);
+				ValSequennr = ViewModelConversion.ToNumeric(m.ValSequennr);
 				ValCodequip = ViewModelConversion.ToString(m.ValCodequip);
 			}
 			catch (Exception)
@@ -254,6 +259,7 @@ namespace GenioMVC.ViewModels.Equip
 				m.ValCodtpequ = ViewModelConversion.ToString(ValCodtpequ);
 				m.ValCodwareh = ViewModelConversion.ToString(ValCodwareh);
 				m.ValRegistnr = ViewModelConversion.ToString(ValRegistnr);
+				m.ValSequennr = ViewModelConversion.ToNumeric(ValSequennr);
 			}
 			catch (Exception)
 			{
@@ -262,12 +268,7 @@ namespace GenioMVC.ViewModels.Equip
 			}
 		}
 
-		/// <summary>
-		/// Sets the value of a single property of the view model based on the provided table and field names.
-		/// </summary>
-		/// <param name="fullFieldName">The full field name in the format "table.field".</param>
-		/// <param name="value">The field value.</param>
-		/// <exception cref="ArgumentNullException">Thrown if <paramref name="fullFieldName"/> is null.</exception>
+		/// <inheritdoc />
 		public override void SetViewModelValue(string fullFieldName, object value)
 		{
 			try
@@ -388,6 +389,7 @@ namespace GenioMVC.ViewModels.Equip
 			// Add characteristics
 			Characs = new List<string>();
 
+
 // USE /[MANUAL GQT VIEWMODEL_LOADPARTIAL TIMEQUIP]/
 		}
 
@@ -451,6 +453,7 @@ namespace GenioMVC.ViewModels.Equip
 				"equip.codtpequ" => ViewModelConversion.ToString(modelValue),
 				"equip.codwareh" => ViewModelConversion.ToString(modelValue),
 				"equip.registnr" => ViewModelConversion.ToString(modelValue),
+				"equip.sequennr" => ViewModelConversion.ToNumeric(modelValue),
 				"equip.codequip" => ViewModelConversion.ToString(modelValue),
 				_ => modelValue
 			};

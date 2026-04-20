@@ -1,7 +1,6 @@
 ﻿import _assignIn from 'lodash-es/assignIn'
 import _assignInWith from 'lodash-es/assignInWith'
 import _capitalize from 'lodash-es/capitalize'
-import cloneDeep from 'lodash-es/cloneDeep'
 import _debounce from 'lodash-es/debounce'
 import _find from 'lodash-es/find'
 import _forEach from 'lodash-es/forEach'
@@ -29,10 +28,10 @@ import {
 } from '@quidgest/clientapp/models/conditionStack'
 import netAPI from '@quidgest/clientapp/network'
 import eventBus from '@quidgest/clientapp/plugins/eventBus'
-import { deepUnwrap } from '@quidgest/clientapp/utils/deepUnwrap'
 import { useGenericDataStore, useSystemDataStore } from '@quidgest/clientapp/stores'
 
 import { removeModal } from '@/utils/layout.js'
+import { deepUnwrap } from '@quidgest/clientapp/utils/deepUnwrap'
 import qEnums from '@quidgest/clientapp/constants/enums'
 import genericFunctions from '@quidgest/clientapp/utils/genericFunctions'
 import controlsResources from './controlsResources.js'
@@ -137,7 +136,6 @@ export class BaseControl
 		this.handlers = {}
 		/** The control label attributes */
 		this.labelAttrs = { class: 'i-text__label' }
-		this.dFlexInline = false
 		/** The field allows adding suggestion */
 		this.hasSuggestions = true
 		/** The model field info (for Base input structure) */
@@ -154,6 +152,8 @@ export class BaseControl
 		this.showAlternativeView = false
 		/** The control css classes */
 		this.fieldClasses = []
+		/** The view modes */
+		this.viewModes = undefined
 
 		_merge(this, options || {})
 	}
@@ -192,10 +192,27 @@ export class BaseControl
 	get wrapperProps()
 	{
 		return {
+			id: this.id,
+			label: this.label,
+			hasLabel: this.hasLabel,
+			readonly: this.readonly,
+			disabled: this.disabled,
+			isRequired: this.isRequired,
+			modelInfo: this.modelInfo,
+			hasSuggestions: this.hasSuggestions,
+			viewModes: this.viewModes,
+			showAlternativeView: this.showAlternativeView,
+			loading: !this.loaded
+		}
+	}
+
+	get gridColumnProps()
+	{
+		return {
 			...this.props,
 			// MTC - there was a problem with the error messages not appearing
-			// in the GridTableList, because it didn't had the modelFieldRef
-			// this is to show the error message of the field
+			// in the GridTableList, because it didn't have the modelFieldRef.
+			// This is to show the error message of the field.
 			modelFieldRef: this.modelFieldRef
 		}
 	}
@@ -508,7 +525,7 @@ export class BaseControl
 	 * Sets a modal with the specified data.
 	 * @param {string|object} modalData The data of the modal (structure: { id: String, props: Object })
 	 */
-	setModal(modalData)
+	async setModal(modalData)
 	{
 		if (_isEmpty(modalData))
 			return
@@ -531,14 +548,20 @@ export class BaseControl
 			isActive: true,
 			...modalData?.modalProps,
 			dismissAction: () => {
+				let dismiss = true
 				if (typeof modalData?.modalProps?.dismissAction === 'function')
-					modalData.modalProps.dismissAction()
-				this.popupIsVisible = false
+					dismiss = modalData.modalProps.dismissAction()
+				if (dismiss !== false)
+					this.popupIsVisible = false
+				return dismiss
 			}
 		}
 
-		this.vueContext.setModal(props, modalProps)
-		nextTick().then(() => this.popupIsVisible = true)
+		const genericDataStore = useGenericDataStore()
+		genericDataStore.setModal(props, modalProps)
+
+		await nextTick()
+		this.popupIsVisible = true
 	}
 
 	/**
@@ -554,7 +577,7 @@ export class BaseControl
 	/**
 	 * Reloads the data of the control
 	 */
-	async reload()
+	reload()
 	{
 		return this.vueContext.fetchFormField(this.modelField)
 	}
@@ -599,7 +622,7 @@ export class BaseControl
 			this.handlers = {}
 
 		const prevHandler = this.handlers[id]
-		var behaviorFunc = behavior
+		let behaviorFunc = behavior
 
 		if (!rewrite && typeof prevHandler === 'function')
 		{
@@ -899,6 +922,15 @@ export class PasswordControl extends StringControl
 
 		_merge(this, options || {})
 	}
+
+	get props()
+	{
+		return {
+			...super.props,
+			maxLength: this.maxLength,
+			showPasswordLabel: this.showPasswordLabel
+		}
+	}
 }
 
 /**
@@ -909,8 +941,7 @@ export class BooleanControl extends DatabaseControl
 	constructor(options, _vueContext)
 	{
 		super({
-			type: 'Boolean',
-			labelAttrs: { class: 'i-checkbox i-checkbox__label' }
+			type: 'Boolean'
 		}, _vueContext)
 
 		_merge(this, options || {})
@@ -918,10 +949,10 @@ export class BooleanControl extends DatabaseControl
 
 	get props()
 	{
-		const boolProps = super.props
-		// Checkboxes have no size property.
-		delete boolProps.size
-		return boolProps
+		return {
+			...super.props,
+			size: systemInfo.layout.CheckBoxSize
+		}
 	}
 }
 
@@ -992,7 +1023,6 @@ export class CurrencyControl extends NumberControl
 	{
 		super({
 			type: 'Number',
-			dFlexInline: true,
 			currencySymbol: systemInfo.system.baseCurrency.symbol ?? '€'
 		}, _vueContext)
 
@@ -1011,7 +1041,6 @@ export class DateControl extends DatabaseControl
 
 		super({
 			type: 'Date',
-			dFlexInline: true,
 			locale: computed(() => systemDataStore.system.currentLang),
 			texts: new controlsResources.DateTimeResources(_vueContext.$getResource)
 		}, _vueContext)
@@ -1107,7 +1136,7 @@ class BaseArrayControl extends DatabaseControl
 
 		this.emptyValue = this.modelFieldRef?.constructor.EMPTY_VALUE
 		// The array is clearable if its not required, and if the empty value is not an option of the array.
-		this.clearable = computed(() => !this.isRequired && !this.items.some(item => item.key === this.emptyValue))
+		this.clearable = computed(() => !this.isRequired && !this.items.some((item) => item.key === this.emptyValue))
 	}
 
 	/**
@@ -1163,9 +1192,11 @@ class BaseArrayControl extends DatabaseControl
 		// Filter array
 		Promise.all(this.validateArrayElShowWhen(allOptions)).then(
 			(options) => {
-				const filteredOptions = options
-					.filter((o) => o.show !== false)
-					.map((o) => o.el)
+				const filteredOptions = deepUnwrap(
+					options
+						.filter((o) => o.show !== false)
+						.map((o) => o.el)
+				)
 
 				// Update visible options
 				if (allGroups !== undefined)
@@ -1252,6 +1283,7 @@ export class RadioGroupControl extends BaseArrayControl
 	{
 		return {
 			...super.props,
+			size: systemInfo.layout.RadioButtonSize,
 			orientation: this.orientation,
 			columns: this.columns
 		}
@@ -1396,6 +1428,15 @@ export class MaskControl extends StringControl
 		_merge(this, options || {})
 	}
 
+	get props()
+	{
+		return {
+			...super.props,
+			maskType: this.maskType,
+			maskFormat: this.maskFormat
+		}
+	}
+
 	/**
 	 * @override
 	 */
@@ -1478,10 +1519,10 @@ export class LookupControl extends BaseControl
 		}
 	}
 
-	get wrapperProps()
+	get gridColumnProps()
 	{
 		return {
-			...super.wrapperProps,
+			...super.gridColumnProps,
 			// The real field in the case of Lookup is the foreign key.
 			// Used in the Grid control to show errors.
 			modelFieldRef: this.lookupKeyModelFieldRef
@@ -1542,7 +1583,7 @@ export class LookupControl extends BaseControl
 	{
 		super.initHandlers()
 
-		this.debouncedSearch = _debounce(this.handleSearch, 500)
+		this.debouncedSearch = _debounce(this.handleSearch, 500, { leading: true })
 
 		const handlers = {
 			'update:model-value': (eventData) => this.lookupKeyModelFieldRef?.fnUpdateValue(eventData),
@@ -1567,7 +1608,7 @@ export class LookupControl extends BaseControl
 	initEvents()
 	{
 		// Reload control opttions when any limit is changed
-		var dependencyEvents = ['RELOAD_ALL_LOOKUP_CONTROLS']
+		let dependencyEvents = ['RELOAD_ALL_LOOKUP_CONTROLS']
 
 		// Add event to detect change of non-duplication prefix.
 		if (this.modelFieldRef && !_isEmpty(this.modelFieldRef.area) && this.modelFieldRef.isUnique && !_isEmpty(this.modelFieldRef.uniquePrefixField))
@@ -1690,7 +1731,8 @@ export class LookupControl extends BaseControl
 				(data, response) => {
 					const requestNumber = response.headers['reloaddbeditrequestnumber']
 					// The list can make more than one 'simultaneous' request to the server and only the response of the last request is interest
-					if (Number(requestNumber) !== this.requestNumberReload) {
+					if (Number(requestNumber) !== this.requestNumberReload)
+					{
 						this.isDebounce = false
 						return
 					}
@@ -1700,12 +1742,13 @@ export class LookupControl extends BaseControl
 					{
 						// Update model data
 						this.modelFieldRef?.updateValue(data)
+
 						// If the user is still searching for the desired record, we don't update the key
 						if (!isSearching)
 						{
 							// The key should be updated with the previously selected value, if it's in the list, or an empty string otherwise
-							const selectedValueInList = data.List.some((option) => option.key === selectedValue)
-							this.lookupKeyModelFieldRef?.updateValue(selectedValueInList ? selectedValue : data.Selected)
+							const selectedValueInList = data.list.some((option) => option.key === selectedValue)
+							this.lookupKeyModelFieldRef?.updateValue(selectedValueInList ? selectedValue : data.selected)
 						}
 					}
 					this.isDebounce = false
@@ -1731,8 +1774,8 @@ export class LookupControl extends BaseControl
 			return
 
 		const isEmptyForm = this.vueContext.formInfo.isEmptyForm === true,
-			baseApiController = !isEmptyForm ? _capitalize(this.vueContext.formInfo.area) : `${_capitalize(this.vueContext.formInfo.name)}Empty`
-		var values = {}
+			baseApiController = !isEmptyForm ? _capitalize(this.vueContext.formInfo.area) : `${_capitalize(this.vueContext.formInfo.name)}Empty`,
+			values = {}
 
 		// Limits
 		_assignIn(values, this.getLimitsValues())
@@ -1784,7 +1827,7 @@ export class LookupControl extends BaseControl
 						// Update model data (including the Key/Value of the field itself)
 						if (this.dependentFields)
 						{
-							let _depFieldsRef = this.dependentFields.call(this.vueContext)
+							const _depFieldsRef = this.dependentFields.call(this.vueContext)
 							// Warning: Never remove the curly braces from the iteration function.
 							// Without the braces, when filling in boolean dependents, assigning "false" will stop the cycle and no further fields will be filled
 							_forEach(data, (depFieldValue, depFieldId) => { _depFieldsRef[depFieldId] = depFieldValue })
@@ -1886,7 +1929,6 @@ export class LookupControl extends BaseControl
 
 class TableListBaseControl extends BaseControl
 {
-	/** @constructor */
 	constructor(options, _vueContext)
 	{
 		super(options, _vueContext)
@@ -1901,18 +1943,11 @@ class TableListBaseControl extends BaseControl
 			writable: true,
 			enumerable: false
 		})
-	}
 
-	getListGlobalFilters()
-	{
-		var result = {}
-		if (Array.isArray(this.globalFilters))
-		{
-			this.globalFilters.forEach(filter => {
-				result[filter.identifier] = filter.getValue()
-			})
-		}
-		return result
+		// Debounce the list data fetch request
+		this.debouncedFetchData = genericFunctions.dedupe(this.fetchListData, { leading: true, wait: 500 })
+		// Data already requested from the server at least once
+		this.dataRequested = false
 	}
 
 	/**
@@ -1920,37 +1955,19 @@ class TableListBaseControl extends BaseControl
 	 */
 	get relatedFilterValues()
 	{
-		// New filters version
-		var filters = this.getListGlobalFilters()
-
-		if (!this.internalEvents) return filters
-
-		// Old filters version
-		// Filter table events by 'filterChange'.
-		const relatedFilterKeys = this.internalEvents
-			.map(event => event.split(':'))
-			.filter(([type]) => type === 'filterChange')
-			.map(([, name]) => name)
-
-		if (!relatedFilterKeys.length || !this.vueContext.model.currentFilterValues) return filters
-
-		Object.entries(this.vueContext.model.currentFilterValues).filter(([key]) =>
-			relatedFilterKeys.includes(key)
-		).forEach((entry) => { filters[entry[0]] = entry[1] })
-
-		return filters
+		return {}
 	}
 
 	/**
 	 * Fetches the data from the server and loads the list.
 	 * @param {object} params The necessary parameters
 	 * @param {Function} fnHydrateViewModel The custom callback method for hydrate the page view model data
-	 * @param {Function} fnUpdateData The custom callback method for update the data
+	 * @param {Function} fnUpdateData The custom callback method to update the data
 	 * @returns A promise with the response from the server.
 	 */
 	fetchListData(params, fnHydrateViewModel, fnUpdateData)
 	{
-		if (this.config.serverMode === false)
+		if (this.config.serverMode === false || this.abortManager === null)
 			return
 
 		// Get a fresh signal (aborts any prior for the same category)
@@ -1958,6 +1975,9 @@ class TableListBaseControl extends BaseControl
 
 		// Table list limits
 		const limits = this.getLimitsValues()
+
+		// Whether this is the first time loading the table after navigating to it
+		const isFirstLoad = !this.dataRequested
 
 		// Object with required parameters
 		const actionParams = {
@@ -1970,13 +1990,8 @@ class TableListBaseControl extends BaseControl
 			queryParams: {},
 			// Table configuration state
 			tableConfiguration: {},
-			// Whether this is the first time loading the table after navigating to it
-			isFirstLoad: false,
 			noRedirect: false,
-			// List of columns that have totalizers
-			totalizerColumns: listFunctions.getColumnTotalizers(this),
-			// List of ids that correspond to the selected rows.
-			selectedRows: listFunctions.getSelectedRows(this),
+			isFirstLoad,
 			...params
 		}
 
@@ -1994,7 +2009,7 @@ class TableListBaseControl extends BaseControl
 		}
 
 		// Put the limit values in Navigation (history) before making the request to the server.
-		// TODO: Change for Event (internal event)
+		// TODO: Change to Event (internal event)
 		_forEach(limits, (value, key) => {
 			this.vueContext.setEntryValue({
 				navigationId: this.currentNavigationId,
@@ -2003,12 +2018,7 @@ class TableListBaseControl extends BaseControl
 			})
 		})
 
-		// Form filter field values also need to be sent to the server, to filter the fetched records.
-		if (Object.keys(this.relatedFilterValues).length > 0)
-			Reflect.set(actionParams, 'relatedFilterValues', this.relatedFilterValues)
-
-		// If it's the first load
-		if (!this.dataAlreadyRequested)
+		if (isFirstLoad)
 		{
 			// Used for «Jump if just one»
 			Reflect.set(actionParams, 'isFirstLoad', true)
@@ -2032,60 +2042,68 @@ class TableListBaseControl extends BaseControl
 				Reflect.set(actionParams, 'loadDefaultView', true)
 			}
 		}
-		this.dataAlreadyRequested = true
 
-		return this.addLoadingProc(netAPI.postData(
-			this.controller,
-			this.action,
-			actionParams,
-			(data, response) => {
-				// When loading additional data for the page ViewModel
-				if (typeof fnHydrateViewModel === 'function')
-					fnHydrateViewModel(data, this)
+		return this.addLoadingProc(
+			new Promise((resolve, reject) => {
+				netAPI.postData(
+					this.controller,
+					this.action,
+					actionParams,
+					(data, response) => {
+						// When loading additional data for the page ViewModel
+						if (typeof fnHydrateViewModel === 'function')
+							fnHydrateViewModel(data, this)
 
-				// Updates table configuration with the latest data.
-				// Done here to ensure this is done only once when actions that require reloading the list are performed.
-				if (!(this instanceof GridTableListControl || this instanceof PropertyListControl))
-					this.updateConfig()
+						// Updates table configuration with the latest data.
+						// Done here to ensure this is done only once when actions that require reloading the list are performed.
+						if (!isFirstLoad &&
+							this.config.viewManagement === qEnums.tableViewManagementModes.persistOne &&
+							!(this instanceof GridTableListControl || this instanceof PropertyListControl))
+							this.saveView({ name: '_', isSelected: 1 })
 
-				// When loading additional data for the branch of the tree,
-				// we use a customized callback to assign data to the branch's children.
-				if (typeof fnUpdateData === 'function')
-					fnUpdateData(data, this)
-				else
-				{
-					let rowKeyToScroll = ''
+						// When loading additional data for the branch of the tree,
+						// we use a customized callback to assign data to the branch's children.
+						if (typeof fnUpdateData === 'function')
+							fnUpdateData(data, this)
+						else
+						{
+							let rowKeyToScroll = ''
 
-					// FOR: table go to row on return
-					// If returning to the table from a form, set key of row to go to
-					if (!_isEmpty(currentControl) && currentControl.id === this.id)
+							// FOR: table go to row on return
+							// If returning to the table from a form, set key of row to go to
+							if (!_isEmpty(currentControl) && currentControl.id === this.id)
+							{
+								rowKeyToScroll = currentControl?.data?.rowKey
+								this.config.rowKeyToScroll = rowKeyToScroll
+								this.config.focusElement = currentControl?.data?.returnElement
+							}
+
+							if (this instanceof TreeTableListControl)
+								this.hydrate(this, data, rowKeyToScroll)
+							else
+								this.hydrate(this, data)
+
+							this.afterLoaded()
+						}
+
+						if (response.data && response.data.Success === false && response.data.Message)
+							genericFunctions.displayMessage(response.data.Message, 'warning')
+
+						resolve()
+					},
+					undefined,
 					{
-						rowKeyToScroll = currentControl?.data?.rowKey
-						this.config.rowKeyToScroll = rowKeyToScroll
-						this.config.focusElement = currentControl?.data?.returnElement
-					}
-
-					if (this instanceof TreeTableListControl)
-						this.hydrate(this, data, rowKeyToScroll)
-					else
-						this.hydrate(this, data)
-
-					this.isLoaded = true
-					this.afterLoaded()
-				}
-
-				if (response.data && response.data.Success === false && response.data.Message)
-					genericFunctions.displayMessage(response.data.Message, 'warning')
-			},
-			undefined,
-			{
-				signal
-			},
-			this.currentNavigationId)
-			.finally(() => {
-				// Clear this key so the controller can be GC’d
-				this.abortManager?.clear('fetchListData')
-			}))
+						signal
+					},
+					this.currentNavigationId)
+					.catch(reject)
+					.finally(() => {
+						// Clear this key so the controller can be GC’d
+						this.abortManager?.clear('fetchListData')
+						this.dataRequested = true
+					})
+			})
+		)
 	}
 
 	/**
@@ -2141,9 +2159,6 @@ export class TableListControl extends TableListBaseControl
 			 * Used, for example, in See More lists, to apply dynamic values received from the form (for example, 'Field' type limit).
 			 */
 			fixedControlLimits: undefined,
-			isLoaded: false,
-			/** Data already requested from the server at least once */
-			dataAlreadyRequested: false,
 			hydrate: listFunctions.hydrateTableData,
 			rowsSelected: {},
 			rowsChecked: {},
@@ -2151,22 +2166,22 @@ export class TableListControl extends TableListBaseControl
 			groupFilters: [],
 			activeFilters: null,
 			filters: [],
+			globalFilters: [],
+			filtersModel: null,
 			globalEvents: [],
 			internalEvents: [],
 			dataImportResponse: {},
 			rowComponent: 'q-table-row',
 			formName: '',
 			newRowID: '',
-			signal: {},
-			subSignals: {
-				config: {},
-				columnConfig: {},
-				advancedFilters: {},
-				viewSave: {},
-				views: {}
-			},
+			unappliedFilters: false,
 			confirmChanges: false,
+			configIsDirty: false,
+			selectedConfigTab: '',
+			selectedConfigFilter: -1,
+			selectedConfigColumn: '',
 			config: {
+				name: '',
 				serverMode: !!options?.config?.serverMode,
 				perPageDefault: systemDataStore.system ? systemDataStore.system.defaultListRows : options.config !== undefined ? options.config.perPage !== undefined ? options.config.perPage : 10 : 10,
 				perPageSelected: null,
@@ -2191,13 +2206,16 @@ export class TableListControl extends TableListBaseControl
 				tableTitle: '',
 				tableNamePlural: '',
 				configOptions: [],
-				configOptionsUse: [],
 				viewManagement: qEnums.tableViewManagementModes.none,
+				userTableConfigName: '',
+				tableConfigNames: [],
 				searchBarConfig: {
 					visibility: false
 				},
-				filtersVisible: false,
+				filtersVisible: true,
+				allowColumnConfiguration: false,
 				allowColumnFilters: false,
+				allowManageViews: false,
 				allowColumnSort: false,
 				defaultColumnSorting: {
 					columnName: '',
@@ -2211,6 +2229,7 @@ export class TableListControl extends TableListBaseControl
 				showRowDragAndDropOption: false,
 				showLimitsInfo: false,
 				showAfterFilter: false,
+				showApplyButton: false,
 				columnResizeOptions: {},
 				permissions: {
 					canView: true,
@@ -2224,9 +2243,6 @@ export class TableListControl extends TableListBaseControl
 					dependencyEvents: []
 				},
 				canInsert: false,
-				rowActionClasses: {
-					'dropdown-item': true
-				},
 				rowKeyToScroll: '',
 				returnElement: '',
 				resourcesPath: systemInfo.resourcesPath,
@@ -2236,7 +2252,9 @@ export class TableListControl extends TableListBaseControl
 				rerenderRowsOnNextChange: false,
 				setNavOnUpdate: false,
 				dateFormats: genericDataStore.dateFormat,
-				hasHorizontalScrollers: systemInfo.layout.TableHorizontalScrollers
+				hasHorizontalScrollers: systemInfo.layout.TableHorizontalScrollers,
+				checkBoxSize: systemInfo.layout.CheckBoxSize,
+				radioButtonSize: systemInfo.layout.RadioButtonSize
 			},
 			actionIDs: [],
 			texts: tableTexts,
@@ -2268,14 +2286,23 @@ export class TableListControl extends TableListBaseControl
 		this.config.perPageDefault = ref(this.config.perPageDefault)
 		this.config.perPageSelected = ref(this.config.perPageSelected)
 		this.config.perPage = computed(() => this.config.perPageSelected.value ? this.config.perPageSelected.value : this.config.perPageDefault.value)
+	}
 
-		// Create reactive copy of configuration options that accounts for whether the table is in readonly mode
-		this.config.configOptions = ref(this.config.configOptions)
-		this.config.configOptionsUse = computed(() => {
-			const configOptions = cloneDeep(this.config.configOptions.value)
-			listFunctions.updateConfigOptions(configOptions, this.config.viewManagement, this.confirmChanges, this.readonly)
-			return configOptions
+	/**
+	 * @override
+	 */
+	get relatedFilterValues()
+	{
+		const filters = {}
+
+		this.globalFilters.forEach((filter) => {
+			filters[filter.identifier] = {
+				...filter.getProperties(),
+				value: filter.getValue()
+			}
 		})
+
+		return filters
 	}
 
 	/**
@@ -2299,8 +2326,6 @@ export class TableListControl extends TableListBaseControl
 		}
 
 		await super.init(isEditableForm)
-
-		this.isLoaded = false
 
 		const genericDataStore = useGenericDataStore()
 
@@ -2345,17 +2370,12 @@ export class TableListControl extends TableListBaseControl
 		super.initHandlers()
 
 		const handlers = {
-			onChangeQuery: () => this.onTableListChangeQuery(),
-			saveView: (eventData) => this.onTableListSaveView(eventData),
-			renameView: (eventData) => this.onTableListRenameView(eventData),
-			copyView: (eventData) => this.onTableListCopyView(eventData),
-			selectView: (eventData) => this.onTableListSelectView(eventData),
-			closeView: (eventData) => this.onTableListCloseView(eventData),
-			viewAction: (eventData) => this.onTableListViewAction(eventData),
+			refresh: (eventData) => this.reload(eventData),
+			clearFilters: () => this.clearFilters(),
+			saveView: (eventData) => this.confirmAndSaveView(eventData),
 			onExportData: (eventData) => this.onTableListExportData(eventData, false),
 			onImportData: (eventData) => this.onTableListImportData(eventData),
 			onExportTemplate: (eventData) => this.onTableListExportData(eventData, true),
-			'update:active-view-mode': (eventData) => this.updateActiveViewMode(eventData),
 			removeRow: (eventData) => this.onRemoveRow(eventData),
 			rowAdd: (eventData) => this.onTableListRowAdd(eventData),
 			rowEdit: (eventData) => this.onTableListRowEdit(eventData),
@@ -2372,26 +2392,25 @@ export class TableListControl extends TableListBaseControl
 			rowAction: (eventData) => this.onTableListExecuteAction(eventData),
 			cellAction: (eventData) => this.onTableListCellAction(eventData),
 			updateCell: (eventData) => this.onTableListUpdateCell(eventData),
-			applyColumnConfig: (eventData) => this.onTableListApplyColumnConfig(eventData),
-			resetColumnConfig: (eventData) => this.onTableListResetColumnConfig(eventData),
 			showPopup: (eventData) => this.setModal(eventData),
 			hidePopup: (eventData) => this.removeFieldModal(eventData),
-			setInfoMessage: (eventData) => this.setInfoMessage(eventData),
+			showConfig: (eventData) => this.showConfig(eventData),
+			hideConfig: (eventData) => this.hideConfig(eventData, true),
+			markConfigDirty: (eventData) => this.setConfigDirtiness(eventData),
+			setConfirmChanges: (eventData) => this.setConfirmChanges(eventData),
+			'update:active-view-mode': (eventData) => this.updateActiveViewMode(eventData),
+			'update:config': (eventData) => this.updateConfig(eventData, true),
 			'update:filters': (eventData) => this.updateFilters(eventData),
 			'update:activeFilters': (eventData) => this.updateActiveFilters(eventData),
 			'update:groupFilters': (eventData) => this.updateGroupFilters(eventData),
 			'update:sorting': (eventData) => this.updateSorting(eventData),
-			updateConfig: () => this.updateConfig(),
 			setProperty: (...args) => this.setProperty(...args),
-			setConfirmChanges: (...args) => this.setConfirmChanges(...args),
 			setRowIndexProperty: (...args) => this.setRowIndexProperty(...args),
 			setArraySubPropWhere: (...args) => this.setArraySubPropWhere(...args),
 			insertForm: () => this.onTableListInsertForm(),
 			cancelInsert: (...args) => this.onTableListCancelInsertRow(...args),
-			signalComponent: (...args) => this.signalComponent(...args),
-			toggleTextWrap: () => { this.config.hasTextWrap = !this.config.hasTextWrap },
-			setQtableAllSelected: (eventData) => this.onSetQtableAllSelected(eventData),
-			fetchQtableAllSelected: (eventData) => this.onFetchQtableAllSelected(eventData)
+			setSelectedRows: (eventData) => this.onSetSelectedRows(eventData),
+			initAllSelected: (eventData) => this.onInitAllSelected(eventData)
 		}
 
 		// Apply handlers without overriding. The handler can come from outside at initialization.
@@ -2413,57 +2432,29 @@ export class TableListControl extends TableListBaseControl
 	{
 		const configOptions = []
 
-		const allowBasicConfiguration = [
+		this.config.allowManageViews = this.config.viewManagement === qEnums.tableViewManagementModes.persistMany
+		this.config.allowColumnConfiguration = [
 			qEnums.tableViewManagementModes.nonPersistent,
 			qEnums.tableViewManagementModes.persistOne,
 			qEnums.tableViewManagementModes.persistMany
 		].includes(this.config.viewManagement)
 
-		this.config.allowColumnConfiguration = allowBasicConfiguration
-		this.config.allowManageViews = this.config.viewManagement === qEnums.tableViewManagementModes.persistMany
-
-		if (this.config.allowManageViews)
+		if (this.config.allowColumnConfiguration)
 		{
 			configOptions.push({
-				id: 'viewSaveChanges',
-				elementId: 'view-save-changes',
-				icon: {
-					icon: 'save'
-				},
-				text: computed(() => this.texts.saveChanges),
-				active: false,
-				visible: true,
-				inReadonly: false
-			})
-		}
-
-		if (this.config.allowColumnConfiguration && this.activeViewModeId === 'LIST')
-		{
-			configOptions.push({
-				id: 'columnConfig',
-				elementId: 'column-config',
-				componentId: 'columnConfig',
-				icon: {
-					icon: 'list'
-				},
+				id: 'columns',
+				icon: { icon: 'list' },
 				text: computed(() => this.texts.configureColumns),
-				separatorBefore: true,
-				active: true,
-				visible: true
+				visible: computed(() => this.activeViewModeId === 'LIST')
 			})
 		}
 
 		if (this.config.allowColumnFilters)
 		{
 			configOptions.push({
-				id: 'advancedFilters',
-				elementId: 'advanced-filters',
-				componentId: 'advancedFilters',
-				icon: {
-					icon: 'filter'
-				},
+				id: 'filters',
+				icon: { icon: 'filter' },
 				text: computed(() => this.texts.configureFilters),
-				active: true,
 				visible: true
 			})
 		}
@@ -2472,28 +2463,9 @@ export class TableListControl extends TableListBaseControl
 		{
 			configOptions.push({
 				id: 'views',
-				elementId: 'views',
-				componentId: 'views',
-				icon: {
-					icon: 'view-manager'
-				},
+				icon: { icon: 'view-manager' },
 				text: computed(() => this.texts.manageViews),
-				active: true,
-				visible: true,
-				inReadonly: false
-			})
-			configOptions.push({
-				id: 'viewSave',
-				elementId: 'view-save',
-				componentId: 'viewSave',
-				icon: {
-					icon: 'add'
-				},
-				text: computed(() => this.texts.createView),
-				separatorBefore: true,
-				active: true,
-				visible: true,
-				inReadonly: false
+				visible: true
 			})
 		}
 
@@ -2501,113 +2473,241 @@ export class TableListControl extends TableListBaseControl
 	}
 
 	/**
-	 * @returns A promise with the response from the server.
+	 * Sets the configuration modal with the specified data.
+	 * @param {object} data The modal data
 	 */
-	onTableListChangeQuery() {
-		this.reload({ tableConfiguration: listFunctions.getTableConfiguration(this) })
-	}
+	async showConfig(data)
+	{
+		const modalId = data?.modalProps?.id
+		if (typeof modalId !== 'string')
+			return
 
-	/**
-	 * Save view (user table configuration)
-	 * @param {object} eObj
-	 */
-	onTableListSaveView(eObj) {
-		if (_isEmpty(eObj.name) || this.readonly)
-			return Promise.resolve()
+		this.selectedConfigTab = data.selectedTab ?? 'columns'
+		this.selectedConfigFilter = typeof data.selectedFilter === 'number' ? data.selectedFilter : -1
+		this.selectedConfigColumn = data.columnName ?? ''
 
-		// Get a fresh signal (aborts any prior for the same category)
-		const signal = this.abortManager.getSignal('onTableListSaveView')
-
-		if (typeof eObj.isSelected !== 'number')
-			eObj.isSelected = -1
-
-		const params = {
-			uuid: this.uuid,
-			configName: eObj.name,
-			isSelected: eObj.isSelected,
-			data: listFunctions.getTableConfiguration(this)
+		const props = {
+			class: 'q-table-config',
+			title: this.texts.tableConfig,
+			size: 'large'
+		}
+		const modalProps = {
+			...data.modalProps,
+			dismissAction: () => this.hideConfig(modalId)
 		}
 
-		// Send request to save configuration
-		return netAPI.postData(
-			'Tblcfg',
-			'SaveConfig',
-			params,
-			() => {
-				// Clear view name array if there are no views
-				if (_isEmpty(this.config.tableConfigNames))
-					this.config.tableConfigNames = []
-
-				// Add view name to list of available views
-				if (!this.config.tableConfigNames.includes(eObj.name))
-					this.config.tableConfigNames.push(eObj.name)
-
-				// Set default view
-				if (eObj.isSelected === 1)
-					this.config.defaultTableConfigName = eObj.name
-
-				// Set opened view name to this view
-				this.config.userTableConfigName = eObj.name
-
-				// Reset property for whether there are changes
-				this.setConfirmChanges(false)
-			},
-			undefined,
-			{
-				signal
-			},
-			this.currentNavigationId)
-			.finally(() => {
-				// Clear this key so the controller can be GC’d
-				this.abortManager?.clear('onTableListSaveView')
-			})
+		await this.setModal({ props, modalProps })
 	}
 
 	/**
-	 * Rename a table view (user table configuration)
-	 * @param {object} eObj
+	 * Removes the configuration modal from the DOM.
+	 * @param {string} modalId The id of the modal
+	 * @param {boolean} removeModal Whether the config modal needs to be removed
 	 */
-	onTableListRenameView(eObj) {
+	hideConfig(modalId, removeModal = false)
+	{
+		if (typeof modalId !== 'string' || modalId.length === 0)
+			return
+
+		const closeConfigPopup = () => {
+			this.selectedConfigTab = ''
+			this.selectedConfigFilter = -1
+			this.selectedConfigColumn = ''
+
+			if (removeModal || this.configIsDirty)
+				this.removeFieldModal(modalId)
+			this.setConfigDirtiness(false)
+		}
+
+		if (this.configIsDirty)
+		{
+			const buttons = {
+				confirm: {
+					label: this.texts.discard,
+					action: closeConfigPopup
+				},
+				cancel: {
+					label: this.texts.cancelText
+				}
+			}
+			genericFunctions.displayMessage(`${this.texts.changesWillBeLost}`, 'warning', null, buttons)
+			return false
+		}
+
+		closeConfigPopup()
+		return true
+	}
+
+	/**
+	 * Sets whether the user configuration is currently dirty.
+	 * @param {boolean} dirty Whether the configuration is dirty
+	 */
+	setConfigDirtiness(dirty)
+	{
+		this.configIsDirty = dirty
+	}
+
+	/**
+	 * Sets the confirmChanges property to determine if the configuration has been changed from the saved configuration.
+	 * Only sets the property if the table's view management is set to persist many or persist none
+	 * @param {boolean} hasChanges
+	 */
+	setConfirmChanges(hasChanges)
+	{
+		if (this.readonly)
+			this.confirmChanges = false
+		else if (this.config.viewManagement === qEnums.tableViewManagementModes.persistMany ||
+			this.config.viewManagement === qEnums.tableViewManagementModes.nonPersistent)
+			this.confirmChanges = hasChanges
+
+		if (!hasChanges)
+			this.unappliedFilters = false
+	}
+
+	/**
+	 * Updates the table configuration, including filters, columns and views.
+	 * @param {object} config The configuration
+	 * @param {boolean} hideConfig Whether to hide the config modal
+	 */
+	async updateConfig(config, hideConfig = false)
+	{
+		if (_isEmpty(config))
+			return
+
+		let reload = false,
+			hasChanges = false,
+			currentView = null,
+			newCurrentView = null
+
+		if (typeof config.textWrap !== 'undefined')
+		{
+			this.config.hasTextWrap = config.textWrap
+			hasChanges = true
+		}
+
+		if (typeof config.columns !== 'undefined')
+		{
+			this.columnsCustom = config.columns
+			reload = true
+			hasChanges = true
+		}
+
+		if (typeof config.defaultSearchColumn !== 'undefined')
+		{
+			this.config.defaultSearchColumnName = config.defaultSearchColumn
+			hasChanges = true
+		}
+
+		if (typeof config.filters !== 'undefined')
+		{
+			this.updateFilters(config.filters, false)
+			reload = true
+			hasChanges = true
+		}
+
+		if (typeof config.activeFilters !== 'undefined')
+		{
+			this.updateActiveFilters(config.activeFilters, false)
+			reload = true
+			hasChanges = true
+		}
+
+		if (typeof config.groupFilters !== 'undefined')
+		{
+			this.updateGroupFilters(config.groupFilters, false)
+			reload = true
+			hasChanges = true
+		}
+
+		if (typeof config.globalFilters !== 'undefined')
+		{
+			this.updateGlobalFilters(config.globalFilters, false)
+			reload = true
+			hasChanges = true
+		}
+
+		if (typeof config.views !== 'undefined')
+		{
+			await this.saveTableViews(config.views)
+			reload = true
+
+			currentView = config.views.find((e) => e.oldName === this.config.userTableConfigName)
+			newCurrentView = config.views.find((e) => e.basedOn === this.config.userTableConfigName)
+		}
+
+		if (hasChanges)
+			this.setConfirmChanges(true)
+
+		if (reload)
+		{
+			// If the current view was deleted and none was created based on it, discards any changes and switches to the base table
+			const configName = currentView?.deleted && _isEmpty(newCurrentView) ? '' : undefined
+			await this.reload(configName)
+
+			// If a new view was created based on the currently selected one, switches to the new one and brings any unsaved changes
+			if (!_isEmpty(newCurrentView))
+				this.config.userTableConfigName = newCurrentView.name
+			// If the current view was renamed, we also need to update it's name on the client-side
+			else if (!_isEmpty(currentView))
+				this.config.userTableConfigName = currentView.name
+		}
+
+		// If the save option is true, saves the changes right after applying them
+		if (config.save && hasChanges)
+			this.confirmAndSaveView({ name: this.config.userTableConfigName })
+
+		this.setConfigDirtiness(false)
+		if (hideConfig)
+			this.hideConfig(config.modalId, true)
+	}
+
+	/**
+	 * Sets the list of views (user table configurations) for this list
+	 * @param {Array} views The views
+	 */
+	saveTableViews(views)
+	{
+		if (this.readonly)
+			return Promise.resolve(true)
+
 		// Get a fresh signal (aborts any prior for the same category)
-		const signal = this.abortManager.getSignal('onTableListRenameView')
-
-		if (typeof eObj.isSelected !== 'number')
-			eObj.isSelected = -1
-
+		const signal = this.abortManager.getSignal('saveTableViews')
 		const params = {
 			uuid: this.uuid,
-			configName: eObj.name,
-			isSelected: eObj.isSelected,
-			renameFromName: eObj.renameFromName
+			configList: views
 		}
 
 		// Send request to save configuration
 		return new Promise((resolve) => {
 			netAPI.postData(
 				'Tblcfg',
-				'RenameConfig',
+				'SaveConfigList',
 				params,
-				async (_, request) => {
+				(data, request) => {
 					if (request.data.Success)
 					{
-						// Set table configuration to use when reloading
-						const userTableConfigName = this.config.userTableConfigName === eObj.renameFromName
-							? eObj.name
-							: this.config.userTableConfigName
-
-						// Set whether to load the default view
-						const loadDefaultView = eObj.isSelected === 1
-
-						// Reset property for whether there are changes
-						this.setConfirmChanges(false)
-
-						// Reload table
-						await this.fetchListData({ userTableConfigName, loadDefaultView })
+						const alertProps = {
+							type: 'success',
+							message: this.texts.tableViewsSaveSuccess,
+							icon: 'ok',
+							pinned: true
+						}
+						this.setInfoMessage(alertProps)
 						resolve(true)
 					}
 					else
 					{
-						genericFunctions.displayMessage(request.data.Message, 'error')
+						let errorMsg = request.data.Message
+						let style = ''
+
+						if (Array.isArray(data) && data.length > 0)
+						{
+							style = 'text-align: left'
+							for (const message of data)
+								errorMsg += `<br /> - ${message}`
+						}
+
+						genericFunctions.displayMessage(`<div style="${style}">${errorMsg}</div>`, 'error')
 						resolve(false)
 					}
 				},
@@ -2618,50 +2718,108 @@ export class TableListControl extends TableListBaseControl
 				this.currentNavigationId)
 				.finally(() => {
 					// Clear this key so the controller can be GC’d
-					this.abortManager?.clear('onTableListRenameView')
+					this.abortManager?.clear('saveTableViews')
 				})
 		})
 	}
 
 	/**
-	 * Close a table view (user table configuration)
+	 * Confirms that the view (user table configuration) has a name and saves it
+	 * @param {object} data The save data
 	 */
-	onTableListCloseView() {
-		// Clear view configuration
-		listFunctions.applyTableConfiguration(this, {})
-		this.config.userTableConfigName = null
+	confirmAndSaveView(data)
+	{
+		if (this.readonly || this.config.viewManagement !== qEnums.tableViewManagementModes.persistMany)
+			return
 
-		// Reset property for whether there are changes
-		this.setConfirmChanges(false)
+		// If the name of the view is empty (e.g. Base table), prompt the user to give it a name
+		if (_isEmpty(data.name))
+		{
+			// Remove it to avoid overwriting the property with undefined.
+			if (typeof data.changeTo !== 'string')
+				delete data.changeTo
 
-		// Reload table
-		return this.fetchListData()
+			const buttons = {
+				confirm: {
+					label: this.texts.saveText,
+					action: (name) => this.saveView({ changeTo: name, ...data, name })
+				},
+				cancel: {
+					label: this.texts.cancelText
+				}
+			}
+
+			genericFunctions.displayMessage(
+				this.texts.chooseViewName,
+				'question',
+				null,
+				buttons,
+				{
+					input: {
+						type: 'text',
+						placeholder: this.texts.viewNameText,
+						validator: (value) =>
+							this.config.tableConfigNames.includes(value)
+								? this.texts.repeatedViewName
+								: value?.length > 0
+									? ''
+									: this.texts.emptyViewName
+					}
+				})
+		}
+		else
+			this.saveView(data)
 	}
 
 	/**
-	 * Select view (user table configuration)
-	 * @param {object} eObj
+	 * Save view (user table configuration)
+	 * @param {object} data The save data
 	 */
-	onTableListSelectView(eObj) {
+	async saveView(data)
+	{
+		if (_isEmpty(data.name) || this.readonly ||
+			(this.config.viewManagement !== qEnums.tableViewManagementModes.persistOne &&
+			this.config.viewManagement !== qEnums.tableViewManagementModes.persistMany))
+			return
+
 		// Get a fresh signal (aborts any prior for the same category)
-		const signal = this.abortManager.getSignal('onTableListSelectView')
+		const signal = this.abortManager.getSignal('saveView')
+
+		// In case there are changes that still weren't applied, we apply them before saving
+		await this.updateConfig(data.config)
 
 		const params = {
 			uuid: this.uuid,
-			configName: eObj.name
+			configName: data.name,
+			data: listFunctions.getTableConfiguration(this)
 		}
 
-		// BEGIN: Send request to save configuration
-		return this.addLoadingProc(netAPI.postData(
+		if (typeof data.isSelected === 'number')
+			params.isSelected = data.isSelected
+
+		// Make request to save configuration
+		await netAPI.postData(
 			'Tblcfg',
-			'SelectConfig',
+			'SaveConfig',
 			params,
 			() => {
-				// Reload table
-				if (eObj.name && eObj.name !== '')
-					this.fetchListData({ queryParams: { uuid: this.uuid }, userTableConfigName: eObj.name })
-				else
-					this.onTableListCloseView(eObj)
+				// Reset property for whether there are changes
+				this.setConfirmChanges(false)
+
+				// Only show an info message if the action was triggered by the user
+				if (this.config.viewManagement === qEnums.tableViewManagementModes.persistMany)
+				{
+					const alertProps = {
+						type: 'success',
+						message: this.texts.tableViewSaveSuccess,
+						icon: 'ok',
+						pinned: true
+					}
+					this.setInfoMessage(alertProps)
+				}
+
+				if (data.changeTo)
+					this.reload(data.changeTo)
 			},
 			undefined,
 			{
@@ -2670,26 +2828,8 @@ export class TableListControl extends TableListBaseControl
 			this.currentNavigationId)
 			.finally(() => {
 				// Clear this key so the controller can be GC’d
-				this.abortManager?.clear('onTableListSelectView')
-			}))
-	}
-
-	/**
-	 * Table view action (user table configuration)
-	 * @param {object} eObj
-	 */
-	onTableListViewAction(eObj) {
-		switch (eObj.name)
-		{
-			case 'SHOW':
-				return this.onTableListOpenView(eObj)
-			case 'DUPLICATE':
-				return this.onTableListCopyView(eObj)
-			case 'DELETE':
-				return this.onTableListDeleteView(eObj)
-			default:
-				return
-		}
+				this.abortManager?.clear('saveView')
+			})
 	}
 
 	/**
@@ -2702,8 +2842,8 @@ export class TableListControl extends TableListBaseControl
 		// Get a fresh signal (aborts any prior for the same category)
 		const signal = this.abortManager.getSignal('onTableListExportData')
 
-		let params = {},
-			paramNameList = 'ExportList',
+		const params = {}
+		let paramNameList = 'ExportList',
 			paramNameType = 'ExportType'
 
 		// Change parameter names when downloading template file
@@ -2739,7 +2879,8 @@ export class TableListControl extends TableListBaseControl
 				this.action,
 				{ queryParams: params, id, tableConfiguration },
 				(data, response) => {
-					if (response.data.Success === true) {
+					if (response.data.Success === true)
+					{
 						// Make call to download file using the response URL
 						netAPI.postData(
 							data.controller,
@@ -2752,9 +2893,9 @@ export class TableListControl extends TableListBaseControl
 							undefined,
 							{ responseType: 'arraybuffer' },
 							this.currentNavigationId)
-					} else if (typeof response.data.Message === 'string') {
-						genericFunctions.displayMessage(response.data.Message, 'error')
 					}
+					else if (typeof response.data.Message === 'string')
+						genericFunctions.displayMessage(response.data.Message, 'error')
 				},
 				undefined,
 				{
@@ -2796,7 +2937,7 @@ export class TableListControl extends TableListBaseControl
 				(data) => {
 					this.dataImportResponse = data
 					if (data.success)
-						this.onTableListChangeQuery()
+						this.reload()
 				},
 				undefined,
 				{
@@ -2820,13 +2961,11 @@ export class TableListControl extends TableListBaseControl
 	 */
 	updateActiveViewMode(id) {
 		this.activeViewModeId = id
-
-		// Re-initialize the table configuration options
-		this.initUserConfig()
-
-		//Save config
 		this.setConfirmChanges(true)
-		this.updateConfig()
+
+		// Save config
+		if (this.config.viewManagement === qEnums.tableViewManagementModes.persistOne)
+			this.saveView({ name: '_', isSelected: 1 })
 	}
 
 	/**
@@ -2853,7 +2992,7 @@ export class TableListControl extends TableListBaseControl
 			expose: this.config.name
 		}
 
-		for (let key in eObj.Fields)
+		for (const key in eObj.Fields)
 			Reflect.set(params, key, eObj.Fields[key])
 
 		return netAPI.postData(
@@ -2887,7 +3026,7 @@ export class TableListControl extends TableListBaseControl
 			expose: this.config.name
 		}
 
-		for (let key in eObj.Fields)
+		for (const key in eObj.Fields)
 			Reflect.set(params, key, eObj.Fields[key])
 
 		return netAPI.postData(
@@ -2958,7 +3097,6 @@ export class TableListControl extends TableListBaseControl
 			params,
 			(data) => {
 				this.hydrate(this, data)
-				this.isLoaded = true
 				// Set row key path to navigate to after reloading
 				this.config.navigatedRowKeyPath = [eObj.rowKey]
 				// Set property to trigger focusing on the right element after reloading
@@ -2977,21 +3115,13 @@ export class TableListControl extends TableListBaseControl
 	}
 
 	/**
-	 * Get ordering column of table
-	 */
-	getOrderingColumn()
-	{
-		return this.columns.find((c) => c.sortOrder > 0)
-	}
-
-	/**
 	 * Toggle drag and drop mode
 	 */
 	onToggleRowsDragDrop()
 	{
 		this.config.hasRowDragAndDrop = !this.config.hasRowDragAndDrop
 
-		var sortOrderColumn = this.getOrderingColumn()
+		const sortOrderColumn = this.columns.find((c) => c.sortOrder > 0)
 		if (this.config.hasRowDragAndDrop && sortOrderColumn)
 		{
 			sortOrderColumn.component = 'q-edit-numeric'
@@ -3019,7 +3149,7 @@ export class TableListControl extends TableListBaseControl
 			this.onSelectRow({ rowKeyPath: eObj })
 		else
 		{
-			let row = listFunctions.getRowByKeyPath(this.rows, eObj)
+			const row = listFunctions.getRowByKeyPath(this.rows, eObj)
 
 			if (row)
 			{
@@ -3120,12 +3250,12 @@ export class TableListControl extends TableListBaseControl
 	 * @param {object} eventData - Information for the selection - the row ID (rowKeyPath) and the selection type (single or multiple)
 	 */
 	onSelectRow(eventData) {
-		let row = listFunctions.getRowByKeyPath(this.rows, eventData.rowKeyPath)
+		const row = listFunctions.getRowByKeyPath(this.rows, eventData.rowKeyPath)
 
 		if (!row)
 			return
 
-		let rowIdStr = row.rowKey
+		const rowIdStr = row.rowKey
 
 		const rowsSelected = Object.keys(this.rowsSelected)
 
@@ -3153,7 +3283,7 @@ export class TableListControl extends TableListBaseControl
 	 * @returns Boolean
 	 */
 	onSelectRows(eObj) {
-		for (let rowKey in eObj)
+		for (const rowKey in eObj)
 			this.rowsSelected[rowKey] = true
 	}
 
@@ -3162,7 +3292,7 @@ export class TableListControl extends TableListBaseControl
 	 * @returns Boolean
 	 */
 	onUnselectAllRows() {
-		for (let rowKey in this.rowsSelected)
+		for (const rowKey in this.rowsSelected)
 			delete this.rowsSelected[rowKey]
 	}
 
@@ -3175,8 +3305,8 @@ export class TableListControl extends TableListBaseControl
 		// Get a fresh signal (aborts any prior for the same category)
 		const signal = this.abortManager.getSignal('onTableListInsertRow')
 
-		var controller = this.config.tableAlias
-		var action = this.action + '_New'
+		let controller = this.config.tableAlias
+		let action = this.action + '_New'
 
 		if (eObj.controller)
 			controller = eObj.controller
@@ -3208,7 +3338,8 @@ export class TableListControl extends TableListBaseControl
 	 *
 	 * @param {object} eObj
 	 */
-	onTableListCellAction(eObj) {
+	onTableListCellAction(eObj)
+	{
 		if (!_isEmpty(eObj) && !_isEmpty(eObj.column) && !_isEmpty(eObj.column.params) && eObj.column.params.type === 'form')
 			this.vueContext.openFormAction(this, eObj.column, eObj.row) // TODO: Change to event (internal events)
 	}
@@ -3217,7 +3348,8 @@ export class TableListControl extends TableListBaseControl
 	 *
 	 * @param {object} eObj
 	 */
-	onTableListUpdateCell(eObj) {
+	onTableListUpdateCell(eObj)
+	{
 		if (this.config.hasRowDragAndDrop)
 		{
 			const pObj = {
@@ -3228,97 +3360,7 @@ export class TableListControl extends TableListBaseControl
 		}
 	}
 
-	/**
-	 *
-	 * @param {object} eObj
-	 */
-	onTableListApplyColumnConfig(eObj) {
-		// Column order and visibility
-		if (Array.isArray(eObj.columnRows))
-		{
-			// Remove filters associated to hidden columns
-			const hiddenFilterCols = listFunctions.getHiddenFilterColumns(this.columns, eObj.columnRows, this.filters)
-			for (const column of hiddenFilterCols)
-			{
-				for (let i = 0; i < this.filters.length; i++)
-				{
-					const filter = this.filters[i]
-					if (filter.field === listFunctions.columnFullName(column))
-					{
-						// If there are sub filters, the first sub filter becomes the main filter,
-						// otherwise, the filter is just removed from the list
-						if (filter.subFilters.length > 0)
-							this.filters[i] = listFunctions.removeFirstFilterCondition(filter)
-						else
-							this.filters.splice(i--, 1)
-					}
-					else
-					{
-						for (let j = 0; j < filter.subFilters.length; j++)
-						{
-							const subFilter = filter.subFilters[j]
-							if (subFilter.field === listFunctions.columnFullName(column))
-								filter.subFilters.splice(j--, 1)
-						}
-					}
-				}
-			}
-
-			// Iterate column configuration data
-			for (const columnCfg of eObj.columnRows)
-			{
-				// Find column configuration data, set properties and add to ordered column configuration data array
-				const currentColumn = this.columns.find((x) => x.name === columnCfg.Fields.formField)
-				if (currentColumn)
-				{
-					currentColumn.order = columnCfg.Fields.order
-					currentColumn.isVisible = !!columnCfg.Fields.visibility
-				}
-			}
-		}
-
-		// Default search column
-		if (eObj.defaultSearchColumn !== undefined && eObj.defaultSearchColumn !== null)
-			this.config.defaultSearchColumnName = eObj.defaultSearchColumn
-
-		this.setConfirmChanges(true)
-		this.onTableListChangeQuery()
-	}
-
-	/**
-	 * Reset column configuration
-	 */
-	onTableListResetColumnConfig() {
-		this.columnsCustom = []
-		this.config.defaultSearchColumnName = this.config.defaultSearchColumnNameOriginal
-
-		this.setConfirmChanges(true)
-		this.onTableListChangeQuery()
-	}
-
 	setInfoMessage(eventData) { this.vueContext.setInfoMessage(eventData) }
-
-	/**
-	 * Update table configuration object
-	 */
-	async updateConfig() {
-		if (this.config.viewManagement === qEnums.tableViewManagementModes.persistOne)
-			await this.onTableListSaveView({ name: '_', isSelected: 1 })
-
-		listFunctions.updateConfigOptions(this.config.configOptions, this.config.viewManagement, this.confirmChanges, this.readonly)
-	}
-
-	/**
-	 * Sets the confirmChanges property to determine if the configuration has been changed from the saved configuration.
-	 * Only sets the property if the table's view management is set to persist many or persist none
-	 * @param {any} hasChanges
-	 */
-	setConfirmChanges(hasChanges) {
-		if (this.config.viewManagement === qEnums.tableViewManagementModes.persistMany
-			|| this.config.viewManagement === qEnums.tableViewManagementModes.nonPersistent)
-			this.confirmChanges = hasChanges
-	}
-
 	setProperty(...args) { this.vueContext.setProperty(this, ...args) }
 	setRowIndexProperty(...args) { listFunctions.setRowIndexProperty(this, ...args) }
 	setArraySubPropWhere(...args) { this.vueContext.setArraySubPropWhere(this, ...args) }
@@ -3338,9 +3380,9 @@ export class TableListControl extends TableListBaseControl
 		// Get a fresh signal (aborts any prior for the same category)
 		const signal = this.abortManager.getSignal('onTableListCancelInsertRow')
 
-		var controller = this.config.tableAlias
-		var action = null
-		var addAction = _find(this.config.generalActions, (act) => act.id === 'insert')
+		let controller = this.config.tableAlias
+		let action = null
+		const addAction = _find(this.config.generalActions, (act) => act.id === 'insert')
 		action = `MF${addAction.params.formName}_Cancel`
 
 		if (eObj.controller)
@@ -3368,29 +3410,11 @@ export class TableListControl extends TableListBaseControl
 	}
 
 	/**
-	 * Set property in table object that is used to send a signal to a component
-	 * @param {string} id
-	 * @param {object} signal
-	 * @param {boolean} mergeProps
-	 */
-	signalComponent(id, signal, mergeProps) {
-		if (mergeProps)
-		{
-			this.subSignals[id] = {
-				...this.subSignals[id],
-				...signal
-			}
-		}
-		else
-			this.subSignals[id] = signal
-	}
-
-	/**
 	 * Adds a route that indicates if all table rows are selected or not
 	 * @param {*} value The value to put in the parameter value
 	 */
-	onSetQtableAllSelected(value) {
-		let allSelected = this.vueContext.navigation.currentLevel.params.allSelected || []
+	onSetSelectedRows(value) {
+		const allSelected = this.vueContext.navigation.currentLevel.params.allSelected || []
 		// "allSelectedRows" is a string due to an issue where Vue won't recognize changes to boolean props
 		this.allSelectedRows = value.isSelected.toString().toLowerCase()
 
@@ -3416,146 +3440,69 @@ export class TableListControl extends TableListBaseControl
 	 * Adds a route that indicates if all table rows are selected or not
 	 * @param {*} tableId
 	 */
-	onFetchQtableAllSelected(tableId) {
-		let allSelected = this.vueContext.navigation.currentLevel.params.allSelected || []
+	onInitAllSelected(tableId) {
+		const allSelected = this.vueContext.navigation.currentLevel.params.allSelected || []
 
 		if (allSelected.findIndex((e) => e === tableId) !== -1)
 			this.allSelectedRows = 'true'
 	}
 
 	/**
-	 * Open a table view (user table configuration)
-	 * @param {object} eObj
+	 * Clears/resets all filters
 	 */
-	onTableListOpenView(eObj)
+	clearFilters()
 	{
-		// Reset property for whether there are changes
-		this.setConfirmChanges(false)
+		let hasChanges = false
 
-		// Reload table
-		return this.fetchListData({ userTableConfigName: eObj.rowValue })
-	}
-
-	/**
-	 * Copy a table view (user table configuration)
-	 * @param {object} eObj
-	 */
-	onTableListCopyView(eObj)
-	{
-		// Get a fresh signal (aborts any prior for the same category)
-		const signal = this.abortManager.getSignal('onTableListCopyView')
-
-		if (typeof eObj.isSelected !== 'number')
-			eObj.isSelected = -1
-
-		const params = {
-			uuid: this.uuid,
-			configName: eObj.name,
-			isSelected: eObj.isSelected,
-			copyFromName: eObj.copyFromName
+		// These filters are cleared
+		if (this.filters.length > 0)
+		{
+			this.filters = []
+			hasChanges = true
 		}
 
-		// Send request to save configuration
-		return new Promise((resolve) => {
-			netAPI.postData(
-				'Tblcfg',
-				'CopyConfig',
-				params,
-				async (_, request) => {
-					if (request.data.Success)
-					{
-						// If user chose to set the copied view as the default
-						const loadDefaultView = eObj.isSelected === 1
-
-						this.setConfirmChanges(false)
-
-						// Reload table
-						await this.fetchListData({ loadDefaultView })
-						resolve(true)
-					}
-					else
-					{
-						genericFunctions.displayMessage(request.data.Message, 'error')
-						resolve(false)
-					}
-				},
-				undefined,
-				{
-					signal
-				},
-				this.currentNavigationId)
-				.finally(() => {
-					// Clear this key so the controller can be GC’d
-					this.abortManager?.clear('onTableListCopyView')
-				})
-		})
-	}
-
-	/**
-	 * Open a table view (user table configuration)
-	 * @param {object} eObj
-	 */
-	onTableListDeleteView(eObj)
-	{
-		// Get a fresh signal (aborts any prior for the same category)
-		const signal = this.abortManager.getSignal('onTableListDeleteView')
-
-		const params = {
-			uuid: this.uuid,
-			configName: eObj.rowValue
+		if (Object.values(this.filtersModel ?? {}).some((e) => !e.isEmpty()))
+		{
+			this.filtersModel.clearValues()
+			this.filtersModel.version++
+			hasChanges = true
 		}
 
-		// Send request to save configuration
-		netAPI.postData(
-			'Tblcfg',
-			'DeleteConfig',
-			params,
-			(data) => {
-				// If view was default view
-				if (data.deletedDefaultView)
-				{
-					// Clear view configuration
-					listFunctions.applyTableConfiguration(this, {})
-					this.config.userTableConfigName = null
-					this.setConfirmChanges(false)
-					// Reload table
-					this.fetchListData()
-				}
-				// If view was opened but not the default view
-				else if (eObj.rowValue === this.config.userTableConfigName)
-				{
-					this.setConfirmChanges(false)
-					// Reload table
-					this.fetchListData({ loadDefaultView: true })
-				}
-				// If view was not opened
-				else
-				{
-					const idx = this.config.tableConfigNames.findIndex((x) => x === eObj.rowValue)
-					this.config.tableConfigNames.splice(idx, 1)
-				}
-			},
-			undefined,
+		// These filters are reset to their defaults
+		if (!_isEmpty(this.activeFilters))
+		{
+			this.activeFilters.selected = deepUnwrap(this.activeFilters.default)
+			this.activeFilters.date.value = new Date()
+			hasChanges = true
+		}
+
+		this.groupFilters.forEach((e) => {
+			if (!_isEqual(e.selected, e.default))
 			{
-				signal
-			},
-			this.currentNavigationId)
-			.finally(() => {
-				// Clear this key so the controller can be GC’d
-				this.abortManager?.clear('onTableListDeleteView')
-			})
+				e.selected = deepUnwrap(e.default)
+				hasChanges = true
+			}
+		})
+
+		// If there are changes, reload the list
+		if (hasChanges)
+		{
+			this.setConfirmChanges(true)
+			this.reload()
+		}
 	}
 
 	/**
 	 * Sets the filters
 	 * @param {Array} filters The list of filters
+	 * @param {boolean} reload Whether to reload the list
 	 */
-	updateFilters(filters)
+	updateFilters(filters, reload = true)
 	{
 		if (!Array.isArray(filters))
 			throw new TypeError('Unsupported filters value.')
 
-		const newFilters = deepUnwrap(filters)
+		const newFilters = filters
 
 		for (const filter of newFilters)
 		{
@@ -3571,34 +3518,72 @@ export class TableListControl extends TableListBaseControl
 			}
 		}
 
-		this.config.page = 1
 		this.filters = newFilters
-		this.setConfirmChanges(true)
-		this.onTableListChangeQuery()
+		this.config.page = 1
+
+		if (reload)
+		{
+			this.setConfirmChanges(true)
+			this.reload()
+		}
+	}
+
+	/**
+	 * Sets properties common to all static filters
+	 * @param {boolean} reload Whether to reload the list
+	 */
+	updateStaticFilters(reload)
+	{
+		this.config.page = 1
+
+		if (reload)
+		{
+			this.setConfirmChanges(true)
+
+			if (!this.config.showApplyButton)
+				this.reload()
+			else
+				this.unappliedFilters = true
+		}
 	}
 
 	/**
 	 * Sets the value of the active filters
 	 * @param {object} activeFilters The active filters
+	 * @param {boolean} reload Whether to reload the list
 	 */
-	updateActiveFilters(activeFilters)
+	updateActiveFilters(activeFilters, reload = true)
 	{
-		this.config.page = 1
-		this.activeFilters = deepUnwrap(activeFilters)
-		this.setConfirmChanges(true)
-		this.onTableListChangeQuery()
+		this.activeFilters = activeFilters
+		this.updateStaticFilters(reload)
 	}
 
 	/**
 	 * Sets the value of the group filters
 	 * @param {Array} groupFilters The group filters
+	 * @param {boolean} reload Whether to reload the list
 	 */
-	updateGroupFilters(groupFilters)
+	updateGroupFilters(groupFilters, reload = true)
 	{
-		this.config.page = 1
-		this.groupFilters = deepUnwrap(groupFilters)
-		this.setConfirmChanges(true)
-		this.onTableListChangeQuery()
+		this.groupFilters = groupFilters
+		this.updateStaticFilters(reload)
+	}
+
+	/**
+	 * Sets the values of the global filters in their model
+	 * @param {object} model The global filters model
+	 * @param {boolean} reload Whether to reload the list
+	 */
+	updateGlobalFilters(model, reload = true)
+	{
+		if (this.filtersModel === null || this.filtersModel.equals(model))
+			return
+
+		this.filtersModel.hydrate(model)
+		// Force the DOM to update
+		this.filtersModel.version++
+
+		this.updateStaticFilters(reload)
 	}
 
 	/**
@@ -3607,6 +3592,16 @@ export class TableListControl extends TableListBaseControl
 	 */
 	updateSorting(sorting)
 	{
+		// Edge case: When a column with DESC sorting is clicked, the sorting state should cycle to DEFAULT.
+		// However, if this column is the defaultColumnSorting and was set to DESC, the system would interpret
+		// the next click's undefined sortOrder as a request to apply the default sorting (DESC), breaking the cycle.
+		// Fix: Explicitly set sortOrder to 'asc' when transitioning from the default DESC state to DEFAULT,
+		// ensuring the next click cycles to DESC → DEFAULT → ASC (instead of DESC → DEFAULT(DESC) → DESC).
+		if (this.config.defaultColumnSorting.columnName === sorting.columnName &&
+			this.config.defaultColumnSorting.sortOrder === 'desc' &&
+			sorting.sortOrder === 'undefined')
+			sorting.sortOrder = 'asc'
+
 		this.columns.forEach((c) => {
 			if (c.name === sorting.columnName && sorting.sortOrder !== 'undefined')
 			{
@@ -3621,7 +3616,7 @@ export class TableListControl extends TableListBaseControl
 		if (!this.columns.some((c) => c.sortOrder > 0))
 			listFunctions.resetTableSorting(this)
 
-		this.onTableListChangeQuery()
+		this.reload()
 	}
 
 	/**
@@ -3698,10 +3693,25 @@ export class TableListControl extends TableListBaseControl
 
 	/**
 	 * Reloads the data of the list
-	 * @param {object} params The parameters for loading the data which are passed to fetchListData()
+	 * @param {string} configName The name of a view to load
+	 * @returns A promise to be resolved when the server responds
 	 */
-	reload(params)
+	async reload(configName)
 	{
+		// Clear the extended support form data, if any, so it's correctly reloaded after the table list reload
+		this.linkedForm?.setFormData(null)
+
+		const controls = this.vueContext.controls
+		// If the table is hidden, does nothing
+		if (!formFunctions.fieldIsVisible(controls, this.id, true))
+			return
+
+		let params = typeof configName !== 'string'
+			? this.dataRequested
+				? { tableConfiguration: listFunctions.getTableConfiguration(this) }
+				: {}
+			: { userTableConfigName: configName }
+
 		const model = this.vueContext.model?.serverObjModel
 		if (model)
 		{
@@ -3711,9 +3721,16 @@ export class TableListControl extends TableListBaseControl
 			}
 		}
 
-		return this.fetchListData(params, this.fnHydrateViewModel)
+		if (typeof configName === 'string')
+			this.setConfirmChanges(false)
+		this.unappliedFilters = false
+
+		await this.debouncedFetchData(params, this.fnHydrateViewModel)
 	}
 
+	/**
+	 * @override
+	 */
 	destroy()
 	{
 		super.destroy()
@@ -3732,7 +3749,8 @@ export class TableListControl extends TableListBaseControl
 		this.columnsOriginal.length = 0
 		this.columnsOriginal = null
 
-		if (this.rows?.length > 0) {
+		if (this.rows?.length > 0)
+		{
 			this.rows.forEach((row) => {
 				if (typeof row?.destroy === 'function')
 					row.destroy()
@@ -3769,12 +3787,8 @@ export class TreeTableListControl extends TableListControl
 			config: {
 				showRowActionText: false,
 				allowColumnResize: false,
-				filtersVisible: false,
 				allowColumnFilters: false,
 				allowColumnSort: false,
-				globalSearch: {
-					visibility: false
-				},
 				searchList: {
 					empty: true,
 					values: [],
@@ -3857,24 +3871,20 @@ export class TreeTableListControl extends TableListControl
 			// Set current row as row to navigate to after reloading
 			this.config.navigatedRowKeyPath = listFunctions.getRowKeyPath(this.rows, eventData.row)
 
-			this.addLoadingProc(
-				this.fetchListData(
-					{
-						queryParams: {
-							currentBranch: eventData.row?.BranchId + 1,
-							currentSelectedKey: eventData.row?.rowKey
-						}
-					},
-					this.fnHydrateViewModel,
-					(data) => {
-						const rowKeyToScroll = this.vueContext.currentControl?.data?.rowKey ?? null // TODO: Change!
-						eventData.row?.hydrateChildrenData(data.Tree, rowKeyToScroll)
-						// Prevent double request
-						eventData.row.alreadyLoaded = true
+			this.fetchListData(
+				{
+					queryParams: {
+						currentBranch: eventData.row?.BranchId + 1,
+						currentSelectedKey: eventData.row?.rowKey
 					}
-				),
-				false,
-				300)
+				},
+				this.fnHydrateViewModel,
+				(data) => {
+					const rowKeyToScroll = this.vueContext.currentControl?.data?.rowKey ?? null // TODO: Change!
+					eventData.row?.hydrateChildrenData(data.Tree, rowKeyToScroll)
+					// Prevent double request
+					eventData.row.alreadyLoaded = true
+				})
 		}
 	}
 }
@@ -3892,12 +3902,8 @@ export class MultipleValuesControl extends TableListControl
 			modelFieldOptions: null,
 			modelFieldOptionsRef: null,
 			config: {
-				filtersVisible: false,
 				allowColumnFilters: false,
 				allowColumnSort: false,
-				globalSearch: {
-					visibility: false
-				},
 				rowClickActionInternal: 'selectMultiple',
 				showFooter: false
 			}
@@ -4344,7 +4350,7 @@ export class DocumentControl extends DatabaseControl
 					})
 				}
 
-				for (let el of elements)
+				for (const el of elements)
 				{
 					// Exclude versions that were already deleted in the client-side or that are already in the list.
 					if (!Object.keys(this.documentVersions).includes(el.version) ||
@@ -4622,7 +4628,8 @@ export class ImageControl extends DatabaseControl
 					if (isPreview)
 						this.fullSizeImage = data
 					this.image = data
-				}))
+				})
+		)
 	}
 
 	/**
@@ -4712,7 +4719,8 @@ export class GroupControl extends NonBlockableControl
 			isCollapsible: false,
 			anchored: false,
 			modelValue: false,
-			startsExpanded: false
+			startsExpanded: false,
+			borderless: false
 		}, _vueContext)
 
 		_merge(this, options || {})
@@ -4737,7 +4745,7 @@ export class GroupControl extends NonBlockableControl
 			if (this.mustBeFilled)
 				return true
 
-			for (let controlId of this.directChildren)
+			for (const controlId of this.directChildren)
 			{
 				const control = Reflect.get(this.vueContext.controls, controlId)
 				if (control.isRequired)
@@ -4752,7 +4760,7 @@ export class GroupControl extends NonBlockableControl
 			if (this.isCollapsible && !this.modelValue)
 				return
 
-			for (let childId of this.directChildren)
+			for (const childId of this.directChildren)
 			{
 				const child = this.vueContext.controls[childId]
 				child.showWhenConditions.emitShowEvent()
@@ -4905,23 +4913,22 @@ export class TimelineControl extends TableListControl
 
 		_assignIn(params, this.vueContext.$route.params)
 
-		return this.addLoadingProc(netAPI.postData(
-			this.controller,
-			this.action,
-			params,
-			(data) => {
-				this.hydrate(this, data)
-				this.isLoaded = true
-			},
-			undefined,
-			{
-				signal
-			},
-			this.currentNavigationId)
-			.finally(() => {
-				// Clear this key so the controller can be GC’d
-				this.abortManager?.clear('fetchTimelineData')
-			}))
+		return this.addLoadingProc(
+			netAPI.postData(
+				this.controller,
+				this.action,
+				params,
+				(data) => this.hydrate(this, data),
+				undefined,
+				{
+					signal
+				},
+				this.currentNavigationId)
+				.finally(() => {
+					// Clear this key so the controller can be GC’d
+					this.abortManager?.clear('fetchTimelineData')
+				})
+		)
 	}
 
 	/**
@@ -5015,7 +5022,7 @@ export class TabControl extends NonBlockableControl
 			if (this.mustBeFilled)
 				return true
 
-			for (let controlId of this.directChildren)
+			for (const controlId of this.directChildren)
 			{
 				const control = Reflect.get(this.vueContext.controls, controlId)
 				if (control.isRequired)
@@ -5027,7 +5034,7 @@ export class TabControl extends NonBlockableControl
 
 		// When tabs become visible, they re-emit an event for all their children
 		this.showWhenConditions.addOnShowListener(() => {
-			for (let childId of this.directChildren)
+			for (const childId of this.directChildren)
 			{
 				const child = this.vueContext.controls[childId]
 				child.showWhenConditions.emitShowEvent()
@@ -5123,7 +5130,7 @@ export class TabsControl
 	 */
 	selectFirstTab()
 	{
-		for (let tab of this.tabsList)
+		for (const tab of this.tabsList)
 		{
 			if (!tab.isVisible || tab.isBlocked)
 				continue
@@ -5246,7 +5253,7 @@ export class FormContainerControl extends BaseControl
 			this.formData = {
 				isNested: true,
 				form: this.supportForm.name,
-				component: this.supportForm.component,
+				component: this.supportForm.component
 			}
 
 		this.initHeaderButtons()
@@ -5279,7 +5286,7 @@ export class FormContainerControl extends BaseControl
 		const handlers = {
 			afterSaveForm: (eventData) => this.onAfterSaveForm(eventData),
 			changeFormMode: (eventData) => this.onChangeFormMode(eventData),
-			['update:nested-model']: (eventData) => (eventData.supportFormId === this.id) ? this.handleRowSelected(eventData) : () => {},
+			'update:nested-model': (eventData) => (eventData.supportFormId === this.id) ? this.handleRowSelected(eventData) : () => {},
 			close: (eventData) => this.onClose(eventData),
 			closedForm: (eventData) => this.onClosedForm(eventData),
 			customEvent: (eventData) => this.onCustomEvent(eventData),
@@ -5375,9 +5382,9 @@ export class FormContainerControl extends BaseControl
 		if (typeof this.fnOnRowChange === 'function')
 			await Promise.resolve(this.fnOnRowChange(row))
 
-		let id = (row.rowKey !== null && row.rowKey !== undefined) ? this.supportForm.fnKeySelector(row) : null
-		let formMode = row.formMode ? row.formMode : this.supportForm.mode
-		let prefillValues = row.prefillValues ? row.prefillValues : {}
+		const id = (row.rowKey !== null && row.rowKey !== undefined) ? this.supportForm.fnKeySelector(row) : null
+		const formMode = row.formMode ? row.formMode : this.supportForm.mode
+		const prefillValues = row.prefillValues ? row.prefillValues : {}
 
 		if (this.firstLoad) this.nestedFormConfig.recordSelected = true
 
@@ -5431,6 +5438,16 @@ export class FormContainerControl extends BaseControl
 	/**
 	 * @override
 	 */
+	reload()
+	{
+		const formName = this.supportForm.name
+		if (typeof formName === 'string')
+			eventBus.emit(`reload-${formName}`)
+	}
+
+	/**
+	 * @override
+	 */
 	destroy()
 	{
 		super.destroy()
@@ -5476,7 +5493,6 @@ export class GridTableListControl extends TableListBaseControl
 				canInsert: true
 			},
 			columns: [],
-			dataAlreadyRequested: false,
 			data: undefined,
 			gridWatcher: () => {},
 			texts: new controlsResources.TableListMainResources(_vueContext.$getResource)
@@ -5598,7 +5614,7 @@ export class GridTableListControl extends TableListBaseControl
 
 	reload()
 	{
-		return this.fetchListData()
+		return this.debouncedFetchData()
 	}
 
 	/**
@@ -5664,7 +5680,7 @@ export class WizardControl extends BaseControl
 			if (this.mustBeFilled)
 				return true
 
-			for (let controlId of this.wizardData.stepFieldIds || [])
+			for (const controlId of this.wizardData.stepFieldIds || [])
 			{
 				const control = Reflect.get(this.vueContext.controls, controlId)
 				if (control.isRequired)
@@ -5799,7 +5815,7 @@ export class PropertyListControl extends TableListBaseControl
 
 	reload()
 	{
-		return this.fetchListData()
+		return this.debouncedFetchData()
 	}
 
 	destroy()
@@ -5807,7 +5823,7 @@ export class PropertyListControl extends TableListBaseControl
 		super.destroy()
 
 		if (this.fields instanceof Array) {
-			for (let fieldIdx in this.fields) {
+			for (const fieldIdx in this.fields) {
 				if (typeof this.fields[fieldIdx].destroy === 'function')
 					this.fields[fieldIdx].destroy()
 			}
@@ -5820,8 +5836,6 @@ export class KanbanControl extends TableListBaseControl
 {
 	constructor(options, _vueContext)
 	{
-		const kanbanTexts = new controlsResources.KanbanResources(_vueContext.$getResource)
-
 		super({
 			type: 'Kanban',
 			columnsTable: '',
@@ -5836,7 +5850,7 @@ export class KanbanControl extends TableListBaseControl
 				allowColumnEdition: false,
 				rowActionDisplay: systemInfo.layout.RowActionDisplay,
 			},
-			texts: kanbanTexts
+			texts: new controlsResources.KanbanResources(_vueContext.$getResource)
 		}, _vueContext)
 
 		_merge(this, options || {})
@@ -5897,9 +5911,9 @@ export class KanbanControl extends TableListBaseControl
 	/**
 	 * Reloads the data of the list
 	 */
-	async reload()
+	reload()
 	{
-		return this.fetchListData(undefined, this.fnHydrateViewModel)
+		return this.debouncedFetchData(undefined, this.fnHydrateViewModel)
 	}
 
 	onCardDrag(eventData)
@@ -5926,11 +5940,10 @@ export class KanbanControl extends TableListBaseControl
 		const { action, card, column } = eventData
 
 		const allActions = [ ...this.config.crudActions, ...this.config.generalActions, this.config.rowClickAction ]
-		const actionCfg = allActions.find(a => a.id === action)
+		const actionCfg = allActions.find((a) => a.id === action)
 
-		let formName = actionCfg.params.formName,
+		const formName = actionCfg.params.formName,
 			mode = actionCfg.params.mode,
-			id = null,
 			formDef = this.config.formsDefinition[formName],
 			options = {
 				repeatInsert: actionCfg.params.repeatInsertion,
@@ -5939,9 +5952,10 @@ export class KanbanControl extends TableListBaseControl
 			},
 			query = {},
 			prefillValues = actionCfg.params.prefillValues || {}
+		let id = null
 
-		let tableName = this.controller[0] + this.controller.substring(1).toLowerCase()
-		let tableViewModelName = this.action + '_ViewModel'
+		const tableName = this.controller[0] + this.controller.substring(1).toLowerCase()
+		const tableViewModelName = this.action + '_ViewModel'
 		this.vueContext.setEntryValue({ navigationId: this.currentNavigationId, key: 'TableName', value: tableName })
 		this.vueContext.setEntryValue({ navigationId: this.currentNavigationId, key: 'TableViewModelName', value: tableViewModelName })
 
@@ -5993,138 +6007,88 @@ export class MarkdownEditorControl extends MultilineStringControl
 	}
 }
 
-export class FormFilterControl extends NonBlockableControl {
-	constructor(options, _vueContext) {
-		super(
-			{
-				clearable: true,
-				columns: 1,
-				filterId: '',
-				groups: [],
-				filterViewMode: 'checkbox',
-				items: [],
-				modelValue: '',
-				orientation: 'vertical',
-				type: 'Filter'
-			},
-			_vueContext
-		)
+/**
+ * Global filter control
+ */
+export class FormFilterControl extends NonBlockableControl
+{
+	constructor(options, _vueContext)
+	{
+		super({
+			type: 'Filter',
+			clearable: true,
+			columns: 1,
+			filterViewMode: 'checkbox',
+			orientation: 'vertical',
+			arrayName: '',
+			groups: [],
+			items: []
+		}, _vueContext)
 
 		_merge(this, options || {})
 	}
 
-	get props() {
+	get props()
+	{
 		return {
 			...super.props,
 			clearable: this.clearable,
+			label: this.label,
 			placeholder: this.placeholder,
 			columns: this.columns,
 			groups: this.groups,
 			items: this.items,
-			modelValue: this.modelValue,
+			modelValue: this.modelFieldRef?.value,
+			range: this.modelFieldRef?.isRange,
 			orientation: this.orientation,
 			viewMode: this.filterViewMode
 		}
 	}
 
+	get wrapperProps()
+	{
+		return {
+			...super.wrapperProps,
+			arrayName: this.arrayName
+		}
+	}
+
 	/**
 	 * @override
 	 */
-	async init(isEditableForm) {
+	async init(isEditableForm)
+	{
 		await super.init(isEditableForm)
-		const isArray = this.arrayName !== undefined
-
-		// Changing the filter should never update the database values
-		delete this.modelFieldRef?.fnUpdateValue
-		delete this.modelFieldRef?.fnUpdateValueOnChange
 
 		// Filters should still be active in formula-based fields
 		if (this.isFormulaBlocked)
 			this.removeBlockSource('FORMULA_FIELD')
 
-		this.items = this.getFilterOptions(isArray)
-		this.groups = this.modelFieldRef?.arrayGroups ?? []
+		if (!_isEmpty(this.arrayName) && this.modelFieldRef)
+		{
+			this.items = unref(this.modelFieldRef.arrayOptions)
+			this.groups = this.modelFieldRef.arrayGroups ?? []
+		}
 
-		this.filterId = (`${this.modelFieldRef.area}.${this.modelFieldRef.field}`).toLowerCase()
-
-		if (!this.vueContext.model?.currentFilterValues)
-			this.vueContext.model.currentFilterValues = {}
-
-		const serverDefault = this.vueContext.model.currentFilterValues[this.filterId]
-		this.modelValue = this.getDefaultFilter(serverDefault, isArray)
+		// If it's a single checkbox, display the label next to it instead of on top
+		if (this.filterViewMode === 'checkbox' && this.items.length === 0)
+			this.hasLabel = false
 	}
 
 	/**
 	 * @override
 	 */
-	initHandlers() {
+	initHandlers()
+	{
 		super.initHandlers()
 
-		this.debouncedUpdate = _debounce(this.updateFilter, 500)
-
 		const handlers = {
-			'update:model-value': (newValue) => {
-				// Update the UI immediately, but debounce the server request
-				this.modelValue = newValue
-				this.debouncedUpdate(newValue)
-			}
+			'update:model-value': (newValue) => this.modelFieldRef?.fnUpdateValue(newValue)
 		}
 
 		_assignInWith(this.handlers, handlers, (objValue, srcValue) =>
 			_isUndefined(objValue) ? srcValue : objValue
 		)
-	}
-
-	destroy()
-	{
-		super.destroy()
-
-		if (typeof this.debouncedUpdate?.cancel === 'function')
-			this.debouncedUpdate.cancel()
-		this.debouncedUpdate = null
-	}
-
-	/**
-	 * Computes the correct default value for the type and viewmode of the filter.
-	 * Boolean filters - false.
-	 * Checkbox groups - empty array.
-	 * Other arrays - empty string.
-	 * @param {FilterValue} serverDefault Default value, comes from the server. Can be undefined.
-	 * @param {Boolean} isArray - True if the filter is based on an array field, false otherwise
-	 * @returns The correct default value according to the filter type
-	 */
-	getDefaultFilter(serverDefault, isArray)
-	{
-		const isCheckboxGroup = this.filterViewMode === 'checkbox' && isArray
-		// Checkbox groups have a model of type array
-		if (serverDefault) return isCheckboxGroup ? [serverDefault] : serverDefault
-
-		if (!isArray)
-			return this.filterViewMode === 'text' ? '' : false
-		return this.filterViewMode === 'checkbox' ? [] : ''
-	}
-
-	/**
-	 * Retrieves the filter options for the model field reference.
-	 * @param {Boolean} isArray - True if the filter is based on an array field, false otherwise
-	 * @returns The list of array options for the filter, or undefined for non-array filters.
-	 */
-	getFilterOptions(isArray) {
-		if (!this.modelFieldRef || !isArray) return undefined
-
-		return unref(this.modelFieldRef.arrayOptions)
-	}
-
-	/**
-	 * Updates the form filter value and emits the vent to update the related tables.
-	 * @param {FilterValue} filterValue - The new value of the filter control
-	 */
-	updateFilter(filterValue) {
-		this.vueContext.model.currentFilterValues[this.filterId] = filterValue
-
-		// Emit table reload event to affected tables
-		const eventId = `filterChange:${this.filterId}`
-		this.vueContext.internalEvents.emit(eventId)
 	}
 }
 

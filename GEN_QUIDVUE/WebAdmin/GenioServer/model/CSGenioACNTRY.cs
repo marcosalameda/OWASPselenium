@@ -47,7 +47,7 @@ namespace CSGenio.business
 			Qfield = new Field(info.Alias, "codcntry", FieldType.KEY_GUID);
 			Qfield.FieldDescription = "";
 			Qfield.FieldSize =  36;
-			Qfield.CavDesignation = "";
+			Qfield.VisivelCav = CavVisibilityType.Nunca;
 
 			Qfield.Dupmsg = "";
 			info.RegisterFieldDB(Qfield);
@@ -72,9 +72,9 @@ namespace CSGenio.business
 
 			//- - - - - - - - - - - - - - - - - - -
 			Qfield = new Field(info.Alias, "codigonr", FieldType.TEXT);
-			Qfield.FieldDescription = "Numeric ISO-3166";
+			Qfield.FieldDescription = "Numeric";
 			Qfield.FieldSize =  3;
-			Qfield.CavDesignation = "NUMERIC_ISO_316620341";
+			Qfield.CavDesignation = "NUMERIC19292";
 
 			Qfield.Dupmsg = "";
 			info.RegisterFieldDB(Qfield);
@@ -102,7 +102,7 @@ namespace CSGenio.business
 			Qfield.FieldDescription = "Flag";
 			Qfield.FieldSize =  3;
 			Qfield.Decimals = 1;
-			Qfield.CavDesignation = "FLAG51937";
+			Qfield.VisivelCav = CavVisibilityType.Nunca;
 
 			Qfield.Dupmsg = "";
 			info.RegisterFieldDB(Qfield);
@@ -121,15 +121,13 @@ namespace CSGenio.business
 		{
 			// Daughters Relations
 			//------------------------------
-			info.ChildTable = new ChildRelation[8];
+			info.ChildTable = new ChildRelation[6];
 			info.ChildTable[0]= new ChildRelation("regio", new String[] {"codcntry","codpais1"}, DeleteProc.NA);
 			info.ChildTable[1]= new ChildRelation("airpt", new String[] {"codcntry"}, DeleteProc.NA);
-			info.ChildTable[2]= new ChildRelation("search", new String[] {"codpais"}, DeleteProc.NA);
-			info.ChildTable[3]= new ChildRelation("cmpny", new String[] {"codcntry"}, DeleteProc.NA);
-			info.ChildTable[4]= new ChildRelation("indoc", new String[] {"codcntry"}, DeleteProc.NA);
-			info.ChildTable[5]= new ChildRelation("propr", new String[] {"codcntry","codpais1"}, DeleteProc.NA);
-			info.ChildTable[6]= new ChildRelation("pesso", new String[] {"codpaise","codcntry"}, DeleteProc.NA);
-			info.ChildTable[7]= new ChildRelation("facil", new String[] {"codcntry"}, DeleteProc.NA);
+			info.ChildTable[2]= new ChildRelation("cmpny", new String[] {"codcntry"}, DeleteProc.NA);
+			info.ChildTable[3]= new ChildRelation("indoc", new String[] {"codcntry"}, DeleteProc.NA);
+			info.ChildTable[4]= new ChildRelation("propr", new String[] {"codcntry","codpais1"}, DeleteProc.NA);
+			info.ChildTable[5]= new ChildRelation("pesso", new String[] {"codpaise","codcntry"}, DeleteProc.NA);
 
 			// Mother Relations
 			//------------------------------
@@ -296,11 +294,11 @@ namespace CSGenio.business
 			set { insertNameValueField(FldActive, value); }
 		}
 
-		/// <summary>Field : "Numeric ISO-3166" Tipo: "C" Formula:  ""</summary>
+		/// <summary>Field : "Numeric" Tipo: "C" Formula:  ""</summary>
 		public static FieldRef FldCodigonr { get { return m_fldCodigonr; } }
 		private static FieldRef m_fldCodigonr = new FieldRef("cntry", "codigonr");
 
-		/// <summary>Field : "Numeric ISO-3166" Tipo: "C" Formula:  ""</summary>
+		/// <summary>Field : "Numeric" Tipo: "C" Formula:  ""</summary>
 		public string ValCodigonr
 		{
 			get { return (string)returnValueField(FldCodigonr); }

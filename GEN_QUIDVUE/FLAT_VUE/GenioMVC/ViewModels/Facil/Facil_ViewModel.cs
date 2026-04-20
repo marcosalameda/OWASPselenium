@@ -1,20 +1,20 @@
-﻿using JsonIgnoreAttribute = System.Text.Json.Serialization.JsonIgnoreAttribute;
+﻿using CSGenio.business;
+using CSGenio.framework;
+using CSGenio.persistence;
+using GenioMVC.Helpers;
+using GenioMVC.Models.Exception;
+using GenioMVC.Models.Navigation;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Quidgest.Persistence;
+using Quidgest.Persistence.GenericQuery;
+
 using System.Collections;
 using System.Collections.Concurrent;
 using System.Collections.Specialized;
 using System.ComponentModel.DataAnnotations;
 using System.Data;
 using System.Globalization;
-
-using CSGenio.business;
-using CSGenio.framework;
-using CSGenio.persistence;
-using GenioMVC.Helpers;
-using GenioMVC.Models.Exception;
-using GenioMVC.Models.Navigation;
-using Quidgest.Persistence;
-using Quidgest.Persistence.GenericQuery;
+using System.Text.Json.Serialization;
 
 namespace GenioMVC.ViewModels.Facil
 {
@@ -31,11 +31,6 @@ namespace GenioMVC.ViewModels.Facil
 
 		#region Foreign keys
 		/// <summary>
-		/// Title: "" | Type: "CE"
-		/// </summary>
-		[ValidateSetAccess]
-		public string ValCodcntry { get; set; }
-		/// <summary>
 		/// Title: "Legal name" | Type: "CE"
 		/// </summary>
 		public string ValCodentit { get; set; }
@@ -45,6 +40,7 @@ namespace GenioMVC.ViewModels.Facil
 		public string ValCodfacty { get; set; }
 
 		#endregion
+
 		/// <summary>
 		/// Title: "Legal name" | Type: "C"
 		/// </summary>
@@ -62,11 +58,6 @@ namespace GenioMVC.ViewModels.Facil
 		/// Title: "Facility type" | Type: "AC"
 		/// </summary>
 		public string ValFaciltyp { get; set; }
-		/// <summary>
-		/// Title: "" | Type: "PSEUD"
-		/// </summary>
-		[JsonIgnore]
-		public SelectList List_ValFaciltyp { get; set; }
 		/// <summary>
 		/// Title: "Facility type" | Type: "C"
 		/// </summary>
@@ -86,11 +77,6 @@ namespace GenioMVC.ViewModels.Facil
 		/// </summary>
 		public string ValGpsinput { get; set; }
 		/// <summary>
-		/// Title: "" | Type: "PSEUD"
-		/// </summary>
-		[JsonIgnore]
-		public SelectList List_ValGpsinput { get; set; }
-		/// <summary>
 		/// Title: "Latitude" | Type: "ND"
 		/// </summary>
 		public decimal? ValLatitude { get; set; }
@@ -102,8 +88,6 @@ namespace GenioMVC.ViewModels.Facil
 		/// Title: "Geographical coordinate" | Type: "GG"
 		/// </summary>
 		public string ValGeocoori { get; set; }
-
-
 
 		#region Navigations
 		#endregion
@@ -241,7 +225,6 @@ namespace GenioMVC.ViewModels.Facil
 
 			try
 			{
-				ValCodcntry = ViewModelConversion.ToString(m.ValCodcntry);
 				ValCodentit = ViewModelConversion.ToString(m.ValCodentit);
 				ValCodfacty = ViewModelConversion.ToString(m.ValCodfacty);
 				ValIncorpor = ViewModelConversion.ToDateTime(m.ValIncorpor);
@@ -292,15 +275,6 @@ namespace GenioMVC.ViewModels.Facil
 				m.ValLongitud = ViewModelConversion.ToNumeric(ValLongitud);
 				m.ValGeocoori = ViewModelConversion.ToString(ValGeocoori);
 				m.ValCodfacil = ViewModelConversion.ToString(ValCodfacil);
-
-				/*
-					At this moment, in the case of runtime calculation of server-side formulas, to improve performance and reduce database load,
-						the values coming from the client-side will be accepted as valid, since they will not be saved and are only being used for calculation.
-				*/
-				if (!HasDisabledUserValuesSecurity)
-					return;
-
-				m.ValCodcntry = ViewModelConversion.ToString(ValCodcntry);
 			}
 			catch (Exception)
 			{
@@ -309,12 +283,7 @@ namespace GenioMVC.ViewModels.Facil
 			}
 		}
 
-		/// <summary>
-		/// Sets the value of a single property of the view model based on the provided table and field names.
-		/// </summary>
-		/// <param name="fullFieldName">The full field name in the format "table.field".</param>
-		/// <param name="value">The field value.</param>
-		/// <exception cref="ArgumentNullException">Thrown if <paramref name="fullFieldName"/> is null.</exception>
+		/// <inheritdoc />
 		public override void SetViewModelValue(string fullFieldName, object value)
 		{
 			try
@@ -470,6 +439,7 @@ namespace GenioMVC.ViewModels.Facil
 
 			Load_Facil___entitname____(qs, lazyLoad);
 			Load_Facil___factytype____(qs, lazyLoad);
+
 // USE /[MANUAL GQT VIEWMODEL_LOADPARTIAL FACIL]/
 		}
 
@@ -540,10 +510,7 @@ namespace GenioMVC.ViewModels.Facil
 				}
 			}
 
-			TableEntitName = new TableDBEdit<Models.Entit>
-			{
-				IsLazyLoad = lazyLoad
-			};
+			TableEntitName = new TableDBEdit<Models.Entit>();
 
 			if (lazyLoad)
 			{
@@ -587,7 +554,7 @@ namespace GenioMVC.ViewModels.Facil
 				int numberItems = CSGenio.framework.Configuration.NrRegDBedit;
 				int offset = (page - 1) * numberItems;
 
-				FieldRef[] fields = new FieldRef[] { CSGenioAentit.FldCodentit, CSGenioAentit.FldName, CSGenioAentit.FldInitials, CSGenioAentit.FldZzstate };
+				FieldRef[] fields = [CSGenioAentit.FldCodentit, CSGenioAentit.FldName, CSGenioAentit.FldInitials, CSGenioAentit.FldZzstate];
 
 // USE /[MANUAL GQT OVERRQ FACIL_ENTITNAME]/
 
@@ -730,10 +697,7 @@ namespace GenioMVC.ViewModels.Facil
 				}
 			}
 
-			TableFactyType = new TableDBEdit<Models.Facty>
-			{
-				IsLazyLoad = lazyLoad
-			};
+			TableFactyType = new TableDBEdit<Models.Facty>();
 
 			if (lazyLoad)
 			{
@@ -777,7 +741,7 @@ namespace GenioMVC.ViewModels.Facil
 				int numberItems = CSGenio.framework.Configuration.NrRegDBedit;
 				int offset = (page - 1) * numberItems;
 
-				FieldRef[] fields = new FieldRef[] { CSGenioAfacty.FldCodfacty, CSGenioAfacty.FldType, CSGenioAfacty.FldLayrname, CSGenioAfacty.FldIconurl, CSGenioAfacty.FldShadowur, CSGenioAfacty.FldIconancx, CSGenioAfacty.FldIconancy, CSGenioAfacty.FldIconheig, CSGenioAfacty.FldIconwid, CSGenioAfacty.FldPopupanx, CSGenioAfacty.FldPopupany, CSGenioAfacty.FldShadowax, CSGenioAfacty.FldShadoway, CSGenioAfacty.FldShadowhe, CSGenioAfacty.FldShadowwi, CSGenioAfacty.FldZzstate };
+				FieldRef[] fields = [CSGenioAfacty.FldCodfacty, CSGenioAfacty.FldType, CSGenioAfacty.FldLayrname, CSGenioAfacty.FldIconurl, CSGenioAfacty.FldShadowur, CSGenioAfacty.FldIconancx, CSGenioAfacty.FldIconancy, CSGenioAfacty.FldIconheig, CSGenioAfacty.FldIconwid, CSGenioAfacty.FldPopupanx, CSGenioAfacty.FldPopupany, CSGenioAfacty.FldShadowax, CSGenioAfacty.FldShadoway, CSGenioAfacty.FldShadowhe, CSGenioAfacty.FldShadowwi, CSGenioAfacty.FldZzstate];
 
 // USE /[MANUAL GQT OVERRQ FACIL_FACTYTYPE]/
 
@@ -906,7 +870,6 @@ namespace GenioMVC.ViewModels.Facil
 		{
 			return identifier switch
 			{
-				"facil.codcntry" => ViewModelConversion.ToString(modelValue),
 				"facil.codentit" => ViewModelConversion.ToString(modelValue),
 				"facil.codfacty" => ViewModelConversion.ToString(modelValue),
 				"facil.incorpor" => ViewModelConversion.ToDateTime(modelValue),

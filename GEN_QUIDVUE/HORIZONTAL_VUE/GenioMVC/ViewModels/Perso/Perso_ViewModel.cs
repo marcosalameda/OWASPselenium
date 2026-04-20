@@ -7,6 +7,7 @@ using GenioMVC.Models.Navigation;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Quidgest.Persistence;
 using Quidgest.Persistence.GenericQuery;
+
 using System.Collections;
 using System.Collections.Concurrent;
 using System.Collections.Specialized;
@@ -31,6 +32,7 @@ namespace GenioMVC.ViewModels.Perso
 		#region Foreign keys
 
 		#endregion
+
 		/// <summary>
 		/// Title: "Photo" | Type: "IJ"
 		/// </summary>
@@ -48,11 +50,6 @@ namespace GenioMVC.ViewModels.Perso
 		/// Title: "Gender" | Type: "AC"
 		/// </summary>
 		public string ValGender { get; set; }
-		/// <summary>
-		/// Title: "" | Type: "PSEUD"
-		/// </summary>
-		[JsonIgnore]
-		public SelectList List_ValGender { get; set; }
 		/// <summary>
 		/// Title: "Email" | Type: "C"
 		/// </summary>
@@ -74,11 +71,6 @@ namespace GenioMVC.ViewModels.Perso
 		/// </summary>
 		public decimal ValMonth { get; set; }
 		/// <summary>
-		/// Title: "" | Type: "PSEUD"
-		/// </summary>
-		[JsonIgnore]
-		public SelectList List_ValMonth { get; set; }
-		/// <summary>
 		/// Title: "Created by" | Type: "ON"
 		/// </summary>
 		[ValidateSetAccess]
@@ -98,8 +90,6 @@ namespace GenioMVC.ViewModels.Perso
 		/// </summary>
 		[ValidateSetAccess]
 		public DateTime? ValModifdat { get; set; }
-
-
 
 		#region Navigations
 		#endregion
@@ -301,12 +291,7 @@ namespace GenioMVC.ViewModels.Perso
 			}
 		}
 
-		/// <summary>
-		/// Sets the value of a single property of the view model based on the provided table and field names.
-		/// </summary>
-		/// <param name="fullFieldName">The full field name in the format "table.field".</param>
-		/// <param name="value">The field value.</param>
-		/// <exception cref="ArgumentNullException">Thrown if <paramref name="fullFieldName"/> is null.</exception>
+		/// <inheritdoc />
 		public override void SetViewModelValue(string fullFieldName, object value)
 		{
 			try
@@ -453,6 +438,7 @@ namespace GenioMVC.ViewModels.Perso
 			}
 			// Add characteristics
 			Characs = new List<string>();
+
 
 // USE /[MANUAL GQT VIEWMODEL_LOADPARTIAL PERSO]/
 		}

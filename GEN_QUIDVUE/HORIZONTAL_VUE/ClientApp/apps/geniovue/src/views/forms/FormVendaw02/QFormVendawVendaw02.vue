@@ -9,12 +9,13 @@
 			<div
 				v-if="showFormHeader"
 				class="c-action-bar">
-				<h1
+				<component
 					v-if="formControl.uiComponents.header && formInfo.designation"
+					:is="topHeadingTag"
 					:id="formTitleId"
 					class="form-header">
 					{{ formInfo.designation }}
-				</h1>
+				</component>
 
 				<div class="c-action-bar__menu">
 					<template
@@ -40,13 +41,10 @@
 									@click="btn.action">
 									<template v-if="btn.icon">
 										<q-badge-indicator
-											v-if="btn.badge && btn.badge.isVisible"
-											:color="btn.badge.color">
+											:enabled="btn.badge?.isVisible ?? false"
+											:color="btn.badge?.color">
 											<q-icon v-bind="btn.icon" />
 										</q-badge-indicator>
-										<q-icon
-											v-else
-											v-bind="btn.icon" />
 									</template>
 								</q-toggle-group-item>
 							</template>
@@ -97,6 +95,7 @@
 		<q-container
 			fluid
 			data-key="VENDAW02"
+			:data-identifier="primaryKeyValue"
 			:data-loading="!formInitialDataLoaded || !isActiveForm">
 			<template v-if="formControl.initialized && showFormBody">
 				<q-row v-if="controls.VENDAW__PSEUDFASES___.isVisible">
@@ -105,18 +104,19 @@
 						cols="auto">
 						<q-wizard
 							v-if="controls.VENDAW__PSEUDFASES___.isVisible"
-							id="VENDAW__PSEUDFASES___"
 							:is-required="controls.VENDAW__PSEUDFASES___.isRequired"
+							:base-heading-level="baseHeadingLevel + 1"
 							v-bind="controls.VENDAW__PSEUDFASES___.wizardData"
+							:id="getControlId(controls.VENDAW__PSEUDFASES___)"
 							v-on="controls.VENDAW__PSEUDFASES___.handlers">
 							<!-- Start VENDAW__PSEUDFASES___ -->
 							<q-row v-if="controls.VENDAW02PSEUDNOVOGR02.isVisible">
 								<q-col v-if="controls.VENDAW02PSEUDNOVOGR02.isVisible">
 									<q-group-box-container
 										v-if="controls.VENDAW02PSEUDNOVOGR02.isVisible"
-										id="VENDAW02PSEUDNOVOGR02"
 										v-bind="controls.VENDAW02PSEUDNOVOGR02"
-										:is-visible="controls.VENDAW02PSEUDNOVOGR02.isVisible">
+										:id="getControlId(controls.VENDAW02PSEUDNOVOGR02)"
+										:no-border="controls.VENDAW02PSEUDNOVOGR02.borderless">
 										<!-- Start VENDAW02PSEUDNOVOGR02 -->
 										<q-row v-if="controls.VENDAW02SALE_INTERESS.isVisible || controls.VENDAW02SALE_SEMRFINA.isVisible || controls.VENDAW02SALE_SEMCAPAC.isVisible">
 											<q-col
@@ -124,8 +124,9 @@
 												cols="auto">
 												<base-input-structure
 													v-if="controls.VENDAW02SALE_INTERESS.isVisible"
-													class="i-checkbox"
-													v-bind="controls.VENDAW02SALE_INTERESS"
+													class="i-text"
+													v-bind="controls.VENDAW02SALE_INTERESS.wrapperProps"
+													:id="getControlId(controls.VENDAW02SALE_INTERESS)"
 													v-on="controls.VENDAW02SALE_INTERESS.handlers"
 													:loading="controls.VENDAW02SALE_INTERESS.props.loading"
 													:reporting-mode-on="reportingModeCAV"
@@ -134,6 +135,7 @@
 														<q-checkbox
 															v-if="controls.VENDAW02SALE_INTERESS.isVisible"
 															v-bind="controls.VENDAW02SALE_INTERESS.props"
+															:id="getControlId(controls.VENDAW02SALE_INTERESS)"
 															v-on="controls.VENDAW02SALE_INTERESS.handlers" />
 													</template>
 												</base-input-structure>
@@ -143,8 +145,9 @@
 												cols="auto">
 												<base-input-structure
 													v-if="controls.VENDAW02SALE_SEMRFINA.isVisible"
-													class="i-checkbox"
-													v-bind="controls.VENDAW02SALE_SEMRFINA"
+													class="i-text"
+													v-bind="controls.VENDAW02SALE_SEMRFINA.wrapperProps"
+													:id="getControlId(controls.VENDAW02SALE_SEMRFINA)"
 													v-on="controls.VENDAW02SALE_SEMRFINA.handlers"
 													:loading="controls.VENDAW02SALE_SEMRFINA.props.loading"
 													:reporting-mode-on="reportingModeCAV"
@@ -153,6 +156,7 @@
 														<q-checkbox
 															v-if="controls.VENDAW02SALE_SEMRFINA.isVisible"
 															v-bind="controls.VENDAW02SALE_SEMRFINA.props"
+															:id="getControlId(controls.VENDAW02SALE_SEMRFINA)"
 															v-on="controls.VENDAW02SALE_SEMRFINA.handlers" />
 													</template>
 												</base-input-structure>
@@ -162,8 +166,9 @@
 												cols="auto">
 												<base-input-structure
 													v-if="controls.VENDAW02SALE_SEMCAPAC.isVisible"
-													class="i-checkbox"
-													v-bind="controls.VENDAW02SALE_SEMCAPAC"
+													class="i-text"
+													v-bind="controls.VENDAW02SALE_SEMCAPAC.wrapperProps"
+													:id="getControlId(controls.VENDAW02SALE_SEMCAPAC)"
 													v-on="controls.VENDAW02SALE_SEMCAPAC.handlers"
 													:loading="controls.VENDAW02SALE_SEMCAPAC.props.loading"
 													:reporting-mode-on="reportingModeCAV"
@@ -172,6 +177,7 @@
 														<q-checkbox
 															v-if="controls.VENDAW02SALE_SEMCAPAC.isVisible"
 															v-bind="controls.VENDAW02SALE_SEMCAPAC.props"
+															:id="getControlId(controls.VENDAW02SALE_SEMCAPAC)"
 															v-on="controls.VENDAW02SALE_SEMCAPAC.handlers" />
 													</template>
 												</base-input-structure>
@@ -184,7 +190,8 @@
 												<base-input-structure
 													v-if="controls.VENDAW02SALE_DTQUALIF.isVisible"
 													class="i-text"
-													v-bind="controls.VENDAW02SALE_DTQUALIF"
+													v-bind="controls.VENDAW02SALE_DTQUALIF.wrapperProps"
+													:id="getControlId(controls.VENDAW02SALE_DTQUALIF)"
 													v-on="controls.VENDAW02SALE_DTQUALIF.handlers"
 													:loading="controls.VENDAW02SALE_DTQUALIF.props.loading"
 													:reporting-mode-on="reportingModeCAV"
@@ -192,6 +199,7 @@
 													<q-date-time-picker
 														v-if="controls.VENDAW02SALE_DTQUALIF.isVisible"
 														v-bind="controls.VENDAW02SALE_DTQUALIF.props"
+														:id="getControlId(controls.VENDAW02SALE_DTQUALIF)"
 														:model-value="model.ValDtqualif.value"
 														@reset-icon-click="model.ValDtqualif.fnUpdateValue(model.ValDtqualif.originalValue ?? new Date())"
 														@update:model-value="model.ValDtqualif.fnUpdateValue($event ?? '')" />
@@ -204,8 +212,9 @@
 												cols="auto">
 												<base-input-structure
 													v-if="controls.VENDAW02SALE_QUALIFIC.isVisible"
-													class="i-checkbox"
-													v-bind="controls.VENDAW02SALE_QUALIFIC"
+													class="i-text"
+													v-bind="controls.VENDAW02SALE_QUALIFIC.wrapperProps"
+													:id="getControlId(controls.VENDAW02SALE_QUALIFIC)"
 													v-on="controls.VENDAW02SALE_QUALIFIC.handlers"
 													:loading="controls.VENDAW02SALE_QUALIFIC.props.loading"
 													:reporting-mode-on="reportingModeCAV"
@@ -214,6 +223,7 @@
 														<q-checkbox
 															v-if="controls.VENDAW02SALE_QUALIFIC.isVisible"
 															v-bind="controls.VENDAW02SALE_QUALIFIC.props"
+															:id="getControlId(controls.VENDAW02SALE_QUALIFIC)"
 															v-on="controls.VENDAW02SALE_QUALIFIC.handlers" />
 													</template>
 												</base-input-structure>
@@ -231,7 +241,7 @@
 		</q-container>
 	</teleport>
 
-	<hr v-if="!isPopup && showFormFooter" />
+	<q-divider v-if="!isPopup && showFormFooter" />
 
 	<teleport
 		v-if="formModalIsReady && showFormFooter"
@@ -705,6 +715,7 @@
 						label: computed(() => this.Resources.QUALIFICATION64257),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
+						borderless: false,
 						isCollapsible: false,
 						anchored: false,
 						directChildren: ['VENDAW02SALE_INTERESS', 'VENDAW02SALE_SEMRFINA', 'VENDAW02SALE_SEMCAPAC', 'VENDAW02SALE_DTQUALIF', 'VENDAW02SALE_QUALIFIC'],
@@ -1180,7 +1191,6 @@
 
 				this.afterControlUpdate(controlField, fieldValue)
 			},
-
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
 // USE /[MANUAL GQT FUNCTIONS_JS VENDAW02]/
 // eslint-disable-next-line

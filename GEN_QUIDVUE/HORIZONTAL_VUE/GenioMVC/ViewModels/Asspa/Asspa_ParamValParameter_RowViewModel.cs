@@ -39,24 +39,6 @@ public class Asspa_ParamValParameter_RowViewModel : Models.Param
 				Area = "PARAM",
 				Field = "PARAMETER",
 			},
-			new ListColumn()
-			{
-				Order = 2,
-				Area = "PARAM",
-				Field = "DECIMALPLACES",
-			},
-			new ListColumn()
-			{
-				Order = 3,
-				Area = "KINDE",
-				Field = "DESIGNAT",
-			},
-			new ListColumn()
-			{
-				Order = 4,
-				Area = "PARAM",
-				Field = "DATATYPE",
-			},
 		];
 	}
 

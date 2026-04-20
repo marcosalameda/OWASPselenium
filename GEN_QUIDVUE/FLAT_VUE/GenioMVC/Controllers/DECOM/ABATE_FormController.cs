@@ -33,12 +33,12 @@ namespace GenioMVC.Controllers
 	{
 		#region NavigationLocation Names
 
-		private static readonly NavigationLocation ACTION_ABATE_CANCEL = new("DESATIVACAO_DE_EQUIP16900", "Abate_Cancel", "Decom") { vueRouteName = "form-ABATE", mode = "CANCEL" };
-		private static readonly NavigationLocation ACTION_ABATE_SHOW = new("DESATIVACAO_DE_EQUIP16900", "Abate_Show", "Decom") { vueRouteName = "form-ABATE", mode = "SHOW" };
-		private static readonly NavigationLocation ACTION_ABATE_NEW = new("DESATIVACAO_DE_EQUIP16900", "Abate_New", "Decom") { vueRouteName = "form-ABATE", mode = "NEW" };
-		private static readonly NavigationLocation ACTION_ABATE_EDIT = new("DESATIVACAO_DE_EQUIP16900", "Abate_Edit", "Decom") { vueRouteName = "form-ABATE", mode = "EDIT" };
-		private static readonly NavigationLocation ACTION_ABATE_DUPLICATE = new("DESATIVACAO_DE_EQUIP16900", "Abate_Duplicate", "Decom") { vueRouteName = "form-ABATE", mode = "DUPLICATE" };
-		private static readonly NavigationLocation ACTION_ABATE_DELETE = new("DESATIVACAO_DE_EQUIP16900", "Abate_Delete", "Decom") { vueRouteName = "form-ABATE", mode = "DELETE" };
+		private static readonly NavigationLocation ACTION_ABATE_CANCEL = new("EQUIPMENT_DECOMMISSI11875", "Abate_Cancel", "Decom") { vueRouteName = "form-ABATE", mode = "CANCEL" };
+		private static readonly NavigationLocation ACTION_ABATE_SHOW = new("EQUIPMENT_DECOMMISSI11875", "Abate_Show", "Decom") { vueRouteName = "form-ABATE", mode = "SHOW" };
+		private static readonly NavigationLocation ACTION_ABATE_NEW = new("EQUIPMENT_DECOMMISSI11875", "Abate_New", "Decom") { vueRouteName = "form-ABATE", mode = "NEW" };
+		private static readonly NavigationLocation ACTION_ABATE_EDIT = new("EQUIPMENT_DECOMMISSI11875", "Abate_Edit", "Decom") { vueRouteName = "form-ABATE", mode = "EDIT" };
+		private static readonly NavigationLocation ACTION_ABATE_DUPLICATE = new("EQUIPMENT_DECOMMISSI11875", "Abate_Duplicate", "Decom") { vueRouteName = "form-ABATE", mode = "DUPLICATE" };
+		private static readonly NavigationLocation ACTION_ABATE_DELETE = new("EQUIPMENT_DECOMMISSI11875", "Abate_Delete", "Decom") { vueRouteName = "form-ABATE", mode = "DELETE" };
 
 		#endregion
 
@@ -358,8 +358,15 @@ namespace GenioMVC.Controllers
 				PersistentSupport sp = UserContext.Current.PersistentSupport;
 				try
 				{
-					GenioMVC.Models.Decom model = new(UserContext.Current);
-					model.klass.QPrimaryKey = Navigation.GetStrValue("decom");
+					var recordKey = Navigation.GetStrValue("decom");
+					var model = GenioMVC.Models.Decom.Find(recordKey, UserContext.Current);
+					if (model.ValZzstate == 0)
+					{
+						Navigation.ClearValue("decom");
+						string errorMessage = Resources.Resources.ESTE_REGISTO_JA_FOI_02595;
+						Log.Error($"${errorMessage} ID: ${recordKey}");
+						return JsonOK(new { Success = true, currentNavigationLevel = Navigation.CurrentLevel.Level, Warning = errorMessage });
+					}
 
 // USE /[MANUAL GQT BEFORE_CANCEL ABATE]/
 

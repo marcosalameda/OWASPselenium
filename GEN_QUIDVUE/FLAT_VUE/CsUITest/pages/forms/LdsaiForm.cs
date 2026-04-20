@@ -10,8 +10,8 @@ public class LdsaiForm : Form
 	/// <summary>
 	/// Document No.
 	/// </summary>
-	public LookupControl OutptDocumenr => new LookupControl(driver, ContainerLocator, "container-LDSAI___OUTPTDOCUMENR");
-	public SeeMorePage OutptDocumenrSeeMorePage => new SeeMorePage(driver, "LDSAI", "LDSAI___OUTPTDOCUMENR");
+	public LookupControl OutptDocumenr => new LookupControl(driver, ContainerLocator, "container-LDSAI___OUTPTDOCUMENR" + IdSuffix);
+	public SeeMorePage OutptDocumenrSeeMorePage => new SeeMorePage(driver, "LDSAI", "LDSAI___OUTPTDOCUMENR" + IdSuffix);
 
 	/// <summary>
 	/// 
@@ -21,36 +21,36 @@ public class LdsaiForm : Form
 	/// <summary>
 	/// 
 	/// </summary>
-	public CollapsibleZoneControl PseudNovogr01 => new CollapsibleZoneControl(driver, ContainerLocator, "#LDSAI___PSEUDNOVOGR01-container");
+	public CollapsibleZoneControl PseudNovogr01 => new CollapsibleZoneControl(driver, ContainerLocator, "#LDSAI___PSEUDNOVOGR01" + IdSuffix + "-container");
 
 	/// <summary>
 	/// Line
 	/// </summary>
-	public BaseInputControl OutpuLine => new BaseInputControl(driver, ContainerLocator, "container-LDSAI___OUTPULINE____", "#LDSAI___OUTPULINE____");
+	public BaseInputControl OutpuLine => new BaseInputControl(driver, ContainerLocator, "container-LDSAI___OUTPULINE____" + IdSuffix, "#LDSAI___OUTPULINE____" + IdSuffix);
 
 	/// <summary>
 	/// Warehouse
 	/// </summary>
-	public LookupControl WarehWarehdes => new LookupControl(driver, ContainerLocator, "container-LDSAI___WAREHWAREHDES");
-	public SeeMorePage WarehWarehdesSeeMorePage => new SeeMorePage(driver, "LDSAI", "LDSAI___WAREHWAREHDES");
+	public LookupControl WarehWarehdes => new LookupControl(driver, ContainerLocator, "container-LDSAI___WAREHWAREHDES" + IdSuffix);
+	public SeeMorePage WarehWarehdesSeeMorePage => new SeeMorePage(driver, "LDSAI", "LDSAI___WAREHWAREHDES" + IdSuffix);
 
 	/// <summary>
 	/// Item
 	/// </summary>
-	public LookupControl ItemItemdes => new LookupControl(driver, ContainerLocator, "container-LDSAI___ITEM_ITEMDES_");
-	public SeeMorePage ItemItemdesSeeMorePage => new SeeMorePage(driver, "LDSAI", "LDSAI___ITEM_ITEMDES_");
+	public LookupControl ItemItemdes => new LookupControl(driver, ContainerLocator, "container-LDSAI___ITEM_ITEMDES_" + IdSuffix);
+	public SeeMorePage ItemItemdesSeeMorePage => new SeeMorePage(driver, "LDSAI", "LDSAI___ITEM_ITEMDES_" + IdSuffix);
 
 	/// <summary>
 	/// Output quantity:
 	/// </summary>
-	public BaseInputControl OutpuExitqnty => new BaseInputControl(driver, ContainerLocator, "container-LDSAI___OUTPUEXITQNTY", "#LDSAI___OUTPUEXITQNTY");
+	public BaseInputControl OutpuExitqnty => new BaseInputControl(driver, ContainerLocator, "container-LDSAI___OUTPUEXITQNTY" + IdSuffix, "#LDSAI___OUTPUEXITQNTY" + IdSuffix);
 
 	/// <summary>
 	/// Output No
 	/// </summary>
-	public LookupControl OudocNrdocsda => new LookupControl(driver, ContainerLocator, "container-LDSAI___OUDOCNRDOCSDA");
-	public SeeMorePage OudocNrdocsdaSeeMorePage => new SeeMorePage(driver, "LDSAI", "LDSAI___OUDOCNRDOCSDA");
+	public LookupControl OudocNrdocsda => new LookupControl(driver, ContainerLocator, "container-LDSAI___OUDOCNRDOCSDA" + IdSuffix);
+	public SeeMorePage OudocNrdocsdaSeeMorePage => new SeeMorePage(driver, "LDSAI", "LDSAI___OUDOCNRDOCSDA" + IdSuffix);
 
-	public LdsaiForm(IWebDriver driver, FORM_MODE mode, By? containerLocator = null)
-		: base(driver, mode, "LDSAI", containerLocator: containerLocator) { }
+	public LdsaiForm(IWebDriver driver, FORM_MODE mode, By? containerLocator = null, bool usePkInId = false)
+		: base(driver, mode, "LDSAI", containerLocator: containerLocator, usePkInId: usePkInId) { }
 }

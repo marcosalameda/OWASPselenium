@@ -113,6 +113,7 @@ export default class ViewModel extends FormViewModelBase
 			field: 'NAME',
 			maxLength: 50,
 			description: computed(() => this.Resources.NAME31974),
+			ignoreFldSubmit: true,
 		}).cloneFrom(values?.TableAgentName))
 		this.stopWatchers.push(watch(() => this.TableAgentName.value, (newValue, oldValue) => this.onUpdate('agent.name', this.TableAgentName, newValue, oldValue)))
 
@@ -156,6 +157,7 @@ export default class ViewModel extends FormViewModelBase
 			field: 'CITY',
 			maxLength: 50,
 			description: computed(() => this.Resources.CITY42505),
+			ignoreFldSubmit: true,
 		}).cloneFrom(values?.TableCityCity))
 		this.stopWatchers.push(watch(() => this.TableCityCity.value, (newValue, oldValue) => this.onUpdate('city.city', this.TableCityCity, newValue, oldValue)))
 

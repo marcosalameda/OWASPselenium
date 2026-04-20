@@ -1,20 +1,20 @@
-﻿using JsonIgnoreAttribute = System.Text.Json.Serialization.JsonIgnoreAttribute;
+﻿using CSGenio.business;
+using CSGenio.framework;
+using CSGenio.persistence;
+using GenioMVC.Helpers;
+using GenioMVC.Models.Exception;
+using GenioMVC.Models.Navigation;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Quidgest.Persistence;
+using Quidgest.Persistence.GenericQuery;
+
 using System.Collections;
 using System.Collections.Concurrent;
 using System.Collections.Specialized;
 using System.ComponentModel.DataAnnotations;
 using System.Data;
 using System.Globalization;
-
-using CSGenio.business;
-using CSGenio.framework;
-using CSGenio.persistence;
-using GenioMVC.Helpers;
-using GenioMVC.Models.Exception;
-using GenioMVC.Models.Navigation;
-using Quidgest.Persistence;
-using Quidgest.Persistence.GenericQuery;
+using System.Text.Json.Serialization;
 
 namespace GenioMVC.ViewModels.Uicom
 {
@@ -32,6 +32,7 @@ namespace GenioMVC.ViewModels.Uicom
 		#region Foreign keys
 
 		#endregion
+
 		/// <summary>
 		/// Title: "Miniature" | Type: "IJ"
 		/// </summary>
@@ -49,8 +50,6 @@ namespace GenioMVC.ViewModels.Uicom
 		/// Title: "Fixed menu name" | Type: "C"
 		/// </summary>
 		public string ValMenuid { get; set; }
-
-
 
 		#region Navigations
 		#endregion
@@ -226,12 +225,7 @@ namespace GenioMVC.ViewModels.Uicom
 			}
 		}
 
-		/// <summary>
-		/// Sets the value of a single property of the view model based on the provided table and field names.
-		/// </summary>
-		/// <param name="fullFieldName">The full field name in the format "table.field".</param>
-		/// <param name="value">The field value.</param>
-		/// <exception cref="ArgumentNullException">Thrown if <paramref name="fullFieldName"/> is null.</exception>
+		/// <inheritdoc />
 		public override void SetViewModelValue(string fullFieldName, object value)
 		{
 			try
@@ -363,6 +357,7 @@ namespace GenioMVC.ViewModels.Uicom
 			}
 			// Add characteristics
 			Characs = new List<string>();
+
 
 // USE /[MANUAL GQT VIEWMODEL_LOADPARTIAL UICOM]/
 		}

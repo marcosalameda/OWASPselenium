@@ -119,6 +119,7 @@ export default class ViewModel extends FormViewModelBase
 			maxDigits: 6,
 			decimalDigits: 0,
 			description: computed(() => this.Resources.NO_14817),
+			ignoreFldSubmit: true,
 		}).cloneFrom(values?.TablePedidNrpedido))
 		this.stopWatchers.push(watch(() => this.TablePedidNrpedido.value, (newValue, oldValue) => this.onUpdate('pedid.nrpedido', this.TablePedidNrpedido, newValue, oldValue)))
 
@@ -131,6 +132,7 @@ export default class ViewModel extends FormViewModelBase
 			maxDigits: 3,
 			decimalDigits: 0,
 			description: computed(() => this.Resources.LINE27983),
+			ignoreFldSubmit: true,
 		}).cloneFrom(values?.TableLnhpdLine))
 		this.stopWatchers.push(watch(() => this.TableLnhpdLine.value, (newValue, oldValue) => this.onUpdate('lnhpd.line', this.TableLnhpdLine, newValue, oldValue)))
 
@@ -153,6 +155,7 @@ export default class ViewModel extends FormViewModelBase
 			field: 'TIPOEQUI',
 			maxLength: 50,
 			description: computed(() => this.Resources.TYPE_OF_EQUIPMENT18080),
+			ignoreFldSubmit: true,
 		}).cloneFrom(values?.TableTpeq1Tipoequi))
 		this.stopWatchers.push(watch(() => this.TableTpeq1Tipoequi.value, (newValue, oldValue) => this.onUpdate('tpeq1.tipoequi', this.TableTpeq1Tipoequi, newValue, oldValue)))
 

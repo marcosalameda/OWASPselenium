@@ -75,7 +75,7 @@ namespace CSGenio.business
 
         public string toXML()
         {
-            // Use /[MANUAL GQT GW_ACTIV_TOXML ${campo.Form.ToUpper()}]/ to override this
+            // Use /[MANUAL GQT GW_ACTIV_TOXML]/ to override this
 			// USE /[MANUAL GQT GW_ACTIV_TOXML]/
 			return "";
 		}

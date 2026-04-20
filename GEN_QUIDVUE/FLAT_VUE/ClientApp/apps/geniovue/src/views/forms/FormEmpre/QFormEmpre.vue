@@ -9,12 +9,13 @@
 			<div
 				v-if="showFormHeader"
 				class="c-action-bar">
-				<h1
+				<component
 					v-if="formControl.uiComponents.header && formInfo.designation"
+					:is="topHeadingTag"
 					:id="formTitleId"
 					class="form-header">
 					{{ formInfo.designation }}
-				</h1>
+				</component>
 
 				<div class="c-action-bar__menu">
 					<template
@@ -40,13 +41,10 @@
 									@click="btn.action">
 									<template v-if="btn.icon">
 										<q-badge-indicator
-											v-if="btn.badge && btn.badge.isVisible"
-											:color="btn.badge.color">
+											:enabled="btn.badge?.isVisible ?? false"
+											:color="btn.badge?.color">
 											<q-icon v-bind="btn.icon" />
 										</q-badge-indicator>
-										<q-icon
-											v-else
-											v-bind="btn.icon" />
 									</template>
 								</q-toggle-group-item>
 							</template>
@@ -97,6 +95,7 @@
 		<q-container
 			fluid
 			data-key="EMPRE"
+			:data-identifier="primaryKeyValue"
 			:data-loading="!formInitialDataLoaded || !isActiveForm">
 			<template v-if="formControl.initialized && showFormBody">
 				<q-row v-if="controls.EMPRE___PSEUDNOVOGR02.isVisible">
@@ -105,9 +104,9 @@
 						cols="auto">
 						<q-group-box-container
 							v-if="controls.EMPRE___PSEUDNOVOGR02.isVisible"
-							id="EMPRE___PSEUDNOVOGR02"
 							v-bind="controls.EMPRE___PSEUDNOVOGR02"
-							:is-visible="controls.EMPRE___PSEUDNOVOGR02.isVisible">
+							:id="getControlId(controls.EMPRE___PSEUDNOVOGR02)"
+							:no-border="controls.EMPRE___PSEUDNOVOGR02.borderless">
 							<!-- Start EMPRE___PSEUDNOVOGR02 -->
 							<q-row v-if="controls.EMPRE___CMPNYLOGO____.isVisible">
 								<q-col
@@ -116,7 +115,8 @@
 									<base-input-structure
 										v-if="controls.EMPRE___CMPNYLOGO____.isVisible"
 										class="q-image"
-										v-bind="controls.EMPRE___CMPNYLOGO____"
+										v-bind="controls.EMPRE___CMPNYLOGO____.wrapperProps"
+										:id="getControlId(controls.EMPRE___CMPNYLOGO____)"
 										v-on="controls.EMPRE___CMPNYLOGO____.handlers"
 										:loading="controls.EMPRE___CMPNYLOGO____.props.loading"
 										:reporting-mode-on="reportingModeCAV"
@@ -124,6 +124,7 @@
 										<q-image
 											v-if="controls.EMPRE___CMPNYLOGO____.isVisible"
 											v-bind="controls.EMPRE___CMPNYLOGO____.props"
+											:id="getControlId(controls.EMPRE___CMPNYLOGO____)"
 											v-on="controls.EMPRE___CMPNYLOGO____.handlers" />
 									</base-input-structure>
 								</q-col>
@@ -138,9 +139,9 @@
 						cols="auto">
 						<q-group-box-container
 							v-if="controls.EMPRE___PSEUDNOVOGR01.isVisible"
-							id="EMPRE___PSEUDNOVOGR01"
 							v-bind="controls.EMPRE___PSEUDNOVOGR01"
-							:is-visible="controls.EMPRE___PSEUDNOVOGR01.isVisible">
+							:id="getControlId(controls.EMPRE___PSEUDNOVOGR01)"
+							:no-border="controls.EMPRE___PSEUDNOVOGR01.borderless">
 							<!-- Start EMPRE___PSEUDNOVOGR01 -->
 							<q-row v-if="controls.EMPRE___CMPNYACRONYM_.isVisible">
 								<q-col
@@ -149,13 +150,15 @@
 									<base-input-structure
 										v-if="controls.EMPRE___CMPNYACRONYM_.isVisible"
 										class="i-text"
-										v-bind="controls.EMPRE___CMPNYACRONYM_"
+										v-bind="controls.EMPRE___CMPNYACRONYM_.wrapperProps"
+										:id="getControlId(controls.EMPRE___CMPNYACRONYM_)"
 										v-on="controls.EMPRE___CMPNYACRONYM_.handlers"
 										:loading="controls.EMPRE___CMPNYACRONYM_.props.loading"
 										:reporting-mode-on="reportingModeCAV"
 										:suggestion-mode-on="suggestionModeOn">
 										<q-text-field
 											v-bind="controls.EMPRE___CMPNYACRONYM_.props"
+											:id="getControlId(controls.EMPRE___CMPNYACRONYM_)"
 											@blur="onBlur(controls.EMPRE___CMPNYACRONYM_, model.ValAcronym.value)"
 											@change="model.ValAcronym.fnUpdateValueOnChange" />
 									</base-input-structure>
@@ -168,13 +171,15 @@
 									<base-input-structure
 										v-if="controls.EMPRE___CMPNYNIF_____.isVisible"
 										class="i-text"
-										v-bind="controls.EMPRE___CMPNYNIF_____"
+										v-bind="controls.EMPRE___CMPNYNIF_____.wrapperProps"
+										:id="getControlId(controls.EMPRE___CMPNYNIF_____)"
 										v-on="controls.EMPRE___CMPNYNIF_____.handlers"
 										:loading="controls.EMPRE___CMPNYNIF_____.props.loading"
 										:reporting-mode-on="reportingModeCAV"
 										:suggestion-mode-on="suggestionModeOn">
 										<q-text-field
 											v-bind="controls.EMPRE___CMPNYNIF_____.props"
+											:id="getControlId(controls.EMPRE___CMPNYNIF_____)"
 											@blur="onBlur(controls.EMPRE___CMPNYNIF_____, model.ValNif.value)"
 											@change="model.ValNif.fnUpdateValueOnChange" />
 									</base-input-structure>
@@ -187,13 +192,15 @@
 									<base-input-structure
 										v-if="controls.EMPRE___CMPNYTELEPHON.isVisible"
 										class="i-text"
-										v-bind="controls.EMPRE___CMPNYTELEPHON"
+										v-bind="controls.EMPRE___CMPNYTELEPHON.wrapperProps"
+										:id="getControlId(controls.EMPRE___CMPNYTELEPHON)"
 										v-on="controls.EMPRE___CMPNYTELEPHON.handlers"
 										:loading="controls.EMPRE___CMPNYTELEPHON.props.loading"
 										:reporting-mode-on="reportingModeCAV"
 										:suggestion-mode-on="suggestionModeOn">
 										<q-text-field
 											v-bind="controls.EMPRE___CMPNYTELEPHON.props"
+											:id="getControlId(controls.EMPRE___CMPNYTELEPHON)"
 											@blur="onBlur(controls.EMPRE___CMPNYTELEPHON, model.ValTelephon.value)"
 											@change="model.ValTelephon.fnUpdateValueOnChange" />
 									</base-input-structure>
@@ -206,13 +213,15 @@
 									<base-input-structure
 										v-if="controls.EMPRE___CMPNYEMAIL___.isVisible"
 										class="i-text"
-										v-bind="controls.EMPRE___CMPNYEMAIL___"
+										v-bind="controls.EMPRE___CMPNYEMAIL___.wrapperProps"
+										:id="getControlId(controls.EMPRE___CMPNYEMAIL___)"
 										v-on="controls.EMPRE___CMPNYEMAIL___.handlers"
 										:loading="controls.EMPRE___CMPNYEMAIL___.props.loading"
 										:reporting-mode-on="reportingModeCAV"
 										:suggestion-mode-on="suggestionModeOn">
 										<q-text-field
 											v-bind="controls.EMPRE___CMPNYEMAIL___.props"
+											:id="getControlId(controls.EMPRE___CMPNYEMAIL___)"
 											@blur="onBlur(controls.EMPRE___CMPNYEMAIL___, model.ValEmail.value)"
 											@change="model.ValEmail.fnUpdateValueOnChange" />
 									</base-input-structure>
@@ -229,13 +238,15 @@
 						<base-input-structure
 							v-if="controls.EMPRE___CMPNYDESIGNAT.isVisible"
 							class="i-text"
-							v-bind="controls.EMPRE___CMPNYDESIGNAT"
+							v-bind="controls.EMPRE___CMPNYDESIGNAT.wrapperProps"
+							:id="getControlId(controls.EMPRE___CMPNYDESIGNAT)"
 							v-on="controls.EMPRE___CMPNYDESIGNAT.handlers"
 							:loading="controls.EMPRE___CMPNYDESIGNAT.props.loading"
 							:reporting-mode-on="reportingModeCAV"
 							:suggestion-mode-on="suggestionModeOn">
 							<q-text-field
 								v-bind="controls.EMPRE___CMPNYDESIGNAT.props"
+								:id="getControlId(controls.EMPRE___CMPNYDESIGNAT)"
 								@blur="onBlur(controls.EMPRE___CMPNYDESIGNAT, model.ValDesignat.value)"
 								@change="model.ValDesignat.fnUpdateValueOnChange" />
 						</base-input-structure>
@@ -245,9 +256,9 @@
 					<q-col v-if="controls.EMPRE___PSEUDNOVOGR03.isVisible">
 						<q-group-box-container
 							v-if="controls.EMPRE___PSEUDNOVOGR03.isVisible"
-							id="EMPRE___PSEUDNOVOGR03"
 							v-bind="controls.EMPRE___PSEUDNOVOGR03"
-							:is-visible="controls.EMPRE___PSEUDNOVOGR03.isVisible">
+							:id="getControlId(controls.EMPRE___PSEUDNOVOGR03)"
+							:no-border="controls.EMPRE___PSEUDNOVOGR03.borderless">
 							<!-- Start EMPRE___PSEUDNOVOGR03 -->
 							<q-row v-if="controls.EMPRE___CNTRYCOUNTRY_.isVisible">
 								<q-col
@@ -256,7 +267,8 @@
 									<base-input-structure
 										v-if="controls.EMPRE___CNTRYCOUNTRY_.isVisible"
 										class="i-text"
-										v-bind="controls.EMPRE___CNTRYCOUNTRY_"
+										v-bind="controls.EMPRE___CNTRYCOUNTRY_.wrapperProps"
+										:id="getControlId(controls.EMPRE___CNTRYCOUNTRY_)"
 										v-on="controls.EMPRE___CNTRYCOUNTRY_.handlers"
 										:loading="controls.EMPRE___CNTRYCOUNTRY_.props.loading"
 										:reporting-mode-on="reportingModeCAV"
@@ -264,6 +276,7 @@
 										<q-lookup
 											v-if="controls.EMPRE___CNTRYCOUNTRY_.isVisible"
 											v-bind="controls.EMPRE___CNTRYCOUNTRY_.props"
+											:id="getControlId(controls.EMPRE___CNTRYCOUNTRY_)"
 											v-on="controls.EMPRE___CNTRYCOUNTRY_.handlers" />
 										<q-see-more-empre-cntrycountry
 											v-if="controls.EMPRE___CNTRYCOUNTRY_.seeMoreIsVisible"
@@ -283,7 +296,8 @@
 						<base-input-structure
 							v-if="controls.EMPRE___CMPNYQTDPESSO.isVisible"
 							class="i-text"
-							v-bind="controls.EMPRE___CMPNYQTDPESSO"
+							v-bind="controls.EMPRE___CMPNYQTDPESSO.wrapperProps"
+							:id="getControlId(controls.EMPRE___CMPNYQTDPESSO)"
 							v-on="controls.EMPRE___CMPNYQTDPESSO.handlers"
 							:loading="controls.EMPRE___CMPNYQTDPESSO.props.loading"
 							:reporting-mode-on="reportingModeCAV"
@@ -291,6 +305,7 @@
 							<q-numeric-input
 								v-if="controls.EMPRE___CMPNYQTDPESSO.isVisible"
 								v-bind="controls.EMPRE___CMPNYQTDPESSO.props"
+								:id="getControlId(controls.EMPRE___CMPNYQTDPESSO)"
 								@update:model-value="model.ValQtdpesso.fnUpdateValue" />
 						</base-input-structure>
 					</q-col>
@@ -300,13 +315,15 @@
 						<base-input-structure
 							v-if="controls.EMPRE___CMPNYHEADLOC_.isVisible"
 							class="i-text"
-							v-bind="controls.EMPRE___CMPNYHEADLOC_"
+							v-bind="controls.EMPRE___CMPNYHEADLOC_.wrapperProps"
+							:id="getControlId(controls.EMPRE___CMPNYHEADLOC_)"
 							v-on="controls.EMPRE___CMPNYHEADLOC_.handlers"
 							:loading="controls.EMPRE___CMPNYHEADLOC_.props.loading"
 							:reporting-mode-on="reportingModeCAV"
 							:suggestion-mode-on="suggestionModeOn">
 							<q-text-field
 								v-bind="controls.EMPRE___CMPNYHEADLOC_.props"
+								:id="getControlId(controls.EMPRE___CMPNYHEADLOC_)"
 								@blur="onBlur(controls.EMPRE___CMPNYHEADLOC_, model.ValHeadloc.value)"
 								@change="model.ValHeadloc.fnUpdateValueOnChange" />
 						</base-input-structure>
@@ -316,7 +333,7 @@
 		</q-container>
 	</teleport>
 
-	<hr v-if="!isPopup && showFormFooter" />
+	<q-divider v-if="!isPopup && showFormFooter" />
 
 	<teleport
 		v-if="formModalIsReady && showFormFooter"
@@ -666,6 +683,7 @@
 						label: computed(() => this.Resources.LOGO62483),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
+						borderless: false,
 						isCollapsible: false,
 						anchored: false,
 						directChildren: ['EMPRE___CMPNYLOGO____'],
@@ -695,6 +713,7 @@
 						label: computed(() => this.Resources.COMPANY52963),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
+						borderless: false,
 						isCollapsible: false,
 						anchored: false,
 						directChildren: ['EMPRE___CMPNYACRONYM_', 'EMPRE___CMPNYNIF_____', 'EMPRE___CMPNYTELEPHON', 'EMPRE___CMPNYEMAIL___'],
@@ -778,6 +797,7 @@
 						label: computed(() => this.Resources.ORIGIN03068),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
+						borderless: false,
 						isCollapsible: false,
 						anchored: false,
 						directChildren: ['EMPRE___CNTRYCOUNTRY_'],
@@ -1392,7 +1412,6 @@
 
 				this.afterControlUpdate(controlField, fieldValue)
 			},
-
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
 // USE /[MANUAL GQT FUNCTIONS_JS EMPRE]/
 // eslint-disable-next-line

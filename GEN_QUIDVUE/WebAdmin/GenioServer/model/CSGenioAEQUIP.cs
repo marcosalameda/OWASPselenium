@@ -47,7 +47,7 @@ namespace CSGenio.business
 			Qfield = new Field(info.Alias, "codequip", FieldType.KEY_GUID);
 			Qfield.FieldDescription = "";
 			Qfield.FieldSize =  36;
-			Qfield.CavDesignation = "";
+			Qfield.VisivelCav = CavVisibilityType.Nunca;
 
 			Qfield.Dupmsg = "";
 			info.RegisterFieldDB(Qfield);
@@ -56,7 +56,7 @@ namespace CSGenio.business
 			Qfield = new Field(info.Alias, "codempre", FieldType.KEY_GUID);
 			Qfield.FieldDescription = ">COMPANY";
 			Qfield.FieldSize =  36;
-			Qfield.CavDesignation = "_COMPANY02087";
+			Qfield.VisivelCav = CavVisibilityType.Nunca;
 
 			Qfield.Dupmsg = "";
 //Actualiza as seguintes réplicas:
@@ -68,7 +68,7 @@ namespace CSGenio.business
 			Qfield = new Field(info.Alias, "codpess1", FieldType.KEY_GUID);
 			Qfield.FieldDescription = ">COMOMODOR";
 			Qfield.FieldSize =  36;
-			Qfield.CavDesignation = "_COMOMODOR01469";
+			Qfield.VisivelCav = CavVisibilityType.Nunca;
 
 			Qfield.Dupmsg = "";
 			info.RegisterFieldDB(Qfield);
@@ -104,7 +104,7 @@ namespace CSGenio.business
 			Qfield = new Field(info.Alias, "codtpequ", FieldType.KEY_GUID);
 			Qfield.FieldDescription = ">TYPE OF EQUIPMENT";
 			Qfield.FieldSize =  36;
-			Qfield.CavDesignation = "_TYPE_OF_EQUIPMENT35057";
+			Qfield.VisivelCav = CavVisibilityType.Nunca;
 
 			Qfield.Dupmsg = "";
 			info.RegisterFieldDB(Qfield);
@@ -113,7 +113,7 @@ namespace CSGenio.business
 			Qfield = new Field(info.Alias, "codwareh", FieldType.KEY_GUID);
 			Qfield.FieldDescription = "";
 			Qfield.FieldSize =  36;
-			Qfield.CavDesignation = "";
+			Qfield.VisivelCav = CavVisibilityType.Nunca;
 
 			Qfield.Dupmsg = "";
 			info.RegisterFieldDB(Qfield);
@@ -122,7 +122,7 @@ namespace CSGenio.business
 			Qfield = new Field(info.Alias, "coditem", FieldType.KEY_GUID);
 			Qfield.FieldDescription = "";
 			Qfield.FieldSize =  36;
-			Qfield.CavDesignation = "";
+			Qfield.VisivelCav = CavVisibilityType.Nunca;
 
 			Qfield.Dupmsg = "";
 			info.RegisterFieldDB(Qfield);
@@ -155,15 +155,15 @@ namespace CSGenio.business
 			Qfield = new Field(info.Alias, "coddeco", FieldType.KEY_GUID);
 			Qfield.FieldDescription = "";
 			Qfield.FieldSize =  36;
-			Qfield.CavDesignation = "";
+			Qfield.VisivelCav = CavVisibilityType.Nunca;
 
 			Qfield.Dupmsg = "";
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "dtdeco", FieldType.DATETIME);
+			Qfield = new Field(info.Alias, "dtdeco", FieldType.DATE);
 			Qfield.FieldDescription = "Decomission";
-			Qfield.FieldSize =  16;
+			Qfield.FieldSize =  8;
 			Qfield.VisivelCav = CavVisibilityType.Nunca;
 
 			Qfield.Dupmsg = "";
@@ -189,7 +189,7 @@ namespace CSGenio.business
 			Qfield.FieldDescription = "Photo";
 			Qfield.FieldSize =  3;
 			Qfield.Decimals = 1;
-			Qfield.CavDesignation = "PHOTO51874";
+			Qfield.VisivelCav = CavVisibilityType.Nunca;
 
 			Qfield.Dupmsg = "";
 			info.RegisterFieldDB(Qfield);
@@ -234,7 +234,7 @@ namespace CSGenio.business
 			Qfield = new Field(info.Alias, "codrooms", FieldType.KEY_GUID);
 			Qfield.FieldDescription = "";
 			Qfield.FieldSize =  36;
-			Qfield.CavDesignation = "";
+			Qfield.VisivelCav = CavVisibilityType.Nunca;
 
 			Qfield.Dupmsg = "";
 			info.RegisterFieldDB(Qfield);
@@ -303,7 +303,7 @@ namespace CSGenio.business
 			Qfield.FieldDescription = "Last photo attached";
 			Qfield.FieldSize =  3;
 			Qfield.Decimals = 1;
-			Qfield.CavDesignation = "LAST_PHOTO_ATTACHED43884";
+			Qfield.VisivelCav = CavVisibilityType.Nunca;
 
 			Qfield.Dupmsg = "";
 			info.RegisterFieldDB(Qfield);
@@ -385,16 +385,16 @@ namespace CSGenio.business
 			// Pathways
 			//------------------------------
 			info.Pathways = new Dictionary<string, string>(12);
-			info.Pathways.Add("wareh","wareh");
 			info.Pathways.Add("decom","decom");
+			info.Pathways.Add("wareh","wareh");
 			info.Pathways.Add("tpequ","tpequ");
 			info.Pathways.Add("room1","room1");
-			info.Pathways.Add("cmpny","cmpny");
 			info.Pathways.Add("item","item");
+			info.Pathways.Add("cmpny","cmpny");
 			info.Pathways.Add("pess1","pess1");
 			info.Pathways.Add("famil","tpequ");
-			info.Pathways.Add("cntry","cmpny");
 			info.Pathways.Add("gitem","item");
+			info.Pathways.Add("cntry","cmpny");
 			info.Pathways.Add("stake","pess1");
 			info.Pathways.Add("cate2","pess1");
 		}
@@ -689,11 +689,11 @@ namespace CSGenio.business
 			set { insertNameValueField(FldCoddeco, value); }
 		}
 
-		/// <summary>Field : "Decomission" Tipo: "DT" Formula: ++ "[DECOM->DTDECO]"</summary>
+		/// <summary>Field : "Decomission" Tipo: "D" Formula: ++ "[DECOM->DTDECO]"</summary>
 		public static FieldRef FldDtdeco { get { return m_fldDtdeco; } }
 		private static FieldRef m_fldDtdeco = new FieldRef("equip", "dtdeco");
 
-		/// <summary>Field : "Decomission" Tipo: "DT" Formula: ++ "[DECOM->DTDECO]"</summary>
+		/// <summary>Field : "Decomission" Tipo: "D" Formula: ++ "[DECOM->DTDECO]"</summary>
 		public DateTime ValDtdeco
 		{
 			get { return (DateTime)returnValueField(FldDtdeco); }

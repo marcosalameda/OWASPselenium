@@ -44,13 +44,6 @@ export default class FormViewModelBase extends ViewModelBase
 			enumerable: false,
 			writable: true
 		})
-
-		// The form filter component current values.
-		Object.defineProperty(this, 'currentFilterValues', {
-			value: markRaw({}),
-			enumerable: false,
-			writable: true
-		})
 	}
 
 	/**
@@ -60,12 +53,11 @@ export default class FormViewModelBase extends ViewModelBase
 	{
 		const dirtyFields = []
 
-		for (let modelField in this)
+		for (const modelField in this)
 		{
 			const fieldObj = this[modelField]
 
-			if (fieldObj instanceof Base &&
-				fieldObj.isDirty)
+			if (fieldObj instanceof Base && fieldObj.isDirty)
 				dirtyFields.push(fieldObj)
 		}
 
@@ -85,7 +77,7 @@ export default class FormViewModelBase extends ViewModelBase
 	 */
 	get isDirty()
 	{
-		return _some(this, (modelField) => modelField instanceof Base && modelField.isDirty)
+		return _some(this, (modelField) => modelField instanceof Base && modelField.isDirty && !modelField.isGlobalFilterField)
 	}
 
 	/**
@@ -101,7 +93,7 @@ export default class FormViewModelBase extends ViewModelBase
 	 */
 	resetValues()
 	{
-		for (let modelField in this)
+		for (const modelField in this)
 		{
 			const fieldObj = this[modelField]
 			fieldObj.resetValue()
@@ -109,11 +101,15 @@ export default class FormViewModelBase extends ViewModelBase
 	}
 
 	/**
-	 * @override
+	 * Clears the values of all model fields.
 	 */
-	hydrate(rawData) {
-		super.hydrate(rawData)
-		this.setCurrentFilterValues(rawData?.DefaultFilterValues)
+	clearValues()
+	{
+		for (const modelField in this)
+		{
+			const fieldObj = this[modelField]
+			fieldObj.hydrate(fieldObj.constructor.EMPTY_VALUE)
+		}
 	}
 
 	/**
@@ -132,7 +128,7 @@ export default class FormViewModelBase extends ViewModelBase
 		{
 			let hasChanged = false
 
-			for (let i in triggerFields)
+			for (const i in triggerFields)
 			{
 				const fieldValue = triggerFields[i]
 
@@ -164,7 +160,7 @@ export default class FormViewModelBase extends ViewModelBase
 					if (typeof data !== 'object')
 						return
 
-					for (let modelField in this)
+					for (const modelField in this)
 					{
 						const fieldObj = this[modelField]
 
@@ -279,7 +275,7 @@ export default class FormViewModelBase extends ViewModelBase
 	 */
 	validateModel()
 	{
-		let modelValidations = {}
+		const modelValidations = {}
 
 		_forEach(this, (modelField, modelFieldName) => {
 			if (modelField instanceof Base)
@@ -310,7 +306,7 @@ export default class FormViewModelBase extends ViewModelBase
 		const tickets = [],
 			documentFields = Object.values(this).filter((e) => e instanceof Document && e.isDirty && e.type !== 'Lookup')
 
-		for (let field of documentFields)
+		for (const field of documentFields)
 		{
 			const currentDocument = field.currentDocument.value
 			const ticketInfo = {
@@ -336,7 +332,7 @@ export default class FormViewModelBase extends ViewModelBase
 					(data, request) => {
 						if (request.data?.Success)
 						{
-							for (let ticketInfo of data.tickets)
+							for (const ticketInfo of data.tickets)
 							{
 								const currentDocument = this[ticketInfo.fieldId].currentDocument.value
 								currentDocument.ticket = ticketInfo.ticket
@@ -354,7 +350,7 @@ export default class FormViewModelBase extends ViewModelBase
 							})
 
 							// If something goes wrong, reset the tickets.
-							for (let field of documentFields)
+							for (const field of documentFields)
 							{
 								const areaKeyField = this.vueContext.dataApi.keys[field.area.toLowerCase()]
 								field.setTickets(areaKeyField.value, this.navigationId)
@@ -386,7 +382,7 @@ export default class FormViewModelBase extends ViewModelBase
 		const promises = [],
 			documentFields = Object.values(this).filter((e) => e instanceof Document && e.isDirty && e.type !== 'Lookup')
 
-		for (let field of documentFields)
+		for (const field of documentFields)
 		{
 			const currentDocument = field.currentDocument
 
@@ -461,7 +457,7 @@ export default class FormViewModelBase extends ViewModelBase
 		const unsavedChanges = [],
 			documentFields = Object.values(this).filter((e) => e instanceof Document && e.isDirty && e.type !== 'Lookup')
 
-		for (let field of documentFields)
+		for (const field of documentFields)
 		{
 			const currentDocument = field.currentDocument.value,
 				properties = field.properties,
@@ -497,7 +493,7 @@ export default class FormViewModelBase extends ViewModelBase
 					(_, request) => {
 						if (request.data?.Success)
 						{
-							for (let field of documentFields)
+							for (const field of documentFields)
 							{
 								const areaKeyField = this.vueContext.dataApi.keys[field.area.toLowerCase()]
 								field.setTickets(areaKeyField.value, this.navigationId)
@@ -530,17 +526,5 @@ export default class FormViewModelBase extends ViewModelBase
 		}
 
 		return true
-	}
-
-	/**
-	 * Sets the default filter values in the model of the form.
-	 * @param {Record} filters The filter defaults
-	 */
-	setCurrentFilterValues(filters)
-	{
-		if (_isEmpty(filters))
-			return
-
-		this.currentFilterValues = filters
 	}
 }

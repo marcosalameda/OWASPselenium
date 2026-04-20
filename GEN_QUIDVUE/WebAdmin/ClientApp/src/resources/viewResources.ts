@@ -152,7 +152,7 @@ class SystemConfigTexts extends BaseResources
 			return this.resources.NOME_DO_SERVIDOR13641
 		}
 		get databaseVersion() {
-			return this.resources.DATABASE_VERSION15344
+			return this.resources.VERSAO_DE_BASE_DE_DA46937
 		}
 		get dataSystemDeletedSuccess() {
 			return this.resources.O_SISTEMA_DE_DADOS_F39849
@@ -255,6 +255,9 @@ class SystemConfigTexts extends BaseResources
 		}
 		get groupSeparatorLabel() {
 			return this.resources.SEPARADOR_DE_GRUPO26735
+		}
+		get negativeNumberFormatLabel() {
+			return this.resources.FORMATO_DE_NUMERO_NE41581
 		}
 		get reportLabel() {
 			return this.resources.RELATORIO62426
@@ -384,6 +387,12 @@ class SystemConfigTexts extends BaseResources
 		}
 		get jwtEncryptionKeyHelp() {
 			return this.resources.CHAVE_SECRETA_UTILIZ48448
+		}
+		get urlMCPLabel() {
+			return this.resources.URL_DO_SERVIDOR_MCP19003
+		}
+		get urlMCPInfo() {
+			return this.resources.ENDPOINT_DO_SERVIDOR41381
 		}
 }
 

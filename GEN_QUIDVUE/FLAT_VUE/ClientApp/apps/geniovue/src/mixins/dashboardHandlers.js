@@ -36,7 +36,6 @@ export default {
 						try
 						{
 							hydrateDashboardData(dashboardControl, data)
-							dashboardControl.isLoaded = true
 
 							_forEach(dashboardControl.widgets, (widget) => {
 								if (widget.requiresAdditionalData)

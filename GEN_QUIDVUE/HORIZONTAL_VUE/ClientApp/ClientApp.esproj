@@ -9,10 +9,10 @@
     <ShouldRunBuildScript>false</ShouldRunBuildScript>
 
     <StartupCommand>pnpm run dev</StartupCommand>
-    <BuildCommand>pnpm run build</BuildCommand>
+    <BuildCommand>pnpm run build:no-color</BuildCommand>
     <TestCommand>pnpm run test</TestCommand>
     <!--<CleanCommand>pnpm run clean</CleanCommand>-->
-    <PublishCommand>pnpm run build</PublishCommand>
+    <PublishCommand>pnpm run build:no-color</PublishCommand>
 
     <!-- Folder where production build objects will be placed -->
     <BuildOutputFolder>$(MSBuildProjectDirectory)\apps/geniovue\dist</BuildOutputFolder>

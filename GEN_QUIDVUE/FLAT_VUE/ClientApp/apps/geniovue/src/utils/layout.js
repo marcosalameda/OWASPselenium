@@ -14,7 +14,7 @@ export function removeModal(modalId) {
 	// Focus on the element / control that opened the popup
 	// Using setTimeout with 0 to wait until the call stack is clear
 	// so the focus doesn't happen before the modal is fully removed
-	// because the focus trap can still be active 
+	// because the focus wrap can still be active
 	// which prevents focusing on the return element
 	setTimeout(() => {
 		focusElement(removedModal?.returnElement)

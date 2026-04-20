@@ -9,7 +9,7 @@
 						<img
 							:src="`${$app.resourcesPath}f-login__brand.png?v=${$app.genio.buildVersion}`"
 							:alt="texts.enter" />
-						<p>{{ texts.appName }}</p>
+						<h1>{{ texts.appName }}</h1>
 					</div>
 
 					<p class="q-logon-text">{{ texts.authentication }}</p>
@@ -42,7 +42,7 @@
 									v-model="currentUser"
 									name="username"
 									:placeholder="texts.user"
-									@keyup.enter="executeLogon"
+									@keyup.enter="executeLogon()"
 									@input="hideUserError" />
 							</q-input-group>
 
@@ -60,8 +60,9 @@
 								:model-value="password"
 								name="password"
 								:placeholder="texts.password"
+								:show-password-label="texts.showPassword"
 								@update:model-value="updatePasswordValue"
-								@keyup-enter="executeLogon"
+								@keyup-enter="executeLogon()"
 								:readonly="!$app.layout.ShowPasswordToggle">
 								<template #prepend>
 									<span>
@@ -79,18 +80,32 @@
 							</div>
 
 							<div class="q-logon-btns-container">
+								<template v-if="model.AuthMode === 2">
+									<q-button
+										v-for="value in model.UserPassMethods"
+										:key="value.Id"
+										id="login-btn"
+										block
+										borderless
+										class="q-button--login"
+										:title="value.Description ?? texts.enter"
+										:label="value.Description ?? texts.enter"
+										:loading="loading"
+										:data-loading="loading"
+										@click="executeLogon(value)" />
+								</template>
 								<q-button
-									v-for="value in model.UserPassMethods"
-									:key="value.Id"
+									v-else-if="model.AuthMode === 1"
 									id="login-btn"
 									block
 									borderless
 									class="q-button--login"
+									variant="outlined"
 									:title="texts.enter"
 									:label="texts.enter"
 									:loading="loading"
 									:data-loading="loading"
-									@click="executeLogon(value)" />
+									@click="executeLogon()" />
 
 								<q-register-button
 									v-if="allowRegistration && $app.layout.UserRegisterStyle === 'button'"
@@ -179,7 +194,8 @@
 
 				model: {
 					UserPassMethods: [],
-					AuthRedirectMethods: []
+					AuthRedirectMethods: [],
+					AuthMode: -1
 				},
 
 				texts: {
@@ -189,7 +205,8 @@
 					authentication: computed(() => this.Resources[hardcodedTexts.authentication]),
 					register: computed(() => this.Resources[hardcodedTexts.register]),
 					password: computed(() => this.Resources[hardcodedTexts.password]),
-					forgotPassword: computed(() => this.Resources[hardcodedTexts.forgotPassword])
+					forgotPassword: computed(() => this.Resources[hardcodedTexts.forgotPassword]),
+					showPassword: computed(() => this.Resources[hardcodedTexts.showPassword])
 				}
 			}
 		},
@@ -430,7 +447,8 @@
 					this.Resources[hardcodedTexts.enter6DigitCode],
 					'question',
 					null,
-					buttons, {
+					buttons,
+					{
 						input: {
 							type: 'text',
 							placeholder: '000000',
@@ -497,6 +515,7 @@
 
 				this.model.UserPassMethods = data.AuthRedirectMethods.filter(x => x.CredentialType === 'UserPassCredential')
 				this.model.AuthRedirectMethods = data.AuthRedirectMethods.filter(x => x.CredentialType === 'TokenCredential')
+				this.model.AuthMode = data.AuthMode
 
 				// Update the store data
 				this.setPasswordRecovery(data.HasPasswordRecovery)

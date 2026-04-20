@@ -1,20 +1,20 @@
-﻿using JsonIgnoreAttribute = System.Text.Json.Serialization.JsonIgnoreAttribute;
+﻿using CSGenio.business;
+using CSGenio.framework;
+using CSGenio.persistence;
+using GenioMVC.Helpers;
+using GenioMVC.Models.Exception;
+using GenioMVC.Models.Navigation;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Quidgest.Persistence;
+using Quidgest.Persistence.GenericQuery;
+
 using System.Collections;
 using System.Collections.Concurrent;
 using System.Collections.Specialized;
 using System.ComponentModel.DataAnnotations;
 using System.Data;
 using System.Globalization;
-
-using CSGenio.business;
-using CSGenio.framework;
-using CSGenio.persistence;
-using GenioMVC.Helpers;
-using GenioMVC.Models.Exception;
-using GenioMVC.Models.Navigation;
-using Quidgest.Persistence;
-using Quidgest.Persistence.GenericQuery;
+using System.Text.Json.Serialization;
 
 namespace GenioMVC.ViewModels.Lnhpd
 {
@@ -40,6 +40,7 @@ namespace GenioMVC.ViewModels.Lnhpd
 		public string ValCodtpequ { get; set; }
 
 		#endregion
+
 		/// <summary>
 		/// Title: "Order no:" | Type: "N"
 		/// </summary>
@@ -62,8 +63,6 @@ namespace GenioMVC.ViewModels.Lnhpd
 		/// Title: "Amount" | Type: "ND"
 		/// </summary>
 		public decimal? ValQuantdec { get; set; }
-
-
 
 		#region Navigations
 		#endregion
@@ -240,12 +239,7 @@ namespace GenioMVC.ViewModels.Lnhpd
 			}
 		}
 
-		/// <summary>
-		/// Sets the value of a single property of the view model based on the provided table and field names.
-		/// </summary>
-		/// <param name="fullFieldName">The full field name in the format "table.field".</param>
-		/// <param name="value">The field value.</param>
-		/// <exception cref="ArgumentNullException">Thrown if <paramref name="fullFieldName"/> is null.</exception>
+		/// <inheritdoc />
 		public override void SetViewModelValue(string fullFieldName, object value)
 		{
 			try
@@ -383,6 +377,7 @@ namespace GenioMVC.ViewModels.Lnhpd
 
 			Load_Lnhpd___pedidnrpedido(qs, lazyLoad);
 			Load_Lnhpd___tpequtipoequi(qs, lazyLoad);
+
 // USE /[MANUAL GQT VIEWMODEL_LOADPARTIAL LNHPD]/
 		}
 
@@ -452,10 +447,7 @@ namespace GenioMVC.ViewModels.Lnhpd
 				}
 			}
 
-			TablePedidNrpedido = new TableDBEdit<Models.Pedid>
-			{
-				IsLazyLoad = lazyLoad
-			};
+			TablePedidNrpedido = new TableDBEdit<Models.Pedid>();
 
 			if (lazyLoad)
 			{
@@ -498,7 +490,7 @@ namespace GenioMVC.ViewModels.Lnhpd
 				int numberItems = CSGenio.framework.Configuration.NrRegDBedit;
 				int offset = (page - 1) * numberItems;
 
-				FieldRef[] fields = new FieldRef[] { CSGenioApedid.FldCodpedid, CSGenioApedid.FldNrpedido, CSGenioApedid.FldZzstate };
+				FieldRef[] fields = [CSGenioApedid.FldCodpedid, CSGenioApedid.FldNrpedido, CSGenioApedid.FldZzstate];
 
 // USE /[MANUAL GQT OVERRQ LNHPD_PEDIDNRPEDIDO]/
 
@@ -641,10 +633,7 @@ namespace GenioMVC.ViewModels.Lnhpd
 				}
 			}
 
-			TableTpequTipoequi = new TableDBEdit<Models.Tpequ>
-			{
-				IsLazyLoad = lazyLoad
-			};
+			TableTpequTipoequi = new TableDBEdit<Models.Tpequ>();
 
 			if (lazyLoad)
 			{
@@ -688,7 +677,7 @@ namespace GenioMVC.ViewModels.Lnhpd
 				int numberItems = CSGenio.framework.Configuration.NrRegDBedit;
 				int offset = (page - 1) * numberItems;
 
-				FieldRef[] fields = new FieldRef[] { CSGenioAtpequ.FldCodtpequ, CSGenioAtpequ.FldTipoequi, CSGenioAtpequ.FldZzstate };
+				FieldRef[] fields = [CSGenioAtpequ.FldCodtpequ, CSGenioAtpequ.FldTipoequi, CSGenioAtpequ.FldZzstate];
 
 // USE /[MANUAL GQT OVERRQ LNHPD_TPEQUTIPOEQUI]/
 

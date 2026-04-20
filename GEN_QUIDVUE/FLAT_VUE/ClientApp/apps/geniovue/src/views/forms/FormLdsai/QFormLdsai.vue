@@ -9,12 +9,13 @@
 			<div
 				v-if="showFormHeader"
 				class="c-action-bar">
-				<h1
+				<component
 					v-if="formControl.uiComponents.header && formInfo.designation"
+					:is="topHeadingTag"
 					:id="formTitleId"
 					class="form-header">
 					{{ formInfo.designation }}
-				</h1>
+				</component>
 
 				<div class="c-action-bar__menu">
 					<template
@@ -40,13 +41,10 @@
 									@click="btn.action">
 									<template v-if="btn.icon">
 										<q-badge-indicator
-											v-if="btn.badge && btn.badge.isVisible"
-											:color="btn.badge.color">
+											:enabled="btn.badge?.isVisible ?? false"
+											:color="btn.badge?.color">
 											<q-icon v-bind="btn.icon" />
 										</q-badge-indicator>
-										<q-icon
-											v-else
-											v-bind="btn.icon" />
 									</template>
 								</q-toggle-group-item>
 							</template>
@@ -97,6 +95,7 @@
 		<q-container
 			fluid
 			data-key="LDSAI"
+			:data-identifier="primaryKeyValue"
 			:data-loading="!formInitialDataLoaded || !isActiveForm">
 			<template v-if="formControl.initialized && showFormBody">
 				<q-row v-if="controls.LDSAI___OUTPTDOCUMENR.isVisible">
@@ -106,7 +105,8 @@
 						<base-input-structure
 							v-if="controls.LDSAI___OUTPTDOCUMENR.isVisible"
 							class="i-text"
-							v-bind="controls.LDSAI___OUTPTDOCUMENR"
+							v-bind="controls.LDSAI___OUTPTDOCUMENR.wrapperProps"
+							:id="getControlId(controls.LDSAI___OUTPTDOCUMENR)"
 							v-on="controls.LDSAI___OUTPTDOCUMENR.handlers"
 							:loading="controls.LDSAI___OUTPTDOCUMENR.props.loading"
 							:reporting-mode-on="reportingModeCAV"
@@ -114,6 +114,7 @@
 							<q-lookup
 								v-if="controls.LDSAI___OUTPTDOCUMENR.isVisible"
 								v-bind="controls.LDSAI___OUTPTDOCUMENR.props"
+								:id="getControlId(controls.LDSAI___OUTPTDOCUMENR)"
 								v-on="controls.LDSAI___OUTPTDOCUMENR.handlers" />
 							<q-see-more-ldsai-outptdocumenr
 								v-if="controls.LDSAI___OUTPTDOCUMENR.seeMoreIsVisible"
@@ -126,9 +127,9 @@
 					<q-col v-if="controls.LDSAI___PSEUDNOVOGR01.isVisible">
 						<q-group-box-container
 							v-if="controls.LDSAI___PSEUDNOVOGR01.isVisible"
-							id="LDSAI___PSEUDNOVOGR01"
 							v-bind="controls.LDSAI___PSEUDNOVOGR01"
-							:is-visible="controls.LDSAI___PSEUDNOVOGR01.isVisible">
+							:id="getControlId(controls.LDSAI___PSEUDNOVOGR01)"
+							:no-border="controls.LDSAI___PSEUDNOVOGR01.borderless">
 							<!-- Start LDSAI___PSEUDNOVOGR01 -->
 							<q-row v-if="controls.LDSAI___OUTPULINE____.isVisible || controls.LDSAI___WAREHWAREHDES.isVisible">
 								<q-col
@@ -137,7 +138,8 @@
 									<base-input-structure
 										v-if="controls.LDSAI___OUTPULINE____.isVisible"
 										class="i-text"
-										v-bind="controls.LDSAI___OUTPULINE____"
+										v-bind="controls.LDSAI___OUTPULINE____.wrapperProps"
+										:id="getControlId(controls.LDSAI___OUTPULINE____)"
 										v-on="controls.LDSAI___OUTPULINE____.handlers"
 										:loading="controls.LDSAI___OUTPULINE____.props.loading"
 										:reporting-mode-on="reportingModeCAV"
@@ -145,6 +147,7 @@
 										<q-numeric-input
 											v-if="controls.LDSAI___OUTPULINE____.isVisible"
 											v-bind="controls.LDSAI___OUTPULINE____.props"
+											:id="getControlId(controls.LDSAI___OUTPULINE____)"
 											@update:model-value="model.ValLine.fnUpdateValue" />
 									</base-input-structure>
 								</q-col>
@@ -154,7 +157,8 @@
 									<base-input-structure
 										v-if="controls.LDSAI___WAREHWAREHDES.isVisible"
 										class="i-text"
-										v-bind="controls.LDSAI___WAREHWAREHDES"
+										v-bind="controls.LDSAI___WAREHWAREHDES.wrapperProps"
+										:id="getControlId(controls.LDSAI___WAREHWAREHDES)"
 										v-on="controls.LDSAI___WAREHWAREHDES.handlers"
 										:loading="controls.LDSAI___WAREHWAREHDES.props.loading"
 										:reporting-mode-on="reportingModeCAV"
@@ -162,6 +166,7 @@
 										<q-lookup
 											v-if="controls.LDSAI___WAREHWAREHDES.isVisible"
 											v-bind="controls.LDSAI___WAREHWAREHDES.props"
+											:id="getControlId(controls.LDSAI___WAREHWAREHDES)"
 											v-on="controls.LDSAI___WAREHWAREHDES.handlers" />
 										<q-see-more-ldsai-warehwarehdes
 											v-if="controls.LDSAI___WAREHWAREHDES.seeMoreIsVisible"
@@ -177,7 +182,8 @@
 									<base-input-structure
 										v-if="controls.LDSAI___ITEM_ITEMDES_.isVisible"
 										class="i-text"
-										v-bind="controls.LDSAI___ITEM_ITEMDES_"
+										v-bind="controls.LDSAI___ITEM_ITEMDES_.wrapperProps"
+										:id="getControlId(controls.LDSAI___ITEM_ITEMDES_)"
 										v-on="controls.LDSAI___ITEM_ITEMDES_.handlers"
 										:loading="controls.LDSAI___ITEM_ITEMDES_.props.loading"
 										:reporting-mode-on="reportingModeCAV"
@@ -185,6 +191,7 @@
 										<q-lookup
 											v-if="controls.LDSAI___ITEM_ITEMDES_.isVisible"
 											v-bind="controls.LDSAI___ITEM_ITEMDES_.props"
+											:id="getControlId(controls.LDSAI___ITEM_ITEMDES_)"
 											v-on="controls.LDSAI___ITEM_ITEMDES_.handlers" />
 										<q-see-more-ldsai-item-itemdes
 											v-if="controls.LDSAI___ITEM_ITEMDES_.seeMoreIsVisible"
@@ -200,7 +207,8 @@
 									<base-input-structure
 										v-if="controls.LDSAI___OUTPUEXITQNTY.isVisible"
 										class="i-text"
-										v-bind="controls.LDSAI___OUTPUEXITQNTY"
+										v-bind="controls.LDSAI___OUTPUEXITQNTY.wrapperProps"
+										:id="getControlId(controls.LDSAI___OUTPUEXITQNTY)"
 										v-on="controls.LDSAI___OUTPUEXITQNTY.handlers"
 										:loading="controls.LDSAI___OUTPUEXITQNTY.props.loading"
 										:reporting-mode-on="reportingModeCAV"
@@ -208,6 +216,7 @@
 										<q-numeric-input
 											v-if="controls.LDSAI___OUTPUEXITQNTY.isVisible"
 											v-bind="controls.LDSAI___OUTPUEXITQNTY.props"
+											:id="getControlId(controls.LDSAI___OUTPUEXITQNTY)"
 											@update:model-value="model.ValExitqnty.fnUpdateValue" />
 									</base-input-structure>
 								</q-col>
@@ -217,7 +226,8 @@
 									<base-input-structure
 										v-if="controls.LDSAI___OUDOCNRDOCSDA.isVisible"
 										class="i-text"
-										v-bind="controls.LDSAI___OUDOCNRDOCSDA"
+										v-bind="controls.LDSAI___OUDOCNRDOCSDA.wrapperProps"
+										:id="getControlId(controls.LDSAI___OUDOCNRDOCSDA)"
 										v-on="controls.LDSAI___OUDOCNRDOCSDA.handlers"
 										:loading="controls.LDSAI___OUDOCNRDOCSDA.props.loading"
 										:reporting-mode-on="reportingModeCAV"
@@ -225,6 +235,7 @@
 										<q-lookup
 											v-if="controls.LDSAI___OUDOCNRDOCSDA.isVisible"
 											v-bind="controls.LDSAI___OUDOCNRDOCSDA.props"
+											:id="getControlId(controls.LDSAI___OUDOCNRDOCSDA)"
 											v-on="controls.LDSAI___OUDOCNRDOCSDA.handlers" />
 										<q-see-more-ldsai-oudocnrdocsda
 											v-if="controls.LDSAI___OUDOCNRDOCSDA.seeMoreIsVisible"
@@ -241,7 +252,7 @@
 		</q-container>
 	</teleport>
 
-	<hr v-if="!isPopup && showFormFooter" />
+	<q-divider v-if="!isPopup && showFormFooter" />
 
 	<teleport
 		v-if="formModalIsReady && showFormFooter"
@@ -624,6 +635,7 @@
 						label: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
+						borderless: false,
 						isCollapsible: false,
 						anchored: false,
 						directChildren: ['LDSAI___OUTPULINE____', 'LDSAI___WAREHWAREHDES', 'LDSAI___ITEM_ITEMDES_', 'LDSAI___OUTPUEXITQNTY', 'LDSAI___OUDOCNRDOCSDA'],
@@ -1169,7 +1181,6 @@
 
 				this.afterControlUpdate(controlField, fieldValue)
 			},
-
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
 // USE /[MANUAL GQT FUNCTIONS_JS LDSAI]/
 // eslint-disable-next-line

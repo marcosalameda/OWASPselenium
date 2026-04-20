@@ -9,12 +9,13 @@
 			<div
 				v-if="showFormHeader"
 				class="c-action-bar">
-				<h1
+				<component
 					v-if="formControl.uiComponents.header && formInfo.designation"
+					:is="topHeadingTag"
 					:id="formTitleId"
 					class="form-header">
 					{{ formInfo.designation }}
-				</h1>
+				</component>
 
 				<div class="c-action-bar__menu">
 					<template
@@ -40,13 +41,10 @@
 									@click="btn.action">
 									<template v-if="btn.icon">
 										<q-badge-indicator
-											v-if="btn.badge && btn.badge.isVisible"
-											:color="btn.badge.color">
+											:enabled="btn.badge?.isVisible ?? false"
+											:color="btn.badge?.color">
 											<q-icon v-bind="btn.icon" />
 										</q-badge-indicator>
-										<q-icon
-											v-else
-											v-bind="btn.icon" />
 									</template>
 								</q-toggle-group-item>
 							</template>
@@ -97,6 +95,7 @@
 		<q-container
 			fluid
 			data-key="SBCAT"
+			:data-identifier="primaryKeyValue"
 			:data-loading="!formInitialDataLoaded || !isActiveForm">
 			<template v-if="formControl.initialized && showFormBody">
 				<q-row v-if="controls.SBCAT___SBCATSUBCATEG.isVisible">
@@ -106,13 +105,15 @@
 						<base-input-structure
 							v-if="controls.SBCAT___SBCATSUBCATEG.isVisible"
 							class="i-text"
-							v-bind="controls.SBCAT___SBCATSUBCATEG"
+							v-bind="controls.SBCAT___SBCATSUBCATEG.wrapperProps"
+							:id="getControlId(controls.SBCAT___SBCATSUBCATEG)"
 							v-on="controls.SBCAT___SBCATSUBCATEG.handlers"
 							:loading="controls.SBCAT___SBCATSUBCATEG.props.loading"
 							:reporting-mode-on="reportingModeCAV"
 							:suggestion-mode-on="suggestionModeOn">
 							<q-text-field
 								v-bind="controls.SBCAT___SBCATSUBCATEG.props"
+								:id="getControlId(controls.SBCAT___SBCATSUBCATEG)"
 								@blur="onBlur(controls.SBCAT___SBCATSUBCATEG, model.ValSubcateg.value)"
 								@change="model.ValSubcateg.fnUpdateValueOnChange" />
 						</base-input-structure>
@@ -122,7 +123,7 @@
 		</q-container>
 	</teleport>
 
-	<hr v-if="!isPopup && showFormFooter" />
+	<q-divider v-if="!isPopup && showFormFooter" />
 
 	<teleport
 		v-if="formModalIsReady && showFormFooter"
@@ -851,7 +852,6 @@
 
 				this.afterControlUpdate(controlField, fieldValue)
 			},
-
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
 // USE /[MANUAL GQT FUNCTIONS_JS SBCAT]/
 // eslint-disable-next-line

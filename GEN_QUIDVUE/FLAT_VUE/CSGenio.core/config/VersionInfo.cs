@@ -12,24 +12,24 @@ namespace CSGenio.framework
         /// <summary>
         /// Main application version number
         /// </summary>
-        public static int Version { get; } = 4420;
+        public static int Version { get; } = 3842;
 
         /// <summary>
         /// Version of the database
         /// CI/CD: Database schema version
         /// </summary>
-        public const int DatabaseSchema = 4420;
+        public const int DatabaseSchema = 3842;
 
         /// <summary>
         /// Version of the database indexes
         /// CI/CD: Database index version
         /// </summary>
-        public const int DatabaseIndex = 2101;
+        public const int DatabaseIndex = 1504;
 
         /// <summary>
         /// Version of the latest version change routines
         /// </summary>
-        public const int ChangeRoutines = 2;
+        public const int ChangeRoutines = 0;
 
         /// <summary>
         /// Version of the latest user settings format
@@ -40,12 +40,12 @@ namespace CSGenio.framework
         /// <summary>
         /// Genio generator version
         /// </summary>
-        public const string GenioVersion = "378.77";
+        public const string GenioVersion = "354.08";
 
         /// <summary>
         /// Generated version. Is incremented each time there is a generation
         /// </summary>
-        public const int Generation = 3090;
+        public const int Generation = 2827;
 
 
         /// <summary>
@@ -77,7 +77,7 @@ namespace CSGenio.framework
         /// <summary>
         /// Version control number or commit hash
         /// </summary>
-        public static readonly string VersionControl = "438";
+        public static readonly string VersionControl = "300";
 
         /// <summary>
         /// Agregate versioning information string
@@ -93,7 +93,7 @@ namespace CSGenio.framework
         /// <summary>
         /// Date when the code was generated
         /// </summary>
-        public static readonly DateTime GenerationDate = new DateTime(2026, 1, 9);
+        public static readonly DateTime GenerationDate = new DateTime(2026, 4, 20);
 
     }
 }

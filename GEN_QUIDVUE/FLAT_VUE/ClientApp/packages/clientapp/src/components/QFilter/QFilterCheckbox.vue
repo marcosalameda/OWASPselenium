@@ -5,22 +5,28 @@
 		<q-checkbox
 			v-if="isBoolFilter"
 			v-model="model as boolean"
+			:label="props.label"
 			:readonly="props.readonly" />
 		<template v-else>
-			<q-checkbox
+			<q-row
 				v-for="item in props.items"
-				:label="item.value.toString()"
 				:key="'filter-option-' + item.key"
-				:model-value="checkboxValue(item.key)"
-				:readonly="props.readonly"
-				@update:model-value="(val: boolean) => toggleSelection(item.key, val)" />
+				:gutter="1">
+				<q-col cols="auto">
+					<q-checkbox
+						:label="item.value.toString()"
+						:model-value="checkboxValue(item.key)"
+						:readonly="props.readonly"
+						@update:model-value="(val: boolean) => toggleSelection(item.key, val)" />
+				</q-col>
+			</q-row>
 		</template>
 	</div>
 </template>
 
 <script setup lang="ts">
 	// Components
-	import { QCheckbox } from '@quidgest/ui/components'
+	import { QCheckbox, QCol, QRow } from '@quidgest/ui/components'
 
 	// Types
 	import type { FilterType, FilterValue, QFilterGroupProps } from './types'
@@ -77,9 +83,9 @@
 	 * @param checked True if the checkbox is being checked, false if it is being unchecked.
 	 */
 	function toggleSelection(key: FilterType, checked: boolean) {
-		if (!Array.isArray(model.value)) return
-
-		const filterValues = [...model.value]
+		const filterValues = Array.isArray(model.value)
+			? [...model.value]
+			: []
 		const idx = filterValues.indexOf(key)
 
 		if (checked && idx === -1) filterValues.push(key)

@@ -11,9 +11,7 @@
 							:columns="tableTest.columns"
 							:config="tableTest.config"
 							:readonly="tableTest.readonly"
-							:rows-checked="tableTest.rowsChecked"
-							@check-row="checkRow(tableTest.rowsChecked, $event)"
-							@uncheck-row="uncheckRow(tableTest.rowsChecked, $event)" />
+							:rows-checked="tableTest.rowsChecked" />
 
 						<q-check-list-extension
 							search-column-name="Val"
@@ -34,9 +32,7 @@
 							:columns="tableTest.columns"
 							:config="tableTest.config"
 							:readonly="tableTest.readonly"
-							:rows-checked="tableTest.rowsChecked"
-							@check-row="checkRow(tableTest.rowsChecked, $event)"
-							@uncheck-row="uncheckRow(tableTest.rowsChecked, $event)" />
+							:rows-checked="tableTest.rowsChecked" />
 
 						<q-check-list-extension
 							search-column-name="Val"

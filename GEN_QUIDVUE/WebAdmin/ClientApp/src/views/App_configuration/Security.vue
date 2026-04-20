@@ -1252,8 +1252,15 @@
 			rowType(newValue) {
 				if (newValue && this.showIdentityDialog) {
 					//if the dialog is open and the provider type changes, try to match up the current options with the new type list of properties
-					const propIndex = this.identityProvidersRows.findIndex(value => value.Rownum == this.rowNum);
-					this.tempConfig = ReadProviderConfig(newValue, this.identityProvidersRows[propIndex].Options, this.SelectLists.IdentityProviderTypeList);
+					const currentRow = this.identityProvidersRows.find(
+						row => row.Rownum === this.rowNum
+					);
+
+					this.tempConfig = ReadProviderConfig(
+						newValue,
+						currentRow?.Options ?? null,
+						this.SelectLists.IdentityProviderTypeList
+					);
 				}
 			},
 			roleType(newValue) {

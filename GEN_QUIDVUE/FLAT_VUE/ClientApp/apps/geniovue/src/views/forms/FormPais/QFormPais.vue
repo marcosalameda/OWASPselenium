@@ -9,12 +9,13 @@
 			<div
 				v-if="showFormHeader"
 				class="c-action-bar">
-				<h1
+				<component
 					v-if="formControl.uiComponents.header && formInfo.designation"
+					:is="topHeadingTag"
 					:id="formTitleId"
 					class="form-header">
 					{{ formInfo.designation }}
-				</h1>
+				</component>
 
 				<div class="c-action-bar__menu">
 					<template
@@ -40,13 +41,10 @@
 									@click="btn.action">
 									<template v-if="btn.icon">
 										<q-badge-indicator
-											v-if="btn.badge && btn.badge.isVisible"
-											:color="btn.badge.color">
+											:enabled="btn.badge?.isVisible ?? false"
+											:color="btn.badge?.color">
 											<q-icon v-bind="btn.icon" />
 										</q-badge-indicator>
-										<q-icon
-											v-else
-											v-bind="btn.icon" />
 									</template>
 								</q-toggle-group-item>
 							</template>
@@ -97,6 +95,7 @@
 		<q-container
 			fluid
 			data-key="PAIS"
+			:data-identifier="primaryKeyValue"
 			:data-loading="!formInitialDataLoaded || !isActiveForm">
 			<template v-if="formControl.initialized && showFormBody">
 				<q-row v-if="controls.PAIS____PSEUDNOVOGR02.isVisible">
@@ -105,9 +104,9 @@
 						cols="auto">
 						<q-group-box-container
 							v-if="controls.PAIS____PSEUDNOVOGR02.isVisible"
-							id="PAIS____PSEUDNOVOGR02"
 							v-bind="controls.PAIS____PSEUDNOVOGR02"
-							:is-visible="controls.PAIS____PSEUDNOVOGR02.isVisible">
+							:id="getControlId(controls.PAIS____PSEUDNOVOGR02)"
+							:no-border="controls.PAIS____PSEUDNOVOGR02.borderless">
 							<!-- Start PAIS____PSEUDNOVOGR02 -->
 							<q-row v-if="controls.PAIS____CNTRYCOUNTRY_.isVisible || controls.PAIS____CNTRYACTIVE__.isVisible">
 								<q-col
@@ -116,13 +115,15 @@
 									<base-input-structure
 										v-if="controls.PAIS____CNTRYCOUNTRY_.isVisible"
 										class="i-text"
-										v-bind="controls.PAIS____CNTRYCOUNTRY_"
+										v-bind="controls.PAIS____CNTRYCOUNTRY_.wrapperProps"
+										:id="getControlId(controls.PAIS____CNTRYCOUNTRY_)"
 										v-on="controls.PAIS____CNTRYCOUNTRY_.handlers"
 										:loading="controls.PAIS____CNTRYCOUNTRY_.props.loading"
 										:reporting-mode-on="reportingModeCAV"
 										:suggestion-mode-on="suggestionModeOn">
 										<q-text-field
 											v-bind="controls.PAIS____CNTRYCOUNTRY_.props"
+											:id="getControlId(controls.PAIS____CNTRYCOUNTRY_)"
 											@blur="onBlur(controls.PAIS____CNTRYCOUNTRY_, model.ValCountry.value)"
 											@change="model.ValCountry.fnUpdateValueOnChange" />
 									</base-input-structure>
@@ -132,8 +133,9 @@
 									cols="auto">
 									<base-input-structure
 										v-if="controls.PAIS____CNTRYACTIVE__.isVisible"
-										class="i-checkbox"
-										v-bind="controls.PAIS____CNTRYACTIVE__"
+										class="i-text"
+										v-bind="controls.PAIS____CNTRYACTIVE__.wrapperProps"
+										:id="getControlId(controls.PAIS____CNTRYACTIVE__)"
 										v-on="controls.PAIS____CNTRYACTIVE__.handlers"
 										:loading="controls.PAIS____CNTRYACTIVE__.props.loading"
 										:reporting-mode-on="reportingModeCAV"
@@ -142,6 +144,7 @@
 											<q-checkbox
 												v-if="controls.PAIS____CNTRYACTIVE__.isVisible"
 												v-bind="controls.PAIS____CNTRYACTIVE__.props"
+												:id="getControlId(controls.PAIS____CNTRYACTIVE__)"
 												v-on="controls.PAIS____CNTRYACTIVE__.handlers" />
 										</template>
 									</base-input-structure>
@@ -151,9 +154,9 @@
 								<q-col v-if="controls.PAIS____PSEUDNOVOGR01.isVisible">
 									<q-group-box-container
 										v-if="controls.PAIS____PSEUDNOVOGR01.isVisible"
-										id="PAIS____PSEUDNOVOGR01"
 										v-bind="controls.PAIS____PSEUDNOVOGR01"
-										:is-visible="controls.PAIS____PSEUDNOVOGR01.isVisible">
+										:id="getControlId(controls.PAIS____PSEUDNOVOGR01)"
+										:no-border="controls.PAIS____PSEUDNOVOGR01.borderless">
 										<!-- Start PAIS____PSEUDNOVOGR01 -->
 										<q-row v-if="controls.PAIS____CNTRYCODIGONR.isVisible || controls.PAIS____CNTRYALFA2___.isVisible || controls.PAIS____CNTRYALFA3___.isVisible">
 											<q-col
@@ -162,13 +165,15 @@
 												<base-input-structure
 													v-if="controls.PAIS____CNTRYCODIGONR.isVisible"
 													class="i-text"
-													v-bind="controls.PAIS____CNTRYCODIGONR"
+													v-bind="controls.PAIS____CNTRYCODIGONR.wrapperProps"
+													:id="getControlId(controls.PAIS____CNTRYCODIGONR)"
 													v-on="controls.PAIS____CNTRYCODIGONR.handlers"
 													:loading="controls.PAIS____CNTRYCODIGONR.props.loading"
 													:reporting-mode-on="reportingModeCAV"
 													:suggestion-mode-on="suggestionModeOn">
 													<q-text-field
 														v-bind="controls.PAIS____CNTRYCODIGONR.props"
+														:id="getControlId(controls.PAIS____CNTRYCODIGONR)"
 														@blur="onBlur(controls.PAIS____CNTRYCODIGONR, model.ValCodigonr.value)"
 														@change="model.ValCodigonr.fnUpdateValueOnChange" />
 												</base-input-structure>
@@ -179,13 +184,15 @@
 												<base-input-structure
 													v-if="controls.PAIS____CNTRYALFA2___.isVisible"
 													class="i-text"
-													v-bind="controls.PAIS____CNTRYALFA2___"
+													v-bind="controls.PAIS____CNTRYALFA2___.wrapperProps"
+													:id="getControlId(controls.PAIS____CNTRYALFA2___)"
 													v-on="controls.PAIS____CNTRYALFA2___.handlers"
 													:loading="controls.PAIS____CNTRYALFA2___.props.loading"
 													:reporting-mode-on="reportingModeCAV"
 													:suggestion-mode-on="suggestionModeOn">
 													<q-text-field
 														v-bind="controls.PAIS____CNTRYALFA2___.props"
+														:id="getControlId(controls.PAIS____CNTRYALFA2___)"
 														@blur="onBlur(controls.PAIS____CNTRYALFA2___, model.ValAlfa2.value)"
 														@change="model.ValAlfa2.fnUpdateValueOnChange" />
 												</base-input-structure>
@@ -196,13 +203,15 @@
 												<base-input-structure
 													v-if="controls.PAIS____CNTRYALFA3___.isVisible"
 													class="i-text"
-													v-bind="controls.PAIS____CNTRYALFA3___"
+													v-bind="controls.PAIS____CNTRYALFA3___.wrapperProps"
+													:id="getControlId(controls.PAIS____CNTRYALFA3___)"
 													v-on="controls.PAIS____CNTRYALFA3___.handlers"
 													:loading="controls.PAIS____CNTRYALFA3___.props.loading"
 													:reporting-mode-on="reportingModeCAV"
 													:suggestion-mode-on="suggestionModeOn">
 													<q-text-field
 														v-bind="controls.PAIS____CNTRYALFA3___.props"
+														:id="getControlId(controls.PAIS____CNTRYALFA3___)"
 														@blur="onBlur(controls.PAIS____CNTRYALFA3___, model.ValAlfa3.value)"
 														@change="model.ValAlfa3.fnUpdateValueOnChange" />
 												</base-input-structure>
@@ -219,7 +228,8 @@
 									<base-input-structure
 										v-if="controls.PAIS____CNTRYFLAG____.isVisible"
 										class="q-image"
-										v-bind="controls.PAIS____CNTRYFLAG____"
+										v-bind="controls.PAIS____CNTRYFLAG____.wrapperProps"
+										:id="getControlId(controls.PAIS____CNTRYFLAG____)"
 										v-on="controls.PAIS____CNTRYFLAG____.handlers"
 										:loading="controls.PAIS____CNTRYFLAG____.props.loading"
 										:reporting-mode-on="reportingModeCAV"
@@ -227,6 +237,7 @@
 										<q-image
 											v-if="controls.PAIS____CNTRYFLAG____.isVisible"
 											v-bind="controls.PAIS____CNTRYFLAG____.props"
+											:id="getControlId(controls.PAIS____CNTRYFLAG____)"
 											v-on="controls.PAIS____CNTRYFLAG____.handlers" />
 									</base-input-structure>
 								</q-col>
@@ -243,6 +254,7 @@
 							v-if="controls.PAIS____PSEUDIMOVEL__.isVisible"
 							:ref="controls.PAIS____PSEUDIMOVEL__.id"
 							v-bind="controls.PAIS____PSEUDIMOVEL__"
+							:id="getControlId(controls.PAIS____PSEUDIMOVEL__)"
 							v-on="controls.PAIS____PSEUDIMOVEL__.handlers" />
 					</q-col>
 				</q-row>
@@ -252,10 +264,9 @@
 						cols="auto">
 						<q-group-box-container
 							v-if="controls.PAIS____PSEUDNOVOGR04.isVisible"
-							id="PAIS____PSEUDNOVOGR04"
 							v-bind="controls.PAIS____PSEUDNOVOGR04"
-							no-border
-							:is-visible="controls.PAIS____PSEUDNOVOGR04.isVisible">
+							:id="getControlId(controls.PAIS____PSEUDNOVOGR04)"
+							:no-border="controls.PAIS____PSEUDNOVOGR04.borderless">
 							<!-- Start PAIS____PSEUDNOVOGR04 -->
 							<q-row v-if="controls.PAIS____PSEUDNOVOGR03.isVisible">
 								<q-col
@@ -263,10 +274,9 @@
 									cols="auto">
 									<q-group-box-container
 										v-if="controls.PAIS____PSEUDNOVOGR03.isVisible"
-										id="PAIS____PSEUDNOVOGR03"
 										v-bind="controls.PAIS____PSEUDNOVOGR03"
-										no-border
-										:is-visible="controls.PAIS____PSEUDNOVOGR03.isVisible">
+										:id="getControlId(controls.PAIS____PSEUDNOVOGR03)"
+										:no-border="controls.PAIS____PSEUDNOVOGR03.borderless">
 										<!-- Start PAIS____PSEUDNOVOGR03 -->
 										<q-row v-if="controls.PAIS____PSEUDPROPRIE1.isVisible">
 											<q-col
@@ -275,12 +285,13 @@
 												<q-table
 													v-if="controls.PAIS____PSEUDPROPRIE1.isVisible"
 													v-bind="controls.PAIS____PSEUDPROPRIE1"
+													:id="getControlId(controls.PAIS____PSEUDPROPRIE1)"
 													v-on="controls.PAIS____PSEUDPROPRIE1.handlers">
-												<q-table-extra-extension
-													v-if="controls.PAIS____PSEUDPROPRIE1.isVisible"
-													:list-ctrl="controls.PAIS____PSEUDPROPRIE1"
-													:filter-operators="controls.PAIS____PSEUDPROPRIE1.filterOperators"
-													v-on="controls.PAIS____PSEUDPROPRIE1.handlers" />
+													<template #header>
+														<q-table-config
+															:table-ctrl="controls.PAIS____PSEUDPROPRIE1"
+															v-on="controls.PAIS____PSEUDPROPRIE1.handlers" />
+													</template>
 													<!-- USE /[MANUAL GQT CUSTOM_TABLE PAIS____PSEUDPROPRIE1]/ -->
 												</q-table>
 											</q-col>
@@ -300,12 +311,13 @@
 						<q-table
 							v-if="controls.PAIS____PSEUDPROPRIED.isVisible"
 							v-bind="controls.PAIS____PSEUDPROPRIED"
+							:id="getControlId(controls.PAIS____PSEUDPROPRIED)"
 							v-on="controls.PAIS____PSEUDPROPRIED.handlers">
-						<q-table-extra-extension
-							v-if="controls.PAIS____PSEUDPROPRIED.isVisible"
-							:list-ctrl="controls.PAIS____PSEUDPROPRIED"
-							:filter-operators="controls.PAIS____PSEUDPROPRIED.filterOperators"
-							v-on="controls.PAIS____PSEUDPROPRIED.handlers" />
+							<template #header>
+								<q-table-config
+									:table-ctrl="controls.PAIS____PSEUDPROPRIED"
+									v-on="controls.PAIS____PSEUDPROPRIED.handlers" />
+							</template>
 							<!-- USE /[MANUAL GQT CUSTOM_TABLE PAIS____PSEUDPROPRIED]/ -->
 						</q-table>
 					</q-col>
@@ -314,7 +326,7 @@
 		</q-container>
 	</teleport>
 
-	<hr v-if="!isPopup && showFormFooter" />
+	<q-divider v-if="!isPopup && showFormFooter" />
 
 	<teleport
 		v-if="formModalIsReady && showFormFooter"
@@ -663,6 +675,7 @@
 						label: computed(() => this.Resources.COUNTRY64133),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
+						borderless: false,
 						isCollapsible: false,
 						anchored: false,
 						directChildren: ['PAIS____CNTRYCOUNTRY_', 'PAIS____CNTRYACTIVE__', 'PAIS____PSEUDNOVOGR01', 'PAIS____CNTRYFLAG____'],
@@ -704,6 +717,7 @@
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'PAIS____PSEUDNOVOGR02',
+						borderless: false,
 						isCollapsible: false,
 						anchored: false,
 						directChildren: ['PAIS____CNTRYCODIGONR', 'PAIS____CNTRYALFA2___', 'PAIS____CNTRYALFA3___'],
@@ -794,6 +808,7 @@
 						label: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
+						borderless: true,
 						isCollapsible: false,
 						anchored: false,
 						directChildren: ['PAIS____PSEUDNOVOGR03'],
@@ -808,6 +823,7 @@
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'PAIS____PSEUDNOVOGR04',
+						borderless: true,
 						isCollapsible: false,
 						anchored: false,
 						directChildren: ['PAIS____PSEUDPROPRIE1'],
@@ -817,11 +833,12 @@
 					PAIS____PSEUDPROPRIE1: new fieldControlClass.TableListControl({
 						id: 'PAIS____PSEUDPROPRIE1',
 						name: 'PROPRIE1',
-						size: '',
+						size: 'xlarge',
 						label: computed(() => this.Resources.REAL_ESTATE_LIST36497),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'PAIS____PSEUDNOVOGR03',
+						headerLevel: computed(() => this.baseHeadingLevel + 1),
 						controller: 'CNTRY',
 						action: 'Pais_ValProprie1',
 						hasDependencies: false,
@@ -835,6 +852,7 @@
 								label: computed(() => this.Resources.PROPERTY_NAME18934),
 								dataLength: 85,
 								scrollData: 30,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.CurrencyColumn({
 								order: 2,
@@ -845,6 +863,7 @@
 								scrollData: 12,
 								maxDigits: 9,
 								decimalPlaces: 2,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 						],
 						config: {
@@ -863,7 +882,6 @@
 							searchBarConfig: {
 								visibility: false
 							},
-							filtersVisible: false,
 							allowColumnFilters: false,
 							allowColumnSort: true,
 							crudActions: [
@@ -937,9 +955,7 @@
 									id: 'insert',
 									name: 'insert',
 									title: computed(() => this.Resources.INSERIR43365),
-									icon: {
-										icon: 'add'
-									},
+									icon: { icon: 'add' },
 									isInReadOnly: false,
 									params: {
 										action: vm.openFormAction,
@@ -986,7 +1002,7 @@
 								sortOrder: 'asc'
 							}
 						},
-						globalEvents: ['changed-REGIO', 'changed-PAIS1', 'changed-CNTRY', 'changed-PESSO', 'changed-PROPR', 'changed-TPPRO'],
+						globalEvents: ['changed-CNTRY', 'changed-REGIO', 'changed-PAIS1', 'changed-PROPR', 'changed-TPPRO', 'changed-PESSO'],
 						uuid: 'Pais_ValProprie1',
 						allSelectedRows: 'false',
 						controlLimits: [
@@ -1001,10 +1017,11 @@
 					PAIS____PSEUDPROPRIED: new fieldControlClass.TableListControl({
 						id: 'PAIS____PSEUDPROPRIED',
 						name: 'PROPRIED',
-						size: '',
+						size: 'xxlarge',
 						label: computed(() => this.Resources.REAL_STATE_MAP58776),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
+						headerLevel: computed(() => this.baseHeadingLevel + 1),
 						controller: 'CNTRY',
 						action: 'Pais_ValPropried',
 						hasDependencies: false,
@@ -1018,6 +1035,7 @@
 								label: computed(() => this.Resources.PROPERTY_NAME18934),
 								dataLength: 85,
 								scrollData: 30,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.CurrencyColumn({
 								order: 2,
@@ -1028,6 +1046,7 @@
 								scrollData: 12,
 								maxDigits: 9,
 								decimalPlaces: 2,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 3,
@@ -1036,6 +1055,7 @@
 								field: 'ENDERECO',
 								label: computed(() => this.Resources.ADDRESS04342),
 								scrollData: 30,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 4,
@@ -1045,6 +1065,7 @@
 								label: computed(() => this.Resources.LOCALE34521),
 								dataLength: 50,
 								scrollData: 30,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 5,
@@ -1054,6 +1075,7 @@
 								label: computed(() => this.Resources.ZIP_CODE56964),
 								dataLength: 20,
 								scrollData: 20,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 6,
@@ -1063,6 +1085,7 @@
 								label: computed(() => this.Resources.POSTAL_LOCATION08708),
 								dataLength: 50,
 								scrollData: 30,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.BooleanColumn({
 								order: 7,
@@ -1071,6 +1094,7 @@
 								field: 'MOBILADA',
 								label: computed(() => this.Resources.FURNISHED37431),
 								scrollData: 1,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.NumericColumn({
 								order: 8,
@@ -1081,6 +1105,7 @@
 								scrollData: 6,
 								maxDigits: 6,
 								decimalPlaces: 0,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.NumericColumn({
 								order: 9,
@@ -1091,6 +1116,7 @@
 								scrollData: 6,
 								maxDigits: 6,
 								decimalPlaces: 0,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.NumericColumn({
 								order: 10,
@@ -1101,6 +1127,7 @@
 								scrollData: 6,
 								maxDigits: 6,
 								decimalPlaces: 0,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.DateColumn({
 								order: 11,
@@ -1110,6 +1137,7 @@
 								label: computed(() => this.Resources.AVAILABLE_FROM53703),
 								scrollData: 8,
 								dateTimeType: 'date',
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.ImageColumn({
 								order: 12,
@@ -1121,6 +1149,7 @@
 								scrollData: 3,
 								sortable: false,
 								searchable: false,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 13,
@@ -1129,6 +1158,7 @@
 								field: 'DESCRIPT',
 								label: computed(() => this.Resources.DESCRIPTION07383),
 								scrollData: 30,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.GeographicColumn({
 								order: 14,
@@ -1140,6 +1170,7 @@
 								scrollData: 30,
 								sortable: false,
 								searchable: false,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 						],
 						config: {
@@ -1157,7 +1188,6 @@
 							searchBarConfig: {
 								visibility: false
 							},
-							filtersVisible: false,
 							allowColumnFilters: false,
 							allowColumnSort: true,
 							crudActions: [
@@ -1231,9 +1261,7 @@
 									id: 'insert',
 									name: 'insert',
 									title: computed(() => this.Resources.INSERIR43365),
-									icon: {
-										icon: 'add'
-									},
+									icon: { icon: 'add' },
 									isInReadOnly: false,
 									params: {
 										action: vm.openFormAction,
@@ -1280,7 +1308,7 @@
 								sortOrder: 'asc'
 							}
 						},
-						globalEvents: ['changed-REGIO', 'changed-PAIS1', 'changed-CNTRY', 'changed-PESSO', 'changed-PROPR', 'changed-TPPRO'],
+						globalEvents: ['changed-CNTRY', 'changed-REGIO', 'changed-PAIS1', 'changed-PROPR', 'changed-TPPRO', 'changed-PESSO'],
 						uuid: 'Pais_ValPropried',
 						allSelectedRows: 'false',
 						controlLimits: [
@@ -1682,7 +1710,6 @@
 
 				this.afterControlUpdate(controlField, fieldValue)
 			},
-
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
 // USE /[MANUAL GQT FUNCTIONS_JS PAIS]/
 // eslint-disable-next-line

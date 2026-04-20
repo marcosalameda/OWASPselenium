@@ -12,6 +12,6 @@ public class Propr03Form : Subform
 	/// </summary>
 	public IWebElement ProprDescript => throw new NotImplementedException();
 
-	public Propr03Form(IWebDriver driver, FORM_MODE mode, By? containerLocator = null)
-		: base(driver, mode, "PROPR03", "PROPR00", containerLocator: containerLocator) { }
+	public Propr03Form(IWebDriver driver, FORM_MODE mode, By? containerLocator = null, bool usePkInId = false)
+		: base(driver, mode, "PROPR03", "PROPR00", containerLocator: containerLocator, usePkInId: usePkInId) { }
 }

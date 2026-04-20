@@ -31,8 +31,6 @@ export default class ViewModel extends MenuViewModelBase
 		super(vueContext, options)
 		// eslint-disable-next-line @typescript-eslint/no-unused-vars
 		const vm = this.vueContext
-
-		this.selectedRows = {}
 	}
 
 	/**

@@ -73,6 +73,7 @@ export default class ViewModel extends FormViewModelBase
 			field: 'ORGANIZA',
 			maxLength: 85,
 			description: computed(() => this.Resources.ORGANIZATION64123),
+			ignoreFldSubmit: true,
 		}).cloneFrom(values?.TableOrganOrganiza))
 		this.stopWatchers.push(watch(() => this.TableOrganOrganiza.value, (newValue, oldValue) => this.onUpdate('organ.organiza', this.TableOrganOrganiza, newValue, oldValue)))
 

@@ -9,12 +9,13 @@
 			<div
 				v-if="showFormHeader"
 				class="c-action-bar">
-				<h1
+				<component
 					v-if="formControl.uiComponents.header && formInfo.designation"
+					:is="topHeadingTag"
 					:id="formTitleId"
 					class="form-header">
 					{{ formInfo.designation }}
-				</h1>
+				</component>
 
 				<div class="c-action-bar__menu">
 					<template
@@ -40,13 +41,10 @@
 									@click="btn.action">
 									<template v-if="btn.icon">
 										<q-badge-indicator
-											v-if="btn.badge && btn.badge.isVisible"
-											:color="btn.badge.color">
+											:enabled="btn.badge?.isVisible ?? false"
+											:color="btn.badge?.color">
 											<q-icon v-bind="btn.icon" />
 										</q-badge-indicator>
-										<q-icon
-											v-else
-											v-bind="btn.icon" />
 									</template>
 								</q-toggle-group-item>
 							</template>
@@ -97,6 +95,7 @@
 		<q-container
 			fluid
 			data-key="CMPKI"
+			:data-identifier="primaryKeyValue"
 			:data-loading="!formInitialDataLoaded || !isActiveForm">
 			<template v-if="formControl.initialized && showFormBody">
 				<q-row v-if="controls.CMPKI___TPEQUTIPOEQUI.isVisible">
@@ -106,7 +105,8 @@
 						<base-input-structure
 							v-if="controls.CMPKI___TPEQUTIPOEQUI.isVisible"
 							class="i-text"
-							v-bind="controls.CMPKI___TPEQUTIPOEQUI"
+							v-bind="controls.CMPKI___TPEQUTIPOEQUI.wrapperProps"
+							:id="getControlId(controls.CMPKI___TPEQUTIPOEQUI)"
 							v-on="controls.CMPKI___TPEQUTIPOEQUI.handlers"
 							:loading="controls.CMPKI___TPEQUTIPOEQUI.props.loading"
 							:reporting-mode-on="reportingModeCAV"
@@ -114,6 +114,7 @@
 							<q-lookup
 								v-if="controls.CMPKI___TPEQUTIPOEQUI.isVisible"
 								v-bind="controls.CMPKI___TPEQUTIPOEQUI.props"
+								:id="getControlId(controls.CMPKI___TPEQUTIPOEQUI)"
 								v-on="controls.CMPKI___TPEQUTIPOEQUI.handlers" />
 							<q-see-more-cmpki-tpequtipoequi
 								v-if="controls.CMPKI___TPEQUTIPOEQUI.seeMoreIsVisible"
@@ -129,7 +130,8 @@
 						<base-input-structure
 							v-if="controls.CMPKI___CMPKIORDER___.isVisible"
 							class="i-text"
-							v-bind="controls.CMPKI___CMPKIORDER___"
+							v-bind="controls.CMPKI___CMPKIORDER___.wrapperProps"
+							:id="getControlId(controls.CMPKI___CMPKIORDER___)"
 							v-on="controls.CMPKI___CMPKIORDER___.handlers"
 							:loading="controls.CMPKI___CMPKIORDER___.props.loading"
 							:reporting-mode-on="reportingModeCAV"
@@ -137,6 +139,7 @@
 							<q-numeric-input
 								v-if="controls.CMPKI___CMPKIORDER___.isVisible"
 								v-bind="controls.CMPKI___CMPKIORDER___.props"
+								:id="getControlId(controls.CMPKI___CMPKIORDER___)"
 								@update:model-value="model.ValOrder.fnUpdateValue" />
 						</base-input-structure>
 					</q-col>
@@ -146,7 +149,8 @@
 						<base-input-structure
 							v-if="controls.CMPKI___TPEQ1TIPOEQUI.isVisible"
 							class="i-text"
-							v-bind="controls.CMPKI___TPEQ1TIPOEQUI"
+							v-bind="controls.CMPKI___TPEQ1TIPOEQUI.wrapperProps"
+							:id="getControlId(controls.CMPKI___TPEQ1TIPOEQUI)"
 							v-on="controls.CMPKI___TPEQ1TIPOEQUI.handlers"
 							:loading="controls.CMPKI___TPEQ1TIPOEQUI.props.loading"
 							:reporting-mode-on="reportingModeCAV"
@@ -154,6 +158,7 @@
 							<q-lookup
 								v-if="controls.CMPKI___TPEQ1TIPOEQUI.isVisible"
 								v-bind="controls.CMPKI___TPEQ1TIPOEQUI.props"
+								:id="getControlId(controls.CMPKI___TPEQ1TIPOEQUI)"
 								v-on="controls.CMPKI___TPEQ1TIPOEQUI.handlers" />
 							<q-see-more-cmpki-tpeq1tipoequi
 								v-if="controls.CMPKI___TPEQ1TIPOEQUI.seeMoreIsVisible"
@@ -163,7 +168,8 @@
 						<base-input-structure
 							v-if="controls.CMPKI___CMPKIQUANTIDA.isVisible"
 							class="i-text"
-							v-bind="controls.CMPKI___CMPKIQUANTIDA"
+							v-bind="controls.CMPKI___CMPKIQUANTIDA.wrapperProps"
+							:id="getControlId(controls.CMPKI___CMPKIQUANTIDA)"
 							v-on="controls.CMPKI___CMPKIQUANTIDA.handlers"
 							:loading="controls.CMPKI___CMPKIQUANTIDA.props.loading"
 							:reporting-mode-on="reportingModeCAV"
@@ -171,6 +177,7 @@
 							<q-numeric-input
 								v-if="controls.CMPKI___CMPKIQUANTIDA.isVisible"
 								v-bind="controls.CMPKI___CMPKIQUANTIDA.props"
+								:id="getControlId(controls.CMPKI___CMPKIQUANTIDA)"
 								@update:model-value="model.ValQuantida.fnUpdateValue" />
 						</base-input-structure>
 					</q-col>
@@ -182,13 +189,15 @@
 						<base-input-structure
 							v-if="controls.CMPKI___CMPKICODE____.isVisible"
 							class="i-text"
-							v-bind="controls.CMPKI___CMPKICODE____"
+							v-bind="controls.CMPKI___CMPKICODE____.wrapperProps"
+							:id="getControlId(controls.CMPKI___CMPKICODE____)"
 							v-on="controls.CMPKI___CMPKICODE____.handlers"
 							:loading="controls.CMPKI___CMPKICODE____.props.loading"
 							:reporting-mode-on="reportingModeCAV"
 							:suggestion-mode-on="suggestionModeOn">
 							<q-text-field
 								v-bind="controls.CMPKI___CMPKICODE____.props"
+								:id="getControlId(controls.CMPKI___CMPKICODE____)"
 								@blur="onBlur(controls.CMPKI___CMPKICODE____, model.ValCode.value)"
 								@change="model.ValCode.fnUpdateValueOnChange" />
 						</base-input-structure>
@@ -201,7 +210,8 @@
 						<base-input-structure
 							v-if="controls.CMPKI___CMPKIDESCRIPT.isVisible"
 							class="i-textarea"
-							v-bind="controls.CMPKI___CMPKIDESCRIPT"
+							v-bind="controls.CMPKI___CMPKIDESCRIPT.wrapperProps"
+							:id="getControlId(controls.CMPKI___CMPKIDESCRIPT)"
 							v-on="controls.CMPKI___CMPKIDESCRIPT.handlers"
 							:loading="controls.CMPKI___CMPKIDESCRIPT.props.loading"
 							:reporting-mode-on="reportingModeCAV"
@@ -209,6 +219,7 @@
 							<q-text-area
 								v-if="controls.CMPKI___CMPKIDESCRIPT.isVisible"
 								v-bind="controls.CMPKI___CMPKIDESCRIPT.props"
+								:id="getControlId(controls.CMPKI___CMPKIDESCRIPT)"
 								v-on="controls.CMPKI___CMPKIDESCRIPT.handlers" />
 						</base-input-structure>
 					</q-col>
@@ -220,13 +231,15 @@
 						<base-input-structure
 							v-if="controls.CMPKI___CMPKIURL_____.isVisible"
 							class="i-text"
-							v-bind="controls.CMPKI___CMPKIURL_____"
+							v-bind="controls.CMPKI___CMPKIURL_____.wrapperProps"
+							:id="getControlId(controls.CMPKI___CMPKIURL_____)"
 							v-on="controls.CMPKI___CMPKIURL_____.handlers"
 							:loading="controls.CMPKI___CMPKIURL_____.props.loading"
 							:reporting-mode-on="reportingModeCAV"
 							:suggestion-mode-on="suggestionModeOn">
 							<q-text-field
 								v-bind="controls.CMPKI___CMPKIURL_____.props"
+								:id="getControlId(controls.CMPKI___CMPKIURL_____)"
 								@blur="onBlur(controls.CMPKI___CMPKIURL_____, model.ValUrl.value)"
 								@change="model.ValUrl.fnUpdateValueOnChange" />
 						</base-input-structure>
@@ -236,7 +249,7 @@
 		</q-container>
 	</teleport>
 
-	<hr v-if="!isPopup && showFormFooter" />
+	<q-divider v-if="!isPopup && showFormFooter" />
 
 	<teleport
 		v-if="formModalIsReady && showFormFooter"
@@ -1106,7 +1119,6 @@
 
 				this.afterControlUpdate(controlField, fieldValue)
 			},
-
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
 // USE /[MANUAL GQT FUNCTIONS_JS CMPKI]/
 // eslint-disable-next-line

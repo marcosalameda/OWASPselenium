@@ -5,20 +5,6 @@ export default function getMenusRoutes()
 {
 	return [
 		{
-			path: '/:culture/:system/PTN/menu/PTN_171',
-			name: 'menu-PTN_171',
-			component: () => import('@/views/menus/ModulePTN/MenuPTN_171/QMenuPtn171.vue'),
-			meta: {
-				routeType: 'menu',
-				module: 'PTN',
-				order: '171',
-				baseArea: 'UP_RULES',
-				hasInitialPHE: false,
-				humanKeyFields: ['ValDescript'],
-				isPopup: false
-			}
-		},
-		{
 			path: '/:culture/:system/GQT/menu/GQT_711',
 			name: 'menu-GQT_711',
 			component: () => import('@/views/menus/ModuleGQT/MenuGQT_711/QMenuGqt711.vue'),
@@ -75,64 +61,6 @@ export default function getMenusRoutes()
 			}
 		},
 		{
-			path: '/:culture/:system/WMS/menu/WMS_251',
-			name: 'menu-WMS_251',
-			component: () => import('@/views/menus/ModuleWMS/MenuWMS_251/QMenuWms251.vue'),
-			meta: {
-				routeType: 'menu',
-				module: 'WMS',
-				order: '251',
-				baseArea: 'DISST',
-				hasInitialPHE: false,
-				humanKeyFields: ['ValStatus'],
-				isPopup: false
-			}
-		},
-		{
-			path: '/:culture/:system/PTN/menu/PTN_2B1',
-			name: 'menu-PTN_2B1',
-			component: () => import('@/views/menus/ModulePTN/MenuPTN_2B1/QMenuPtn2b1.vue'),
-			meta: {
-				routeType: 'menu',
-				module: 'PTN',
-				order: '2B1',
-				baseArea: 'ASSET',
-				hasInitialPHE: false,
-				humanKeyFields: ['ValName'],
-				isPopup: false
-			}
-		},
-		{
-			path: '/:culture/:system/PTN/menu/PTN_2C11',
-			name: 'menu-PTN_2C11',
-			component: () => import('@/views/menus/ModulePTN/MenuPTN_2C11/QMenuPtn2c11.vue'),
-			beforeEnter: [updateQueryParams],
-			meta: {
-				routeType: 'menu',
-				module: 'PTN',
-				order: '2C11',
-				baseArea: 'ASSET',
-				hasInitialPHE: false,
-				humanKeyFields: ['ValName'],
-				limitations: ['kinde' /* DB */],
-				isPopup: false
-			}
-		},
-		{
-			path: '/:culture/:system/TBS/menu/TBS_1A1',
-			name: 'menu-TBS_1A1',
-			component: () => import('@/views/menus/ModuleTBS/MenuTBS_1A1/QMenuTbs1a1.vue'),
-			meta: {
-				routeType: 'menu',
-				module: 'TBS',
-				order: '1A1',
-				baseArea: 'ASSET',
-				hasInitialPHE: false,
-				humanKeyFields: ['ValName'],
-				isPopup: false
-			}
-		},
-		{
 			path: '/:culture/:system/WMS/menu/WMS_ASSET_CARD',
 			name: 'menu-WMS_ASSET_CARD',
 			component: () => import('@/views/menus/ModuleWMS/MenuWMS_ASSET_CARD/QMenuWmsAssetCard.vue'),
@@ -168,20 +96,6 @@ export default function getMenusRoutes()
 				routeType: 'menu',
 				module: 'PTN',
 				order: '3121',
-				baseArea: 'LENDI',
-				hasInitialPHE: false,
-				humanKeyFields: ['ValLendinnr'],
-				isPopup: false
-			}
-		},
-		{
-			path: '/:culture/:system/PTN/menu/PTN_3171',
-			name: 'menu-PTN_3171',
-			component: () => import('@/views/menus/ModulePTN/MenuPTN_3171/QMenuPtn3171.vue'),
-			meta: {
-				routeType: 'menu',
-				module: 'PTN',
-				order: '3171',
 				baseArea: 'LENDI',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValLendinnr'],
@@ -319,34 +233,6 @@ export default function getMenusRoutes()
 			}
 		},
 		{
-			path: '/:culture/:system/GQT/menu/GQT_DEVOLOBS',
-			name: 'menu-GQT_DEVOLOBS',
-			component: () => import('@/views/menus/ModuleGQT/MenuGQT_DEVOLOBS/QMenuGqtDevolobs.vue'),
-			meta: {
-				routeType: 'menu',
-				module: 'GQT',
-				order: '18111',
-				baseArea: 'LENDI',
-				hasInitialPHE: false,
-				humanKeyFields: ['ValLendinnr'],
-				isPopup: false
-			}
-		},
-		{
-			path: '/:culture/:system/PTN/menu/PTN_291',
-			name: 'menu-PTN_291',
-			component: () => import('@/views/menus/ModulePTN/MenuPTN_291/QMenuPtn291.vue'),
-			meta: {
-				routeType: 'menu',
-				module: 'PTN',
-				order: '291',
-				baseArea: 'CNTRY',
-				hasInitialPHE: false,
-				humanKeyFields: ['ValCountry'],
-				isPopup: false
-			}
-		},
-		{
 			path: '/:culture/:system/IMO/menu/IMO_131',
 			name: 'menu-IMO_131',
 			component: () => import('@/views/menus/ModuleIMO/MenuIMO_131/QMenuImo131.vue'),
@@ -389,23 +275,9 @@ export default function getMenusRoutes()
 			}
 		},
 		{
-			path: '/:culture/:system/WMS/menu/WMS_4271',
-			name: 'menu-WMS_4271',
-			component: () => import('@/views/menus/ModuleWMS/MenuWMS_4271/QMenuWms4271.vue'),
-			meta: {
-				routeType: 'menu',
-				module: 'WMS',
-				order: '4271',
-				baseArea: 'CNTRY',
-				hasInitialPHE: false,
-				humanKeyFields: ['ValCountry'],
-				isPopup: false
-			}
-		},
-		{
-			path: '/:culture/:system/GQT/menu/GQT_REPAIR_LIST',
-			name: 'menu-GQT_REPAIR_LIST',
-			component: () => import('@/views/menus/ModuleGQT/MenuGQT_REPAIR_LIST/QMenuGqtRepairList.vue'),
+			path: '/:culture/:system/GQT/menu/GQT_311',
+			name: 'menu-GQT_311',
+			component: () => import('@/views/menus/ModuleGQT/MenuGQT_311/QMenuGqt311.vue'),
 			meta: {
 				routeType: 'menu',
 				module: 'GQT',
@@ -515,13 +387,13 @@ export default function getMenusRoutes()
 			}
 		},
 		{
-			path: '/:culture/:system/WMS/menu/WMS_211',
-			name: 'menu-WMS_211',
-			component: () => import('@/views/menus/ModuleWMS/MenuWMS_211/QMenuWms211.vue'),
+			path: '/:culture/:system/WMS/menu/WMS_2111',
+			name: 'menu-WMS_2111',
+			component: () => import('@/views/menus/ModuleWMS/MenuWMS_2111/QMenuWms2111.vue'),
 			meta: {
 				routeType: 'menu',
 				module: 'WMS',
-				order: '211',
+				order: '2111',
 				baseArea: 'DISPA',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValDispanr'],
@@ -543,27 +415,13 @@ export default function getMenusRoutes()
 			}
 		},
 		{
-			path: '/:culture/:system/WMS/menu/WMS_2311',
-			name: 'menu-WMS_2311',
-			component: () => import('@/views/menus/ModuleWMS/MenuWMS_2311/QMenuWms2311.vue'),
+			path: '/:culture/:system/WMS/menu/WMS_231',
+			name: 'menu-WMS_231',
+			component: () => import('@/views/menus/ModuleWMS/MenuWMS_231/QMenuWms231.vue'),
 			meta: {
 				routeType: 'menu',
 				module: 'WMS',
-				order: '2311',
-				baseArea: 'DISPA',
-				hasInitialPHE: false,
-				humanKeyFields: ['ValDispanr'],
-				isPopup: false
-			}
-		},
-		{
-			path: '/:culture/:system/WMS/menu/WMS_241',
-			name: 'menu-WMS_241',
-			component: () => import('@/views/menus/ModuleWMS/MenuWMS_241/QMenuWms241.vue'),
-			meta: {
-				routeType: 'menu',
-				module: 'WMS',
-				order: '241',
+				order: '231',
 				baseArea: 'DISPA',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValDispanr'],
@@ -1275,48 +1133,6 @@ export default function getMenusRoutes()
 			}
 		},
 		{
-			path: '/:culture/:system/PTN/menu/PTN_3N51',
-			name: 'menu-PTN_3N51',
-			component: () => import('@/views/menus/ModulePTN/MenuPTN_3N51/QMenuPtn3n51.vue'),
-			meta: {
-				routeType: 'menu',
-				module: 'PTN',
-				order: '3N51',
-				baseArea: 'SEARCH',
-				hasInitialPHE: false,
-				humanKeyFields: ['ValHkey'],
-				isPopup: false
-			}
-		},
-		{
-			path: '/:culture/:system/PTN/menu/PTN_3N31',
-			name: 'menu-PTN_3N31',
-			component: () => import('@/views/menus/ModulePTN/MenuPTN_3N31/QMenuPtn3n31.vue'),
-			meta: {
-				routeType: 'menu',
-				module: 'PTN',
-				order: '3N31',
-				baseArea: 'OPERACOES',
-				hasInitialPHE: false,
-				humanKeyFields: [],
-				isPopup: false
-			}
-		},
-		{
-			path: '/:culture/:system/PTN/menu/PTN_3N41',
-			name: 'menu-PTN_3N41',
-			component: () => import('@/views/menus/ModulePTN/MenuPTN_3N41/QMenuPtn3n41.vue'),
-			meta: {
-				routeType: 'menu',
-				module: 'PTN',
-				order: '3N41',
-				baseArea: 'OPERACOES',
-				hasInitialPHE: false,
-				humanKeyFields: [],
-				isPopup: false
-			}
-		},
-		{
 			path: '/:culture/:system/WMS/menu/WMS_511',
 			name: 'menu-WMS_511',
 			component: () => import('@/views/menus/ModuleWMS/MenuWMS_511/QMenuWms511.vue'),
@@ -1373,6 +1189,20 @@ export default function getMenusRoutes()
 			}
 		},
 		{
+			path: '/:culture/:system/WMS/menu/WMS_5511',
+			name: 'menu-WMS_5511',
+			component: () => import('@/views/menus/ModuleWMS/MenuWMS_5511/QMenuWms5511.vue'),
+			meta: {
+				routeType: 'menu',
+				module: 'WMS',
+				order: '5511',
+				baseArea: 'ENTIT',
+				hasInitialPHE: false,
+				humanKeyFields: ['ValName', 'ValInitials'],
+				isPopup: false
+			}
+		},
+		{
 			path: '/:culture/:system/WMS/menu/WMS_4261',
 			name: 'menu-WMS_4261',
 			component: () => import('@/views/menus/ModuleWMS/MenuWMS_4261/QMenuWms4261.vue'),
@@ -1408,20 +1238,6 @@ export default function getMenusRoutes()
 				routeType: 'menu',
 				module: 'PTN',
 				order: '3131',
-				baseArea: 'TBLB',
-				hasInitialPHE: false,
-				humanKeyFields: ['ValText'],
-				isPopup: false
-			}
-		},
-		{
-			path: '/:culture/:system/PTN/menu/PTN_3141',
-			name: 'menu-PTN_3141',
-			component: () => import('@/views/menus/ModulePTN/MenuPTN_3141/QMenuPtn3141.vue'),
-			meta: {
-				routeType: 'menu',
-				module: 'PTN',
-				order: '3141',
 				baseArea: 'TBLB',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValText'],
@@ -1611,32 +1427,16 @@ export default function getMenusRoutes()
 			}
 		},
 		{
-			path: '/:culture/:system/PTN/menu/PTN_3161',
-			name: 'menu-PTN_3161',
-			component: () => import('@/views/menus/ModulePTN/MenuPTN_3161/QMenuPtn3161.vue'),
+			path: '/:culture/:system/PTN/menu/PTN_3151',
+			name: 'menu-PTN_3151',
+			component: () => import('@/views/menus/ModulePTN/MenuPTN_3151/QMenuPtn3151.vue'),
 			meta: {
 				routeType: 'menu',
 				module: 'PTN',
-				order: '3161',
+				order: '3151',
 				baseArea: 'TBLK',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValName'],
-				isPopup: false
-			}
-		},
-		{
-			path: '/:culture/:system/PTN/menu/PTN_2911',
-			name: 'menu-PTN_2911',
-			component: () => import('@/views/menus/ModulePTN/MenuPTN_2911/QMenuPtn2911.vue'),
-			beforeEnter: [updateQueryParams],
-			meta: {
-				routeType: 'menu',
-				module: 'PTN',
-				order: '2911',
-				baseArea: 'CMPNY',
-				hasInitialPHE: false,
-				humanKeyFields: ['ValDesignat'],
-				limitations: ['cntry' /* DB */],
 				isPopup: false
 			}
 		},
@@ -1769,34 +1569,6 @@ export default function getMenusRoutes()
 			}
 		},
 		{
-			path: '/:culture/:system/PTN/menu/PTN_2C1',
-			name: 'menu-PTN_2C1',
-			component: () => import('@/views/menus/ModulePTN/MenuPTN_2C1/QMenuPtn2c1.vue'),
-			meta: {
-				routeType: 'menu',
-				module: 'PTN',
-				order: '2C1',
-				baseArea: 'KINDE',
-				hasInitialPHE: false,
-				humanKeyFields: ['ValDesignat'],
-				isPopup: false
-			}
-		},
-		{
-			path: '/:culture/:system/TBS/menu/TBS_1C1',
-			name: 'menu-TBS_1C1',
-			component: () => import('@/views/menus/ModuleTBS/MenuTBS_1C1/QMenuTbs1c1.vue'),
-			meta: {
-				routeType: 'menu',
-				module: 'TBS',
-				order: '1C1',
-				baseArea: 'KINDE',
-				hasInitialPHE: false,
-				humanKeyFields: ['ValDesignat'],
-				isPopup: false
-			}
-		},
-		{
 			path: '/:culture/:system/WMS/menu/WMS_4121',
 			name: 'menu-WMS_4121',
 			component: () => import('@/views/menus/ModuleWMS/MenuWMS_4121/QMenuWms4121.vue'),
@@ -1818,34 +1590,6 @@ export default function getMenusRoutes()
 				routeType: 'menu',
 				module: 'PTN',
 				order: '131',
-				baseArea: 'RULES',
-				hasInitialPHE: false,
-				humanKeyFields: ['ValDescript'],
-				isPopup: false
-			}
-		},
-		{
-			path: '/:culture/:system/PTN/menu/PTN_151',
-			name: 'menu-PTN_151',
-			component: () => import('@/views/menus/ModulePTN/MenuPTN_151/QMenuPtn151.vue'),
-			meta: {
-				routeType: 'menu',
-				module: 'PTN',
-				order: '151',
-				baseArea: 'RULES',
-				hasInitialPHE: false,
-				humanKeyFields: ['ValDescript'],
-				isPopup: false
-			}
-		},
-		{
-			path: '/:culture/:system/PTN/menu/PTN_161',
-			name: 'menu-PTN_161',
-			component: () => import('@/views/menus/ModulePTN/MenuPTN_161/QMenuPtn161.vue'),
-			meta: {
-				routeType: 'menu',
-				module: 'PTN',
-				order: '161',
 				baseArea: 'RULES',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValDescript'],
@@ -1893,20 +1637,6 @@ export default function getMenusRoutes()
 				hasInitialPHE: false,
 				humanKeyFields: ['ValName'],
 				limitations: ['cntry' /* DB */],
-				isPopup: false
-			}
-		},
-		{
-			path: '/:culture/:system/TBS/menu/TBS_1D1',
-			name: 'menu-TBS_1D1',
-			component: () => import('@/views/menus/ModuleTBS/MenuTBS_1D1/QMenuTbs1d1.vue'),
-			meta: {
-				routeType: 'menu',
-				module: 'TBS',
-				order: '1D1',
-				baseArea: 'PARAM',
-				hasInitialPHE: false,
-				humanKeyFields: ['ValParameter'],
 				isPopup: false
 			}
 		},
@@ -2101,20 +1831,6 @@ export default function getMenusRoutes()
 			}
 		},
 		{
-			path: '/:culture/:system/PTN/menu/PTN_3M1',
-			name: 'menu-PTN_3M1',
-			component: () => import('@/views/menus/ModulePTN/MenuPTN_3M1/QMenuPtn3m1.vue'),
-			meta: {
-				routeType: 'menu',
-				module: 'PTN',
-				order: '3M1',
-				baseArea: 'GRPB',
-				hasInitialPHE: false,
-				humanKeyFields: ['ValName'],
-				isPopup: false
-			}
-		},
-		{
 			path: '/:culture/:system/WMS/menu/WMS_4331',
 			name: 'menu-WMS_4331',
 			component: () => import('@/views/menus/ModuleWMS/MenuWMS_4331/QMenuWms4331.vue'),
@@ -2129,20 +1845,6 @@ export default function getMenusRoutes()
 			}
 		},
 		{
-			path: '/:culture/:system/UIS/menu/UIS_111',
-			name: 'menu-UIS_111',
-			component: () => import('@/views/menus/ModuleUIS/MenuUIS_111/QMenuUis111.vue'),
-			meta: {
-				routeType: 'menu',
-				module: 'UIS',
-				order: '111',
-				baseArea: 'COMPC',
-				hasInitialPHE: false,
-				humanKeyFields: ['ValCompclas'],
-				isPopup: false
-			}
-		},
-		{
 			path: '/:culture/:system/STY/menu/STY_OVERVIEW',
 			name: 'menu-STY_OVERVIEW',
 			component: () => import('@/views/menus/ModuleSTY/MenuSTY_OVERVIEW/QMenuStyOverview.vue'),
@@ -2153,20 +1855,6 @@ export default function getMenusRoutes()
 				baseArea: 'UICOM',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValName'],
-				isPopup: false
-			}
-		},
-		{
-			path: '/:culture/:system/TBS/menu/TBS_1B1',
-			name: 'menu-TBS_1B1',
-			component: () => import('@/views/menus/ModuleTBS/MenuTBS_1B1/QMenuTbs1b1.vue'),
-			meta: {
-				routeType: 'menu',
-				module: 'TBS',
-				order: '1B1',
-				baseArea: 'ASSPA',
-				hasInitialPHE: false,
-				humanKeyFields: ['ValText'],
 				isPopup: false
 			}
 		},
@@ -2299,20 +1987,6 @@ export default function getMenusRoutes()
 			}
 		},
 		{
-			path: '/:culture/:system/STY/menu/STY_441',
-			name: 'menu-STY_441',
-			component: () => import('@/views/menus/ModuleSTY/MenuSTY_441/QMenuSty441.vue'),
-			meta: {
-				routeType: 'menu',
-				module: 'STY',
-				order: '441',
-				baseArea: 'ITEM',
-				hasInitialPHE: false,
-				humanKeyFields: ['ValItemdes'],
-				isPopup: false
-			}
-		},
-		{
 			path: '/:culture/:system/PTN/menu/PTN_121',
 			name: 'menu-PTN_121',
 			component: () => import('@/views/menus/ModulePTN/MenuPTN_121/QMenuPtn121.vue'),
@@ -2320,20 +1994,6 @@ export default function getMenusRoutes()
 				routeType: 'menu',
 				module: 'PTN',
 				order: '121',
-				baseArea: 'ITEM',
-				hasInitialPHE: false,
-				humanKeyFields: ['ValItemdes'],
-				isPopup: false
-			}
-		},
-		{
-			path: '/:culture/:system/PTN/menu/PTN_2A1',
-			name: 'menu-PTN_2A1',
-			component: () => import('@/views/menus/ModulePTN/MenuPTN_2A1/QMenuPtn2a1.vue'),
-			meta: {
-				routeType: 'menu',
-				module: 'PTN',
-				order: '2A1',
 				baseArea: 'ITEM',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValItemdes'],
@@ -2427,13 +2087,13 @@ export default function getMenusRoutes()
 			}
 		},
 		{
-			path: '/:culture/:system/GQT/menu/GQT_UNUSED_ITEMS',
-			name: 'menu-GQT_UNUSED_ITEMS',
-			component: () => import('@/views/menus/ModuleGQT/MenuGQT_UNUSED_ITEMS/QMenuGqtUnusedItems.vue'),
+			path: '/:culture/:system/GQT/menu/GQT_4A1',
+			name: 'menu-GQT_4A1',
+			component: () => import('@/views/menus/ModuleGQT/MenuGQT_4A1/QMenuGqt4a1.vue'),
 			meta: {
 				routeType: 'menu',
 				module: 'GQT',
-				order: '4A11',
+				order: '4A1',
 				baseArea: 'ITEM',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValItemdes'],
@@ -2583,13 +2243,13 @@ export default function getMenusRoutes()
 			}
 		},
 		{
-			path: '/:culture/:system/PTN/menu/PTN_351',
-			name: 'menu-PTN_351',
-			component: () => import('@/views/menus/ModulePTN/MenuPTN_351/QMenuPtn351.vue'),
+			path: '/:culture/:system/PTN/menu/PTN_3511',
+			name: 'menu-PTN_3511',
+			component: () => import('@/views/menus/ModulePTN/MenuPTN_3511/QMenuPtn3511.vue'),
 			meta: {
 				routeType: 'menu',
 				module: 'PTN',
-				order: '351',
+				order: '3511',
 				baseArea: 'ROOMS',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValRoomnr'],
@@ -2739,13 +2399,13 @@ export default function getMenusRoutes()
 			}
 		},
 		{
-			path: '/:culture/:system/PTN/menu/PTN_3151',
-			name: 'menu-PTN_3151',
-			component: () => import('@/views/menus/ModulePTN/MenuPTN_3151/QMenuPtn3151.vue'),
+			path: '/:culture/:system/PTN/menu/PTN_3141',
+			name: 'menu-PTN_3141',
+			component: () => import('@/views/menus/ModulePTN/MenuPTN_3141/QMenuPtn3141.vue'),
 			meta: {
 				routeType: 'menu',
 				module: 'PTN',
-				order: '3151',
+				order: '3141',
 				baseArea: 'TRSB',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValName'],
@@ -2777,34 +2437,6 @@ export default function getMenusRoutes()
 				baseArea: 'PWREG',
 				hasInitialPHE: false,
 				humanKeyFields: [],
-				isPopup: false
-			}
-		},
-		{
-			path: '/:culture/:system/PTN/menu/PTN_3N21',
-			name: 'menu-PTN_3N21',
-			component: () => import('@/views/menus/ModulePTN/MenuPTN_3N21/QMenuPtn3n21.vue'),
-			meta: {
-				routeType: 'menu',
-				module: 'PTN',
-				order: '3N21',
-				baseArea: 'ENTIDADE',
-				hasInitialPHE: false,
-				humanKeyFields: ['ValEntidade'],
-				isPopup: false
-			}
-		},
-		{
-			path: '/:culture/:system/PTN/menu/PTN_3N4111',
-			name: 'menu-PTN_3N4111',
-			component: () => import('@/views/menus/ModulePTN/MenuPTN_3N4111/QMenuPtn3n4111.vue'),
-			meta: {
-				routeType: 'menu',
-				module: 'PTN',
-				order: '3N4111',
-				baseArea: 'ENTIDADE',
-				hasInitialPHE: false,
-				humanKeyFields: ['ValEntidade'],
 				isPopup: false
 			}
 		},
@@ -2890,49 +2522,6 @@ export default function getMenusRoutes()
 				hasInitialPHE: false,
 				humanKeyFields: ['ValName'],
 				isPopup: false
-			}
-		},
-		{
-			path: '/:culture/:system/PTN/menu/PTN_531',
-			name: 'menu-PTN_531',
-			component: () => import('@/views/menus/ModulePTN/MenuPTN_531/QMenuPtn531.vue'),
-			meta: {
-				routeType: 'menu',
-				module: 'PTN',
-				order: '531',
-				baseArea: 'PESS1',
-				hasInitialPHE: false,
-				humanKeyFields: ['ValName'],
-				isPopup: false
-			}
-		},
-		{
-			path: '/:culture/:system/PTN/menu/PTN_711',
-			name: 'menu-PTN_711',
-			component: () => import('@/views/menus/ModulePTN/MenuPTN_711/QMenuPtn711.vue'),
-			meta: {
-				routeType: 'menu',
-				module: 'PTN',
-				order: '711',
-				baseArea: 'PESS1',
-				hasInitialPHE: false,
-				humanKeyFields: ['ValName'],
-				isPopup: false
-			}
-		},
-		{
-			path: '/:culture/:system/PTN/menu/PTN_5311',
-			name: 'menu-PTN_5311',
-			component: () => import('@/views/menus/ModulePTN/MenuPTN_5311/QMenuPtn5311.vue'),
-			beforeEnter: [updateQueryParams],
-			meta: {
-				routeType: 'menu',
-				module: 'PTN',
-				order: '5311',
-				baseArea: 'PESS1',
-				hasInitialPHE: false,
-				limitations: ['pess1' /* DB */],
-				isPopup: true
 			}
 		},
 		{
@@ -3374,36 +2963,6 @@ export default function getMenusRoutes()
 			}
 		},
 		{
-			path: '/:culture/:system/UIS/menu/UIS_1111',
-			name: 'menu-UIS_1111',
-			component: () => import('@/views/menus/ModuleUIS/MenuUIS_1111/QMenuUis1111.vue'),
-			beforeEnter: [updateQueryParams],
-			meta: {
-				routeType: 'menu',
-				module: 'UIS',
-				order: '1111',
-				baseArea: 'COMPO',
-				hasInitialPHE: false,
-				humanKeyFields: ['ValComptype'],
-				limitations: ['compc' /* DB */],
-				isPopup: false
-			}
-		},
-		{
-			path: '/:culture/:system/UIS/menu/UIS_121',
-			name: 'menu-UIS_121',
-			component: () => import('@/views/menus/ModuleUIS/MenuUIS_121/QMenuUis121.vue'),
-			meta: {
-				routeType: 'menu',
-				module: 'UIS',
-				order: '121',
-				baseArea: 'COMPO',
-				hasInitialPHE: false,
-				humanKeyFields: ['ValComptype'],
-				isPopup: false
-			}
-		},
-		{
 			path: '/:culture/:system/GQT/menu/GQT_281',
 			name: 'menu-GQT_281',
 			component: () => import('@/views/menus/ModuleGQT/MenuGQT_281/QMenuGqt281.vue'),
@@ -3474,20 +3033,6 @@ export default function getMenusRoutes()
 			}
 		},
 		{
-			path: '/:culture/:system/PTN/menu/PTN_3N11',
-			name: 'menu-PTN_3N11',
-			component: () => import('@/views/menus/ModulePTN/MenuPTN_3N11/QMenuPtn3n11.vue'),
-			meta: {
-				routeType: 'menu',
-				module: 'PTN',
-				order: '3N11',
-				baseArea: 'CONCELHO',
-				hasInitialPHE: false,
-				humanKeyFields: ['ValNome'],
-				isPopup: false
-			}
-		},
-		{
 			path: '/:culture/:system/STY/menu/STY_TABS',
 			name: 'menu-STY_TABS',
 			component: () => import('@/views/menus/ModuleSTY/MenuSTY_TABS/QMenuStyTabs.vue'),
@@ -3537,34 +3082,6 @@ export default function getMenusRoutes()
 				routeType: 'menu',
 				module: 'STY',
 				order: '358211',
-				baseArea: 'FLDS',
-				hasInitialPHE: false,
-				humanKeyFields: ['ValDescrip'],
-				isPopup: false
-			}
-		},
-		{
-			path: '/:culture/:system/PTN/menu/PTN_261',
-			name: 'menu-PTN_261',
-			component: () => import('@/views/menus/ModulePTN/MenuPTN_261/QMenuPtn261.vue'),
-			meta: {
-				routeType: 'menu',
-				module: 'PTN',
-				order: '261',
-				baseArea: 'FLDS',
-				hasInitialPHE: false,
-				humanKeyFields: ['ValDescrip'],
-				isPopup: false
-			}
-		},
-		{
-			path: '/:culture/:system/PTN/menu/PTN_271',
-			name: 'menu-PTN_271',
-			component: () => import('@/views/menus/ModulePTN/MenuPTN_271/QMenuPtn271.vue'),
-			meta: {
-				routeType: 'menu',
-				module: 'PTN',
-				order: '271',
 				baseArea: 'FLDS',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValDescrip'],
@@ -3865,20 +3382,6 @@ export default function getMenusRoutes()
 				routeType: 'menu',
 				module: 'PTN',
 				order: '3L1',
-				baseArea: 'Dashboard',
-				isDashboardPage: true,
-				hasInitialPHE: false,
-				isPopup: false
-			}
-		},
-		{
-			path: '/:culture/:system/GQT/menu/GQT_TESTDS',
-			name: 'menu-GQT_TESTDS',
-			component: () => import('@/views/menus/ModuleGQT/MenuGQT_TESTDS/QMenuGqtTestds.vue'),
-			meta: {
-				routeType: 'menu',
-				module: 'GQT',
-				order: 'C1',
 				baseArea: 'Dashboard',
 				isDashboardPage: true,
 				hasInitialPHE: false,

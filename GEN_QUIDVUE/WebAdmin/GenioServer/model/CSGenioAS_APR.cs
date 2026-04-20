@@ -48,7 +48,6 @@ namespace CSGenio.business
 			Qfield.FieldDescription = "";
 			Qfield.FieldSize =  36;
 			Qfield.VisivelCav = CavVisibilityType.Nunca;
-			Qfield.CavDesignation = "";
 
 			Qfield.Dupmsg = "";
 			info.RegisterFieldDB(Qfield);
@@ -224,7 +223,6 @@ namespace CSGenio.business
 			Qfield.FieldDescription = "Entid key";
 			Qfield.FieldSize =  36;
 			Qfield.VisivelCav = CavVisibilityType.Nunca;
-			Qfield.CavDesignation = "ENTID_KEY04396";
 
 			Qfield.Dupmsg = "";
 			info.RegisterFieldDB(Qfield);
@@ -244,7 +242,6 @@ namespace CSGenio.business
 			Qfield.FieldDescription = "";
 			Qfield.FieldSize =  36;
 			Qfield.VisivelCav = CavVisibilityType.Nunca;
-			Qfield.CavDesignation = "";
 
 			Qfield.Dupmsg = "";
 			info.RegisterFieldDB(Qfield);

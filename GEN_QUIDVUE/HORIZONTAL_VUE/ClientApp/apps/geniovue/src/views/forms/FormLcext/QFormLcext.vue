@@ -9,12 +9,13 @@
 			<div
 				v-if="showFormHeader"
 				class="c-action-bar">
-				<h1
+				<component
 					v-if="formControl.uiComponents.header && formInfo.designation"
+					:is="topHeadingTag"
 					:id="formTitleId"
 					class="form-header">
 					{{ formInfo.designation }}
-				</h1>
+				</component>
 
 				<div class="c-action-bar__menu">
 					<template
@@ -40,13 +41,10 @@
 									@click="btn.action">
 									<template v-if="btn.icon">
 										<q-badge-indicator
-											v-if="btn.badge && btn.badge.isVisible"
-											:color="btn.badge.color">
+											:enabled="btn.badge?.isVisible ?? false"
+											:color="btn.badge?.color">
 											<q-icon v-bind="btn.icon" />
 										</q-badge-indicator>
-										<q-icon
-											v-else
-											v-bind="btn.icon" />
 									</template>
 								</q-toggle-group-item>
 							</template>
@@ -97,15 +95,16 @@
 		<q-container
 			fluid
 			data-key="LCEXT"
+			:data-identifier="primaryKeyValue"
 			:data-loading="!formInitialDataLoaded || !isActiveForm">
 			<template v-if="formControl.initialized && showFormBody">
 				<q-row v-if="controls.LCEXT___PSEUDNOVOGR01.isVisible">
 					<q-col v-if="controls.LCEXT___PSEUDNOVOGR01.isVisible">
 						<q-group-box-container
 							v-if="controls.LCEXT___PSEUDNOVOGR01.isVisible"
-							id="LCEXT___PSEUDNOVOGR01"
 							v-bind="controls.LCEXT___PSEUDNOVOGR01"
-							:is-visible="controls.LCEXT___PSEUDNOVOGR01.isVisible">
+							:id="getControlId(controls.LCEXT___PSEUDNOVOGR01)"
+							:no-border="controls.LCEXT___PSEUDNOVOGR01.borderless">
 							<!-- Start LCEXT___PSEUDNOVOGR01 -->
 							<q-row v-if="controls.LCEXT___LOCATGLN_____.isVisible">
 								<q-col
@@ -114,7 +113,8 @@
 									<base-input-structure
 										v-if="controls.LCEXT___LOCATGLN_____.isVisible"
 										class="i-text"
-										v-bind="controls.LCEXT___LOCATGLN_____"
+										v-bind="controls.LCEXT___LOCATGLN_____.wrapperProps"
+										:id="getControlId(controls.LCEXT___LOCATGLN_____)"
 										v-on="controls.LCEXT___LOCATGLN_____.handlers"
 										:loading="controls.LCEXT___LOCATGLN_____.props.loading"
 										:reporting-mode-on="reportingModeCAV"
@@ -122,6 +122,7 @@
 										<q-lookup
 											v-if="controls.LCEXT___LOCATGLN_____.isVisible"
 											v-bind="controls.LCEXT___LOCATGLN_____.props"
+											:id="getControlId(controls.LCEXT___LOCATGLN_____)"
 											v-on="controls.LCEXT___LOCATGLN_____.handlers" />
 										<q-see-more-lcext-locatgln
 											v-if="controls.LCEXT___LOCATGLN_____.seeMoreIsVisible"
@@ -137,13 +138,15 @@
 									<base-input-structure
 										v-if="controls.LCEXT___LCEXTGLNEXT__.isVisible"
 										class="i-text"
-										v-bind="controls.LCEXT___LCEXTGLNEXT__"
+										v-bind="controls.LCEXT___LCEXTGLNEXT__.wrapperProps"
+										:id="getControlId(controls.LCEXT___LCEXTGLNEXT__)"
 										v-on="controls.LCEXT___LCEXTGLNEXT__.handlers"
 										:loading="controls.LCEXT___LCEXTGLNEXT__.props.loading"
 										:reporting-mode-on="reportingModeCAV"
 										:suggestion-mode-on="suggestionModeOn">
 										<q-text-field
 											v-bind="controls.LCEXT___LCEXTGLNEXT__.props"
+											:id="getControlId(controls.LCEXT___LCEXTGLNEXT__)"
 											@blur="onBlur(controls.LCEXT___LCEXTGLNEXT__, model.ValGlnext.value)"
 											@change="model.ValGlnext.fnUpdateValueOnChange" />
 									</base-input-structure>
@@ -156,7 +159,8 @@
 									<base-input-structure
 										v-if="controls.LCEXT___LCEXTSPACETYP.isVisible"
 										class="i-text"
-										v-bind="controls.LCEXT___LCEXTSPACETYP"
+										v-bind="controls.LCEXT___LCEXTSPACETYP.wrapperProps"
+										:id="getControlId(controls.LCEXT___LCEXTSPACETYP)"
 										v-on="controls.LCEXT___LCEXTSPACETYP.handlers"
 										:loading="controls.LCEXT___LCEXTSPACETYP.props.loading"
 										:reporting-mode-on="reportingModeCAV"
@@ -164,6 +168,7 @@
 										<q-select
 											v-if="controls.LCEXT___LCEXTSPACETYP.isVisible"
 											v-bind="controls.LCEXT___LCEXTSPACETYP.props"
+											:id="getControlId(controls.LCEXT___LCEXTSPACETYP)"
 											@update:model-value="model.ValSpacetyp.fnUpdateValue" />
 									</base-input-structure>
 								</q-col>
@@ -173,13 +178,15 @@
 									<base-input-structure
 										v-if="controls.LCEXT___LCEXTSPACEOBS.isVisible"
 										class="i-text"
-										v-bind="controls.LCEXT___LCEXTSPACEOBS"
+										v-bind="controls.LCEXT___LCEXTSPACEOBS.wrapperProps"
+										:id="getControlId(controls.LCEXT___LCEXTSPACEOBS)"
 										v-on="controls.LCEXT___LCEXTSPACEOBS.handlers"
 										:loading="controls.LCEXT___LCEXTSPACEOBS.props.loading"
 										:reporting-mode-on="reportingModeCAV"
 										:suggestion-mode-on="suggestionModeOn">
 										<q-text-field
 											v-bind="controls.LCEXT___LCEXTSPACEOBS.props"
+											:id="getControlId(controls.LCEXT___LCEXTSPACEOBS)"
 											@blur="onBlur(controls.LCEXT___LCEXTSPACEOBS, model.ValSpaceobs.value)"
 											@change="model.ValSpaceobs.fnUpdateValueOnChange" />
 									</base-input-structure>
@@ -193,7 +200,7 @@
 		</q-container>
 	</teleport>
 
-	<hr v-if="!isPopup && showFormFooter" />
+	<q-divider v-if="!isPopup && showFormFooter" />
 
 	<teleport
 		v-if="formModalIsReady && showFormFooter"
@@ -543,6 +550,7 @@
 						label: computed(() => this.Resources.LOCATION_EXTENSION29935),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
+						borderless: false,
 						isCollapsible: false,
 						anchored: false,
 						directChildren: ['LCEXT___LOCATGLN_____', 'LCEXT___LCEXTGLNEXT__', 'LCEXT___LCEXTSPACETYP', 'LCEXT___LCEXTSPACEOBS'],
@@ -604,8 +612,8 @@
 						container: 'LCEXT___PSEUDNOVOGR01',
 						maxLength: 1,
 						arrayName: 'SpaceTyp',
-						helpShortItem: '',
-						helpDetailedItem: '',
+						helpShortItem: 'None',
+						helpDetailedItem: 'None',
 						controlLimits: [
 						],
 					}, this),
@@ -1010,7 +1018,6 @@
 
 				this.afterControlUpdate(controlField, fieldValue)
 			},
-
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
 // USE /[MANUAL GQT FUNCTIONS_JS LCEXT]/
 // eslint-disable-next-line

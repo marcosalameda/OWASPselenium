@@ -207,6 +207,7 @@ export default class ViewModel extends FormViewModelBase
 			field: 'CATEGORY',
 			maxLength: 50,
 			description: computed(() => this.Resources.CATEGORY18978),
+			ignoreFldSubmit: true,
 		}).cloneFrom(values?.TableCategCategory))
 		this.stopWatchers.push(watch(() => this.TableCategCategory.value, (newValue, oldValue) => this.onUpdate('categ.categoria', this.TableCategCategory, newValue, oldValue)))
 
@@ -228,6 +229,7 @@ export default class ViewModel extends FormViewModelBase
 			field: 'COUNTRY',
 			maxLength: 90,
 			description: computed(() => this.Resources.COUNTRY64133),
+			ignoreFldSubmit: true,
 		}).cloneFrom(values?.TablePais1Country))
 		this.stopWatchers.push(watch(() => this.TablePais1Country.value, (newValue, oldValue) => this.onUpdate('pais1.country', this.TablePais1Country, newValue, oldValue)))
 
@@ -259,6 +261,7 @@ export default class ViewModel extends FormViewModelBase
 			field: 'DESIGNAT',
 			maxLength: 85,
 			description: computed(() => this.Resources.DESIGNATION35876),
+			ignoreFldSubmit: true,
 		}).cloneFrom(values?.TableCmpnyDesignat))
 		this.stopWatchers.push(watch(() => this.TableCmpnyDesignat.value, (newValue, oldValue) => this.onUpdate('cmpny.designat', this.TableCmpnyDesignat, newValue, oldValue)))
 
@@ -281,6 +284,7 @@ export default class ViewModel extends FormViewModelBase
 			field: 'REGIAO',
 			maxLength: 50,
 			description: computed(() => this.Resources.REGION12723),
+			ignoreFldSubmit: true,
 		}).cloneFrom(values?.TableRegi1Regiao))
 		this.stopWatchers.push(watch(() => this.TableRegi1Regiao.value, (newValue, oldValue) => this.onUpdate('regi1.regiao', this.TableRegi1Regiao, newValue, oldValue)))
 

@@ -9,12 +9,13 @@
 			<div
 				v-if="showFormHeader"
 				class="c-action-bar">
-				<h1
+				<component
 					v-if="formControl.uiComponents.header && formInfo.designation"
+					:is="topHeadingTag"
 					:id="formTitleId"
 					class="form-header">
 					{{ formInfo.designation }}
-				</h1>
+				</component>
 
 				<div class="c-action-bar__menu">
 					<template
@@ -40,13 +41,10 @@
 									@click="btn.action">
 									<template v-if="btn.icon">
 										<q-badge-indicator
-											v-if="btn.badge && btn.badge.isVisible"
-											:color="btn.badge.color">
+											:enabled="btn.badge?.isVisible ?? false"
+											:color="btn.badge?.color">
 											<q-icon v-bind="btn.icon" />
 										</q-badge-indicator>
-										<q-icon
-											v-else
-											v-bind="btn.icon" />
 									</template>
 								</q-toggle-group-item>
 							</template>
@@ -97,15 +95,16 @@
 		<q-container
 			fluid
 			data-key="ENTIX"
+			:data-identifier="primaryKeyValue"
 			:data-loading="!formInitialDataLoaded || !isActiveForm">
 			<template v-if="formControl.initialized && showFormBody">
 				<q-row v-if="controls.ENTIX___PSEUDNOVOGR01.isVisible">
 					<q-col v-if="controls.ENTIX___PSEUDNOVOGR01.isVisible">
 						<q-group-box-container
 							v-if="controls.ENTIX___PSEUDNOVOGR01.isVisible"
-							id="ENTIX___PSEUDNOVOGR01"
 							v-bind="controls.ENTIX___PSEUDNOVOGR01"
-							:is-visible="controls.ENTIX___PSEUDNOVOGR01.isVisible">
+							:id="getControlId(controls.ENTIX___PSEUDNOVOGR01)"
+							:no-border="controls.ENTIX___PSEUDNOVOGR01.borderless">
 							<!-- Start ENTIX___PSEUDNOVOGR01 -->
 							<q-row v-if="controls.ENTIX___ENTITNAME____.isVisible">
 								<q-col
@@ -114,13 +113,15 @@
 									<base-input-structure
 										v-if="controls.ENTIX___ENTITNAME____.isVisible"
 										class="i-text"
-										v-bind="controls.ENTIX___ENTITNAME____"
+										v-bind="controls.ENTIX___ENTITNAME____.wrapperProps"
+										:id="getControlId(controls.ENTIX___ENTITNAME____)"
 										v-on="controls.ENTIX___ENTITNAME____.handlers"
 										:loading="controls.ENTIX___ENTITNAME____.props.loading"
 										:reporting-mode-on="reportingModeCAV"
 										:suggestion-mode-on="suggestionModeOn">
 										<q-text-field
 											v-bind="controls.ENTIX___ENTITNAME____.props"
+											:id="getControlId(controls.ENTIX___ENTITNAME____)"
 											@blur="onBlur(controls.ENTIX___ENTITNAME____, model.ValName.value)"
 											@change="model.ValName.fnUpdateValueOnChange" />
 									</base-input-structure>
@@ -133,7 +134,8 @@
 									<base-input-structure
 										v-if="controls.ENTIX___ENTITFOUNDED_.isVisible"
 										class="i-text"
-										v-bind="controls.ENTIX___ENTITFOUNDED_"
+										v-bind="controls.ENTIX___ENTITFOUNDED_.wrapperProps"
+										:id="getControlId(controls.ENTIX___ENTITFOUNDED_)"
 										v-on="controls.ENTIX___ENTITFOUNDED_.handlers"
 										:loading="controls.ENTIX___ENTITFOUNDED_.props.loading"
 										:reporting-mode-on="reportingModeCAV"
@@ -141,6 +143,7 @@
 										<q-date-time-picker
 											v-if="controls.ENTIX___ENTITFOUNDED_.isVisible"
 											v-bind="controls.ENTIX___ENTITFOUNDED_.props"
+											:id="getControlId(controls.ENTIX___ENTITFOUNDED_)"
 											:model-value="model.ValFounded.value"
 											@reset-icon-click="model.ValFounded.fnUpdateValue(model.ValFounded.originalValue ?? new Date())"
 											@update:model-value="model.ValFounded.fnUpdateValue($event ?? '')" />
@@ -152,13 +155,15 @@
 									<base-input-structure
 										v-if="controls.ENTIX___ENTITINITIALS.isVisible"
 										class="i-text"
-										v-bind="controls.ENTIX___ENTITINITIALS"
+										v-bind="controls.ENTIX___ENTITINITIALS.wrapperProps"
+										:id="getControlId(controls.ENTIX___ENTITINITIALS)"
 										v-on="controls.ENTIX___ENTITINITIALS.handlers"
 										:loading="controls.ENTIX___ENTITINITIALS.props.loading"
 										:reporting-mode-on="reportingModeCAV"
 										:suggestion-mode-on="suggestionModeOn">
 										<q-text-field
 											v-bind="controls.ENTIX___ENTITINITIALS.props"
+											:id="getControlId(controls.ENTIX___ENTITINITIALS)"
 											@blur="onBlur(controls.ENTIX___ENTITINITIALS, model.ValInitials.value)"
 											@change="model.ValInitials.fnUpdateValueOnChange" />
 									</base-input-structure>
@@ -169,13 +174,15 @@
 									<base-input-structure
 										v-if="controls.ENTIX___ENTITREGISTRA.isVisible"
 										class="i-text"
-										v-bind="controls.ENTIX___ENTITREGISTRA"
+										v-bind="controls.ENTIX___ENTITREGISTRA.wrapperProps"
+										:id="getControlId(controls.ENTIX___ENTITREGISTRA)"
 										v-on="controls.ENTIX___ENTITREGISTRA.handlers"
 										:loading="controls.ENTIX___ENTITREGISTRA.props.loading"
 										:reporting-mode-on="reportingModeCAV"
 										:suggestion-mode-on="suggestionModeOn">
 										<q-text-field
 											v-bind="controls.ENTIX___ENTITREGISTRA.props"
+											:id="getControlId(controls.ENTIX___ENTITREGISTRA)"
 											@blur="onBlur(controls.ENTIX___ENTITREGISTRA, model.ValRegistra.value)"
 											@change="model.ValRegistra.fnUpdateValueOnChange" />
 									</base-input-structure>
@@ -186,13 +193,15 @@
 									<base-input-structure
 										v-if="controls.ENTIX___ENTITTAXNUMBE.isVisible"
 										class="i-text"
-										v-bind="controls.ENTIX___ENTITTAXNUMBE"
+										v-bind="controls.ENTIX___ENTITTAXNUMBE.wrapperProps"
+										:id="getControlId(controls.ENTIX___ENTITTAXNUMBE)"
 										v-on="controls.ENTIX___ENTITTAXNUMBE.handlers"
 										:loading="controls.ENTIX___ENTITTAXNUMBE.props.loading"
 										:reporting-mode-on="reportingModeCAV"
 										:suggestion-mode-on="suggestionModeOn">
 										<q-text-field
 											v-bind="controls.ENTIX___ENTITTAXNUMBE.props"
+											:id="getControlId(controls.ENTIX___ENTITTAXNUMBE)"
 											@blur="onBlur(controls.ENTIX___ENTITTAXNUMBE, model.ValTaxnumbe.value)"
 											@change="model.ValTaxnumbe.fnUpdateValueOnChange" />
 									</base-input-structure>
@@ -205,13 +214,15 @@
 									<base-input-structure
 										v-if="controls.ENTIX___ENTITIBAN____.isVisible"
 										class="i-text"
-										v-bind="controls.ENTIX___ENTITIBAN____"
+										v-bind="controls.ENTIX___ENTITIBAN____.wrapperProps"
+										:id="getControlId(controls.ENTIX___ENTITIBAN____)"
 										v-on="controls.ENTIX___ENTITIBAN____.handlers"
 										:loading="controls.ENTIX___ENTITIBAN____.props.loading"
 										:reporting-mode-on="reportingModeCAV"
 										:suggestion-mode-on="suggestionModeOn">
 										<q-text-field
 											v-bind="controls.ENTIX___ENTITIBAN____.props"
+											:id="getControlId(controls.ENTIX___ENTITIBAN____)"
 											@blur="onBlur(controls.ENTIX___ENTITIBAN____, model.ValIban.value)"
 											@change="model.ValIban.fnUpdateValueOnChange" />
 									</base-input-structure>
@@ -222,13 +233,15 @@
 									<base-input-structure
 										v-if="controls.ENTIX___ENTITPHONENUM.isVisible"
 										class="i-text"
-										v-bind="controls.ENTIX___ENTITPHONENUM"
+										v-bind="controls.ENTIX___ENTITPHONENUM.wrapperProps"
+										:id="getControlId(controls.ENTIX___ENTITPHONENUM)"
 										v-on="controls.ENTIX___ENTITPHONENUM.handlers"
 										:loading="controls.ENTIX___ENTITPHONENUM.props.loading"
 										:reporting-mode-on="reportingModeCAV"
 										:suggestion-mode-on="suggestionModeOn">
 										<q-text-field
 											v-bind="controls.ENTIX___ENTITPHONENUM.props"
+											:id="getControlId(controls.ENTIX___ENTITPHONENUM)"
 											@blur="onBlur(controls.ENTIX___ENTITPHONENUM, model.ValPhonenum.value)"
 											@change="model.ValPhonenum.fnUpdateValueOnChange" />
 									</base-input-structure>
@@ -241,15 +254,19 @@
 									<base-input-structure
 										v-if="controls.ENTIX___ENTITOWNER___.isVisible"
 										class="i-text"
-										v-bind="controls.ENTIX___ENTITOWNER___"
+										v-bind="controls.ENTIX___ENTITOWNER___.wrapperProps"
+										:id="getControlId(controls.ENTIX___ENTITOWNER___)"
 										v-on="controls.ENTIX___ENTITOWNER___.handlers"
 										:loading="controls.ENTIX___ENTITOWNER___.props.loading"
 										:reporting-mode-on="reportingModeCAV"
 										:suggestion-mode-on="suggestionModeOn">
-										<q-text-field
-											v-bind="controls.ENTIX___ENTITOWNER___.props"
-											@blur="onBlur(controls.ENTIX___ENTITOWNER___, model.ValOwner.value)"
-											@change="model.ValOwner.fnUpdateValueOnChange" />
+										<template #label>
+											<q-checkbox
+												v-if="controls.ENTIX___ENTITOWNER___.isVisible"
+												v-bind="controls.ENTIX___ENTITOWNER___.props"
+												:id="getControlId(controls.ENTIX___ENTITOWNER___)"
+												v-on="controls.ENTIX___ENTITOWNER___.handlers" />
+										</template>
 									</base-input-structure>
 								</q-col>
 								<q-col
@@ -257,8 +274,9 @@
 									cols="auto">
 									<base-input-structure
 										v-if="controls.ENTIX___ENTITCARRIER_.isVisible"
-										class="i-checkbox"
-										v-bind="controls.ENTIX___ENTITCARRIER_"
+										class="i-text"
+										v-bind="controls.ENTIX___ENTITCARRIER_.wrapperProps"
+										:id="getControlId(controls.ENTIX___ENTITCARRIER_)"
 										v-on="controls.ENTIX___ENTITCARRIER_.handlers"
 										:loading="controls.ENTIX___ENTITCARRIER_.props.loading"
 										:reporting-mode-on="reportingModeCAV"
@@ -267,6 +285,7 @@
 											<q-checkbox
 												v-if="controls.ENTIX___ENTITCARRIER_.isVisible"
 												v-bind="controls.ENTIX___ENTITCARRIER_.props"
+												:id="getControlId(controls.ENTIX___ENTITCARRIER_)"
 												v-on="controls.ENTIX___ENTITCARRIER_.handlers" />
 										</template>
 									</base-input-structure>
@@ -276,8 +295,9 @@
 									cols="auto">
 									<base-input-structure
 										v-if="controls.ENTIX___ENTITSUPPLIER.isVisible"
-										class="i-checkbox"
-										v-bind="controls.ENTIX___ENTITSUPPLIER"
+										class="i-text"
+										v-bind="controls.ENTIX___ENTITSUPPLIER.wrapperProps"
+										:id="getControlId(controls.ENTIX___ENTITSUPPLIER)"
 										v-on="controls.ENTIX___ENTITSUPPLIER.handlers"
 										:loading="controls.ENTIX___ENTITSUPPLIER.props.loading"
 										:reporting-mode-on="reportingModeCAV"
@@ -286,6 +306,7 @@
 											<q-checkbox
 												v-if="controls.ENTIX___ENTITSUPPLIER.isVisible"
 												v-bind="controls.ENTIX___ENTITSUPPLIER.props"
+												:id="getControlId(controls.ENTIX___ENTITSUPPLIER)"
 												v-on="controls.ENTIX___ENTITSUPPLIER.handlers" />
 										</template>
 									</base-input-structure>
@@ -295,8 +316,9 @@
 									cols="auto">
 									<base-input-structure
 										v-if="controls.ENTIX___ENTITMANUFACT.isVisible"
-										class="i-checkbox"
-										v-bind="controls.ENTIX___ENTITMANUFACT"
+										class="i-text"
+										v-bind="controls.ENTIX___ENTITMANUFACT.wrapperProps"
+										:id="getControlId(controls.ENTIX___ENTITMANUFACT)"
 										v-on="controls.ENTIX___ENTITMANUFACT.handlers"
 										:loading="controls.ENTIX___ENTITMANUFACT.props.loading"
 										:reporting-mode-on="reportingModeCAV"
@@ -305,6 +327,7 @@
 											<q-checkbox
 												v-if="controls.ENTIX___ENTITMANUFACT.isVisible"
 												v-bind="controls.ENTIX___ENTITMANUFACT.props"
+												:id="getControlId(controls.ENTIX___ENTITMANUFACT)"
 												v-on="controls.ENTIX___ENTITMANUFACT.handlers" />
 										</template>
 									</base-input-structure>
@@ -314,16 +337,18 @@
 						</q-group-box-container>
 					</q-col>
 				</q-row>
-				<q-row v-if="controls.ENTIX___PSEUDNOVOGR05.isVisible">
-					<q-col v-if="controls.ENTIX___PSEUDNOVOGR05.isVisible">
+				<q-row v-if="controls.ENTIX___PSEUDNOVOGR05.isVisible || controls.ENTIX___PSEUDNOVOGR06.isVisible">
+					<q-col
+						v-if="controls.ENTIX___PSEUDNOVOGR05.isVisible"
+						cols="auto">
 						<q-accordion
 							v-if="controls.ENTIX___PSEUDNOVOGR05.isVisible"
-							id="ENTIX___PSEUDNOVOGR05"
+							:id="getControlId(controls.ENTIX___PSEUDNOVOGR05)"
 							v-model="controls.ENTIX___PSEUDNOVOGR05.openChild">
 							<!-- Start ENTIX___PSEUDNOVOGR05 -->
 							<q-accordion-item
 								v-if="controls.ENTIX___PSEUDNOVOGR02.isVisible"
-								id="ENTIX___PSEUDNOVOGR02-container"
+								:id="getControlId(controls.ENTIX___PSEUDNOVOGR02) + '-container'"
 								value="ENTIX___PSEUDNOVOGR02"
 								:title="controls.ENTIX___PSEUDNOVOGR02.label">
 								<!-- Start ENTIX___PSEUDNOVOGR02 -->
@@ -334,13 +359,15 @@
 										<base-input-structure
 											v-if="controls.ENTIX___ENTITTELEPHON.isVisible"
 											class="i-text"
-											v-bind="controls.ENTIX___ENTITTELEPHON"
+											v-bind="controls.ENTIX___ENTITTELEPHON.wrapperProps"
+											:id="getControlId(controls.ENTIX___ENTITTELEPHON)"
 											v-on="controls.ENTIX___ENTITTELEPHON.handlers"
 											:loading="controls.ENTIX___ENTITTELEPHON.props.loading"
 											:reporting-mode-on="reportingModeCAV"
 											:suggestion-mode-on="suggestionModeOn">
 											<q-text-field
 												v-bind="controls.ENTIX___ENTITTELEPHON.props"
+												:id="getControlId(controls.ENTIX___ENTITTELEPHON)"
 												@blur="onBlur(controls.ENTIX___ENTITTELEPHON, model.ValTelephon.value)"
 												@change="model.ValTelephon.fnUpdateValueOnChange" />
 										</base-input-structure>
@@ -351,13 +378,15 @@
 										<base-input-structure
 											v-if="controls.ENTIX___ENTITFAX_____.isVisible"
 											class="i-text"
-											v-bind="controls.ENTIX___ENTITFAX_____"
+											v-bind="controls.ENTIX___ENTITFAX_____.wrapperProps"
+											:id="getControlId(controls.ENTIX___ENTITFAX_____)"
 											v-on="controls.ENTIX___ENTITFAX_____.handlers"
 											:loading="controls.ENTIX___ENTITFAX_____.props.loading"
 											:reporting-mode-on="reportingModeCAV"
 											:suggestion-mode-on="suggestionModeOn">
 											<q-text-field
 												v-bind="controls.ENTIX___ENTITFAX_____.props"
+												:id="getControlId(controls.ENTIX___ENTITFAX_____)"
 												@blur="onBlur(controls.ENTIX___ENTITFAX_____, model.ValFax.value)"
 												@change="model.ValFax.fnUpdateValueOnChange" />
 										</base-input-structure>
@@ -370,13 +399,15 @@
 										<base-input-structure
 											v-if="controls.ENTIX___ENTITEMAIL___.isVisible"
 											class="i-text"
-											v-bind="controls.ENTIX___ENTITEMAIL___"
+											v-bind="controls.ENTIX___ENTITEMAIL___.wrapperProps"
+											:id="getControlId(controls.ENTIX___ENTITEMAIL___)"
 											v-on="controls.ENTIX___ENTITEMAIL___.handlers"
 											:loading="controls.ENTIX___ENTITEMAIL___.props.loading"
 											:reporting-mode-on="reportingModeCAV"
 											:suggestion-mode-on="suggestionModeOn">
 											<q-text-field
 												v-bind="controls.ENTIX___ENTITEMAIL___.props"
+												:id="getControlId(controls.ENTIX___ENTITEMAIL___)"
 												@blur="onBlur(controls.ENTIX___ENTITEMAIL___, model.ValEmail.value)"
 												@change="model.ValEmail.fnUpdateValueOnChange" />
 										</base-input-structure>
@@ -389,13 +420,15 @@
 										<base-input-structure
 											v-if="controls.ENTIX___ENTITWEBSITE_.isVisible"
 											class="i-text"
-											v-bind="controls.ENTIX___ENTITWEBSITE_"
+											v-bind="controls.ENTIX___ENTITWEBSITE_.wrapperProps"
+											:id="getControlId(controls.ENTIX___ENTITWEBSITE_)"
 											v-on="controls.ENTIX___ENTITWEBSITE_.handlers"
 											:loading="controls.ENTIX___ENTITWEBSITE_.props.loading"
 											:reporting-mode-on="reportingModeCAV"
 											:suggestion-mode-on="suggestionModeOn">
 											<q-text-field
 												v-bind="controls.ENTIX___ENTITWEBSITE_.props"
+												:id="getControlId(controls.ENTIX___ENTITWEBSITE_)"
 												@blur="onBlur(controls.ENTIX___ENTITWEBSITE_, model.ValWebsite.value)"
 												@change="model.ValWebsite.fnUpdateValueOnChange" />
 										</base-input-structure>
@@ -408,13 +441,15 @@
 										<base-input-structure
 											v-if="controls.ENTIX___ENTITPERSON__.isVisible"
 											class="i-text"
-											v-bind="controls.ENTIX___ENTITPERSON__"
+											v-bind="controls.ENTIX___ENTITPERSON__.wrapperProps"
+											:id="getControlId(controls.ENTIX___ENTITPERSON__)"
 											v-on="controls.ENTIX___ENTITPERSON__.handlers"
 											:loading="controls.ENTIX___ENTITPERSON__.props.loading"
 											:reporting-mode-on="reportingModeCAV"
 											:suggestion-mode-on="suggestionModeOn">
 											<q-text-field
 												v-bind="controls.ENTIX___ENTITPERSON__.props"
+												:id="getControlId(controls.ENTIX___ENTITPERSON__)"
 												@blur="onBlur(controls.ENTIX___ENTITPERSON__, model.ValPerson.value)"
 												@change="model.ValPerson.fnUpdateValueOnChange" />
 										</base-input-structure>
@@ -427,13 +462,15 @@
 										<base-input-structure
 											v-if="controls.ENTIX___ENTITCONTACT_.isVisible"
 											class="i-text"
-											v-bind="controls.ENTIX___ENTITCONTACT_"
+											v-bind="controls.ENTIX___ENTITCONTACT_.wrapperProps"
+											:id="getControlId(controls.ENTIX___ENTITCONTACT_)"
 											v-on="controls.ENTIX___ENTITCONTACT_.handlers"
 											:loading="controls.ENTIX___ENTITCONTACT_.props.loading"
 											:reporting-mode-on="reportingModeCAV"
 											:suggestion-mode-on="suggestionModeOn">
 											<q-text-field
 												v-bind="controls.ENTIX___ENTITCONTACT_.props"
+												:id="getControlId(controls.ENTIX___ENTITCONTACT_)"
 												@blur="onBlur(controls.ENTIX___ENTITCONTACT_, model.ValContact.value)"
 												@change="model.ValContact.fnUpdateValueOnChange" />
 										</base-input-structure>
@@ -444,13 +481,15 @@
 										<base-input-structure
 											v-if="controls.ENTIX___ENTITLANGUAGE.isVisible"
 											class="i-text"
-											v-bind="controls.ENTIX___ENTITLANGUAGE"
+											v-bind="controls.ENTIX___ENTITLANGUAGE.wrapperProps"
+											:id="getControlId(controls.ENTIX___ENTITLANGUAGE)"
 											v-on="controls.ENTIX___ENTITLANGUAGE.handlers"
 											:loading="controls.ENTIX___ENTITLANGUAGE.props.loading"
 											:reporting-mode-on="reportingModeCAV"
 											:suggestion-mode-on="suggestionModeOn">
 											<q-text-field
 												v-bind="controls.ENTIX___ENTITLANGUAGE.props"
+												:id="getControlId(controls.ENTIX___ENTITLANGUAGE)"
 												@blur="onBlur(controls.ENTIX___ENTITLANGUAGE, model.ValLanguage.value)"
 												@change="model.ValLanguage.fnUpdateValueOnChange" />
 										</base-input-structure>
@@ -461,13 +500,15 @@
 										<base-input-structure
 											v-if="controls.ENTIX___ENTITCURRENCY.isVisible"
 											class="i-text"
-											v-bind="controls.ENTIX___ENTITCURRENCY"
+											v-bind="controls.ENTIX___ENTITCURRENCY.wrapperProps"
+											:id="getControlId(controls.ENTIX___ENTITCURRENCY)"
 											v-on="controls.ENTIX___ENTITCURRENCY.handlers"
 											:loading="controls.ENTIX___ENTITCURRENCY.props.loading"
 											:reporting-mode-on="reportingModeCAV"
 											:suggestion-mode-on="suggestionModeOn">
 											<q-text-field
 												v-bind="controls.ENTIX___ENTITCURRENCY.props"
+												:id="getControlId(controls.ENTIX___ENTITCURRENCY)"
 												@blur="onBlur(controls.ENTIX___ENTITCURRENCY, model.ValCurrency.value)"
 												@change="model.ValCurrency.fnUpdateValueOnChange" />
 										</base-input-structure>
@@ -477,7 +518,7 @@
 							</q-accordion-item>
 							<q-accordion-item
 								v-if="controls.ENTIX___PSEUDNOVOGR03.isVisible"
-								id="ENTIX___PSEUDNOVOGR03-container"
+								:id="getControlId(controls.ENTIX___PSEUDNOVOGR03) + '-container'"
 								value="ENTIX___PSEUDNOVOGR03"
 								:title="controls.ENTIX___PSEUDNOVOGR03.label">
 								<!-- Start ENTIX___PSEUDNOVOGR03 -->
@@ -488,13 +529,15 @@
 										<base-input-structure
 											v-if="controls.ENTIX___ENTITBUILDING.isVisible"
 											class="i-text"
-											v-bind="controls.ENTIX___ENTITBUILDING"
+											v-bind="controls.ENTIX___ENTITBUILDING.wrapperProps"
+											:id="getControlId(controls.ENTIX___ENTITBUILDING)"
 											v-on="controls.ENTIX___ENTITBUILDING.handlers"
 											:loading="controls.ENTIX___ENTITBUILDING.props.loading"
 											:reporting-mode-on="reportingModeCAV"
 											:suggestion-mode-on="suggestionModeOn">
 											<q-text-field
 												v-bind="controls.ENTIX___ENTITBUILDING.props"
+												:id="getControlId(controls.ENTIX___ENTITBUILDING)"
 												@blur="onBlur(controls.ENTIX___ENTITBUILDING, model.ValBuilding.value)"
 												@change="model.ValBuilding.fnUpdateValueOnChange" />
 										</base-input-structure>
@@ -507,13 +550,15 @@
 										<base-input-structure
 											v-if="controls.ENTIX___ENTITSTREET__.isVisible"
 											class="i-text"
-											v-bind="controls.ENTIX___ENTITSTREET__"
+											v-bind="controls.ENTIX___ENTITSTREET__.wrapperProps"
+											:id="getControlId(controls.ENTIX___ENTITSTREET__)"
 											v-on="controls.ENTIX___ENTITSTREET__.handlers"
 											:loading="controls.ENTIX___ENTITSTREET__.props.loading"
 											:reporting-mode-on="reportingModeCAV"
 											:suggestion-mode-on="suggestionModeOn">
 											<q-text-field
 												v-bind="controls.ENTIX___ENTITSTREET__.props"
+												:id="getControlId(controls.ENTIX___ENTITSTREET__)"
 												@blur="onBlur(controls.ENTIX___ENTITSTREET__, model.ValStreet.value)"
 												@change="model.ValStreet.fnUpdateValueOnChange" />
 										</base-input-structure>
@@ -526,13 +571,15 @@
 										<base-input-structure
 											v-if="controls.ENTIX___ENTITTOWN____.isVisible"
 											class="i-text"
-											v-bind="controls.ENTIX___ENTITTOWN____"
+											v-bind="controls.ENTIX___ENTITTOWN____.wrapperProps"
+											:id="getControlId(controls.ENTIX___ENTITTOWN____)"
 											v-on="controls.ENTIX___ENTITTOWN____.handlers"
 											:loading="controls.ENTIX___ENTITTOWN____.props.loading"
 											:reporting-mode-on="reportingModeCAV"
 											:suggestion-mode-on="suggestionModeOn">
 											<q-text-field
 												v-bind="controls.ENTIX___ENTITTOWN____.props"
+												:id="getControlId(controls.ENTIX___ENTITTOWN____)"
 												@blur="onBlur(controls.ENTIX___ENTITTOWN____, model.ValTown.value)"
 												@change="model.ValTown.fnUpdateValueOnChange" />
 										</base-input-structure>
@@ -545,13 +592,15 @@
 										<base-input-structure
 											v-if="controls.ENTIX___ENTITCOUNTY__.isVisible"
 											class="i-text"
-											v-bind="controls.ENTIX___ENTITCOUNTY__"
+											v-bind="controls.ENTIX___ENTITCOUNTY__.wrapperProps"
+											:id="getControlId(controls.ENTIX___ENTITCOUNTY__)"
 											v-on="controls.ENTIX___ENTITCOUNTY__.handlers"
 											:loading="controls.ENTIX___ENTITCOUNTY__.props.loading"
 											:reporting-mode-on="reportingModeCAV"
 											:suggestion-mode-on="suggestionModeOn">
 											<q-text-field
 												v-bind="controls.ENTIX___ENTITCOUNTY__.props"
+												:id="getControlId(controls.ENTIX___ENTITCOUNTY__)"
 												@blur="onBlur(controls.ENTIX___ENTITCOUNTY__, model.ValCounty.value)"
 												@change="model.ValCounty.fnUpdateValueOnChange" />
 										</base-input-structure>
@@ -564,13 +613,15 @@
 										<base-input-structure
 											v-if="controls.ENTIX___ENTITSTATE___.isVisible"
 											class="i-text"
-											v-bind="controls.ENTIX___ENTITSTATE___"
+											v-bind="controls.ENTIX___ENTITSTATE___.wrapperProps"
+											:id="getControlId(controls.ENTIX___ENTITSTATE___)"
 											v-on="controls.ENTIX___ENTITSTATE___.handlers"
 											:loading="controls.ENTIX___ENTITSTATE___.props.loading"
 											:reporting-mode-on="reportingModeCAV"
 											:suggestion-mode-on="suggestionModeOn">
 											<q-text-field
 												v-bind="controls.ENTIX___ENTITSTATE___.props"
+												:id="getControlId(controls.ENTIX___ENTITSTATE___)"
 												@blur="onBlur(controls.ENTIX___ENTITSTATE___, model.ValState.value)"
 												@change="model.ValState.fnUpdateValueOnChange" />
 										</base-input-structure>
@@ -583,13 +634,15 @@
 										<base-input-structure
 											v-if="controls.ENTIX___ENTITPOSTALCO.isVisible"
 											class="i-text"
-											v-bind="controls.ENTIX___ENTITPOSTALCO"
+											v-bind="controls.ENTIX___ENTITPOSTALCO.wrapperProps"
+											:id="getControlId(controls.ENTIX___ENTITPOSTALCO)"
 											v-on="controls.ENTIX___ENTITPOSTALCO.handlers"
 											:loading="controls.ENTIX___ENTITPOSTALCO.props.loading"
 											:reporting-mode-on="reportingModeCAV"
 											:suggestion-mode-on="suggestionModeOn">
 											<q-text-field
 												v-bind="controls.ENTIX___ENTITPOSTALCO.props"
+												:id="getControlId(controls.ENTIX___ENTITPOSTALCO)"
 												@blur="onBlur(controls.ENTIX___ENTITPOSTALCO, model.ValPostalco.value)"
 												@change="model.ValPostalco.fnUpdateValueOnChange" />
 										</base-input-structure>
@@ -602,13 +655,15 @@
 										<base-input-structure
 											v-if="controls.ENTIX___ENTITPOBOX___.isVisible"
 											class="i-text"
-											v-bind="controls.ENTIX___ENTITPOBOX___"
+											v-bind="controls.ENTIX___ENTITPOBOX___.wrapperProps"
+											:id="getControlId(controls.ENTIX___ENTITPOBOX___)"
 											v-on="controls.ENTIX___ENTITPOBOX___.handlers"
 											:loading="controls.ENTIX___ENTITPOBOX___.props.loading"
 											:reporting-mode-on="reportingModeCAV"
 											:suggestion-mode-on="suggestionModeOn">
 											<q-text-field
 												v-bind="controls.ENTIX___ENTITPOBOX___.props"
+												:id="getControlId(controls.ENTIX___ENTITPOBOX___)"
 												@blur="onBlur(controls.ENTIX___ENTITPOBOX___, model.ValPobox.value)"
 												@change="model.ValPobox.fnUpdateValueOnChange" />
 										</base-input-structure>
@@ -618,7 +673,7 @@
 							</q-accordion-item>
 							<q-accordion-item
 								v-if="controls.ENTIX___PSEUDNOVOGR04.isVisible"
-								id="ENTIX___PSEUDNOVOGR04-container"
+								:id="getControlId(controls.ENTIX___PSEUDNOVOGR04) + '-container'"
 								value="ENTIX___PSEUDNOVOGR04"
 								:title="controls.ENTIX___PSEUDNOVOGR04.label">
 								<!-- Start ENTIX___PSEUDNOVOGR04 -->
@@ -629,7 +684,8 @@
 										<base-input-structure
 											v-if="controls.ENTIX___FACI1NAME____.isVisible"
 											class="i-text"
-											v-bind="controls.ENTIX___FACI1NAME____"
+											v-bind="controls.ENTIX___FACI1NAME____.wrapperProps"
+											:id="getControlId(controls.ENTIX___FACI1NAME____)"
 											v-on="controls.ENTIX___FACI1NAME____.handlers"
 											:loading="controls.ENTIX___FACI1NAME____.props.loading"
 											:reporting-mode-on="reportingModeCAV"
@@ -637,6 +693,7 @@
 											<q-lookup
 												v-if="controls.ENTIX___FACI1NAME____.isVisible"
 												v-bind="controls.ENTIX___FACI1NAME____.props"
+												:id="getControlId(controls.ENTIX___FACI1NAME____)"
 												v-on="controls.ENTIX___FACI1NAME____.handlers" />
 										</base-input-structure>
 									</q-col>
@@ -646,7 +703,8 @@
 										<base-input-structure
 											v-if="controls.ENTIX___FACI2NAME____.isVisible"
 											class="i-text"
-											v-bind="controls.ENTIX___FACI2NAME____"
+											v-bind="controls.ENTIX___FACI2NAME____.wrapperProps"
+											:id="getControlId(controls.ENTIX___FACI2NAME____)"
 											v-on="controls.ENTIX___FACI2NAME____.handlers"
 											:loading="controls.ENTIX___FACI2NAME____.props.loading"
 											:reporting-mode-on="reportingModeCAV"
@@ -654,6 +712,7 @@
 											<q-lookup
 												v-if="controls.ENTIX___FACI2NAME____.isVisible"
 												v-bind="controls.ENTIX___FACI2NAME____.props"
+												:id="getControlId(controls.ENTIX___FACI2NAME____)"
 												v-on="controls.ENTIX___FACI2NAME____.handlers" />
 										</base-input-structure>
 									</q-col>
@@ -663,17 +722,14 @@
 							<!-- End ENTIX___PSEUDNOVOGR05 -->
 						</q-accordion>
 					</q-col>
-				</q-row>
-				<q-row v-if="controls.ENTIX___PSEUDNOVOGR06.isVisible">
 					<q-col
 						v-if="controls.ENTIX___PSEUDNOVOGR06.isVisible"
 						cols="auto">
 						<q-group-box-container
 							v-if="controls.ENTIX___PSEUDNOVOGR06.isVisible"
-							id="ENTIX___PSEUDNOVOGR06"
 							v-bind="controls.ENTIX___PSEUDNOVOGR06"
-							no-border
-							:is-visible="controls.ENTIX___PSEUDNOVOGR06.isVisible">
+							:id="getControlId(controls.ENTIX___PSEUDNOVOGR06)"
+							:no-border="controls.ENTIX___PSEUDNOVOGR06.borderless">
 							<!-- Start ENTIX___PSEUDNOVOGR06 -->
 							<q-row v-if="controls.ENTIX___PSEUDFACILITE.isVisible">
 								<q-col
@@ -682,14 +738,15 @@
 									<q-table
 										v-if="controls.ENTIX___PSEUDFACILITE.isVisible"
 										v-bind="controls.ENTIX___PSEUDFACILITE"
+										:id="getControlId(controls.ENTIX___PSEUDFACILITE)"
 										v-on="controls.ENTIX___PSEUDFACILITE.handlers">
+										<template #header>
+											<q-table-config
+												:table-ctrl="controls.ENTIX___PSEUDFACILITE"
+												v-on="controls.ENTIX___PSEUDFACILITE.handlers" />
+										</template>
 										<!-- USE /[MANUAL GQT CUSTOM_TABLE ENTIX___PSEUDFACILITE]/ -->
 									</q-table>
-									<q-table-extra-extension
-										v-if="controls.ENTIX___PSEUDFACILITE.isVisible"
-										:list-ctrl="controls.ENTIX___PSEUDFACILITE"
-										:filter-operators="controls.ENTIX___PSEUDFACILITE.filterOperators"
-										v-on="controls.ENTIX___PSEUDFACILITE.handlers" />
 								</q-col>
 							</q-row>
 							<!-- End ENTIX___PSEUDNOVOGR06 -->
@@ -700,7 +757,7 @@
 		</q-container>
 	</teleport>
 
-	<hr v-if="!isPopup && showFormFooter" />
+	<q-divider v-if="!isPopup && showFormFooter" />
 
 	<teleport
 		v-if="formModalIsReady && showFormFooter"
@@ -1049,6 +1106,7 @@
 						label: computed(() => this.Resources.COMPANY_IDENTIFICATI44986),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
+						borderless: false,
 						isCollapsible: false,
 						anchored: false,
 						directChildren: ['ENTIX___ENTITNAME____', 'ENTIX___ENTITFOUNDED_', 'ENTIX___ENTITINITIALS', 'ENTIX___ENTITREGISTRA', 'ENTIX___ENTITTAXNUMBE', 'ENTIX___ENTITIBAN____', 'ENTIX___ENTITPHONENUM', 'ENTIX___ENTITOWNER___', 'ENTIX___ENTITCARRIER_', 'ENTIX___ENTITSUPPLIER', 'ENTIX___ENTITMANUFACT'],
@@ -1109,7 +1167,7 @@
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'ENTIX___PSEUDNOVOGR01',
-						maxLength: 30,
+						maxLength: 20,
 						controlLimits: [
 						],
 					}, this),
@@ -1123,7 +1181,7 @@
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'ENTIX___PSEUDNOVOGR01',
-						maxLength: 30,
+						maxLength: 20,
 						controlLimits: [
 						],
 					}, this),
@@ -1137,7 +1195,7 @@
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'ENTIX___PSEUDNOVOGR01',
-						maxLength: 33,
+						maxLength: 25,
 						controlLimits: [
 						],
 					}, this),
@@ -1155,17 +1213,16 @@
 						controlLimits: [
 						],
 					}, this),
-					ENTIX___ENTITOWNER___: new fieldControlClass.StringControl({
+					ENTIX___ENTITOWNER___: new fieldControlClass.BooleanControl({
 						modelField: 'ValOwner',
 						valueChangeEvent: 'fieldChange:entit.owner',
 						id: 'ENTIX___ENTITOWNER___',
 						name: 'OWNER',
-						size: 'medium',
+						size: 'mini',
 						label: computed(() => this.Resources.OWNER09558),
 						placeholder: '',
-						labelPosition: computed(() => this.labelAlignment.topleft),
+						labelPosition: computed(() => this.labelAlignment.right),
 						container: 'ENTIX___PSEUDNOVOGR01',
-						maxLength: 50,
 						controlLimits: [
 						],
 					}, this),
@@ -1177,7 +1234,7 @@
 						size: 'mini',
 						label: computed(() => this.Resources.CARRIER64855),
 						placeholder: '',
-						labelPosition: computed(() => this.$app.layout.CheckboxLabelAlignment),
+						labelPosition: computed(() => this.labelAlignment.right),
 						container: 'ENTIX___PSEUDNOVOGR01',
 						controlLimits: [
 						],
@@ -1190,7 +1247,7 @@
 						size: 'small',
 						label: computed(() => this.Resources.SUPPLIER17230),
 						placeholder: '',
-						labelPosition: computed(() => this.$app.layout.CheckboxLabelAlignment),
+						labelPosition: computed(() => this.labelAlignment.right),
 						container: 'ENTIX___PSEUDNOVOGR01',
 						controlLimits: [
 						],
@@ -1203,7 +1260,7 @@
 						size: 'small',
 						label: computed(() => this.Resources.MANUFACTURER50759),
 						placeholder: '',
-						labelPosition: computed(() => this.$app.layout.CheckboxLabelAlignment),
+						labelPosition: computed(() => this.labelAlignment.right),
 						container: 'ENTIX___PSEUDNOVOGR01',
 						controlLimits: [
 						],
@@ -1211,7 +1268,7 @@
 					ENTIX___PSEUDNOVOGR05: new fieldControlClass.AccordionControl({
 						id: 'ENTIX___PSEUDNOVOGR05',
 						name: 'NOVOGR05',
-						size: 'block',
+						size: 'xxlarge',
 						label: computed(() => this.Resources.ACCORDION01950),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
@@ -1230,6 +1287,7 @@
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'ENTIX___PSEUDNOVOGR05',
 						isInAccordion: true,
+						borderless: false,
 						isCollapsible: true,
 						anchored: false,
 						directChildren: ['ENTIX___ENTITTELEPHON', 'ENTIX___ENTITFAX_____', 'ENTIX___ENTITEMAIL___', 'ENTIX___ENTITWEBSITE_', 'ENTIX___ENTITPERSON__', 'ENTIX___ENTITCONTACT_', 'ENTIX___ENTITLANGUAGE', 'ENTIX___ENTITCURRENCY'],
@@ -1316,7 +1374,7 @@
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'ENTIX___PSEUDNOVOGR02',
-						maxLength: 30,
+						maxLength: 20,
 						controlLimits: [
 						],
 					}, this),
@@ -1357,6 +1415,7 @@
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'ENTIX___PSEUDNOVOGR05',
 						isInAccordion: true,
+						borderless: false,
 						isCollapsible: true,
 						anchored: false,
 						directChildren: ['ENTIX___ENTITBUILDING', 'ENTIX___ENTITSTREET__', 'ENTIX___ENTITTOWN____', 'ENTIX___ENTITCOUNTY__', 'ENTIX___ENTITSTATE___', 'ENTIX___ENTITPOSTALCO', 'ENTIX___ENTITPOBOX___'],
@@ -1373,7 +1432,7 @@
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'ENTIX___PSEUDNOVOGR03',
-						maxLength: 25,
+						maxLength: 10,
 						controlLimits: [
 						],
 					}, this),
@@ -1387,7 +1446,7 @@
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'ENTIX___PSEUDNOVOGR03',
-						maxLength: 50,
+						maxLength: 85,
 						controlLimits: [
 						],
 					}, this),
@@ -1401,7 +1460,7 @@
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'ENTIX___PSEUDNOVOGR03',
-						maxLength: 50,
+						maxLength: 85,
 						controlLimits: [
 						],
 					}, this),
@@ -1415,7 +1474,7 @@
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'ENTIX___PSEUDNOVOGR03',
-						maxLength: 50,
+						maxLength: 85,
 						controlLimits: [
 						],
 					}, this),
@@ -1429,7 +1488,7 @@
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'ENTIX___PSEUDNOVOGR03',
-						maxLength: 50,
+						maxLength: 85,
 						controlLimits: [
 						],
 					}, this),
@@ -1443,7 +1502,7 @@
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'ENTIX___PSEUDNOVOGR03',
-						maxLength: 10,
+						maxLength: 50,
 						controlLimits: [
 						],
 					}, this),
@@ -1470,6 +1529,7 @@
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'ENTIX___PSEUDNOVOGR05',
 						isInAccordion: true,
+						borderless: false,
 						isCollapsible: true,
 						anchored: false,
 						directChildren: ['ENTIX___FACI1NAME____', 'ENTIX___FACI2NAME____'],
@@ -1481,7 +1541,7 @@
 						valueChangeEvent: 'fieldChange:faci1.name',
 						id: 'ENTIX___FACI1NAME____',
 						name: 'NAME',
-						size: 'mini',
+						size: 'xlarge',
 						label: computed(() => this.Resources.FACILITY_NAME19514),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
@@ -1543,6 +1603,7 @@
 						label: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
+						borderless: true,
 						isCollapsible: false,
 						anchored: false,
 						directChildren: ['ENTIX___PSEUDFACILITE'],
@@ -1552,11 +1613,12 @@
 					ENTIX___PSEUDFACILITE: new fieldControlClass.TableListControl({
 						id: 'ENTIX___PSEUDFACILITE',
 						name: 'FACILITE',
-						size: '',
+						size: 'xxlarge',
 						label: computed(() => this.Resources.FACILITIES08876),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'ENTIX___PSEUDNOVOGR06',
+						headerLevel: computed(() => this.baseHeadingLevel + 1),
 						controller: 'ENTIT',
 						action: 'Entix_ValFacilite',
 						hasDependencies: false,
@@ -1655,7 +1717,6 @@
 							searchBarConfig: {
 								visibility: false
 							},
-							filtersVisible: false,
 							allowColumnFilters: false,
 							allowColumnSort: true,
 							crudActions: [
@@ -1729,9 +1790,7 @@
 									id: 'insert',
 									name: 'insert',
 									title: computed(() => this.Resources.INSERIR43365),
-									icon: {
-										icon: 'add'
-									},
+									icon: { icon: 'add' },
 									isInReadOnly: false,
 									params: {
 										action: vm.openFormAction,
@@ -1778,7 +1837,7 @@
 								sortOrder: 'asc'
 							}
 						},
-						globalEvents: ['changed-CNTRY', 'changed-ENTIT', 'changed-FACIL', 'changed-FACTY'],
+						globalEvents: ['changed-FACTY', 'changed-FACIL', 'changed-ENTIT'],
 						uuid: 'Entix_ValFacilite',
 						allSelectedRows: 'false',
 						controlLimits: [
@@ -2237,7 +2296,6 @@
 
 				this.afterControlUpdate(controlField, fieldValue)
 			},
-
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
 // USE /[MANUAL GQT FUNCTIONS_JS ENTIX]/
 // eslint-disable-next-line

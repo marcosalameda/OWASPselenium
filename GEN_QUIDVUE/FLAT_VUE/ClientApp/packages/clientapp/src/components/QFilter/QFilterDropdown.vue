@@ -10,6 +10,7 @@
 		:readonly="props.readonly"
 		:size="props.size" />
 </template>
+
 <script setup lang="ts">
 	// Components
 	import { QCombobox } from '@quidgest/ui/components'

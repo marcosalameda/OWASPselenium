@@ -10,8 +10,8 @@ public class FullcaleForm : Form
 	/// <summary>
 	/// Visits
 	/// </summary>
-	public ListControl PseudFullcale => new ListControl(driver, ContainerLocator, "#FULLCALEPSEUDFULLCALE");
+	public ListControl PseudFullcale => new ListControl(driver, ContainerLocator, "#FULLCALEPSEUDFULLCALE" + IdSuffix);
 
-	public FullcaleForm(IWebDriver driver, FORM_MODE mode, By? containerLocator = null)
-		: base(driver, mode, "FULLCALE", containerLocator: containerLocator) { }
+	public FullcaleForm(IWebDriver driver, FORM_MODE mode, By? containerLocator = null, bool usePkInId = false)
+		: base(driver, mode, "FULLCALE", containerLocator: containerLocator, usePkInId: usePkInId) { }
 }

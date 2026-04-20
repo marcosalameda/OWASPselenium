@@ -9,12 +9,13 @@
 			<div
 				v-if="showFormHeader"
 				class="c-action-bar">
-				<h1
+				<component
 					v-if="formControl.uiComponents.header && formInfo.designation"
+					:is="topHeadingTag"
 					:id="formTitleId"
 					class="form-header">
 					{{ formInfo.designation }}
-				</h1>
+				</component>
 
 				<div class="c-action-bar__menu">
 					<template
@@ -40,13 +41,10 @@
 									@click="btn.action">
 									<template v-if="btn.icon">
 										<q-badge-indicator
-											v-if="btn.badge && btn.badge.isVisible"
-											:color="btn.badge.color">
+											:enabled="btn.badge?.isVisible ?? false"
+											:color="btn.badge?.color">
 											<q-icon v-bind="btn.icon" />
 										</q-badge-indicator>
-										<q-icon
-											v-else
-											v-bind="btn.icon" />
 									</template>
 								</q-toggle-group-item>
 							</template>
@@ -97,6 +95,7 @@
 		<q-container
 			fluid
 			data-key="LISTACAM"
+			:data-identifier="primaryKeyValue"
 			:data-loading="!formInitialDataLoaded || !isActiveForm">
 			<template v-if="formControl.initialized && showFormBody">
 				<q-row v-if="controls.LISTACAMPSEUDCAMTEXTO.isVisible || controls.LISTACAMPSEUDCAMNUM__.isVisible || controls.LISTACAMPSEUDCAMDATE_.isVisible || controls.LISTACAMPSEUDCAMMASK_.isVisible || controls.LISTACAMPSEUDCAMENUM_.isVisible || controls.LISTACAMPSEUDCAMDOCS_.isVisible || controls.LISTACAMPSEUDCAMAUDIT.isVisible">
@@ -105,635 +104,689 @@
 						cols="auto">
 						<q-tab-container
 							v-if="controls.formTabs.isVisible"
-							id="q-tabs-LISTACAM"
+							:id="getId('q-tabs-LISTACAM')"
 							v-bind="controls.formTabs.props"
 							@tab-changed="controls.formTabs.selectTab($event)">
-							<template #tab-panel>
-								<section
-									v-if="controls.LISTACAMPSEUDCAMTEXTO.isVisible"
-									v-show="controls.formTabs.selectedTab === 'LISTACAMPSEUDCAMTEXTO'">
-									<div
-										id="LISTACAMPSEUDCAMTEXTO"
-										role="tabpanel"
-										aria-labelledby="tab-container-LISTACAMPSEUDCAMTEXTO">
-										<q-row v-if="controls.CAMTEXTOFLDS_TXTFIELD.isVisible">
-											<q-col
+							<section
+								v-if="controls.LISTACAMPSEUDCAMTEXTO.isVisible"
+								v-show="controls.formTabs.selectedTab === 'LISTACAMPSEUDCAMTEXTO'">
+								<div
+									id="LISTACAMPSEUDCAMTEXTO"
+									role="tabpanel"
+									aria-labelledby="q-tabs-LISTACAM-tab-LISTACAMPSEUDCAMTEXTO">
+									<q-row v-if="controls.CAMTEXTOFLDS_TXTFIELD.isVisible">
+										<q-col
+											v-if="controls.CAMTEXTOFLDS_TXTFIELD.isVisible"
+											cols="auto">
+											<base-input-structure
 												v-if="controls.CAMTEXTOFLDS_TXTFIELD.isVisible"
-												cols="auto">
-												<base-input-structure
-													v-if="controls.CAMTEXTOFLDS_TXTFIELD.isVisible"
-													class="i-text"
-													v-bind="controls.CAMTEXTOFLDS_TXTFIELD"
-													v-on="controls.CAMTEXTOFLDS_TXTFIELD.handlers"
-													:loading="controls.CAMTEXTOFLDS_TXTFIELD.props.loading"
-													:reporting-mode-on="reportingModeCAV"
-													:suggestion-mode-on="suggestionModeOn">
-													<q-text-field
-														v-bind="controls.CAMTEXTOFLDS_TXTFIELD.props"
-														@blur="onBlur(controls.CAMTEXTOFLDS_TXTFIELD, model.ValTxtfield.value)"
-														@change="model.ValTxtfield.fnUpdateValueOnChange" />
-												</base-input-structure>
-											</q-col>
-										</q-row>
-										<q-row v-if="controls.CAMTEXTOFLDS_DESCRIP_.isVisible">
-											<q-col
+												class="i-text"
+												v-bind="controls.CAMTEXTOFLDS_TXTFIELD.wrapperProps"
+												:id="getControlId(controls.CAMTEXTOFLDS_TXTFIELD)"
+												v-on="controls.CAMTEXTOFLDS_TXTFIELD.handlers"
+												:loading="controls.CAMTEXTOFLDS_TXTFIELD.props.loading"
+												:reporting-mode-on="reportingModeCAV"
+												:suggestion-mode-on="suggestionModeOn">
+												<q-text-field
+													v-bind="controls.CAMTEXTOFLDS_TXTFIELD.props"
+													:id="getControlId(controls.CAMTEXTOFLDS_TXTFIELD)"
+													@blur="onBlur(controls.CAMTEXTOFLDS_TXTFIELD, model.ValTxtfield.value)"
+													@change="model.ValTxtfield.fnUpdateValueOnChange" />
+											</base-input-structure>
+										</q-col>
+									</q-row>
+									<q-row v-if="controls.CAMTEXTOFLDS_DESCRIP_.isVisible">
+										<q-col
+											v-if="controls.CAMTEXTOFLDS_DESCRIP_.isVisible"
+											cols="auto">
+											<base-input-structure
 												v-if="controls.CAMTEXTOFLDS_DESCRIP_.isVisible"
-												cols="auto">
-												<base-input-structure
+												class="i-textarea"
+												v-bind="controls.CAMTEXTOFLDS_DESCRIP_.wrapperProps"
+												:id="getControlId(controls.CAMTEXTOFLDS_DESCRIP_)"
+												v-on="controls.CAMTEXTOFLDS_DESCRIP_.handlers"
+												:loading="controls.CAMTEXTOFLDS_DESCRIP_.props.loading"
+												:reporting-mode-on="reportingModeCAV"
+												:suggestion-mode-on="suggestionModeOn">
+												<q-text-area
 													v-if="controls.CAMTEXTOFLDS_DESCRIP_.isVisible"
-													class="i-textarea"
-													v-bind="controls.CAMTEXTOFLDS_DESCRIP_"
-													v-on="controls.CAMTEXTOFLDS_DESCRIP_.handlers"
-													:loading="controls.CAMTEXTOFLDS_DESCRIP_.props.loading"
-													:reporting-mode-on="reportingModeCAV"
-													:suggestion-mode-on="suggestionModeOn">
-													<q-text-area
-														v-if="controls.CAMTEXTOFLDS_DESCRIP_.isVisible"
-														v-bind="controls.CAMTEXTOFLDS_DESCRIP_.props"
-														v-on="controls.CAMTEXTOFLDS_DESCRIP_.handlers" />
-												</base-input-structure>
-											</q-col>
-										</q-row>
-									</div>
-								</section>
-								<section
-									v-if="controls.LISTACAMPSEUDCAMNUM__.isVisible"
-									v-show="controls.formTabs.selectedTab === 'LISTACAMPSEUDCAMNUM__'">
-									<div
-										id="LISTACAMPSEUDCAMNUM__"
-										role="tabpanel"
-										aria-labelledby="tab-container-LISTACAMPSEUDCAMNUM__">
-										<q-row v-if="controls.CAMNUM__FLDS_NPASSAGE.isVisible">
-											<q-col
+													v-bind="controls.CAMTEXTOFLDS_DESCRIP_.props"
+													:id="getControlId(controls.CAMTEXTOFLDS_DESCRIP_)"
+													v-on="controls.CAMTEXTOFLDS_DESCRIP_.handlers" />
+											</base-input-structure>
+										</q-col>
+									</q-row>
+								</div>
+							</section>
+							<section
+								v-if="controls.LISTACAMPSEUDCAMNUM__.isVisible"
+								v-show="controls.formTabs.selectedTab === 'LISTACAMPSEUDCAMNUM__'">
+								<div
+									id="LISTACAMPSEUDCAMNUM__"
+									role="tabpanel"
+									aria-labelledby="q-tabs-LISTACAM-tab-LISTACAMPSEUDCAMNUM__">
+									<q-row v-if="controls.CAMNUM__FLDS_NPASSAGE.isVisible">
+										<q-col
+											v-if="controls.CAMNUM__FLDS_NPASSAGE.isVisible"
+											cols="auto">
+											<base-input-structure
 												v-if="controls.CAMNUM__FLDS_NPASSAGE.isVisible"
-												cols="auto">
-												<base-input-structure
+												class="i-text"
+												v-bind="controls.CAMNUM__FLDS_NPASSAGE.wrapperProps"
+												:id="getControlId(controls.CAMNUM__FLDS_NPASSAGE)"
+												v-on="controls.CAMNUM__FLDS_NPASSAGE.handlers"
+												:loading="controls.CAMNUM__FLDS_NPASSAGE.props.loading"
+												:reporting-mode-on="reportingModeCAV"
+												:suggestion-mode-on="suggestionModeOn">
+												<q-numeric-input
 													v-if="controls.CAMNUM__FLDS_NPASSAGE.isVisible"
-													class="i-text"
-													v-bind="controls.CAMNUM__FLDS_NPASSAGE"
-													v-on="controls.CAMNUM__FLDS_NPASSAGE.handlers"
-													:loading="controls.CAMNUM__FLDS_NPASSAGE.props.loading"
-													:reporting-mode-on="reportingModeCAV"
-													:suggestion-mode-on="suggestionModeOn">
-													<q-numeric-input
-														v-if="controls.CAMNUM__FLDS_NPASSAGE.isVisible"
-														v-bind="controls.CAMNUM__FLDS_NPASSAGE.props"
-														@update:model-value="model.ValNpassage.fnUpdateValue" />
-												</base-input-structure>
-											</q-col>
-										</q-row>
-										<q-row v-if="controls.CAMNUM__FLDS_DURATION.isVisible">
-											<q-col
+													v-bind="controls.CAMNUM__FLDS_NPASSAGE.props"
+													:id="getControlId(controls.CAMNUM__FLDS_NPASSAGE)"
+													@update:model-value="model.ValNpassage.fnUpdateValue" />
+											</base-input-structure>
+										</q-col>
+									</q-row>
+									<q-row v-if="controls.CAMNUM__FLDS_DURATION.isVisible">
+										<q-col
+											v-if="controls.CAMNUM__FLDS_DURATION.isVisible"
+											cols="auto">
+											<base-input-structure
 												v-if="controls.CAMNUM__FLDS_DURATION.isVisible"
-												cols="auto">
-												<base-input-structure
+												class="i-text"
+												v-bind="controls.CAMNUM__FLDS_DURATION.wrapperProps"
+												:id="getControlId(controls.CAMNUM__FLDS_DURATION)"
+												v-on="controls.CAMNUM__FLDS_DURATION.handlers"
+												:loading="controls.CAMNUM__FLDS_DURATION.props.loading"
+												:reporting-mode-on="reportingModeCAV"
+												:suggestion-mode-on="suggestionModeOn">
+												<q-numeric-input
 													v-if="controls.CAMNUM__FLDS_DURATION.isVisible"
-													class="i-text"
-													v-bind="controls.CAMNUM__FLDS_DURATION"
-													v-on="controls.CAMNUM__FLDS_DURATION.handlers"
-													:loading="controls.CAMNUM__FLDS_DURATION.props.loading"
-													:reporting-mode-on="reportingModeCAV"
-													:suggestion-mode-on="suggestionModeOn">
-													<q-numeric-input
-														v-if="controls.CAMNUM__FLDS_DURATION.isVisible"
-														v-bind="controls.CAMNUM__FLDS_DURATION.props"
-														@update:model-value="model.ValDuration.fnUpdateValue" />
-												</base-input-structure>
-											</q-col>
-										</q-row>
-										<q-row v-if="controls.CAMNUM__FLDS_PRICE___.isVisible">
-											<q-col
+													v-bind="controls.CAMNUM__FLDS_DURATION.props"
+													:id="getControlId(controls.CAMNUM__FLDS_DURATION)"
+													@update:model-value="model.ValDuration.fnUpdateValue" />
+											</base-input-structure>
+										</q-col>
+									</q-row>
+									<q-row v-if="controls.CAMNUM__FLDS_PRICE___.isVisible">
+										<q-col
+											v-if="controls.CAMNUM__FLDS_PRICE___.isVisible"
+											cols="auto">
+											<base-input-structure
 												v-if="controls.CAMNUM__FLDS_PRICE___.isVisible"
-												cols="auto">
-												<base-input-structure
+												class="i-text"
+												v-bind="controls.CAMNUM__FLDS_PRICE___.wrapperProps"
+												:id="getControlId(controls.CAMNUM__FLDS_PRICE___)"
+												v-on="controls.CAMNUM__FLDS_PRICE___.handlers"
+												:loading="controls.CAMNUM__FLDS_PRICE___.props.loading"
+												:reporting-mode-on="reportingModeCAV"
+												:suggestion-mode-on="suggestionModeOn">
+												<q-numeric-input
 													v-if="controls.CAMNUM__FLDS_PRICE___.isVisible"
-													class="i-text"
-													v-bind="controls.CAMNUM__FLDS_PRICE___"
-													v-on="controls.CAMNUM__FLDS_PRICE___.handlers"
-													:loading="controls.CAMNUM__FLDS_PRICE___.props.loading"
-													:reporting-mode-on="reportingModeCAV"
-													:suggestion-mode-on="suggestionModeOn">
-													<q-numeric-input
-														v-if="controls.CAMNUM__FLDS_PRICE___.isVisible"
-														v-bind="controls.CAMNUM__FLDS_PRICE___.props"
-														@update:model-value="model.ValPrice.fnUpdateValue" />
-												</base-input-structure>
-											</q-col>
-										</q-row>
-										<q-row v-if="controls.CAMNUM__FLDS_PRECOBIL.isVisible">
-											<q-col
+													v-bind="controls.CAMNUM__FLDS_PRICE___.props"
+													:id="getControlId(controls.CAMNUM__FLDS_PRICE___)"
+													@update:model-value="model.ValPrice.fnUpdateValue" />
+											</base-input-structure>
+										</q-col>
+									</q-row>
+									<q-row v-if="controls.CAMNUM__FLDS_PRECOBIL.isVisible">
+										<q-col
+											v-if="controls.CAMNUM__FLDS_PRECOBIL.isVisible"
+											cols="auto">
+											<base-input-structure
 												v-if="controls.CAMNUM__FLDS_PRECOBIL.isVisible"
-												cols="auto">
-												<base-input-structure
+												class="i-text"
+												v-bind="controls.CAMNUM__FLDS_PRECOBIL.wrapperProps"
+												:id="getControlId(controls.CAMNUM__FLDS_PRECOBIL)"
+												v-on="controls.CAMNUM__FLDS_PRECOBIL.handlers"
+												:loading="controls.CAMNUM__FLDS_PRECOBIL.props.loading"
+												:reporting-mode-on="reportingModeCAV"
+												:suggestion-mode-on="suggestionModeOn">
+												<q-numeric-input
 													v-if="controls.CAMNUM__FLDS_PRECOBIL.isVisible"
-													class="i-text"
-													v-bind="controls.CAMNUM__FLDS_PRECOBIL"
-													v-on="controls.CAMNUM__FLDS_PRECOBIL.handlers"
-													:loading="controls.CAMNUM__FLDS_PRECOBIL.props.loading"
-													:reporting-mode-on="reportingModeCAV"
-													:suggestion-mode-on="suggestionModeOn">
-													<q-numeric-input
-														v-if="controls.CAMNUM__FLDS_PRECOBIL.isVisible"
-														v-bind="controls.CAMNUM__FLDS_PRECOBIL.props"
-														@update:model-value="model.ValPrecobil.fnUpdateValue" />
-												</base-input-structure>
-											</q-col>
-										</q-row>
-									</div>
-								</section>
-								<section
-									v-if="controls.LISTACAMPSEUDCAMDATE_.isVisible"
-									v-show="controls.formTabs.selectedTab === 'LISTACAMPSEUDCAMDATE_'">
-									<div
-										id="LISTACAMPSEUDCAMDATE_"
-										role="tabpanel"
-										aria-labelledby="tab-container-LISTACAMPSEUDCAMDATE_">
-										<q-row v-if="controls.CAMDATE_FLDS_YEAR____.isVisible">
-											<q-col
+													v-bind="controls.CAMNUM__FLDS_PRECOBIL.props"
+													:id="getControlId(controls.CAMNUM__FLDS_PRECOBIL)"
+													@update:model-value="model.ValPrecobil.fnUpdateValue" />
+											</base-input-structure>
+										</q-col>
+									</q-row>
+								</div>
+							</section>
+							<section
+								v-if="controls.LISTACAMPSEUDCAMDATE_.isVisible"
+								v-show="controls.formTabs.selectedTab === 'LISTACAMPSEUDCAMDATE_'">
+								<div
+									id="LISTACAMPSEUDCAMDATE_"
+									role="tabpanel"
+									aria-labelledby="q-tabs-LISTACAM-tab-LISTACAMPSEUDCAMDATE_">
+									<q-row v-if="controls.CAMDATE_FLDS_YEAR____.isVisible">
+										<q-col
+											v-if="controls.CAMDATE_FLDS_YEAR____.isVisible"
+											cols="auto">
+											<base-input-structure
 												v-if="controls.CAMDATE_FLDS_YEAR____.isVisible"
-												cols="auto">
-												<base-input-structure
+												class="i-text"
+												v-bind="controls.CAMDATE_FLDS_YEAR____.wrapperProps"
+												:id="getControlId(controls.CAMDATE_FLDS_YEAR____)"
+												v-on="controls.CAMDATE_FLDS_YEAR____.handlers"
+												:loading="controls.CAMDATE_FLDS_YEAR____.props.loading"
+												:reporting-mode-on="reportingModeCAV"
+												:suggestion-mode-on="suggestionModeOn">
+												<q-numeric-input
 													v-if="controls.CAMDATE_FLDS_YEAR____.isVisible"
-													class="i-text"
-													v-bind="controls.CAMDATE_FLDS_YEAR____"
-													v-on="controls.CAMDATE_FLDS_YEAR____.handlers"
-													:loading="controls.CAMDATE_FLDS_YEAR____.props.loading"
-													:reporting-mode-on="reportingModeCAV"
-													:suggestion-mode-on="suggestionModeOn">
-													<q-numeric-input
-														v-if="controls.CAMDATE_FLDS_YEAR____.isVisible"
-														v-bind="controls.CAMDATE_FLDS_YEAR____.props"
-														@update:model-value="model.ValYear.fnUpdateValue" />
-												</base-input-structure>
-											</q-col>
-										</q-row>
-										<q-row v-if="controls.CAMDATE_FLDS_DATE____.isVisible">
-											<q-col
+													v-bind="controls.CAMDATE_FLDS_YEAR____.props"
+													:id="getControlId(controls.CAMDATE_FLDS_YEAR____)"
+													@update:model-value="model.ValYear.fnUpdateValue" />
+											</base-input-structure>
+										</q-col>
+									</q-row>
+									<q-row v-if="controls.CAMDATE_FLDS_DATE____.isVisible">
+										<q-col
+											v-if="controls.CAMDATE_FLDS_DATE____.isVisible"
+											cols="auto">
+											<base-input-structure
 												v-if="controls.CAMDATE_FLDS_DATE____.isVisible"
-												cols="auto">
-												<base-input-structure
+												class="i-text"
+												v-bind="controls.CAMDATE_FLDS_DATE____.wrapperProps"
+												:id="getControlId(controls.CAMDATE_FLDS_DATE____)"
+												v-on="controls.CAMDATE_FLDS_DATE____.handlers"
+												:loading="controls.CAMDATE_FLDS_DATE____.props.loading"
+												:reporting-mode-on="reportingModeCAV"
+												:suggestion-mode-on="suggestionModeOn">
+												<q-date-time-picker
 													v-if="controls.CAMDATE_FLDS_DATE____.isVisible"
-													class="i-text"
-													v-bind="controls.CAMDATE_FLDS_DATE____"
-													v-on="controls.CAMDATE_FLDS_DATE____.handlers"
-													:loading="controls.CAMDATE_FLDS_DATE____.props.loading"
-													:reporting-mode-on="reportingModeCAV"
-													:suggestion-mode-on="suggestionModeOn">
-													<q-date-time-picker
-														v-if="controls.CAMDATE_FLDS_DATE____.isVisible"
-														v-bind="controls.CAMDATE_FLDS_DATE____.props"
-														:model-value="model.ValDate.value"
-														@reset-icon-click="model.ValDate.fnUpdateValue(model.ValDate.originalValue ?? new Date())"
-														@update:model-value="model.ValDate.fnUpdateValue($event ?? '')" />
-												</base-input-structure>
-											</q-col>
-										</q-row>
-										<q-row v-if="controls.CAMDATE_FLDS_DATETIME.isVisible">
-											<q-col
+													v-bind="controls.CAMDATE_FLDS_DATE____.props"
+													:id="getControlId(controls.CAMDATE_FLDS_DATE____)"
+													:model-value="model.ValDate.value"
+													@reset-icon-click="model.ValDate.fnUpdateValue(model.ValDate.originalValue ?? new Date())"
+													@update:model-value="model.ValDate.fnUpdateValue($event ?? '')" />
+											</base-input-structure>
+										</q-col>
+									</q-row>
+									<q-row v-if="controls.CAMDATE_FLDS_DATETIME.isVisible">
+										<q-col
+											v-if="controls.CAMDATE_FLDS_DATETIME.isVisible"
+											cols="auto">
+											<base-input-structure
 												v-if="controls.CAMDATE_FLDS_DATETIME.isVisible"
-												cols="auto">
-												<base-input-structure
+												class="i-text"
+												v-bind="controls.CAMDATE_FLDS_DATETIME.wrapperProps"
+												:id="getControlId(controls.CAMDATE_FLDS_DATETIME)"
+												v-on="controls.CAMDATE_FLDS_DATETIME.handlers"
+												:loading="controls.CAMDATE_FLDS_DATETIME.props.loading"
+												:reporting-mode-on="reportingModeCAV"
+												:suggestion-mode-on="suggestionModeOn">
+												<q-date-time-picker
 													v-if="controls.CAMDATE_FLDS_DATETIME.isVisible"
-													class="i-text"
-													v-bind="controls.CAMDATE_FLDS_DATETIME"
-													v-on="controls.CAMDATE_FLDS_DATETIME.handlers"
-													:loading="controls.CAMDATE_FLDS_DATETIME.props.loading"
-													:reporting-mode-on="reportingModeCAV"
-													:suggestion-mode-on="suggestionModeOn">
-													<q-date-time-picker
-														v-if="controls.CAMDATE_FLDS_DATETIME.isVisible"
-														v-bind="controls.CAMDATE_FLDS_DATETIME.props"
-														:model-value="model.ValDatetime.value"
-														@reset-icon-click="model.ValDatetime.fnUpdateValue(model.ValDatetime.originalValue ?? new Date())"
-														@update:model-value="model.ValDatetime.fnUpdateValue($event ?? '')" />
-												</base-input-structure>
-											</q-col>
-										</q-row>
-										<q-row v-if="controls.CAMDATE_FLDS_DATESECO.isVisible">
-											<q-col
+													v-bind="controls.CAMDATE_FLDS_DATETIME.props"
+													:id="getControlId(controls.CAMDATE_FLDS_DATETIME)"
+													:model-value="model.ValDatetime.value"
+													@reset-icon-click="model.ValDatetime.fnUpdateValue(model.ValDatetime.originalValue ?? new Date())"
+													@update:model-value="model.ValDatetime.fnUpdateValue($event ?? '')" />
+											</base-input-structure>
+										</q-col>
+									</q-row>
+									<q-row v-if="controls.CAMDATE_FLDS_DATESECO.isVisible">
+										<q-col
+											v-if="controls.CAMDATE_FLDS_DATESECO.isVisible"
+											cols="auto">
+											<base-input-structure
 												v-if="controls.CAMDATE_FLDS_DATESECO.isVisible"
-												cols="auto">
-												<base-input-structure
+												class="i-text"
+												v-bind="controls.CAMDATE_FLDS_DATESECO.wrapperProps"
+												:id="getControlId(controls.CAMDATE_FLDS_DATESECO)"
+												v-on="controls.CAMDATE_FLDS_DATESECO.handlers"
+												:loading="controls.CAMDATE_FLDS_DATESECO.props.loading"
+												:reporting-mode-on="reportingModeCAV"
+												:suggestion-mode-on="suggestionModeOn">
+												<q-date-time-picker
 													v-if="controls.CAMDATE_FLDS_DATESECO.isVisible"
-													class="i-text"
-													v-bind="controls.CAMDATE_FLDS_DATESECO"
-													v-on="controls.CAMDATE_FLDS_DATESECO.handlers"
-													:loading="controls.CAMDATE_FLDS_DATESECO.props.loading"
-													:reporting-mode-on="reportingModeCAV"
-													:suggestion-mode-on="suggestionModeOn">
-													<q-date-time-picker
-														v-if="controls.CAMDATE_FLDS_DATESECO.isVisible"
-														v-bind="controls.CAMDATE_FLDS_DATESECO.props"
-														:model-value="model.ValDateseco.value"
-														@reset-icon-click="model.ValDateseco.fnUpdateValue(model.ValDateseco.originalValue ?? new Date())"
-														@update:model-value="model.ValDateseco.fnUpdateValue($event ?? '')" />
-												</base-input-structure>
-											</q-col>
-										</q-row>
-										<q-row v-if="controls.CAMDATE_FLDS_TIME____.isVisible">
-											<q-col
+													v-bind="controls.CAMDATE_FLDS_DATESECO.props"
+													:id="getControlId(controls.CAMDATE_FLDS_DATESECO)"
+													:model-value="model.ValDateseco.value"
+													@reset-icon-click="model.ValDateseco.fnUpdateValue(model.ValDateseco.originalValue ?? new Date())"
+													@update:model-value="model.ValDateseco.fnUpdateValue($event ?? '')" />
+											</base-input-structure>
+										</q-col>
+									</q-row>
+									<q-row v-if="controls.CAMDATE_FLDS_TIME____.isVisible">
+										<q-col
+											v-if="controls.CAMDATE_FLDS_TIME____.isVisible"
+											cols="auto">
+											<base-input-structure
 												v-if="controls.CAMDATE_FLDS_TIME____.isVisible"
-												cols="auto">
-												<base-input-structure
+												class="i-text"
+												v-bind="controls.CAMDATE_FLDS_TIME____.wrapperProps"
+												:id="getControlId(controls.CAMDATE_FLDS_TIME____)"
+												v-on="controls.CAMDATE_FLDS_TIME____.handlers"
+												:loading="controls.CAMDATE_FLDS_TIME____.props.loading"
+												:reporting-mode-on="reportingModeCAV"
+												:suggestion-mode-on="suggestionModeOn">
+												<q-date-time-picker
 													v-if="controls.CAMDATE_FLDS_TIME____.isVisible"
-													class="i-text"
-													v-bind="controls.CAMDATE_FLDS_TIME____"
-													v-on="controls.CAMDATE_FLDS_TIME____.handlers"
-													:loading="controls.CAMDATE_FLDS_TIME____.props.loading"
-													:reporting-mode-on="reportingModeCAV"
-													:suggestion-mode-on="suggestionModeOn">
-													<q-date-time-picker
-														v-if="controls.CAMDATE_FLDS_TIME____.isVisible"
-														v-bind="controls.CAMDATE_FLDS_TIME____.props"
-														:model-value="model.ValTime.value"
-														@reset-icon-click="model.ValTime.fnUpdateValue(model.ValTime.originalValue ?? new Date())"
-														@update:model-value="model.ValTime.fnUpdateValue($event ?? '')" />
-												</base-input-structure>
-											</q-col>
-										</q-row>
-									</div>
-								</section>
-								<section
-									v-if="controls.LISTACAMPSEUDCAMMASK_.isVisible"
-									v-show="controls.formTabs.selectedTab === 'LISTACAMPSEUDCAMMASK_'">
-									<div
-										id="LISTACAMPSEUDCAMMASK_"
-										role="tabpanel"
-										aria-labelledby="tab-container-LISTACAMPSEUDCAMMASK_">
-										<q-row v-if="controls.CAMMASK_FLDS_ZIPFIELD.isVisible">
-											<q-col
+													v-bind="controls.CAMDATE_FLDS_TIME____.props"
+													:id="getControlId(controls.CAMDATE_FLDS_TIME____)"
+													:model-value="model.ValTime.value"
+													@reset-icon-click="model.ValTime.fnUpdateValue(model.ValTime.originalValue ?? new Date())"
+													@update:model-value="model.ValTime.fnUpdateValue($event ?? '')" />
+											</base-input-structure>
+										</q-col>
+									</q-row>
+								</div>
+							</section>
+							<section
+								v-if="controls.LISTACAMPSEUDCAMMASK_.isVisible"
+								v-show="controls.formTabs.selectedTab === 'LISTACAMPSEUDCAMMASK_'">
+								<div
+									id="LISTACAMPSEUDCAMMASK_"
+									role="tabpanel"
+									aria-labelledby="q-tabs-LISTACAM-tab-LISTACAMPSEUDCAMMASK_">
+									<q-row v-if="controls.CAMMASK_FLDS_ZIPFIELD.isVisible">
+										<q-col
+											v-if="controls.CAMMASK_FLDS_ZIPFIELD.isVisible"
+											cols="auto">
+											<base-input-structure
 												v-if="controls.CAMMASK_FLDS_ZIPFIELD.isVisible"
-												cols="auto">
-												<base-input-structure
+												class="i-text"
+												v-bind="controls.CAMMASK_FLDS_ZIPFIELD.wrapperProps"
+												:id="getControlId(controls.CAMMASK_FLDS_ZIPFIELD)"
+												v-on="controls.CAMMASK_FLDS_ZIPFIELD.handlers"
+												:loading="controls.CAMMASK_FLDS_ZIPFIELD.props.loading"
+												:reporting-mode-on="reportingModeCAV"
+												:suggestion-mode-on="suggestionModeOn">
+												<q-mask
 													v-if="controls.CAMMASK_FLDS_ZIPFIELD.isVisible"
-													class="i-text"
-													v-bind="controls.CAMMASK_FLDS_ZIPFIELD"
-													v-on="controls.CAMMASK_FLDS_ZIPFIELD.handlers"
-													:loading="controls.CAMMASK_FLDS_ZIPFIELD.props.loading"
-													:reporting-mode-on="reportingModeCAV"
-													:suggestion-mode-on="suggestionModeOn">
-													<q-mask
-														v-if="controls.CAMMASK_FLDS_ZIPFIELD.isVisible"
-														v-bind="controls.CAMMASK_FLDS_ZIPFIELD"
-														:model-value="model.ValZipfield.value"
-														@change="model.ValZipfield.fnUpdateValueOnChange" />
-												</base-input-structure>
-											</q-col>
-										</q-row>
-										<q-row v-if="controls.CAMMASK_FLDS_VATNUMBR.isVisible">
-											<q-col
+													v-bind="controls.CAMMASK_FLDS_ZIPFIELD.props"
+													:id="getControlId(controls.CAMMASK_FLDS_ZIPFIELD)"
+													:model-value="model.ValZipfield.value"
+													@change="model.ValZipfield.fnUpdateValueOnChange" />
+											</base-input-structure>
+										</q-col>
+									</q-row>
+									<q-row v-if="controls.CAMMASK_FLDS_VATNUMBR.isVisible">
+										<q-col
+											v-if="controls.CAMMASK_FLDS_VATNUMBR.isVisible"
+											cols="auto">
+											<base-input-structure
 												v-if="controls.CAMMASK_FLDS_VATNUMBR.isVisible"
-												cols="auto">
-												<base-input-structure
+												class="i-text"
+												v-bind="controls.CAMMASK_FLDS_VATNUMBR.wrapperProps"
+												:id="getControlId(controls.CAMMASK_FLDS_VATNUMBR)"
+												v-on="controls.CAMMASK_FLDS_VATNUMBR.handlers"
+												:loading="controls.CAMMASK_FLDS_VATNUMBR.props.loading"
+												:reporting-mode-on="reportingModeCAV"
+												:suggestion-mode-on="suggestionModeOn">
+												<q-mask
 													v-if="controls.CAMMASK_FLDS_VATNUMBR.isVisible"
-													class="i-text"
-													v-bind="controls.CAMMASK_FLDS_VATNUMBR"
-													v-on="controls.CAMMASK_FLDS_VATNUMBR.handlers"
-													:loading="controls.CAMMASK_FLDS_VATNUMBR.props.loading"
-													:reporting-mode-on="reportingModeCAV"
-													:suggestion-mode-on="suggestionModeOn">
-													<q-mask
-														v-if="controls.CAMMASK_FLDS_VATNUMBR.isVisible"
-														v-bind="controls.CAMMASK_FLDS_VATNUMBR"
-														:model-value="model.ValVatnumbr.value"
-														@change="model.ValVatnumbr.fnUpdateValueOnChange" />
-												</base-input-structure>
-											</q-col>
-										</q-row>
-										<q-row v-if="controls.CAMMASK_FLDS_LICPLATE.isVisible">
-											<q-col
+													v-bind="controls.CAMMASK_FLDS_VATNUMBR.props"
+													:id="getControlId(controls.CAMMASK_FLDS_VATNUMBR)"
+													:model-value="model.ValVatnumbr.value"
+													@change="model.ValVatnumbr.fnUpdateValueOnChange" />
+											</base-input-structure>
+										</q-col>
+									</q-row>
+									<q-row v-if="controls.CAMMASK_FLDS_LICPLATE.isVisible">
+										<q-col
+											v-if="controls.CAMMASK_FLDS_LICPLATE.isVisible"
+											cols="auto">
+											<base-input-structure
 												v-if="controls.CAMMASK_FLDS_LICPLATE.isVisible"
-												cols="auto">
-												<base-input-structure
+												class="i-text"
+												v-bind="controls.CAMMASK_FLDS_LICPLATE.wrapperProps"
+												:id="getControlId(controls.CAMMASK_FLDS_LICPLATE)"
+												v-on="controls.CAMMASK_FLDS_LICPLATE.handlers"
+												:loading="controls.CAMMASK_FLDS_LICPLATE.props.loading"
+												:reporting-mode-on="reportingModeCAV"
+												:suggestion-mode-on="suggestionModeOn">
+												<q-mask
 													v-if="controls.CAMMASK_FLDS_LICPLATE.isVisible"
-													class="i-text"
-													v-bind="controls.CAMMASK_FLDS_LICPLATE"
-													v-on="controls.CAMMASK_FLDS_LICPLATE.handlers"
-													:loading="controls.CAMMASK_FLDS_LICPLATE.props.loading"
-													:reporting-mode-on="reportingModeCAV"
-													:suggestion-mode-on="suggestionModeOn">
-													<q-mask
-														v-if="controls.CAMMASK_FLDS_LICPLATE.isVisible"
-														v-bind="controls.CAMMASK_FLDS_LICPLATE"
-														:model-value="model.ValLicplate.value"
-														@change="model.ValLicplate.fnUpdateValueOnChange" />
-												</base-input-structure>
-											</q-col>
-										</q-row>
-										<q-row v-if="controls.CAMMASK_FLDS_SSNUMBER.isVisible">
-											<q-col
+													v-bind="controls.CAMMASK_FLDS_LICPLATE.props"
+													:id="getControlId(controls.CAMMASK_FLDS_LICPLATE)"
+													:model-value="model.ValLicplate.value"
+													@change="model.ValLicplate.fnUpdateValueOnChange" />
+											</base-input-structure>
+										</q-col>
+									</q-row>
+									<q-row v-if="controls.CAMMASK_FLDS_SSNUMBER.isVisible">
+										<q-col
+											v-if="controls.CAMMASK_FLDS_SSNUMBER.isVisible"
+											cols="auto">
+											<base-input-structure
 												v-if="controls.CAMMASK_FLDS_SSNUMBER.isVisible"
-												cols="auto">
-												<base-input-structure
+												class="i-text"
+												v-bind="controls.CAMMASK_FLDS_SSNUMBER.wrapperProps"
+												:id="getControlId(controls.CAMMASK_FLDS_SSNUMBER)"
+												v-on="controls.CAMMASK_FLDS_SSNUMBER.handlers"
+												:loading="controls.CAMMASK_FLDS_SSNUMBER.props.loading"
+												:reporting-mode-on="reportingModeCAV"
+												:suggestion-mode-on="suggestionModeOn">
+												<q-mask
 													v-if="controls.CAMMASK_FLDS_SSNUMBER.isVisible"
-													class="i-text"
-													v-bind="controls.CAMMASK_FLDS_SSNUMBER"
-													v-on="controls.CAMMASK_FLDS_SSNUMBER.handlers"
-													:loading="controls.CAMMASK_FLDS_SSNUMBER.props.loading"
-													:reporting-mode-on="reportingModeCAV"
-													:suggestion-mode-on="suggestionModeOn">
-													<q-mask
-														v-if="controls.CAMMASK_FLDS_SSNUMBER.isVisible"
-														v-bind="controls.CAMMASK_FLDS_SSNUMBER"
-														:model-value="model.ValSsnumber.value"
-														@change="model.ValSsnumber.fnUpdateValueOnChange" />
-												</base-input-structure>
-											</q-col>
-										</q-row>
-										<q-row v-if="controls.CAMMASK_FLDS_BANKNMBR.isVisible">
-											<q-col
+													v-bind="controls.CAMMASK_FLDS_SSNUMBER.props"
+													:id="getControlId(controls.CAMMASK_FLDS_SSNUMBER)"
+													:model-value="model.ValSsnumber.value"
+													@change="model.ValSsnumber.fnUpdateValueOnChange" />
+											</base-input-structure>
+										</q-col>
+									</q-row>
+									<q-row v-if="controls.CAMMASK_FLDS_BANKNMBR.isVisible">
+										<q-col
+											v-if="controls.CAMMASK_FLDS_BANKNMBR.isVisible"
+											cols="auto">
+											<base-input-structure
 												v-if="controls.CAMMASK_FLDS_BANKNMBR.isVisible"
-												cols="auto">
-												<base-input-structure
+												class="i-text"
+												v-bind="controls.CAMMASK_FLDS_BANKNMBR.wrapperProps"
+												:id="getControlId(controls.CAMMASK_FLDS_BANKNMBR)"
+												v-on="controls.CAMMASK_FLDS_BANKNMBR.handlers"
+												:loading="controls.CAMMASK_FLDS_BANKNMBR.props.loading"
+												:reporting-mode-on="reportingModeCAV"
+												:suggestion-mode-on="suggestionModeOn">
+												<q-mask
 													v-if="controls.CAMMASK_FLDS_BANKNMBR.isVisible"
-													class="i-text"
-													v-bind="controls.CAMMASK_FLDS_BANKNMBR"
-													v-on="controls.CAMMASK_FLDS_BANKNMBR.handlers"
-													:loading="controls.CAMMASK_FLDS_BANKNMBR.props.loading"
-													:reporting-mode-on="reportingModeCAV"
-													:suggestion-mode-on="suggestionModeOn">
-													<q-mask
-														v-if="controls.CAMMASK_FLDS_BANKNMBR.isVisible"
-														v-bind="controls.CAMMASK_FLDS_BANKNMBR"
-														:model-value="model.ValBanknmbr.value"
-														@change="model.ValBanknmbr.fnUpdateValueOnChange" />
-												</base-input-structure>
-											</q-col>
-										</q-row>
-										<q-row v-if="controls.CAMMASK_FLDS_EMAILFLD.isVisible">
-											<q-col
+													v-bind="controls.CAMMASK_FLDS_BANKNMBR.props"
+													:id="getControlId(controls.CAMMASK_FLDS_BANKNMBR)"
+													:model-value="model.ValBanknmbr.value"
+													@change="model.ValBanknmbr.fnUpdateValueOnChange" />
+											</base-input-structure>
+										</q-col>
+									</q-row>
+									<q-row v-if="controls.CAMMASK_FLDS_EMAILFLD.isVisible">
+										<q-col
+											v-if="controls.CAMMASK_FLDS_EMAILFLD.isVisible"
+											cols="auto">
+											<base-input-structure
 												v-if="controls.CAMMASK_FLDS_EMAILFLD.isVisible"
-												cols="auto">
-												<base-input-structure
+												class="i-text"
+												v-bind="controls.CAMMASK_FLDS_EMAILFLD.wrapperProps"
+												:id="getControlId(controls.CAMMASK_FLDS_EMAILFLD)"
+												v-on="controls.CAMMASK_FLDS_EMAILFLD.handlers"
+												:loading="controls.CAMMASK_FLDS_EMAILFLD.props.loading"
+												:reporting-mode-on="reportingModeCAV"
+												:suggestion-mode-on="suggestionModeOn">
+												<q-mask
 													v-if="controls.CAMMASK_FLDS_EMAILFLD.isVisible"
-													class="i-text"
-													v-bind="controls.CAMMASK_FLDS_EMAILFLD"
-													v-on="controls.CAMMASK_FLDS_EMAILFLD.handlers"
-													:loading="controls.CAMMASK_FLDS_EMAILFLD.props.loading"
-													:reporting-mode-on="reportingModeCAV"
-													:suggestion-mode-on="suggestionModeOn">
-													<q-mask
-														v-if="controls.CAMMASK_FLDS_EMAILFLD.isVisible"
-														v-bind="controls.CAMMASK_FLDS_EMAILFLD"
-														:model-value="model.ValEmailfld.value"
-														@change="model.ValEmailfld.fnUpdateValueOnChange" />
-												</base-input-structure>
-											</q-col>
-										</q-row>
-										<q-row v-if="controls.CAMMASK_FLDS_IBANFIEL.isVisible">
-											<q-col
+													v-bind="controls.CAMMASK_FLDS_EMAILFLD.props"
+													:id="getControlId(controls.CAMMASK_FLDS_EMAILFLD)"
+													:model-value="model.ValEmailfld.value"
+													@change="model.ValEmailfld.fnUpdateValueOnChange" />
+											</base-input-structure>
+										</q-col>
+									</q-row>
+									<q-row v-if="controls.CAMMASK_FLDS_IBANFIEL.isVisible">
+										<q-col
+											v-if="controls.CAMMASK_FLDS_IBANFIEL.isVisible"
+											cols="auto">
+											<base-input-structure
 												v-if="controls.CAMMASK_FLDS_IBANFIEL.isVisible"
-												cols="auto">
-												<base-input-structure
+												class="i-text"
+												v-bind="controls.CAMMASK_FLDS_IBANFIEL.wrapperProps"
+												:id="getControlId(controls.CAMMASK_FLDS_IBANFIEL)"
+												v-on="controls.CAMMASK_FLDS_IBANFIEL.handlers"
+												:loading="controls.CAMMASK_FLDS_IBANFIEL.props.loading"
+												:reporting-mode-on="reportingModeCAV"
+												:suggestion-mode-on="suggestionModeOn">
+												<q-mask
 													v-if="controls.CAMMASK_FLDS_IBANFIEL.isVisible"
-													class="i-text"
-													v-bind="controls.CAMMASK_FLDS_IBANFIEL"
-													v-on="controls.CAMMASK_FLDS_IBANFIEL.handlers"
-													:loading="controls.CAMMASK_FLDS_IBANFIEL.props.loading"
-													:reporting-mode-on="reportingModeCAV"
-													:suggestion-mode-on="suggestionModeOn">
-													<q-mask
-														v-if="controls.CAMMASK_FLDS_IBANFIEL.isVisible"
-														v-bind="controls.CAMMASK_FLDS_IBANFIEL"
-														:model-value="model.ValIbanfiel.value"
-														@change="model.ValIbanfiel.fnUpdateValueOnChange" />
-												</base-input-structure>
-											</q-col>
-										</q-row>
-										<q-row v-if="controls.CAMMASK_FLDS_UPPRTEXT.isVisible">
-											<q-col
+													v-bind="controls.CAMMASK_FLDS_IBANFIEL.props"
+													:id="getControlId(controls.CAMMASK_FLDS_IBANFIEL)"
+													:model-value="model.ValIbanfiel.value"
+													@change="model.ValIbanfiel.fnUpdateValueOnChange" />
+											</base-input-structure>
+										</q-col>
+									</q-row>
+									<q-row v-if="controls.CAMMASK_FLDS_UPPRTEXT.isVisible">
+										<q-col
+											v-if="controls.CAMMASK_FLDS_UPPRTEXT.isVisible"
+											cols="auto">
+											<base-input-structure
 												v-if="controls.CAMMASK_FLDS_UPPRTEXT.isVisible"
-												cols="auto">
-												<base-input-structure
+												class="i-text"
+												v-bind="controls.CAMMASK_FLDS_UPPRTEXT.wrapperProps"
+												:id="getControlId(controls.CAMMASK_FLDS_UPPRTEXT)"
+												v-on="controls.CAMMASK_FLDS_UPPRTEXT.handlers"
+												:loading="controls.CAMMASK_FLDS_UPPRTEXT.props.loading"
+												:reporting-mode-on="reportingModeCAV"
+												:suggestion-mode-on="suggestionModeOn">
+												<q-mask
 													v-if="controls.CAMMASK_FLDS_UPPRTEXT.isVisible"
-													class="i-text"
-													v-bind="controls.CAMMASK_FLDS_UPPRTEXT"
-													v-on="controls.CAMMASK_FLDS_UPPRTEXT.handlers"
-													:loading="controls.CAMMASK_FLDS_UPPRTEXT.props.loading"
-													:reporting-mode-on="reportingModeCAV"
-													:suggestion-mode-on="suggestionModeOn">
-													<q-mask
-														v-if="controls.CAMMASK_FLDS_UPPRTEXT.isVisible"
-														v-bind="controls.CAMMASK_FLDS_UPPRTEXT"
-														:model-value="model.ValUpprtext.value"
-														@change="model.ValUpprtext.fnUpdateValueOnChange" />
-												</base-input-structure>
-											</q-col>
-										</q-row>
-									</div>
-								</section>
-								<section
-									v-if="controls.LISTACAMPSEUDCAMENUM_.isVisible"
-									v-show="controls.formTabs.selectedTab === 'LISTACAMPSEUDCAMENUM_'">
-									<div
-										id="LISTACAMPSEUDCAMENUM_"
-										role="tabpanel"
-										aria-labelledby="tab-container-LISTACAMPSEUDCAMENUM_">
-										<q-row v-if="controls.CAMENUM_FLDS_CLASSNUM.isVisible">
-											<q-col
+													v-bind="controls.CAMMASK_FLDS_UPPRTEXT.props"
+													:id="getControlId(controls.CAMMASK_FLDS_UPPRTEXT)"
+													:model-value="model.ValUpprtext.value"
+													@change="model.ValUpprtext.fnUpdateValueOnChange" />
+											</base-input-structure>
+										</q-col>
+									</q-row>
+								</div>
+							</section>
+							<section
+								v-if="controls.LISTACAMPSEUDCAMENUM_.isVisible"
+								v-show="controls.formTabs.selectedTab === 'LISTACAMPSEUDCAMENUM_'">
+								<div
+									id="LISTACAMPSEUDCAMENUM_"
+									role="tabpanel"
+									aria-labelledby="q-tabs-LISTACAM-tab-LISTACAMPSEUDCAMENUM_">
+									<q-row v-if="controls.CAMENUM_FLDS_CLASSNUM.isVisible">
+										<q-col
+											v-if="controls.CAMENUM_FLDS_CLASSNUM.isVisible"
+											cols="auto">
+											<base-input-structure
 												v-if="controls.CAMENUM_FLDS_CLASSNUM.isVisible"
-												cols="auto">
-												<base-input-structure
+												class="i-radio-container"
+												v-bind="controls.CAMENUM_FLDS_CLASSNUM.wrapperProps"
+												:id="getControlId(controls.CAMENUM_FLDS_CLASSNUM)"
+												v-on="controls.CAMENUM_FLDS_CLASSNUM.handlers"
+												:label-position="labelAlignment.topleft"
+												:loading="controls.CAMENUM_FLDS_CLASSNUM.props.loading"
+												:reporting-mode-on="reportingModeCAV"
+												:suggestion-mode-on="suggestionModeOn">
+												<q-radio-group
 													v-if="controls.CAMENUM_FLDS_CLASSNUM.isVisible"
-													class="i-radio-container"
-													v-bind="controls.CAMENUM_FLDS_CLASSNUM"
-													v-on="controls.CAMENUM_FLDS_CLASSNUM.handlers"
-													:label-position="labelAlignment.topleft"
-													:loading="controls.CAMENUM_FLDS_CLASSNUM.props.loading"
-													:reporting-mode-on="reportingModeCAV"
-													:suggestion-mode-on="suggestionModeOn">
-													<q-radio-group
-														v-if="controls.CAMENUM_FLDS_CLASSNUM.isVisible"
-														v-bind="controls.CAMENUM_FLDS_CLASSNUM.props"
-														v-on="controls.CAMENUM_FLDS_CLASSNUM.handlers">
-														<q-radio-button
-															v-for="radio in controls.CAMENUM_FLDS_CLASSNUM.items"
-															:key="radio.key"
-															:label="radio.value"
-															:value="radio.key" />
-													</q-radio-group>
-												</base-input-structure>
-											</q-col>
-										</q-row>
-										<q-row v-if="controls.CAMENUM_FLDS_CLASS___.isVisible">
-											<q-col
+													v-bind="controls.CAMENUM_FLDS_CLASSNUM.props"
+													:id="getControlId(controls.CAMENUM_FLDS_CLASSNUM)"
+													v-on="controls.CAMENUM_FLDS_CLASSNUM.handlers">
+													<q-radio-button
+														v-for="radio in controls.CAMENUM_FLDS_CLASSNUM.items"
+														:key="radio.key"
+														:label="radio.value"
+														:value="radio.key" />
+												</q-radio-group>
+											</base-input-structure>
+										</q-col>
+									</q-row>
+									<q-row v-if="controls.CAMENUM_FLDS_CLASS___.isVisible">
+										<q-col
+											v-if="controls.CAMENUM_FLDS_CLASS___.isVisible"
+											cols="auto">
+											<base-input-structure
 												v-if="controls.CAMENUM_FLDS_CLASS___.isVisible"
-												cols="auto">
-												<base-input-structure
+												class="i-text"
+												v-bind="controls.CAMENUM_FLDS_CLASS___.wrapperProps"
+												:id="getControlId(controls.CAMENUM_FLDS_CLASS___)"
+												v-on="controls.CAMENUM_FLDS_CLASS___.handlers"
+												:loading="controls.CAMENUM_FLDS_CLASS___.props.loading"
+												:reporting-mode-on="reportingModeCAV"
+												:suggestion-mode-on="suggestionModeOn">
+												<q-select
 													v-if="controls.CAMENUM_FLDS_CLASS___.isVisible"
-													class="i-text"
-													v-bind="controls.CAMENUM_FLDS_CLASS___"
-													v-on="controls.CAMENUM_FLDS_CLASS___.handlers"
-													:loading="controls.CAMENUM_FLDS_CLASS___.props.loading"
-													:reporting-mode-on="reportingModeCAV"
-													:suggestion-mode-on="suggestionModeOn">
-													<q-select
-														v-if="controls.CAMENUM_FLDS_CLASS___.isVisible"
-														v-bind="controls.CAMENUM_FLDS_CLASS___.props"
-														@update:model-value="model.ValClass.fnUpdateValue" />
-												</base-input-structure>
-											</q-col>
-										</q-row>
-										<q-row v-if="controls.CAMENUM_FLDS_LOGICENU.isVisible">
-											<q-col
+													v-bind="controls.CAMENUM_FLDS_CLASS___.props"
+													:id="getControlId(controls.CAMENUM_FLDS_CLASS___)"
+													@update:model-value="model.ValClass.fnUpdateValue" />
+											</base-input-structure>
+										</q-col>
+									</q-row>
+									<q-row v-if="controls.CAMENUM_FLDS_LOGICENU.isVisible">
+										<q-col
+											v-if="controls.CAMENUM_FLDS_LOGICENU.isVisible"
+											cols="auto">
+											<base-input-structure
 												v-if="controls.CAMENUM_FLDS_LOGICENU.isVisible"
-												cols="auto">
-												<base-input-structure
+												class="i-text"
+												v-bind="controls.CAMENUM_FLDS_LOGICENU.wrapperProps"
+												:id="getControlId(controls.CAMENUM_FLDS_LOGICENU)"
+												v-on="controls.CAMENUM_FLDS_LOGICENU.handlers"
+												:loading="controls.CAMENUM_FLDS_LOGICENU.props.loading"
+												:reporting-mode-on="reportingModeCAV"
+												:suggestion-mode-on="suggestionModeOn">
+												<q-switch
 													v-if="controls.CAMENUM_FLDS_LOGICENU.isVisible"
-													class="i-text"
-													v-bind="controls.CAMENUM_FLDS_LOGICENU"
-													v-on="controls.CAMENUM_FLDS_LOGICENU.handlers"
-													:loading="controls.CAMENUM_FLDS_LOGICENU.props.loading"
-													:reporting-mode-on="reportingModeCAV"
-													:suggestion-mode-on="suggestionModeOn">
-													<q-switch
-														v-if="controls.CAMENUM_FLDS_LOGICENU.isVisible"
-														v-bind="controls.CAMENUM_FLDS_LOGICENU.props"
-														v-on="controls.CAMENUM_FLDS_LOGICENU.handlers" />
-												</base-input-structure>
-											</q-col>
-										</q-row>
-									</div>
-								</section>
-								<section
-									v-if="controls.LISTACAMPSEUDCAMDOCS_.isVisible"
-									v-show="controls.formTabs.selectedTab === 'LISTACAMPSEUDCAMDOCS_'">
-									<div
-										id="LISTACAMPSEUDCAMDOCS_"
-										role="tabpanel"
-										aria-labelledby="tab-container-LISTACAMPSEUDCAMDOCS_">
-										<q-row v-if="controls.CAMDOCS_FLDS_LOGO____.isVisible">
-											<q-col
+													v-bind="controls.CAMENUM_FLDS_LOGICENU.props"
+													:id="getControlId(controls.CAMENUM_FLDS_LOGICENU)"
+													v-on="controls.CAMENUM_FLDS_LOGICENU.handlers" />
+											</base-input-structure>
+										</q-col>
+									</q-row>
+								</div>
+							</section>
+							<section
+								v-if="controls.LISTACAMPSEUDCAMDOCS_.isVisible"
+								v-show="controls.formTabs.selectedTab === 'LISTACAMPSEUDCAMDOCS_'">
+								<div
+									id="LISTACAMPSEUDCAMDOCS_"
+									role="tabpanel"
+									aria-labelledby="q-tabs-LISTACAM-tab-LISTACAMPSEUDCAMDOCS_">
+									<q-row v-if="controls.CAMDOCS_FLDS_LOGO____.isVisible">
+										<q-col
+											v-if="controls.CAMDOCS_FLDS_LOGO____.isVisible"
+											cols="auto">
+											<base-input-structure
 												v-if="controls.CAMDOCS_FLDS_LOGO____.isVisible"
-												cols="auto">
-												<base-input-structure
+												class="q-image"
+												v-bind="controls.CAMDOCS_FLDS_LOGO____.wrapperProps"
+												:id="getControlId(controls.CAMDOCS_FLDS_LOGO____)"
+												v-on="controls.CAMDOCS_FLDS_LOGO____.handlers"
+												:loading="controls.CAMDOCS_FLDS_LOGO____.props.loading"
+												:reporting-mode-on="reportingModeCAV"
+												:suggestion-mode-on="suggestionModeOn">
+												<q-image
 													v-if="controls.CAMDOCS_FLDS_LOGO____.isVisible"
-													class="q-image"
-													v-bind="controls.CAMDOCS_FLDS_LOGO____"
-													v-on="controls.CAMDOCS_FLDS_LOGO____.handlers"
-													:loading="controls.CAMDOCS_FLDS_LOGO____.props.loading"
-													:reporting-mode-on="reportingModeCAV"
-													:suggestion-mode-on="suggestionModeOn">
-													<q-image
-														v-if="controls.CAMDOCS_FLDS_LOGO____.isVisible"
-														v-bind="controls.CAMDOCS_FLDS_LOGO____.props"
-														v-on="controls.CAMDOCS_FLDS_LOGO____.handlers" />
-												</base-input-structure>
-											</q-col>
-										</q-row>
-										<q-row v-if="controls.CAMDOCS_FLDS_ATTACH__.isVisible">
-											<q-col
+													v-bind="controls.CAMDOCS_FLDS_LOGO____.props"
+													:id="getControlId(controls.CAMDOCS_FLDS_LOGO____)"
+													v-on="controls.CAMDOCS_FLDS_LOGO____.handlers" />
+											</base-input-structure>
+										</q-col>
+									</q-row>
+									<q-row v-if="controls.CAMDOCS_FLDS_ATTACH__.isVisible">
+										<q-col
+											v-if="controls.CAMDOCS_FLDS_ATTACH__.isVisible"
+											cols="auto">
+											<base-input-structure
 												v-if="controls.CAMDOCS_FLDS_ATTACH__.isVisible"
-												cols="auto">
-												<base-input-structure
+												class="i-text"
+												v-bind="controls.CAMDOCS_FLDS_ATTACH__.wrapperProps"
+												:id="getControlId(controls.CAMDOCS_FLDS_ATTACH__)"
+												v-on="controls.CAMDOCS_FLDS_ATTACH__.handlers"
+												:loading="controls.CAMDOCS_FLDS_ATTACH__.props.loading"
+												:reporting-mode-on="reportingModeCAV"
+												:suggestion-mode-on="suggestionModeOn">
+												<q-document
 													v-if="controls.CAMDOCS_FLDS_ATTACH__.isVisible"
-													class="i-text"
-													v-bind="controls.CAMDOCS_FLDS_ATTACH__"
-													v-on="controls.CAMDOCS_FLDS_ATTACH__.handlers"
-													:loading="controls.CAMDOCS_FLDS_ATTACH__.props.loading"
-													:reporting-mode-on="reportingModeCAV"
-													:suggestion-mode-on="suggestionModeOn">
-													<q-document
-														v-if="controls.CAMDOCS_FLDS_ATTACH__.isVisible"
-														v-bind="controls.CAMDOCS_FLDS_ATTACH__.props"
-														v-on="controls.CAMDOCS_FLDS_ATTACH__.handlers" />
-												</base-input-structure>
-											</q-col>
-										</q-row>
-									</div>
-								</section>
-								<section
-									v-if="controls.LISTACAMPSEUDCAMAUDIT.isVisible"
-									v-show="controls.formTabs.selectedTab === 'LISTACAMPSEUDCAMAUDIT'">
-									<div
-										id="LISTACAMPSEUDCAMAUDIT"
-										role="tabpanel"
-										aria-labelledby="tab-container-LISTACAMPSEUDCAMAUDIT">
-										<q-row v-if="controls.CAMAUDITFLDS_CREATUSE.isVisible">
-											<q-col
+													v-bind="controls.CAMDOCS_FLDS_ATTACH__.props"
+													:id="getControlId(controls.CAMDOCS_FLDS_ATTACH__)"
+													v-on="controls.CAMDOCS_FLDS_ATTACH__.handlers" />
+											</base-input-structure>
+										</q-col>
+									</q-row>
+								</div>
+							</section>
+							<section
+								v-if="controls.LISTACAMPSEUDCAMAUDIT.isVisible"
+								v-show="controls.formTabs.selectedTab === 'LISTACAMPSEUDCAMAUDIT'">
+								<div
+									id="LISTACAMPSEUDCAMAUDIT"
+									role="tabpanel"
+									aria-labelledby="q-tabs-LISTACAM-tab-LISTACAMPSEUDCAMAUDIT">
+									<q-row v-if="controls.CAMAUDITFLDS_CREATUSE.isVisible">
+										<q-col
+											v-if="controls.CAMAUDITFLDS_CREATUSE.isVisible"
+											cols="auto">
+											<base-input-structure
 												v-if="controls.CAMAUDITFLDS_CREATUSE.isVisible"
-												cols="auto">
-												<base-input-structure
-													v-if="controls.CAMAUDITFLDS_CREATUSE.isVisible"
-													class="i-text"
-													v-bind="controls.CAMAUDITFLDS_CREATUSE"
-													v-on="controls.CAMAUDITFLDS_CREATUSE.handlers"
-													:loading="controls.CAMAUDITFLDS_CREATUSE.props.loading"
-													:reporting-mode-on="reportingModeCAV"
-													:suggestion-mode-on="suggestionModeOn">
-													<q-text-field
-														v-bind="controls.CAMAUDITFLDS_CREATUSE.props"
-														@blur="onBlur(controls.CAMAUDITFLDS_CREATUSE, model.ValCreatuse.value)"
-														@change="model.ValCreatuse.fnUpdateValueOnChange" />
-												</base-input-structure>
-											</q-col>
-										</q-row>
-										<q-row v-if="controls.CAMAUDITFLDS_CREATDAT.isVisible">
-											<q-col
+												class="i-text"
+												v-bind="controls.CAMAUDITFLDS_CREATUSE.wrapperProps"
+												:id="getControlId(controls.CAMAUDITFLDS_CREATUSE)"
+												v-on="controls.CAMAUDITFLDS_CREATUSE.handlers"
+												:loading="controls.CAMAUDITFLDS_CREATUSE.props.loading"
+												:reporting-mode-on="reportingModeCAV"
+												:suggestion-mode-on="suggestionModeOn">
+												<q-text-field
+													v-bind="controls.CAMAUDITFLDS_CREATUSE.props"
+													:id="getControlId(controls.CAMAUDITFLDS_CREATUSE)"
+													@blur="onBlur(controls.CAMAUDITFLDS_CREATUSE, model.ValCreatuse.value)"
+													@change="model.ValCreatuse.fnUpdateValueOnChange" />
+											</base-input-structure>
+										</q-col>
+									</q-row>
+									<q-row v-if="controls.CAMAUDITFLDS_CREATDAT.isVisible">
+										<q-col
+											v-if="controls.CAMAUDITFLDS_CREATDAT.isVisible"
+											cols="auto">
+											<base-input-structure
 												v-if="controls.CAMAUDITFLDS_CREATDAT.isVisible"
-												cols="auto">
-												<base-input-structure
+												class="i-text"
+												v-bind="controls.CAMAUDITFLDS_CREATDAT.wrapperProps"
+												:id="getControlId(controls.CAMAUDITFLDS_CREATDAT)"
+												v-on="controls.CAMAUDITFLDS_CREATDAT.handlers"
+												:loading="controls.CAMAUDITFLDS_CREATDAT.props.loading"
+												:reporting-mode-on="reportingModeCAV"
+												:suggestion-mode-on="suggestionModeOn">
+												<q-date-time-picker
 													v-if="controls.CAMAUDITFLDS_CREATDAT.isVisible"
-													class="i-text"
-													v-bind="controls.CAMAUDITFLDS_CREATDAT"
-													v-on="controls.CAMAUDITFLDS_CREATDAT.handlers"
-													:loading="controls.CAMAUDITFLDS_CREATDAT.props.loading"
-													:reporting-mode-on="reportingModeCAV"
-													:suggestion-mode-on="suggestionModeOn">
-													<q-date-time-picker
-														v-if="controls.CAMAUDITFLDS_CREATDAT.isVisible"
-														v-bind="controls.CAMAUDITFLDS_CREATDAT.props"
-														:model-value="model.ValCreatdat.value"
-														@reset-icon-click="model.ValCreatdat.fnUpdateValue(model.ValCreatdat.originalValue ?? new Date())"
-														@update:model-value="model.ValCreatdat.fnUpdateValue($event ?? '')" />
-												</base-input-structure>
-											</q-col>
-										</q-row>
-										<q-row v-if="controls.CAMAUDITFLDS_CREATHOU.isVisible">
-											<q-col
+													v-bind="controls.CAMAUDITFLDS_CREATDAT.props"
+													:id="getControlId(controls.CAMAUDITFLDS_CREATDAT)"
+													:model-value="model.ValCreatdat.value"
+													@reset-icon-click="model.ValCreatdat.fnUpdateValue(model.ValCreatdat.originalValue ?? new Date())"
+													@update:model-value="model.ValCreatdat.fnUpdateValue($event ?? '')" />
+											</base-input-structure>
+										</q-col>
+									</q-row>
+									<q-row v-if="controls.CAMAUDITFLDS_CREATHOU.isVisible">
+										<q-col
+											v-if="controls.CAMAUDITFLDS_CREATHOU.isVisible"
+											cols="auto">
+											<base-input-structure
 												v-if="controls.CAMAUDITFLDS_CREATHOU.isVisible"
-												cols="auto">
-												<base-input-structure
+												class="i-text"
+												v-bind="controls.CAMAUDITFLDS_CREATHOU.wrapperProps"
+												:id="getControlId(controls.CAMAUDITFLDS_CREATHOU)"
+												v-on="controls.CAMAUDITFLDS_CREATHOU.handlers"
+												:loading="controls.CAMAUDITFLDS_CREATHOU.props.loading"
+												:reporting-mode-on="reportingModeCAV"
+												:suggestion-mode-on="suggestionModeOn">
+												<q-date-time-picker
 													v-if="controls.CAMAUDITFLDS_CREATHOU.isVisible"
-													class="i-text"
-													v-bind="controls.CAMAUDITFLDS_CREATHOU"
-													v-on="controls.CAMAUDITFLDS_CREATHOU.handlers"
-													:loading="controls.CAMAUDITFLDS_CREATHOU.props.loading"
-													:reporting-mode-on="reportingModeCAV"
-													:suggestion-mode-on="suggestionModeOn">
-													<q-date-time-picker
-														v-if="controls.CAMAUDITFLDS_CREATHOU.isVisible"
-														v-bind="controls.CAMAUDITFLDS_CREATHOU.props"
-														:model-value="model.ValCreathou.value"
-														@reset-icon-click="model.ValCreathou.fnUpdateValue(model.ValCreathou.originalValue ?? new Date())"
-														@update:model-value="model.ValCreathou.fnUpdateValue($event ?? '')" />
-												</base-input-structure>
-											</q-col>
-										</q-row>
-										<q-row v-if="controls.CAMAUDITFLDS_CREATINS.isVisible">
-											<q-col
+													v-bind="controls.CAMAUDITFLDS_CREATHOU.props"
+													:id="getControlId(controls.CAMAUDITFLDS_CREATHOU)"
+													:model-value="model.ValCreathou.value"
+													@reset-icon-click="model.ValCreathou.fnUpdateValue(model.ValCreathou.originalValue ?? new Date())"
+													@update:model-value="model.ValCreathou.fnUpdateValue($event ?? '')" />
+											</base-input-structure>
+										</q-col>
+									</q-row>
+									<q-row v-if="controls.CAMAUDITFLDS_CREATINS.isVisible">
+										<q-col
+											v-if="controls.CAMAUDITFLDS_CREATINS.isVisible"
+											cols="auto">
+											<base-input-structure
 												v-if="controls.CAMAUDITFLDS_CREATINS.isVisible"
-												cols="auto">
-												<base-input-structure
+												class="i-text"
+												v-bind="controls.CAMAUDITFLDS_CREATINS.wrapperProps"
+												:id="getControlId(controls.CAMAUDITFLDS_CREATINS)"
+												v-on="controls.CAMAUDITFLDS_CREATINS.handlers"
+												:loading="controls.CAMAUDITFLDS_CREATINS.props.loading"
+												:reporting-mode-on="reportingModeCAV"
+												:suggestion-mode-on="suggestionModeOn">
+												<q-date-time-picker
 													v-if="controls.CAMAUDITFLDS_CREATINS.isVisible"
-													class="i-text"
-													v-bind="controls.CAMAUDITFLDS_CREATINS"
-													v-on="controls.CAMAUDITFLDS_CREATINS.handlers"
-													:loading="controls.CAMAUDITFLDS_CREATINS.props.loading"
-													:reporting-mode-on="reportingModeCAV"
-													:suggestion-mode-on="suggestionModeOn">
-													<q-date-time-picker
-														v-if="controls.CAMAUDITFLDS_CREATINS.isVisible"
-														v-bind="controls.CAMAUDITFLDS_CREATINS.props"
-														:model-value="model.ValCreatins.value"
-														@reset-icon-click="model.ValCreatins.fnUpdateValue(model.ValCreatins.originalValue ?? new Date())"
-														@update:model-value="model.ValCreatins.fnUpdateValue($event ?? '')" />
-												</base-input-structure>
-											</q-col>
-										</q-row>
-									</div>
-								</section>
-							</template>
+													v-bind="controls.CAMAUDITFLDS_CREATINS.props"
+													:id="getControlId(controls.CAMAUDITFLDS_CREATINS)"
+													:model-value="model.ValCreatins.value"
+													@reset-icon-click="model.ValCreatins.fnUpdateValue(model.ValCreatins.originalValue ?? new Date())"
+													@update:model-value="model.ValCreatins.fnUpdateValue($event ?? '')" />
+											</base-input-structure>
+										</q-col>
+									</q-row>
+								</div>
+							</section>
 						</q-tab-container>
 					</q-col>
 				</q-row>
@@ -741,7 +794,7 @@
 		</q-container>
 	</teleport>
 
-	<hr v-if="!isPopup && showFormFooter" />
+	<q-divider v-if="!isPopup && showFormFooter" />
 
 	<teleport
 		v-if="formModalIsReady && showFormFooter"
@@ -1257,7 +1310,7 @@
 						size: 'mini',
 						helpControl: {
 							shortHelp: {
-								type: 'Tooltip',
+								type: 'subtext',
 								text: computed(() => this.Resources.___3161967),
 							},
 						},
@@ -1278,7 +1331,7 @@
 						size: 'small',
 						helpControl: {
 							shortHelp: {
-								type: 'Tooltip',
+								type: 'subtext',
 								text: computed(() => this.Resources.___3261074),
 							},
 						},
@@ -1298,7 +1351,7 @@
 						size: 'medium',
 						helpControl: {
 							shortHelp: {
-								type: 'Tooltip',
+								type: 'subtext',
 								text: computed(() => this.Resources.___3360901),
 							},
 						},
@@ -1318,7 +1371,7 @@
 						size: 'medium',
 						helpControl: {
 							shortHelp: {
-								type: 'Tooltip',
+								type: 'subtext',
 								text: computed(() => this.Resources.___3465504),
 							},
 						},
@@ -1338,7 +1391,7 @@
 						size: 'mini',
 						helpControl: {
 							shortHelp: {
-								type: 'Tooltip',
+								type: 'subtext',
 								text: computed(() => this.Resources.___3561555),
 							},
 						},
@@ -1469,7 +1522,7 @@
 						name: 'CLASSNUM',
 						helpControl: {
 							shortHelp: {
-								type: 'Tooltip',
+								type: 'subtext',
 								text: computed(() => this.Resources.___1845555),
 							},
 						},
@@ -1492,7 +1545,7 @@
 						size: 'medium',
 						helpControl: {
 							shortHelp: {
-								type: 'Tooltip',
+								type: 'subtext',
 								text: computed(() => this.Resources.___2712722),
 							},
 						},
@@ -1502,8 +1555,8 @@
 						tab: 'LISTACAMPSEUDCAMENUM_',
 						maxLength: 2,
 						arrayName: 'CLASS',
-						helpShortItem: '',
-						helpDetailedItem: '',
+						helpShortItem: 'None',
+						helpDetailedItem: 'None',
 						controlLimits: [
 						],
 					}, this),
@@ -1515,7 +1568,7 @@
 						size: 'medium',
 						helpControl: {
 							shortHelp: {
-								type: 'Tooltip',
+								type: 'subtext',
 								text: computed(() => this.Resources.___2813103),
 							},
 						},
@@ -1539,7 +1592,7 @@
 						size: 'medium',
 						helpControl: {
 							shortHelp: {
-								type: 'Tooltip',
+								type: 'subtext',
 								text: computed(() => this.Resources.___2916088),
 							},
 						},
@@ -1561,7 +1614,7 @@
 						size: 'large',
 						helpControl: {
 							shortHelp: {
-								type: 'Tooltip',
+								type: 'subtext',
 								text: computed(() => this.Resources.___3061884),
 							},
 						},
@@ -1684,8 +1737,6 @@
 						set ValCodaero(value) { vm.model.ValCodaero.updateValue(value) },
 						get ValCodequip() { return vm.model.ValCodequip.value },
 						set ValCodequip(value) { vm.model.ValCodequip.updateValue(value) },
-						get ValCond() { return vm.model.ValCond.value },
-						set ValCond(value) { vm.model.ValCond.updateValue(value) },
 						get ValCreatdat() { return vm.model.ValCreatdat.value },
 						set ValCreatdat(value) { vm.model.ValCreatdat.updateValue(value) },
 						get ValCreathou() { return vm.model.ValCreathou.value },
@@ -1722,8 +1773,6 @@
 						set ValPrice(value) { vm.model.ValPrice.updateValue(value) },
 						get ValSsnumber() { return vm.model.ValSsnumber.value },
 						set ValSsnumber(value) { vm.model.ValSsnumber.updateValue(value) },
-						get ValTblcond() { return vm.model.ValTblcond.value },
-						set ValTblcond(value) { vm.model.ValTblcond.updateValue(value) },
 						get ValTime() { return vm.model.ValTime.value },
 						set ValTime(value) { vm.model.ValTime.updateValue(value) },
 						get ValTxtfield() { return vm.model.ValTxtfield.value },
@@ -2089,7 +2138,6 @@
 
 				this.afterControlUpdate(controlField, fieldValue)
 			},
-
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
 // USE /[MANUAL GQT FUNCTIONS_JS LISTACAM]/
 // eslint-disable-next-line

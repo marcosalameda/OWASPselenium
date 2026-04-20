@@ -126,7 +126,7 @@ export default class ViewModel extends FormViewModelBase
 			originId: 'ValRegistra',
 			area: 'ENTIT',
 			field: 'REGISTRA',
-			maxLength: 30,
+			maxLength: 20,
 			description: computed(() => this.Resources.LEGAL_REGISTRATION04413),
 		}).cloneFrom(values?.ValRegistra))
 		this.stopWatchers.push(watch(() => this.ValRegistra.value, (newValue, oldValue) => this.onUpdate('entit.registra', this.ValRegistra, newValue, oldValue)))
@@ -136,29 +136,10 @@ export default class ViewModel extends FormViewModelBase
 			originId: 'ValTaxnumbe',
 			area: 'ENTIT',
 			field: 'TAXNUMBE',
-			maxLength: 30,
+			maxLength: 20,
 			description: computed(() => this.Resources.VAT_NUMBER24236),
 		}).cloneFrom(values?.ValTaxnumbe))
 		this.stopWatchers.push(watch(() => this.ValTaxnumbe.value, (newValue, oldValue) => this.onUpdate('entit.taxnumbe', this.ValTaxnumbe, newValue, oldValue)))
-
-		this.ValFounded = reactive(new modelFieldType.Date({
-			id: 'ValFounded',
-			originId: 'ValFounded',
-			area: 'ENTIT',
-			field: 'FOUNDED',
-			description: computed(() => this.Resources.FOUNDED_IN54120),
-		}).cloneFrom(values?.ValFounded))
-		this.stopWatchers.push(watch(() => this.ValFounded.value, (newValue, oldValue) => this.onUpdate('entit.founded', this.ValFounded, newValue, oldValue)))
-
-		this.ValOwner = reactive(new modelFieldType.String({
-			id: 'ValOwner',
-			originId: 'ValOwner',
-			area: 'ENTIT',
-			field: 'OWNER',
-			maxLength: 50,
-			description: computed(() => this.Resources.OWNER09558),
-		}).cloneFrom(values?.ValOwner))
-		this.stopWatchers.push(watch(() => this.ValOwner.value, (newValue, oldValue) => this.onUpdate('entit.owner', this.ValOwner, newValue, oldValue)))
 
 		this.ValEmail = reactive(new modelFieldType.String({
 			id: 'ValEmail',
@@ -185,7 +166,7 @@ export default class ViewModel extends FormViewModelBase
 			originId: 'ValIban',
 			area: 'ENTIT',
 			field: 'IBAN',
-			maxLength: 33,
+			maxLength: 25,
 			description: computed(() => this.Resources.IBAN__INTERNATIONAL_45066),
 		}).cloneFrom(values?.ValIban))
 		this.stopWatchers.push(watch(() => this.ValIban.value, (newValue, oldValue) => this.onUpdate('entit.iban', this.ValIban, newValue, oldValue)))
@@ -195,7 +176,7 @@ export default class ViewModel extends FormViewModelBase
 			originId: 'ValBuilding',
 			area: 'ENTIT',
 			field: 'BUILDING',
-			maxLength: 25,
+			maxLength: 10,
 			description: computed(() => this.Resources.BUILDING_HOUSE_NUMBE20738),
 		}).cloneFrom(values?.ValBuilding))
 		this.stopWatchers.push(watch(() => this.ValBuilding.value, (newValue, oldValue) => this.onUpdate('entit.building', this.ValBuilding, newValue, oldValue)))
@@ -205,7 +186,7 @@ export default class ViewModel extends FormViewModelBase
 			originId: 'ValStreet',
 			area: 'ENTIT',
 			field: 'STREET',
-			maxLength: 50,
+			maxLength: 85,
 			description: computed(() => this.Resources.STREET44324),
 		}).cloneFrom(values?.ValStreet))
 		this.stopWatchers.push(watch(() => this.ValStreet.value, (newValue, oldValue) => this.onUpdate('entit.street', this.ValStreet, newValue, oldValue)))
@@ -215,7 +196,7 @@ export default class ViewModel extends FormViewModelBase
 			originId: 'ValTown',
 			area: 'ENTIT',
 			field: 'TOWN',
-			maxLength: 50,
+			maxLength: 85,
 			description: computed(() => this.Resources.TOWN_CITY16259),
 		}).cloneFrom(values?.ValTown))
 		this.stopWatchers.push(watch(() => this.ValTown.value, (newValue, oldValue) => this.onUpdate('entit.town', this.ValTown, newValue, oldValue)))
@@ -225,7 +206,7 @@ export default class ViewModel extends FormViewModelBase
 			originId: 'ValCounty',
 			area: 'ENTIT',
 			field: 'COUNTY',
-			maxLength: 50,
+			maxLength: 85,
 			description: computed(() => this.Resources.COUNTY_PROVINCE34285),
 		}).cloneFrom(values?.ValCounty))
 		this.stopWatchers.push(watch(() => this.ValCounty.value, (newValue, oldValue) => this.onUpdate('entit.county', this.ValCounty, newValue, oldValue)))
@@ -235,7 +216,7 @@ export default class ViewModel extends FormViewModelBase
 			originId: 'ValState',
 			area: 'ENTIT',
 			field: 'STATE',
-			maxLength: 50,
+			maxLength: 85,
 			description: computed(() => this.Resources.STATE_PROVINCE28516),
 		}).cloneFrom(values?.ValState))
 		this.stopWatchers.push(watch(() => this.ValState.value, (newValue, oldValue) => this.onUpdate('entit.state', this.ValState, newValue, oldValue)))
@@ -255,7 +236,7 @@ export default class ViewModel extends FormViewModelBase
 			originId: 'ValPostalco',
 			area: 'ENTIT',
 			field: 'POSTALCO',
-			maxLength: 10,
+			maxLength: 50,
 			description: computed(() => this.Resources.ZIP_POSTAL_CODE55613),
 		}).cloneFrom(values?.ValPostalco))
 		this.stopWatchers.push(watch(() => this.ValPostalco.value, (newValue, oldValue) => this.onUpdate('entit.postalco', this.ValPostalco, newValue, oldValue)))
@@ -305,10 +286,19 @@ export default class ViewModel extends FormViewModelBase
 			originId: 'ValContact',
 			area: 'ENTIT',
 			field: 'CONTACT',
-			maxLength: 30,
+			maxLength: 20,
 			description: computed(() => this.Resources.CONTACT_TELEPHONE_NU12694),
 		}).cloneFrom(values?.ValContact))
 		this.stopWatchers.push(watch(() => this.ValContact.value, (newValue, oldValue) => this.onUpdate('entit.contact', this.ValContact, newValue, oldValue)))
+
+		this.ValOwner = reactive(new modelFieldType.Boolean({
+			id: 'ValOwner',
+			originId: 'ValOwner',
+			area: 'ENTIT',
+			field: 'OWNER',
+			description: computed(() => this.Resources.OWNER09558),
+		}).cloneFrom(values?.ValOwner))
+		this.stopWatchers.push(watch(() => this.ValOwner.value, (newValue, oldValue) => this.onUpdate('entit.owner', this.ValOwner, newValue, oldValue)))
 
 		this.ValCarrier = reactive(new modelFieldType.Boolean({
 			id: 'ValCarrier',
@@ -337,6 +327,15 @@ export default class ViewModel extends FormViewModelBase
 		}).cloneFrom(values?.ValManufact))
 		this.stopWatchers.push(watch(() => this.ValManufact.value, (newValue, oldValue) => this.onUpdate('entit.manufact', this.ValManufact, newValue, oldValue)))
 
+		this.ValFounded = reactive(new modelFieldType.Date({
+			id: 'ValFounded',
+			originId: 'ValFounded',
+			area: 'ENTIT',
+			field: 'FOUNDED',
+			description: computed(() => this.Resources.FOUNDED_IN54120),
+		}).cloneFrom(values?.ValFounded))
+		this.stopWatchers.push(watch(() => this.ValFounded.value, (newValue, oldValue) => this.onUpdate('entit.founded', this.ValFounded, newValue, oldValue)))
+
 		this.TableFaci1Name = reactive(new modelFieldType.String({
 			type: 'Lookup',
 			id: 'TableFaci1Name',
@@ -345,6 +344,7 @@ export default class ViewModel extends FormViewModelBase
 			field: 'NAME',
 			maxLength: 85,
 			description: computed(() => this.Resources.FACILITY_NAME19514),
+			ignoreFldSubmit: true,
 		}).cloneFrom(values?.TableFaci1Name))
 		this.stopWatchers.push(watch(() => this.TableFaci1Name.value, (newValue, oldValue) => this.onUpdate('faci1.name', this.TableFaci1Name, newValue, oldValue)))
 
@@ -356,6 +356,7 @@ export default class ViewModel extends FormViewModelBase
 			field: 'NAME',
 			maxLength: 85,
 			description: computed(() => this.Resources.FACILITY_NAME19514),
+			ignoreFldSubmit: true,
 		}).cloneFrom(values?.TableFaci2Name))
 		this.stopWatchers.push(watch(() => this.TableFaci2Name.value, (newValue, oldValue) => this.onUpdate('faci2.name', this.TableFaci2Name, newValue, oldValue)))
 

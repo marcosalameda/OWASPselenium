@@ -47,7 +47,7 @@ namespace CSGenio.business
 			Qfield = new Field(info.Alias, "codlendi", FieldType.KEY_GUID);
 			Qfield.FieldDescription = "";
 			Qfield.FieldSize =  36;
-			Qfield.CavDesignation = "";
+			Qfield.VisivelCav = CavVisibilityType.Nunca;
 
 			Qfield.Dupmsg = "";
 			info.RegisterFieldDB(Qfield);
@@ -56,7 +56,7 @@ namespace CSGenio.business
 			Qfield = new Field(info.Alias, "codpess1", FieldType.KEY_GUID);
 			Qfield.FieldDescription = ">COMOMODOR";
 			Qfield.FieldSize =  36;
-			Qfield.CavDesignation = "_COMOMODOR01469";
+			Qfield.VisivelCav = CavVisibilityType.Nunca;
 
 			Qfield.Dupmsg = "";
 			info.RegisterFieldDB(Qfield);
@@ -65,7 +65,7 @@ namespace CSGenio.business
 			Qfield = new Field(info.Alias, "codequip", FieldType.KEY_GUID);
 			Qfield.FieldDescription = ">EQUIPMENT";
 			Qfield.FieldSize =  36;
-			Qfield.CavDesignation = "_EQUIPMENT12605";
+			Qfield.VisivelCav = CavVisibilityType.Nunca;
 
             Qfield.NotNull = true;
 			Qfield.Dupmsg = "";
@@ -75,7 +75,7 @@ namespace CSGenio.business
 			Qfield = new Field(info.Alias, "codpess2", FieldType.KEY_GUID);
 			Qfield.FieldDescription = ">DADATARY";
 			Qfield.FieldSize =  36;
-			Qfield.CavDesignation = "_DADATARY21139";
+			Qfield.VisivelCav = CavVisibilityType.Nunca;
 
 			Qfield.Dupmsg = "";
 			info.RegisterFieldDB(Qfield);
@@ -227,13 +227,13 @@ namespace CSGenio.business
 			// Pathways
 			//------------------------------
 			info.Pathways = new Dictionary<string, string>(14);
-			info.Pathways.Add("pess2","pess2");
 			info.Pathways.Add("pess1","pess1");
+			info.Pathways.Add("pess2","pess2");
 			info.Pathways.Add("equip","equip");
-			info.Pathways.Add("stake","pess2");
-			info.Pathways.Add("cmpny","pess2");
-			info.Pathways.Add("cntry","pess2");
+			info.Pathways.Add("stake","pess1");
 			info.Pathways.Add("cate2","pess1");
+			info.Pathways.Add("cmpny","pess1");
+			info.Pathways.Add("cntry","pess1");
 			info.Pathways.Add("decom","equip");
 			info.Pathways.Add("wareh","equip");
 			info.Pathways.Add("tpequ","equip");

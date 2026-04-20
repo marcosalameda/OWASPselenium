@@ -33,7 +33,7 @@
 </template>
 
 <script>
-	import { computed } from 'vue'
+	import { computed, nextTick } from 'vue'
 	import { mapActions } from 'pinia'
 
 	import { useGenericDataStore } from '@quidgest/clientapp/stores'
@@ -79,9 +79,7 @@
 				'setModal'
 			]),
 
-			removeModal,
-
-			fnShowQueryList()
+			async fnShowQueryList()
 			{
 				const props = {
 					title: this.texts.selectQuery,
@@ -90,10 +88,10 @@
 						{
 							id: 'dialog-button-close',
 							action: this.fnHideQueryList,
-							icon: { icon: 'close', type: 'svg' },
+							icon: { icon: 'close' },
 							props: {
 								label: computed(() => this.Resources[hardcodedTexts.close]),
-								variant: 'bold'
+								title: computed(() => this.Resources[hardcodedTexts.close])
 							}
 						}
 					]
@@ -105,12 +103,13 @@
 				}
 				this.setModal(props, modalProps)
 
-				this.$nextTick().then(() => this.showQueryList = true)
+				await nextTick()
+				this.showQueryList = true
 			},
 
 			fnHideQueryList()
 			{
-				this.removeModal(this.modalId)
+				removeModal(this.modalId)
 				this.showQueryList = false
 			},
 
@@ -119,10 +118,14 @@
 			 */
 			loadQueryList()
 			{
-				fetchData('Cav', 'LoadQueryList', null, data => { // { ID, Title, Acess, Opercria }
-					this.reportList = data
-					this.fnShowQueryList()
-				})
+				fetchData(
+					'Cav',
+					'LoadQueryList',
+					null,
+					(data) => { // { ID, Title, Acess, Opercria }
+						this.reportList = data
+						this.fnShowQueryList()
+					})
 			},
 
 			getAccessTypeTitle(access)

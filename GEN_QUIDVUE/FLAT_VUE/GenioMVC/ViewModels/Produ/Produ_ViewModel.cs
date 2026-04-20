@@ -1,20 +1,20 @@
-﻿using JsonIgnoreAttribute = System.Text.Json.Serialization.JsonIgnoreAttribute;
+﻿using CSGenio.business;
+using CSGenio.framework;
+using CSGenio.persistence;
+using GenioMVC.Helpers;
+using GenioMVC.Models.Exception;
+using GenioMVC.Models.Navigation;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Quidgest.Persistence;
+using Quidgest.Persistence.GenericQuery;
+
 using System.Collections;
 using System.Collections.Concurrent;
 using System.Collections.Specialized;
 using System.ComponentModel.DataAnnotations;
 using System.Data;
 using System.Globalization;
-
-using CSGenio.business;
-using CSGenio.framework;
-using CSGenio.persistence;
-using GenioMVC.Helpers;
-using GenioMVC.Models.Exception;
-using GenioMVC.Models.Navigation;
-using Quidgest.Persistence;
-using Quidgest.Persistence.GenericQuery;
+using System.Text.Json.Serialization;
 
 namespace GenioMVC.ViewModels.Produ
 {
@@ -40,6 +40,7 @@ namespace GenioMVC.ViewModels.Produ
 		public string ValCodlocat { get; set; }
 
 		#endregion
+
 		/// <summary>
 		/// Title: "Product" | Type: "C"
 		/// </summary>
@@ -48,11 +49,6 @@ namespace GenioMVC.ViewModels.Produ
 		/// Title: "In use" | Type: "AL"
 		/// </summary>
 		public int ValIn_use { get; set; }
-		/// <summary>
-		/// Title: "" | Type: "PSEUD"
-		/// </summary>
-		[JsonIgnore]
-		public SelectList List_ValIn_use { get; set; }
 		/// <summary>
 		/// Title: "Description" | Type: "MO"
 		/// </summary>
@@ -107,8 +103,6 @@ namespace GenioMVC.ViewModels.Produ
 		/// </summary>
 		[ValidateSetAccess]
 		public TableDBEdit<GenioMVC.Models.Lcext> TableLcextGlnext { get; set; }
-
-
 
 		#region Navigations
 		#endregion
@@ -312,12 +306,7 @@ namespace GenioMVC.ViewModels.Produ
 			}
 		}
 
-		/// <summary>
-		/// Sets the value of a single property of the view model based on the provided table and field names.
-		/// </summary>
-		/// <param name="fullFieldName">The full field name in the format "table.field".</param>
-		/// <param name="value">The field value.</param>
-		/// <exception cref="ArgumentNullException">Thrown if <paramref name="fullFieldName"/> is null.</exception>
+		/// <inheritdoc />
 		public override void SetViewModelValue(string fullFieldName, object value)
 		{
 			try
@@ -473,6 +462,7 @@ namespace GenioMVC.ViewModels.Produ
 
 			Load_Produ___locatgln_____(qs, lazyLoad);
 			Load_Produ___lcextglnext__(qs, lazyLoad);
+
 // USE /[MANUAL GQT VIEWMODEL_LOADPARTIAL PRODU]/
 		}
 
@@ -548,10 +538,7 @@ namespace GenioMVC.ViewModels.Produ
 				}
 			}
 
-			TableLocatGln = new TableDBEdit<Models.Locat>
-			{
-				IsLazyLoad = lazyLoad
-			};
+			TableLocatGln = new TableDBEdit<Models.Locat>();
 
 			if (lazyLoad)
 			{
@@ -595,7 +582,7 @@ namespace GenioMVC.ViewModels.Produ
 				int numberItems = CSGenio.framework.Configuration.NrRegDBedit;
 				int offset = (page - 1) * numberItems;
 
-				FieldRef[] fields = new FieldRef[] { CSGenioAlocat.FldCodlocat, CSGenioAlocat.FldGln, CSGenioAlocat.FldZzstate };
+				FieldRef[] fields = [CSGenioAlocat.FldCodlocat, CSGenioAlocat.FldGln, CSGenioAlocat.FldZzstate];
 
 // USE /[MANUAL GQT OVERRQ PRODU_LOCATGLN]/
 
@@ -742,10 +729,7 @@ namespace GenioMVC.ViewModels.Produ
 			// Area limit
 			produ___lcextglnext__DoLoad &= AddCriteriaAreaLimit(produ___lcextglnext__Conds, CSGenio.business.CSGenioAlocat.FldCodlocat, "locat", this.ValCodlocat, true);
 
-			TableLcextGlnext = new TableDBEdit<Models.Lcext>
-			{
-				IsLazyLoad = lazyLoad
-			};
+			TableLcextGlnext = new TableDBEdit<Models.Lcext>();
 
 			if (lazyLoad)
 			{
@@ -792,7 +776,7 @@ namespace GenioMVC.ViewModels.Produ
 				int numberItems = CSGenio.framework.Configuration.NrRegDBedit;
 				int offset = (page - 1) * numberItems;
 
-				FieldRef[] fields = new FieldRef[] { CSGenioAlcext.FldCodlcext, CSGenioAlcext.FldGlnext, CSGenioAlcext.FldZzstate };
+				FieldRef[] fields = [CSGenioAlcext.FldCodlcext, CSGenioAlcext.FldGlnext, CSGenioAlcext.FldZzstate];
 
 // USE /[MANUAL GQT OVERRQ PRODU_LCEXTGLNEXT]/
 

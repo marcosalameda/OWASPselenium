@@ -62,7 +62,7 @@ namespace CSGenio.business
         {
             int nrArgs = args.Length;//nº de argumentos no pedido
             if (nrArgs < 3)//se tiver menos que 3 é erro, 1- comando,  2 - parametro , 3 - nome do grafico
-				throw new BusinessException("Erro a carregar o Grafico HTML.", "PedidoFlash${campo.Tgrafico}${campo.Form.ToUpper()}${campo.Fdbf.ToUpper()}${campo.Fcampo.ToUpper()}", "Insufficient number of arguments.");
+				throw new BusinessException("Erro a carregar o Grafico HTML.", "PedidoFlashGTime", "Insufficient number of arguments.");
             this.tpComando = (CommandType)Enum.Parse(typeof(CommandType), args[0]);//tipo de comando
             this.parametro = args[1];//parâmetro
             this.camposHistorial = new string[nrArgs - 3];//campos do historial

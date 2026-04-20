@@ -9,12 +9,13 @@
 			<div
 				v-if="showFormHeader"
 				class="c-action-bar">
-				<h1
+				<component
 					v-if="formControl.uiComponents.header && formInfo.designation"
+					:is="topHeadingTag"
 					:id="formTitleId"
 					class="form-header">
 					{{ formInfo.designation }}
-				</h1>
+				</component>
 
 				<div class="c-action-bar__menu">
 					<template
@@ -40,13 +41,10 @@
 									@click="btn.action">
 									<template v-if="btn.icon">
 										<q-badge-indicator
-											v-if="btn.badge && btn.badge.isVisible"
-											:color="btn.badge.color">
+											:enabled="btn.badge?.isVisible ?? false"
+											:color="btn.badge?.color">
 											<q-icon v-bind="btn.icon" />
 										</q-badge-indicator>
-										<q-icon
-											v-else
-											v-bind="btn.icon" />
 									</template>
 								</q-toggle-group-item>
 							</template>
@@ -97,6 +95,7 @@
 		<q-container
 			fluid
 			data-key="ARTIGEXT"
+			:data-identifier="primaryKeyValue"
 			:data-loading="!formInitialDataLoaded || !isActiveForm">
 			<template v-if="formControl.initialized && showFormBody">
 				<q-row v-if="controls.ARTIGEXTWAREHWAREHDES.isVisible">
@@ -106,7 +105,8 @@
 						<base-input-structure
 							v-if="controls.ARTIGEXTWAREHWAREHDES.isVisible"
 							class="i-text"
-							v-bind="controls.ARTIGEXTWAREHWAREHDES"
+							v-bind="controls.ARTIGEXTWAREHWAREHDES.wrapperProps"
+							:id="getControlId(controls.ARTIGEXTWAREHWAREHDES)"
 							v-on="controls.ARTIGEXTWAREHWAREHDES.handlers"
 							:loading="controls.ARTIGEXTWAREHWAREHDES.props.loading"
 							:reporting-mode-on="reportingModeCAV"
@@ -114,6 +114,7 @@
 							<q-lookup
 								v-if="controls.ARTIGEXTWAREHWAREHDES.isVisible"
 								v-bind="controls.ARTIGEXTWAREHWAREHDES.props"
+								:id="getControlId(controls.ARTIGEXTWAREHWAREHDES)"
 								v-on="controls.ARTIGEXTWAREHWAREHDES.handlers" />
 							<q-see-more-artigextwarehwarehdes
 								v-if="controls.ARTIGEXTWAREHWAREHDES.seeMoreIsVisible"
@@ -129,7 +130,8 @@
 						<base-input-structure
 							v-if="controls.ARTIGEXTGITEMITEMDES_.isVisible"
 							class="i-text"
-							v-bind="controls.ARTIGEXTGITEMITEMDES_"
+							v-bind="controls.ARTIGEXTGITEMITEMDES_.wrapperProps"
+							:id="getControlId(controls.ARTIGEXTGITEMITEMDES_)"
 							v-on="controls.ARTIGEXTGITEMITEMDES_.handlers"
 							:loading="controls.ARTIGEXTGITEMITEMDES_.props.loading"
 							:reporting-mode-on="reportingModeCAV"
@@ -137,6 +139,7 @@
 							<q-lookup
 								v-if="controls.ARTIGEXTGITEMITEMDES_.isVisible"
 								v-bind="controls.ARTIGEXTGITEMITEMDES_.props"
+								:id="getControlId(controls.ARTIGEXTGITEMITEMDES_)"
 								v-on="controls.ARTIGEXTGITEMITEMDES_.handlers" />
 							<q-see-more-artigextgitemitemdes
 								v-if="controls.ARTIGEXTGITEMITEMDES_.seeMoreIsVisible"
@@ -150,13 +153,15 @@
 						<base-input-structure
 							v-if="controls.ARTIGEXTGITEMITEMGCOD.isVisible"
 							class="i-text"
-							v-bind="controls.ARTIGEXTGITEMITEMGCOD"
+							v-bind="controls.ARTIGEXTGITEMITEMGCOD.wrapperProps"
+							:id="getControlId(controls.ARTIGEXTGITEMITEMGCOD)"
 							v-on="controls.ARTIGEXTGITEMITEMGCOD.handlers"
 							:loading="controls.ARTIGEXTGITEMITEMGCOD.props.loading"
 							:reporting-mode-on="reportingModeCAV"
 							:suggestion-mode-on="suggestionModeOn">
 							<q-text-field
 								v-bind="controls.ARTIGEXTGITEMITEMGCOD.props"
+								:id="getControlId(controls.ARTIGEXTGITEMITEMGCOD)"
 								@blur="onBlur(controls.ARTIGEXTGITEMITEMGCOD, model.GitemValItemgcod.value)"
 								@change="model.GitemValItemgcod.fnUpdateValueOnChange" />
 						</base-input-structure>
@@ -169,13 +174,15 @@
 						<base-input-structure
 							v-if="controls.ARTIGEXTITEM_ITEMDES_.isVisible"
 							class="i-text"
-							v-bind="controls.ARTIGEXTITEM_ITEMDES_"
+							v-bind="controls.ARTIGEXTITEM_ITEMDES_.wrapperProps"
+							:id="getControlId(controls.ARTIGEXTITEM_ITEMDES_)"
 							v-on="controls.ARTIGEXTITEM_ITEMDES_.handlers"
 							:loading="controls.ARTIGEXTITEM_ITEMDES_.props.loading"
 							:reporting-mode-on="reportingModeCAV"
 							:suggestion-mode-on="suggestionModeOn">
 							<q-text-field
 								v-bind="controls.ARTIGEXTITEM_ITEMDES_.props"
+								:id="getControlId(controls.ARTIGEXTITEM_ITEMDES_)"
 								@blur="onBlur(controls.ARTIGEXTITEM_ITEMDES_, model.ValItemdes.value)"
 								@change="model.ValItemdes.fnUpdateValueOnChange" />
 						</base-input-structure>
@@ -186,13 +193,15 @@
 						<base-input-structure
 							v-if="controls.ARTIGEXTITEM_ITEMCOD_.isVisible"
 							class="i-text"
-							v-bind="controls.ARTIGEXTITEM_ITEMCOD_"
+							v-bind="controls.ARTIGEXTITEM_ITEMCOD_.wrapperProps"
+							:id="getControlId(controls.ARTIGEXTITEM_ITEMCOD_)"
 							v-on="controls.ARTIGEXTITEM_ITEMCOD_.handlers"
 							:loading="controls.ARTIGEXTITEM_ITEMCOD_.props.loading"
 							:reporting-mode-on="reportingModeCAV"
 							:suggestion-mode-on="suggestionModeOn">
 							<q-text-field
 								v-bind="controls.ARTIGEXTITEM_ITEMCOD_.props"
+								:id="getControlId(controls.ARTIGEXTITEM_ITEMCOD_)"
 								@blur="onBlur(controls.ARTIGEXTITEM_ITEMCOD_, model.ValItemcod.value)"
 								@change="model.ValItemcod.fnUpdateValueOnChange" />
 						</base-input-structure>
@@ -205,7 +214,8 @@
 						<base-input-structure
 							v-if="controls.ARTIGEXTITEM_IMAGE___.isVisible"
 							class="q-image"
-							v-bind="controls.ARTIGEXTITEM_IMAGE___"
+							v-bind="controls.ARTIGEXTITEM_IMAGE___.wrapperProps"
+							:id="getControlId(controls.ARTIGEXTITEM_IMAGE___)"
 							v-on="controls.ARTIGEXTITEM_IMAGE___.handlers"
 							:loading="controls.ARTIGEXTITEM_IMAGE___.props.loading"
 							:reporting-mode-on="reportingModeCAV"
@@ -213,6 +223,7 @@
 							<q-image
 								v-if="controls.ARTIGEXTITEM_IMAGE___.isVisible"
 								v-bind="controls.ARTIGEXTITEM_IMAGE___.props"
+								:id="getControlId(controls.ARTIGEXTITEM_IMAGE___)"
 								v-on="controls.ARTIGEXTITEM_IMAGE___.handlers" />
 						</base-input-structure>
 					</q-col>
@@ -221,7 +232,7 @@
 		</q-container>
 	</teleport>
 
-	<hr v-if="!isPopup && showFormFooter" />
+	<q-divider v-if="!isPopup && showFormFooter" />
 
 	<teleport
 		v-if="formModalIsReady && showFormFooter"
@@ -1078,7 +1089,6 @@
 
 				this.afterControlUpdate(controlField, fieldValue)
 			},
-
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
 // USE /[MANUAL GQT FUNCTIONS_JS ARTIGEXT]/
 // eslint-disable-next-line

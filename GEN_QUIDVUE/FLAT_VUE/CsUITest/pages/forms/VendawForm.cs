@@ -12,6 +12,6 @@ public class VendawForm : Form
 	/// </summary>
 	public IWebElement PseudFases => throw new NotImplementedException();
 
-	public VendawForm(IWebDriver driver, FORM_MODE mode, By? containerLocator = null)
-		: base(driver, mode, "VENDAW", containerLocator: containerLocator) { }
+	public VendawForm(IWebDriver driver, FORM_MODE mode, By? containerLocator = null, bool usePkInId = false)
+		: base(driver, mode, "VENDAW", containerLocator: containerLocator, usePkInId: usePkInId) { }
 }

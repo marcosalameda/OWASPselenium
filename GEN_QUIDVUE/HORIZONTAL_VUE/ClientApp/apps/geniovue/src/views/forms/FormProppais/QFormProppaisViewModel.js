@@ -79,7 +79,7 @@ export default class ViewModel extends FormViewModelBase
 			area: 'CNTRY',
 			field: 'CODIGONR',
 			maxLength: 3,
-			description: computed(() => this.Resources.NUMERIC_ISO_316620341),
+			description: computed(() => this.Resources.NUMERIC19292),
 		}).cloneFrom(values?.ValCodigonr))
 		this.stopWatchers.push(watch(() => this.ValCodigonr.value, (newValue, oldValue) => this.onUpdate('cntry.codigonr', this.ValCodigonr, newValue, oldValue)))
 

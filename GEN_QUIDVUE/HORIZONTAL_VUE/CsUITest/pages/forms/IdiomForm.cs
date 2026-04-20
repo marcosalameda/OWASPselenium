@@ -10,13 +10,13 @@ public class IdiomForm : Form
 	/// <summary>
 	/// Language
 	/// </summary>
-	public BaseInputControl LanguLangua => new BaseInputControl(driver, ContainerLocator, "container-IDIOM___LANGULANGUA__", "#IDIOM___LANGULANGUA__");
+	public BaseInputControl LanguLangua => new BaseInputControl(driver, ContainerLocator, "container-IDIOM___LANGULANGUA__" + IdSuffix, "#IDIOM___LANGULANGUA__" + IdSuffix);
 
 	/// <summary>
 	/// Acronym
 	/// </summary>
-	public BaseInputControl LanguAcron => new BaseInputControl(driver, ContainerLocator, "container-IDIOM___LANGUACRON___", "#IDIOM___LANGUACRON___");
+	public BaseInputControl LanguAcron => new BaseInputControl(driver, ContainerLocator, "container-IDIOM___LANGUACRON___" + IdSuffix, "#IDIOM___LANGUACRON___" + IdSuffix);
 
-	public IdiomForm(IWebDriver driver, FORM_MODE mode, By? containerLocator = null)
-		: base(driver, mode, "IDIOM", containerLocator: containerLocator) { }
+	public IdiomForm(IWebDriver driver, FORM_MODE mode, By? containerLocator = null, bool usePkInId = false)
+		: base(driver, mode, "IDIOM", containerLocator: containerLocator, usePkInId: usePkInId) { }
 }

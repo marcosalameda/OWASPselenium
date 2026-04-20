@@ -33,12 +33,12 @@ namespace GenioMVC.Controllers
 	{
 		#region NavigationLocation Names
 
-		private static readonly NavigationLocation ACTION_PESS1_CANCEL = new("PERSON10446", "Pess1_Cancel", "Pess1") { vueRouteName = "form-PESS1", mode = "CANCEL" };
-		private static readonly NavigationLocation ACTION_PESS1_SHOW = new("PERSON10446", "Pess1_Show", "Pess1") { vueRouteName = "form-PESS1", mode = "SHOW" };
-		private static readonly NavigationLocation ACTION_PESS1_NEW = new("PERSON10446", "Pess1_New", "Pess1") { vueRouteName = "form-PESS1", mode = "NEW" };
-		private static readonly NavigationLocation ACTION_PESS1_EDIT = new("PERSON10446", "Pess1_Edit", "Pess1") { vueRouteName = "form-PESS1", mode = "EDIT" };
-		private static readonly NavigationLocation ACTION_PESS1_DUPLICATE = new("PERSON10446", "Pess1_Duplicate", "Pess1") { vueRouteName = "form-PESS1", mode = "DUPLICATE" };
-		private static readonly NavigationLocation ACTION_PESS1_DELETE = new("PERSON10446", "Pess1_Delete", "Pess1") { vueRouteName = "form-PESS1", mode = "DELETE" };
+		private static readonly NavigationLocation ACTION_PESS1_CANCEL = new("COMODANTE63029", "Pess1_Cancel", "Pess1") { vueRouteName = "form-PESS1", mode = "CANCEL" };
+		private static readonly NavigationLocation ACTION_PESS1_SHOW = new("COMODANTE63029", "Pess1_Show", "Pess1") { vueRouteName = "form-PESS1", mode = "SHOW" };
+		private static readonly NavigationLocation ACTION_PESS1_NEW = new("COMODANTE63029", "Pess1_New", "Pess1") { vueRouteName = "form-PESS1", mode = "NEW" };
+		private static readonly NavigationLocation ACTION_PESS1_EDIT = new("COMODANTE63029", "Pess1_Edit", "Pess1") { vueRouteName = "form-PESS1", mode = "EDIT" };
+		private static readonly NavigationLocation ACTION_PESS1_DUPLICATE = new("COMODANTE63029", "Pess1_Duplicate", "Pess1") { vueRouteName = "form-PESS1", mode = "DUPLICATE" };
+		private static readonly NavigationLocation ACTION_PESS1_DELETE = new("COMODANTE63029", "Pess1_Delete", "Pess1") { vueRouteName = "form-PESS1", mode = "DELETE" };
 
 		#endregion
 
@@ -358,8 +358,15 @@ namespace GenioMVC.Controllers
 				PersistentSupport sp = UserContext.Current.PersistentSupport;
 				try
 				{
-					GenioMVC.Models.Pess1 model = new(UserContext.Current);
-					model.klass.QPrimaryKey = Navigation.GetStrValue("pess1");
+					var recordKey = Navigation.GetStrValue("pess1");
+					var model = GenioMVC.Models.Pess1.Find(recordKey, UserContext.Current);
+					if (model.ValZzstate == 0)
+					{
+						Navigation.ClearValue("pess1");
+						string errorMessage = Resources.Resources.ESTE_REGISTO_JA_FOI_02595;
+						Log.Error($"${errorMessage} ID: ${recordKey}");
+						return JsonOK(new { Success = true, currentNavigationLevel = Navigation.CurrentLevel.Level, Warning = errorMessage });
+					}
 
 // USE /[MANUAL GQT BEFORE_CANCEL PESS1]/
 
@@ -518,71 +525,6 @@ namespace GenioMVC.Controllers
 		{
 			requestModel.Model.Init(UserContext.Current);
 			return UpdateFilesTickets(requestModel.Tickets, requestModel.Model, requestModel.IsApply);
-		}
-		// Supressing the warning because we are actually just deserializing
-#pragma warning disable CS0618
-		public class Pess1_MockPersonCreator_CB_ViewModel : Pess1_ViewModel
-#pragma warning restore CS0618
-		{
-			public string ChatBotUserPrompt { get; set; }
-		}
-
-		/// <summary>
-		/// Call the MockPersonCreator
-		/// </summary>
-		public ActionResult Pess1_MockPersonCreator_CB([FromBody] Pess1_MockPersonCreator_CB_ViewModel vm)
-		{
-			var key = vm.ValCodpesso;
-
-			User user = UserContext.Current.User;
-			PersistentSupport sp = PersistentSupport.getPersistentSupport(user.Year, user.Name);
-
-			try
-			{
-				sp.openTransaction();
-				var model = Pess1.Find(key, UserContext.Current);
-				vm.MapToModel(model);
-
-				GenioServer.ai.MockPersonCreatorAgent agent = new(_aiService);
-				CSGenio.core.ai.AgentContextData agentContext = new()
-				{
-					Username = user.Name,
-					AgentId = agent.AGENT_ID,
-					FormId = "PESS1",
-					CurrentRecordId = key,
-					Module = user.CurrentModule,
-					Subsystem = user.Year
-				};
-				agent.LoadRecords(key, sp, user);
-				sp.closeTransaction();
-				if (!string.IsNullOrEmpty(vm.ChatBotUserPrompt))
-				{
-					agentContext.UserPrompt = vm.ChatBotUserPrompt;
-				}
-
-				var jobId = agent.GetAgentPromptJobId(agentContext);
-
-				return Json(new {
-					success = true,
-					data = new
-					{
-						agentId = agent.AGENT_ID,
-						jobId
-					},
-				});
-			}
-			catch (Exception ex)
-			{
-				Log.Error($"Error in Pess1_MockPersonCreator_CB: {ex.Message}");
-				sp.rollbackTransaction();
-				return Json(
-					new
-					{
-						success = true,
-						message = Resources.Resources.PEDIMOS_DESCULPA__OC63848
-					}
-				);
-			}
 		}
 	}
 }

@@ -133,6 +133,7 @@ export default class ViewModel extends FormViewModelBase
 			field: 'DESIGNAT',
 			maxLength: 85,
 			description: computed(() => this.Resources.DESIGNATION35876),
+			ignoreFldSubmit: true,
 		}).cloneFrom(values?.TableCmpnyDesignat))
 		this.stopWatchers.push(watch(() => this.TableCmpnyDesignat.value, (newValue, oldValue) => this.onUpdate('cmpny.designat', this.TableCmpnyDesignat, newValue, oldValue)))
 
@@ -144,6 +145,7 @@ export default class ViewModel extends FormViewModelBase
 			field: 'NAME',
 			maxLength: 85,
 			description: computed(() => this.Resources.NAME31974),
+			ignoreFldSubmit: true,
 		}).cloneFrom(values?.TablePess1Name))
 		this.stopWatchers.push(watch(() => this.TablePess1Name.value, (newValue, oldValue) => this.onUpdate('pess1.name', this.TablePess1Name, newValue, oldValue)))
 
@@ -189,6 +191,7 @@ export default class ViewModel extends FormViewModelBase
 			field: 'TIPOEQUI',
 			maxLength: 50,
 			description: computed(() => this.Resources.TYPE_OF_EQUIPMENT18080),
+			ignoreFldSubmit: true,
 		}).cloneFrom(values?.TableTpequTipoequi))
 		this.stopWatchers.push(watch(() => this.TableTpequTipoequi.value, (newValue, oldValue) => this.onUpdate('tpequ.tipoequi', this.TableTpequTipoequi, newValue, oldValue)))
 
@@ -210,6 +213,7 @@ export default class ViewModel extends FormViewModelBase
 			field: 'WAREHDES',
 			maxLength: 85,
 			description: computed(() => this.Resources.WAREHOUSE51864),
+			ignoreFldSubmit: true,
 		}).cloneFrom(values?.TableWarehWarehdes))
 		this.stopWatchers.push(watch(() => this.TableWarehWarehdes.value, (newValue, oldValue) => this.onUpdate('wareh.warehdes', this.TableWarehWarehdes, newValue, oldValue)))
 
@@ -221,6 +225,7 @@ export default class ViewModel extends FormViewModelBase
 			field: 'ITEMDES',
 			maxLength: 85,
 			description: computed(() => this.Resources.ARTICLE60065),
+			ignoreFldSubmit: true,
 		}).cloneFrom(values?.TableItemItemdes))
 		this.stopWatchers.push(watch(() => this.TableItemItemdes.value, (newValue, oldValue) => this.onUpdate('item.itemdes', this.TableItemItemdes, newValue, oldValue)))
 
@@ -280,7 +285,7 @@ export default class ViewModel extends FormViewModelBase
 		}).cloneFrom(values?.ValDtaquisi))
 		this.stopWatchers.push(watch(() => this.ValDtaquisi.value, (newValue, oldValue) => this.onUpdate('equip.dtaquisi', this.ValDtaquisi, newValue, oldValue)))
 
-		this.ValDtdeco = reactive(new modelFieldType.DateTime({
+		this.ValDtdeco = reactive(new modelFieldType.Date({
 			id: 'ValDtdeco',
 			originId: 'ValDtdeco',
 			area: 'EQUIP',
@@ -334,6 +339,7 @@ export default class ViewModel extends FormViewModelBase
 			maxLength: 10,
 			isFixed: true,
 			description: computed(() => this.Resources.N_R__ROOM43805),
+			ignoreFldSubmit: true,
 		}).cloneFrom(values?.TableRoom1Roomnr))
 		this.stopWatchers.push(watch(() => this.TableRoom1Roomnr.value, (newValue, oldValue) => this.onUpdate('room1.roomnr', this.TableRoom1Roomnr, newValue, oldValue)))
 
@@ -504,6 +510,7 @@ export default class ViewModel extends FormViewModelBase
 			maxDigits: 10,
 			decimalDigits: 0,
 			description: computed(() => this.Resources.NO_BATE21045),
+			ignoreFldSubmit: true,
 		}).cloneFrom(values?.TableDecomDecomnr))
 		this.stopWatchers.push(watch(() => this.TableDecomDecomnr.value, (newValue, oldValue) => this.onUpdate('decom.decomnr', this.TableDecomDecomnr, newValue, oldValue)))
 
@@ -541,6 +548,29 @@ export default class ViewModel extends FormViewModelBase
 			id: 'List_Movimevv',
 			ignoreFldSubmit: true
 		}).cloneFrom(values?.List_Movimevv)
+
+		/** The form fields used only in formulas. */
+		this.TpequValTipoequi = reactive(new modelFieldType.String({
+			id: 'TpequValTipoequi',
+			originId: 'ValTipoequi',
+			area: 'TPEQU',
+			field: 'TIPOEQUI',
+			maxLength: 50,
+			isFixed: true,
+			description: computed(() => this.Resources.TYPE_OF_EQUIPMENT18080),
+		}).cloneFrom(values?.TpequValTipoequi))
+		this.stopWatchers.push(watch(() => this.TpequValTipoequi.value, (newValue, oldValue) => this.onUpdate('tpequ.tipoequi', this.TpequValTipoequi, newValue, oldValue)))
+
+		this.ItemValItemdes = reactive(new modelFieldType.String({
+			id: 'ItemValItemdes',
+			originId: 'ValItemdes',
+			area: 'ITEM',
+			field: 'ITEMDES',
+			maxLength: 85,
+			isFixed: true,
+			description: computed(() => this.Resources.ARTICLE60065),
+		}).cloneFrom(values?.ItemValItemdes))
+		this.stopWatchers.push(watch(() => this.ItemValItemdes.value, (newValue, oldValue) => this.onUpdate('item.itemdes', this.ItemValItemdes, newValue, oldValue)))
 	}
 
 	/**

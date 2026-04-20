@@ -34,10 +34,10 @@ export function hydrateTableData(listControl, viewModel)
 	const globalTablesData = useGlobalTablesDataStore()
 	globalTablesData.loadFromViewModel(viewModel)
 
-	let newListRows = []
+	const newListRows = []
 
 	// Default search column
-	let defaultSearchColumn = getDefaultSearchColumn(listControl.columns, listControl.config.defaultSearchColumnName)
+	const defaultSearchColumn = getDefaultSearchColumn(listControl.columns, listControl.config.defaultSearchColumnName)
 	if (defaultSearchColumn)
 		listControl.config.defaultSearchColumnNameOriginal = defaultSearchColumn.name
 
@@ -47,7 +47,7 @@ export function hydrateTableData(listControl, viewModel)
 	{
 		// Process table configuration (saved view or current configuration)
 		if (!_isEmpty(viewModel.currentTableConfig))
-			applyTableConfiguration(listControl, viewModel.currentTableConfig)
+			applyTableConfiguration(listControl, viewModel.currentTableConfig, viewModel.filtersModel)
 
 		// List of users views (configurations)
 		if (!_isEmpty(viewModel.tableConfigNames))
@@ -88,7 +88,7 @@ export function hydrateTableData(listControl, viewModel)
 		listControl.rows = shallowReactive(newListRows)
 
 		// Pagination
-		let p = viewModel.table.pagination
+		const p = viewModel.table.pagination
 		if (p.hasTotal)
 			listControl.totalRows = p.totalRows
 		else
@@ -116,6 +116,9 @@ export function hydrateTableData(listControl, viewModel)
 		// New values
 		if (listControl.modelFieldOptionsRef)
 		{
+			// Set number of rows which is stored differently in checklists than in normal tables
+			listControl.totalRows = viewModel[listControl.modelFieldOptions].length
+
 			listControl.modelFieldOptionsRef.hydrate(viewModel[listControl.modelFieldOptions])
 
 			_forEach(listControl.modelFieldOptionsRef.value, (rowData, rowIndex) => {
@@ -156,13 +159,13 @@ export function getTableConfiguration(listControl)
 	// BEGIN: Column order and visibility
 	const columns = []
 
-	for (const column of listControl.columns)
+	for (const column of listControl.columns ?? [])
 	{
 		columns.push({
 			name: column.name,
 			order: column.order,
 			visibility: column.isVisible ? 1 : 0,
-			exportability: column.export ? 1 : 0,
+			exportability: column.export,
 			sortOrder: column.sortOrder,
 			sortAsc: column.sortAsc
 		})
@@ -198,6 +201,12 @@ export function getTableConfiguration(listControl)
 	}
 	// END: Active Filters
 
+	// The global filter values
+	config.globalFilters = listControl.relatedFilterValues
+
+	// List of IDs that correspond to the selected rows
+	config.selectedRows = getSelectedRows(listControl)
+
 	if (listControl.config.defaultSearchColumnName)
 		config.defaultSearchColumn = listControl.config.defaultSearchColumnName
 
@@ -220,8 +229,9 @@ export function getTableConfiguration(listControl)
  * Apply view configuration to table
  * @param {object} listControl The list control object
  * @param {object} viewCfg The view configuration object
+ * @param {object} filtersModel The global filters view model
  */
-export function applyTableConfiguration(listControl, viewCfg)
+export function applyTableConfiguration(listControl, viewCfg, filtersModel)
 {
 	// Configuration name
 	listControl.config.userTableConfigName = viewCfg.name ?? ''
@@ -253,8 +263,8 @@ export function applyTableConfiguration(listControl, viewCfg)
 			{
 				// Get column configuration data and apply it
 				const customColumn = viewCfg.columnConfiguration[idx]
-				currentColumn.formField = customColumn.name
-				currentColumn.position = customColumn.order
+				currentColumn.name = customColumn.name
+				currentColumn.order = customColumn.order
 				currentColumn.isVisible = !!customColumn.visibility
 				currentColumn.sortOrder = customColumn.sortOrder
 				currentColumn.sortAsc = customColumn.sortAsc
@@ -317,6 +327,14 @@ export function applyTableConfiguration(listControl, viewCfg)
 		}
 	}
 
+	// Global filters
+	if (!_isEmpty(filtersModel) && !_isEmpty(listControl.filtersModel))
+	{
+		listControl.filtersModel.clearValues()
+		listControl.filtersModel.hydrate(filtersModel)
+		listControl.filtersModel.version++
+	}
+
 	// Default search column
 	listControl.config.defaultSearchColumnName = viewCfg.defaultSearchColumn ?? listControl.config.defaultSearchColumnNameOriginal
 
@@ -347,47 +365,6 @@ export function resetTableSorting(listControl)
 	{
 		sortColumn.sortOrder = 1
 		sortColumn.sortAsc = defaultSorting.sortOrder === 'asc'
-	}
-}
-
-/**
- * Update table configuration options.
- * @param {object} configOptions Configuration options
- * @param {object} viewManagement View management type/mode
- * @param {object} confirmChanges Whether there are unsaved changes to confirm
- * @param {object} readonly Whether in readonly mode
- */
-export function updateConfigOptions(configOptions, viewManagement, confirmChanges, readonly)
-{
-	let viewSaveChanges = _find(configOptions, ['id', 'viewSaveChanges'])
-
-	if (viewManagement === tableViewManagementModes.persistMany)
-	{
-		if (viewSaveChanges)
-		{
-			if (confirmChanges)
-				viewSaveChanges.active = true
-			else
-				viewSaveChanges.active = false
-		}
-	}
-	else
-	{
-		if (viewSaveChanges)
-			viewSaveChanges.active = false
-	}
-
-	// Account for readonly mode
-	if (toValue(readonly))
-	{
-		// Deactivate options that are not available in readonly mode
-		for (let idx in configOptions)
-		{
-			const option = configOptions[idx]
-
-			if (option.inReadonly === false)
-				option.active = false
-		}
 	}
 }
 
@@ -430,7 +407,7 @@ class TableRow
 export function hydrateTableRow(listControl, rowData, rowIndex)
 {
 	// Deserialize serialized fields
-	for (let idx in listControl.columns)
+	for (const idx in listControl.columns)
 	{
 		const column = listControl.columns[idx]
 		if (column.isSerialized)
@@ -498,15 +475,15 @@ export function hydrateTimelineData(timelineControl, viewModel)
  */
 export function getColumnHierarchy(columns)
 {
-	let columnHierarchy = []
-	let columnGroups = {}
-	let extraColumns = []
+	const columnHierarchy = []
+	const columnGroups = {}
+	const extraColumns = []
 	let columnLevel = 0
 
 	// Group columns by table
-	for (let key in columns)
+	for (const key in columns)
 	{
-		let column = columns[key]
+		const column = columns[key]
 
 		// Add columns that are not data columns to separate object instead
 		if (_isEmpty(column.name) || _isEmpty(column.area) || _isEmpty(column.field))
@@ -530,23 +507,23 @@ export function getColumnHierarchy(columns)
 	}
 
 	// Add column groups by level to hierarchy
-	for (let key in columnGroups)
+	for (const key in columnGroups)
 	{
-		let columnGroup = columnGroups[key]
+		const columnGroup = columnGroups[key]
 
 		// Add column group with extra columns at the beginning
 		columnHierarchy[columnGroup.level] = extraColumns.concat(columnGroup.columns)
 	}
 
 	// Add tree action property to first data column of each group
-	for (let key in columnHierarchy)
+	for (const key in columnHierarchy)
 	{
-		let columnGroup = columnHierarchy[key]
+		const columnGroup = columnHierarchy[key]
 
 		// Add tree action property to first data column
-		for (let key in columnGroup)
+		for (const key in columnGroup)
 		{
-			let column = columnGroup[key]
+			const column = columnGroup[key]
 
 			if (isVisibleColumn(column) && !_isEmpty(column.name) && !_isEmpty(column.area) && !_isEmpty(column.field))
 			{
@@ -561,16 +538,18 @@ export function getColumnHierarchy(columns)
 
 /**
  * Get records per page options formatted for menu
- * @param perPageOptionsArray {number}
+ * @param {array} perPageOptionsArray
  */
 export function getPerPageOptions(perPageOptionsArray)
 {
-	let perPageOptions = []
+	const perPageOptions = []
 
-	for (let idx in perPageOptionsArray)
+	for (const option of perPageOptionsArray)
 	{
-		const perPageOption = perPageOptionsArray[idx]
-		perPageOptions.push({ id: perPageOption, text: perPageOption.toString() })
+		perPageOptions.push({
+			key: option,
+			value: option.toString()
+		})
 	}
 
 	return perPageOptions
@@ -710,7 +689,7 @@ class TreeRow
 
 	destroy()
 	{
-		for (let childRowIdx in this._parsedChildren) {
+		for (const childRowIdx in this._parsedChildren) {
 			if (this._parsedChildren[childRowIdx] instanceof TreeRow) {
 				this._parsedChildren[childRowIdx].destroy()
 			}
@@ -794,14 +773,13 @@ class CalendarResourceChild
  */
 export function hydrateCalendarData(listControl, viewModel)
 {
-	let events = [], resources = []
+	const events = [], resources = []
 
 	_forEach(viewModel.table.elements, (row) => {
-		let event = new CalendarEvent(),
+		const event = new CalendarEvent(),
 			resource = new CalendarResource(),
-			resourceChild = new CalendarResourceChild(),
-			hasChildren = false,
-			dates = 0,
+			resourceChild = new CalendarResourceChild()
+		let dates = 0,
 			texts = 0,
 			bools = 0
 
@@ -810,7 +788,7 @@ export function hydrateCalendarData(listControl, viewModel)
 		_forEach(listControl.columns, (column) => {
 			if (isVisibleColumn(column))
 			{
-				let columnValue = _get(row, column.name)
+				const columnValue = _get(row, column.name)
 				switch (column.dataType)
 				{
 					case 'Text':
@@ -886,14 +864,13 @@ export function hydrateCalendarData(listControl, viewModel)
 
 		events.push(event)
 
-		let resIndex = _findIndex(resources, { id: resource.id })
+		const resIndex = _findIndex(resources, { id: resource.id })
 		if (resIndex === -1)
 		{
-			if (hasChildren)
-				resource.children.push(resourceChild)
+			resource.children.push(resourceChild)
 			resources.push(resource)
 		}
-		else if (hasChildren && _findIndex(resources[resIndex].children, resourceChild) === -1)
+		else if (_findIndex(resources[resIndex].children, resourceChild) === -1)
 			resources[resIndex].children.push(resourceChild)
 	})
 
@@ -1023,8 +1000,8 @@ export function getRowByKeyPath(rows, dataInfo)
  */
 export function getRowKeyPath(rows, row)
 {
-	let rowKeyPath = [row?.rowKey]
-	let allRows = getRowsFlatArray(rows, 'children')
+	const rowKeyPath = [row?.rowKey]
+	const allRows = getRowsFlatArray(rows, 'children')
 	let currentRow = row
 
 	while (currentRow?.ParentRowKey && parseInt(currentRow.level) > 0)
@@ -1057,14 +1034,14 @@ export function getRowByMultiIndex(rows, multiIndex)
 	{
 		// Get index path as an array of integers from multi-index
 		indexPath = multiIndex?.split('_')
-		for (let idx in indexPath)
+		for (const idx in indexPath)
 			indexPath[idx] = parseInt(indexPath[idx])
 	}
 
 	let currentRow = null
 	let currentRows = rows
 	// Iterate rows at current level to find the index at the current level
-	for (let idx in indexPath)
+	for (const idx in indexPath)
 	{
 		// Get row at this level
 		currentRow = currentRows[indexPath[idx]]
@@ -1088,7 +1065,7 @@ export function getRowsFromKeyHash(rows, rowKeys)
 	const rtnRows = []
 	let row = {}
 
-	for (let idx in rows)
+	for (const idx in rows)
 	{
 		row = rows[idx]
 		if (rowKeys[row.rowKey] !== undefined)
@@ -1109,7 +1086,7 @@ export function getParentMultiIndex(multiIndex)
 	if (multiIndex === undefined || multiIndex === null)
 		return
 
-	let multiIndexArray = multiIndex.split('_')
+	const multiIndexArray = multiIndex.split('_')
 
 	// Remove last level index
 	multiIndexArray.pop()
@@ -1127,7 +1104,7 @@ export function getParentMultiIndex(multiIndex)
 export function setRowIndexProperty(listConf, index, propertyName, propertyValue)
 {
 	// Get row
-	let row = getRowByMultiIndex(listConf.rows, index)
+	const row = getRowByMultiIndex(listConf.rows, index)
 
 	// If row does not exist
 	if (!row)
@@ -1183,28 +1160,6 @@ export function setCellValue(row, column, value)
 }
 
 /**
- * Set the value of a cell.
- * @param table {Object}
- * @param row {Object}
- * @param column {Object}
- * @param value {Object}
- */
-export function setTableCellValue(table, row, column, value)
-{
-	// Current index of this row
-	var curIdx = table.rows.findIndex(getRownumIndex, row.Rownum)
-	// Check bounds
-	if (curIdx < 0 || curIdx >= table.rows.length)
-		return
-
-	// Get this row in table
-	var thisRow = table.rows[curIdx]
-
-	// Set cell value
-	_set(thisRow.Fields, column.name, value)
-}
-
-/**
  * Full column name
  * @param {object} column
  */
@@ -1255,64 +1210,40 @@ export function getTableColumnFromName(table, columnName)
 }
 
 /**
- * Recalculate values for all cell in a column to be in order.
- * @param currentValue {Object}
- * @returns boolean
+ * Recalculate values for all cells in a column to be in order.
+ * @param rows {Array}
+ * @param changedRow {Object}
+ * @param orderColumn {Object}
  */
-export function getRownumIndex(currentValue)
+export function reCalcCellOrder(rows, changedRow, orderColumn)
 {
-	return (parseInt(currentValue.Rownum) === parseInt(this))
-}
+	const newRows = deepUnwrap(rows)
+	const curIdx = newRows.findIndex((r) => r.rowKey === changedRow.rowKey)
+	const newChangedRow = newRows[curIdx]
 
-/**
- * Recalculate values for all cell in a column to be in order.
- * @param table {Object}
- * @param row {Object}
- * @param column {Object}
- */
-export function reCalcCellOrder(table, row, column)
-{
-	// Current index of this row
-	var curIdx = table.rows.findIndex((r) => r.rowKey === row.rowKey)
 	// Check bounds
-	if (curIdx < 0 || curIdx >= table.rows.length)
+	if (curIdx < 0 || curIdx >= newRows.length)
 		return
 
 	// New index of this row
-	var newIdx = getCellValue(row, column) - 1
+	let newIdx = getCellValue(newChangedRow, orderColumn) - 1
 	// Check bounds
 	if (newIdx < 0)
 		newIdx = 0
-	else if (newIdx >= table.rows.length)
-		newIdx = table.rows.length - 1
+	else if (newIdx >= newRows.length)
+		newIdx = newRows.length - 1
 
 	// Remove row from current location
-	table.rows.splice(curIdx, 1)
+	newRows.splice(curIdx, 1)
 	// Add row at new location
-	table.rows.splice(newIdx, 0, row)
+	newRows.splice(newIdx, 0, newChangedRow)
 
 	// Iterate rows and assign new values to the "order" column
-	var thisIdx = 1
-	for (let idx in table.rows)
-		setCellValue(table.rows[idx], column, thisIdx++)
+	let idx = 1
+	for (const row of newRows)
+		setCellValue(row, orderColumn, idx++)
 
-	// Update key properties to update component keys to reload controls so they display the new values
-	for (let idx in table.rows)
-		table.rows[idx].key++
-}
-
-/**
- * Call function defined to run when cell value changes.
- * @param table {Object}
- * @param row {Object}
- * @param column {Object}
- * @param options {Object}
- */
-export function cellOnChange(table, row, column, options)
-{
-	if (column.dataOnChange === undefined)
-		return
-	column.dataOnChange(table, row, column, options)
+	return newRows
 }
 
 /* BEGIN: Formatting field data to display */
@@ -1342,7 +1273,7 @@ export function numericDisplayCell(row, column, options)
 {
 	const value = getCellValue(row, column)
 	const fnGetDisplayValue = (val) => {
-		return genericFunctions.numericDisplay(val, column.numberFormat?.decimalSeparator, column.numberFormat?.groupSeparator, { minimumFractionDigits: column.decimalPlaces, maximumFractionDigits: column.decimalPlaces }, options)
+		return genericFunctions.numericDisplay(val, column.numberFormat?.decimalSeparator, column.numberFormat?.groupSeparator, column.numberFormat?.negativeFormat, { minimumFractionDigits: column.decimalPlaces, maximumFractionDigits: column.decimalPlaces }, options)
 	}
 	return genericFunctions.formatValueToDisplay(value, fnGetDisplayValue)
 }
@@ -1361,7 +1292,7 @@ export function currencyDisplayCell(row, column, options)
 		return numericDisplayCell(row, column, options)
 
 	const fnGetDisplayValue = (val) => {
-		return genericFunctions.currencyDisplay(val, column.numberFormat?.decimalSeparator, column.numberFormat?.groupSeparator, column.decimalPlaces, column.currency, options.lcid, 'narrowSymbol', options)
+		return genericFunctions.currencyDisplay(val, column.numberFormat?.decimalSeparator, column.numberFormat?.groupSeparator, column.numberFormat?.negativeFormat, column.decimalPlaces, column.currency, options.lcid, 'narrowSymbol', options)
 	}
 	return genericFunctions.formatValueToDisplay(value, fnGetDisplayValue)
 }
@@ -1376,7 +1307,7 @@ export function currencyDisplayCell(row, column, options)
 export function dateDisplayCell(row, column, options)
 {
 	const formats = column.dateFormats ?? {}
-	let dateTimeStr = getCellValue(row, column)
+	const dateTimeStr = getCellValue(row, column)
 
 	const fnGetDisplayValue = (val) => {
 		let dateTimeFormat
@@ -1471,7 +1402,7 @@ export function geographicDisplayCell(row, column)
 {
 	const value = getCellValue(row, column)
 	const fnGetDisplayValue = (val) => {
-		return geographicDisplay(val, column.numberFormat.decimalSeparator, column.numberFormat.groupSeparator)
+		return geographicDisplay(val, column.numberFormat.decimalSeparator, column.numberFormat.groupSeparator, column.numberFormat.negativeFormat)
 	}
 	return genericFunctions.formatValueToDisplay(value, fnGetDisplayValue)
 }
@@ -1560,7 +1491,7 @@ export function getCellValueDisplay(table, row, column, options)
  */
 export function textSearchCell(row, column, options)
 {
-	var value = getCellValue(row, column)
+	const value = getCellValue(row, column)
 	return genericFunctions.textDisplay(value, options)
 }
 
@@ -1573,7 +1504,7 @@ export function textSearchCell(row, column, options)
  */
 export function numericSearchCell(row, column, options)
 {
-	var value = getCellValue(row, column)
+	const value = getCellValue(row, column)
 	return genericFunctions.numericDisplay(value, options.numberFormat.decimalSeparator, options.numberFormat.groupSeparator, { minimumFractionDigits: column.decimalPlaces, maximumFractionDigits: column.decimalPlaces }, options)
 }
 
@@ -1586,7 +1517,7 @@ export function numericSearchCell(row, column, options)
  */
 export function currencySearchCell(row, column, options)
 {
-	var value = getCellValue(row, column)
+	const value = getCellValue(row, column)
 	return genericFunctions.numericDisplay(value, options.numberFormat.decimalSeparator, options.numberFormat.groupSeparator, { minimumFractionDigits: column.decimalPlaces, maximumFractionDigits: column.decimalPlaces }, options)
 }
 
@@ -1611,7 +1542,7 @@ export function dateSearchCell(row, column, options)
  */
 export function booleanSearchCell(row, column, options)
 {
-	var value = getCellValue(row, column)
+	const value = getCellValue(row, column)
 	return genericFunctions.booleanDisplay(value, options)
 }
 
@@ -1651,7 +1582,7 @@ export function imageSearch(value)
  */
 export function imageSearchCell(row, column, options)
 {
-	var value = getCellValue(row, column)
+	const value = getCellValue(row, column)
 	return imageSearch(value, options)
 }
 
@@ -1680,7 +1611,7 @@ export function documentSearch(value)
  */
 export function documentSearchCell(row, column, options)
 {
-	var value = getCellValue(row, column)
+	const value = getCellValue(row, column)
 	return documentSearch(value, options)
 }
 
@@ -1707,7 +1638,7 @@ export function geographicSearch(value, decimalSep, groupSep)
  */
 export function geographicSearchCell(row, column)
 {
-	var value = getCellValue(row, column)
+	const value = getCellValue(row, column)
 	return geographicSearch(value, column.numberFormat.decimalSeparator, column.numberFormat.groupSeparator)
 }
 
@@ -1821,7 +1752,7 @@ export function getHiddenFilterColumns(columns, columnRows, filters)
 
 	for (const rowColumn of columnRows)
 	{
-		const column = columns.find((c) => rowColumn.Value === c.formField || rowColumn.Value === c.name)
+		const column = columns.find((c) => rowColumn.value === c.name)
 		const columnWasVisible = isVisibleColumn(column) ? 1 : 0
 
 		if (rowColumn.Fields.visibility !== columnWasVisible && columnIsFiltered(filters, column))
@@ -1955,16 +1886,6 @@ export function getFilterName(filterOperators, filter, searchableColumns, separa
 }
 
 /**
- * Isolates the columns with totalizers enabled from the list configuration.
- * @param {Object} listConf : The list configuration.
- * @returns {Array} The array of columns with the totalizer enabled (array of identifiers of type 'table.field').
- */
-export function getColumnTotalizers(listConf)
-{
-	return listConf.columns?.filter(col => col.totalizer).map(col => genericFunctions.formatColumnIdentifier(col.area, col.field))
-}
-
-/**
  * Returns the selected rows from the list configuration.
  * @param {Object} listConf : The list configuration.
  * @returns {Array} An array of Ids corresponding to the table's currently selected rows.
@@ -1997,6 +1918,7 @@ export function getColumnTotalValueDisplay(column, value)
 				value,
 				column.numberFormat.decimalSeparator,
 				column.numberFormat.groupSeparator,
+				column.numberFormat.negativeFormat,
 				column.decimalPlaces,
 				column.currency,
 				'en-US', // Hardcoded to show the currency symbol previous to the value
@@ -2113,18 +2035,15 @@ export function setFilterDefaultValues(filterOperators, filter, searchableColumn
 	const valueCount = getFilterValueCount(filterOperators, filter, searchableColumns)
 
 	filter.values = []
-	for (let valueIdx = 0; valueIdx < valueCount; valueIdx++)
+	for (let i = 0; i < valueCount; i++)
 	{
-		if (operator.defaultValue !== undefined)
-		{
-			const operatorDefaultValue = deepUnwrap(operator.defaultValue)
-			filter.values[valueIdx] = cloneDeep(operatorDefaultValue)
-		}
-		else
+		if (typeof operator.defaultValue === 'undefined')
 		{
 			const column = getColumnFromTableColumnName(searchableColumns, filter.field)
-			filter.values[valueIdx] = searchFilterData.defaultValue(column)
+			filter.values[i] = searchFilterData.defaultValue(column)
 		}
+		else
+			filter.values[i] = deepUnwrap(operator.defaultValue)
 	}
 }
 
@@ -2337,7 +2256,7 @@ export function hasDataAction(column)
  */
 export function rowWithoutChildren(row)
 {
-	var newRow = { ...row }
+	const newRow = { ...row }
 	delete newRow.children
 	return cloneDeep(newRow)
 }
@@ -2365,7 +2284,7 @@ export function initTableEvents(listControl)
 
 		// Reload the list when it becomes visible.
 		listControl.showWhenConditions.addOnShowListener(() => {
-			if (!listControl.isLoaded)
+			if (!listControl.dataRequested)
 				listControl.reload()
 		})
 
@@ -2435,7 +2354,7 @@ export function actionIsAllowed(action, rowPermissions, tablePermissions, isRead
 	if (action === undefined || action === null)
 		return false
 
-	// Check is action has permission
+	// Check if action has permission
 	// If the action is row-specific, use the row permissions or, if not, use the table permissions
 	const hasPermission = rowPermissions
 		? genericFunctions.btnHasPermission(rowPermissions, action.id)
@@ -2485,11 +2404,11 @@ export function getTableColumnDropdownSortDescId(tableControlId, columnName)
 }
 
 /**
- * Get the ID of a table column dropdown push-to-advanced-filters button
+ * Get the ID of a table column filter button
  * @param tableControlId {String} Table control ID (Not the table name in the DB)
  * @param columnName {String} Column name
  */
-export function getTableColumnDropdownToAdvancedId(tableControlId, columnName)
+export function getTableColumnFilterId(tableControlId, columnName)
 {
 	return getTableColumnControlIdPrefix(tableControlId, columnName) + '_column_filter'
 }
@@ -2508,7 +2427,6 @@ export default {
 	getTableConfiguration,
 	applyTableConfiguration,
 	resetTableSorting,
-	updateConfigOptions,
 	hydrateTreeTableData,
 	hydrateTimelineData,
 	hydrateCalendarData,
@@ -2527,13 +2445,11 @@ export default {
 	getTableCellValue,
 	getCellNameValue,
 	setCellValue,
-	setTableCellValue,
 	columnFullName,
 	getColumnFromTableAndColumnNames,
 	getColumnFromTableColumnName,
 	getTableColumnFromName,
 	reCalcCellOrder,
-	cellOnChange,
 	textDisplayCell,
 	numericDisplayCell,
 	currencyDisplayCell,
@@ -2571,7 +2487,6 @@ export default {
 	removeFirstFilterCondition,
 	searchFilter,
 	getFilterName,
-	getColumnTotalizers,
 	getSelectedRows,
 	getColumnTotalValueDisplay,
 	getFilterOperators,
@@ -2604,6 +2519,6 @@ export default {
 	getTableColumnControlIdPrefix,
 	getTableColumnDropdownSortAscId,
 	getTableColumnDropdownSortDescId,
-	getTableColumnDropdownToAdvancedId,
+	getTableColumnFilterId,
 	getTableSelectorDropdownToggleId
 }

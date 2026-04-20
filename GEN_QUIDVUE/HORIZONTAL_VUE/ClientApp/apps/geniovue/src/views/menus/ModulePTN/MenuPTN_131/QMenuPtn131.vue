@@ -3,22 +3,23 @@
 		v-if="menuModalIsReady"
 		:to="`#${uiContainersId.body}`"
 		:disabled="!menuInfo.isPopup">
-		<form
+		<div
 			class="form-horizontal"
 			@submit.prevent>
 			<q-row-container>
 				<q-table
 					v-bind="controls.menu"
 					v-on="controls.menu.handlers">
+					<template #header>
+						<q-table-config
+							:table-ctrl="controls.menu"
+							v-on="controls.menu.handlers">
+						</q-table-config>
+					</template>
 					<!-- USE /[MANUAL GQT CUSTOM_TABLE PTN_Menu_131]/ -->
 				</q-table>
-
-				<q-table-extra-extension
-					:list-ctrl="controls.menu"
-					:filter-operators="controls.menu.filterOperators"
-					v-on="controls.menu.handlers" />
 			</q-row-container>
-		</form>
+		</div>
 	</teleport>
 
 	<teleport
@@ -123,7 +124,7 @@
 					isMenuList: true,
 					designation: computed(() => this.Resources.CONDITIONS63260),
 					acronym: 'PTN_131',
-					name: 'RULES',
+					name: 'REGRA',
 					route: 'menu-PTN_131',
 					order: '131',
 					controller: 'RULES',
@@ -156,7 +157,6 @@
 								scrollData: 1,
 								export: 1,
 								array: computed(() => new qProjArrays.QArrayTipocond(vm.$getResource).elements),
-								arrayType: qProjArrays.QArrayTipocond.type,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 2,
@@ -178,7 +178,6 @@
 								scrollData: 1,
 								export: 1,
 								array: computed(() => new qProjArrays.QArrayAlocregr(vm.$getResource).elements),
-								arrayType: qProjArrays.QArrayAlocregr.type,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 						],
 						config: {
@@ -196,7 +195,6 @@
 							searchBarConfig: {
 								visibility: true
 							},
-							filtersVisible: true,
 							allowColumnFilters: true,
 							allowColumnSort: true,
 							crudActions: [
@@ -270,9 +268,7 @@
 									id: 'insert',
 									name: 'insert',
 									title: computed(() => this.Resources.INSERIR43365),
-									icon: {
-										icon: 'add'
-									},
+									icon: { icon: 'add' },
 									isInReadOnly: true,
 									params: {
 										action: vm.openFormAction,
@@ -293,17 +289,19 @@
 							MCActions: [
 							],
 							rowClickAction: {
-								id: 'RCA_EDIT_REGRA',
-								name: 'EDIT_REGRA',
-								title: '',
-								isInReadOnly: true,
+								id: 'RCA_PTN_1311',
+								name: 'form-REGRA',
+								isVisible: true,
 								params: {
 									isRoute: true,
-									action: vm.openFormAction,
-									type: 'form',
-									formName: 'REGRA',
-									mode: 'EDIT',
-									isControlled: true
+									limits: [
+										{
+											identifier: 'id',
+											fnValueSelector: (row) => row.ValCodregra
+										},
+									],
+									isControlled: true,
+									action: vm.openFormAction, type: 'form', mode: 'SHOW', formName: 'REGRA'
 								}
 							},
 							formsDefinition: {
@@ -317,8 +315,8 @@
 								fnFormula(params)
 								{
 									// Formula: [RULES->TIPOCOND]!="I"  || [RULES->LOCAL]!="T"
-									//if (!(this.ValTipocond.value!=="I"||this.ValLocal.value!=="T"))
-										//return false
+									if (!(this.ValTipocond.value!=="I"||this.ValLocal.value!=="T"))
+										return false
 									return true
 								},
 								dependencyEvents: ['fieldChange:rules.tipocond', 'fieldChange:rules.local'],
@@ -331,7 +329,7 @@
 								sortOrder: 'asc'
 							}
 						},
-						globalEvents: ['changed-RULES', 'changed-UP_RULES'],
+						globalEvents: ['changed-RULES'],
 						uuid: '9b87f9f8-b7d7-4ffb-8bd2-a17a81c9ef71',
 						allSelectedRows: 'false',
 						headerLevel: 1,

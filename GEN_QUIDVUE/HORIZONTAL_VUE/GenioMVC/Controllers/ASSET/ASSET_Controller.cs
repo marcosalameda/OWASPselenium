@@ -80,38 +80,6 @@ namespace GenioMVC.Controllers
 			{
 				switch (string.IsNullOrEmpty(Identifier) ? "" : Identifier)
 				{
-					case "ASSET___MANUFNAME____":	// Field (DB)
-						{
-							var model = new Asset_ViewModel(UserContext.Current) { editable = false };
-							model.MapFromModel(row);
-							model.Load_Asset___manufname____(qs);
-							result = model.TableManufName;
-						}
-						break;
-					case "ASSET___KINDEDESIGNAT":	// Field (DB)
-						{
-							var model = new Asset_ViewModel(UserContext.Current) { editable = false };
-							model.MapFromModel(row);
-							model.Load_Asset___kindedesignat(qs);
-							result = model.TableKindeDesignat;
-						}
-						break;
-					case "ASSET_GLOBAL_FILTER__KINDE__DESIGNAT":	// Field (DB)
-						{
-							var model = new Asset_global_filter_ViewModel(UserContext.Current) { editable = false };
-							model.MapFromModel(row);
-							model.Load_Asset_global_filter__kinde__designat(qs);
-							result = model.TableKindeDesignat;
-						}
-						break;
-					case "ASSET_GLOBAL_FILTER__PARAM__PARAMETE_FG":	// Field (FG)
-						{
-							var model = new Asset_global_filter_ViewModel(UserContext.Current) { editable = false };
-							model.MapFromModel(row);
-							model.Load_Asset_global_filter__param__paramete_fg(qs);
-							result = model.TableParamParamete;
-						}
-						break;
 					case "EQUIPM__MANUFNAME____":	// Field (DB)
 						{
 							var model = new Equipm_ViewModel(UserContext.Current) { editable = false };
@@ -138,7 +106,7 @@ namespace GenioMVC.Controllers
 			}
 
 			if (result != null)
-				return JsonOK(new { List = result.List, TotalRows = result.Pagination.TotalRows, Selected = result.Selected, Value = result.Value });
+				return JsonOK(result);
 			return JsonERROR("Not found any valid result");
 		}
 
@@ -161,18 +129,6 @@ namespace GenioMVC.Controllers
 				UserContext.Current.PersistentSupport.openConnection();
 				switch (string.IsNullOrEmpty(Identifier) ? "" : Identifier)
 				{
-					case "ASSET___MANUFNAME____":	// Field (DB)
-						values = new Asset_ViewModel(UserContext.Current).GetDependant_AssetTableManufName(Selected);
-						break;
-					case "ASSET___KINDEDESIGNAT":	// Field (DB)
-						values = new Asset_ViewModel(UserContext.Current).GetDependant_AssetTableKindeDesignat(Selected);
-						break;
-					case "ASSET_GLOBAL_FILTER__KINDE__DESIGNAT":	// Field (DB)
-						values = new Asset_global_filter_ViewModel(UserContext.Current).GetDependant_Asset_global_filterTableKindeDesignat(Selected);
-						break;
-					case "ASSET_GLOBAL_FILTER__PARAM__PARAMETE_FG":	// Field (FG)
-						values = new Asset_global_filter_ViewModel(UserContext.Current).GetDependant_Asset_global_filterTableParamParamete(Selected);
-						break;
 					case "EQUIPM__MANUFNAME____":	// Field (DB)
 						values = new Equipm_ViewModel(UserContext.Current).GetDependant_EquipmTableManufName(Selected);
 						break;
@@ -204,38 +160,6 @@ namespace GenioMVC.Controllers
 		}
 
 
-
-
-
-		/// <summary>
-		/// Recalculate formulas of the "Asset" form. (++, CT, SR, CL and U1)
-		/// </summary>
-		/// <param name="formData">Current form data</param>
-		/// <returns></returns>
-		[HttpPost]
-		public JsonResult RecalculateFormulas_Asset([FromBody]Asset_ViewModel formData)
-		{
-			return GenericRecalculateFormulas(formData, "asset",
-				(primaryKey) => Models.Asset.Find(primaryKey, UserContext.Current, "FASSET"),
-				(model) => formData.MapToModel(model as Models.Asset)
-			);
-		}
-
-
-
-		/// <summary>
-		/// Recalculate formulas of the "Asset_global_filter" form. (++, CT, SR, CL and U1)
-		/// </summary>
-		/// <param name="formData">Current form data</param>
-		/// <returns></returns>
-		[HttpPost]
-		public JsonResult RecalculateFormulas_Asset_global_filter([FromBody]Asset_global_filter_ViewModel formData)
-		{
-			return GenericRecalculateFormulas(formData, "asset",
-				(primaryKey) => Models.Asset.Find(primaryKey, UserContext.Current, "FASSET_GLOBAL_FILTER"),
-				(model) => formData.MapToModel(model as Models.Asset)
-			);
-		}
 
 
 

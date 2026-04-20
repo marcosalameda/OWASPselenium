@@ -269,9 +269,7 @@ namespace Administration.Controllers
             model.Modules.Add(new UsersModule("STY", Resources.Resources.STYLE47121));
             model.Modules.Add(new UsersModule("TBS", Resources.Resources.BASE_TABLES04823));
             model.Modules.Add(new UsersModule("TRN", Resources.Resources.TRAINING_EXERCISES07801));
-            model.Modules.Add(new UsersModule("UIS", Resources.Resources.USER_INTERFACE32384));
             model.Modules.Add(new UsersModule("WMS", Resources.Resources.WAREHOUSE_MANAGEMENT10443));
-            model.Modules.Add(new UsersModule("XRS", Resources.Resources.WHAREHOUSE_API10412));
         }
 
         [HttpGet]

@@ -71,9 +71,9 @@
 					:src="`${resourcesPath}no-widgets.png`"
 					:alt="texts.noRecordsText" />
 
-				<h5 class="no-widgets__message">
+				<h2 class="no-widgets__message">
 					{{ texts.noDataText }}
-				</h5>
+				</h2>
 
 				<q-button
 					variant="bold"

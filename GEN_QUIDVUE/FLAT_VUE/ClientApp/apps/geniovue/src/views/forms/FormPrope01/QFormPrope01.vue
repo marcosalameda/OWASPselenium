@@ -9,12 +9,13 @@
 			<div
 				v-if="showFormHeader"
 				class="c-action-bar">
-				<h1
+				<component
 					v-if="formControl.uiComponents.header && formInfo.designation"
+					:is="topHeadingTag"
 					:id="formTitleId"
 					class="form-header">
 					{{ formInfo.designation }}
-				</h1>
+				</component>
 
 				<div class="c-action-bar__menu">
 					<template
@@ -40,13 +41,10 @@
 									@click="btn.action">
 									<template v-if="btn.icon">
 										<q-badge-indicator
-											v-if="btn.badge && btn.badge.isVisible"
-											:color="btn.badge.color">
+											:enabled="btn.badge?.isVisible ?? false"
+											:color="btn.badge?.color">
 											<q-icon v-bind="btn.icon" />
 										</q-badge-indicator>
-										<q-icon
-											v-else
-											v-bind="btn.icon" />
 									</template>
 								</q-toggle-group-item>
 							</template>
@@ -97,6 +95,7 @@
 		<q-container
 			fluid
 			data-key="PROPE01"
+			:data-identifier="primaryKeyValue"
 			:data-loading="!formInitialDataLoaded || !isActiveForm">
 			<template v-if="formControl.initialized && showFormBody">
 				<q-row v-if="controls.PROPE01_PROPEPHOTO___.isVisible">
@@ -106,7 +105,8 @@
 						<base-input-structure
 							v-if="controls.PROPE01_PROPEPHOTO___.isVisible"
 							class="q-image"
-							v-bind="controls.PROPE01_PROPEPHOTO___"
+							v-bind="controls.PROPE01_PROPEPHOTO___.wrapperProps"
+							:id="getControlId(controls.PROPE01_PROPEPHOTO___)"
 							v-on="controls.PROPE01_PROPEPHOTO___.handlers"
 							:loading="controls.PROPE01_PROPEPHOTO___.props.loading"
 							:reporting-mode-on="reportingModeCAV"
@@ -114,6 +114,7 @@
 							<q-image
 								v-if="controls.PROPE01_PROPEPHOTO___.isVisible"
 								v-bind="controls.PROPE01_PROPEPHOTO___.props"
+								:id="getControlId(controls.PROPE01_PROPEPHOTO___)"
 								v-on="controls.PROPE01_PROPEPHOTO___.handlers" />
 						</base-input-structure>
 					</q-col>
@@ -125,13 +126,15 @@
 						<base-input-structure
 							v-if="controls.PROPE01_PROPETITLE___.isVisible"
 							class="i-text"
-							v-bind="controls.PROPE01_PROPETITLE___"
+							v-bind="controls.PROPE01_PROPETITLE___.wrapperProps"
+							:id="getControlId(controls.PROPE01_PROPETITLE___)"
 							v-on="controls.PROPE01_PROPETITLE___.handlers"
 							:loading="controls.PROPE01_PROPETITLE___.props.loading"
 							:reporting-mode-on="reportingModeCAV"
 							:suggestion-mode-on="suggestionModeOn">
 							<q-text-field
 								v-bind="controls.PROPE01_PROPETITLE___.props"
+								:id="getControlId(controls.PROPE01_PROPETITLE___)"
 								@blur="onBlur(controls.PROPE01_PROPETITLE___, model.ValTitle.value)"
 								@change="model.ValTitle.fnUpdateValueOnChange" />
 						</base-input-structure>
@@ -144,7 +147,8 @@
 						<base-input-structure
 							v-if="controls.PROPE01_PROPEPRICE___.isVisible"
 							class="i-text"
-							v-bind="controls.PROPE01_PROPEPRICE___"
+							v-bind="controls.PROPE01_PROPEPRICE___.wrapperProps"
+							:id="getControlId(controls.PROPE01_PROPEPRICE___)"
 							v-on="controls.PROPE01_PROPEPRICE___.handlers"
 							:loading="controls.PROPE01_PROPEPRICE___.props.loading"
 							:reporting-mode-on="reportingModeCAV"
@@ -152,6 +156,7 @@
 							<q-numeric-input
 								v-if="controls.PROPE01_PROPEPRICE___.isVisible"
 								v-bind="controls.PROPE01_PROPEPRICE___.props"
+								:id="getControlId(controls.PROPE01_PROPEPRICE___)"
 								@update:model-value="model.ValPrice.fnUpdateValue" />
 						</base-input-structure>
 					</q-col>
@@ -163,7 +168,8 @@
 						<base-input-structure
 							v-if="controls.PROPE01_AGENTNAME____.isVisible"
 							class="i-text"
-							v-bind="controls.PROPE01_AGENTNAME____"
+							v-bind="controls.PROPE01_AGENTNAME____.wrapperProps"
+							:id="getControlId(controls.PROPE01_AGENTNAME____)"
 							v-on="controls.PROPE01_AGENTNAME____.handlers"
 							:loading="controls.PROPE01_AGENTNAME____.props.loading"
 							:reporting-mode-on="reportingModeCAV"
@@ -171,6 +177,7 @@
 							<q-lookup
 								v-if="controls.PROPE01_AGENTNAME____.isVisible"
 								v-bind="controls.PROPE01_AGENTNAME____.props"
+								:id="getControlId(controls.PROPE01_AGENTNAME____)"
 								v-on="controls.PROPE01_AGENTNAME____.handlers" />
 							<q-see-more-prope01-agentname
 								v-if="controls.PROPE01_AGENTNAME____.seeMoreIsVisible"
@@ -183,7 +190,7 @@
 		</q-container>
 	</teleport>
 
-	<hr v-if="!isPopup && showFormFooter" />
+	<q-divider v-if="!isPopup && showFormFooter" />
 
 	<teleport
 		v-if="formModalIsReady && showFormFooter"
@@ -986,7 +993,6 @@
 
 				this.afterControlUpdate(controlField, fieldValue)
 			},
-
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
 // USE /[MANUAL GQT FUNCTIONS_JS PROPE01]/
 // eslint-disable-next-line

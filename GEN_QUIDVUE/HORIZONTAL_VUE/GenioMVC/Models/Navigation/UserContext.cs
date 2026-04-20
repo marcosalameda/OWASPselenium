@@ -1,5 +1,4 @@
-﻿using AspNetCore.LegacyAuthCookieCompat;
-using CSGenio.framework;
+﻿using CSGenio.framework;
 using CSGenio.persistence;
 using GenioServer.security;
 using Newtonsoft.Json;
@@ -17,7 +16,6 @@ namespace GenioMVC.Models.Navigation
     [Serializable]
 	public class UserContext
 	{
-		private readonly object m_lock = new object();
 		/// <summary>
 		/// The active navigations
 		/// </summary>
@@ -267,7 +265,6 @@ namespace GenioMVC.Models.Navigation
 			}
 		}
 
-
         /// <summary>
         /// An attempt will be made to recover the Initial EPH if necessary.
         /// </summary>
@@ -281,7 +278,6 @@ namespace GenioMVC.Models.Navigation
                 UserFactory.FillEphRuntime(user, initialEphCache);
 			}
 		}
-
 
 		public Dictionary<string, InitialEPHCache> ?GetInitialEph()
 		{
@@ -303,8 +299,6 @@ namespace GenioMVC.Models.Navigation
             var bytes = Encoding.UTF8.GetBytes(utf8);
 			m_httpContext.Session.Set("user.eph.initial", bytes);
         }
-
-
 
         private readonly HttpContext m_httpContext;
         private readonly IConfiguration m_configuration;
@@ -422,33 +416,8 @@ namespace GenioMVC.Models.Navigation
 			}
 		}
 
-		/*
-		public static UserContext GetCurrent(HttpContext context)
-		{
-			//get
-			//{
-				//The context might have been already initialized by a request redirecting to this one
-				//So if we already have a context in this thread we keep it
-				UserContext? ctx = context.Items["appContext"] as UserContext;
-				if (ctx != null)
-					return ctx;
-
-				//else create a new one
-				ctx = new UserContext(context);
-
-				//save in the current response thread
-				context.Items["appContext"] = ctx;
-				return ctx;
-			//}
-		}
-		*/
-
 		public void Destroy()
 		{
-			//var current = m_httpContext.Items["appContext"] as UserContext;
-			//if (current != null)
-			//	current.User = null;
-
 			m_httpContext.Session.Remove("user.identity");
 			QCache.Instance.User.Invalidate("user." + m_httpContext.User.Identity.Name);
 		}

@@ -10,62 +10,62 @@ public class EntixForm : Form
 	/// <summary>
 	/// Company identification
 	/// </summary>
-	public CollapsibleZoneControl PseudNovogr01 => new CollapsibleZoneControl(driver, ContainerLocator, "#ENTIX___PSEUDNOVOGR01-container");
+	public CollapsibleZoneControl PseudNovogr01 => new CollapsibleZoneControl(driver, ContainerLocator, "#ENTIX___PSEUDNOVOGR01" + IdSuffix + "-container");
 
 	/// <summary>
 	/// Legal name
 	/// </summary>
-	public BaseInputControl EntitName => new BaseInputControl(driver, ContainerLocator, "container-ENTIX___ENTITNAME____", "#ENTIX___ENTITNAME____");
+	public BaseInputControl EntitName => new BaseInputControl(driver, ContainerLocator, "container-ENTIX___ENTITNAME____" + IdSuffix, "#ENTIX___ENTITNAME____" + IdSuffix);
 
 	/// <summary>
 	/// Founded in
 	/// </summary>
-	public DateInputControl EntitFounded => new DateInputControl(driver, ContainerLocator, "#ENTIX___ENTITFOUNDED_");
+	public DateInputControl EntitFounded => new DateInputControl(driver, ContainerLocator, "#ENTIX___ENTITFOUNDED_" + IdSuffix);
 
 	/// <summary>
 	/// Company initials
 	/// </summary>
-	public BaseInputControl EntitInitials => new BaseInputControl(driver, ContainerLocator, "container-ENTIX___ENTITINITIALS", "#ENTIX___ENTITINITIALS");
+	public BaseInputControl EntitInitials => new BaseInputControl(driver, ContainerLocator, "container-ENTIX___ENTITINITIALS" + IdSuffix, "#ENTIX___ENTITINITIALS" + IdSuffix);
 
 	/// <summary>
 	/// Legal registration
 	/// </summary>
-	public BaseInputControl EntitRegistra => new BaseInputControl(driver, ContainerLocator, "container-ENTIX___ENTITREGISTRA", "#ENTIX___ENTITREGISTRA");
+	public BaseInputControl EntitRegistra => new BaseInputControl(driver, ContainerLocator, "container-ENTIX___ENTITREGISTRA" + IdSuffix, "#ENTIX___ENTITREGISTRA" + IdSuffix);
 
 	/// <summary>
 	/// VAT Number
 	/// </summary>
-	public BaseInputControl EntitTaxnumbe => new BaseInputControl(driver, ContainerLocator, "container-ENTIX___ENTITTAXNUMBE", "#ENTIX___ENTITTAXNUMBE");
+	public BaseInputControl EntitTaxnumbe => new BaseInputControl(driver, ContainerLocator, "container-ENTIX___ENTITTAXNUMBE" + IdSuffix, "#ENTIX___ENTITTAXNUMBE" + IdSuffix);
 
 	/// <summary>
 	/// IBAN (International Bank Account Number)
 	/// </summary>
-	public BaseInputControl EntitIban => new BaseInputControl(driver, ContainerLocator, "container-ENTIX___ENTITIBAN____", "#ENTIX___ENTITIBAN____");
+	public BaseInputControl EntitIban => new BaseInputControl(driver, ContainerLocator, "container-ENTIX___ENTITIBAN____" + IdSuffix, "#ENTIX___ENTITIBAN____" + IdSuffix);
 
 	/// <summary>
 	/// Phone number
 	/// </summary>
-	public BaseInputControl EntitPhonenum => new BaseInputControl(driver, ContainerLocator, "container-ENTIX___ENTITPHONENUM", "#ENTIX___ENTITPHONENUM");
+	public BaseInputControl EntitPhonenum => new BaseInputControl(driver, ContainerLocator, "container-ENTIX___ENTITPHONENUM" + IdSuffix, "#ENTIX___ENTITPHONENUM" + IdSuffix);
 
 	/// <summary>
 	/// Owner
 	/// </summary>
-	public BaseInputControl EntitOwner => new BaseInputControl(driver, ContainerLocator, "container-ENTIX___ENTITOWNER___", "#ENTIX___ENTITOWNER___");
+	public CheckboxInputControl EntitOwner => new CheckboxInputControl(driver, ContainerLocator, "#container-ENTIX___ENTITOWNER___" + IdSuffix);
 
 	/// <summary>
 	/// Carrier
 	/// </summary>
-	public CheckboxInputControl EntitCarrier => new CheckboxInputControl(driver, ContainerLocator, "#container-ENTIX___ENTITCARRIER_");
+	public CheckboxInputControl EntitCarrier => new CheckboxInputControl(driver, ContainerLocator, "#container-ENTIX___ENTITCARRIER_" + IdSuffix);
 
 	/// <summary>
 	/// Supplier
 	/// </summary>
-	public CheckboxInputControl EntitSupplier => new CheckboxInputControl(driver, ContainerLocator, "#container-ENTIX___ENTITSUPPLIER");
+	public CheckboxInputControl EntitSupplier => new CheckboxInputControl(driver, ContainerLocator, "#container-ENTIX___ENTITSUPPLIER" + IdSuffix);
 
 	/// <summary>
 	/// Manufacturer
 	/// </summary>
-	public CheckboxInputControl EntitManufact => new CheckboxInputControl(driver, ContainerLocator, "#container-ENTIX___ENTITMANUFACT");
+	public CheckboxInputControl EntitManufact => new CheckboxInputControl(driver, ContainerLocator, "#container-ENTIX___ENTITMANUFACT" + IdSuffix);
 
 	/// <summary>
 	/// ACCORDION
@@ -75,113 +75,113 @@ public class EntixForm : Form
 	/// <summary>
 	/// Contact
 	/// </summary>
-	public CollapsibleZoneControl PseudNovogr02 => new CollapsibleZoneControl(driver, ContainerLocator, "#ENTIX___PSEUDNOVOGR02-container");
+	public CollapsibleZoneControl PseudNovogr02 => new CollapsibleZoneControl(driver, ContainerLocator, "#ENTIX___PSEUDNOVOGR02" + IdSuffix + "-container");
 
 	/// <summary>
 	/// Telephone
 	/// </summary>
-	public BaseInputControl EntitTelephon => new BaseInputControl(driver, ContainerLocator, "container-ENTIX___ENTITTELEPHON", "#ENTIX___ENTITTELEPHON");
+	public BaseInputControl EntitTelephon => new BaseInputControl(driver, ContainerLocator, "container-ENTIX___ENTITTELEPHON" + IdSuffix, "#ENTIX___ENTITTELEPHON" + IdSuffix);
 
 	/// <summary>
 	/// Fax
 	/// </summary>
-	public BaseInputControl EntitFax => new BaseInputControl(driver, ContainerLocator, "container-ENTIX___ENTITFAX_____", "#ENTIX___ENTITFAX_____");
+	public BaseInputControl EntitFax => new BaseInputControl(driver, ContainerLocator, "container-ENTIX___ENTITFAX_____" + IdSuffix, "#ENTIX___ENTITFAX_____" + IdSuffix);
 
 	/// <summary>
 	/// Email
 	/// </summary>
-	public BaseInputControl EntitEmail => new BaseInputControl(driver, ContainerLocator, "container-ENTIX___ENTITEMAIL___", "#ENTIX___ENTITEMAIL___");
+	public BaseInputControl EntitEmail => new BaseInputControl(driver, ContainerLocator, "container-ENTIX___ENTITEMAIL___" + IdSuffix, "#ENTIX___ENTITEMAIL___" + IdSuffix);
 
 	/// <summary>
 	/// Web site
 	/// </summary>
-	public BaseInputControl EntitWebsite => new BaseInputControl(driver, ContainerLocator, "container-ENTIX___ENTITWEBSITE_", "#ENTIX___ENTITWEBSITE_");
+	public BaseInputControl EntitWebsite => new BaseInputControl(driver, ContainerLocator, "container-ENTIX___ENTITWEBSITE_" + IdSuffix, "#ENTIX___ENTITWEBSITE_" + IdSuffix);
 
 	/// <summary>
 	/// Person/Department to contact
 	/// </summary>
-	public BaseInputControl EntitPerson => new BaseInputControl(driver, ContainerLocator, "container-ENTIX___ENTITPERSON__", "#ENTIX___ENTITPERSON__");
+	public BaseInputControl EntitPerson => new BaseInputControl(driver, ContainerLocator, "container-ENTIX___ENTITPERSON__" + IdSuffix, "#ENTIX___ENTITPERSON__" + IdSuffix);
 
 	/// <summary>
 	/// Contact telephone number
 	/// </summary>
-	public BaseInputControl EntitContact => new BaseInputControl(driver, ContainerLocator, "container-ENTIX___ENTITCONTACT_", "#ENTIX___ENTITCONTACT_");
+	public BaseInputControl EntitContact => new BaseInputControl(driver, ContainerLocator, "container-ENTIX___ENTITCONTACT_" + IdSuffix, "#ENTIX___ENTITCONTACT_" + IdSuffix);
 
 	/// <summary>
 	/// Language
 	/// </summary>
-	public BaseInputControl EntitLanguage => new BaseInputControl(driver, ContainerLocator, "container-ENTIX___ENTITLANGUAGE", "#ENTIX___ENTITLANGUAGE");
+	public BaseInputControl EntitLanguage => new BaseInputControl(driver, ContainerLocator, "container-ENTIX___ENTITLANGUAGE" + IdSuffix, "#ENTIX___ENTITLANGUAGE" + IdSuffix);
 
 	/// <summary>
 	/// Currency
 	/// </summary>
-	public BaseInputControl EntitCurrency => new BaseInputControl(driver, ContainerLocator, "container-ENTIX___ENTITCURRENCY", "#ENTIX___ENTITCURRENCY");
+	public BaseInputControl EntitCurrency => new BaseInputControl(driver, ContainerLocator, "container-ENTIX___ENTITCURRENCY" + IdSuffix, "#ENTIX___ENTITCURRENCY" + IdSuffix);
 
 	/// <summary>
 	/// 
 	/// </summary>
-	public CollapsibleZoneControl PseudNovogr03 => new CollapsibleZoneControl(driver, ContainerLocator, "#ENTIX___PSEUDNOVOGR03-container");
+	public CollapsibleZoneControl PseudNovogr03 => new CollapsibleZoneControl(driver, ContainerLocator, "#ENTIX___PSEUDNOVOGR03" + IdSuffix + "-container");
 
 	/// <summary>
 	/// Building/house number
 	/// </summary>
-	public BaseInputControl EntitBuilding => new BaseInputControl(driver, ContainerLocator, "container-ENTIX___ENTITBUILDING", "#ENTIX___ENTITBUILDING");
+	public BaseInputControl EntitBuilding => new BaseInputControl(driver, ContainerLocator, "container-ENTIX___ENTITBUILDING" + IdSuffix, "#ENTIX___ENTITBUILDING" + IdSuffix);
 
 	/// <summary>
 	/// Street
 	/// </summary>
-	public BaseInputControl EntitStreet => new BaseInputControl(driver, ContainerLocator, "container-ENTIX___ENTITSTREET__", "#ENTIX___ENTITSTREET__");
+	public BaseInputControl EntitStreet => new BaseInputControl(driver, ContainerLocator, "container-ENTIX___ENTITSTREET__" + IdSuffix, "#ENTIX___ENTITSTREET__" + IdSuffix);
 
 	/// <summary>
 	/// Town/City
 	/// </summary>
-	public BaseInputControl EntitTown => new BaseInputControl(driver, ContainerLocator, "container-ENTIX___ENTITTOWN____", "#ENTIX___ENTITTOWN____");
+	public BaseInputControl EntitTown => new BaseInputControl(driver, ContainerLocator, "container-ENTIX___ENTITTOWN____" + IdSuffix, "#ENTIX___ENTITTOWN____" + IdSuffix);
 
 	/// <summary>
 	/// County/Province
 	/// </summary>
-	public BaseInputControl EntitCounty => new BaseInputControl(driver, ContainerLocator, "container-ENTIX___ENTITCOUNTY__", "#ENTIX___ENTITCOUNTY__");
+	public BaseInputControl EntitCounty => new BaseInputControl(driver, ContainerLocator, "container-ENTIX___ENTITCOUNTY__" + IdSuffix, "#ENTIX___ENTITCOUNTY__" + IdSuffix);
 
 	/// <summary>
 	/// State/Province
 	/// </summary>
-	public BaseInputControl EntitState => new BaseInputControl(driver, ContainerLocator, "container-ENTIX___ENTITSTATE___", "#ENTIX___ENTITSTATE___");
+	public BaseInputControl EntitState => new BaseInputControl(driver, ContainerLocator, "container-ENTIX___ENTITSTATE___" + IdSuffix, "#ENTIX___ENTITSTATE___" + IdSuffix);
 
 	/// <summary>
 	/// ZIP/Postal code
 	/// </summary>
-	public BaseInputControl EntitPostalco => new BaseInputControl(driver, ContainerLocator, "container-ENTIX___ENTITPOSTALCO", "#ENTIX___ENTITPOSTALCO");
+	public BaseInputControl EntitPostalco => new BaseInputControl(driver, ContainerLocator, "container-ENTIX___ENTITPOSTALCO" + IdSuffix, "#ENTIX___ENTITPOSTALCO" + IdSuffix);
 
 	/// <summary>
 	/// Post office box
 	/// </summary>
-	public BaseInputControl EntitPobox => new BaseInputControl(driver, ContainerLocator, "container-ENTIX___ENTITPOBOX___", "#ENTIX___ENTITPOBOX___");
+	public BaseInputControl EntitPobox => new BaseInputControl(driver, ContainerLocator, "container-ENTIX___ENTITPOBOX___" + IdSuffix, "#ENTIX___ENTITPOBOX___" + IdSuffix);
 
 	/// <summary>
 	/// Facilities
 	/// </summary>
-	public CollapsibleZoneControl PseudNovogr04 => new CollapsibleZoneControl(driver, ContainerLocator, "#ENTIX___PSEUDNOVOGR04-container");
+	public CollapsibleZoneControl PseudNovogr04 => new CollapsibleZoneControl(driver, ContainerLocator, "#ENTIX___PSEUDNOVOGR04" + IdSuffix + "-container");
 
 	/// <summary>
 	/// Facility name
 	/// </summary>
-	public BaseInputControl Faci1Name => new BaseInputControl(driver, ContainerLocator, "container-ENTIX___FACI1NAME____", "#ENTIX___FACI1NAME____");
+	public BaseInputControl Faci1Name => new BaseInputControl(driver, ContainerLocator, "container-ENTIX___FACI1NAME____" + IdSuffix, "#ENTIX___FACI1NAME____" + IdSuffix);
 
 	/// <summary>
 	/// Facility name
 	/// </summary>
-	public BaseInputControl Faci2Name => new BaseInputControl(driver, ContainerLocator, "container-ENTIX___FACI2NAME____", "#ENTIX___FACI2NAME____");
+	public BaseInputControl Faci2Name => new BaseInputControl(driver, ContainerLocator, "container-ENTIX___FACI2NAME____" + IdSuffix, "#ENTIX___FACI2NAME____" + IdSuffix);
 
 	/// <summary>
 	/// 
 	/// </summary>
-	public CollapsibleZoneControl PseudNovogr06 => new CollapsibleZoneControl(driver, ContainerLocator, "#ENTIX___PSEUDNOVOGR06-container");
+	public CollapsibleZoneControl PseudNovogr06 => new CollapsibleZoneControl(driver, ContainerLocator, "#ENTIX___PSEUDNOVOGR06" + IdSuffix + "-container");
 
 	/// <summary>
 	/// Facilities
 	/// </summary>
-	public ListControl PseudFacilite => new ListControl(driver, ContainerLocator, "#ENTIX___PSEUDFACILITE");
+	public ListControl PseudFacilite => new ListControl(driver, ContainerLocator, "#ENTIX___PSEUDFACILITE" + IdSuffix);
 
-	public EntixForm(IWebDriver driver, FORM_MODE mode, By? containerLocator = null)
-		: base(driver, mode, "ENTIX", containerLocator: containerLocator) { }
+	public EntixForm(IWebDriver driver, FORM_MODE mode, By? containerLocator = null, bool usePkInId = false)
+		: base(driver, mode, "ENTIX", containerLocator: containerLocator, usePkInId: usePkInId) { }
 }

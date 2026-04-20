@@ -19,6 +19,18 @@
 						</q-text-field>
 					</row>
 					<row>
+						<q-text-field v-model="model.UrlMCP"
+									:label="resources.urlMCPLabel"
+									size="xxlarge">
+							<template #extras>
+								<div class="q-field__extras">
+									<q-icon icon="information-outline" />
+									{{ resources.urlMCPInfo }}
+								</div>
+							</template>
+						</q-text-field>
+					</row>
+					<row>
 						<q-select v-model="model.MCPSecurityMode"
 								  :label="resources.mcpSecurityMode"
 								  :items="mcpSecurityModeOptions"

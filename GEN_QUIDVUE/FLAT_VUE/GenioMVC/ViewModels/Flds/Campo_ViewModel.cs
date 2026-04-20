@@ -1,20 +1,20 @@
-﻿using JsonIgnoreAttribute = System.Text.Json.Serialization.JsonIgnoreAttribute;
+﻿using CSGenio.business;
+using CSGenio.framework;
+using CSGenio.persistence;
+using GenioMVC.Helpers;
+using GenioMVC.Models.Exception;
+using GenioMVC.Models.Navigation;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Quidgest.Persistence;
+using Quidgest.Persistence.GenericQuery;
+
 using System.Collections;
 using System.Collections.Concurrent;
 using System.Collections.Specialized;
 using System.ComponentModel.DataAnnotations;
 using System.Data;
 using System.Globalization;
-
-using CSGenio.business;
-using CSGenio.framework;
-using CSGenio.persistence;
-using GenioMVC.Helpers;
-using GenioMVC.Models.Exception;
-using GenioMVC.Models.Navigation;
-using Quidgest.Persistence;
-using Quidgest.Persistence.GenericQuery;
+using System.Text.Json.Serialization;
 
 namespace GenioMVC.ViewModels.Flds
 {
@@ -41,6 +41,7 @@ namespace GenioMVC.ViewModels.Flds
 		public string ValCodequip { get; set; }
 
 		#endregion
+
 		/// <summary>
 		/// Title: "Airline" | Type: "C"
 		/// </summary>
@@ -99,28 +100,13 @@ namespace GenioMVC.ViewModels.Flds
 		/// </summary>
 		public string ValClass { get; set; }
 		/// <summary>
-		/// Title: "" | Type: "PSEUD"
-		/// </summary>
-		[JsonIgnore]
-		public SelectList List_ValClass { get; set; }
-		/// <summary>
 		/// Title: "Classe (Enumeração Numérica)" | Type: "AN"
 		/// </summary>
 		public decimal ValClassnum { get; set; }
 		/// <summary>
-		/// Title: "" | Type: "PSEUD"
-		/// </summary>
-		[JsonIgnore]
-		public SelectList List_ValClassnum { get; set; }
-		/// <summary>
 		/// Title: "1st trip (Logical Enumeration)" | Type: "AL"
 		/// </summary>
 		public int ValLogicenu { get; set; }
-		/// <summary>
-		/// Title: "" | Type: "PSEUD"
-		/// </summary>
-		[JsonIgnore]
-		public SelectList List_ValLogicenu { get; set; }
 		/// <summary>
 		/// Title: "Logo" | Type: "IJ"
 		/// </summary>
@@ -160,8 +146,6 @@ namespace GenioMVC.ViewModels.Flds
 		[ValidateSetAccess]
 		public DateTime? ValCreatins { get; set; }
 
-
-
 		#region Navigations
 		#endregion
 
@@ -179,14 +163,6 @@ namespace GenioMVC.ViewModels.Flds
 
 		#region Fields for formulas
 
-		// Field for formula
-		/// <summary>Field: "Enforce table conditions" Tipo: "L"</summary>
-		[ValidateSetAccess]
-		public bool ValTblcond { get; set; }
-		// Field for formula
-		/// <summary>Field: "Field state" Tipo: "AC"</summary>
-		[ValidateSetAccess]
-		public string ValCond { get; set; }
 
 		#endregion
 
@@ -324,8 +300,6 @@ namespace GenioMVC.ViewModels.Flds
 				ValCreatdat = ViewModelConversion.ToDateTime(m.ValCreatdat);
 				ValCreathou = ViewModelConversion.ToString(m.ValCreathou);
 				ValCreatins = ViewModelConversion.ToDateTime(m.ValCreatins);
-				ValTblcond = ViewModelConversion.ToLogic(m.ValTblcond);
-				ValCond = ViewModelConversion.ToString(m.ValCond);
 				ValCodflds = ViewModelConversion.ToString(m.ValCodflds);
 			}
 			catch (Exception)
@@ -386,8 +360,6 @@ namespace GenioMVC.ViewModels.Flds
 				m.ValCreatdat = ViewModelConversion.ToDateTime(ValCreatdat);
 				m.ValCreathou = ViewModelConversion.ToString(ValCreathou);
 				m.ValCreatins = ViewModelConversion.ToDateTime(ValCreatins);
-				m.ValTblcond = ViewModelConversion.ToLogic(ValTblcond);
-				m.ValCond = ViewModelConversion.ToString(ValCond);
 			}
 			catch (Exception)
 			{
@@ -396,12 +368,7 @@ namespace GenioMVC.ViewModels.Flds
 			}
 		}
 
-		/// <summary>
-		/// Sets the value of a single property of the view model based on the provided table and field names.
-		/// </summary>
-		/// <param name="fullFieldName">The full field name in the format "table.field".</param>
-		/// <param name="value">The field value.</param>
-		/// <exception cref="ArgumentNullException">Thrown if <paramref name="fullFieldName"/> is null.</exception>
+		/// <inheritdoc />
 		public override void SetViewModelValue(string fullFieldName, object value)
 		{
 			try
@@ -585,6 +552,7 @@ namespace GenioMVC.ViewModels.Flds
 			Characs = new List<string>();
 
 			Load_Campo___aero_name____(qs, lazyLoad);
+
 // USE /[MANUAL GQT VIEWMODEL_LOADPARTIAL CAMPO]/
 		}
 
@@ -654,10 +622,7 @@ namespace GenioMVC.ViewModels.Flds
 				}
 			}
 
-			TableAeroName = new TableDBEdit<Models.Aero>
-			{
-				IsLazyLoad = lazyLoad
-			};
+			TableAeroName = new TableDBEdit<Models.Aero>();
 
 			if (lazyLoad)
 			{
@@ -701,7 +666,7 @@ namespace GenioMVC.ViewModels.Flds
 				int numberItems = CSGenio.framework.Configuration.NrRegDBedit;
 				int offset = (page - 1) * numberItems;
 
-				FieldRef[] fields = new FieldRef[] { CSGenioAaero.FldCodaero, CSGenioAaero.FldName, CSGenioAaero.FldZzstate };
+				FieldRef[] fields = [CSGenioAaero.FldCodaero, CSGenioAaero.FldName, CSGenioAaero.FldZzstate];
 
 // USE /[MANUAL GQT OVERRQ CAMPO_AERONAME]/
 
@@ -853,8 +818,6 @@ namespace GenioMVC.ViewModels.Flds
 				"flds.creatdat" => ViewModelConversion.ToDateTime(modelValue),
 				"flds.creathou" => ViewModelConversion.ToString(modelValue),
 				"flds.creatins" => ViewModelConversion.ToDateTime(modelValue),
-				"flds.tblcond" => ViewModelConversion.ToLogic(modelValue),
-				"flds.cond" => ViewModelConversion.ToString(modelValue),
 				"flds.codflds" => ViewModelConversion.ToString(modelValue),
 				"aero.codaero" => ViewModelConversion.ToString(modelValue),
 				"aero.name" => ViewModelConversion.ToString(modelValue),

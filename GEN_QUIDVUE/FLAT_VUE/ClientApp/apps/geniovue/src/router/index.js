@@ -119,7 +119,8 @@ export function setupRouter(i18n)
 					class: 'q-dialog-form',
 					dismissible: false,
 					focusWrap: false,
-					returnFocusOnDeactivate: false
+					returnFocusOnDeactivate: false,
+					size: 'medium'
 				}
 
 				const modalProps = {

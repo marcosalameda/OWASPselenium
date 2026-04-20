@@ -7,6 +7,7 @@ using GenioMVC.Models.Navigation;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Quidgest.Persistence;
 using Quidgest.Persistence.GenericQuery;
+
 using System.Collections;
 using System.Collections.Concurrent;
 using System.Collections.Specialized;
@@ -39,6 +40,7 @@ namespace GenioMVC.ViewModels.Item
 		public string ValCodwareh { get; set; }
 
 		#endregion
+
 		/// <summary>
 		/// Title: "Image" | Type: "IJ"
 		/// </summary>
@@ -59,11 +61,6 @@ namespace GenioMVC.ViewModels.Item
 		/// </summary>
 		public string ValItemtype { get; set; }
 		/// <summary>
-		/// Title: "" | Type: "PSEUD"
-		/// </summary>
-		[JsonIgnore]
-		public SelectList List_ValItemtype { get; set; }
-		/// <summary>
 		/// Title: "Code" | Type: "C"
 		/// </summary>
 		public string ValItemcod { get; set; }
@@ -75,8 +72,6 @@ namespace GenioMVC.ViewModels.Item
 		/// Title: "In use" | Type: "L"
 		/// </summary>
 		public bool ValValid { get; set; }
-
-
 
 		#region Navigations
 		#endregion
@@ -104,6 +99,15 @@ namespace GenioMVC.ViewModels.Item
 		/// <summary>Field: "Code" Tipo: "C"</summary>
 		[ValidateSetAccess]
 		public string GitemValItemgcod { get { return funcGitemValItemgcod != null ? funcGitemValItemgcod() : _auxGitemValItemgcod; } private set { funcGitemValItemgcod = () => value; } }
+		// Field for formula
+		/// <summary>Used only for lazy loading of the GitemValItemdes field</summary>
+		[JsonIgnore]
+		[ValidateSetAccess]
+		public Func<string> funcGitemValItemdes { get; set; }
+		private string _auxGitemValItemdes { get; set; }
+		/// <summary>Field: "Global article" Tipo: "C"</summary>
+		[ValidateSetAccess]
+		public string GitemValItemdes { get { return funcGitemValItemdes != null ? funcGitemValItemdes() : _auxGitemValItemdes; } private set { funcGitemValItemdes = () => value; } }
 
 		#endregion
 
@@ -225,6 +229,7 @@ namespace GenioMVC.ViewModels.Item
 				ValItemdes = ViewModelConversion.ToString(m.ValItemdes);
 				ValValid = ViewModelConversion.ToLogic(m.ValValid);
 				funcGitemValItemgcod = () => ViewModelConversion.ToString(m.Gitem.ValItemgcod);
+				funcGitemValItemdes = () => ViewModelConversion.ToString(m.Gitem.ValItemdes);
 				ValCoditem = ViewModelConversion.ToString(m.ValCoditem);
 			}
 			catch (Exception)
@@ -276,12 +281,7 @@ namespace GenioMVC.ViewModels.Item
 			}
 		}
 
-		/// <summary>
-		/// Sets the value of a single property of the view model based on the provided table and field names.
-		/// </summary>
-		/// <param name="fullFieldName">The full field name in the format "table.field".</param>
-		/// <param name="value">The field value.</param>
-		/// <exception cref="ArgumentNullException">Thrown if <paramref name="fullFieldName"/> is null.</exception>
+		/// <inheritdoc />
 		public override void SetViewModelValue(string fullFieldName, object value)
 		{
 			try
@@ -425,6 +425,7 @@ namespace GenioMVC.ViewModels.Item
 
 			Load_Artiginvgitemitemdes_(qs, lazyLoad);
 			Load_Artiginvwarehwarehdes(qs, lazyLoad);
+
 // USE /[MANUAL GQT VIEWMODEL_LOADPARTIAL ARTIGINV]/
 		}
 
@@ -500,10 +501,7 @@ namespace GenioMVC.ViewModels.Item
 				}
 			}
 
-			TableGitemItemdes = new TableDBEdit<Models.Gitem>
-			{
-				IsLazyLoad = lazyLoad
-			};
+			TableGitemItemdes = new TableDBEdit<Models.Gitem>();
 
 			if (lazyLoad)
 			{
@@ -691,10 +689,7 @@ namespace GenioMVC.ViewModels.Item
 				}
 			}
 
-			TableWarehWarehdes = new TableDBEdit<Models.Wareh>
-			{
-				IsLazyLoad = lazyLoad
-			};
+			TableWarehWarehdes = new TableDBEdit<Models.Wareh>();
 
 			if (lazyLoad)
 			{
@@ -881,9 +876,9 @@ namespace GenioMVC.ViewModels.Item
 				"item.itemdes" => ViewModelConversion.ToString(modelValue),
 				"item.valid" => ViewModelConversion.ToLogic(modelValue),
 				"gitem.itemgcod" => ViewModelConversion.ToString(modelValue),
+				"gitem.itemdes" => ViewModelConversion.ToString(modelValue),
 				"item.coditem" => ViewModelConversion.ToString(modelValue),
 				"gitem.codgitem" => ViewModelConversion.ToString(modelValue),
-				"gitem.itemdes" => ViewModelConversion.ToString(modelValue),
 				"wareh.codwareh" => ViewModelConversion.ToString(modelValue),
 				"wareh.warehdes" => ViewModelConversion.ToString(modelValue),
 				_ => modelValue

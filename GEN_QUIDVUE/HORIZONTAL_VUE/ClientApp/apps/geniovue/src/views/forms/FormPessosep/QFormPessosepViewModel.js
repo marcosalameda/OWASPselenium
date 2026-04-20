@@ -54,16 +54,16 @@ export default class ViewModel extends FormViewModelBase
 		this.stopWatchers.push(watch(() => this.ValCodpesso.value, (newValue, oldValue) => this.onUpdate('pesso.codpesso', this.ValCodpesso, newValue, oldValue)))
 
 		/** The hidden foreign keys. */
-		this.ValCodcntry = reactive(new modelFieldType.ForeignKey({
-			id: 'ValCodcntry',
-			originId: 'ValCodcntry',
+		this.ValCodregia = reactive(new modelFieldType.ForeignKey({
+			id: 'ValCodregia',
+			originId: 'ValCodregia',
 			area: 'PESSO',
-			field: 'CODCNTRY',
-			relatedArea: 'PAIS1',
+			field: 'CODREGIA',
+			relatedArea: 'REGI1',
 			isFixed: true,
-			description: computed(() => this.Resources.PERSON_S_PARENTS05687),
-		}).cloneFrom(values?.ValCodcntry))
-		this.stopWatchers.push(watch(() => this.ValCodcntry.value, (newValue, oldValue) => this.onUpdate('pesso.codcntry', this.ValCodcntry, newValue, oldValue)))
+			description: '',
+		}).cloneFrom(values?.ValCodregia))
+		this.stopWatchers.push(watch(() => this.ValCodregia.value, (newValue, oldValue) => this.onUpdate('pesso.codregia', this.ValCodregia, newValue, oldValue)))
 
 		this.ValCodpaise = reactive(new modelFieldType.ForeignKey({
 			id: 'ValCodpaise',
@@ -76,16 +76,16 @@ export default class ViewModel extends FormViewModelBase
 		}).cloneFrom(values?.ValCodpaise))
 		this.stopWatchers.push(watch(() => this.ValCodpaise.value, (newValue, oldValue) => this.onUpdate('pesso.codpaise', this.ValCodpaise, newValue, oldValue)))
 
-		this.ValCodregia = reactive(new modelFieldType.ForeignKey({
-			id: 'ValCodregia',
-			originId: 'ValCodregia',
+		this.ValCodcntry = reactive(new modelFieldType.ForeignKey({
+			id: 'ValCodcntry',
+			originId: 'ValCodcntry',
 			area: 'PESSO',
-			field: 'CODREGIA',
-			relatedArea: 'REGI1',
+			field: 'CODCNTRY',
+			relatedArea: 'PAIS1',
 			isFixed: true,
-			description: '',
-		}).cloneFrom(values?.ValCodregia))
-		this.stopWatchers.push(watch(() => this.ValCodregia.value, (newValue, oldValue) => this.onUpdate('pesso.codregia', this.ValCodregia, newValue, oldValue)))
+			description: computed(() => this.Resources.PERSON_S_PARENTS05687),
+		}).cloneFrom(values?.ValCodcntry))
+		this.stopWatchers.push(watch(() => this.ValCodcntry.value, (newValue, oldValue) => this.onUpdate('pesso.codcntry', this.ValCodcntry, newValue, oldValue)))
 
 		/** The used foreign keys. */
 		this.ValCodcateg = reactive(new modelFieldType.ForeignKey({
@@ -176,6 +176,7 @@ export default class ViewModel extends FormViewModelBase
 			field: 'CATEGORY',
 			maxLength: 50,
 			description: computed(() => this.Resources.CATEGORY18978),
+			ignoreFldSubmit: true,
 		}).cloneFrom(values?.TableCategCategory))
 		this.stopWatchers.push(watch(() => this.TableCategCategory.value, (newValue, oldValue) => this.onUpdate('categ.categoria', this.TableCategCategory, newValue, oldValue)))
 
@@ -189,39 +190,6 @@ export default class ViewModel extends FormViewModelBase
 		}).cloneFrom(values?.ValDtultcat))
 		this.stopWatchers.push(watch(() => this.ValDtultcat.value, (newValue, oldValue) => this.onUpdate('pesso.dtultcat', this.ValDtultcat, newValue, oldValue)))
 
-		this.ValCurricul = reactive(new modelFieldType.Document({
-			id: 'ValCurricul',
-			originId: 'ValCurricul',
-			area: 'PESSO',
-			field: 'CURRICUL',
-			properties: computed(() => this.ValCurriculPropertiesVM),
-			documentFK: computed(() => this.ValCurriculfk),
-			currentDocument: computed(() => this.ValCurriculData),
-			description: computed(() => this.Resources.CURRICULUM51182),
-		}).cloneFrom(values?.ValCurricul))
-		this.stopWatchers.push(watch(() => this.ValCurricul.value, (newValue, oldValue) => this.onUpdate('pesso.curricul', this.ValCurricul, newValue, oldValue)))
-
-		this.ValCurriculPropertiesVM = reactive(new modelFieldType.Base({
-			id: 'ValCurriculPropertiesVM',
-			area: 'PESSO',
-			field: 'CURRICULDOCUM',
-			ignoreFldSubmit: true
-		}).cloneFrom(values?.ValCurriculPropertiesVM))
-		this.ValCurriculfk = reactive(new modelFieldType.String({
-			id: 'ValCurriculfk',
-			area: 'PESSO',
-			field: 'CURRICULFK'
-		}).cloneFrom(values?.ValCurriculfk))
-		this.stopWatchers.push(watch(() => this.ValCurriculfk.value, (newValue, oldValue) => this.onUpdate('pesso.curriculfk', this.ValCurriculfk, newValue, oldValue)))
-
-		this.ValCurriculData = reactive(new modelFieldType.DocumentData({
-			id: 'ValCurriculData',
-			area: 'PESSO',
-			field: 'CURRICULDATA',
-			ignoreFldSubmit: true
-		}).cloneFrom(values?.ValCurriculData))
-		this.stopWatchers.push(watch(() => this.ValCurriculData.value, (newValue, oldValue) => this.onUpdate('pesso.curriculdata', this.ValCurriculData, newValue, oldValue), { deep: true }))
-
 		this.TableCmpnyDesignat = reactive(new modelFieldType.String({
 			type: 'Lookup',
 			id: 'TableCmpnyDesignat',
@@ -230,6 +198,7 @@ export default class ViewModel extends FormViewModelBase
 			field: 'DESIGNAT',
 			maxLength: 85,
 			description: computed(() => this.Resources.DESIGNATION35876),
+			ignoreFldSubmit: true,
 		}).cloneFrom(values?.TableCmpnyDesignat))
 		this.stopWatchers.push(watch(() => this.TableCmpnyDesignat.value, (newValue, oldValue) => this.onUpdate('cmpny.designat', this.TableCmpnyDesignat, newValue, oldValue)))
 

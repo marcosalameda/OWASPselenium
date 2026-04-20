@@ -9,12 +9,13 @@
 			<div
 				v-if="showFormHeader"
 				class="c-action-bar">
-				<h1
+				<component
 					v-if="formControl.uiComponents.header && formInfo.designation"
+					:is="topHeadingTag"
 					:id="formTitleId"
 					class="form-header">
 					{{ formInfo.designation }}
-				</h1>
+				</component>
 
 				<div class="c-action-bar__menu">
 					<template
@@ -40,13 +41,10 @@
 									@click="btn.action">
 									<template v-if="btn.icon">
 										<q-badge-indicator
-											v-if="btn.badge && btn.badge.isVisible"
-											:color="btn.badge.color">
+											:enabled="btn.badge?.isVisible ?? false"
+											:color="btn.badge?.color">
 											<q-icon v-bind="btn.icon" />
 										</q-badge-indicator>
-										<q-icon
-											v-else
-											v-bind="btn.icon" />
 									</template>
 								</q-toggle-group-item>
 							</template>
@@ -97,6 +95,7 @@
 		<q-container
 			fluid
 			data-key="GENCO"
+			:data-identifier="primaryKeyValue"
 			:data-loading="!formInitialDataLoaded || !isActiveForm">
 			<template v-if="formControl.initialized && showFormBody">
 				<q-row v-if="controls.GENCO___GENREAGENCONT.isVisible">
@@ -106,7 +105,8 @@
 						<base-input-structure
 							v-if="controls.GENCO___GENREAGENCONT.isVisible"
 							class="i-text"
-							v-bind="controls.GENCO___GENREAGENCONT"
+							v-bind="controls.GENCO___GENREAGENCONT.wrapperProps"
+							:id="getControlId(controls.GENCO___GENREAGENCONT)"
 							v-on="controls.GENCO___GENREAGENCONT.handlers"
 							:loading="controls.GENCO___GENREAGENCONT.props.loading"
 							:reporting-mode-on="reportingModeCAV"
@@ -114,6 +114,7 @@
 							<q-select
 								v-if="controls.GENCO___GENREAGENCONT.isVisible"
 								v-bind="controls.GENCO___GENREAGENCONT.props"
+								:id="getControlId(controls.GENCO___GENREAGENCONT)"
 								@update:model-value="model.ValAgencont.fnUpdateValue" />
 						</base-input-structure>
 					</q-col>
@@ -125,13 +126,15 @@
 						<base-input-structure
 							v-if="controls.GENCO___GENREBACKCOLO.isVisible"
 							class="i-text"
-							v-bind="controls.GENCO___GENREBACKCOLO"
+							v-bind="controls.GENCO___GENREBACKCOLO.wrapperProps"
+							:id="getControlId(controls.GENCO___GENREBACKCOLO)"
 							v-on="controls.GENCO___GENREBACKCOLO.handlers"
 							:loading="controls.GENCO___GENREBACKCOLO.props.loading"
 							:reporting-mode-on="reportingModeCAV"
 							:suggestion-mode-on="suggestionModeOn">
 							<q-text-field
 								v-bind="controls.GENCO___GENREBACKCOLO.props"
+								:id="getControlId(controls.GENCO___GENREBACKCOLO)"
 								@blur="onBlur(controls.GENCO___GENREBACKCOLO, model.ValBackcolo.value)"
 								@change="model.ValBackcolo.fnUpdateValueOnChange" />
 						</base-input-structure>
@@ -144,13 +147,15 @@
 						<base-input-structure
 							v-if="controls.GENCO___GENRETEXTCOLO.isVisible"
 							class="i-text"
-							v-bind="controls.GENCO___GENRETEXTCOLO"
+							v-bind="controls.GENCO___GENRETEXTCOLO.wrapperProps"
+							:id="getControlId(controls.GENCO___GENRETEXTCOLO)"
 							v-on="controls.GENCO___GENRETEXTCOLO.handlers"
 							:loading="controls.GENCO___GENRETEXTCOLO.props.loading"
 							:reporting-mode-on="reportingModeCAV"
 							:suggestion-mode-on="suggestionModeOn">
 							<q-text-field
 								v-bind="controls.GENCO___GENRETEXTCOLO.props"
+								:id="getControlId(controls.GENCO___GENRETEXTCOLO)"
 								@blur="onBlur(controls.GENCO___GENRETEXTCOLO, model.ValTextcolo.value)"
 								@change="model.ValTextcolo.fnUpdateValueOnChange" />
 						</base-input-structure>
@@ -160,7 +165,7 @@
 		</q-container>
 	</teleport>
 
-	<hr v-if="!isPopup && showFormFooter" />
+	<q-divider v-if="!isPopup && showFormFooter" />
 
 	<teleport
 		v-if="formModalIsReady && showFormFooter"
@@ -513,8 +518,8 @@
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						maxLength: 1,
 						arrayName: 'GenConta',
-						helpShortItem: '',
-						helpDetailedItem: '',
+						helpShortItem: 'None',
+						helpDetailedItem: 'None',
 						controlLimits: [
 						],
 					}, this),
@@ -924,7 +929,6 @@
 
 				this.afterControlUpdate(controlField, fieldValue)
 			},
-
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
 // USE /[MANUAL GQT FUNCTIONS_JS GENCO]/
 // eslint-disable-next-line

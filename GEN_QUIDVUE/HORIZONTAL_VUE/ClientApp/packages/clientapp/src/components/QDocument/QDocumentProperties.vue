@@ -6,32 +6,27 @@
 		:buttons="buttons"
 		dismissible
 		size="medium">
-		<template #body>
-			<q-container
-				v-if="props.fileProperties"
-				class="q-document__popup-container"
-				fluid>
-				<template
-					v-for="property in propList"
-					:key="property.name">
-					<q-row>
-						<q-text-field
-							:model-value="
-								props.fileProperties[property.name as keyof FileProperties]
-							"
-							:label="property.label"
-							readonly
-							size="block" />
-					</q-row>
-				</template>
-			</q-container>
+		<template
+			v-if="props.fileProperties"
+			#body>
+			<q-row
+				v-for="property in propList"
+				:key="property.name">
+				<q-col>
+					<q-text-field
+						:model-value="props.fileProperties[property.name as keyof FileProperties]"
+						:label="property.label"
+						readonly
+						size="block" />
+				</q-col>
+			</q-row>
 		</template>
 	</q-dialog>
 </template>
 
 <script setup lang="ts">
 	// Components
-	import { QDialog, QContainer, QRow } from '@quidgest/ui/components'
+	import { QCol, QDialog, QRow } from '@quidgest/ui/components'
 
 	// Types
 	import type { QButtonProps } from '@quidgest/ui/components'

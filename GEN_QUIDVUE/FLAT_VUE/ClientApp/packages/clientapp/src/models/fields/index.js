@@ -45,24 +45,24 @@ export {
 
 export default {
 	Base,
-	String,
-	MultiLineString,
-	Password,
-	PrimaryKey,
-	ForeignKey,
+	Boolean,
 	Coordinate,
-	Geographic,
 	Date,
 	DateTime,
 	DateTimeSeconds,
-	Time,
-	Boolean,
-	Number,
-	Image,
-	DocumentData, // FIXME: this should not be exported, Document should suffice.
 	Document,
-	MultipleValues,
+	DocumentData, // FIXME: this should not be exported, Document should suffice.
+	ForeignKey,
+	Geographic,
 	GridTableList,
 	GridTableListValue,
-	PropertyList
+	Image,
+	MultiLineString,
+	MultipleValues,
+	Number,
+	Password,
+	PrimaryKey,
+	PropertyList,
+	String,
+	Time
 }

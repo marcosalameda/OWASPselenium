@@ -47,16 +47,18 @@ export default defineConfigWithVueTs(
 	{
 		files: ['**/*.{js,ts,vue}'],
 		rules: {
+			// FIXME: Enable this rule when the codebase is ready
+			'@typescript-eslint/no-this-alias': 'off',
+			'@typescript-eslint/no-unused-expressions': ['error', { allowTernary: true }],
+			'@typescript-eslint/no-unused-vars': 'warn',
 			eqeqeq: 'error',
 			'no-console': 'warn',
 			'no-debugger': 'warn',
 			'no-fallthrough': 'off',
 			'no-mixed-spaces-and-tabs': 'warn',
 			'no-unreachable': 'warn',
-			'@typescript-eslint/no-unused-vars': 'warn',
-			'@typescript-eslint/no-unused-expressions': ['error', { allowTernary: true }],
-			// FIXME: Enable this rule when the codebase is ready
-			'@typescript-eslint/no-this-alias': 'off'
+			'no-var': 'warn',
+			'prefer-const': 'warn'
 		}
 	},
 

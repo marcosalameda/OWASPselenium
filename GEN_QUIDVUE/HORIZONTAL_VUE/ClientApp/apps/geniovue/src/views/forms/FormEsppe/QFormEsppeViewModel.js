@@ -83,6 +83,7 @@ export default class ViewModel extends FormViewModelBase
 			field: 'NAME',
 			maxLength: 85,
 			description: computed(() => this.Resources.NAME31974),
+			ignoreFldSubmit: true,
 		}).cloneFrom(values?.TablePessoName))
 		this.stopWatchers.push(watch(() => this.TablePessoName.value, (newValue, oldValue) => this.onUpdate('pesso.name', this.TablePessoName, newValue, oldValue)))
 
@@ -94,6 +95,7 @@ export default class ViewModel extends FormViewModelBase
 			field: 'ESPECIAL',
 			maxLength: 50,
 			description: computed(() => this.Resources.SPECIALTY09304),
+			ignoreFldSubmit: true,
 		}).cloneFrom(values?.TableSpeciEspecial))
 		this.stopWatchers.push(watch(() => this.TableSpeciEspecial.value, (newValue, oldValue) => this.onUpdate('speci.especial', this.TableSpeciEspecial, newValue, oldValue)))
 	}

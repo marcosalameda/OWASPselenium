@@ -212,14 +212,16 @@ public class TableUiSettings(PersistentSupport sp, User user, string uuid, strin
 	/// <summary>
 	/// Retrieves the names of all available table configurations for a specific user and table.
 	/// This method returns only the configuration names, not the full configuration data.
+	/// The returned list is ordered alphabetically by configuration name.
 	/// </summary>
 	/// <param name="sp">The persistence support instance for database operations.</param>
 	/// <param name="user">The user whose configurations should be retrieved.</param>
 	/// <param name="uuid">The unique identifier for the table/view.</param>
-	/// <returns>A list of configuration names available to the specified user for the given table.</returns>
+	/// <returns>A list of configuration names available to the specified user for the given table, ordered alphabetically.</returns>
 	/// <remarks>
 	/// This is an efficient way to get a list of available configurations without loading
 	/// the full configuration data. Useful for populating configuration selection UI elements.
+	/// The results are sorted alphabetically for consistent and predictable ordering.
 	/// </remarks>
 	public static List<string> GetTableConfigNames(PersistentSupport sp, User user, string uuid)
 	{
@@ -231,6 +233,7 @@ public class TableUiSettings(PersistentSupport sp, User user, string uuid, strin
 				.Equal(CSGenioAtblcfg.FldUuid, uuid),
 			[CSGenioAtblcfg.FldName.Field])
 			.Select(c => c.ValName)
+			.OrderBy(name => name)
 			.ToList();
 	}
 

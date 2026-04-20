@@ -10,7 +10,7 @@ public class TimequipForm : Form
 	/// <summary>
 	/// Equipment Repairs
 	/// </summary>
-	public ListControl PseudReparaco => new ListControl(driver, ContainerLocator, "#TIMEQUIPPSEUDREPARACO");
+	public ListControl PseudReparaco => new ListControl(driver, ContainerLocator, "#TIMEQUIPPSEUDREPARACO" + IdSuffix);
 
 	/// <summary>
 	/// Timeline Primary
@@ -22,6 +22,6 @@ public class TimequipForm : Form
 	/// </summary>
 	public IWebElement PseudSecundar => throw new NotImplementedException();
 
-	public TimequipForm(IWebDriver driver, FORM_MODE mode, By? containerLocator = null)
-		: base(driver, mode, "TIMEQUIP", containerLocator: containerLocator) { }
+	public TimequipForm(IWebDriver driver, FORM_MODE mode, By? containerLocator = null, bool usePkInId = false)
+		: base(driver, mode, "TIMEQUIP", containerLocator: containerLocator, usePkInId: usePkInId) { }
 }

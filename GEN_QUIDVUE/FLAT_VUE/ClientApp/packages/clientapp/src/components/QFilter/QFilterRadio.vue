@@ -12,6 +12,7 @@
 			:label="item.value.toString()" />
 	</q-radio-group>
 </template>
+
 <script setup lang="ts">
 	// Components
 	import { QRadioButton, QRadioGroup } from '@quidgest/ui/components'

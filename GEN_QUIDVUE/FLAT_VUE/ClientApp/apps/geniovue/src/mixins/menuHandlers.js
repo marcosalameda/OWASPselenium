@@ -29,7 +29,7 @@ export default {
 		this.componentOnLoadProc.once(async () => {
 			this.setMenuNavProperties()
 
-			for (let i in this.controls)
+			for (const i in this.controls)
 			{
 				await this.controls[i].init()
 				this.controls[i].initData?.()
@@ -57,7 +57,7 @@ export default {
 
 		this.changeMenuActiveState(false)
 
-		if(this.controls)
+		if (this.controls)
 		{
 			const controlsIds = Object.keys(this.controls)
 			controlsIds.forEach((controlId) => {
@@ -68,7 +68,7 @@ export default {
 			})
 		}
 
-		if(typeof this.model?.destroy === 'function')
+		if (typeof this.model?.destroy === 'function')
 		{
 			this.model.destroy()
 			this.model = null
@@ -102,7 +102,7 @@ export default {
 		 * Fetches the data of the menu list from the server.
 		 * @returns A promise to be resolved after the request completes.
 		 */
-		async loadList()
+		loadList()
 		{
 			return this.controls.menu.reload()
 		},
@@ -130,6 +130,15 @@ export default {
 		changeMenuActiveState(isActive)
 		{
 			this.isActiveMenu = isActive
+		},
+
+		/**
+		 * Applies the filters model to the list and reloads it.
+		 * @param {object} model The filters form view model
+		 */
+		applyFilters(model)
+		{
+			this.controls.menu.updateGlobalFilters(model)
 		}
 	},
 

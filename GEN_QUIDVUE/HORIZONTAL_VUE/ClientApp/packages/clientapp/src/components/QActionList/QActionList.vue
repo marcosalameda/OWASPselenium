@@ -2,28 +2,26 @@
 	<div class="q-action-list">
 		<!-- INLINE -->
 		<template
-			v-for="(group, i) in groups.filter((g) => g.display === 'inline')"
+			v-for="group in groups.filter((g) => g.display === 'inline')"
 			:key="group.id">
 			<q-button-group
-				:disabled="group.disabled"
-				:borderless="group.borderless">
+				v-bind="$attrs"
+				:borderless="props.borderless"
+				:disabled="group.disabled">
 				<q-button
 					v-for="action in getGroupActions(group.id)"
 					:key="action.key"
+					:data-key="action.key"
 					:title="action.label"
-					:label="action.icon ? '' : action.label"
+					:label="group.displayLabels || !action.icon ? action.label : ''"
 					:disabled="props.readonly || action.disabled"
 					:size="group.size"
-					:class="group.customClass"
 					@click="() => onItemClick(action.key)">
 					<q-icon
 						v-if="action.icon"
 						v-bind="action.icon" />
 				</q-button>
 			</q-button-group>
-			<q-divider
-				v-if="i < groups.length - 1"
-				direction="vertical" />
 		</template>
 
 		<!-- DROPDOWN -->
@@ -31,24 +29,30 @@
 		<template v-if="groups.some((g) => g.display === 'dropdown')">
 			<q-button
 				ref="activator"
-				:size="props.options?.dropdownSize || 'regular'"
-				data-type="options-button">
-				<q-icon
-					v-if="props.options?.dropdownIcon"
-					v-bind="props.options?.dropdownIcon" />
-				<q-icon
-					v-else
-					icon="more-items" />
+				data-type="options-button"
+				aria-haspopup="true"
+				v-bind="$attrs"
+				:borderless="props.borderless"
+				:size="props.dropdownSize">
+				<slot>
+					<q-icon icon="more-items" />
+				</slot>
+
+				<template #append>
+					<q-icon
+						v-if="!!$slots.default"
+						class="q-action-list__expand"
+						icon="expand" />
+				</template>
 			</q-button>
 
 			<q-dropdown-menu
 				:activator="activatorRef?.$el"
 				:items="filteredItems"
 				:groups="groups.filter((g) => g.display === 'dropdown')"
-				:icons="props.options?.submenusIcons"
-				placement="right-start"
-				@select="onItemClick">
-			</q-dropdown-menu>
+				:icons="props.submenusIcon"
+				:placement="props.placement"
+				@select="onItemClick" />
 		</template>
 	</div>
 </template>
@@ -56,24 +60,18 @@
 <script setup lang="ts">
 	// Utils
 	import { computed, useTemplateRef } from 'vue'
-	import { DEFAULT_SUBMENU_ICONS } from './types'
+	import { DEFAULT_SUBMENU_ICONS } from './constants'
 
 	// Components
 	import { QDropdownMenu, QButton } from '@quidgest/ui/components'
 
 	// Types
-	import type { QActionListProps, QActionListGroup, QActionListOptions } from './types'
-	import type { Icon } from '@quidgest/ui/components'
+	import type { QActionListGroup, QActionListItem, QActionListProps } from './types'
 
 	const props = withDefaults(defineProps<QActionListProps>(), {
-		options: () =>
-			({
-				dropdownIcon: {
-					icon: 'more-items'
-				} as Icon,
-				dropdownSize: 'regular',
-				submenusIcons: DEFAULT_SUBMENU_ICONS
-			}) as QActionListOptions
+		dropdownSize: 'regular',
+		placement: 'right-start',
+		submenusIcon: () => DEFAULT_SUBMENU_ICONS
 	})
 
 	const emit = defineEmits<{
@@ -82,19 +80,35 @@
 
 	const activatorRef = useTemplateRef('activator')
 
-	const filteredItems = computed(() => {
-		return props.items.filter((item) => item.isVisible !== false)
+	const filteredItems = computed<QActionListItem[]>(() => {
+		return props.items?.filter((item: QActionListItem) => item.isVisible !== false) ?? []
 	})
 
 	const groups = computed<QActionListGroup[]>(() => {
 		if (props.groups?.length) {
-			// Ensure groups without items are not displayed.
-			return props.groups
-				.filter((group) => filteredItems.value?.some((item) => item.group === group.id))
-				.map((group) => ({
-					...group,
-					display: group.display ?? 'dropdown'
-				}))
+			// Ensure groups without items are not displayed
+			const validGroups = props.groups.filter((group) =>
+				filteredItems.value?.some((item) => item.group === group.id)
+			)
+
+			// Count total items in dropdown groups
+			const dropdownGroupsItems = validGroups
+				.filter((g: QActionListGroup) => (g.display ?? 'dropdown') === 'dropdown')
+				.reduce(
+					(total: number, g: QActionListGroup) => total + getGroupActions(g.id).length,
+					0
+				)
+
+			// If there's only 1 item total in dropdown groups, display it as inline
+			const shouldDisplayDropdownsAsInline = dropdownGroupsItems === 1
+
+			return validGroups.map((group) => ({
+				...group,
+				display:
+					group.display === 'dropdown' && shouldDisplayDropdownsAsInline
+						? 'inline'
+						: (group.display ?? 'dropdown')
+			}))
 		}
 
 		// Generate a default group without title
@@ -102,13 +116,11 @@
 	})
 
 	function getGroupActions(group?: string) {
-		if (!group) {
-			// If no group is specified, return all items
-			return filteredItems.value
-		}
-
-		// Filter items by the specified group
-		return filteredItems.value?.filter((item) => item.group === group)
+		return !group
+			? // If no group is specified, return all items
+				filteredItems.value
+			: // Else, filter items by the specified group
+				filteredItems.value?.filter((item: QActionListItem) => item.group === group)
 	}
 
 	/**
@@ -119,4 +131,8 @@
 	function onItemClick(actionKey: string) {
 		emit('click', actionKey)
 	}
+
+	defineOptions({
+		inheritAttrs: false
+	})
 </script>

@@ -11,7 +11,6 @@ import netAPI from '@quidgest/clientapp/network'
 import qApi from '@/api/genio/quidgestFunctions.js'
 import qFunctions from '@/api/genio/projectFunctions.js'
 import qProjArrays from '@/api/genio/projectArrays.js'
-import DNFormViewModelEquipmPseudaTags from '@/views/forms/FormEquipm/QGridFormEquipmPseudaTagsViewModel.js'
 /* eslint-enable @typescript-eslint/no-unused-vars */
 
 /**
@@ -191,6 +190,7 @@ export default class ViewModel extends FormViewModelBase
 			field: 'NAME',
 			maxLength: 85,
 			description: computed(() => this.Resources.LEGAL_NAME42902),
+			ignoreFldSubmit: true,
 		}).cloneFrom(values?.TableManufName))
 		this.stopWatchers.push(watch(() => this.TableManufName.value, (newValue, oldValue) => this.onUpdate('manuf.name', this.TableManufName, newValue, oldValue)))
 
@@ -202,48 +202,9 @@ export default class ViewModel extends FormViewModelBase
 			field: 'DESIGNAT',
 			maxLength: 85,
 			description: computed(() => this.Resources.KIND_OF_EQUIPMENT22928),
+			ignoreFldSubmit: true,
 		}).cloneFrom(values?.TableKindeDesignat))
 		this.stopWatchers.push(watch(() => this.TableKindeDesignat.value, (newValue, oldValue) => this.onUpdate('kinde.designat', this.TableKindeDesignat, newValue, oldValue)))
-
-		this.ValDescription = reactive(new modelFieldType.MultiLineString({
-			id: 'ValDescription',
-			originId: 'ValDescription',
-			area: 'ASSET',
-			field: 'DESCRIPT',
-			description: computed(() => this.Resources.DESCRIPTION07383),
-		}).cloneFrom(values?.ValDescription))
-		this.stopWatchers.push(watch(() => this.ValDescription.value, (newValue, oldValue) => this.onUpdate('asset.description', this.ValDescription, newValue, oldValue)))
-
-		this.ValLongdesc = reactive(new modelFieldType.MultiLineString({
-			type: 'MarkdownEditor',
-			id: 'ValLongdesc',
-			originId: 'ValLongdesc',
-			area: 'ASSET',
-			field: 'LONGDESC',
-			description: computed(() => this.Resources.DETAILED_DESCRIPTION36560),
-		}).cloneFrom(values?.ValLongdesc))
-		this.stopWatchers.push(watch(() => this.ValLongdesc.value, (newValue, oldValue) => this.onUpdate('asset.longdesc', this.ValLongdesc, newValue, oldValue)))
-
-		this.ValCategory = reactive(new modelFieldType.String({
-			id: 'ValCategory',
-			originId: 'ValCategory',
-			area: 'ASSET',
-			field: 'CATEGORY',
-			maxLength: 5,
-			arrayOptions: computed(() => new qProjArrays.QArrayAssetcategory(vm.$getResource).elements),
-			description: computed(() => this.Resources.CATEGORY18978),
-		}).cloneFrom(values?.ValCategory))
-		this.stopWatchers.push(watch(() => this.ValCategory.value, (newValue, oldValue) => this.onUpdate('asset.category', this.ValCategory, newValue, oldValue)))
-
-		this.ValBg_color = reactive(new modelFieldType.String({
-			id: 'ValBg_color',
-			originId: 'ValBg_color',
-			area: 'ASSET',
-			field: 'BG_COLOR',
-			maxLength: 50,
-			description: computed(() => this.Resources.BACKGROUND_COLOR_FOR59228),
-		}).cloneFrom(values?.ValBg_color))
-		this.stopWatchers.push(watch(() => this.ValBg_color.value, (newValue, oldValue) => this.onUpdate('asset.bg_color', this.ValBg_color, newValue, oldValue)))
 
 		this.ValPhoto = reactive(new modelFieldType.Image({
 			id: 'ValPhoto',
@@ -253,16 +214,6 @@ export default class ViewModel extends FormViewModelBase
 			description: computed(() => this.Resources.PHOTO51874),
 		}).cloneFrom(values?.ValPhoto))
 		this.stopWatchers.push(watch(() => this.ValPhoto.value, (newValue, oldValue) => this.onUpdate('asset.photo', this.ValPhoto, newValue, oldValue)))
-		/** The Grid Table List value. */
-		this.ValA_tags = reactive(new modelFieldType.GridTableList({
-			id: 'ValA_tags',
-			area: 'ATAGS',
-			field: 'A_TAGS',
-			viewModelClass: DNFormViewModelEquipmPseudaTags,
-		}, this.vueContext).cloneFrom(values?.ValA_tags))
-		this.stopWatchers.push(watch(() => this.ValA_tags.value?.newElements, () => this.onUpdate('pseud.a_tags', this.ValA_tags, this.ValA_tags.value), { deep: true }))
-		this.stopWatchers.push(watch(() => this.ValA_tags.value?.editedElements, () => this.onUpdate('pseud.a_tags', this.ValA_tags, this.ValA_tags.value), { deep: true }))
-		this.stopWatchers.push(watch(() => this.ValA_tags.value?.removedElements, () => this.onUpdate('pseud.a_tags', this.ValA_tags, this.ValA_tags.value), { deep: true }))
 	}
 
 	/**

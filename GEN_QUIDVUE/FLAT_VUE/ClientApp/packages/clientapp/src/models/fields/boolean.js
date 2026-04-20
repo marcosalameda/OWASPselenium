@@ -3,6 +3,8 @@ import _assignIn from 'lodash-es/assignIn'
 import { Base } from './base'
 
 export class Boolean extends Base {
+	static EMPTY_VALUE = false
+
 	constructor(options) {
 		super(
 			_assignIn(
@@ -12,13 +14,6 @@ export class Boolean extends Base {
 				options
 			)
 		)
-	}
-
-	/**
-	 * @override
-	 */
-	get serverValue() {
-		return this.value ?? false
 	}
 
 	/**
@@ -35,18 +30,7 @@ export class Boolean extends Base {
 	/**
 	 * @override
 	 */
-	clearValue() {
-		super.clearValue(false)
-	}
-
-	/**
-	 * @override
-	 */
 	isValidType(value) {
-		return (
-			typeof value === 'boolean' ||
-			value === this.constructor.EMPTY_VALUE ||
-			[0, 1].includes(value)
-		)
+		return typeof value === 'boolean' || [0, 1].includes(value)
 	}
 }

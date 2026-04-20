@@ -28,18 +28,18 @@ namespace GenioMVC.Controllers
 {
 	public partial class ReparController : ControllerBase
 	{
-		private static readonly NavigationLocation ACTION_GQT_MENU_REPAIR_LIST = new NavigationLocation("REPAIRS18165", "GQT_Menu_REPAIR_LIST", "Repar") { vueRouteName = "menu-GQT_REPAIR_LIST" };
+		private static readonly NavigationLocation ACTION_GQT_MENU_311 = new NavigationLocation("REPAIRS18165", "GQT_Menu_311", "Repar") { vueRouteName = "menu-GQT_311" };
 
 
 		//
-		// GET: /Repar/GQT_Menu_REPAIR_LIST
-		[ActionName("GQT_Menu_REPAIR_LIST")]
+		// GET: /Repar/GQT_Menu_311
+		[ActionName("GQT_Menu_311")]
 		[HttpPost]
-		public ActionResult GQT_Menu_REPAIR_LIST([FromBody] RequestMenuModel requestModel)
+		public ActionResult GQT_Menu_311([FromBody] RequestMenuModel requestModel)
 		{
 			var queryParams = requestModel.QueryParams;
 
-			GQT_Menu_REPAIR_LIST_ViewModel model = new(m_userContext);
+			GQT_Menu_311_ViewModel model = new(m_userContext);
 
 			CSGenio.core.framework.table.TableConfiguration tableConfig = model.GetTableConfig(
 				requestModel.TableConfiguration,
@@ -49,20 +49,11 @@ namespace GenioMVC.Controllers
 			// Determine rows per page
 			tableConfig.RowsPerPage = tableConfig.DetermineRowsPerPage(CSGenio.framework.Configuration.NrRegDBedit, "");
 
-			// Determine what columns have totalizers
-			tableConfig.TotalizerColumns = requestModel.TotalizerColumns;
-
-			// For tables with multiple selection enabled, determine currently selected rows
-			tableConfig.SelectedRows = requestModel.SelectedRows;
-
-			// Add form field filters to the table configuration
-			tableConfig.FieldFilters = requestModel.RelatedFilterValues;
-
 			bool isHomePage = RouteData.Values.ContainsKey("isHomePage") ? (bool)RouteData.Values["isHomePage"] : false;
 			if (isHomePage)
-				Navigation.SetValue("HomePage", "GQT_Menu_REPAIR_LIST");
+				Navigation.SetValue("HomePage", "GQT_Menu_311");
 
-			//If there was a recent operation on this table then force the primary persistence server to be called and ignore the read only feature
+			// If there was a recent operation on this table then force the primary persistence server to be called and ignore the read only feature
 			if (string.IsNullOrEmpty(Navigation.GetStrValue("ForcePrimaryRead_repar")))
 				UserContext.Current.SetPersistenceReadOnly(true);
 			else
@@ -79,18 +70,18 @@ namespace GenioMVC.Controllers
 				querystring.AddRange(queryParams);
 
 			if (!isHomePage &&
-				(Navigation.CurrentLevel == null || !ACTION_GQT_MENU_REPAIR_LIST.IsSameAction(Navigation.CurrentLevel.Location)) &&
-				Navigation.CurrentLevel.Location.Action != ACTION_GQT_MENU_REPAIR_LIST.Action)
+				(Navigation.CurrentLevel == null || !ACTION_GQT_MENU_311.IsSameAction(Navigation.CurrentLevel.Location)) &&
+				Navigation.CurrentLevel.Location.Action != ACTION_GQT_MENU_311.Action)
 				CSGenio.framework.Audit.registAction(UserContext.Current.User, Resources.Resources.MENU01948 + " " + Navigation.CurrentLevel.Location.ShortDescription());
 			else if (isHomePage)
 			{
-				CSGenio.framework.Audit.registAction(UserContext.Current.User, Resources.Resources.MENU01948 + " " + ACTION_GQT_MENU_REPAIR_LIST.ShortDescription());
+				CSGenio.framework.Audit.registAction(UserContext.Current.User, Resources.Resources.MENU01948 + " " + ACTION_GQT_MENU_311.ShortDescription());
 				Navigation.SetValue("HomePageContainsList", true);
 			}
 
 
 
-// USE /[MANUAL GQT MENU_GET REPAIR_LIST]/
+// USE /[MANUAL GQT MENU_GET 311]/
 
 			try
 			{

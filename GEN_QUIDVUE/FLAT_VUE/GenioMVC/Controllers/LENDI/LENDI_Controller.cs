@@ -57,7 +57,13 @@ namespace GenioMVC.Controllers
 
 				string area = "lendi";
 				var limitation = new List<ReportLimitParameter>();
+				string reportExportFileName = "comodato";
 
+				// This find is necessary to check: if the value exists, if the record is invalid, and if the user can view it (EPH).
+				string id = Navigation.GetStrValue(area);
+				var record = Models.Lendi.Find(id, UserContext.Current);
+				if (record == null || record.ValZzstate != 0)
+					throw new FrameworkException(Resources.Resources.NAO_E_POSSIVEL_ACEDE59423, "GQT_Report_1511", "Cannot access the specified record");
 				// Created by [CJP] at [2017.05.31]
 				// Updated by [MH] at [2017.07.11]
 				// Add min and max values to navigation with the field name
@@ -84,13 +90,10 @@ namespace GenioMVC.Controllers
 
 
 // USE /[MANUAL GQT BEFORE_EXECUTE_REPORT 1511]/
-				List<string> allowedReportFormats = new List<string> { "PDF" };
-				if (requestModel.Format != null && !allowedReportFormats.Contains(requestModel.Format))
-					throw new Exception(Resources.Resources.O_FORMATO_DE_RELATOR01134);
 
 				string reportFormat = requestModel.Format != null ? ReportSSRS.GetExportType(requestModel.Format) : "PDF";
 				ReportSSRS_Result result;
-				using (var renderer = new ReportSSRS(reportFullPath, reportFileName, reportFullPath, isServerReports, UserContext.Current.PersistentSupport))
+				using (var renderer = new ReportSSRS(reportFullPath, reportExportFileName, reportFullPath, isServerReports, UserContext.Current.PersistentSupport))
 				{
 					// MH (11/10/2017) - Report Server credentials
 					if (Configuration.SSRSServer.ContainsCredentials())
@@ -102,7 +105,7 @@ namespace GenioMVC.Controllers
 
 // USE /[MANUAL GQT OVERRIDE_REPORT 1511]/
 
-				string fileName = "\"" + "comodato." + result.FileNameExtension + "\"";
+				string fileName = "\"" + result.FileName + "." + result.FileNameExtension + "\"";
 				return File(result.File, result.MimeType, fileName);
 			}
 			catch (Exception e)
@@ -304,7 +307,7 @@ namespace GenioMVC.Controllers
 			}
 
 			if (result != null)
-				return JsonOK(new { List = result.List, TotalRows = result.Pagination.TotalRows, Selected = result.Selected, Value = result.Value });
+				return JsonOK(result);
 			return JsonERROR("Not found any valid result");
 		}
 
@@ -361,49 +364,6 @@ namespace GenioMVC.Controllers
 		}
 
 
-		// POST: /Lendi/PTN_3171_Equip_Registnr_ShowWhen
-		[HttpPost]
-		public JsonResult PTN_3171_Equip_Registnr_ShowWhen([FromBody] ViewModels.Lendi.PTN_Menu_3171_ViewModel formData)
-		{
-			try
-			{
-				// Create a model from form data to avoid extra database queries.
-				var p = new Models.Lendi(UserContext.Current);
-
-				// Map client-side form data into the model
-				formData.MapToModel(p);
-
-				// Formula: 1==1
-				var result = 1==1;
-				return JsonOK(result);
-			}
-			catch (Exception ex)
-			{
-				return JsonERROR(ex.Message);
-			}
-		}
-
-		// POST: /Lendi/PTN_3171_Lendi_Ifoutdt__ShowWhen
-		[HttpPost]
-		public JsonResult PTN_3171_Lendi_Ifoutdt__ShowWhen([FromBody] ViewModels.Lendi.PTN_Menu_3171_ViewModel formData)
-		{
-			try
-			{
-				// Create a model from form data to avoid extra database queries.
-				var p = new Models.Lendi(UserContext.Current);
-
-				// Map client-side form data into the model
-				formData.MapToModel(p);
-
-				// Formula: 1==0
-				var result = 1==0;
-				return JsonOK(result);
-			}
-			catch (Exception ex)
-			{
-				return JsonERROR(ex.Message);
-			}
-		}
 
 
 

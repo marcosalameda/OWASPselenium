@@ -387,7 +387,7 @@ public static class TableConfigurationManager
 	/// <param name="uuid">The unique identifier of the table.</param>
 	/// <param name="configName">The name for the new copied configuration.</param>
 	/// <param name="isDefault">Whether the copied configuration should be marked as default.</param>
-	/// <param name="copyFromName">The name of the existing configuration to copy from.</param>
+	/// <param name="copyFromName">The name of the existing configuration to copy from (if not specified, the base configuration will be used).</param>
 	/// <exception cref="BusinessException">
 	/// Thrown when the system is in maintenance mode, when the source configuration is not found,
 	/// or when a configuration with the new name already exists.
@@ -425,7 +425,7 @@ public static class TableConfigurationManager
 			CSGenioAtblcfg userTableConfigToCopy = userTableConfigs.Where(config => config.ValName.Equals(copyFromName)).ToList().FirstOrDefault();
 
 			// If record to copy doesn't exist, throw an exception
-			if (userTableConfigToCopy == null)
+			if (userTableConfigToCopy == null && !string.IsNullOrWhiteSpace(copyFromName))
 				throw new BusinessException(string.Format(Translations.Get("A vista com o nome '{0}' não existe.", user.Language), copyFromName), "CopyConfig", $"Table configuration not found: {copyFromName}.");
 
 			// Check for saved configuration
@@ -437,6 +437,8 @@ public static class TableConfigurationManager
 			if (isDefault == 1)
 				ClearDefaultConfig(user, sp, uuid);
 
+			string config = userTableConfigToCopy?.ValConfig ?? new TableConfiguration().SerializeAsJson();
+
 			// Create new record
 			userTableConfig = new CSGenioAtblcfg(user)
 			{
@@ -444,7 +446,7 @@ public static class TableConfigurationManager
 				ValUuid = uuid,
 				ValName = configName,
 				ValIsdefault = isDefault == 1 ? 1 : 0,
-				ValConfig = userTableConfigToCopy.ValConfig,
+				ValConfig = config,
 				ValDate = DateTime.UtcNow,
 				ValUsrsetv = Configuration.UserSettingsVersion
 			};

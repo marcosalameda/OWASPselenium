@@ -54,6 +54,17 @@ export default class ViewModel extends FormViewModelBase
 		this.stopWatchers.push(watch(() => this.ValCoddeco.value, (newValue, oldValue) => this.onUpdate('decom.coddeco', this.ValCoddeco, newValue, oldValue)))
 
 		/** The remaining form fields. */
+		this.ValDecomnr = reactive(new modelFieldType.Number({
+			id: 'ValDecomnr',
+			originId: 'ValDecomnr',
+			area: 'DECOM',
+			field: 'DECOMNR',
+			maxDigits: 10,
+			decimalDigits: 0,
+			description: computed(() => this.Resources.NO_BATE21045),
+		}).cloneFrom(values?.ValDecomnr))
+		this.stopWatchers.push(watch(() => this.ValDecomnr.value, (newValue, oldValue) => this.onUpdate('decom.decomnr', this.ValDecomnr, newValue, oldValue)))
+
 		this.ValDtdeco = reactive(new modelFieldType.DateTime({
 			id: 'ValDtdeco',
 			originId: 'ValDtdeco',
@@ -75,16 +86,14 @@ export default class ViewModel extends FormViewModelBase
 		}).cloneFrom(values?.ValDtdeco))
 		this.stopWatchers.push(watch(() => this.ValDtdeco.value, (newValue, oldValue) => this.onUpdate('decom.dtdeco', this.ValDtdeco, newValue, oldValue)))
 
-		this.ValDecomnr = reactive(new modelFieldType.Number({
-			id: 'ValDecomnr',
-			originId: 'ValDecomnr',
+		this.ValNote = reactive(new modelFieldType.MultiLineString({
+			id: 'ValNote',
+			originId: 'ValNote',
 			area: 'DECOM',
-			field: 'DECOMNR',
-			maxDigits: 10,
-			decimalDigits: 0,
-			description: computed(() => this.Resources.NO_BATE21045),
-		}).cloneFrom(values?.ValDecomnr))
-		this.stopWatchers.push(watch(() => this.ValDecomnr.value, (newValue, oldValue) => this.onUpdate('decom.decomnr', this.ValDecomnr, newValue, oldValue)))
+			field: 'NOTE',
+			description: computed(() => this.Resources.NOTES05274),
+		}).cloneFrom(values?.ValNote))
+		this.stopWatchers.push(watch(() => this.ValNote.value, (newValue, oldValue) => this.onUpdate('decom.note', this.ValNote, newValue, oldValue)))
 	}
 
 	/**

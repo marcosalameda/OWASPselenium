@@ -9,12 +9,13 @@
 			<div
 				v-if="showFormHeader"
 				class="c-action-bar">
-				<h1
+				<component
 					v-if="formControl.uiComponents.header && formInfo.designation"
+					:is="topHeadingTag"
 					:id="formTitleId"
 					class="form-header">
 					{{ formInfo.designation }}
-				</h1>
+				</component>
 
 				<div class="c-action-bar__menu">
 					<template
@@ -40,13 +41,10 @@
 									@click="btn.action">
 									<template v-if="btn.icon">
 										<q-badge-indicator
-											v-if="btn.badge && btn.badge.isVisible"
-											:color="btn.badge.color">
+											:enabled="btn.badge?.isVisible ?? false"
+											:color="btn.badge?.color">
 											<q-icon v-bind="btn.icon" />
 										</q-badge-indicator>
-										<q-icon
-											v-else
-											v-bind="btn.icon" />
 									</template>
 								</q-toggle-group-item>
 							</template>
@@ -97,6 +95,7 @@
 		<q-container
 			fluid
 			data-key="DSAID"
+			:data-identifier="primaryKeyValue"
 			:data-loading="!formInitialDataLoaded || !isActiveForm">
 			<template v-if="formControl.initialized && showFormBody">
 				<q-row v-if="controls.DSAID___WARE1WAREHDES.isVisible || controls.DSAID___OUTPTDOCUMENR.isVisible">
@@ -106,7 +105,8 @@
 						<base-input-structure
 							v-if="controls.DSAID___WARE1WAREHDES.isVisible"
 							class="i-text"
-							v-bind="controls.DSAID___WARE1WAREHDES"
+							v-bind="controls.DSAID___WARE1WAREHDES.wrapperProps"
+							:id="getControlId(controls.DSAID___WARE1WAREHDES)"
 							v-on="controls.DSAID___WARE1WAREHDES.handlers"
 							:loading="controls.DSAID___WARE1WAREHDES.props.loading"
 							:reporting-mode-on="reportingModeCAV"
@@ -114,6 +114,7 @@
 							<q-lookup
 								v-if="controls.DSAID___WARE1WAREHDES.isVisible"
 								v-bind="controls.DSAID___WARE1WAREHDES.props"
+								:id="getControlId(controls.DSAID___WARE1WAREHDES)"
 								v-on="controls.DSAID___WARE1WAREHDES.handlers" />
 							<q-see-more-dsaid-ware1warehdes
 								v-if="controls.DSAID___WARE1WAREHDES.seeMoreIsVisible"
@@ -127,7 +128,8 @@
 						<base-input-structure
 							v-if="controls.DSAID___OUTPTDOCUMENR.isVisible"
 							class="i-text"
-							v-bind="controls.DSAID___OUTPTDOCUMENR"
+							v-bind="controls.DSAID___OUTPTDOCUMENR.wrapperProps"
+							:id="getControlId(controls.DSAID___OUTPTDOCUMENR)"
 							v-on="controls.DSAID___OUTPTDOCUMENR.handlers"
 							:loading="controls.DSAID___OUTPTDOCUMENR.props.loading"
 							:reporting-mode-on="reportingModeCAV"
@@ -135,6 +137,7 @@
 							<q-numeric-input
 								v-if="controls.DSAID___OUTPTDOCUMENR.isVisible"
 								v-bind="controls.DSAID___OUTPTDOCUMENR.props"
+								:id="getControlId(controls.DSAID___OUTPTDOCUMENR)"
 								@update:model-value="model.ValDocumenr.fnUpdateValue" />
 						</base-input-structure>
 					</q-col>
@@ -146,12 +149,24 @@
 						<q-table
 							v-if="controls.DSAID___PSEUDSAIDAS__.isVisible"
 							v-bind="controls.DSAID___PSEUDSAIDAS__"
+							:id="getControlId(controls.DSAID___PSEUDSAIDAS__)"
 							v-on="controls.DSAID___PSEUDSAIDAS__.handlers">
-						<q-table-extra-extension
-							v-if="controls.DSAID___PSEUDSAIDAS__.isVisible"
-							:list-ctrl="controls.DSAID___PSEUDSAIDAS__"
-							:filter-operators="controls.DSAID___PSEUDSAIDAS__.filterOperators"
-							v-on="controls.DSAID___PSEUDSAIDAS__.handlers" />
+							<template #header>
+								<q-table-config
+									:table-ctrl="controls.DSAID___PSEUDSAIDAS__"
+									v-on="controls.DSAID___PSEUDSAIDAS__.handlers" />
+							</template>
+							<template
+								v-if="controls.DSAID___PSEUDSAIDAS__.config.hasRowDragAndDrop"
+								#[controls.DSAID___PSEUDSAIDAS__.config.defaultColumnSorting.columnName]="{ cellValue, column, row }">
+								<q-edit-numeric
+									:value="cellValue"
+									:table-name="controls.DSAID___PSEUDSAIDAS__.config.name"
+									:column-name="column.name"
+									:row-index="row.rowKey"
+									:options="column"
+									@update="controls.DSAID___PSEUDSAIDAS__.onTableListRowReorder({ rowKey: row.rowKey, index: $event - 1 })" />
+							</template>
 							<!-- USE /[MANUAL GQT CUSTOM_TABLE DSAID___PSEUDSAIDAS__]/ -->
 						</q-table>
 					</q-col>
@@ -163,7 +178,8 @@
 						<base-input-structure
 							v-if="controls.DSAID___PSEUDSAIDA___.isVisible"
 							class="i-button"
-							v-bind="controls.DSAID___PSEUDSAIDA___"
+							v-bind="controls.DSAID___PSEUDSAIDA___.wrapperProps"
+							:id="getControlId(controls.DSAID___PSEUDSAIDA___)"
 							v-on="controls.DSAID___PSEUDSAIDA___.handlers"
 							:loading="controls.DSAID___PSEUDSAIDA___.props.loading"
 							:reporting-mode-on="reportingModeCAV"
@@ -171,6 +187,7 @@
 							<q-button
 								v-if="controls.DSAID___PSEUDSAIDA___.isVisible"
 								v-bind="controls.DSAID___PSEUDSAIDA___.props"
+								:id="getControlId(controls.DSAID___PSEUDSAIDA___)"
 								@click="controls.DSAID___PSEUDSAIDA___.action($event)">
 								<q-icon v-bind="controls.DSAID___PSEUDSAIDA___.icon" />
 							</q-button>
@@ -181,7 +198,7 @@
 		</q-container>
 	</teleport>
 
-	<hr v-if="!isPopup && showFormFooter" />
+	<q-divider v-if="!isPopup && showFormFooter" />
 
 	<teleport
 		v-if="formModalIsReady && showFormFooter"
@@ -588,10 +605,11 @@
 					DSAID___PSEUDSAIDAS__: new fieldControlClass.TableListControl({
 						id: 'DSAID___PSEUDSAIDAS__',
 						name: 'SAIDAS',
-						size: '',
+						size: 'xxlarge',
 						label: computed(() => this.Resources.OUTPUT_10769),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
+						headerLevel: computed(() => this.baseHeadingLevel + 1),
 						controller: 'OUTPT',
 						action: 'Dsaid_ValSaidas',
 						hasDependencies: false,
@@ -606,6 +624,7 @@
 								scrollData: 5,
 								maxDigits: 3,
 								decimalPlaces: 1,
+								export: 1,
 								sortOrder: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
@@ -616,6 +635,7 @@
 								label: computed(() => this.Resources.ARTICLE60065),
 								dataLength: 85,
 								scrollData: 50,
+								export: 1,
 								pkColumn: 'ValCoditem',
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
@@ -626,6 +646,7 @@
 								label: computed(() => this.Resources.CODE49225),
 								dataLength: 15,
 								scrollData: 15,
+								export: 1,
 								pkColumn: 'ValCoditem',
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.NumericColumn({
@@ -637,6 +658,7 @@
 								scrollData: 10,
 								maxDigits: 10,
 								decimalPlaces: 0,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 5,
@@ -647,7 +669,6 @@
 								dataLength: 85,
 								scrollData: 30,
 								supportForm: 'ARMAZPOP',
-								supportFormIsPopup: true,
 								params: {
 									type: 'form',
 									isRoute: true,
@@ -655,6 +676,7 @@
 									mode: 'SHOW'
 								},
 								cellAction: true,
+								export: 1,
 								pkColumn: 'ValCodwareh',
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 						],
@@ -679,7 +701,6 @@
 							searchBarConfig: {
 								visibility: true
 							},
-							filtersVisible: true,
 							allowColumnFilters: true,
 							allowColumnSort: true,
 							crudActions: [
@@ -743,7 +764,7 @@
 								sortOrder: 'asc'
 							}
 						},
-						globalEvents: ['changed-ITEM', 'changed-OUTPU', 'changed-OUTPT', 'changed-OUDOC', 'changed-WAREH'],
+						globalEvents: ['changed-ITEM', 'changed-OUDOC', 'changed-WAREH', 'changed-OUTPU', 'changed-OUTPT'],
 						uuid: 'Dsaid_ValSaidas',
 						allSelectedRows: 'false',
 						controlLimits: [
@@ -763,7 +784,7 @@
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						icon: {
-							icon: computed(() => `${this.$app.resourcesPath}ok.ico?v=3090`),
+							icon: computed(() => `${this.$app.resourcesPath}ok.ico?v=2827`),
 							type: 'img',
 							role: 'presentation',
 						},
@@ -1174,7 +1195,6 @@
 
 				this.afterControlUpdate(controlField, fieldValue)
 			},
-
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
 // USE /[MANUAL GQT FUNCTIONS_JS DSAID]/
 // eslint-disable-next-line

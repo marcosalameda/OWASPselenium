@@ -197,5 +197,15 @@ namespace GenioServer.security
                 IdProperty = GenioIdentityType.InternalId
             };
         }
+
+        public override CredentialSecret NewCredentialCreate(string username, string originalChallenge, string assertion)
+        {
+            PasswordSecret credentialSecret = new PasswordSecret();
+            credentialSecret.Username = username;
+            credentialSecret.OldPass = originalChallenge;
+            credentialSecret.NewPass = assertion;
+            credentialSecret.ConfirmPass = assertion;
+            return credentialSecret;
+        }
     }
 }

@@ -48,7 +48,6 @@ namespace CSGenio.business
 			Qfield.FieldDescription = "";
 			Qfield.FieldSize =  36;
 			Qfield.VisivelCav = CavVisibilityType.Nunca;
-			Qfield.CavDesignation = "";
 
 			Qfield.Dupmsg = "";
 			info.RegisterFieldDB(Qfield);
@@ -69,7 +68,6 @@ namespace CSGenio.business
 			Qfield.FieldSize =  3;
 			Qfield.Decimals = 1;
 			Qfield.VisivelCav = CavVisibilityType.Nunca;
-			Qfield.CavDesignation = "IMAGE65174";
 
 			Qfield.Dupmsg = "";
 			info.RegisterFieldDB(Qfield);

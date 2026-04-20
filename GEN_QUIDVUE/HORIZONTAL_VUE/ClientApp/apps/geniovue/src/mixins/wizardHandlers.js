@@ -53,7 +53,7 @@ export default {
 		 */
 		currentStepIndex()
 		{
-			for (let stepData of this.wizardData.stepList)
+			for (const stepData of this.wizardData.stepList)
 				if (stepData.route === this.currentStepRoute)
 					return stepData.order
 			return -1
@@ -260,7 +260,7 @@ export default {
 							return
 						}
 
-						let wizardPath = [...this.wizardPath]
+						const wizardPath = [...this.wizardPath]
 						if (this.isEditable && this.selectedStep.route === this.currentStepRoute)
 							wizardPath.push(data.Route)
 

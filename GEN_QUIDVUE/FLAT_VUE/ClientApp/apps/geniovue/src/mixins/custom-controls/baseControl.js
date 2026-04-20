@@ -41,7 +41,7 @@ export default class CustomControl
 
 		const viewMode = this.controlContext.viewModes[this.controlOrder - 1]
 		const prevHandler = viewMode.handlers[id]
-		var behaviorFunc = behavior
+		let behaviorFunc = behavior
 
 		if (!rewrite && typeof prevHandler === 'function')
 		{
@@ -75,7 +75,7 @@ export default class CustomControl
 	 */
 	setGenericCustomProps(viewMode)
 	{
-		for (let i in this.customProperties)
+		for (const i in this.customProperties)
 			viewMode[i] = this.customProperties[i]
 	}
 

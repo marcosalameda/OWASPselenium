@@ -1,20 +1,20 @@
-﻿using JsonIgnoreAttribute = System.Text.Json.Serialization.JsonIgnoreAttribute;
+﻿using CSGenio.business;
+using CSGenio.framework;
+using CSGenio.persistence;
+using GenioMVC.Helpers;
+using GenioMVC.Models.Exception;
+using GenioMVC.Models.Navigation;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Quidgest.Persistence;
+using Quidgest.Persistence.GenericQuery;
+
 using System.Collections;
 using System.Collections.Concurrent;
 using System.Collections.Specialized;
 using System.ComponentModel.DataAnnotations;
 using System.Data;
 using System.Globalization;
-
-using CSGenio.business;
-using CSGenio.framework;
-using CSGenio.persistence;
-using GenioMVC.Helpers;
-using GenioMVC.Models.Exception;
-using GenioMVC.Models.Navigation;
-using Quidgest.Persistence;
-using Quidgest.Persistence.GenericQuery;
+using System.Text.Json.Serialization;
 
 namespace GenioMVC.ViewModels.City
 {
@@ -36,6 +36,7 @@ namespace GenioMVC.ViewModels.City
 		public string ValCodctry { get; set; }
 
 		#endregion
+
 		/// <summary>
 		/// Title: "Cidade" | Type: "C"
 		/// </summary>
@@ -45,8 +46,6 @@ namespace GenioMVC.ViewModels.City
 		/// </summary>
 		[ValidateSetAccess]
 		public TableDBEdit<GenioMVC.Models.Ctry> TableCtryCountry { get; set; }
-
-
 
 		#region Navigations
 		#endregion
@@ -217,12 +216,7 @@ namespace GenioMVC.ViewModels.City
 			}
 		}
 
-		/// <summary>
-		/// Sets the value of a single property of the view model based on the provided table and field names.
-		/// </summary>
-		/// <param name="fullFieldName">The full field name in the format "table.field".</param>
-		/// <param name="value">The field value.</param>
-		/// <exception cref="ArgumentNullException">Thrown if <paramref name="fullFieldName"/> is null.</exception>
+		/// <inheritdoc />
 		public override void SetViewModelValue(string fullFieldName, object value)
 		{
 			try
@@ -350,6 +344,7 @@ namespace GenioMVC.ViewModels.City
 			Characs = new List<string>();
 
 			Load_City03__ctry_country_(qs, lazyLoad);
+
 // USE /[MANUAL GQT VIEWMODEL_LOADPARTIAL CITY03]/
 		}
 
@@ -420,10 +415,7 @@ namespace GenioMVC.ViewModels.City
 				}
 			}
 
-			TableCtryCountry = new TableDBEdit<Models.Ctry>
-			{
-				IsLazyLoad = lazyLoad
-			};
+			TableCtryCountry = new TableDBEdit<Models.Ctry>();
 
 			if (lazyLoad)
 			{
@@ -467,7 +459,7 @@ namespace GenioMVC.ViewModels.City
 				int numberItems = CSGenio.framework.Configuration.NrRegDBedit;
 				int offset = (page - 1) * numberItems;
 
-				FieldRef[] fields = new FieldRef[] { CSGenioActry.FldCodctry, CSGenioActry.FldCountry, CSGenioActry.FldZzstate };
+				FieldRef[] fields = [CSGenioActry.FldCodctry, CSGenioActry.FldCountry, CSGenioActry.FldZzstate];
 
 // USE /[MANUAL GQT OVERRQ CITY03_CTRYCOUNTRY]/
 

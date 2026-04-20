@@ -9,12 +9,13 @@
 			<div
 				v-if="showFormHeader"
 				class="c-action-bar">
-				<h1
+				<component
 					v-if="formControl.uiComponents.header && formInfo.designation"
+					:is="topHeadingTag"
 					:id="formTitleId"
 					class="form-header">
 					{{ formInfo.designation }}
-				</h1>
+				</component>
 
 				<div class="c-action-bar__menu">
 					<template
@@ -40,13 +41,10 @@
 									@click="btn.action">
 									<template v-if="btn.icon">
 										<q-badge-indicator
-											v-if="btn.badge && btn.badge.isVisible"
-											:color="btn.badge.color">
+											:enabled="btn.badge?.isVisible ?? false"
+											:color="btn.badge?.color">
 											<q-icon v-bind="btn.icon" />
 										</q-badge-indicator>
-										<q-icon
-											v-else
-											v-bind="btn.icon" />
 									</template>
 								</q-toggle-group-item>
 							</template>
@@ -97,6 +95,7 @@
 		<q-container
 			fluid
 			data-key="LDENTNOR"
+			:data-identifier="primaryKeyValue"
 			:data-loading="!formInitialDataLoaded || !isActiveForm">
 			<template v-if="formControl.initialized && showFormBody">
 				<q-row v-if="controls.LDENTNORWAREHWAREHDES.isVisible || controls.LDENTNORLDENTLINE____.isVisible || controls.LDENTNORITEM_ITEMDES_.isVisible || controls.LDENTNORLDENTQTDENTRA.isVisible">
@@ -106,7 +105,8 @@
 						<base-input-structure
 							v-if="controls.LDENTNORWAREHWAREHDES.isVisible"
 							class="i-text"
-							v-bind="controls.LDENTNORWAREHWAREHDES"
+							v-bind="controls.LDENTNORWAREHWAREHDES.wrapperProps"
+							:id="getControlId(controls.LDENTNORWAREHWAREHDES)"
 							v-on="controls.LDENTNORWAREHWAREHDES.handlers"
 							:loading="controls.LDENTNORWAREHWAREHDES.props.loading"
 							:reporting-mode-on="reportingModeCAV"
@@ -114,6 +114,7 @@
 							<q-lookup
 								v-if="controls.LDENTNORWAREHWAREHDES.isVisible"
 								v-bind="controls.LDENTNORWAREHWAREHDES.props"
+								:id="getControlId(controls.LDENTNORWAREHWAREHDES)"
 								v-on="controls.LDENTNORWAREHWAREHDES.handlers" />
 							<q-see-more-ldentnorwarehwarehdes
 								v-if="controls.LDENTNORWAREHWAREHDES.seeMoreIsVisible"
@@ -127,7 +128,8 @@
 						<base-input-structure
 							v-if="controls.LDENTNORLDENTLINE____.isVisible"
 							class="i-text"
-							v-bind="controls.LDENTNORLDENTLINE____"
+							v-bind="controls.LDENTNORLDENTLINE____.wrapperProps"
+							:id="getControlId(controls.LDENTNORLDENTLINE____)"
 							v-on="controls.LDENTNORLDENTLINE____.handlers"
 							:loading="controls.LDENTNORLDENTLINE____.props.loading"
 							:reporting-mode-on="reportingModeCAV"
@@ -135,6 +137,7 @@
 							<q-numeric-input
 								v-if="controls.LDENTNORLDENTLINE____.isVisible"
 								v-bind="controls.LDENTNORLDENTLINE____.props"
+								:id="getControlId(controls.LDENTNORLDENTLINE____)"
 								@update:model-value="model.ValLine.fnUpdateValue" />
 						</base-input-structure>
 					</q-col>
@@ -144,7 +147,8 @@
 						<base-input-structure
 							v-if="controls.LDENTNORITEM_ITEMDES_.isVisible"
 							class="i-text"
-							v-bind="controls.LDENTNORITEM_ITEMDES_"
+							v-bind="controls.LDENTNORITEM_ITEMDES_.wrapperProps"
+							:id="getControlId(controls.LDENTNORITEM_ITEMDES_)"
 							v-on="controls.LDENTNORITEM_ITEMDES_.handlers"
 							:loading="controls.LDENTNORITEM_ITEMDES_.props.loading"
 							:reporting-mode-on="reportingModeCAV"
@@ -152,6 +156,7 @@
 							<q-lookup
 								v-if="controls.LDENTNORITEM_ITEMDES_.isVisible"
 								v-bind="controls.LDENTNORITEM_ITEMDES_.props"
+								:id="getControlId(controls.LDENTNORITEM_ITEMDES_)"
 								v-on="controls.LDENTNORITEM_ITEMDES_.handlers" />
 							<q-see-more-ldentnoritem-itemdes
 								v-if="controls.LDENTNORITEM_ITEMDES_.seeMoreIsVisible"
@@ -165,7 +170,8 @@
 						<base-input-structure
 							v-if="controls.LDENTNORLDENTQTDENTRA.isVisible"
 							class="i-text"
-							v-bind="controls.LDENTNORLDENTQTDENTRA"
+							v-bind="controls.LDENTNORLDENTQTDENTRA.wrapperProps"
+							:id="getControlId(controls.LDENTNORLDENTQTDENTRA)"
 							v-on="controls.LDENTNORLDENTQTDENTRA.handlers"
 							:loading="controls.LDENTNORLDENTQTDENTRA.props.loading"
 							:reporting-mode-on="reportingModeCAV"
@@ -173,6 +179,7 @@
 							<q-numeric-input
 								v-if="controls.LDENTNORLDENTQTDENTRA.isVisible"
 								v-bind="controls.LDENTNORLDENTQTDENTRA.props"
+								:id="getControlId(controls.LDENTNORLDENTQTDENTRA)"
 								@update:model-value="model.ValQtdentra.fnUpdateValue" />
 						</base-input-structure>
 					</q-col>
@@ -181,7 +188,7 @@
 		</q-container>
 	</teleport>
 
-	<hr v-if="!isPopup && showFormFooter" />
+	<q-divider v-if="!isPopup && showFormFooter" />
 
 	<teleport
 		v-if="formModalIsReady && showFormFooter"
@@ -1019,7 +1026,6 @@
 
 				this.afterControlUpdate(controlField, fieldValue)
 			},
-
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
 // USE /[MANUAL GQT FUNCTIONS_JS LDENTNOR]/
 // eslint-disable-next-line

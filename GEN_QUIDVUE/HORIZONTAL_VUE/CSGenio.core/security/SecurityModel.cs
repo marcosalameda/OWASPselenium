@@ -8,15 +8,15 @@ namespace GenioServer.security
     /// Autentication mode when multiple identity providers are used
     /// </summary>
     public enum AuthenticationMode
-    {
-        /// <summary>
-        /// The user must be valid with all the providers configured
-        /// </summary>
-        RejectOnFirstFail,
+    {        
         /// <summary>
         /// The user must be valid in at least one of the providers configured
         /// </summary>
-        AcceptOnFirstSucess
+        AcceptOnFirstSucess,
+        /// <summary>
+        /// The users will have a specific login button per provider configured
+        /// </summary>
+        OneButtonPerProvider
     }
 
     public enum MultiSessionMode

@@ -2,8 +2,9 @@
 import type {
 	Icon,
 	DialogButton,
+	QDialogHandlers,
 	QDialogOptions,
-	QDialogInputOption,
+	QDialogProps,
 	QButtonVariant
 } from '@quidgest/ui/components'
 
@@ -47,24 +48,6 @@ interface IconDataConfig {
 }
 
 /**
- * Props interface for the dialog component
- */
-export interface MessageBoxProps {
-	/** The dialog title */
-	title: string
-	/** The main message text */
-	text: string
-	/** Icon configuration */
-	icon: Icon
-	/** Array of configured buttons */
-	buttons: DialogButton[]
-	/** Configuration of input control */
-	input?: QDialogInputOption
-	/** Whether the dialog can be dismissed by clicking outside or pressing ESC */
-	dismissible: boolean
-}
-
-/**
  * A utility class for creating standardized message dialog boxes with customizable
  * buttons, icons, and behavior. Provides a consistent interface for displaying
  * information, confirmations, warnings, and error messages to users.
@@ -102,6 +85,9 @@ export default class MessageBox {
 	/** Additional dialog configuration options */
 	public readonly options: QDialogOptions
 
+	/** Event handlers */
+	public readonly handlers: QDialogHandlers
+
 	/**
 	 * Predefined icon configurations for standard message types
 	 */
@@ -132,6 +118,8 @@ export default class MessageBox {
 	 * Default dialog options applied when none are specified
 	 */
 	private static readonly DEFAULT_OPTIONS: Partial<QDialogOptions> = {
+		size: 'small',
+		dismissible: true,
 		input: undefined
 	}
 
@@ -143,6 +131,7 @@ export default class MessageBox {
 	 * @param title - The dialog title (defaults to empty string)
 	 * @param buttons - Configuration for dialog buttons (defaults to single OK button)
 	 * @param options - Additional dialog options (optional)
+	 * @param handlers Event handlers (optional)
 	 *
 	 * @throws {Error} When required parameters are missing or invalid
 	 */
@@ -151,7 +140,8 @@ export default class MessageBox {
 		icon: MessageBoxIconType | string = 'info',
 		title: string = '',
 		buttons: MessageBoxButtons = {},
-		options: QDialogOptions = {}
+		options: QDialogOptions = {},
+		handlers: QDialogHandlers = {}
 	) {
 		// Validate required parameters
 		if (!text || typeof text !== 'string') {
@@ -172,6 +162,9 @@ export default class MessageBox {
 
 		// Convert and validate buttons
 		this.buttons = this.configureButtons(buttons)
+
+		// Set event handlers
+		this.handlers = handlers
 	}
 
 	/**
@@ -285,14 +278,16 @@ export default class MessageBox {
 	 *
 	 * @returns Props object for dialog component
 	 */
-	public get props(): MessageBoxProps {
+	public get props(): QDialogProps {
 		return {
 			title: this.title,
 			text: this.text,
 			icon: this.icon,
 			buttons: this.buttons,
+			size: this.options.size,
+			dismissible: this.options.dismissible,
 			input: this.options.input,
-			dismissible: true
+			class: 'q-dialog-message'
 		}
 	}
 

@@ -9,12 +9,13 @@
 			<div
 				v-if="showFormHeader"
 				class="c-action-bar">
-				<h1
+				<component
 					v-if="formControl.uiComponents.header && formInfo.designation"
+					:is="topHeadingTag"
 					:id="formTitleId"
 					class="form-header">
 					{{ formInfo.designation }}
-				</h1>
+				</component>
 
 				<div class="c-action-bar__menu">
 					<template
@@ -40,13 +41,10 @@
 									@click="btn.action">
 									<template v-if="btn.icon">
 										<q-badge-indicator
-											v-if="btn.badge && btn.badge.isVisible"
-											:color="btn.badge.color">
+											:enabled="btn.badge?.isVisible ?? false"
+											:color="btn.badge?.color">
 											<q-icon v-bind="btn.icon" />
 										</q-badge-indicator>
-										<q-icon
-											v-else
-											v-bind="btn.icon" />
 									</template>
 								</q-toggle-group-item>
 							</template>
@@ -97,6 +95,7 @@
 		<q-container
 			fluid
 			data-key="GRPB"
+			:data-identifier="primaryKeyValue"
 			:data-loading="!formInitialDataLoaded || !isActiveForm">
 			<template v-if="formControl.initialized && showFormBody">
 				<q-row v-if="controls.GRPB____GRPB_NAME____.isVisible">
@@ -106,13 +105,15 @@
 						<base-input-structure
 							v-if="controls.GRPB____GRPB_NAME____.isVisible"
 							class="i-text"
-							v-bind="controls.GRPB____GRPB_NAME____"
+							v-bind="controls.GRPB____GRPB_NAME____.wrapperProps"
+							:id="getControlId(controls.GRPB____GRPB_NAME____)"
 							v-on="controls.GRPB____GRPB_NAME____.handlers"
 							:loading="controls.GRPB____GRPB_NAME____.props.loading"
 							:reporting-mode-on="reportingModeCAV"
 							:suggestion-mode-on="suggestionModeOn">
 							<q-text-field
 								v-bind="controls.GRPB____GRPB_NAME____.props"
+								:id="getControlId(controls.GRPB____GRPB_NAME____)"
 								@blur="onBlur(controls.GRPB____GRPB_NAME____, model.ValName.value)"
 								@change="model.ValName.fnUpdateValueOnChange" />
 						</base-input-structure>
@@ -125,6 +126,7 @@
 						<q-grid-table-list
 							v-if="controls.GRPB____PSEUDTBLB____.isVisible"
 							v-bind="controls.GRPB____PSEUDTBLB____"
+							:id="getControlId(controls.GRPB____PSEUDTBLB____)"
 							v-on="controls.GRPB____PSEUDTBLB____.handlers" />
 					</q-col>
 				</q-row>
@@ -132,7 +134,7 @@
 		</q-container>
 	</teleport>
 
-	<hr v-if="!isPopup && showFormFooter" />
+	<q-divider v-if="!isPopup && showFormFooter" />
 
 	<teleport
 		v-if="formModalIsReady && showFormFooter"
@@ -490,7 +492,7 @@
 					GRPB____PSEUDTBLB____: new fieldControlClass.GridTableListControl({
 						id: 'GRPB____PSEUDTBLB____',
 						name: 'TBLB',
-						size: '',
+						size: 'xxlarge',
 						label: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
@@ -498,6 +500,7 @@
 						action: 'Grpb_ValTblb',
 						modelField: 'ValTblb',
 						component: 'q-grid-form-grpb-pseudtblb',
+						headerLevel: computed(() => this.baseHeadingLevel + 1),
 						permissions: {
 						},
 						columns: [
@@ -624,7 +627,6 @@
 								scrollData: 10,
 								export: 1,
 								array: computed(() => new qProjArrays.QArrayTypet(vm.$getResource).elements),
-								arrayType: qProjArrays.QArrayTypet.type,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.ArrayColumn({
 								order: 13,
@@ -637,7 +639,6 @@
 								decimalPlaces: 0,
 								export: 1,
 								array: computed(() => new qProjArrays.QArrayTypen(vm.$getResource).elements),
-								arrayType: qProjArrays.QArrayTypen.type,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 						],
 						controlLimits: [
@@ -1024,7 +1025,6 @@
 
 				this.afterControlUpdate(controlField, fieldValue)
 			},
-
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
 // USE /[MANUAL GQT FUNCTIONS_JS GRPB]/
 // eslint-disable-next-line

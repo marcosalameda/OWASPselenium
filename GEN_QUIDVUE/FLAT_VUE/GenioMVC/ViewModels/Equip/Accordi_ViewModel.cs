@@ -1,20 +1,20 @@
-﻿using JsonIgnoreAttribute = System.Text.Json.Serialization.JsonIgnoreAttribute;
+﻿using CSGenio.business;
+using CSGenio.framework;
+using CSGenio.persistence;
+using GenioMVC.Helpers;
+using GenioMVC.Models.Exception;
+using GenioMVC.Models.Navigation;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Quidgest.Persistence;
+using Quidgest.Persistence.GenericQuery;
+
 using System.Collections;
 using System.Collections.Concurrent;
 using System.Collections.Specialized;
 using System.ComponentModel.DataAnnotations;
 using System.Data;
 using System.Globalization;
-
-using CSGenio.business;
-using CSGenio.framework;
-using CSGenio.persistence;
-using GenioMVC.Helpers;
-using GenioMVC.Models.Exception;
-using GenioMVC.Models.Navigation;
-using Quidgest.Persistence;
-using Quidgest.Persistence.GenericQuery;
+using System.Text.Json.Serialization;
 
 namespace GenioMVC.ViewModels.Equip
 {
@@ -65,6 +65,7 @@ namespace GenioMVC.ViewModels.Equip
 		public string ValCodwareh { get; set; }
 
 		#endregion
+
 		/// <summary>
 		/// Title: "Company:" | Type: "C"
 		/// </summary>
@@ -84,8 +85,6 @@ namespace GenioMVC.ViewModels.Equip
 		/// </summary>
 		[ImageThumbnailJsonConverter(100, 50)]
 		public GenioMVC.Models.ImageModel ValPhotogra { get; set; }
-
-
 
 		#region Navigations
 		#endregion
@@ -285,12 +284,7 @@ namespace GenioMVC.ViewModels.Equip
 			}
 		}
 
-		/// <summary>
-		/// Sets the value of a single property of the view model based on the provided table and field names.
-		/// </summary>
-		/// <param name="fullFieldName">The full field name in the format "table.field".</param>
-		/// <param name="value">The field value.</param>
-		/// <exception cref="ArgumentNullException">Thrown if <paramref name="fullFieldName"/> is null.</exception>
+		/// <inheritdoc />
 		public override void SetViewModelValue(string fullFieldName, object value)
 		{
 			try
@@ -425,6 +419,7 @@ namespace GenioMVC.ViewModels.Equip
 
 			Load_Accordi_cmpnydesignat(qs, lazyLoad);
 			Load_Accordi_pess1name____(qs, lazyLoad);
+
 // USE /[MANUAL GQT VIEWMODEL_LOADPARTIAL ACCORDI]/
 		}
 
@@ -494,10 +489,7 @@ namespace GenioMVC.ViewModels.Equip
 				}
 			}
 
-			TableCmpnyDesignat = new TableDBEdit<Models.Cmpny>
-			{
-				IsLazyLoad = lazyLoad
-			};
+			TableCmpnyDesignat = new TableDBEdit<Models.Cmpny>();
 
 			if (lazyLoad)
 			{
@@ -541,7 +533,7 @@ namespace GenioMVC.ViewModels.Equip
 				int numberItems = CSGenio.framework.Configuration.NrRegDBedit;
 				int offset = (page - 1) * numberItems;
 
-				FieldRef[] fields = new FieldRef[] { CSGenioAcmpny.FldCodempre, CSGenioAcmpny.FldDesignat, CSGenioAcmpny.FldZzstate };
+				FieldRef[] fields = [CSGenioAcmpny.FldCodempre, CSGenioAcmpny.FldDesignat, CSGenioAcmpny.FldZzstate];
 
 // USE /[MANUAL GQT OVERRQ ACCORDI_CMPNYDESIGNAT]/
 
@@ -688,10 +680,7 @@ namespace GenioMVC.ViewModels.Equip
 			// Area limit
 			accordi_pess1name____DoLoad &= AddCriteriaAreaLimit(accordi_pess1name____Conds, CSGenio.business.CSGenioAcmpny.FldCodempre, "cmpny", this.ValCodempre, true);
 
-			TablePess1Name = new TableDBEdit<Models.Pess1>
-			{
-				IsLazyLoad = lazyLoad
-			};
+			TablePess1Name = new TableDBEdit<Models.Pess1>();
 
 			if (lazyLoad)
 			{
@@ -743,22 +732,6 @@ namespace GenioMVC.ViewModels.Equip
 					weakFilters.Equal(CSGenioApess1.FldCodpesso, selectedValue);
 
 				CriteriaSet subfilters = CriteriaSet.And();
-				if (Navigation.CheckKey("filter_ValCodpess1_FILTER1_1") && (bool)Navigation.GetValue("filter_ValCodpess1_FILTER1_1") == true)
-				{
-						subfilters.Equal(CSGenioApess1.FldGender, "F");
-
-				}
-				else
-					Navigation.SetValue("filter_ValCodpess1_FILTER1_1", false);
-
-				if (Navigation.CheckKey("filter_ValCodpess1_FILTER2_1") && (bool)Navigation.GetValue("filter_ValCodpess1_FILTER2_1") == true)
-				{
-						subfilters.Equal(CSGenioApess1.FldGender, "M");
-
-				}
-				else
-					Navigation.SetValue("filter_ValCodpess1_FILTER2_1", false);
-
 				weakFilters.SubSets.Add(subfilters);
 				accordi_pess1name____Conds.SubSets.Add(weakFilters);
 
@@ -767,7 +740,7 @@ namespace GenioMVC.ViewModels.Equip
 				int numberItems = CSGenio.framework.Configuration.NrRegDBedit;
 				int offset = (page - 1) * numberItems;
 
-				FieldRef[] fields = new FieldRef[] { CSGenioApess1.FldCodpesso, CSGenioApess1.FldName, CSGenioApess1.FldZzstate };
+				FieldRef[] fields = [CSGenioApess1.FldCodpesso, CSGenioApess1.FldName, CSGenioApess1.FldZzstate];
 
 // USE /[MANUAL GQT OVERRQ ACCORDI_PESS1NAME]/
 
@@ -924,34 +897,10 @@ namespace GenioMVC.ViewModels.Equip
 
 			{
 				var groupFilters = CriteriaSet.Or();
-				bool filter_Accordi_Pess1ValName_FILTER1_1 = false;
-				if (requestValues["filter_Accordi_Pess1ValName_FILTER1"] != null)
-					filter_Accordi_Pess1ValName_FILTER1_1 = requestValues["filter_Accordi_Pess1ValName_FILTER1"].Contains("1");
-				else if (Navigation.CheckKey("filter_Accordi_Pess1ValName_FILTER1_1"))
-					filter_Accordi_Pess1ValName_FILTER1_1 = (bool)Navigation.GetValue("filter_Accordi_Pess1ValName_FILTER1_1");
-				Navigation.SetValue("filter_Accordi_Pess1ValName_FILTER1_1", filter_Accordi_Pess1ValName_FILTER1_1);
-				if (filter_Accordi_Pess1ValName_FILTER1_1)
-				{
-					groupFilters.Equal(CSGenioApess1.FldGender, "F");
-
-				}
-
 				subfilters.SubSets.Add(groupFilters);
 			}
 			{
 				var groupFilters = CriteriaSet.Or();
-				bool filter_Accordi_Pess1ValName_FILTER2_1 = false;
-				if (requestValues["filter_Accordi_Pess1ValName_FILTER2"] != null)
-					filter_Accordi_Pess1ValName_FILTER2_1 = requestValues["filter_Accordi_Pess1ValName_FILTER2"].Contains("1");
-				else if (Navigation.CheckKey("filter_Accordi_Pess1ValName_FILTER2_1"))
-					filter_Accordi_Pess1ValName_FILTER2_1 = (bool)Navigation.GetValue("filter_Accordi_Pess1ValName_FILTER2_1");
-				Navigation.SetValue("filter_Accordi_Pess1ValName_FILTER2_1", filter_Accordi_Pess1ValName_FILTER2_1);
-				if (filter_Accordi_Pess1ValName_FILTER2_1)
-				{
-					groupFilters.Equal(CSGenioApess1.FldGender, "M");
-
-				}
-
 				subfilters.SubSets.Add(groupFilters);
 			}
 

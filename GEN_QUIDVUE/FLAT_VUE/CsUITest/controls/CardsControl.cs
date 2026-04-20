@@ -78,7 +78,7 @@ public class CardsControl: ControlObject
         WaitForLoading();        
         var card = GetCardByIndex(index); 
         //TODO: instead of title it should be data-key=action
-        var button = card.FindElement(By.CssSelector($"[data-testid=table-action][data-action-key={action}]"));
+        var button = card.FindElement(By.CssSelector($"[data-key={action}]"));
 
         button.Click();
     }

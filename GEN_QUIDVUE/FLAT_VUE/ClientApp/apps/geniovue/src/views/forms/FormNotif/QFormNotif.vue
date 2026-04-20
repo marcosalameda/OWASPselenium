@@ -9,12 +9,13 @@
 			<div
 				v-if="showFormHeader"
 				class="c-action-bar">
-				<h1
+				<component
 					v-if="formControl.uiComponents.header && formInfo.designation"
+					:is="topHeadingTag"
 					:id="formTitleId"
 					class="form-header">
 					{{ formInfo.designation }}
-				</h1>
+				</component>
 
 				<div class="c-action-bar__menu">
 					<template
@@ -40,13 +41,10 @@
 									@click="btn.action">
 									<template v-if="btn.icon">
 										<q-badge-indicator
-											v-if="btn.badge && btn.badge.isVisible"
-											:color="btn.badge.color">
+											:enabled="btn.badge?.isVisible ?? false"
+											:color="btn.badge?.color">
 											<q-icon v-bind="btn.icon" />
 										</q-badge-indicator>
-										<q-icon
-											v-else
-											v-bind="btn.icon" />
 									</template>
 								</q-toggle-group-item>
 							</template>
@@ -97,6 +95,7 @@
 		<q-container
 			fluid
 			data-key="NOTIF"
+			:data-identifier="primaryKeyValue"
 			:data-loading="!formInitialDataLoaded || !isActiveForm">
 			<template v-if="formControl.initialized && showFormBody">
 				<q-row v-if="controls.NOTIF___NOTIFNRCOMODA.isVisible || controls.NOTIF___NOTIFBEGIN___.isVisible || controls.NOTIF___NOTIFEND_____.isVisible">
@@ -106,7 +105,8 @@
 						<base-input-structure
 							v-if="controls.NOTIF___NOTIFNRCOMODA.isVisible"
 							class="i-text"
-							v-bind="controls.NOTIF___NOTIFNRCOMODA"
+							v-bind="controls.NOTIF___NOTIFNRCOMODA.wrapperProps"
+							:id="getControlId(controls.NOTIF___NOTIFNRCOMODA)"
 							v-on="controls.NOTIF___NOTIFNRCOMODA.handlers"
 							:loading="controls.NOTIF___NOTIFNRCOMODA.props.loading"
 							:reporting-mode-on="reportingModeCAV"
@@ -114,12 +114,14 @@
 							<q-numeric-input
 								v-if="controls.NOTIF___NOTIFNRCOMODA.isVisible"
 								v-bind="controls.NOTIF___NOTIFNRCOMODA.props"
+								:id="getControlId(controls.NOTIF___NOTIFNRCOMODA)"
 								@update:model-value="model.ValNrcomoda.fnUpdateValue" />
 						</base-input-structure>
 						<base-input-structure
 							v-if="controls.NOTIF___NOTIFBEGIN___.isVisible"
 							class="i-text"
-							v-bind="controls.NOTIF___NOTIFBEGIN___"
+							v-bind="controls.NOTIF___NOTIFBEGIN___.wrapperProps"
+							:id="getControlId(controls.NOTIF___NOTIFBEGIN___)"
 							v-on="controls.NOTIF___NOTIFBEGIN___.handlers"
 							:loading="controls.NOTIF___NOTIFBEGIN___.props.loading"
 							:reporting-mode-on="reportingModeCAV"
@@ -127,6 +129,7 @@
 							<q-date-time-picker
 								v-if="controls.NOTIF___NOTIFBEGIN___.isVisible"
 								v-bind="controls.NOTIF___NOTIFBEGIN___.props"
+								:id="getControlId(controls.NOTIF___NOTIFBEGIN___)"
 								:model-value="model.ValBegin.value"
 								@reset-icon-click="model.ValBegin.fnUpdateValue(model.ValBegin.originalValue ?? new Date())"
 								@update:model-value="model.ValBegin.fnUpdateValue($event ?? '')" />
@@ -138,7 +141,8 @@
 						<base-input-structure
 							v-if="controls.NOTIF___NOTIFEND_____.isVisible"
 							class="i-text"
-							v-bind="controls.NOTIF___NOTIFEND_____"
+							v-bind="controls.NOTIF___NOTIFEND_____.wrapperProps"
+							:id="getControlId(controls.NOTIF___NOTIFEND_____)"
 							v-on="controls.NOTIF___NOTIFEND_____.handlers"
 							:loading="controls.NOTIF___NOTIFEND_____.props.loading"
 							:reporting-mode-on="reportingModeCAV"
@@ -146,6 +150,7 @@
 							<q-date-time-picker
 								v-if="controls.NOTIF___NOTIFEND_____.isVisible"
 								v-bind="controls.NOTIF___NOTIFEND_____.props"
+								:id="getControlId(controls.NOTIF___NOTIFEND_____)"
 								:model-value="model.ValEnd.value"
 								@reset-icon-click="model.ValEnd.fnUpdateValue(model.ValEnd.originalValue ?? new Date())"
 								@update:model-value="model.ValEnd.fnUpdateValue($event ?? '')" />
@@ -159,13 +164,15 @@
 						<base-input-structure
 							v-if="controls.NOTIF___NOTIFEMAIL___.isVisible"
 							class="i-text"
-							v-bind="controls.NOTIF___NOTIFEMAIL___"
+							v-bind="controls.NOTIF___NOTIFEMAIL___.wrapperProps"
+							:id="getControlId(controls.NOTIF___NOTIFEMAIL___)"
 							v-on="controls.NOTIF___NOTIFEMAIL___.handlers"
 							:loading="controls.NOTIF___NOTIFEMAIL___.props.loading"
 							:reporting-mode-on="reportingModeCAV"
 							:suggestion-mode-on="suggestionModeOn">
 							<q-text-field
 								v-bind="controls.NOTIF___NOTIFEMAIL___.props"
+								:id="getControlId(controls.NOTIF___NOTIFEMAIL___)"
 								@blur="onBlur(controls.NOTIF___NOTIFEMAIL___, model.ValEmail.value)"
 								@change="model.ValEmail.fnUpdateValueOnChange" />
 						</base-input-structure>
@@ -178,13 +185,15 @@
 						<base-input-structure
 							v-if="controls.NOTIF___NOTIFIDNOTIF_.isVisible"
 							class="i-text"
-							v-bind="controls.NOTIF___NOTIFIDNOTIF_"
+							v-bind="controls.NOTIF___NOTIFIDNOTIF_.wrapperProps"
+							:id="getControlId(controls.NOTIF___NOTIFIDNOTIF_)"
 							v-on="controls.NOTIF___NOTIFIDNOTIF_.handlers"
 							:loading="controls.NOTIF___NOTIFIDNOTIF_.props.loading"
 							:reporting-mode-on="reportingModeCAV"
 							:suggestion-mode-on="suggestionModeOn">
 							<q-text-field
 								v-bind="controls.NOTIF___NOTIFIDNOTIF_.props"
+								:id="getControlId(controls.NOTIF___NOTIFIDNOTIF_)"
 								@blur="onBlur(controls.NOTIF___NOTIFIDNOTIF_, model.ValIdnotif.value)"
 								@change="model.ValIdnotif.fnUpdateValueOnChange" />
 						</base-input-structure>
@@ -197,13 +206,15 @@
 						<base-input-structure
 							v-if="controls.NOTIF___NOTIFIDMSG___.isVisible"
 							class="i-text"
-							v-bind="controls.NOTIF___NOTIFIDMSG___"
+							v-bind="controls.NOTIF___NOTIFIDMSG___.wrapperProps"
+							:id="getControlId(controls.NOTIF___NOTIFIDMSG___)"
 							v-on="controls.NOTIF___NOTIFIDMSG___.handlers"
 							:loading="controls.NOTIF___NOTIFIDMSG___.props.loading"
 							:reporting-mode-on="reportingModeCAV"
 							:suggestion-mode-on="suggestionModeOn">
 							<q-text-field
 								v-bind="controls.NOTIF___NOTIFIDMSG___.props"
+								:id="getControlId(controls.NOTIF___NOTIFIDMSG___)"
 								@blur="onBlur(controls.NOTIF___NOTIFIDMSG___, model.ValIdmsg.value)"
 								@change="model.ValIdmsg.fnUpdateValueOnChange" />
 						</base-input-structure>
@@ -216,7 +227,8 @@
 						<base-input-structure
 							v-if="controls.NOTIF___NOTIFMESSAGE_.isVisible"
 							class="i-textarea"
-							v-bind="controls.NOTIF___NOTIFMESSAGE_"
+							v-bind="controls.NOTIF___NOTIFMESSAGE_.wrapperProps"
+							:id="getControlId(controls.NOTIF___NOTIFMESSAGE_)"
 							v-on="controls.NOTIF___NOTIFMESSAGE_.handlers"
 							:loading="controls.NOTIF___NOTIFMESSAGE_.props.loading"
 							:reporting-mode-on="reportingModeCAV"
@@ -224,6 +236,7 @@
 							<q-text-area
 								v-if="controls.NOTIF___NOTIFMESSAGE_.isVisible"
 								v-bind="controls.NOTIF___NOTIFMESSAGE_.props"
+								:id="getControlId(controls.NOTIF___NOTIFMESSAGE_)"
 								v-on="controls.NOTIF___NOTIFMESSAGE_.handlers" />
 						</base-input-structure>
 					</q-col>
@@ -235,13 +248,15 @@
 						<base-input-structure
 							v-if="controls.NOTIF___NOTIFMAILERR_.isVisible"
 							class="i-text"
-							v-bind="controls.NOTIF___NOTIFMAILERR_"
+							v-bind="controls.NOTIF___NOTIFMAILERR_.wrapperProps"
+							:id="getControlId(controls.NOTIF___NOTIFMAILERR_)"
 							v-on="controls.NOTIF___NOTIFMAILERR_.handlers"
 							:loading="controls.NOTIF___NOTIFMAILERR_.props.loading"
 							:reporting-mode-on="reportingModeCAV"
 							:suggestion-mode-on="suggestionModeOn">
 							<q-text-field
 								v-bind="controls.NOTIF___NOTIFMAILERR_.props"
+								:id="getControlId(controls.NOTIF___NOTIFMAILERR_)"
 								@blur="onBlur(controls.NOTIF___NOTIFMAILERR_, model.ValMailerr.value)"
 								@change="model.ValMailerr.fnUpdateValueOnChange" />
 						</base-input-structure>
@@ -254,13 +269,15 @@
 						<base-input-structure
 							v-if="controls.NOTIF___NOTIFDESIGNAT.isVisible"
 							class="i-text"
-							v-bind="controls.NOTIF___NOTIFDESIGNAT"
+							v-bind="controls.NOTIF___NOTIFDESIGNAT.wrapperProps"
+							:id="getControlId(controls.NOTIF___NOTIFDESIGNAT)"
 							v-on="controls.NOTIF___NOTIFDESIGNAT.handlers"
 							:loading="controls.NOTIF___NOTIFDESIGNAT.props.loading"
 							:reporting-mode-on="reportingModeCAV"
 							:suggestion-mode-on="suggestionModeOn">
 							<q-text-field
 								v-bind="controls.NOTIF___NOTIFDESIGNAT.props"
+								:id="getControlId(controls.NOTIF___NOTIFDESIGNAT)"
 								@blur="onBlur(controls.NOTIF___NOTIFDESIGNAT, model.ValDesignat.value)"
 								@change="model.ValDesignat.fnUpdateValueOnChange" />
 						</base-input-structure>
@@ -272,8 +289,9 @@
 						cols="auto">
 						<base-input-structure
 							v-if="controls.NOTIF___NOTIFRETURNED.isVisible"
-							class="i-checkbox"
-							v-bind="controls.NOTIF___NOTIFRETURNED"
+							class="i-text"
+							v-bind="controls.NOTIF___NOTIFRETURNED.wrapperProps"
+							:id="getControlId(controls.NOTIF___NOTIFRETURNED)"
 							v-on="controls.NOTIF___NOTIFRETURNED.handlers"
 							:loading="controls.NOTIF___NOTIFRETURNED.props.loading"
 							:reporting-mode-on="reportingModeCAV"
@@ -282,6 +300,7 @@
 								<q-checkbox
 									v-if="controls.NOTIF___NOTIFRETURNED.isVisible"
 									v-bind="controls.NOTIF___NOTIFRETURNED.props"
+									:id="getControlId(controls.NOTIF___NOTIFRETURNED)"
 									v-on="controls.NOTIF___NOTIFRETURNED.handlers" />
 							</template>
 						</base-input-structure>
@@ -292,7 +311,8 @@
 						<base-input-structure
 							v-if="controls.NOTIF___NOTIFDTDEVOLU.isVisible"
 							class="i-text"
-							v-bind="controls.NOTIF___NOTIFDTDEVOLU"
+							v-bind="controls.NOTIF___NOTIFDTDEVOLU.wrapperProps"
+							:id="getControlId(controls.NOTIF___NOTIFDTDEVOLU)"
 							v-on="controls.NOTIF___NOTIFDTDEVOLU.handlers"
 							:loading="controls.NOTIF___NOTIFDTDEVOLU.props.loading"
 							:reporting-mode-on="reportingModeCAV"
@@ -300,6 +320,7 @@
 							<q-date-time-picker
 								v-if="controls.NOTIF___NOTIFDTDEVOLU.isVisible"
 								v-bind="controls.NOTIF___NOTIFDTDEVOLU.props"
+								:id="getControlId(controls.NOTIF___NOTIFDTDEVOLU)"
 								:model-value="model.ValDtdevolu.value"
 								@reset-icon-click="model.ValDtdevolu.fnUpdateValue(model.ValDtdevolu.originalValue ?? new Date())"
 								@update:model-value="model.ValDtdevolu.fnUpdateValue($event ?? '')" />
@@ -313,7 +334,8 @@
 						<base-input-structure
 							v-if="controls.NOTIF___PESS2NAME____.isVisible"
 							class="i-text"
-							v-bind="controls.NOTIF___PESS2NAME____"
+							v-bind="controls.NOTIF___PESS2NAME____.wrapperProps"
+							:id="getControlId(controls.NOTIF___PESS2NAME____)"
 							v-on="controls.NOTIF___PESS2NAME____.handlers"
 							:loading="controls.NOTIF___PESS2NAME____.props.loading"
 							:reporting-mode-on="reportingModeCAV"
@@ -321,6 +343,7 @@
 							<q-lookup
 								v-if="controls.NOTIF___PESS2NAME____.isVisible"
 								v-bind="controls.NOTIF___PESS2NAME____.props"
+								:id="getControlId(controls.NOTIF___PESS2NAME____)"
 								v-on="controls.NOTIF___PESS2NAME____.handlers" />
 							<q-see-more-notif-pess2name
 								v-if="controls.NOTIF___PESS2NAME____.seeMoreIsVisible"
@@ -333,7 +356,7 @@
 		</q-container>
 	</teleport>
 
-	<hr v-if="!isPopup && showFormFooter" />
+	<q-divider v-if="!isPopup && showFormFooter" />
 
 	<teleport
 		v-if="formModalIsReady && showFormFooter"
@@ -1255,7 +1278,6 @@
 
 				this.afterControlUpdate(controlField, fieldValue)
 			},
-
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
 // USE /[MANUAL GQT FUNCTIONS_JS NOTIF]/
 // eslint-disable-next-line

@@ -216,6 +216,8 @@ namespace GenioMVC.ViewModels.Facil
 
 			crs.SubSets.Add(subfilters);
 
+			// Form field filters
+			crs.SubSets.Add(ProcessFieldFilters(tableConfig.GlobalFilters));
 
 			crs.SubSets.Add(GetCustomizedStaticLimits(StaticLimits));
 
@@ -344,12 +346,11 @@ namespace GenioMVC.ViewModels.Facil
 
 			FieldRef[] fields = new FieldRef[] { CSGenioAfacil.FldCodfacil, CSGenioAfacil.FldZzstate, CSGenioAfacil.FldCodentit, CSGenioAentit.FldCodentit, CSGenioAentit.FldName, CSGenioAfacil.FldIncorpor, CSGenioAfacil.FldName, CSGenioAfacil.FldFaciltyp, CSGenioAfacil.FldCodfacty, CSGenioAfacty.FldCodfacty, CSGenioAfacty.FldType, CSGenioAfacil.FldAddress, CSGenioAfacil.FldImage, CSGenioAfacil.FldGpsinput, CSGenioAfacil.FldLatitude, CSGenioAfacil.FldLongitud, CSGenioAfacil.FldGeocoori, CSGenioAfacil.FldGeocoord };
 
-
-			// Totalizers
-			List<FieldRef> fieldsWithTotalizers = fields.Where(field => tableConfig.TotalizerColumns.Contains(field.FullName)).ToList();
+			// List of column names that should display totalized (aggregated) values.
+			List<string> totalizerColumns = [];
+			List<FieldRef> fieldsWithTotalizers = [.. fields.Where(field => totalizerColumns.Contains(field.FullName))];
 
 			FieldRef firstVisibleColumn = null;
-
 			if (sorts.Count == 0)
 			{
 				firstVisibleColumn = tableConfig?.GetFirstVisibleColumn(TableAlias);
@@ -544,7 +545,7 @@ namespace GenioMVC.ViewModels.Facil
 
 		private static readonly string[] _fieldsToSerialize =
 		[
-			"Facil", "Facil.ValCodfacil", "Facil.ValZzstate", "Entit", "Entit.ValName", "Facil.ValIncorpor", "Facil.ValName", "Facil.ValFaciltyp", "Facty", "Facty.ValType", "Facil.ValAddress", "Facil.ValImage", "Facil.ValGpsinput", "Facil.ValLatitude", "Facil.ValLongitud", "Facil.ValGeocoori", "Facil.ValGeocoord", "Facil.ValCodcntry", "Facil.ValCodentit", "Facil.ValCodfacty"
+			"Facil", "Facil.ValCodfacil", "Facil.ValZzstate", "Entit", "Entit.ValName", "Facil.ValIncorpor", "Facil.ValName", "Facil.ValFaciltyp", "Facty", "Facty.ValType", "Facil.ValAddress", "Facil.ValImage", "Facil.ValGpsinput", "Facil.ValLatitude", "Facil.ValLongitud", "Facil.ValGeocoori", "Facil.ValGeocoord", "Facil.ValCodentit", "Facil.ValCodfacty"
 		];
 
 		private static readonly List<TableSearchColumn> _searchableColumns =

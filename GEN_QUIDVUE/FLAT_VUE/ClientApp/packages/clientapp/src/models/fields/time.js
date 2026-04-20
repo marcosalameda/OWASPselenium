@@ -11,7 +11,8 @@ export class Time extends Base {
 		super(
 			_assignIn(
 				{
-					type: 'Time'
+					type: 'Time',
+					isRange: false
 				},
 				options
 			)
@@ -22,6 +23,13 @@ export class Time extends Base {
 	 * @override
 	 */
 	get displayValue() {
+		if (this.isRange) {
+			if (_isEmpty(this.value)) return ''
+
+			const [start, end] = this.value
+			return `${timeToString(start)} - ${timeToString(end)}`
+		}
+
 		if (_isEmpty(super.displayValue) || super.displayValue === Time.EMPTY_VALUE) return ''
 
 		return timeToString(this.value)
@@ -31,6 +39,12 @@ export class Time extends Base {
 	 * @override
 	 */
 	get serverValue() {
+		if (this.isRange) {
+			if (_isEmpty(this.value) || this.value[0] === Time.EMPTY_VALUE || this.value[1] === Time.EMPTY_VALUE) return []
+
+			return this.value
+		}
+
 		return this.value !== Time.EMPTY_VALUE ? this.value : null
 	}
 
@@ -40,7 +54,7 @@ export class Time extends Base {
 	hydrate(rawDataFieldValue) {
 		// Ensure instance-specific empty value representation
 		// (convert '' to '__:__')
-		if (_isEmpty(rawDataFieldValue)) rawDataFieldValue = Time.EMPTY_VALUE
+		if (_isEmpty(rawDataFieldValue)) rawDataFieldValue = this.isRange ? [] : Time.EMPTY_VALUE
 
 		super.hydrate(rawDataFieldValue)
 	}
@@ -49,7 +63,18 @@ export class Time extends Base {
 	 * @override
 	 */
 	isValidType(value) {
-		return typeof value === 'object' || typeof value === 'string' || value === null
+		if (this.isRange) {
+			// Validate as a time range
+			if (Array.isArray(value) && value.length === 2) {
+				const [start, end] = value
+				return (typeof start === 'object' || typeof start === 'string' || start === null) &&
+					(typeof end === 'object' || typeof end === 'string' || end === null)
+			}
+			return _isEmpty(value)
+		} else {
+			// Validate as a single time
+			return typeof value === 'object' || typeof value === 'string' || value === null
+		}
 	}
 
 	/**
@@ -57,9 +82,15 @@ export class Time extends Base {
 	 */
 	sanitizeValue(value) {
 		const sanitizedVal = super.sanitizeValue(value)
+		const sanitizeTime = (time) => typeof time === 'object' ? (time ? timeToString(time) : '') : time
 
-		if (typeof sanitizedVal === 'object') return sanitizedVal ? timeToString(sanitizedVal) : ''
+		if (this.isRange) {
+			if (_isEmpty(sanitizedVal)) return []
 
-		return sanitizedVal
+			const [start, end] = sanitizedVal
+			return [sanitizeTime(start), sanitizeTime(end)]
+		}
+
+		return sanitizeTime(sanitizedVal)
 	}
 }

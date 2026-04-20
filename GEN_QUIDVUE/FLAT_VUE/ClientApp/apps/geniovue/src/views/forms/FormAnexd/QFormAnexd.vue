@@ -9,12 +9,13 @@
 			<div
 				v-if="showFormHeader"
 				class="c-action-bar">
-				<h1
+				<component
 					v-if="formControl.uiComponents.header && formInfo.designation"
+					:is="topHeadingTag"
 					:id="formTitleId"
 					class="form-header">
 					{{ formInfo.designation }}
-				</h1>
+				</component>
 
 				<div class="c-action-bar__menu">
 					<template
@@ -40,13 +41,10 @@
 									@click="btn.action">
 									<template v-if="btn.icon">
 										<q-badge-indicator
-											v-if="btn.badge && btn.badge.isVisible"
-											:color="btn.badge.color">
+											:enabled="btn.badge?.isVisible ?? false"
+											:color="btn.badge?.color">
 											<q-icon v-bind="btn.icon" />
 										</q-badge-indicator>
-										<q-icon
-											v-else
-											v-bind="btn.icon" />
 									</template>
 								</q-toggle-group-item>
 							</template>
@@ -97,6 +95,7 @@
 		<q-container
 			fluid
 			data-key="ANEXD"
+			:data-identifier="primaryKeyValue"
 			:data-loading="!formInitialDataLoaded || !isActiveForm">
 			<template v-if="formControl.initialized && showFormBody">
 				<q-row v-if="controls.ANEXD___EQUIPREGISTNR.isVisible">
@@ -106,7 +105,8 @@
 						<base-input-structure
 							v-if="controls.ANEXD___EQUIPREGISTNR.isVisible"
 							class="i-text"
-							v-bind="controls.ANEXD___EQUIPREGISTNR"
+							v-bind="controls.ANEXD___EQUIPREGISTNR.wrapperProps"
+							:id="getControlId(controls.ANEXD___EQUIPREGISTNR)"
 							v-on="controls.ANEXD___EQUIPREGISTNR.handlers"
 							:loading="controls.ANEXD___EQUIPREGISTNR.props.loading"
 							:reporting-mode-on="reportingModeCAV"
@@ -114,6 +114,7 @@
 							<q-lookup
 								v-if="controls.ANEXD___EQUIPREGISTNR.isVisible"
 								v-bind="controls.ANEXD___EQUIPREGISTNR.props"
+								:id="getControlId(controls.ANEXD___EQUIPREGISTNR)"
 								v-on="controls.ANEXD___EQUIPREGISTNR.handlers" />
 							<q-see-more-anexd-equipregistnr
 								v-if="controls.ANEXD___EQUIPREGISTNR.seeMoreIsVisible"
@@ -129,7 +130,8 @@
 						<base-input-structure
 							v-if="controls.ANEXD___ANEXDDTHRANEX.isVisible"
 							class="i-text"
-							v-bind="controls.ANEXD___ANEXDDTHRANEX"
+							v-bind="controls.ANEXD___ANEXDDTHRANEX.wrapperProps"
+							:id="getControlId(controls.ANEXD___ANEXDDTHRANEX)"
 							v-on="controls.ANEXD___ANEXDDTHRANEX.handlers"
 							:loading="controls.ANEXD___ANEXDDTHRANEX.props.loading"
 							:reporting-mode-on="reportingModeCAV"
@@ -137,6 +139,7 @@
 							<q-date-time-picker
 								v-if="controls.ANEXD___ANEXDDTHRANEX.isVisible"
 								v-bind="controls.ANEXD___ANEXDDTHRANEX.props"
+								:id="getControlId(controls.ANEXD___ANEXDDTHRANEX)"
 								:model-value="model.ValDthranex.value"
 								@reset-icon-click="model.ValDthranex.fnUpdateValue(model.ValDthranex.originalValue ?? new Date())"
 								@update:model-value="model.ValDthranex.fnUpdateValue($event ?? '')" />
@@ -148,13 +151,15 @@
 						<base-input-structure
 							v-if="controls.ANEXD___ANEXDREFERENC.isVisible"
 							class="i-text"
-							v-bind="controls.ANEXD___ANEXDREFERENC"
+							v-bind="controls.ANEXD___ANEXDREFERENC.wrapperProps"
+							:id="getControlId(controls.ANEXD___ANEXDREFERENC)"
 							v-on="controls.ANEXD___ANEXDREFERENC.handlers"
 							:loading="controls.ANEXD___ANEXDREFERENC.props.loading"
 							:reporting-mode-on="reportingModeCAV"
 							:suggestion-mode-on="suggestionModeOn">
 							<q-text-field
 								v-bind="controls.ANEXD___ANEXDREFERENC.props"
+								:id="getControlId(controls.ANEXD___ANEXDREFERENC)"
 								@blur="onBlur(controls.ANEXD___ANEXDREFERENC, model.ValReferenc.value)"
 								@change="model.ValReferenc.fnUpdateValueOnChange" />
 						</base-input-structure>
@@ -167,13 +172,15 @@
 						<base-input-structure
 							v-if="controls.ANEXD___ANEXDTITLE___.isVisible"
 							class="i-text"
-							v-bind="controls.ANEXD___ANEXDTITLE___"
+							v-bind="controls.ANEXD___ANEXDTITLE___.wrapperProps"
+							:id="getControlId(controls.ANEXD___ANEXDTITLE___)"
 							v-on="controls.ANEXD___ANEXDTITLE___.handlers"
 							:loading="controls.ANEXD___ANEXDTITLE___.props.loading"
 							:reporting-mode-on="reportingModeCAV"
 							:suggestion-mode-on="suggestionModeOn">
 							<q-text-field
 								v-bind="controls.ANEXD___ANEXDTITLE___.props"
+								:id="getControlId(controls.ANEXD___ANEXDTITLE___)"
 								@blur="onBlur(controls.ANEXD___ANEXDTITLE___, model.ValTitle.value)"
 								@change="model.ValTitle.fnUpdateValueOnChange" />
 						</base-input-structure>
@@ -186,7 +193,8 @@
 						<base-input-structure
 							v-if="controls.ANEXD___LANGULANGUA__.isVisible"
 							class="i-text"
-							v-bind="controls.ANEXD___LANGULANGUA__"
+							v-bind="controls.ANEXD___LANGULANGUA__.wrapperProps"
+							:id="getControlId(controls.ANEXD___LANGULANGUA__)"
 							v-on="controls.ANEXD___LANGULANGUA__.handlers"
 							:loading="controls.ANEXD___LANGULANGUA__.props.loading"
 							:reporting-mode-on="reportingModeCAV"
@@ -194,6 +202,7 @@
 							<q-lookup
 								v-if="controls.ANEXD___LANGULANGUA__.isVisible"
 								v-bind="controls.ANEXD___LANGULANGUA__.props"
+								:id="getControlId(controls.ANEXD___LANGULANGUA__)"
 								v-on="controls.ANEXD___LANGULANGUA__.handlers" />
 							<q-see-more-anexd-langulangua
 								v-if="controls.ANEXD___LANGULANGUA__.seeMoreIsVisible"
@@ -209,13 +218,15 @@
 						<base-input-structure
 							v-if="controls.ANEXD___ANEXDTITTRADU.isVisible"
 							class="i-text"
-							v-bind="controls.ANEXD___ANEXDTITTRADU"
+							v-bind="controls.ANEXD___ANEXDTITTRADU.wrapperProps"
+							:id="getControlId(controls.ANEXD___ANEXDTITTRADU)"
 							v-on="controls.ANEXD___ANEXDTITTRADU.handlers"
 							:loading="controls.ANEXD___ANEXDTITTRADU.props.loading"
 							:reporting-mode-on="reportingModeCAV"
 							:suggestion-mode-on="suggestionModeOn">
 							<q-text-field
 								v-bind="controls.ANEXD___ANEXDTITTRADU.props"
+								:id="getControlId(controls.ANEXD___ANEXDTITTRADU)"
 								@blur="onBlur(controls.ANEXD___ANEXDTITTRADU, model.ValTittradu.value)"
 								@change="model.ValTittradu.fnUpdateValueOnChange" />
 						</base-input-structure>
@@ -228,7 +239,8 @@
 						<base-input-structure
 							v-if="controls.ANEXD___ANEXDDOCUMENT.isVisible"
 							class="i-text"
-							v-bind="controls.ANEXD___ANEXDDOCUMENT"
+							v-bind="controls.ANEXD___ANEXDDOCUMENT.wrapperProps"
+							:id="getControlId(controls.ANEXD___ANEXDDOCUMENT)"
 							v-on="controls.ANEXD___ANEXDDOCUMENT.handlers"
 							:loading="controls.ANEXD___ANEXDDOCUMENT.props.loading"
 							:reporting-mode-on="reportingModeCAV"
@@ -236,6 +248,7 @@
 							<q-document
 								v-if="controls.ANEXD___ANEXDDOCUMENT.isVisible"
 								v-bind="controls.ANEXD___ANEXDDOCUMENT.props"
+								:id="getControlId(controls.ANEXD___ANEXDDOCUMENT)"
 								v-on="controls.ANEXD___ANEXDDOCUMENT.handlers" />
 						</base-input-structure>
 					</q-col>
@@ -244,7 +257,7 @@
 		</q-container>
 	</teleport>
 
-	<hr v-if="!isPopup && showFormFooter" />
+	<q-divider v-if="!isPopup && showFormFooter" />
 
 	<teleport
 		v-if="formModalIsReady && showFormFooter"
@@ -705,7 +718,7 @@
 						size: 'xxlarge',
 						helpControl: {
 							shortHelp: {
-								type: 'Subtext',
+								type: 'subtext',
 								text: computed(() => this.Resources.___1637441),
 							},
 						},
@@ -756,8 +769,6 @@
 						set ValTittradu(value) { vm.model.ValTittradu.updateValue(value) },
 					},
 					Equip: {
-						get ValCodequip() { return vm.model.ValCodequip.value },
-						set ValCodequip(value) { vm.model.ValCodequip.updateValue(value) },
 						get ValRegistnr() { return vm.model.TableEquipRegistnr.value },
 						set ValRegistnr(value) { vm.model.TableEquipRegistnr.updateValue(value) },
 					},
@@ -1117,7 +1128,6 @@
 
 				this.afterControlUpdate(controlField, fieldValue)
 			},
-
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
 // USE /[MANUAL GQT FUNCTIONS_JS ANEXD]/
 // eslint-disable-next-line

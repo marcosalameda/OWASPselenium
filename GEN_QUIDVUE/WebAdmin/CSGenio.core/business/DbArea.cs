@@ -784,7 +784,7 @@ namespace CSGenio.business
             {
                 var userMessage = (ex as GenioException)?.UserMessage;
                 throw new BusinessException(
-                    userMessage, 
+                    userMessage,
                     nameof(ExistsOrderingValue),
                     $"Error checking ordering duplication - [area]={area}; [pk]={primaryKeyValue}; " +
                     $"[field]={orderingField}; [value]={orderingValue}; " +
@@ -796,7 +796,7 @@ namespace CSGenio.business
 
         /// <summary>
         /// Applies sequence re-ordering for all fields marked with the “Order” option.
-        /// If a non-duplication (scoping) prefix exist, re-ordering is constrained to that group. 
+        /// If a non-duplication (scoping) prefix exist, re-ordering is constrained to that group.
         /// When the prefix changes, the previous group is re-ordered to close any gap.
         /// Notes:
         /// - Ordering is 1-based (positions must be >= 1).
@@ -806,13 +806,13 @@ namespace CSGenio.business
         /// - An empty prefix represents its own distinct “empty” group and is also re-sequenced.
         /// - If there is no previous values (oldValues == null), the old group is not re-sequenced.
         ///
-        /// TODO: To achieve optimization and reduce query repetition, this method should become part of «fillInternalOperations» 
-        /// and be merged with the default calculations. When sequential numbering is active, 
+        /// TODO: To achieve optimization and reduce query repetition, this method should become part of «fillInternalOperations»
+        /// and be merged with the default calculations. When sequential numbering is active,
         /// it is automatically excluded if the number already exists, a reorder is performed; otherwise, the default value prevails.
         /// </summary>
         /// <param name="sp">The current <see cref="PersistentSupport"/> context.</param>
         /// <param name="oldValues">
-        /// Previous persisted values for this record (when available). 
+        /// Previous persisted values for this record (when available).
         /// When <c>null</c>, the incoming order is still treated as a change for collision resolution,
         /// but the previous prefix is unknown so no “old scope” clean-up is attempted.
         /// </param>
@@ -1342,7 +1342,7 @@ namespace CSGenio.business
                     {
                         continue;
                     }
-                    
+
                     foreach (ReplicaDestination target in campoReplica.ReplicaDestinationList)
                     {
                         UpdateQuery uq = null;
@@ -1889,12 +1889,14 @@ namespace CSGenio.business
             {
                 using(new ScopedPersistentSupport(sp))
                 {
-                    foreach (var condition in conditions)
+                    foreach (ConditionFormula condition in conditions)
                     {
                         try
                         {
-							var fdc = new FormulaDbContext(this);
+                            FormulaDbContext fdc = new(this);
+                            fdc.AddFormulaSources(condition.ByAreaArguments);
                             bool condResult = condition.ExecuteCondition(this, sp, ConditionToFunctionType(type), fdc);
+
                             if (!condResult)
                             {
                                 var status = StatusMessage.Error(condition.GetMessage(user));
@@ -1911,7 +1913,6 @@ namespace CSGenio.business
 
             return result;
         }
-
 
         /// <summary>
         /// Validates all duplication conditions returns a boolean with the result
@@ -2701,7 +2702,7 @@ namespace CSGenio.business
                 List<FieldRef> fieldsToUpdate = tambemDuplica(sp, codeValue.ToString());
 
                 // Reload formula fields (SR and UV) when cascade duplicate
-                reloadFormulaModelFields(sp, fieldsToUpdate);
+                ReloadFormulaModelFields(sp, fieldsToUpdate);
 
                 afterDuplicate(sp);
             }
@@ -2753,33 +2754,28 @@ namespace CSGenio.business
         /// </summary>
         /// <param name="sp">The persistent support object.</param>
         /// <param name="modelFieldsToUpdate">The list of fields to update.</param>
-        private void reloadFormulaModelFields(PersistentSupport sp, List<FieldRef> modelFieldsToUpdate)
+        private void ReloadFormulaModelFields(PersistentSupport sp, List<FieldRef> modelFieldsToUpdate)
         {
-            if(modelFieldsToUpdate.Count() < 1) return;
+            if(modelFieldsToUpdate.Count() == 0) return;
 
-            // Group fields by table
-            var fieldGroups = modelFieldsToUpdate.GroupBy(field => field.Area).ToList();
+            var areaFields = modelFieldsToUpdate
+                .Where(fld => fld.Area == this.Alias);
 
-            foreach (var fieldGroup in fieldGroups)
-            {
-                //If the fields are not from the same area, the model will not be retrieved.
-                if (fieldGroup.Key != this.Alias)
-                    continue;
-					
-                // Initialize the DbArea for the current table
-                DbArea fieldArea = (DbArea)Area.createArea(fieldGroup.Key, User, User.CurrentModule);
+            if (areaFields.Count() == 0) return;
+            
+            // Fetch all field records for the current table in one go
+            var fieldNames = areaFields
+                .Select(f => f.Field)
+                .Distinct()
+                .ToArray();
+            sp.getRecord(this, QPrimaryKey, fieldNames);
 
-                // Fetch all field records for the current table in one go
-                var fieldNames = fieldGroup.Select(f => f.Field).ToArray();
-                sp.getRecord(fieldArea, QPrimaryKey, fieldNames);
-
-                // Replace DB value in the model fields
-                foreach(var field in fieldGroup)
-                    Fields[field] = fieldArea.Fields[field];
-            }
+            // After reloading the Last Value / Linked Sum values, internal formulas may be affected, 
+            // so it is necessary to trigger a recalculation of the formulas.
+            fillInternalOperations(sp, null);
         }
 
-        private List<FieldRef> loadFieldsToUpdate(AreaInfo area)
+        private List<FieldRef> LoadFieldsToUpdate(AreaInfo area)
         {
             /*
             * In this method we only need to reload the values of the Formula
@@ -2857,7 +2853,7 @@ namespace CSGenio.business
                         AreaInfo childInfo = Area.GetInfoArea(relacao.AliasSourceTab);
 
                         // Load fields to update on the parent table
-                        modelFieldsToUpdate.AddRange(loadFieldsToUpdate(childInfo));
+                        modelFieldsToUpdate.AddRange(LoadFieldsToUpdate(childInfo));
 
                         //RMR(2022-11-11) - If it has more child record to duplicate after, it cannot enforce conditions
                         bool needsValidation = !cascata.Any(x => x.TargetTable == relacao.SourceTable);
@@ -3894,7 +3890,7 @@ namespace CSGenio.business
         /// <summary>
         /// Generic primitive to re-sequence an ordering field within a partition.
         /// Adjusts neighbouring rows inside the subset (non duplication prefix, if have)
-        /// to move the current record from <paramref name="currentPosition"/> 
+        /// to move the current record from <paramref name="currentPosition"/>
         /// to <paramref name="newPosition"/>, ensuring a contiguous 1-based sequence is preserved.
         /// Notes:
         /// - Oversize requests (newPosition > maxOrder) do not shift the sequence.
@@ -4009,8 +4005,8 @@ namespace CSGenio.business
             sp.ReorderSequence(this, orderingField, range_condition, startPos);
 
             // 6) Optionally place the moved row at its target position.
-            //    Not always necessary: in most cases a subsequent Save/Update operation 
-            //    will persist the new field value anyway. Skipping this avoids an extra 
+            //    Not always necessary: in most cases a subsequent Save/Update operation
+            //    will persist the new field value anyway. Skipping this avoids an extra
             //    UPDATE on the same column, making the operation lighter.
             if (placeMovedRow)
             {

@@ -73,6 +73,7 @@ export default class ViewModel extends FormViewModelBase
 			field: 'NAME',
 			maxLength: 85,
 			description: computed(() => this.Resources.IDENTIFICATION_NAME16317),
+			ignoreFldSubmit: true,
 		}).cloneFrom(values?.TableAssetName))
 		this.stopWatchers.push(watch(() => this.TableAssetName.value, (newValue, oldValue) => this.onUpdate('asset.name', this.TableAssetName, newValue, oldValue)))
 
@@ -110,6 +111,7 @@ export default class ViewModel extends FormViewModelBase
 			field: 'DIGDOCUMFK'
 		}).cloneFrom(values?.ValDigdocumfk))
 		this.stopWatchers.push(watch(() => this.ValDigdocumfk.value, (newValue, oldValue) => this.onUpdate('assma.digdocumfk', this.ValDigdocumfk, newValue, oldValue)))
+
 		this.ValDigdocumData = reactive(new modelFieldType.DocumentData({
 			id: 'ValDigdocumData',
 			area: 'ASSMA',

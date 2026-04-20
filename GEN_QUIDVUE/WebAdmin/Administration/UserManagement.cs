@@ -34,7 +34,6 @@ namespace Administration
             perm.Add(new ModulesLevel("STY", Resources.Resources.STYLE47121, "ADMINISTRATOR", Resources.Resources.ADMINISTRATOR54799));
             perm.Add(new ModulesLevel("GQT", Resources.Resources.GENIO_QUALITY_TESTS30896, "ADMINISTRATOR", Resources.Resources.ADMINISTRATOR54799));
             perm.Add(new ModulesLevel("TRN", Resources.Resources.TRAINING_EXERCISES07801, "ADMINISTRATOR", Resources.Resources.ADMINISTRATOR54799));
-            perm.Add(new ModulesLevel("UIS", Resources.Resources.USER_INTERFACE32384, "ADMINISTRATOR", Resources.Resources.ADMINISTRATOR54799));
             perm.Add(new ModulesLevel("TBS", Resources.Resources.BASE_TABLES04823, "ADMINISTRATOR", Resources.Resources.ADMINISTRATOR54799));
             perm.Add(new ModulesLevel("PTN", Resources.Resources.PATTERNS16056, "ADMINISTRATOR", Resources.Resources.ADMINISTRATOR54799));
             perm.Add(new ModulesLevel("REG", Resources.Resources.REGISTRATION03584, "ADMINISTRATOR", Resources.Resources.ADMINISTRATOR54799));
@@ -57,7 +56,6 @@ namespace Administration
             perm.Add(new ModulesLevel("TRN", Resources.Resources.TRAINING_EXERCISES07801, "SYSADMIN", Resources.Resources.SYSADMIN53289));
             perm.Add(new ModulesLevel("REG", Resources.Resources.REGISTRATION03584, "SYSADMIN", Resources.Resources.SYSADMIN53289));
             perm.Add(new ModulesLevel("STY", Resources.Resources.STYLE47121, "SYSADMIN", Resources.Resources.SYSADMIN53289));
-            perm.Add(new ModulesLevel("UIS", Resources.Resources.USER_INTERFACE32384, "SYSADMIN", Resources.Resources.SYSADMIN53289));
             perm.Add(new ModulesLevel("GQT", Resources.Resources.GENIO_QUALITY_TESTS30896, "VIEW", Resources.Resources.VIEW37934));
             perm.Add(new ModulesLevel("PTN", Resources.Resources.PATTERNS16056, "VIEW_PESSO", Resources.Resources.EDITOR_RECURSOS23553));
             perm.Add(new ModulesLevel("TRN", Resources.Resources.TRAINING_EXERCISES07801, "VIEW_PESSO", Resources.Resources.EDITOR_RECURSOS23553));
@@ -66,7 +64,6 @@ namespace Administration
             perm.Add(new ModulesLevel("TBS", Resources.Resources.BASE_TABLES04823, "1", Resources.Resources.QUERY30986));
             perm.Add(new ModulesLevel("IMO", Resources.Resources.REAL_ESTATE24996, "1", Resources.Resources.QUERY30986));
             perm.Add(new ModulesLevel("GQT", Resources.Resources.GENIO_QUALITY_TESTS30896, "1", Resources.Resources.QUERY30986));
-            perm.Add(new ModulesLevel("UIS", Resources.Resources.USER_INTERFACE32384, "1", Resources.Resources.QUERY30986));
             perm.Add(new ModulesLevel("PTN", Resources.Resources.PATTERNS16056, "1", Resources.Resources.QUERY30986));
             perm.Add(new ModulesLevel("STY", Resources.Resources.STYLE47121, "1", Resources.Resources.QUERY30986));
             perm.Add(new ModulesLevel("GQT", Resources.Resources.GENIO_QUALITY_TESTS30896, "2", Resources.Resources.VENDEDOR34177));
@@ -80,10 +77,8 @@ namespace Administration
             perm.Add(new ModulesLevel("TRN", Resources.Resources.TRAINING_EXERCISES07801, "99", Resources.Resources.ADMINISTRATOR27313));
             perm.Add(new ModulesLevel("PTN", Resources.Resources.PATTERNS16056, "99", Resources.Resources.ADMINISTRATOR27313));
             perm.Add(new ModulesLevel("TBS", Resources.Resources.BASE_TABLES04823, "99", Resources.Resources.ADMINISTRATOR27313));
-            perm.Add(new ModulesLevel("UIS", Resources.Resources.USER_INTERFACE32384, "99", Resources.Resources.ADMINISTRATOR27313));
             perm.Add(new ModulesLevel("GQT", Resources.Resources.GENIO_QUALITY_TESTS30896, "99", Resources.Resources.ADMINISTRATOR27313));
             perm.Add(new ModulesLevel("WMS", Resources.Resources.WAREHOUSE_MANAGEMENT10443, "99", Resources.Resources.ADMINISTRATOR27313));
-            perm.Add(new ModulesLevel("XRS", Resources.Resources.WHAREHOUSE_API10412, "99", Resources.Resources.ADMINISTRATOR27313));
             perm.Add(new ModulesLevel("STY", Resources.Resources.STYLE47121, "99", Resources.Resources.ADMINISTRATOR27313));
 	
             return perm;

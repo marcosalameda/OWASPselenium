@@ -1,9 +1,9 @@
 ﻿<template>
 	<q-row
 		v-if="hasActiveFilters || groupFilters.length > 0"
-		:gutter="0"
-		class="q-table-static-filters"
-		align="center">
+		class="q-table__static-filters"
+		align="center"
+		:gutter="0">
 		<!-- BEGIN: Active Filters -->
 		<q-col
 			v-if="hasActiveFilters"
@@ -24,7 +24,7 @@
 				</q-col>
 
 				<q-col cols="auto">
-					<div class="q-table-static-filters__date">
+					<div class="q-table__static-filters-date">
 						<q-label :for="activeFilters.date.id">
 							{{ texts.onDate }}
 						</q-label>

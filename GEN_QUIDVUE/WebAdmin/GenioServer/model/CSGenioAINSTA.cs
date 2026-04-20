@@ -47,7 +47,7 @@ namespace CSGenio.business
 			Qfield = new Field(info.Alias, "codinsta", FieldType.KEY_GUID);
 			Qfield.FieldDescription = "";
 			Qfield.FieldSize =  36;
-			Qfield.CavDesignation = "";
+			Qfield.VisivelCav = CavVisibilityType.Nunca;
 
 			Qfield.Dupmsg = "";
 			info.RegisterFieldDB(Qfield);
@@ -56,7 +56,7 @@ namespace CSGenio.business
 			Qfield = new Field(info.Alias, "codtpequ", FieldType.KEY_GUID);
 			Qfield.FieldDescription = ">TYPE OF EQUIPMENT";
 			Qfield.FieldSize =  36;
-			Qfield.CavDesignation = "_TYPE_OF_EQUIPMENT35057";
+			Qfield.VisivelCav = CavVisibilityType.Nunca;
 
 			Qfield.Dupmsg = "";
 			info.RegisterFieldDB(Qfield);
@@ -65,7 +65,7 @@ namespace CSGenio.business
 			Qfield = new Field(info.Alias, "codequip", FieldType.KEY_GUID);
 			Qfield.FieldDescription = ">EQUIPMENT";
 			Qfield.FieldSize =  36;
-			Qfield.CavDesignation = "_EQUIPMENT12605";
+			Qfield.VisivelCav = CavVisibilityType.Nunca;
 
 			Qfield.Dupmsg = "";
 			info.RegisterFieldDB(Qfield);
@@ -182,7 +182,7 @@ namespace CSGenio.business
 			Qfield = new Field(info.Alias, "coordgeo", FieldType.GEOGRAPHY_POINT);
 			Qfield.FieldDescription = "Geographic coordinate";
 			Qfield.FieldSize =  50;
-			Qfield.CavDesignation = "GEOGRAPHIC_COORDINAT21394";
+			Qfield.VisivelCav = CavVisibilityType.Nunca;
 
 			Qfield.Dupmsg = "";
 			info.RegisterFieldDB(Qfield);
@@ -220,14 +220,14 @@ namespace CSGenio.business
 			info.Pathways.Add("tpequ","tpequ");
 			info.Pathways.Add("equip","equip");
 			info.Pathways.Add("famil","tpequ");
-			info.Pathways.Add("wareh","equip");
 			info.Pathways.Add("decom","equip");
+			info.Pathways.Add("wareh","equip");
 			info.Pathways.Add("room1","equip");
-			info.Pathways.Add("cmpny","equip");
 			info.Pathways.Add("item","equip");
+			info.Pathways.Add("cmpny","equip");
 			info.Pathways.Add("pess1","equip");
-			info.Pathways.Add("cntry","equip");
 			info.Pathways.Add("gitem","equip");
+			info.Pathways.Add("cntry","equip");
 			info.Pathways.Add("stake","equip");
 			info.Pathways.Add("cate2","equip");
 		}

@@ -143,7 +143,7 @@
 			<div :id="`q-modal-${modal.id}-footer`" />
 		</template>
 	</q-dialog>
-	
+
 	<q-dialog-provider />
 
 	<q-suggestions
@@ -511,12 +511,14 @@
 			 */
 			closeModal(modal)
 			{
+				let dismiss = true
+
 				if (typeof modal.dismissAction === 'function')
-					modal.dismissAction()
+					dismiss = modal.dismissAction()
 
 				// If the modal is not from a route, remove it
 				// If the modal is from a route, it will be removed when the route changes
-				if (!modal.hasRoute)
+				if (!modal.hasRoute && dismiss !== false)
 					removeModal(modal.id)
 			},
 

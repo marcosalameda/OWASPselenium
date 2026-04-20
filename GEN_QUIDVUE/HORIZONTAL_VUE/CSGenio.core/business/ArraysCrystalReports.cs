@@ -48,13 +48,6 @@ namespace CSGenio.business
 			            Qresult.AppendLine("if {{{0}}} = \"C\" then \"Não existe CC (contabilidade de custos)\" else");
             Qresult.Append("\"                                              \"");
             todasArrays.Add("accustos", Qresult.ToString());
-			// acondtst
-            Qresult = new StringBuilder();
-			            Qresult.AppendLine("if {{{0}}} = \"BLOCK\" then \"Block field\" else");
-			            Qresult.AppendLine("if {{{0}}} = \"HIDE\" then \"Hide field\" else");
-			            Qresult.AppendLine("if {{{0}}} = \"REQUIRE\" then \"Require field\" else");
-            Qresult.Append("\"                                              \"");
-            todasArrays.Add("acondtst", Qresult.ToString());
 			// active
             Qresult = new StringBuilder();
 			            Qresult.AppendLine("if {{{0}}} = \"Y\" then \"Yes\" else");
@@ -248,22 +241,6 @@ namespace CSGenio.business
 			            Qresult.AppendLine("if {{{0}}} = \"N\" then \"Não\" else");
             Qresult.Append("\"                                              \"");
             todasArrays.Add("asimnao", Qresult.ToString());
-			// assetcategory
-            Qresult = new StringBuilder();
-			            Qresult.AppendLine("if {{{0}}} = \"RE\" then \"Real Estate\" else");
-			            Qresult.AppendLine("if {{{0}}} = \"VCL\" then \"Vehicle\" else");
-			            Qresult.AppendLine("if {{{0}}} = \"EQUIP\" then \"Equipment\" else");
-			            Qresult.AppendLine("if {{{0}}} = \"FNTR\" then \"Furniture\" else");
-            Qresult.Append("\"                                              \"");
-            todasArrays.Add("assetcategory", Qresult.ToString());
-			// assettags
-            Qresult = new StringBuilder();
-			Qresult.AppendLine("if {{{0}}} = 1 then \"Urgent\" else");
-			Qresult.AppendLine("if {{{0}}} = 2 then \"Checked\" else");
-			Qresult.AppendLine("if {{{0}}} = 3 then \"In Repair\" else");
-			Qresult.AppendLine("if {{{0}}} = 4 then \"Important\" else");
-            Qresult.Append("\"                                              \"");
-            todasArrays.Add("assettags", Qresult.ToString());
 			// assettyp
             Qresult = new StringBuilder();
 			            Qresult.AppendLine("if {{{0}}} = \"E\" then \"Equipment\" else");
@@ -406,18 +383,6 @@ namespace CSGenio.business
 			Qresult.AppendLine("if {{{0}}} = 3 then \"Económica\" else");
             Qresult.Append("\"                                              \"");
             todasArrays.Add("classnum", Qresult.ToString());
-			// componenticons
-            Qresult = new StringBuilder();
-			Qresult.AppendLine("if {{{0}}} = 2 then \"Data Input\" else");
-			Qresult.AppendLine("if {{{0}}} = 6 then \"Data Display\" else");
-			Qresult.AppendLine("if {{{0}}} = 3 then \"Data Grid\" else");
-			Qresult.AppendLine("if {{{0}}} = 4 then \"Action\" else");
-			Qresult.AppendLine("if {{{0}}} = 5 then \"Container\" else");
-			Qresult.AppendLine("if {{{0}}} = 8 then \"Relational structure\" else");
-			Qresult.AppendLine("if {{{0}}} = 7 then \"Interactive\" else");
-			Qresult.AppendLine("if {{{0}}} = 1 then \"Media\" else");
-            Qresult.Append("\"                                              \"");
-            todasArrays.Add("componenticons", Qresult.ToString());
 			// datatype
             Qresult = new StringBuilder();
 			            Qresult.AppendLine("if {{{0}}} = \"T\" then \"Text\" else");
@@ -598,11 +563,6 @@ namespace CSGenio.business
 			            Qresult.AppendLine("if {{{0}}} = \"Outro\" then \"Other\" else");
             Qresult.Append("\"                                              \"");
             todasArrays.Add("sexo", Qresult.ToString());
-			// sistema_contabilistico
-            Qresult = new StringBuilder();
-			            Qresult.AppendLine("if {{{0}}} = \"SNC\" then \"SNC\" else");
-            Qresult.Append("\"                                              \"");
-            todasArrays.Add("sistema_contabilistico", Qresult.ToString());
 			// spacetyp
             Qresult = new StringBuilder();
 			            Qresult.AppendLine("if {{{0}}} = \"F\" then \"Floor\" else");

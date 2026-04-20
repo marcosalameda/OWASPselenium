@@ -3,22 +3,23 @@
 		v-if="menuModalIsReady"
 		:to="`#${uiContainersId.body}`"
 		:disabled="!menuInfo.isPopup">
-		<form
+		<div
 			class="form-horizontal"
 			@submit.prevent>
 			<q-row-container>
 				<q-table
 					v-bind="controls.menu"
 					v-on="controls.menu.handlers">
+					<template #header>
+						<q-table-config
+							:table-ctrl="controls.menu"
+							v-on="controls.menu.handlers">
+						</q-table-config>
+					</template>
 					<!-- USE /[MANUAL GQT CUSTOM_TABLE STY_Menu_IMGBACKGROUND]/ -->
 				</q-table>
-
-				<q-table-extra-extension
-					:list-ctrl="controls.menu"
-					:filter-operators="controls.menu.filterOperators"
-					v-on="controls.menu.handlers" />
 			</q-row-container>
-		</form>
+		</div>
 	</teleport>
 
 	<teleport
@@ -176,7 +177,6 @@
 								scrollData: 9,
 								export: 1,
 								array: computed(() => new qProjArrays.QArraySexo(vm.$getResource).elements),
-								arrayType: qProjArrays.QArraySexo.type,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.NumericColumn({
 								order: 4,
@@ -283,18 +283,6 @@
 								searchable: false,
 								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
-							new listColumnTypes.BooleanColumn({
-								order: 14,
-								name: 'ValShowreco',
-								area: 'WPESS',
-								field: 'SHOWRECO',
-								label: computed(() => this.Resources.SHOW_RECORD11620),
-								scrollData: 1,
-								isVisible: false,
-								sortable: false,
-								searchable: false,
-								export: 0,
-							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 						],
 						config: {
 							name: 'STY_Menu_IMGBACKGROUND',
@@ -311,7 +299,6 @@
 							searchBarConfig: {
 								visibility: true
 							},
-							filtersVisible: true,
 							allowColumnFilters: true,
 							allowColumnSort: true,
 							crudActions: [
@@ -385,9 +372,7 @@
 									id: 'insert',
 									name: 'insert',
 									title: computed(() => this.Resources.INSERIR43365),
-									icon: {
-										icon: 'add'
-									},
+									icon: { icon: 'add' },
 									isInReadOnly: true,
 									params: {
 										action: vm.openFormAction,
@@ -436,7 +421,7 @@
 								sortOrder: 'asc'
 							}
 						},
-						globalEvents: ['changed-WPESS', 'changed-WAREH'],
+						globalEvents: ['changed-WAREH', 'changed-WPESS'],
 						uuid: '1e458cba-04d7-4e05-b1f9-079d14d87bcf',
 						allSelectedRows: 'false',
 						viewModes: [
@@ -470,7 +455,6 @@
 										allowsMultiple: true,
 										sources: [
 											'WPESS.EMAIL',
-											'WPESS.SHOWRECO',
 										]
 									},
 									image: {

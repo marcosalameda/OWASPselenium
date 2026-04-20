@@ -11,7 +11,7 @@
     "dev": "pnpm run pre-dev && set NODE_OPTIONS=--max_old_space_size=10240 && vite --mode development",
     "serve": "set NODE_OPTIONS=--max_old_space_size=10240 && vite serve --mode development",
     "storybook": "storybook dev -p 6006",
-    "build:storybook": "storybook build"
+    "build:storybook": "set NODE_OPTIONS=--max_old_space_size=10240 && storybook build"
   },
   "dependencies": {
     "@fullcalendar/common": "5.10.1",
@@ -38,7 +38,7 @@
     "proj4": "2.9.1",
     "screenfull": "6.0.2",
     "vue3-google-map": "0.18.0",
-    "@quidgest/chatbot": "~0.6.3",
+    "@quidgest/chatbot": "~0.6.7",
     "@quidgest/clientapp": "workspace:*",
     "@quidgest/ui": "catalog:",
     "@tinymce/tinymce-vue": "5.0.0",
@@ -60,7 +60,7 @@
     "popper.js": "1.16.1",
     "qrcode.vue": "3.3.3",
     "sortablejs": "1.15.6",
-    "uuid": "11.0.5",
+    "uuid": "13.0.0",
     "vite-plugin-pwa": "1.0.3",
     "vue": "catalog:",
     "vue-cookies": "1.7.4",

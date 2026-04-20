@@ -7,6 +7,7 @@ using GenioMVC.Models.Navigation;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Quidgest.Persistence;
 using Quidgest.Persistence.GenericQuery;
+
 using System.Collections;
 using System.Collections.Concurrent;
 using System.Collections.Specialized;
@@ -49,6 +50,7 @@ namespace GenioMVC.ViewModels.Lnhde
 		public string ValCodtpequ { get; set; }
 
 		#endregion
+
 		/// <summary>
 		/// Title: "Order no:" | Type: "N"
 		/// </summary>
@@ -88,8 +90,6 @@ namespace GenioMVC.ViewModels.Lnhde
 		/// Title: "Site" | Type: "C"
 		/// </summary>
 		public string ValUrl { get; set; }
-
-
 
 		#region Navigations
 		#endregion
@@ -294,12 +294,7 @@ namespace GenioMVC.ViewModels.Lnhde
 			}
 		}
 
-		/// <summary>
-		/// Sets the value of a single property of the view model based on the provided table and field names.
-		/// </summary>
-		/// <param name="fullFieldName">The full field name in the format "table.field".</param>
-		/// <param name="value">The field value.</param>
-		/// <exception cref="ArgumentNullException">Thrown if <paramref name="fullFieldName"/> is null.</exception>
+		/// <inheritdoc />
 		public override void SetViewModelValue(string fullFieldName, object value)
 		{
 			try
@@ -447,6 +442,7 @@ namespace GenioMVC.ViewModels.Lnhde
 			Load_Lnhde___pedidnrpedido(qs, lazyLoad);
 			Load_Lnhde___lnhpdline____(qs, lazyLoad);
 			Load_Lnhde___tpeq1tipoequi(qs, lazyLoad);
+
 // USE /[MANUAL GQT VIEWMODEL_LOADPARTIAL LNHDE]/
 		}
 
@@ -519,10 +515,7 @@ namespace GenioMVC.ViewModels.Lnhde
 				}
 			}
 
-			TablePedidNrpedido = new TableDBEdit<Models.Pedid>
-			{
-				IsLazyLoad = lazyLoad
-			};
+			TablePedidNrpedido = new TableDBEdit<Models.Pedid>();
 
 			if (lazyLoad)
 			{
@@ -712,10 +705,7 @@ namespace GenioMVC.ViewModels.Lnhde
 			// Area limit
 			lnhde___lnhpdline____DoLoad &= AddCriteriaAreaLimit(lnhde___lnhpdline____Conds, CSGenio.business.CSGenioApedid.FldCodpedid, "pedid", this.ValCodpedid, true);
 
-			TableLnhpdLine = new TableDBEdit<Models.Lnhpd>
-			{
-				IsLazyLoad = lazyLoad
-			};
+			TableLnhpdLine = new TableDBEdit<Models.Lnhpd>();
 
 			if (lazyLoad)
 			{
@@ -914,10 +904,7 @@ namespace GenioMVC.ViewModels.Lnhde
 				}
 			}
 
-			TableTpeq1Tipoequi = new TableDBEdit<Models.Tpeq1>
-			{
-				IsLazyLoad = lazyLoad
-			};
+			TableTpeq1Tipoequi = new TableDBEdit<Models.Tpeq1>();
 
 			if (lazyLoad)
 			{

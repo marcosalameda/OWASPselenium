@@ -1,5 +1,7 @@
 ﻿<template>
-	<q-row :gutter="4">
+	<q-row
+		class="q-table__current-filters"
+		:gutter="4">
 		<q-col
 			v-for="(filter, filterIdx) in filters"
 			:key="filterIdx"
@@ -8,7 +10,6 @@
 				data-testid="table-filter"
 				pill
 				removable
-				size="large"
 				:disabled="!filter.active"
 				:title="texts.editText"
 				:data-column-id="filterIdx"
@@ -17,20 +18,6 @@
 				@click:remove="removeFilter(filterIdx)">
 				<q-icon icon="filter" />
 				{{ getFilterName(filterOperators, filter, searchableColumns, texts.orText, texts.allFieldsText) }}
-			</q-badge>
-		</q-col>
-
-		<q-col cols="auto">
-			<q-badge
-				v-if="filters.length > 0"
-				data-testid="clear-filters"
-				pill
-				size="large"
-				variant="outlined"
-				:title="texts.clear"
-				@click="clearFilters">
-				<q-icon icon="remove" />
-				{{ texts.clear }}
 			</q-badge>
 		</q-col>
 	</q-row>
@@ -45,7 +32,7 @@
 	export default {
 		name: 'QTableCurrentFilters',
 
-		emits: ['show-advanced-filters', 'update:filters'],
+		emits: ['show-filters', 'update:filters'],
 
 		props: {
 			/**
@@ -92,7 +79,7 @@
 			 */
 			editFilter(filterIdx)
 			{
-				this.$emit('show-advanced-filters', filterIdx)
+				this.$emit('show-filters', filterIdx)
 			},
 
 			/**
@@ -105,14 +92,6 @@
 				filters.splice(filterIdx, 1)
 
 				this.$emit('update:filters', filters)
-			},
-
-			/**
-			 * Clear all column filters
-			 */
-			clearFilters()
-			{
-				this.$emit('update:filters', [])
 			}
 		}
 	}

@@ -9,12 +9,13 @@
 			<div
 				v-if="showFormHeader"
 				class="c-action-bar">
-				<h1
+				<component
 					v-if="formControl.uiComponents.header && formInfo.designation"
+					:is="topHeadingTag"
 					:id="formTitleId"
 					class="form-header">
 					{{ formInfo.designation }}
-				</h1>
+				</component>
 
 				<div class="c-action-bar__menu">
 					<template
@@ -40,13 +41,10 @@
 									@click="btn.action">
 									<template v-if="btn.icon">
 										<q-badge-indicator
-											v-if="btn.badge && btn.badge.isVisible"
-											:color="btn.badge.color">
+											:enabled="btn.badge?.isVisible ?? false"
+											:color="btn.badge?.color">
 											<q-icon v-bind="btn.icon" />
 										</q-badge-indicator>
-										<q-icon
-											v-else
-											v-bind="btn.icon" />
 									</template>
 								</q-toggle-group-item>
 							</template>
@@ -97,6 +95,7 @@
 		<q-container
 			fluid
 			data-key="FOTOS"
+			:data-identifier="primaryKeyValue"
 			:data-loading="!formInitialDataLoaded || !isActiveForm">
 			<template v-if="formControl.initialized && showFormBody">
 				<q-row v-if="controls.FOTOS___EQUIPREGISTNR.isVisible">
@@ -106,7 +105,8 @@
 						<base-input-structure
 							v-if="controls.FOTOS___EQUIPREGISTNR.isVisible"
 							class="i-text"
-							v-bind="controls.FOTOS___EQUIPREGISTNR"
+							v-bind="controls.FOTOS___EQUIPREGISTNR.wrapperProps"
+							:id="getControlId(controls.FOTOS___EQUIPREGISTNR)"
 							v-on="controls.FOTOS___EQUIPREGISTNR.handlers"
 							:loading="controls.FOTOS___EQUIPREGISTNR.props.loading"
 							:reporting-mode-on="reportingModeCAV"
@@ -114,6 +114,7 @@
 							<q-lookup
 								v-if="controls.FOTOS___EQUIPREGISTNR.isVisible"
 								v-bind="controls.FOTOS___EQUIPREGISTNR.props"
+								:id="getControlId(controls.FOTOS___EQUIPREGISTNR)"
 								v-on="controls.FOTOS___EQUIPREGISTNR.handlers" />
 							<q-see-more-fotos-equipregistnr
 								v-if="controls.FOTOS___EQUIPREGISTNR.seeMoreIsVisible"
@@ -129,7 +130,8 @@
 						<base-input-structure
 							v-if="controls.FOTOS___PHOTOPHOTOGRA.isVisible"
 							class="q-image"
-							v-bind="controls.FOTOS___PHOTOPHOTOGRA"
+							v-bind="controls.FOTOS___PHOTOPHOTOGRA.wrapperProps"
+							:id="getControlId(controls.FOTOS___PHOTOPHOTOGRA)"
 							v-on="controls.FOTOS___PHOTOPHOTOGRA.handlers"
 							:loading="controls.FOTOS___PHOTOPHOTOGRA.props.loading"
 							:reporting-mode-on="reportingModeCAV"
@@ -137,6 +139,7 @@
 							<q-image
 								v-if="controls.FOTOS___PHOTOPHOTOGRA.isVisible"
 								v-bind="controls.FOTOS___PHOTOPHOTOGRA.props"
+								:id="getControlId(controls.FOTOS___PHOTOPHOTOGRA)"
 								v-on="controls.FOTOS___PHOTOPHOTOGRA.handlers" />
 						</base-input-structure>
 					</q-col>
@@ -148,13 +151,15 @@
 						<base-input-structure
 							v-if="controls.FOTOS___PHOTOTITLE___.isVisible"
 							class="i-text"
-							v-bind="controls.FOTOS___PHOTOTITLE___"
+							v-bind="controls.FOTOS___PHOTOTITLE___.wrapperProps"
+							:id="getControlId(controls.FOTOS___PHOTOTITLE___)"
 							v-on="controls.FOTOS___PHOTOTITLE___.handlers"
 							:loading="controls.FOTOS___PHOTOTITLE___.props.loading"
 							:reporting-mode-on="reportingModeCAV"
 							:suggestion-mode-on="suggestionModeOn">
 							<q-text-field
 								v-bind="controls.FOTOS___PHOTOTITLE___.props"
+								:id="getControlId(controls.FOTOS___PHOTOTITLE___)"
 								@blur="onBlur(controls.FOTOS___PHOTOTITLE___, model.ValTitle.value)"
 								@change="model.ValTitle.fnUpdateValueOnChange" />
 						</base-input-structure>
@@ -167,7 +172,8 @@
 						<base-input-structure
 							v-if="controls.FOTOS___PHOTOANEXED__.isVisible"
 							class="i-text"
-							v-bind="controls.FOTOS___PHOTOANEXED__"
+							v-bind="controls.FOTOS___PHOTOANEXED__.wrapperProps"
+							:id="getControlId(controls.FOTOS___PHOTOANEXED__)"
 							v-on="controls.FOTOS___PHOTOANEXED__.handlers"
 							:loading="controls.FOTOS___PHOTOANEXED__.props.loading"
 							:reporting-mode-on="reportingModeCAV"
@@ -175,6 +181,7 @@
 							<q-date-time-picker
 								v-if="controls.FOTOS___PHOTOANEXED__.isVisible"
 								v-bind="controls.FOTOS___PHOTOANEXED__.props"
+								:id="getControlId(controls.FOTOS___PHOTOANEXED__)"
 								:model-value="model.ValAnexed.value"
 								@reset-icon-click="model.ValAnexed.fnUpdateValue(model.ValAnexed.originalValue ?? new Date())"
 								@update:model-value="model.ValAnexed.fnUpdateValue($event ?? '')" />
@@ -185,7 +192,7 @@
 		</q-container>
 	</teleport>
 
-	<hr v-if="!isPopup && showFormFooter" />
+	<q-divider v-if="!isPopup && showFormFooter" />
 
 	<teleport
 		v-if="formModalIsReady && showFormFooter"
@@ -983,7 +990,6 @@
 
 				this.afterControlUpdate(controlField, fieldValue)
 			},
-
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
 // USE /[MANUAL GQT FUNCTIONS_JS FOTOS]/
 // eslint-disable-next-line

@@ -9,12 +9,13 @@
 			<div
 				v-if="showFormHeader"
 				class="c-action-bar">
-				<h1
+				<component
 					v-if="formControl.uiComponents.header && formInfo.designation"
+					:is="topHeadingTag"
 					:id="formTitleId"
 					class="form-header">
 					{{ formInfo.designation }}
-				</h1>
+				</component>
 
 				<div class="c-action-bar__menu">
 					<template
@@ -40,13 +41,10 @@
 									@click="btn.action">
 									<template v-if="btn.icon">
 										<q-badge-indicator
-											v-if="btn.badge && btn.badge.isVisible"
-											:color="btn.badge.color">
+											:enabled="btn.badge?.isVisible ?? false"
+											:color="btn.badge?.color">
 											<q-icon v-bind="btn.icon" />
 										</q-badge-indicator>
-										<q-icon
-											v-else
-											v-bind="btn.icon" />
 									</template>
 								</q-toggle-group-item>
 							</template>
@@ -97,14 +95,15 @@
 		<q-container
 			fluid
 			data-key="INSTA"
+			:data-identifier="primaryKeyValue"
 			:data-loading="!formInitialDataLoaded || !isActiveForm">
 			<template v-if="formControl.initialized && showFormBody">
 				<q-row v-if="controls.INSTA___PSEUDNOVOGR01.isVisible">
 					<q-col v-if="controls.INSTA___PSEUDNOVOGR01.isVisible">
 						<q-group-collapsible
 							v-if="controls.INSTA___PSEUDNOVOGR01.isVisible"
-							id="INSTA___PSEUDNOVOGR01"
 							v-bind="controls.INSTA___PSEUDNOVOGR01"
+							:id="getControlId(controls.INSTA___PSEUDNOVOGR01)"
 							v-on="controls.INSTA___PSEUDNOVOGR01.handlers">
 							<!-- Start INSTA___PSEUDNOVOGR01 -->
 							<q-row v-if="controls.INSTA___TPEQUTIPOEQUI.isVisible">
@@ -114,7 +113,8 @@
 									<base-input-structure
 										v-if="controls.INSTA___TPEQUTIPOEQUI.isVisible"
 										class="i-text"
-										v-bind="controls.INSTA___TPEQUTIPOEQUI"
+										v-bind="controls.INSTA___TPEQUTIPOEQUI.wrapperProps"
+										:id="getControlId(controls.INSTA___TPEQUTIPOEQUI)"
 										v-on="controls.INSTA___TPEQUTIPOEQUI.handlers"
 										:loading="controls.INSTA___TPEQUTIPOEQUI.props.loading"
 										:reporting-mode-on="reportingModeCAV"
@@ -122,6 +122,7 @@
 										<q-lookup
 											v-if="controls.INSTA___TPEQUTIPOEQUI.isVisible"
 											v-bind="controls.INSTA___TPEQUTIPOEQUI.props"
+											:id="getControlId(controls.INSTA___TPEQUTIPOEQUI)"
 											v-on="controls.INSTA___TPEQUTIPOEQUI.handlers" />
 										<q-see-more-insta-tpequtipoequi
 											v-if="controls.INSTA___TPEQUTIPOEQUI.seeMoreIsVisible"
@@ -137,7 +138,8 @@
 									<base-input-structure
 										v-if="controls.INSTA___EQUIPREGISTNR.isVisible"
 										class="i-text"
-										v-bind="controls.INSTA___EQUIPREGISTNR"
+										v-bind="controls.INSTA___EQUIPREGISTNR.wrapperProps"
+										:id="getControlId(controls.INSTA___EQUIPREGISTNR)"
 										v-on="controls.INSTA___EQUIPREGISTNR.handlers"
 										:loading="controls.INSTA___EQUIPREGISTNR.props.loading"
 										:reporting-mode-on="reportingModeCAV"
@@ -145,6 +147,7 @@
 										<q-lookup
 											v-if="controls.INSTA___EQUIPREGISTNR.isVisible"
 											v-bind="controls.INSTA___EQUIPREGISTNR.props"
+											:id="getControlId(controls.INSTA___EQUIPREGISTNR)"
 											v-on="controls.INSTA___EQUIPREGISTNR.handlers" />
 										<q-see-more-insta-equipregistnr
 											v-if="controls.INSTA___EQUIPREGISTNR.seeMoreIsVisible"
@@ -158,13 +161,15 @@
 									<base-input-structure
 										v-if="controls.INSTA___EQUIPDESIGNAT.isVisible"
 										class="i-text"
-										v-bind="controls.INSTA___EQUIPDESIGNAT"
+										v-bind="controls.INSTA___EQUIPDESIGNAT.wrapperProps"
+										:id="getControlId(controls.INSTA___EQUIPDESIGNAT)"
 										v-on="controls.INSTA___EQUIPDESIGNAT.handlers"
 										:loading="controls.INSTA___EQUIPDESIGNAT.props.loading"
 										:reporting-mode-on="reportingModeCAV"
 										:suggestion-mode-on="suggestionModeOn">
 										<q-text-field
 											v-bind="controls.INSTA___EQUIPDESIGNAT.props"
+											:id="getControlId(controls.INSTA___EQUIPDESIGNAT)"
 											@blur="onBlur(controls.INSTA___EQUIPDESIGNAT, model.EquipValDesignat.value)"
 											@change="model.EquipValDesignat.fnUpdateValueOnChange" />
 									</base-input-structure>
@@ -177,7 +182,8 @@
 									<base-input-structure
 										v-if="controls.INSTA___EQUIPPHOTOGRA.isVisible"
 										class="q-image"
-										v-bind="controls.INSTA___EQUIPPHOTOGRA"
+										v-bind="controls.INSTA___EQUIPPHOTOGRA.wrapperProps"
+										:id="getControlId(controls.INSTA___EQUIPPHOTOGRA)"
 										v-on="controls.INSTA___EQUIPPHOTOGRA.handlers"
 										:loading="controls.INSTA___EQUIPPHOTOGRA.props.loading"
 										:reporting-mode-on="reportingModeCAV"
@@ -185,6 +191,7 @@
 										<q-image
 											v-if="controls.INSTA___EQUIPPHOTOGRA.isVisible"
 											v-bind="controls.INSTA___EQUIPPHOTOGRA.props"
+											:id="getControlId(controls.INSTA___EQUIPPHOTOGRA)"
 											v-on="controls.INSTA___EQUIPPHOTOGRA.handlers" />
 									</base-input-structure>
 								</q-col>
@@ -197,9 +204,9 @@
 					<q-col v-if="controls.INSTA___PSEUDNOVOGR02.isVisible">
 						<q-group-box-container
 							v-if="controls.INSTA___PSEUDNOVOGR02.isVisible"
-							id="INSTA___PSEUDNOVOGR02"
 							v-bind="controls.INSTA___PSEUDNOVOGR02"
-							:is-visible="controls.INSTA___PSEUDNOVOGR02.isVisible">
+							:id="getControlId(controls.INSTA___PSEUDNOVOGR02)"
+							:no-border="controls.INSTA___PSEUDNOVOGR02.borderless">
 							<!-- Start INSTA___PSEUDNOVOGR02 -->
 							<q-row v-if="controls.INSTA___INSTASINCE___.isVisible || controls.INSTA___INSTAUNTIL___.isVisible || controls.INSTA___INSTAHOURS___.isVisible || controls.INSTA___INSTAPRECOHOR.isVisible || controls.INSTA___INSTAVALUE___.isVisible">
 								<q-col
@@ -208,7 +215,8 @@
 									<base-input-structure
 										v-if="controls.INSTA___INSTASINCE___.isVisible"
 										class="i-text"
-										v-bind="controls.INSTA___INSTASINCE___"
+										v-bind="controls.INSTA___INSTASINCE___.wrapperProps"
+										:id="getControlId(controls.INSTA___INSTASINCE___)"
 										v-on="controls.INSTA___INSTASINCE___.handlers"
 										:loading="controls.INSTA___INSTASINCE___.props.loading"
 										:reporting-mode-on="reportingModeCAV"
@@ -216,6 +224,7 @@
 										<q-date-time-picker
 											v-if="controls.INSTA___INSTASINCE___.isVisible"
 											v-bind="controls.INSTA___INSTASINCE___.props"
+											:id="getControlId(controls.INSTA___INSTASINCE___)"
 											:model-value="model.ValSince.value"
 											@reset-icon-click="model.ValSince.fnUpdateValue(model.ValSince.originalValue ?? new Date())"
 											@update:model-value="model.ValSince.fnUpdateValue($event ?? '')" />
@@ -227,7 +236,8 @@
 									<base-input-structure
 										v-if="controls.INSTA___INSTAUNTIL___.isVisible"
 										class="i-text"
-										v-bind="controls.INSTA___INSTAUNTIL___"
+										v-bind="controls.INSTA___INSTAUNTIL___.wrapperProps"
+										:id="getControlId(controls.INSTA___INSTAUNTIL___)"
 										v-on="controls.INSTA___INSTAUNTIL___.handlers"
 										:loading="controls.INSTA___INSTAUNTIL___.props.loading"
 										:reporting-mode-on="reportingModeCAV"
@@ -235,6 +245,7 @@
 										<q-date-time-picker
 											v-if="controls.INSTA___INSTAUNTIL___.isVisible"
 											v-bind="controls.INSTA___INSTAUNTIL___.props"
+											:id="getControlId(controls.INSTA___INSTAUNTIL___)"
 											:model-value="model.ValUntil.value"
 											@reset-icon-click="model.ValUntil.fnUpdateValue(model.ValUntil.originalValue ?? new Date())"
 											@update:model-value="model.ValUntil.fnUpdateValue($event ?? '')" />
@@ -246,7 +257,8 @@
 									<base-input-structure
 										v-if="controls.INSTA___INSTAHOURS___.isVisible"
 										class="i-text"
-										v-bind="controls.INSTA___INSTAHOURS___"
+										v-bind="controls.INSTA___INSTAHOURS___.wrapperProps"
+										:id="getControlId(controls.INSTA___INSTAHOURS___)"
 										v-on="controls.INSTA___INSTAHOURS___.handlers"
 										:loading="controls.INSTA___INSTAHOURS___.props.loading"
 										:reporting-mode-on="reportingModeCAV"
@@ -254,6 +266,7 @@
 										<q-numeric-input
 											v-if="controls.INSTA___INSTAHOURS___.isVisible"
 											v-bind="controls.INSTA___INSTAHOURS___.props"
+											:id="getControlId(controls.INSTA___INSTAHOURS___)"
 											@update:model-value="model.ValHours.fnUpdateValue" />
 									</base-input-structure>
 								</q-col>
@@ -263,7 +276,8 @@
 									<base-input-structure
 										v-if="controls.INSTA___INSTAPRECOHOR.isVisible"
 										class="i-text"
-										v-bind="controls.INSTA___INSTAPRECOHOR"
+										v-bind="controls.INSTA___INSTAPRECOHOR.wrapperProps"
+										:id="getControlId(controls.INSTA___INSTAPRECOHOR)"
 										v-on="controls.INSTA___INSTAPRECOHOR.handlers"
 										:loading="controls.INSTA___INSTAPRECOHOR.props.loading"
 										:reporting-mode-on="reportingModeCAV"
@@ -271,12 +285,14 @@
 										<q-numeric-input
 											v-if="controls.INSTA___INSTAPRECOHOR.isVisible"
 											v-bind="controls.INSTA___INSTAPRECOHOR.props"
+											:id="getControlId(controls.INSTA___INSTAPRECOHOR)"
 											@update:model-value="model.ValPrecohor.fnUpdateValue" />
 									</base-input-structure>
 									<base-input-structure
 										v-if="controls.INSTA___INSTAVALUE___.isVisible"
 										class="i-text"
-										v-bind="controls.INSTA___INSTAVALUE___"
+										v-bind="controls.INSTA___INSTAVALUE___.wrapperProps"
+										:id="getControlId(controls.INSTA___INSTAVALUE___)"
 										v-on="controls.INSTA___INSTAVALUE___.handlers"
 										:loading="controls.INSTA___INSTAVALUE___.props.loading"
 										:reporting-mode-on="reportingModeCAV"
@@ -284,6 +300,7 @@
 										<q-numeric-input
 											v-if="controls.INSTA___INSTAVALUE___.isVisible"
 											v-bind="controls.INSTA___INSTAVALUE___.props"
+											:id="getControlId(controls.INSTA___INSTAVALUE___)"
 											@update:model-value="model.ValValue.fnUpdateValue" />
 									</base-input-structure>
 								</q-col>
@@ -296,22 +313,24 @@
 					<q-col v-if="controls.INSTA___PSEUDNOVOGR03.isVisible">
 						<q-group-box-container
 							v-if="controls.INSTA___PSEUDNOVOGR03.isVisible"
-							id="INSTA___PSEUDNOVOGR03"
 							v-bind="controls.INSTA___PSEUDNOVOGR03"
-							:is-visible="controls.INSTA___PSEUDNOVOGR03.isVisible">
+							:id="getControlId(controls.INSTA___PSEUDNOVOGR03)"
+							:no-border="controls.INSTA___PSEUDNOVOGR03.borderless">
 							<!-- Start INSTA___PSEUDNOVOGR03 -->
 							<q-row v-if="controls.INSTA___INSTACOORDGEO.isVisible">
 								<q-col v-if="controls.INSTA___INSTACOORDGEO.isVisible">
 									<base-input-structure
 										v-if="controls.INSTA___INSTACOORDGEO.isVisible"
 										class="i-text"
-										v-bind="controls.INSTA___INSTACOORDGEO"
+										v-bind="controls.INSTA___INSTACOORDGEO.wrapperProps"
+										:id="getControlId(controls.INSTA___INSTACOORDGEO)"
 										v-on="controls.INSTA___INSTACOORDGEO.handlers"
 										:loading="controls.INSTA___INSTACOORDGEO.props.loading"
 										:reporting-mode-on="reportingModeCAV"
 										:suggestion-mode-on="suggestionModeOn">
 										<q-text-field
 											v-bind="controls.INSTA___INSTACOORDGEO.props"
+											:id="getControlId(controls.INSTA___INSTACOORDGEO)"
 											@blur="onBlur(controls.INSTA___INSTACOORDGEO, model.ValCoordgeo.value)"
 											@change="model.ValCoordgeo.fnUpdateValueOnChange" />
 									</base-input-structure>
@@ -325,7 +344,7 @@
 		</q-container>
 	</teleport>
 
-	<hr v-if="!isPopup && showFormFooter" />
+	<q-divider v-if="!isPopup && showFormFooter" />
 
 	<teleport
 		v-if="formModalIsReady && showFormFooter"
@@ -790,6 +809,7 @@
 						label: computed(() => this.Resources.COST06096),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
+						borderless: false,
 						isCollapsible: false,
 						anchored: false,
 						directChildren: ['INSTA___INSTASINCE___', 'INSTA___INSTAUNTIL___', 'INSTA___INSTAHOURS___', 'INSTA___INSTAPRECOHOR', 'INSTA___INSTAVALUE___'],
@@ -879,6 +899,7 @@
 						label: computed(() => this.Resources.LOCAL41011),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
+						borderless: false,
 						isCollapsible: false,
 						anchored: false,
 						directChildren: ['INSTA___INSTACOORDGEO'],
@@ -1466,7 +1487,6 @@
 
 				this.afterControlUpdate(controlField, fieldValue)
 			},
-
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
 // USE /[MANUAL GQT FUNCTIONS_JS INSTA]/
 // eslint-disable-next-line

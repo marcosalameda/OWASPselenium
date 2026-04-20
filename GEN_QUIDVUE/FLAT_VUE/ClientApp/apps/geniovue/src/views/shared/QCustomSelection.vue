@@ -106,11 +106,8 @@
 						initialSortColumnName: 'Record',
 						initialSortColumnOrder: 'asc',
 						crudActions: [],
-						globalSearch: {
-							visibility: false
-						},
 						perPage: 15,
-						numVisibilePaginationButtons: 3,
+						numVisiblePaginationButtons: 3,
 						showRecordCount: false,
 						rowBgColorSelected: '#e0e0e0',
 						rowClickActionInternal: 'selectSingle',

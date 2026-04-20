@@ -47,7 +47,7 @@ namespace CSGenio.business
 			Qfield = new Field(info.Alias, "codlnhde", FieldType.KEY_GUID);
 			Qfield.FieldDescription = "";
 			Qfield.FieldSize =  36;
-			Qfield.CavDesignation = "";
+			Qfield.VisivelCav = CavVisibilityType.Nunca;
 
 			Qfield.Dupmsg = "";
 			info.RegisterFieldDB(Qfield);
@@ -56,7 +56,7 @@ namespace CSGenio.business
 			Qfield = new Field(info.Alias, "codlnhpd", FieldType.KEY_GUID);
 			Qfield.FieldDescription = "";
 			Qfield.FieldSize =  36;
-			Qfield.CavDesignation = "";
+			Qfield.VisivelCav = CavVisibilityType.Nunca;
 
 			Qfield.Dupmsg = "";
 			info.RegisterFieldDB(Qfield);
@@ -89,7 +89,7 @@ namespace CSGenio.business
 			Qfield = new Field(info.Alias, "codtpequ", FieldType.KEY_GUID);
 			Qfield.FieldDescription = "";
 			Qfield.FieldSize =  36;
-			Qfield.CavDesignation = "";
+			Qfield.VisivelCav = CavVisibilityType.Nunca;
 
 			Qfield.Dupmsg = "";
 			info.RegisterFieldDB(Qfield);
@@ -109,7 +109,7 @@ namespace CSGenio.business
 			Qfield = new Field(info.Alias, "codlnhag", FieldType.KEY_GUID);
 			Qfield.FieldDescription = "";
 			Qfield.FieldSize =  36;
-			Qfield.CavDesignation = "";
+			Qfield.VisivelCav = CavVisibilityType.Nunca;
 
 			Qfield.Dupmsg = "";
 			info.RegisterFieldDB(Qfield);
@@ -199,12 +199,12 @@ namespace CSGenio.business
 			//------------------------------
 			info.Pathways = new Dictionary<string, string>(7);
 			info.Pathways.Add("pedid","pedid");
-			info.Pathways.Add("lnhpd","lnhpd");
 			info.Pathways.Add("tpeq1","tpeq1");
+			info.Pathways.Add("lnhpd","lnhpd");
 			info.Pathways.Add("lnhag","lnhag");
+			info.Pathways.Add("fami1","tpeq1");
 			info.Pathways.Add("tpequ","lnhpd");
 			info.Pathways.Add("famil","lnhpd");
-			info.Pathways.Add("fami1","tpeq1");
 		}
 
 		/// <summary>

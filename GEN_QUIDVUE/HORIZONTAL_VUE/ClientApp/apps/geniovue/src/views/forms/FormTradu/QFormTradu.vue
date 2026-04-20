@@ -9,12 +9,13 @@
 			<div
 				v-if="showFormHeader"
 				class="c-action-bar">
-				<h1
+				<component
 					v-if="formControl.uiComponents.header && formInfo.designation"
+					:is="topHeadingTag"
 					:id="formTitleId"
 					class="form-header">
 					{{ formInfo.designation }}
-				</h1>
+				</component>
 
 				<div class="c-action-bar__menu">
 					<template
@@ -40,13 +41,10 @@
 									@click="btn.action">
 									<template v-if="btn.icon">
 										<q-badge-indicator
-											v-if="btn.badge && btn.badge.isVisible"
-											:color="btn.badge.color">
+											:enabled="btn.badge?.isVisible ?? false"
+											:color="btn.badge?.color">
 											<q-icon v-bind="btn.icon" />
 										</q-badge-indicator>
-										<q-icon
-											v-else
-											v-bind="btn.icon" />
 									</template>
 								</q-toggle-group-item>
 							</template>
@@ -97,6 +95,7 @@
 		<q-container
 			fluid
 			data-key="TRADU"
+			:data-identifier="primaryKeyValue"
 			:data-loading="!formInitialDataLoaded || !isActiveForm">
 			<template v-if="formControl.initialized && showFormBody">
 				<q-row v-if="controls.TRADU___TRADUREFERENC.isVisible">
@@ -106,13 +105,15 @@
 						<base-input-structure
 							v-if="controls.TRADU___TRADUREFERENC.isVisible"
 							class="i-text"
-							v-bind="controls.TRADU___TRADUREFERENC"
+							v-bind="controls.TRADU___TRADUREFERENC.wrapperProps"
+							:id="getControlId(controls.TRADU___TRADUREFERENC)"
 							v-on="controls.TRADU___TRADUREFERENC.handlers"
 							:loading="controls.TRADU___TRADUREFERENC.props.loading"
 							:reporting-mode-on="reportingModeCAV"
 							:suggestion-mode-on="suggestionModeOn">
 							<q-text-field
 								v-bind="controls.TRADU___TRADUREFERENC.props"
+								:id="getControlId(controls.TRADU___TRADUREFERENC)"
 								@blur="onBlur(controls.TRADU___TRADUREFERENC, model.ValReferenc.value)"
 								@change="model.ValReferenc.fnUpdateValueOnChange" />
 						</base-input-structure>
@@ -125,7 +126,8 @@
 						<base-input-structure
 							v-if="controls.TRADU___LANG1LANGUA__.isVisible"
 							class="i-text"
-							v-bind="controls.TRADU___LANG1LANGUA__"
+							v-bind="controls.TRADU___LANG1LANGUA__.wrapperProps"
+							:id="getControlId(controls.TRADU___LANG1LANGUA__)"
 							v-on="controls.TRADU___LANG1LANGUA__.handlers"
 							:loading="controls.TRADU___LANG1LANGUA__.props.loading"
 							:reporting-mode-on="reportingModeCAV"
@@ -133,6 +135,7 @@
 							<q-lookup
 								v-if="controls.TRADU___LANG1LANGUA__.isVisible"
 								v-bind="controls.TRADU___LANG1LANGUA__.props"
+								:id="getControlId(controls.TRADU___LANG1LANGUA__)"
 								v-on="controls.TRADU___LANG1LANGUA__.handlers" />
 							<q-see-more-tradu-lang1langua
 								v-if="controls.TRADU___LANG1LANGUA__.seeMoreIsVisible"
@@ -148,13 +151,15 @@
 						<base-input-structure
 							v-if="controls.TRADU___TRADUATRADUZI.isVisible"
 							class="i-text"
-							v-bind="controls.TRADU___TRADUATRADUZI"
+							v-bind="controls.TRADU___TRADUATRADUZI.wrapperProps"
+							:id="getControlId(controls.TRADU___TRADUATRADUZI)"
 							v-on="controls.TRADU___TRADUATRADUZI.handlers"
 							:loading="controls.TRADU___TRADUATRADUZI.props.loading"
 							:reporting-mode-on="reportingModeCAV"
 							:suggestion-mode-on="suggestionModeOn">
 							<q-text-field
 								v-bind="controls.TRADU___TRADUATRADUZI.props"
+								:id="getControlId(controls.TRADU___TRADUATRADUZI)"
 								@blur="onBlur(controls.TRADU___TRADUATRADUZI, model.ValAtraduzi.value)"
 								@change="model.ValAtraduzi.fnUpdateValueOnChange" />
 						</base-input-structure>
@@ -167,7 +172,8 @@
 						<base-input-structure
 							v-if="controls.TRADU___LANG2LANGUA__.isVisible"
 							class="i-text"
-							v-bind="controls.TRADU___LANG2LANGUA__"
+							v-bind="controls.TRADU___LANG2LANGUA__.wrapperProps"
+							:id="getControlId(controls.TRADU___LANG2LANGUA__)"
 							v-on="controls.TRADU___LANG2LANGUA__.handlers"
 							:loading="controls.TRADU___LANG2LANGUA__.props.loading"
 							:reporting-mode-on="reportingModeCAV"
@@ -175,6 +181,7 @@
 							<q-lookup
 								v-if="controls.TRADU___LANG2LANGUA__.isVisible"
 								v-bind="controls.TRADU___LANG2LANGUA__.props"
+								:id="getControlId(controls.TRADU___LANG2LANGUA__)"
 								v-on="controls.TRADU___LANG2LANGUA__.handlers" />
 							<q-see-more-tradu-lang2langua
 								v-if="controls.TRADU___LANG2LANGUA__.seeMoreIsVisible"
@@ -190,13 +197,15 @@
 						<base-input-structure
 							v-if="controls.TRADU___TRADUTRADUZID.isVisible"
 							class="i-text"
-							v-bind="controls.TRADU___TRADUTRADUZID"
+							v-bind="controls.TRADU___TRADUTRADUZID.wrapperProps"
+							:id="getControlId(controls.TRADU___TRADUTRADUZID)"
 							v-on="controls.TRADU___TRADUTRADUZID.handlers"
 							:loading="controls.TRADU___TRADUTRADUZID.props.loading"
 							:reporting-mode-on="reportingModeCAV"
 							:suggestion-mode-on="suggestionModeOn">
 							<q-text-field
 								v-bind="controls.TRADU___TRADUTRADUZID.props"
+								:id="getControlId(controls.TRADU___TRADUTRADUZID)"
 								@blur="onBlur(controls.TRADU___TRADUTRADUZID, model.ValTraduzid.value)"
 								@change="model.ValTraduzid.fnUpdateValueOnChange" />
 						</base-input-structure>
@@ -206,7 +215,7 @@
 		</q-container>
 	</teleport>
 
-	<hr v-if="!isPopup && showFormFooter" />
+	<q-divider v-if="!isPopup && showFormFooter" />
 
 	<teleport
 		v-if="formModalIsReady && showFormFooter"
@@ -1039,7 +1048,6 @@
 
 				this.afterControlUpdate(controlField, fieldValue)
 			},
-
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
 // USE /[MANUAL GQT FUNCTIONS_JS TRADU]/
 // eslint-disable-next-line

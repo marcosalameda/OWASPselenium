@@ -7,7 +7,7 @@
 				v-if="!isTreeMode"
 				v-bind="listCtrl"
 				v-on="listCtrl.handlers">
-				<template #tableTitle>
+				<template #title>
 					<q-toggle-group
 						v-model="currentMode"
 						required
@@ -20,12 +20,17 @@
 						</q-toggle-group-item>
 					</q-toggle-group>
 				</template>
+				<template #header>
+					<q-table-config
+						:table-ctrl="listCtrl"
+						v-on="listCtrl.handlers" />
+				</template>
 			</q-table>
 			<q-table
 				v-else
 				v-bind="treeListCtrl"
 				v-on="treeListCtrl.handlers">
-				<template #tableTitle>
+				<template #title>
 					<q-toggle-group
 						v-model="currentMode"
 						required
@@ -37,6 +42,11 @@
 							<q-icon icon="view-options" />
 						</q-toggle-group-item>
 					</q-toggle-group>
+				</template>
+				<template #header>
+					<q-table-config
+						:table-ctrl="treeListCtrl"
+						v-on="treeListCtrl.handlers" />
 				</template>
 			</q-table>
 		</q-row>
@@ -148,13 +158,8 @@
 					action: 'GetTreeSeeMore',
 					config: {
 						actionsPlacement: 'left',
-						generalActionsPlacement: 'below',
 						showFooter: true,
-						filtersVisible: false,
 						allowColumnSort: false,
-						globalSearch: {
-							visibility: false
-						},
 						rowClickActionInternal: null
 					}
 				}), this)
@@ -331,94 +336,8 @@
 							searchBarConfig: {
 								visibility: true
 							},
-							filtersVisible: true,
 							allowColumnFilters: true,
 							allowColumnSort: true,
-							crudActions: [
-								{
-									id: 'show',
-									name: 'show',
-									title: computed(() => this.Resources.CONSULTAR57388),
-									icon: {
-										icon: 'view'
-									},
-									isInReadOnly: true,
-									params: {
-										action: vm.openFormAction,
-										type: 'form',
-										formName: 'PESS1',
-										mode: 'SHOW',
-										isControlled: true
-									}
-								},
-								{
-									id: 'edit',
-									name: 'edit',
-									title: computed(() => this.Resources.EDITAR11616),
-									icon: {
-										icon: 'pencil'
-									},
-									isInReadOnly: false,
-									params: {
-										action: vm.openFormAction,
-										type: 'form',
-										formName: 'PESS1',
-										mode: 'EDIT',
-										isControlled: true
-									}
-								},
-								{
-									id: 'duplicate',
-									name: 'duplicate',
-									title: computed(() => this.Resources.DUPLICAR09748),
-									icon: {
-										icon: 'duplicate'
-									},
-									isInReadOnly: false,
-									params: {
-										action: vm.openFormAction,
-										type: 'form',
-										formName: 'PESS1',
-										mode: 'DUPLICATE',
-										isControlled: true
-									}
-								},
-								{
-									id: 'delete',
-									name: 'delete',
-									title: computed(() => this.Resources.ELIMINAR21155),
-									icon: {
-										icon: 'delete'
-									},
-									isInReadOnly: false,
-									params: {
-										action: vm.openFormAction,
-										type: 'form',
-										formName: 'PESS1',
-										mode: 'DELETE',
-										isControlled: true
-									}
-								}
-							],
-							generalActions: [
-								{
-									id: 'insert',
-									name: 'insert',
-									title: computed(() => this.Resources.INSERIR43365),
-									icon: {
-										icon: 'add'
-									},
-									isInReadOnly: false,
-									params: {
-										action: vm.openFormAction,
-										type: 'form',
-										formName: 'PESS1',
-										mode: 'NEW',
-										repeatInsertion: false,
-										isControlled: true
-									}
-								},
-							],
 							generalCustomActions: [
 							],
 							groupActions: [
@@ -432,10 +351,6 @@
 								name: 'see-more-choice',
 							},
 							formsDefinition: {
-								'PESS1': {
-									fnKeySelector: (row) => row.Fields.ValCodpesso,
-									isPopup: false
-								},
 							},
 							treeListDefinitions: {
 								branchAreas: {
@@ -459,27 +374,17 @@
 						},
 						groupFilters: [
 							{
-								id: 'filter_Accordi_Pess1ValName_FILTER1',
-								isMultiple: true,
+								id: 'filter_Accordi_Pess1ValName_',
+								isMultiple: false,
 								items: [
-									{
-										id: 'filter_Accordi_Pess1ValName_FILTER1_1',
-										value: computed(() => this.Resources.FEMALE46107),
-										key: '1'
-									},
 								],
 								selected: undefined,
 								default: undefined
 							},
 							{
-								id: 'filter_Accordi_Pess1ValName_FILTER2',
-								isMultiple: true,
+								id: 'filter_Accordi_Pess1ValName_',
+								isMultiple: false,
 								items: [
-									{
-										id: 'filter_Accordi_Pess1ValName_FILTER2_1',
-										value: computed(() => this.Resources.MALE32397),
-										key: '1'
-									},
 								],
 								selected: undefined,
 								default: undefined

@@ -7,6 +7,7 @@ using GenioMVC.Models.Navigation;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Quidgest.Persistence;
 using Quidgest.Persistence.GenericQuery;
+
 using System.Collections;
 using System.Collections.Concurrent;
 using System.Collections.Specialized;
@@ -44,6 +45,7 @@ namespace GenioMVC.ViewModels.Pess1
 		public string ValCodparte { get; set; }
 
 		#endregion
+
 		/// <summary>
 		/// Title: "Company:" | Type: "C"
 		/// </summary>
@@ -62,11 +64,6 @@ namespace GenioMVC.ViewModels.Pess1
 		/// Title: "Gender" | Type: "AC"
 		/// </summary>
 		public string ValGender { get; set; }
-		/// <summary>
-		/// Title: "" | Type: "PSEUD"
-		/// </summary>
-		[JsonIgnore]
-		public SelectList List_ValGender { get; set; }
 		/// <summary>
 		/// Title: "Birth" | Type: "D"
 		/// </summary>
@@ -90,7 +87,7 @@ namespace GenioMVC.ViewModels.Pess1
 		/// <summary>
 		/// Title: "Photo" | Type: "IJ"
 		/// </summary>
-		[ImageThumbnailJsonConverter(30, 50)]
+		[ImageThumbnailJsonConverter(100, 50)]
 		public GenioMVC.Models.ImageModel ValPhotogra { get; set; }
 		/// <summary>
 		/// Title: "Since" | Type: "D"
@@ -108,8 +105,6 @@ namespace GenioMVC.ViewModels.Pess1
 		/// Title: "Age" | Type: "N"
 		/// </summary>
 		public decimal? ValIdade { get; set; }
-
-
 
 		#region Navigations
 		#endregion
@@ -315,12 +310,7 @@ namespace GenioMVC.ViewModels.Pess1
 			}
 		}
 
-		/// <summary>
-		/// Sets the value of a single property of the view model based on the provided table and field names.
-		/// </summary>
-		/// <param name="fullFieldName">The full field name in the format "table.field".</param>
-		/// <param name="value">The field value.</param>
-		/// <exception cref="ArgumentNullException">Thrown if <paramref name="fullFieldName"/> is null.</exception>
+		/// <inheritdoc />
 		public override void SetViewModelValue(string fullFieldName, object value)
 		{
 			try
@@ -485,6 +475,7 @@ namespace GenioMVC.ViewModels.Pess1
 
 			Load_Pess1___cmpnydesignat(qs, lazyLoad);
 			Load_Pess1___stakedesignat(qs, lazyLoad);
+
 // USE /[MANUAL GQT VIEWMODEL_LOADPARTIAL PESS1]/
 		}
 
@@ -500,6 +491,8 @@ namespace GenioMVC.ViewModels.Pess1
 			CrudViewModelFieldValidator validator = new(m_userContext.User.Language);
 
 			validator.StringLength("ValName", Resources.Resources.NAME31974, ValName, 85);
+
+			validator.Required("ValName", Resources.Resources.NAME31974, ViewModelConversion.ToString(ValName), FieldType.TEXT.GetFormatting());
 			validator.StringLength("ValTelephon", Resources.Resources.TELEPHONE28697, ValTelephon, 20);
 			validator.StringLength("ValEmail", Resources.Resources.EMAIL25170, ValEmail, 254);
 			validator.StringLength("ValEmail2", Resources.Resources.EMAIL__CONFIRM_56391, ValEmail2, 254);
@@ -558,10 +551,7 @@ namespace GenioMVC.ViewModels.Pess1
 				}
 			}
 
-			TableCmpnyDesignat = new TableDBEdit<Models.Cmpny>
-			{
-				IsLazyLoad = lazyLoad
-			};
+			TableCmpnyDesignat = new TableDBEdit<Models.Cmpny>();
 
 			if (lazyLoad)
 			{
@@ -748,10 +738,7 @@ namespace GenioMVC.ViewModels.Pess1
 				}
 			}
 
-			TableStakeDesignat = new TableDBEdit<Models.Stake>
-			{
-				IsLazyLoad = lazyLoad
-			};
+			TableStakeDesignat = new TableDBEdit<Models.Stake>();
 
 			if (lazyLoad)
 			{

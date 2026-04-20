@@ -3,22 +3,23 @@
 		v-if="menuModalIsReady"
 		:to="`#${uiContainersId.body}`"
 		:disabled="!menuInfo.isPopup">
-		<form
+		<div
 			class="form-horizontal"
 			@submit.prevent>
 			<q-row-container>
 				<q-table
 					v-bind="controls.menu"
 					v-on="controls.menu.handlers">
+					<template #header>
+						<q-table-config
+							:table-ctrl="controls.menu"
+							v-on="controls.menu.handlers">
+						</q-table-config>
+					</template>
 					<!-- USE /[MANUAL GQT CUSTOM_TABLE PTN_Menu_3141]/ -->
 				</q-table>
-
-				<q-table-extra-extension
-					:list-ctrl="controls.menu"
-					:filter-operators="controls.menu.filterOperators"
-					v-on="controls.menu.handlers" />
 			</q-row-container>
-		</form>
+		</div>
 	</teleport>
 
 	<teleport
@@ -121,12 +122,12 @@
 				menuInfo: {
 					id: '3141',
 					isMenuList: true,
-					designation: computed(() => this.Resources.TABLES__BASIC_TYPES_29665),
+					designation: computed(() => this.Resources.RELATED_TABLES__BASI34539),
 					acronym: 'PTN_3141',
-					name: 'TBLB',
+					name: 'TRSB',
 					route: 'menu-PTN_3141',
 					order: '3141',
-					controller: 'TBLB',
+					controller: 'TRSB',
 					action: 'PTN_Menu_3141',
 					isPopup: false
 				},
@@ -137,7 +138,7 @@
 					menu: new controlClass.TableListControl({
 						fnHydrateViewModel: (data) => vm.model.hydrate(data),
 						id: 'PTN_Menu_3141',
-						controller: 'TBLB',
+						controller: 'TRSB',
 						action: 'PTN_Menu_3141',
 						hasDependencies: false,
 						isInCollapsible: false,
@@ -148,147 +149,30 @@
 						columnsOriginal: [
 							new listColumnTypes.TextColumn({
 								order: 1,
-								name: 'ValText',
-								area: 'TBLB',
-								field: 'TEXT',
-								label: computed(() => this.Resources.TEXT04938),
+								name: 'ValName',
+								area: 'TRSB',
+								field: 'NAME',
+								label: computed(() => this.Resources.NAME31974),
 								dataLength: 50,
 								scrollData: 30,
-							}, computed(() => vm.model), computed(() => vm.internalEvents)),
-							new listColumnTypes.TextColumn({
-								order: 2,
-								name: 'ValTextml',
-								area: 'TBLB',
-								field: 'TEXTML',
-								label: computed(() => this.Resources.MULTILINE_TEXT38013),
-								scrollData: 30,
-							}, computed(() => vm.model), computed(() => vm.internalEvents)),
-							new listColumnTypes.NumericColumn({
-								order: 3,
-								name: 'ValNumint',
-								area: 'TBLB',
-								field: 'NUMINT',
-								label: computed(() => this.Resources.NUMERIC__INTEGER_50289),
-								scrollData: 10,
-								maxDigits: 10,
-								decimalPlaces: 0,
-							}, computed(() => vm.model), computed(() => vm.internalEvents)),
-							new listColumnTypes.NumericColumn({
-								order: 4,
-								name: 'ValNumdec',
-								area: 'TBLB',
-								field: 'NUMDEC',
-								label: computed(() => this.Resources.NUMERIC__DECIMAL_36157),
-								scrollData: 10,
-								maxDigits: 6,
-								decimalPlaces: 3,
-							}, computed(() => vm.model), computed(() => vm.internalEvents)),
-							new listColumnTypes.CurrencyColumn({
-								order: 5,
-								name: 'ValCurint',
-								area: 'TBLB',
-								field: 'CURINT',
-								label: computed(() => this.Resources.CURRENCY__INTERGER_21437),
-								scrollData: 10,
-								maxDigits: 7,
-								decimalPlaces: 2,
-							}, computed(() => vm.model), computed(() => vm.internalEvents)),
-							new listColumnTypes.CurrencyColumn({
-								order: 6,
-								name: 'ValCurdec',
-								area: 'TBLB',
-								field: 'CURDEC',
-								label: computed(() => this.Resources.CURRENCY__DECIMAL_11718),
-								scrollData: 10,
-								maxDigits: 5,
-								decimalPlaces: 4,
-							}, computed(() => vm.model), computed(() => vm.internalEvents)),
-							new listColumnTypes.BooleanColumn({
-								order: 7,
-								name: 'ValBool',
-								area: 'TBLB',
-								field: 'BOOL',
-								label: computed(() => this.Resources.BOOLEAN45002),
-								scrollData: 1,
-							}, computed(() => vm.model), computed(() => vm.internalEvents)),
-							new listColumnTypes.DateColumn({
-								order: 8,
-								name: 'ValDate',
-								area: 'TBLB',
-								field: 'DATE',
-								label: computed(() => this.Resources.DATE18475),
-								scrollData: 8,
-								dateTimeType: 'date',
-							}, computed(() => vm.model), computed(() => vm.internalEvents)),
-							new listColumnTypes.DateColumn({
-								order: 9,
-								name: 'ValDatetm',
-								area: 'TBLB',
-								field: 'DATETM',
-								label: computed(() => this.Resources.DATETIME__MINUTES_59352),
-								scrollData: 16,
-								dateTimeType: 'dateTime',
-							}, computed(() => vm.model), computed(() => vm.internalEvents)),
-							new listColumnTypes.DateColumn({
-								order: 10,
-								name: 'ValDatets',
-								area: 'TBLB',
-								field: 'DATETS',
-								label: computed(() => this.Resources.DATETIME__SECONDS_49861),
-								scrollData: 19,
-								dateTimeType: 'dateTimeSeconds',
-							}, computed(() => vm.model), computed(() => vm.internalEvents)),
-							new listColumnTypes.TextColumn({
-								order: 11,
-								name: 'ValTimehm',
-								area: 'TBLB',
-								field: 'TIMEHM',
-								label: computed(() => this.Resources.TIME__HOURS_MINUTES_01660),
-								dataLength: 5,
-								scrollData: 5,
-								dateTimeType: 'time',
-							}, computed(() => vm.model), computed(() => vm.internalEvents)),
-							new listColumnTypes.ArrayColumn({
-								order: 12,
-								name: 'ValEnumt',
-								area: 'TBLB',
-								field: 'ENUMT',
-								label: computed(() => this.Resources.ENUMERATION__TEXT_15855),
-								dataLength: 1,
-								scrollData: 1,
-								array: computed(() => new qProjArrays.QArrayTypet(vm.$getResource).elements),
-								arrayType: qProjArrays.QArrayTypet.type,
-							}, computed(() => vm.model), computed(() => vm.internalEvents)),
-							new listColumnTypes.ArrayColumn({
-								order: 13,
-								name: 'ValEnumn',
-								area: 'TBLB',
-								field: 'ENUMN',
-								label: computed(() => this.Resources.ENUMERATION__NUMERIC44708),
-								scrollData: 1,
-								maxDigits: 1,
-								decimalPlaces: 0,
-								array: computed(() => new qProjArrays.QArrayTypen(vm.$getResource).elements),
-								arrayType: qProjArrays.QArrayTypen.type,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 						],
 						config: {
 							name: 'PTN_Menu_3141',
 							serverMode: true,
-							pkColumn: 'ValCodtblb',
-							tableAlias: 'TBLB',
-							tableNamePlural: computed(() => this.Resources.TABLES__BASIC_TYPES_29665),
-							viewManagement: 'S',
+							pkColumn: 'ValCodtrsb',
+							tableAlias: 'TRSB',
+							tableNamePlural: computed(() => this.Resources.RELATED_TABLES__BASI34539),
+							viewManagement: 'U',
 							showLimitsInfo: true,
-							tableTitle: computed(() => this.Resources.TABLES__BASIC_TYPES_29665),
-							perPageOptions: [20,25,30],
-							showRecordCount: true,
+							tableTitle: computed(() => this.Resources.RELATED_TABLES__BASI34539),
+							showAlternatePagination: true,
 							permissions: {
 							},
 							searchBarConfig: {
 								visibility: true
 							},
-							filtersVisible: true,
 							allowColumnFilters: true,
 							allowColumnSort: true,
 							crudActions: [
@@ -303,7 +187,7 @@
 									params: {
 										action: vm.openFormAction,
 										type: 'form',
-										formName: 'TBLB',
+										formName: 'TRSB',
 										mode: 'SHOW',
 										isControlled: true
 									}
@@ -319,7 +203,7 @@
 									params: {
 										action: vm.openFormAction,
 										type: 'form',
-										formName: 'TBLB',
+										formName: 'TRSB',
 										mode: 'EDIT',
 										isControlled: true
 									}
@@ -335,7 +219,7 @@
 									params: {
 										action: vm.openFormAction,
 										type: 'form',
-										formName: 'TBLB',
+										formName: 'TRSB',
 										mode: 'DUPLICATE',
 										isControlled: true
 									}
@@ -351,7 +235,7 @@
 									params: {
 										action: vm.openFormAction,
 										type: 'form',
-										formName: 'TBLB',
+										formName: 'TRSB',
 										mode: 'DELETE',
 										isControlled: true
 									}
@@ -362,14 +246,12 @@
 									id: 'insert',
 									name: 'insert',
 									title: computed(() => this.Resources.INSERIR43365),
-									icon: {
-										icon: 'add'
-									},
+									icon: { icon: 'add' },
 									isInReadOnly: true,
 									params: {
 										action: vm.openFormAction,
 										type: 'form',
-										formName: 'TBLB',
+										formName: 'TRSB',
 										mode: 'NEW',
 										repeatInsertion: false,
 										isControlled: true
@@ -386,37 +268,35 @@
 							],
 							rowClickAction: {
 								id: 'RCA_PTN_31411',
-								name: 'form-TBLB',
+								name: 'form-TRSB',
 								isVisible: true,
 								params: {
 									isRoute: true,
 									limits: [
 										{
 											identifier: 'id',
-											fnValueSelector: (row) => row.ValCodtblb
+											fnValueSelector: (row) => row.ValCodtrsb
 										},
 									],
 									isControlled: true,
-									action: vm.openFormAction, type: 'form', mode: 'SHOW', formName: 'TBLB'
+									action: vm.openFormAction, type: 'form', mode: 'SHOW', formName: 'TRSB'
 								}
 							},
 							formsDefinition: {
-								'TBLB': {
-									fnKeySelector: (row) => row.Fields.ValCodtblb,
+								'TRSB': {
+									fnKeySelector: (row) => row.Fields.ValCodtrsb,
 									isPopup: false
 								},
 							},
-							allowFileExport: true,
-							allowFileImport: true,
-							defaultSearchColumnName: 'ValText',
-							defaultSearchColumnNameOriginal: 'ValText',
+							defaultSearchColumnName: 'ValName',
+							defaultSearchColumnNameOriginal: 'ValName',
 							defaultColumnSorting: {
-								columnName: 'ValText',
+								columnName: 'ValName',
 								sortOrder: 'asc'
 							}
 						},
-						globalEvents: ['changed-TBLB', 'changed-GRPB'],
-						uuid: 'b91b9161-2846-47fc-b5b4-08511357ea57',
+						globalEvents: ['changed-TRSB'],
+						uuid: 'af8a7b0d-5af1-4fed-b40f-75b9abd0d802',
 						allSelectedRows: 'false',
 						headerLevel: 1,
 						isActiveControl: computed(() => this.isActiveMenu)

@@ -9,12 +9,13 @@
 			<div
 				v-if="showFormHeader"
 				class="c-action-bar">
-				<h1
+				<component
 					v-if="formControl.uiComponents.header && formInfo.designation"
+					:is="topHeadingTag"
 					:id="formTitleId"
 					class="form-header">
 					{{ formInfo.designation }}
-				</h1>
+				</component>
 
 				<div class="c-action-bar__menu">
 					<template
@@ -40,13 +41,10 @@
 									@click="btn.action">
 									<template v-if="btn.icon">
 										<q-badge-indicator
-											v-if="btn.badge && btn.badge.isVisible"
-											:color="btn.badge.color">
+											:enabled="btn.badge?.isVisible ?? false"
+											:color="btn.badge?.color">
 											<q-icon v-bind="btn.icon" />
 										</q-badge-indicator>
-										<q-icon
-											v-else
-											v-bind="btn.icon" />
 									</template>
 								</q-toggle-group-item>
 							</template>
@@ -97,6 +95,7 @@
 		<q-container
 			fluid
 			data-key="RORDF"
+			:data-identifier="primaryKeyValue"
 			:data-loading="!formInitialDataLoaded || !isActiveForm">
 			<template v-if="formControl.initialized && showFormBody">
 				<q-row v-if="controls.RORDF___RORDFORDER___.isVisible || controls.RORDF___RORDFTITLE___.isVisible">
@@ -106,7 +105,8 @@
 						<base-input-structure
 							v-if="controls.RORDF___RORDFORDER___.isVisible"
 							class="i-text"
-							v-bind="controls.RORDF___RORDFORDER___"
+							v-bind="controls.RORDF___RORDFORDER___.wrapperProps"
+							:id="getControlId(controls.RORDF___RORDFORDER___)"
 							v-on="controls.RORDF___RORDFORDER___.handlers"
 							:loading="controls.RORDF___RORDFORDER___.props.loading"
 							:reporting-mode-on="reportingModeCAV"
@@ -114,18 +114,21 @@
 							<q-numeric-input
 								v-if="controls.RORDF___RORDFORDER___.isVisible"
 								v-bind="controls.RORDF___RORDFORDER___.props"
+								:id="getControlId(controls.RORDF___RORDFORDER___)"
 								@update:model-value="model.ValOrder.fnUpdateValue" />
 						</base-input-structure>
 						<base-input-structure
 							v-if="controls.RORDF___RORDFTITLE___.isVisible"
 							class="i-text"
-							v-bind="controls.RORDF___RORDFTITLE___"
+							v-bind="controls.RORDF___RORDFTITLE___.wrapperProps"
+							:id="getControlId(controls.RORDF___RORDFTITLE___)"
 							v-on="controls.RORDF___RORDFTITLE___.handlers"
 							:loading="controls.RORDF___RORDFTITLE___.props.loading"
 							:reporting-mode-on="reportingModeCAV"
 							:suggestion-mode-on="suggestionModeOn">
 							<q-text-field
 								v-bind="controls.RORDF___RORDFTITLE___.props"
+								:id="getControlId(controls.RORDF___RORDFTITLE___)"
 								@blur="onBlur(controls.RORDF___RORDFTITLE___, model.ValTitle.value)"
 								@change="model.ValTitle.fnUpdateValueOnChange" />
 						</base-input-structure>
@@ -135,7 +138,7 @@
 		</q-container>
 	</teleport>
 
-	<hr v-if="!isPopup && showFormFooter" />
+	<q-divider v-if="!isPopup && showFormFooter" />
 
 	<teleport
 		v-if="formModalIsReady && showFormFooter"
@@ -882,7 +885,6 @@
 
 				this.afterControlUpdate(controlField, fieldValue)
 			},
-
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
 // USE /[MANUAL GQT FUNCTIONS_JS RORDF]/
 // eslint-disable-next-line

@@ -1,7 +1,7 @@
 <template>
 	<div
 		class="q-submenus-widget">
-		<h5 class="q-submenus-widget__title">{{ widget.Title }}</h5>
+		<h2 class="q-submenus-widget__title">{{ widget.Title }}</h2>
 		<div
 			class="q-submenus-widget__links"
 			v-if="!isEmpty(widget.MenuEntry.Children)">

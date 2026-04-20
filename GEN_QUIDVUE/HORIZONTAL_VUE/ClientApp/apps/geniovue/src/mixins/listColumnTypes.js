@@ -4,14 +4,14 @@ import _get from 'lodash-es/get'
 import _isEmpty from 'lodash-es/isEmpty'
 import _keyBy from 'lodash-es/keyBy'
 import _toString from 'lodash-es/toString'
-import { nextTick, ref, unref, markRaw, toValue } from 'vue'
-import { ScopedWatch } from '@quidgest/clientapp/utils/scopedWatch'
-import { deepUnwrap } from '@quidgest/clientapp/utils/deepUnwrap'
+import { markRaw, nextTick, toValue, ref, unref } from 'vue'
 
 import listFunctions from '@/mixins/listFunctions.js'
 import { systemInfo } from '@/systemInfo'
 import { validateFormula } from '@/utils/formula.js'
+import { deepUnwrap } from '@quidgest/clientapp/utils/deepUnwrap'
 import { QEventEmitter } from '@quidgest/clientapp/plugins/eventBus'
+import { ScopedWatch } from '@quidgest/clientapp/utils/scopedWatch'
 import { useGenericDataStore } from '@quidgest/clientapp/stores'
 import genericFunctions from '@quidgest/clientapp/utils/genericFunctions'
 
@@ -48,12 +48,11 @@ export class BaseColumn
 		this.field = 'Undefined'
 		this.label = ''
 		this.supportForm = null
-		this.supportFormIsPopup = false
 		this.params = null
 		this.cellAction = false
 		this.sortable = true
 		this.searchable = true
-		this.export = true
+		this.export = 1
 		this.array = null
 		this.useDistinctValues = false
 		this.initialSort = false
@@ -127,7 +126,7 @@ export class BaseColumn
 
 			// If the visibility changes, triggers the listeners.
 			if (isVisible !== toValue(this.isVisible))
-				for (let listener of this.visibilityListeners)
+				for (const listener of this.visibilityListeners)
 					listener(toValue(this.isVisible))
 		}
 		Object.defineProperty(this, 'fnVisibility', { enumerable: false })
@@ -268,6 +267,7 @@ export class NumericColumn extends BaseColumn
 			numberFormat: {
 				decimalSeparator: genericDataStore.numberFormat.decimalSeparator,
 				groupSeparator: genericDataStore.numberFormat.thousandsSeparator,
+				negativeFormat: genericDataStore.numberFormat.negativeFormat
 			},
 			showTotal: true,
 			columnClasses: 'c-table__cell-numeric row-numeric',
@@ -466,6 +466,7 @@ export class GeographicColumn extends BaseColumn
 			numberFormat: {
 				decimalSeparator: genericDataStore.numberFormat.decimalSeparator,
 				groupSeparator: genericDataStore.numberFormat.thousandsSeparator,
+				negativeFormat: genericDataStore.numberFormat.negativeFormat
 			}
 		}, options), modelCtx, eventEmitter, init, additionalReactiveOptions)
 	}

@@ -47,7 +47,7 @@ namespace CSGenio.business
 			Qfield = new Field(info.Alias, "codanexd", FieldType.KEY_GUID);
 			Qfield.FieldDescription = "";
 			Qfield.FieldSize =  36;
-			Qfield.CavDesignation = "";
+			Qfield.VisivelCav = CavVisibilityType.Nunca;
 
 			Qfield.Dupmsg = "";
 			info.RegisterFieldDB(Qfield);
@@ -56,7 +56,7 @@ namespace CSGenio.business
 			Qfield = new Field(info.Alias, "codequip", FieldType.KEY_GUID);
 			Qfield.FieldDescription = "";
 			Qfield.FieldSize =  36;
-			Qfield.CavDesignation = "";
+			Qfield.VisivelCav = CavVisibilityType.Nunca;
 
 			Qfield.Dupmsg = "";
 			info.RegisterFieldDB(Qfield);
@@ -96,7 +96,7 @@ namespace CSGenio.business
 			Qfield = new Field(info.Alias, "codlang", FieldType.KEY_GUID);
 			Qfield.FieldDescription = ">LANGUAGE";
 			Qfield.FieldSize =  36;
-			Qfield.CavDesignation = "_LANGUAGE30793";
+			Qfield.VisivelCav = CavVisibilityType.Nunca;
 
 			Qfield.Dupmsg = "";
 			info.RegisterFieldDB(Qfield);
@@ -152,16 +152,16 @@ namespace CSGenio.business
 			info.Pathways = new Dictionary<string, string>(14);
 			info.Pathways.Add("langu","langu");
 			info.Pathways.Add("equip","equip");
-			info.Pathways.Add("wareh","equip");
 			info.Pathways.Add("decom","equip");
+			info.Pathways.Add("wareh","equip");
 			info.Pathways.Add("tpequ","equip");
 			info.Pathways.Add("room1","equip");
-			info.Pathways.Add("cmpny","equip");
 			info.Pathways.Add("item","equip");
+			info.Pathways.Add("cmpny","equip");
 			info.Pathways.Add("pess1","equip");
 			info.Pathways.Add("famil","equip");
-			info.Pathways.Add("cntry","equip");
 			info.Pathways.Add("gitem","equip");
+			info.Pathways.Add("cntry","equip");
 			info.Pathways.Add("stake","equip");
 			info.Pathways.Add("cate2","equip");
 		}
@@ -187,20 +187,6 @@ namespace CSGenio.business
 
 			//Write conditions
 			List<ConditionFormula> conditions = new List<ConditionFormula>();
-
-			// HasRole("A") && !isEmptyG([EQUIP->CODEQUIP])
-			{
-			List<ByAreaArguments> argumentsListByArea = new List<ByAreaArguments>();
-			argumentsListByArea= new List<ByAreaArguments>();
-			argumentsListByArea.Add(new ByAreaArguments(new string[] {"codequip"},new int[] {0},"equip","codequip"));
-			ConditionFormula writeCondition = new ConditionFormula(argumentsListByArea, 1, delegate(object []args,User user,string module,PersistentSupport sp) {
-				return GlobalFunctions.HasRole(user,"A")&&!(((string)args[0]) == "");
-			});
-			writeCondition.ErrorWarning = "";
-            writeCondition.Type =  ConditionType.INSERT;
-            writeCondition.Validate = true;
-			conditions.Add(writeCondition);
-			}
 			info.WriteConditions = conditions.Where(c=> c.IsWriteCondition()).ToList();
 			info.CrudConditions = conditions.Where(c=> c.IsCrudCondition()).ToList();
 

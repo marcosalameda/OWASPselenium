@@ -1,20 +1,20 @@
-﻿using JsonIgnoreAttribute = System.Text.Json.Serialization.JsonIgnoreAttribute;
+﻿using CSGenio.business;
+using CSGenio.framework;
+using CSGenio.persistence;
+using GenioMVC.Helpers;
+using GenioMVC.Models.Exception;
+using GenioMVC.Models.Navigation;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Quidgest.Persistence;
+using Quidgest.Persistence.GenericQuery;
+
 using System.Collections;
 using System.Collections.Concurrent;
 using System.Collections.Specialized;
 using System.ComponentModel.DataAnnotations;
 using System.Data;
 using System.Globalization;
-
-using CSGenio.business;
-using CSGenio.framework;
-using CSGenio.persistence;
-using GenioMVC.Helpers;
-using GenioMVC.Models.Exception;
-using GenioMVC.Models.Navigation;
-using Quidgest.Persistence;
-using Quidgest.Persistence.GenericQuery;
+using System.Text.Json.Serialization;
 
 namespace GenioMVC.ViewModels.Pesso
 {
@@ -56,6 +56,7 @@ namespace GenioMVC.ViewModels.Pesso
 		public string ValCodregia { get; set; }
 
 		#endregion
+
 		/// <summary>
 		/// Title: "Company:" | Type: "C"
 		/// </summary>
@@ -70,11 +71,6 @@ namespace GenioMVC.ViewModels.Pesso
 		/// </summary>
 		public string ValGender { get; set; }
 		/// <summary>
-		/// Title: "" | Type: "PSEUD"
-		/// </summary>
-		[JsonIgnore]
-		public SelectList List_ValGender { get; set; }
-		/// <summary>
 		/// Title: "Telephone" | Type: "C"
 		/// </summary>
 		public string ValTelephon { get; set; }
@@ -87,8 +83,6 @@ namespace GenioMVC.ViewModels.Pesso
 		/// </summary>
 		[ImageThumbnailJsonConverter(100, 50)]
 		public GenioMVC.Models.ImageModel ValPhotogra { get; set; }
-
-
 
 		#region Navigations
 		#endregion
@@ -290,12 +284,7 @@ namespace GenioMVC.ViewModels.Pesso
 			}
 		}
 
-		/// <summary>
-		/// Sets the value of a single property of the view model based on the provided table and field names.
-		/// </summary>
-		/// <param name="fullFieldName">The full field name in the format "table.field".</param>
-		/// <param name="value">The field value.</param>
-		/// <exception cref="ArgumentNullException">Thrown if <paramref name="fullFieldName"/> is null.</exception>
+		/// <inheritdoc />
 		public override void SetViewModelValue(string fullFieldName, object value)
 		{
 			try
@@ -435,6 +424,7 @@ namespace GenioMVC.ViewModels.Pesso
 			Characs = new List<string>();
 
 			Load_Externo_cmpnydesignat(qs, lazyLoad);
+
 // USE /[MANUAL GQT VIEWMODEL_LOADPARTIAL EXTERNO]/
 		}
 
@@ -450,6 +440,8 @@ namespace GenioMVC.ViewModels.Pesso
 			CrudViewModelFieldValidator validator = new(m_userContext.User.Language);
 
 			validator.StringLength("ValName", Resources.Resources.NAME_23841, ValName, 85);
+
+			validator.Required("ValName", Resources.Resources.NAME_23841, ViewModelConversion.ToString(ValName), FieldType.TEXT.GetFormatting());
 			validator.StringLength("ValTelephon", Resources.Resources.TELEPHONE28697, ValTelephon, 20);
 			validator.StringLength("ValEmail", Resources.Resources.EMAIL_44228, ValEmail, 254);
 
@@ -507,10 +499,7 @@ namespace GenioMVC.ViewModels.Pesso
 				}
 			}
 
-			TableCmpnyDesignat = new TableDBEdit<Models.Cmpny>
-			{
-				IsLazyLoad = lazyLoad
-			};
+			TableCmpnyDesignat = new TableDBEdit<Models.Cmpny>();
 
 			if (lazyLoad)
 			{
@@ -554,7 +543,7 @@ namespace GenioMVC.ViewModels.Pesso
 				int numberItems = CSGenio.framework.Configuration.NrRegDBedit;
 				int offset = (page - 1) * numberItems;
 
-				FieldRef[] fields = new FieldRef[] { CSGenioAcmpny.FldCodempre, CSGenioAcmpny.FldDesignat, CSGenioAcmpny.FldZzstate };
+				FieldRef[] fields = [CSGenioAcmpny.FldCodempre, CSGenioAcmpny.FldDesignat, CSGenioAcmpny.FldZzstate];
 
 // USE /[MANUAL GQT OVERRQ EXTERNO_CMPNYDESIGNAT]/
 

@@ -1,20 +1,20 @@
-﻿using JsonIgnoreAttribute = System.Text.Json.Serialization.JsonIgnoreAttribute;
+﻿using CSGenio.business;
+using CSGenio.framework;
+using CSGenio.persistence;
+using GenioMVC.Helpers;
+using GenioMVC.Models.Exception;
+using GenioMVC.Models.Navigation;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Quidgest.Persistence;
+using Quidgest.Persistence.GenericQuery;
+
 using System.Collections;
 using System.Collections.Concurrent;
 using System.Collections.Specialized;
 using System.ComponentModel.DataAnnotations;
 using System.Data;
 using System.Globalization;
-
-using CSGenio.business;
-using CSGenio.framework;
-using CSGenio.persistence;
-using GenioMVC.Helpers;
-using GenioMVC.Models.Exception;
-using GenioMVC.Models.Navigation;
-using Quidgest.Persistence;
-using Quidgest.Persistence.GenericQuery;
+using System.Text.Json.Serialization;
 
 namespace GenioMVC.ViewModels.Equip
 {
@@ -67,12 +67,11 @@ namespace GenioMVC.ViewModels.Equip
 		public string ValCodwareh { get; set; }
 
 		#endregion
+
 		/// <summary>
 		/// Title: "Designation" | Type: "C"
 		/// </summary>
 		public string ValDesignat { get; set; }
-
-
 
 		#region Navigations
 		#endregion
@@ -95,6 +94,10 @@ namespace GenioMVC.ViewModels.Equip
 		/// <summary>Field: "No. register" Tipo: "C"</summary>
 		[ValidateSetAccess]
 		public string ValRegistnr { get; set; }
+		// Field for formula
+		/// <summary>Field: "Sequential no." Tipo: "N"</summary>
+		[ValidateSetAccess]
+		public decimal? ValSequennr { get; set; }
 		// Field for formula
 		/// <summary>Used only for lazy loading of the ItemValItemdes field</summary>
 		[JsonIgnore]
@@ -226,6 +229,7 @@ namespace GenioMVC.ViewModels.Equip
 				ValCodwareh = ViewModelConversion.ToString(m.ValCodwareh);
 				ValDesignat = ViewModelConversion.ToString(m.ValDesignat);
 				ValRegistnr = ViewModelConversion.ToString(m.ValRegistnr);
+				ValSequennr = ViewModelConversion.ToNumeric(m.ValSequennr);
 				funcItemValItemdes = () => ViewModelConversion.ToString(m.Item.ValItemdes);
 				ValCodequip = ViewModelConversion.ToString(m.ValCodequip);
 			}
@@ -271,6 +275,7 @@ namespace GenioMVC.ViewModels.Equip
 				m.ValCodtpequ = ViewModelConversion.ToString(ValCodtpequ);
 				m.ValCodwareh = ViewModelConversion.ToString(ValCodwareh);
 				m.ValRegistnr = ViewModelConversion.ToString(ValRegistnr);
+				m.ValSequennr = ViewModelConversion.ToNumeric(ValSequennr);
 			}
 			catch (Exception)
 			{
@@ -279,12 +284,7 @@ namespace GenioMVC.ViewModels.Equip
 			}
 		}
 
-		/// <summary>
-		/// Sets the value of a single property of the view model based on the provided table and field names.
-		/// </summary>
-		/// <param name="fullFieldName">The full field name in the format "table.field".</param>
-		/// <param name="value">The field value.</param>
-		/// <exception cref="ArgumentNullException">Thrown if <paramref name="fullFieldName"/> is null.</exception>
+		/// <inheritdoc />
 		public override void SetViewModelValue(string fullFieldName, object value)
 		{
 			try
@@ -408,6 +408,7 @@ namespace GenioMVC.ViewModels.Equip
 			// Add characteristics
 			Characs = new List<string>();
 
+
 // USE /[MANUAL GQT VIEWMODEL_LOADPARTIAL EQUDOCUM]/
 		}
 
@@ -473,6 +474,7 @@ namespace GenioMVC.ViewModels.Equip
 				"equip.codwareh" => ViewModelConversion.ToString(modelValue),
 				"equip.designat" => ViewModelConversion.ToString(modelValue),
 				"equip.registnr" => ViewModelConversion.ToString(modelValue),
+				"equip.sequennr" => ViewModelConversion.ToNumeric(modelValue),
 				"item.itemdes" => ViewModelConversion.ToString(modelValue),
 				"equip.codequip" => ViewModelConversion.ToString(modelValue),
 				_ => modelValue

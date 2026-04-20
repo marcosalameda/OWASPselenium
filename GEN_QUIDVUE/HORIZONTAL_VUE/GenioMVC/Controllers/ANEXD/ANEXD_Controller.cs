@@ -106,7 +106,7 @@ namespace GenioMVC.Controllers
 			}
 
 			if (result != null)
-				return JsonOK(new { List = result.List, TotalRows = result.Pagination.TotalRows, Selected = result.Selected, Value = result.Value });
+				return JsonOK(result);
 			return JsonERROR("Not found any valid result");
 		}
 
@@ -161,26 +161,6 @@ namespace GenioMVC.Controllers
 
 
 
-		// POST: /Anexd/ANEXD_InsertCondition
-		[HttpPost]
-		public JsonResult ANEXD_InsertCondition()
-		{
-			try
-			{
-				// Create a model from form data to avoid extra database queries.
-				var p = new Models.Anexd(UserContext.Current);
-
-				// Formula: HasRole("A") && !isEmptyG([EQUIP->CODEQUIP])
-				if (!((Logical)(CSGenio.business.GlobalFunctions.HasRole(m_userContext.User,"A")&&!(((string)p.Equip.ValCodequip) == ""))))
-					return JsonOK(false);
-
-				return JsonOK(true);
-			}
-			catch (Exception ex)
-			{
-				return JsonERROR(ex.Message);
-			}
-		}
 
 
 		/// <summary>

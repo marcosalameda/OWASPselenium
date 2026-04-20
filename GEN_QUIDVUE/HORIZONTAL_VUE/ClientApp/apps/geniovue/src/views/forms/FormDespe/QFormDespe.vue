@@ -9,12 +9,13 @@
 			<div
 				v-if="showFormHeader"
 				class="c-action-bar">
-				<h1
+				<component
 					v-if="formControl.uiComponents.header && formInfo.designation"
+					:is="topHeadingTag"
 					:id="formTitleId"
 					class="form-header">
 					{{ formInfo.designation }}
-				</h1>
+				</component>
 
 				<div class="c-action-bar__menu">
 					<template
@@ -40,13 +41,10 @@
 									@click="btn.action">
 									<template v-if="btn.icon">
 										<q-badge-indicator
-											v-if="btn.badge && btn.badge.isVisible"
-											:color="btn.badge.color">
+											:enabled="btn.badge?.isVisible ?? false"
+											:color="btn.badge?.color">
 											<q-icon v-bind="btn.icon" />
 										</q-badge-indicator>
-										<q-icon
-											v-else
-											v-bind="btn.icon" />
 									</template>
 								</q-toggle-group-item>
 							</template>
@@ -97,6 +95,7 @@
 		<q-container
 			fluid
 			data-key="DESPE"
+			:data-identifier="primaryKeyValue"
 			:data-loading="!formInitialDataLoaded || !isActiveForm">
 			<template v-if="formControl.initialized && showFormBody">
 				<q-row v-if="controls.DESPE___PROJEPROJECTO.isVisible || controls.DESPE___YEAR_YEAR____.isVisible">
@@ -106,7 +105,8 @@
 						<base-input-structure
 							v-if="controls.DESPE___PROJEPROJECTO.isVisible"
 							class="i-text"
-							v-bind="controls.DESPE___PROJEPROJECTO"
+							v-bind="controls.DESPE___PROJEPROJECTO.wrapperProps"
+							:id="getControlId(controls.DESPE___PROJEPROJECTO)"
 							v-on="controls.DESPE___PROJEPROJECTO.handlers"
 							:loading="controls.DESPE___PROJEPROJECTO.props.loading"
 							:reporting-mode-on="reportingModeCAV"
@@ -114,6 +114,7 @@
 							<q-lookup
 								v-if="controls.DESPE___PROJEPROJECTO.isVisible"
 								v-bind="controls.DESPE___PROJEPROJECTO.props"
+								:id="getControlId(controls.DESPE___PROJEPROJECTO)"
 								v-on="controls.DESPE___PROJEPROJECTO.handlers" />
 							<q-see-more-despe-projeprojecto
 								v-if="controls.DESPE___PROJEPROJECTO.seeMoreIsVisible"
@@ -127,7 +128,8 @@
 						<base-input-structure
 							v-if="controls.DESPE___YEAR_YEAR____.isVisible"
 							class="i-text"
-							v-bind="controls.DESPE___YEAR_YEAR____"
+							v-bind="controls.DESPE___YEAR_YEAR____.wrapperProps"
+							:id="getControlId(controls.DESPE___YEAR_YEAR____)"
 							v-on="controls.DESPE___YEAR_YEAR____.handlers"
 							:loading="controls.DESPE___YEAR_YEAR____.props.loading"
 							:reporting-mode-on="reportingModeCAV"
@@ -135,6 +137,7 @@
 							<q-lookup
 								v-if="controls.DESPE___YEAR_YEAR____.isVisible"
 								v-bind="controls.DESPE___YEAR_YEAR____.props"
+								:id="getControlId(controls.DESPE___YEAR_YEAR____)"
 								v-on="controls.DESPE___YEAR_YEAR____.handlers" />
 							<q-see-more-despe-year-year
 								v-if="controls.DESPE___YEAR_YEAR____.seeMoreIsVisible"
@@ -150,7 +153,8 @@
 						<base-input-structure
 							v-if="controls.DESPE___AGREGVALUE___.isVisible"
 							class="i-text"
-							v-bind="controls.DESPE___AGREGVALUE___"
+							v-bind="controls.DESPE___AGREGVALUE___.wrapperProps"
+							:id="getControlId(controls.DESPE___AGREGVALUE___)"
 							v-on="controls.DESPE___AGREGVALUE___.handlers"
 							:loading="controls.DESPE___AGREGVALUE___.props.loading"
 							:reporting-mode-on="reportingModeCAV"
@@ -158,6 +162,7 @@
 							<q-lookup
 								v-if="controls.DESPE___AGREGVALUE___.isVisible"
 								v-bind="controls.DESPE___AGREGVALUE___.props"
+								:id="getControlId(controls.DESPE___AGREGVALUE___)"
 								v-on="controls.DESPE___AGREGVALUE___.handlers" />
 							<q-see-more-despe-agregvalue
 								v-if="controls.DESPE___AGREGVALUE___.seeMoreIsVisible"
@@ -173,13 +178,15 @@
 						<base-input-structure
 							v-if="controls.DESPE___EXPENDESCRIPT.isVisible"
 							class="i-text"
-							v-bind="controls.DESPE___EXPENDESCRIPT"
+							v-bind="controls.DESPE___EXPENDESCRIPT.wrapperProps"
+							:id="getControlId(controls.DESPE___EXPENDESCRIPT)"
 							v-on="controls.DESPE___EXPENDESCRIPT.handlers"
 							:loading="controls.DESPE___EXPENDESCRIPT.props.loading"
 							:reporting-mode-on="reportingModeCAV"
 							:suggestion-mode-on="suggestionModeOn">
 							<q-text-field
 								v-bind="controls.DESPE___EXPENDESCRIPT.props"
+								:id="getControlId(controls.DESPE___EXPENDESCRIPT)"
 								@blur="onBlur(controls.DESPE___EXPENDESCRIPT, model.ValDescript.value)"
 								@change="model.ValDescript.fnUpdateValueOnChange" />
 						</base-input-structure>
@@ -192,7 +199,8 @@
 						<base-input-structure
 							v-if="controls.DESPE___EXPENVALUE___.isVisible"
 							class="i-text"
-							v-bind="controls.DESPE___EXPENVALUE___"
+							v-bind="controls.DESPE___EXPENVALUE___.wrapperProps"
+							:id="getControlId(controls.DESPE___EXPENVALUE___)"
 							v-on="controls.DESPE___EXPENVALUE___.handlers"
 							:loading="controls.DESPE___EXPENVALUE___.props.loading"
 							:reporting-mode-on="reportingModeCAV"
@@ -200,6 +208,7 @@
 							<q-numeric-input
 								v-if="controls.DESPE___EXPENVALUE___.isVisible"
 								v-bind="controls.DESPE___EXPENVALUE___.props"
+								:id="getControlId(controls.DESPE___EXPENVALUE___)"
 								@update:model-value="model.ValValue.fnUpdateValue" />
 						</base-input-structure>
 					</q-col>
@@ -209,7 +218,8 @@
 						<base-input-structure
 							v-if="controls.DESPE___EXPENPREVVAL_.isVisible"
 							class="i-text"
-							v-bind="controls.DESPE___EXPENPREVVAL_"
+							v-bind="controls.DESPE___EXPENPREVVAL_.wrapperProps"
+							:id="getControlId(controls.DESPE___EXPENPREVVAL_)"
 							v-on="controls.DESPE___EXPENPREVVAL_.handlers"
 							:loading="controls.DESPE___EXPENPREVVAL_.props.loading"
 							:reporting-mode-on="reportingModeCAV"
@@ -217,6 +227,7 @@
 							<q-numeric-input
 								v-if="controls.DESPE___EXPENPREVVAL_.isVisible"
 								v-bind="controls.DESPE___EXPENPREVVAL_.props"
+								:id="getControlId(controls.DESPE___EXPENPREVVAL_)"
 								@update:model-value="model.ValPrevval.fnUpdateValue" />
 						</base-input-structure>
 					</q-col>
@@ -226,7 +237,8 @@
 						<base-input-structure
 							v-if="controls.DESPE___EXPENYEARPREV.isVisible"
 							class="i-text"
-							v-bind="controls.DESPE___EXPENYEARPREV"
+							v-bind="controls.DESPE___EXPENYEARPREV.wrapperProps"
+							:id="getControlId(controls.DESPE___EXPENYEARPREV)"
 							v-on="controls.DESPE___EXPENYEARPREV.handlers"
 							:loading="controls.DESPE___EXPENYEARPREV.props.loading"
 							:reporting-mode-on="reportingModeCAV"
@@ -234,6 +246,7 @@
 							<q-numeric-input
 								v-if="controls.DESPE___EXPENYEARPREV.isVisible"
 								v-bind="controls.DESPE___EXPENYEARPREV.props"
+								:id="getControlId(controls.DESPE___EXPENYEARPREV)"
 								@update:model-value="model.ValYearprev.fnUpdateValue" />
 						</base-input-structure>
 					</q-col>
@@ -242,7 +255,7 @@
 		</q-container>
 	</teleport>
 
-	<hr v-if="!isPopup && showFormFooter" />
+	<q-divider v-if="!isPopup && showFormFooter" />
 
 	<teleport
 		v-if="formModalIsReady && showFormFooter"
@@ -1147,7 +1160,6 @@
 
 				this.afterControlUpdate(controlField, fieldValue)
 			},
-
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
 // USE /[MANUAL GQT FUNCTIONS_JS DESPE]/
 // eslint-disable-next-line

@@ -9,12 +9,13 @@
 			<div
 				v-if="showFormHeader"
 				class="c-action-bar">
-				<h1
+				<component
 					v-if="formControl.uiComponents.header && formInfo.designation"
+					:is="topHeadingTag"
 					:id="formTitleId"
 					class="form-header">
 					{{ formInfo.designation }}
-				</h1>
+				</component>
 
 				<div class="c-action-bar__menu">
 					<template
@@ -40,13 +41,10 @@
 									@click="btn.action">
 									<template v-if="btn.icon">
 										<q-badge-indicator
-											v-if="btn.badge && btn.badge.isVisible"
-											:color="btn.badge.color">
+											:enabled="btn.badge?.isVisible ?? false"
+											:color="btn.badge?.color">
 											<q-icon v-bind="btn.icon" />
 										</q-badge-indicator>
-										<q-icon
-											v-else
-											v-bind="btn.icon" />
 									</template>
 								</q-toggle-group-item>
 							</template>
@@ -97,6 +95,7 @@
 		<q-container
 			fluid
 			data-key="REGIA_ON"
+			:data-identifier="primaryKeyValue"
 			:data-loading="!formInitialDataLoaded || !isActiveForm">
 			<template v-if="formControl.initialized && showFormBody">
 				<q-row v-if="controls.REGIA_ONCNTRYCOUNTRY_.isVisible || controls.REGIA_ONREGIOREGIAO__.isVisible || controls.REGIA_ONPAIS1COUNTRY_.isVisible || controls.REGIA_ONPSEUDIMOVEISL.isVisible">
@@ -106,7 +105,8 @@
 						<base-input-structure
 							v-if="controls.REGIA_ONCNTRYCOUNTRY_.isVisible"
 							class="i-text"
-							v-bind="controls.REGIA_ONCNTRYCOUNTRY_"
+							v-bind="controls.REGIA_ONCNTRYCOUNTRY_.wrapperProps"
+							:id="getControlId(controls.REGIA_ONCNTRYCOUNTRY_)"
 							v-on="controls.REGIA_ONCNTRYCOUNTRY_.handlers"
 							:loading="controls.REGIA_ONCNTRYCOUNTRY_.props.loading"
 							:reporting-mode-on="reportingModeCAV"
@@ -114,6 +114,7 @@
 							<q-lookup
 								v-if="controls.REGIA_ONCNTRYCOUNTRY_.isVisible"
 								v-bind="controls.REGIA_ONCNTRYCOUNTRY_.props"
+								:id="getControlId(controls.REGIA_ONCNTRYCOUNTRY_)"
 								v-on="controls.REGIA_ONCNTRYCOUNTRY_.handlers" />
 							<q-see-more-regia-oncntrycountry
 								v-if="controls.REGIA_ONCNTRYCOUNTRY_.seeMoreIsVisible"
@@ -127,13 +128,15 @@
 						<base-input-structure
 							v-if="controls.REGIA_ONREGIOREGIAO__.isVisible"
 							class="i-text"
-							v-bind="controls.REGIA_ONREGIOREGIAO__"
+							v-bind="controls.REGIA_ONREGIOREGIAO__.wrapperProps"
+							:id="getControlId(controls.REGIA_ONREGIOREGIAO__)"
 							v-on="controls.REGIA_ONREGIOREGIAO__.handlers"
 							:loading="controls.REGIA_ONREGIOREGIAO__.props.loading"
 							:reporting-mode-on="reportingModeCAV"
 							:suggestion-mode-on="suggestionModeOn">
 							<q-text-field
 								v-bind="controls.REGIA_ONREGIOREGIAO__.props"
+								:id="getControlId(controls.REGIA_ONREGIOREGIAO__)"
 								@blur="onBlur(controls.REGIA_ONREGIOREGIAO__, model.ValRegiao.value)"
 								@change="model.ValRegiao.fnUpdateValueOnChange" />
 						</base-input-structure>
@@ -144,7 +147,8 @@
 						<base-input-structure
 							v-if="controls.REGIA_ONPAIS1COUNTRY_.isVisible"
 							class="i-text"
-							v-bind="controls.REGIA_ONPAIS1COUNTRY_"
+							v-bind="controls.REGIA_ONPAIS1COUNTRY_.wrapperProps"
+							:id="getControlId(controls.REGIA_ONPAIS1COUNTRY_)"
 							v-on="controls.REGIA_ONPAIS1COUNTRY_.handlers"
 							:loading="controls.REGIA_ONPAIS1COUNTRY_.props.loading"
 							:reporting-mode-on="reportingModeCAV"
@@ -152,6 +156,7 @@
 							<q-lookup
 								v-if="controls.REGIA_ONPAIS1COUNTRY_.isVisible"
 								v-bind="controls.REGIA_ONPAIS1COUNTRY_.props"
+								:id="getControlId(controls.REGIA_ONPAIS1COUNTRY_)"
 								v-on="controls.REGIA_ONPAIS1COUNTRY_.handlers" />
 							<q-see-more-regia-onpais1country
 								v-if="controls.REGIA_ONPAIS1COUNTRY_.seeMoreIsVisible"
@@ -165,12 +170,13 @@
 						<q-table
 							v-if="controls.REGIA_ONPSEUDIMOVEISL.isVisible"
 							v-bind="controls.REGIA_ONPSEUDIMOVEISL"
+							:id="getControlId(controls.REGIA_ONPSEUDIMOVEISL)"
 							v-on="controls.REGIA_ONPSEUDIMOVEISL.handlers">
-						<q-table-extra-extension
-							v-if="controls.REGIA_ONPSEUDIMOVEISL.isVisible"
-							:list-ctrl="controls.REGIA_ONPSEUDIMOVEISL"
-							:filter-operators="controls.REGIA_ONPSEUDIMOVEISL.filterOperators"
-							v-on="controls.REGIA_ONPSEUDIMOVEISL.handlers" />
+							<template #header>
+								<q-table-config
+									:table-ctrl="controls.REGIA_ONPSEUDIMOVEISL"
+									v-on="controls.REGIA_ONPSEUDIMOVEISL.handlers" />
+							</template>
 							<!-- USE /[MANUAL GQT CUSTOM_TABLE REGIA_ONPSEUDIMOVEISL]/ -->
 						</q-table>
 					</q-col>
@@ -179,7 +185,7 @@
 		</q-container>
 	</teleport>
 
-	<hr v-if="!isPopup && showFormFooter" />
+	<q-divider v-if="!isPopup && showFormFooter" />
 
 	<teleport
 		v-if="formModalIsReady && showFormFooter"
@@ -597,10 +603,11 @@
 					REGIA_ONPSEUDIMOVEISL: new fieldControlClass.TableListControl({
 						id: 'REGIA_ONPSEUDIMOVEISL',
 						name: 'IMOVEISL',
-						size: '',
+						size: 'xxlarge',
 						label: computed(() => this.Resources.IMOVEIS09219),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
+						headerLevel: computed(() => this.baseHeadingLevel + 1),
 						controller: 'REGIO',
 						action: 'Regia_on_ValImoveisl',
 						hasDependencies: false,
@@ -614,6 +621,7 @@
 								label: computed(() => this.Resources.PROPERTY_NAME18934),
 								dataLength: 85,
 								scrollData: 30,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.CurrencyColumn({
 								order: 2,
@@ -624,6 +632,7 @@
 								scrollData: 12,
 								maxDigits: 9,
 								decimalPlaces: 2,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.ImageColumn({
 								order: 3,
@@ -635,6 +644,7 @@
 								scrollData: 3,
 								sortable: false,
 								searchable: false,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 4,
@@ -643,6 +653,7 @@
 								field: 'DESCRIPT',
 								label: computed(() => this.Resources.DESCRIPTION07383),
 								scrollData: 30,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.GeographicColumn({
 								order: 5,
@@ -654,6 +665,7 @@
 								scrollData: 30,
 								sortable: false,
 								searchable: false,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 6,
@@ -663,6 +675,7 @@
 								label: computed(() => this.Resources.PAIS_PESSOA61621),
 								dataLength: 90,
 								scrollData: 30,
+								export: 1,
 								pkColumn: 'ValCodcntry',
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
@@ -673,6 +686,7 @@
 								label: computed(() => this.Resources.COUNTRY64133),
 								dataLength: 90,
 								scrollData: 30,
+								export: 1,
 								pkColumn: 'ValCodcntry',
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 						],
@@ -695,7 +709,6 @@
 							searchBarConfig: {
 								visibility: false
 							},
-							filtersVisible: false,
 							allowColumnFilters: false,
 							allowColumnSort: true,
 							crudActions: [
@@ -753,7 +766,7 @@
 								sortOrder: 'asc'
 							}
 						},
-						globalEvents: ['changed-REGIO', 'changed-PAIS1', 'changed-CNTRY', 'changed-PESSO', 'changed-PROPR', 'changed-TPPRO'],
+						globalEvents: ['changed-CNTRY', 'changed-REGIO', 'changed-PAIS1', 'changed-PROPR', 'changed-TPPRO', 'changed-PESSO'],
 						uuid: 'Regia_on_ValImoveisl',
 						allSelectedRows: 'false',
 						controlLimits: [
@@ -1156,7 +1169,6 @@
 
 				this.afterControlUpdate(controlField, fieldValue)
 			},
-
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
 // USE /[MANUAL GQT FUNCTIONS_JS REGIA_ON]/
 // eslint-disable-next-line

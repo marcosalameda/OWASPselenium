@@ -207,20 +207,6 @@ export default function getMainRoutes()
 			}
 		},
 		{
-			path: '/:culture/:system/UIS/Home',
-			name: 'home-UIS',
-			meta: {
-				routeType: 'home',
-				module: 'UIS',
-				hasInitialPHE: false,
-				isHomePage: true
-			},
-			component: () => import('@/views/shared/Home.vue'),
-			props: {
-				isHomePage: true
-			}
-		},
-		{
 			path: '/Error',
 			name: 'genericError',
 			component: () => import('@/views/shared/errors/GenericError.vue'),
@@ -279,6 +265,25 @@ export default function getMainRoutes()
 			meta: {
 				routeType: 'report'
 			}
-		}
+		},
+		{
+			// This is used to be able to open forms by redirecting from external links without knowing the current user language or db system
+			// Chatbot makes use of this route to open links given by tool calls
+			// Example: /auto/auto/SYS/OpenForm/FormName/Mode/Id
+			path: '/:culture/:system/:module/OpenForm/:form/:mode/:id?',
+			name: 'OpenFormByRedirect',
+			redirect: to => {
+				return {
+					name: `form-${to.params.form}`,
+					params: {
+						mode: to.params.mode,
+						id: to.params.id,
+						culture: to.params.culture === 'auto' ? systemDataStore.system.currentLang : to.params.culture,
+						system: to.params.system === 'auto' ? systemDataStore.system.currentSystem : to.params.system,
+						module: to.params.module
+					}
+				}
+			}
+		},
 	]
 }

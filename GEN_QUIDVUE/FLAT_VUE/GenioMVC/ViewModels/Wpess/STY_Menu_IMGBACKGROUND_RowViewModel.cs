@@ -111,12 +111,6 @@ public class STY_Menu_IMGBACKGROUND_RowViewModel : Models.Wpess
 				Area = "WPESS",
 				Field = "FTBACKGR",
 			},
-			new ListColumn()
-			{
-				Order = 14,
-				Area = "WPESS",
-				Field = "SHOWRECO",
-			},
 		];
 	}
 

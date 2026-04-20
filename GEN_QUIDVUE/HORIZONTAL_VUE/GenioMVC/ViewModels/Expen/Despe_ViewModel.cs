@@ -7,6 +7,7 @@ using GenioMVC.Models.Navigation;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Quidgest.Persistence;
 using Quidgest.Persistence.GenericQuery;
+
 using System.Collections;
 using System.Collections.Concurrent;
 using System.Collections.Specialized;
@@ -43,6 +44,7 @@ namespace GenioMVC.ViewModels.Expen
 		public string ValCodyear { get; set; }
 
 		#endregion
+
 		/// <summary>
 		/// Title: "Project" | Type: "C"
 		/// </summary>
@@ -76,8 +78,6 @@ namespace GenioMVC.ViewModels.Expen
 		/// </summary>
 		[ValidateSetAccess]
 		public decimal? ValYearprev { get; set; }
-
-
 
 		#region Navigations
 		#endregion
@@ -276,12 +276,7 @@ namespace GenioMVC.ViewModels.Expen
 			}
 		}
 
-		/// <summary>
-		/// Sets the value of a single property of the view model based on the provided table and field names.
-		/// </summary>
-		/// <param name="fullFieldName">The full field name in the format "table.field".</param>
-		/// <param name="value">The field value.</param>
-		/// <exception cref="ArgumentNullException">Thrown if <paramref name="fullFieldName"/> is null.</exception>
+		/// <inheritdoc />
 		public override void SetViewModelValue(string fullFieldName, object value)
 		{
 			try
@@ -420,6 +415,7 @@ namespace GenioMVC.ViewModels.Expen
 			Load_Despe___projeprojecto(qs, lazyLoad);
 			Load_Despe___year_year____(qs, lazyLoad);
 			Load_Despe___agregvalue___(qs, lazyLoad);
+
 // USE /[MANUAL GQT VIEWMODEL_LOADPARTIAL DESPE]/
 		}
 
@@ -490,10 +486,7 @@ namespace GenioMVC.ViewModels.Expen
 				}
 			}
 
-			TableProjeProjecto = new TableDBEdit<Models.Proje>
-			{
-				IsLazyLoad = lazyLoad
-			};
+			TableProjeProjecto = new TableDBEdit<Models.Proje>();
 
 			if (lazyLoad)
 			{
@@ -680,10 +673,7 @@ namespace GenioMVC.ViewModels.Expen
 				}
 			}
 
-			TableYearYear = new TableDBEdit<Models.Year>
-			{
-				IsLazyLoad = lazyLoad
-			};
+			TableYearYear = new TableDBEdit<Models.Year>();
 
 			if (lazyLoad)
 			{
@@ -878,10 +868,7 @@ namespace GenioMVC.ViewModels.Expen
 			// Area limit
 			despe___agregvalue___DoLoad &= AddCriteriaAreaLimit(despe___agregvalue___Conds, CSGenio.business.CSGenioAproje.FldCodproje, "proje", this.ValCodproje, true);
 
-			TableAgregValue = new TableDBEdit<Models.Agreg>
-			{
-				IsLazyLoad = lazyLoad
-			};
+			TableAgregValue = new TableDBEdit<Models.Agreg>();
 
 			if (lazyLoad)
 			{

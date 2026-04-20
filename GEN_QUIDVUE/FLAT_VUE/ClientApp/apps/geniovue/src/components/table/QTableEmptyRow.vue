@@ -2,12 +2,13 @@
 	<tr
 		v-for="row in emptyRows"
 		:key="row.id">
-		<template v-for="column in columns">
+		<template
+			v-for="column in columns"
+			:key="'td-' + getColumnName(column) + row.id">
 			<td
 				v-if="canShowColumn(column)"
-				:key="'td-' + getColumnName(column) + row.id"
 				:class="cellClasses(column)">
-				<div class="q-skeleton__cell-loading"></div>
+				<div class="q-skeleton__cell-loading" />
 			</td>
 		</template>
 	</tr>
@@ -49,7 +50,7 @@
 		computed: {
 			emptyRows()
 			{
-				return _times(this.nRows, () => { return { id: uuidv4() } })
+				return _times(this.nRows, () => ({ id: uuidv4() }))
 			}
 		},
 
@@ -59,7 +60,6 @@
 				return column?.name?.replace(/\./g,'_') || 'unknown'
 			},
 
-			// CSS classes for cell
 			/**
 			 * Get CSS classes for column
 			 * @param column {Object}

@@ -182,14 +182,11 @@ namespace CSGenio.framework
 				new("STY", Role.UNAUTHORIZED),
 				new("PTN", Role.UNAUTHORIZED),
 				new("REG", Role.UNAUTHORIZED),
-				new("UIS", Role.UNAUTHORIZED),
 				new("GQT", Role.UNAUTHORIZED),
-				new("XRS", Role.UNAUTHORIZED),
 
 				new("STY", Role.ROLE_ADMINISTRATOR),
 				new("GQT", Role.ROLE_ADMINISTRATOR),
 				new("TRN", Role.ROLE_ADMINISTRATOR),
-				new("UIS", Role.ROLE_ADMINISTRATOR),
 				new("TBS", Role.ROLE_ADMINISTRATOR),
 				new("PTN", Role.ROLE_ADMINISTRATOR),
 				new("REG", Role.ROLE_ADMINISTRATOR),
@@ -212,7 +209,6 @@ namespace CSGenio.framework
 				new("TRN", Role.ROLE_SYSADMIN),
 				new("REG", Role.ROLE_SYSADMIN),
 				new("STY", Role.ROLE_SYSADMIN),
-				new("UIS", Role.ROLE_SYSADMIN),
 				new("GQT", Role.ROLE_VIEW),
 				new("PTN", Role.ROLE_VIEW_PESSO),
 				new("TRN", Role.ROLE_VIEW_PESSO),
@@ -221,7 +217,6 @@ namespace CSGenio.framework
 				new("TBS", Role.ROLE_1),
 				new("IMO", Role.ROLE_1),
 				new("GQT", Role.ROLE_1),
-				new("UIS", Role.ROLE_1),
 				new("PTN", Role.ROLE_1),
 				new("STY", Role.ROLE_1),
 				new("GQT", Role.ROLE_2),
@@ -235,10 +230,8 @@ namespace CSGenio.framework
 				new("TRN", Role.ADMINISTRATION),
 				new("PTN", Role.ADMINISTRATION),
 				new("TBS", Role.ADMINISTRATION),
-				new("UIS", Role.ADMINISTRATION),
 				new("GQT", Role.ADMINISTRATION),
 				new("WMS", Role.ADMINISTRATION),
-				new("XRS", Role.ADMINISTRATION),
 				new("STY", Role.ADMINISTRATION)			];
 
         }

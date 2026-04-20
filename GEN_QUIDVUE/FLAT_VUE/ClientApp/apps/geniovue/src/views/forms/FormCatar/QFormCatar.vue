@@ -9,12 +9,13 @@
 			<div
 				v-if="showFormHeader"
 				class="c-action-bar">
-				<h1
+				<component
 					v-if="formControl.uiComponents.header && formInfo.designation"
+					:is="topHeadingTag"
 					:id="formTitleId"
 					class="form-header">
 					{{ formInfo.designation }}
-				</h1>
+				</component>
 
 				<div class="c-action-bar__menu">
 					<template
@@ -40,13 +41,10 @@
 									@click="btn.action">
 									<template v-if="btn.icon">
 										<q-badge-indicator
-											v-if="btn.badge && btn.badge.isVisible"
-											:color="btn.badge.color">
+											:enabled="btn.badge?.isVisible ?? false"
+											:color="btn.badge?.color">
 											<q-icon v-bind="btn.icon" />
 										</q-badge-indicator>
-										<q-icon
-											v-else
-											v-bind="btn.icon" />
 									</template>
 								</q-toggle-group-item>
 							</template>
@@ -97,6 +95,7 @@
 		<q-container
 			fluid
 			data-key="CATAR"
+			:data-identifier="primaryKeyValue"
 			:data-loading="!formInitialDataLoaded || !isActiveForm">
 			<template v-if="formControl.initialized && showFormBody">
 				<q-row v-if="controls.CATAR___ITEM_ITEMDES_.isVisible">
@@ -106,7 +105,8 @@
 						<base-input-structure
 							v-if="controls.CATAR___ITEM_ITEMDES_.isVisible"
 							class="i-text"
-							v-bind="controls.CATAR___ITEM_ITEMDES_"
+							v-bind="controls.CATAR___ITEM_ITEMDES_.wrapperProps"
+							:id="getControlId(controls.CATAR___ITEM_ITEMDES_)"
 							v-on="controls.CATAR___ITEM_ITEMDES_.handlers"
 							:loading="controls.CATAR___ITEM_ITEMDES_.props.loading"
 							:reporting-mode-on="reportingModeCAV"
@@ -114,6 +114,7 @@
 							<q-lookup
 								v-if="controls.CATAR___ITEM_ITEMDES_.isVisible"
 								v-bind="controls.CATAR___ITEM_ITEMDES_.props"
+								:id="getControlId(controls.CATAR___ITEM_ITEMDES_)"
 								v-on="controls.CATAR___ITEM_ITEMDES_.handlers" />
 							<q-see-more-catar-item-itemdes
 								v-if="controls.CATAR___ITEM_ITEMDES_.seeMoreIsVisible"
@@ -129,7 +130,8 @@
 						<base-input-structure
 							v-if="controls.CATAR___CATTPTPCATEGO.isVisible"
 							class="i-text"
-							v-bind="controls.CATAR___CATTPTPCATEGO"
+							v-bind="controls.CATAR___CATTPTPCATEGO.wrapperProps"
+							:id="getControlId(controls.CATAR___CATTPTPCATEGO)"
 							v-on="controls.CATAR___CATTPTPCATEGO.handlers"
 							:loading="controls.CATAR___CATTPTPCATEGO.props.loading"
 							:reporting-mode-on="reportingModeCAV"
@@ -137,6 +139,7 @@
 							<q-lookup
 								v-if="controls.CATAR___CATTPTPCATEGO.isVisible"
 								v-bind="controls.CATAR___CATTPTPCATEGO.props"
+								:id="getControlId(controls.CATAR___CATTPTPCATEGO)"
 								v-on="controls.CATAR___CATTPTPCATEGO.handlers" />
 							<q-see-more-catar-cattptpcatego
 								v-if="controls.CATAR___CATTPTPCATEGO.seeMoreIsVisible"
@@ -149,7 +152,7 @@
 		</q-container>
 	</teleport>
 
-	<hr v-if="!isPopup && showFormFooter" />
+	<q-divider v-if="!isPopup && showFormFooter" />
 
 	<teleport
 		v-if="formModalIsReady && showFormFooter"
@@ -943,7 +946,6 @@
 
 				this.afterControlUpdate(controlField, fieldValue)
 			},
-
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
 // USE /[MANUAL GQT FUNCTIONS_JS CATAR]/
 // eslint-disable-next-line

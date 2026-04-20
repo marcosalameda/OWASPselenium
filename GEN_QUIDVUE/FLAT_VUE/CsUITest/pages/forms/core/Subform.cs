@@ -12,6 +12,7 @@ public class Subform : Form
     /// <param name="id">The ID of the form.</param>
     /// <param name="parentFormId">The ID of the parent form.</param>
     /// <param name="containerLocator">A custom locator for the form container.</param>
-    public Subform(IWebDriver driver, FORM_MODE mode, string id, string parentFormId, By? containerLocator = null)
-        : base(driver, mode, id, containerLocator: containerLocator, bodyLocator: ByData.Key(parentFormId)) { }
+    /// <param name="usePkInId">Whether to use the primary key in IDs of the form controls.</param>
+    public Subform(IWebDriver driver, FORM_MODE mode, string id, string parentFormId, By? containerLocator = null, bool usePkInId = false)
+        : base(driver, mode, id, containerLocator: containerLocator, bodyLocator: ByData.Key(parentFormId), usePkInId: usePkInId) { }
 }

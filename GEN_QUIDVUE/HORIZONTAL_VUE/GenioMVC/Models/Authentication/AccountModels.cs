@@ -140,10 +140,10 @@ namespace GenioMVC.Models
 		/// A human readable title for this provider instance
 		/// </summary>
 		public string Description { get; set; }
-        /// <summary>
-        /// Type of credential interface requested by this provider
-        /// </summary>
-        public string CredentialType { get; set; }
+		/// <summary>
+		/// Type of credential interface requested by this provider
+		/// </summary>
+		public string CredentialType { get; set; }
 		/// <summary>
 		/// The external uri to redirect the user during login with this provider
 		/// </summary>
@@ -173,7 +173,7 @@ namespace GenioMVC.Models
 		/// <summary>
 		/// Provider we are using to authenticate with
 		/// </summary>
-        public string ProviderId { get; set; }
+		public string ProviderId { get; set; }
 
 		/// <summary>
 		/// Authentication models that need authentication
@@ -189,6 +189,10 @@ namespace GenioMVC.Models
 			get { return SecurityFactory.HasPasswordManagement() && !string.IsNullOrEmpty(Configuration.PasswordRecoveryEmail); }
 		}
 
+		/// <summary>
+		/// Authentication mode
+		/// </summary>
+		public AuthenticationMode AuthMode { get; set; }
 
 		public override CrudViewModelValidationResult Validate(UserContext userContext)
 		{

@@ -9,12 +9,13 @@
 			<div
 				v-if="showFormHeader"
 				class="c-action-bar">
-				<h1
+				<component
 					v-if="formControl.uiComponents.header && formInfo.designation"
+					:is="topHeadingTag"
 					:id="formTitleId"
 					class="form-header">
 					{{ formInfo.designation }}
-				</h1>
+				</component>
 
 				<div class="c-action-bar__menu">
 					<template
@@ -40,13 +41,10 @@
 									@click="btn.action">
 									<template v-if="btn.icon">
 										<q-badge-indicator
-											v-if="btn.badge && btn.badge.isVisible"
-											:color="btn.badge.color">
+											:enabled="btn.badge?.isVisible ?? false"
+											:color="btn.badge?.color">
 											<q-icon v-bind="btn.icon" />
 										</q-badge-indicator>
-										<q-icon
-											v-else
-											v-bind="btn.icon" />
 									</template>
 								</q-toggle-group-item>
 							</template>
@@ -97,6 +95,7 @@
 		<q-container
 			fluid
 			data-key="TPEQ1"
+			:data-identifier="primaryKeyValue"
 			:data-loading="!formInitialDataLoaded || !isActiveForm">
 			<template v-if="formControl.initialized && showFormBody">
 				<q-row v-if="controls.TPEQ1___FAMI1FAMILY__.isVisible || controls.TPEQ1___TPEQ1TPEQUCOD.isVisible || controls.TPEQ1___TPEQ1NIVEL___.isVisible">
@@ -106,7 +105,8 @@
 						<base-input-structure
 							v-if="controls.TPEQ1___FAMI1FAMILY__.isVisible"
 							class="i-text"
-							v-bind="controls.TPEQ1___FAMI1FAMILY__"
+							v-bind="controls.TPEQ1___FAMI1FAMILY__.wrapperProps"
+							:id="getControlId(controls.TPEQ1___FAMI1FAMILY__)"
 							v-on="controls.TPEQ1___FAMI1FAMILY__.handlers"
 							:loading="controls.TPEQ1___FAMI1FAMILY__.props.loading"
 							:reporting-mode-on="reportingModeCAV"
@@ -114,6 +114,7 @@
 							<q-lookup
 								v-if="controls.TPEQ1___FAMI1FAMILY__.isVisible"
 								v-bind="controls.TPEQ1___FAMI1FAMILY__.props"
+								:id="getControlId(controls.TPEQ1___FAMI1FAMILY__)"
 								v-on="controls.TPEQ1___FAMI1FAMILY__.handlers" />
 							<q-see-more-tpeq1-fami1family
 								v-if="controls.TPEQ1___FAMI1FAMILY__.seeMoreIsVisible"
@@ -127,20 +128,23 @@
 						<base-input-structure
 							v-if="controls.TPEQ1___TPEQ1TPEQUCOD.isVisible"
 							class="i-text"
-							v-bind="controls.TPEQ1___TPEQ1TPEQUCOD"
+							v-bind="controls.TPEQ1___TPEQ1TPEQUCOD.wrapperProps"
+							:id="getControlId(controls.TPEQ1___TPEQ1TPEQUCOD)"
 							v-on="controls.TPEQ1___TPEQ1TPEQUCOD.handlers"
 							:loading="controls.TPEQ1___TPEQ1TPEQUCOD.props.loading"
 							:reporting-mode-on="reportingModeCAV"
 							:suggestion-mode-on="suggestionModeOn">
 							<q-text-field
 								v-bind="controls.TPEQ1___TPEQ1TPEQUCOD.props"
+								:id="getControlId(controls.TPEQ1___TPEQ1TPEQUCOD)"
 								@blur="onBlur(controls.TPEQ1___TPEQ1TPEQUCOD, model.ValTpequcod.value)"
 								@change="model.ValTpequcod.fnUpdateValueOnChange" />
 						</base-input-structure>
 						<base-input-structure
 							v-if="controls.TPEQ1___TPEQ1NIVEL___.isVisible"
 							class="i-text"
-							v-bind="controls.TPEQ1___TPEQ1NIVEL___"
+							v-bind="controls.TPEQ1___TPEQ1NIVEL___.wrapperProps"
+							:id="getControlId(controls.TPEQ1___TPEQ1NIVEL___)"
 							v-on="controls.TPEQ1___TPEQ1NIVEL___.handlers"
 							:loading="controls.TPEQ1___TPEQ1NIVEL___.props.loading"
 							:reporting-mode-on="reportingModeCAV"
@@ -148,6 +152,7 @@
 							<q-numeric-input
 								v-if="controls.TPEQ1___TPEQ1NIVEL___.isVisible"
 								v-bind="controls.TPEQ1___TPEQ1NIVEL___.props"
+								:id="getControlId(controls.TPEQ1___TPEQ1NIVEL___)"
 								@update:model-value="model.ValNivel.fnUpdateValue" />
 						</base-input-structure>
 					</q-col>
@@ -159,13 +164,15 @@
 						<base-input-structure
 							v-if="controls.TPEQ1___TPEQ1TIPOEQUI.isVisible"
 							class="i-text"
-							v-bind="controls.TPEQ1___TPEQ1TIPOEQUI"
+							v-bind="controls.TPEQ1___TPEQ1TIPOEQUI.wrapperProps"
+							:id="getControlId(controls.TPEQ1___TPEQ1TIPOEQUI)"
 							v-on="controls.TPEQ1___TPEQ1TIPOEQUI.handlers"
 							:loading="controls.TPEQ1___TPEQ1TIPOEQUI.props.loading"
 							:reporting-mode-on="reportingModeCAV"
 							:suggestion-mode-on="suggestionModeOn">
 							<q-text-field
 								v-bind="controls.TPEQ1___TPEQ1TIPOEQUI.props"
+								:id="getControlId(controls.TPEQ1___TPEQ1TIPOEQUI)"
 								@blur="onBlur(controls.TPEQ1___TPEQ1TIPOEQUI, model.ValTipoequi.value)"
 								@change="model.ValTipoequi.fnUpdateValueOnChange" />
 						</base-input-structure>
@@ -178,13 +185,15 @@
 						<base-input-structure
 							v-if="controls.TPEQ1___TPEQ1TPEQUPAI.isVisible"
 							class="i-text"
-							v-bind="controls.TPEQ1___TPEQ1TPEQUPAI"
+							v-bind="controls.TPEQ1___TPEQ1TPEQUPAI.wrapperProps"
+							:id="getControlId(controls.TPEQ1___TPEQ1TPEQUPAI)"
 							v-on="controls.TPEQ1___TPEQ1TPEQUPAI.handlers"
 							:loading="controls.TPEQ1___TPEQ1TPEQUPAI.props.loading"
 							:reporting-mode-on="reportingModeCAV"
 							:suggestion-mode-on="suggestionModeOn">
 							<q-text-field
 								v-bind="controls.TPEQ1___TPEQ1TPEQUPAI.props"
+								:id="getControlId(controls.TPEQ1___TPEQ1TPEQUPAI)"
 								@blur="onBlur(controls.TPEQ1___TPEQ1TPEQUPAI, model.ValTpequpai.value)"
 								@change="model.ValTpequpai.fnUpdateValueOnChange" />
 						</base-input-structure>
@@ -197,13 +206,15 @@
 						<base-input-structure
 							v-if="controls.TPEQ1___TPEQ1BACKCOLO.isVisible"
 							class="i-text"
-							v-bind="controls.TPEQ1___TPEQ1BACKCOLO"
+							v-bind="controls.TPEQ1___TPEQ1BACKCOLO.wrapperProps"
+							:id="getControlId(controls.TPEQ1___TPEQ1BACKCOLO)"
 							v-on="controls.TPEQ1___TPEQ1BACKCOLO.handlers"
 							:loading="controls.TPEQ1___TPEQ1BACKCOLO.props.loading"
 							:reporting-mode-on="reportingModeCAV"
 							:suggestion-mode-on="suggestionModeOn">
 							<q-text-field
 								v-bind="controls.TPEQ1___TPEQ1BACKCOLO.props"
+								:id="getControlId(controls.TPEQ1___TPEQ1BACKCOLO)"
 								@blur="onBlur(controls.TPEQ1___TPEQ1BACKCOLO, model.ValBackcolo.value)"
 								@change="model.ValBackcolo.fnUpdateValueOnChange" />
 						</base-input-structure>
@@ -214,13 +225,15 @@
 						<base-input-structure
 							v-if="controls.TPEQ1___TPEQ1CORLETRA.isVisible"
 							class="i-text"
-							v-bind="controls.TPEQ1___TPEQ1CORLETRA"
+							v-bind="controls.TPEQ1___TPEQ1CORLETRA.wrapperProps"
+							:id="getControlId(controls.TPEQ1___TPEQ1CORLETRA)"
 							v-on="controls.TPEQ1___TPEQ1CORLETRA.handlers"
 							:loading="controls.TPEQ1___TPEQ1CORLETRA.props.loading"
 							:reporting-mode-on="reportingModeCAV"
 							:suggestion-mode-on="suggestionModeOn">
 							<q-text-field
 								v-bind="controls.TPEQ1___TPEQ1CORLETRA.props"
+								:id="getControlId(controls.TPEQ1___TPEQ1CORLETRA)"
 								@blur="onBlur(controls.TPEQ1___TPEQ1CORLETRA, model.ValCorletra.value)"
 								@change="model.ValCorletra.fnUpdateValueOnChange" />
 						</base-input-structure>
@@ -233,7 +246,8 @@
 						<base-input-structure
 							v-if="controls.TPEQ1___TPEQ1PRECOMAX.isVisible"
 							class="i-text"
-							v-bind="controls.TPEQ1___TPEQ1PRECOMAX"
+							v-bind="controls.TPEQ1___TPEQ1PRECOMAX.wrapperProps"
+							:id="getControlId(controls.TPEQ1___TPEQ1PRECOMAX)"
 							v-on="controls.TPEQ1___TPEQ1PRECOMAX.handlers"
 							:loading="controls.TPEQ1___TPEQ1PRECOMAX.props.loading"
 							:reporting-mode-on="reportingModeCAV"
@@ -241,6 +255,7 @@
 							<q-numeric-input
 								v-if="controls.TPEQ1___TPEQ1PRECOMAX.isVisible"
 								v-bind="controls.TPEQ1___TPEQ1PRECOMAX.props"
+								:id="getControlId(controls.TPEQ1___TPEQ1PRECOMAX)"
 								@update:model-value="model.ValPrecomax.fnUpdateValue" />
 						</base-input-structure>
 					</q-col>
@@ -250,7 +265,8 @@
 						<base-input-structure
 							v-if="controls.TPEQ1___TPEQ1PRECOULT.isVisible"
 							class="i-text"
-							v-bind="controls.TPEQ1___TPEQ1PRECOULT"
+							v-bind="controls.TPEQ1___TPEQ1PRECOULT.wrapperProps"
+							:id="getControlId(controls.TPEQ1___TPEQ1PRECOULT)"
 							v-on="controls.TPEQ1___TPEQ1PRECOULT.handlers"
 							:loading="controls.TPEQ1___TPEQ1PRECOULT.props.loading"
 							:reporting-mode-on="reportingModeCAV"
@@ -258,6 +274,7 @@
 							<q-numeric-input
 								v-if="controls.TPEQ1___TPEQ1PRECOULT.isVisible"
 								v-bind="controls.TPEQ1___TPEQ1PRECOULT.props"
+								:id="getControlId(controls.TPEQ1___TPEQ1PRECOULT)"
 								@update:model-value="model.ValPrecoult.fnUpdateValue" />
 						</base-input-structure>
 					</q-col>
@@ -269,7 +286,8 @@
 						<base-input-structure
 							v-if="controls.TPEQ1___TPEQ1SINCE___.isVisible"
 							class="i-text"
-							v-bind="controls.TPEQ1___TPEQ1SINCE___"
+							v-bind="controls.TPEQ1___TPEQ1SINCE___.wrapperProps"
+							:id="getControlId(controls.TPEQ1___TPEQ1SINCE___)"
 							v-on="controls.TPEQ1___TPEQ1SINCE___.handlers"
 							:loading="controls.TPEQ1___TPEQ1SINCE___.props.loading"
 							:reporting-mode-on="reportingModeCAV"
@@ -277,6 +295,7 @@
 							<q-date-time-picker
 								v-if="controls.TPEQ1___TPEQ1SINCE___.isVisible"
 								v-bind="controls.TPEQ1___TPEQ1SINCE___.props"
+								:id="getControlId(controls.TPEQ1___TPEQ1SINCE___)"
 								:model-value="model.ValSince.value"
 								@reset-icon-click="model.ValSince.fnUpdateValue(model.ValSince.originalValue ?? new Date())"
 								@update:model-value="model.ValSince.fnUpdateValue($event ?? '')" />
@@ -288,7 +307,8 @@
 						<base-input-structure
 							v-if="controls.TPEQ1___TPEQ1QTDEQUIP.isVisible"
 							class="i-text"
-							v-bind="controls.TPEQ1___TPEQ1QTDEQUIP"
+							v-bind="controls.TPEQ1___TPEQ1QTDEQUIP.wrapperProps"
+							:id="getControlId(controls.TPEQ1___TPEQ1QTDEQUIP)"
 							v-on="controls.TPEQ1___TPEQ1QTDEQUIP.handlers"
 							:loading="controls.TPEQ1___TPEQ1QTDEQUIP.props.loading"
 							:reporting-mode-on="reportingModeCAV"
@@ -296,6 +316,7 @@
 							<q-numeric-input
 								v-if="controls.TPEQ1___TPEQ1QTDEQUIP.isVisible"
 								v-bind="controls.TPEQ1___TPEQ1QTDEQUIP.props"
+								:id="getControlId(controls.TPEQ1___TPEQ1QTDEQUIP)"
 								@update:model-value="model.ValQtdequip.fnUpdateValue" />
 						</base-input-structure>
 					</q-col>
@@ -304,8 +325,9 @@
 						cols="auto">
 						<base-input-structure
 							v-if="controls.TPEQ1___TPEQ1KIT_____.isVisible"
-							class="i-checkbox"
-							v-bind="controls.TPEQ1___TPEQ1KIT_____"
+							class="i-text"
+							v-bind="controls.TPEQ1___TPEQ1KIT_____.wrapperProps"
+							:id="getControlId(controls.TPEQ1___TPEQ1KIT_____)"
 							v-on="controls.TPEQ1___TPEQ1KIT_____.handlers"
 							:loading="controls.TPEQ1___TPEQ1KIT_____.props.loading"
 							:reporting-mode-on="reportingModeCAV"
@@ -314,6 +336,7 @@
 								<q-checkbox
 									v-if="controls.TPEQ1___TPEQ1KIT_____.isVisible"
 									v-bind="controls.TPEQ1___TPEQ1KIT_____.props"
+									:id="getControlId(controls.TPEQ1___TPEQ1KIT_____)"
 									v-on="controls.TPEQ1___TPEQ1KIT_____.handlers" />
 							</template>
 						</base-input-structure>
@@ -323,7 +346,7 @@
 		</q-container>
 	</teleport>
 
-	<hr v-if="!isPopup && showFormFooter" />
+	<q-divider v-if="!isPopup && showFormFooter" />
 
 	<teleport
 		v-if="formModalIsReady && showFormFooter"
@@ -823,7 +846,7 @@
 						size: 'small',
 						helpControl: {
 							shortHelp: {
-								type: 'Subtext',
+								type: 'subtext',
 								text: computed(() => this.Resources.____615950),
 							},
 						},
@@ -1249,7 +1272,6 @@
 
 				this.afterControlUpdate(controlField, fieldValue)
 			},
-
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
 // USE /[MANUAL GQT FUNCTIONS_JS TPEQ1]/
 // eslint-disable-next-line

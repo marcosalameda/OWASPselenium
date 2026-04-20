@@ -7,6 +7,7 @@ using GenioMVC.Models.Navigation;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Quidgest.Persistence;
 using Quidgest.Persistence.GenericQuery;
+
 using System.Collections;
 using System.Collections.Concurrent;
 using System.Collections.Specialized;
@@ -35,6 +36,7 @@ namespace GenioMVC.ViewModels.Cattp
 		public string ValCodsbcat { get; set; }
 
 		#endregion
+
 		/// <summary>
 		/// Title: "Category type" | Type: "C"
 		/// </summary>
@@ -44,8 +46,6 @@ namespace GenioMVC.ViewModels.Cattp
 		/// </summary>
 		[ValidateSetAccess]
 		public TableDBEdit<GenioMVC.Models.Sbcat> TableSbcatSubcateg { get; set; }
-
-
 
 		#region Navigations
 		#endregion
@@ -216,12 +216,7 @@ namespace GenioMVC.ViewModels.Cattp
 			}
 		}
 
-		/// <summary>
-		/// Sets the value of a single property of the view model based on the provided table and field names.
-		/// </summary>
-		/// <param name="fullFieldName">The full field name in the format "table.field".</param>
-		/// <param name="value">The field value.</param>
-		/// <exception cref="ArgumentNullException">Thrown if <paramref name="fullFieldName"/> is null.</exception>
+		/// <inheritdoc />
 		public override void SetViewModelValue(string fullFieldName, object value)
 		{
 			try
@@ -349,6 +344,7 @@ namespace GenioMVC.ViewModels.Cattp
 			Characs = new List<string>();
 
 			Load_Tpcat___sbcatsubcateg(qs, lazyLoad);
+
 // USE /[MANUAL GQT VIEWMODEL_LOADPARTIAL TPCAT]/
 		}
 
@@ -419,10 +415,7 @@ namespace GenioMVC.ViewModels.Cattp
 				}
 			}
 
-			TableSbcatSubcateg = new TableDBEdit<Models.Sbcat>
-			{
-				IsLazyLoad = lazyLoad
-			};
+			TableSbcatSubcateg = new TableDBEdit<Models.Sbcat>();
 
 			if (lazyLoad)
 			{

@@ -7,6 +7,7 @@ using GenioMVC.Models.Navigation;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Quidgest.Persistence;
 using Quidgest.Persistence.GenericQuery;
+
 using System.Collections;
 using System.Collections.Concurrent;
 using System.Collections.Specialized;
@@ -35,6 +36,7 @@ namespace GenioMVC.ViewModels.Proph
 		public string ValCodprope { get; set; }
 
 		#endregion
+
 		/// <summary>
 		/// Title: "Photo" | Type: "IJ"
 		/// </summary>
@@ -49,8 +51,6 @@ namespace GenioMVC.ViewModels.Proph
 		/// </summary>
 		[ValidateSetAccess]
 		public TableDBEdit<GenioMVC.Models.Prope> TablePropeTitle { get; set; }
-
-
 
 		#region Navigations
 		#endregion
@@ -224,12 +224,7 @@ namespace GenioMVC.ViewModels.Proph
 			}
 		}
 
-		/// <summary>
-		/// Sets the value of a single property of the view model based on the provided table and field names.
-		/// </summary>
-		/// <param name="fullFieldName">The full field name in the format "table.field".</param>
-		/// <param name="value">The field value.</param>
-		/// <exception cref="ArgumentNullException">Thrown if <paramref name="fullFieldName"/> is null.</exception>
+		/// <inheritdoc />
 		public override void SetViewModelValue(string fullFieldName, object value)
 		{
 			try
@@ -360,6 +355,7 @@ namespace GenioMVC.ViewModels.Proph
 			Characs = new List<string>();
 
 			Load_Photo03_propetitle___(qs, lazyLoad);
+
 // USE /[MANUAL GQT VIEWMODEL_LOADPARTIAL PHOTO03]/
 		}
 
@@ -430,10 +426,7 @@ namespace GenioMVC.ViewModels.Proph
 				}
 			}
 
-			TablePropeTitle = new TableDBEdit<Models.Prope>
-			{
-				IsLazyLoad = lazyLoad
-			};
+			TablePropeTitle = new TableDBEdit<Models.Prope>();
 
 			if (lazyLoad)
 			{

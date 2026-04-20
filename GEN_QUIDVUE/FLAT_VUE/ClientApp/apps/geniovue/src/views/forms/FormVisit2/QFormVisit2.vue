@@ -9,12 +9,13 @@
 			<div
 				v-if="showFormHeader"
 				class="c-action-bar">
-				<h1
+				<component
 					v-if="formControl.uiComponents.header && formInfo.designation"
+					:is="topHeadingTag"
 					:id="formTitleId"
 					class="form-header">
 					{{ formInfo.designation }}
-				</h1>
+				</component>
 
 				<div class="c-action-bar__menu">
 					<template
@@ -40,13 +41,10 @@
 									@click="btn.action">
 									<template v-if="btn.icon">
 										<q-badge-indicator
-											v-if="btn.badge && btn.badge.isVisible"
-											:color="btn.badge.color">
+											:enabled="btn.badge?.isVisible ?? false"
+											:color="btn.badge?.color">
 											<q-icon v-bind="btn.icon" />
 										</q-badge-indicator>
-										<q-icon
-											v-else
-											v-bind="btn.icon" />
 									</template>
 								</q-toggle-group-item>
 							</template>
@@ -97,6 +95,7 @@
 		<q-container
 			fluid
 			data-key="VISIT2"
+			:data-identifier="primaryKeyValue"
 			:data-loading="!formInitialDataLoaded || !isActiveForm">
 			<template v-if="formControl.initialized && showFormBody">
 				<q-row v-if="controls.VISIT2__EQUIPREGISTNR.isVisible || controls.VISIT2__VISITTITLE___.isVisible || controls.VISIT2__VISITSTARTDT_.isVisible || controls.VISIT2__VISITDTFIM___.isVisible">
@@ -106,7 +105,8 @@
 						<base-input-structure
 							v-if="controls.VISIT2__EQUIPREGISTNR.isVisible"
 							class="i-text"
-							v-bind="controls.VISIT2__EQUIPREGISTNR"
+							v-bind="controls.VISIT2__EQUIPREGISTNR.wrapperProps"
+							:id="getControlId(controls.VISIT2__EQUIPREGISTNR)"
 							v-on="controls.VISIT2__EQUIPREGISTNR.handlers"
 							:loading="controls.VISIT2__EQUIPREGISTNR.props.loading"
 							:reporting-mode-on="reportingModeCAV"
@@ -114,6 +114,7 @@
 							<q-lookup
 								v-if="controls.VISIT2__EQUIPREGISTNR.isVisible"
 								v-bind="controls.VISIT2__EQUIPREGISTNR.props"
+								:id="getControlId(controls.VISIT2__EQUIPREGISTNR)"
 								v-on="controls.VISIT2__EQUIPREGISTNR.handlers" />
 							<q-see-more-visit2-equipregistnr
 								v-if="controls.VISIT2__EQUIPREGISTNR.seeMoreIsVisible"
@@ -127,13 +128,15 @@
 						<base-input-structure
 							v-if="controls.VISIT2__VISITTITLE___.isVisible"
 							class="i-text"
-							v-bind="controls.VISIT2__VISITTITLE___"
+							v-bind="controls.VISIT2__VISITTITLE___.wrapperProps"
+							:id="getControlId(controls.VISIT2__VISITTITLE___)"
 							v-on="controls.VISIT2__VISITTITLE___.handlers"
 							:loading="controls.VISIT2__VISITTITLE___.props.loading"
 							:reporting-mode-on="reportingModeCAV"
 							:suggestion-mode-on="suggestionModeOn">
 							<q-text-field
 								v-bind="controls.VISIT2__VISITTITLE___.props"
+								:id="getControlId(controls.VISIT2__VISITTITLE___)"
 								@blur="onBlur(controls.VISIT2__VISITTITLE___, model.ValTitle.value)"
 								@change="model.ValTitle.fnUpdateValueOnChange" />
 						</base-input-structure>
@@ -144,7 +147,8 @@
 						<base-input-structure
 							v-if="controls.VISIT2__VISITSTARTDT_.isVisible"
 							class="i-text"
-							v-bind="controls.VISIT2__VISITSTARTDT_"
+							v-bind="controls.VISIT2__VISITSTARTDT_.wrapperProps"
+							:id="getControlId(controls.VISIT2__VISITSTARTDT_)"
 							v-on="controls.VISIT2__VISITSTARTDT_.handlers"
 							:loading="controls.VISIT2__VISITSTARTDT_.props.loading"
 							:reporting-mode-on="reportingModeCAV"
@@ -152,6 +156,7 @@
 							<q-date-time-picker
 								v-if="controls.VISIT2__VISITSTARTDT_.isVisible"
 								v-bind="controls.VISIT2__VISITSTARTDT_.props"
+								:id="getControlId(controls.VISIT2__VISITSTARTDT_)"
 								:model-value="model.ValStartdt.value"
 								@reset-icon-click="model.ValStartdt.fnUpdateValue(model.ValStartdt.originalValue ?? new Date())"
 								@update:model-value="model.ValStartdt.fnUpdateValue($event ?? '')" />
@@ -163,7 +168,8 @@
 						<base-input-structure
 							v-if="controls.VISIT2__VISITDTFIM___.isVisible"
 							class="i-text"
-							v-bind="controls.VISIT2__VISITDTFIM___"
+							v-bind="controls.VISIT2__VISITDTFIM___.wrapperProps"
+							:id="getControlId(controls.VISIT2__VISITDTFIM___)"
 							v-on="controls.VISIT2__VISITDTFIM___.handlers"
 							:loading="controls.VISIT2__VISITDTFIM___.props.loading"
 							:reporting-mode-on="reportingModeCAV"
@@ -171,6 +177,7 @@
 							<q-date-time-picker
 								v-if="controls.VISIT2__VISITDTFIM___.isVisible"
 								v-bind="controls.VISIT2__VISITDTFIM___.props"
+								:id="getControlId(controls.VISIT2__VISITDTFIM___)"
 								:model-value="model.ValDtfim.value"
 								@reset-icon-click="model.ValDtfim.fnUpdateValue(model.ValDtfim.originalValue ?? new Date())"
 								@update:model-value="model.ValDtfim.fnUpdateValue($event ?? '')" />
@@ -184,7 +191,8 @@
 						<base-input-structure
 							v-if="controls.VISIT2__VISITDESCRIPT.isVisible"
 							class="i-textarea"
-							v-bind="controls.VISIT2__VISITDESCRIPT"
+							v-bind="controls.VISIT2__VISITDESCRIPT.wrapperProps"
+							:id="getControlId(controls.VISIT2__VISITDESCRIPT)"
 							v-on="controls.VISIT2__VISITDESCRIPT.handlers"
 							:loading="controls.VISIT2__VISITDESCRIPT.props.loading"
 							:reporting-mode-on="reportingModeCAV"
@@ -192,6 +200,7 @@
 							<q-text-area
 								v-if="controls.VISIT2__VISITDESCRIPT.isVisible"
 								v-bind="controls.VISIT2__VISITDESCRIPT.props"
+								:id="getControlId(controls.VISIT2__VISITDESCRIPT)"
 								v-on="controls.VISIT2__VISITDESCRIPT.handlers" />
 						</base-input-structure>
 					</q-col>
@@ -200,8 +209,9 @@
 						cols="auto">
 						<base-input-structure
 							v-if="controls.VISIT2__VISITTODOODIA.isVisible"
-							class="i-checkbox"
-							v-bind="controls.VISIT2__VISITTODOODIA"
+							class="i-text"
+							v-bind="controls.VISIT2__VISITTODOODIA.wrapperProps"
+							:id="getControlId(controls.VISIT2__VISITTODOODIA)"
 							v-on="controls.VISIT2__VISITTODOODIA.handlers"
 							:loading="controls.VISIT2__VISITTODOODIA.props.loading"
 							:reporting-mode-on="reportingModeCAV"
@@ -210,6 +220,7 @@
 								<q-checkbox
 									v-if="controls.VISIT2__VISITTODOODIA.isVisible"
 									v-bind="controls.VISIT2__VISITTODOODIA.props"
+									:id="getControlId(controls.VISIT2__VISITTODOODIA)"
 									v-on="controls.VISIT2__VISITTODOODIA.handlers" />
 							</template>
 						</base-input-structure>
@@ -222,13 +233,15 @@
 						<base-input-structure
 							v-if="controls.VISIT2__VISITCOLOR___.isVisible"
 							class="i-text"
-							v-bind="controls.VISIT2__VISITCOLOR___"
+							v-bind="controls.VISIT2__VISITCOLOR___.wrapperProps"
+							:id="getControlId(controls.VISIT2__VISITCOLOR___)"
 							v-on="controls.VISIT2__VISITCOLOR___.handlers"
 							:loading="controls.VISIT2__VISITCOLOR___.props.loading"
 							:reporting-mode-on="reportingModeCAV"
 							:suggestion-mode-on="suggestionModeOn">
 							<q-text-field
 								v-bind="controls.VISIT2__VISITCOLOR___.props"
+								:id="getControlId(controls.VISIT2__VISITCOLOR___)"
 								@blur="onBlur(controls.VISIT2__VISITCOLOR___, model.ValColor.value)"
 								@change="model.ValColor.fnUpdateValueOnChange" />
 						</base-input-structure>
@@ -238,7 +251,7 @@
 		</q-container>
 	</teleport>
 
-	<hr v-if="!isPopup && showFormFooter" />
+	<q-divider v-if="!isPopup && showFormFooter" />
 
 	<teleport
 		v-if="formModalIsReady && showFormFooter"
@@ -1081,7 +1094,6 @@
 
 				this.afterControlUpdate(controlField, fieldValue)
 			},
-
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
 // USE /[MANUAL GQT FUNCTIONS_JS VISIT2]/
 // eslint-disable-next-line

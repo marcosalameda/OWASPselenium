@@ -93,24 +93,6 @@ namespace GenioMVC.ViewModels.Equip
 			return crs;
 		}
 
-		/// <summary>
-		/// Sets the value of a single property of the view model based on the provided table and field names.
-		/// </summary>
-		/// <param name="fullFieldName">The full field name in the format "table.field".</param>
-		/// <param name="value">The field value.</param
-		private void SetViewModelValue(string fullFieldName, object value)
-		{
-			if (string.IsNullOrEmpty(fullFieldName))
-				return;
-
-			switch (fullFieldName)
-			{
-				case "equip.codequip":
-					EquipValCodequip = ViewModelConversion.ToString(value);
-					break;
-			}
-		}
-
 		public override int GetCount(User user)
 		{
 			throw new NotImplementedException("This operation is not supported");
@@ -208,11 +190,12 @@ namespace GenioMVC.ViewModels.Equip
 			crs.SubSets.Add(subfilters);
 
 			// Form field filters
-			if (tableConfig.FieldFilters != null)
-				crs.SubSets.Add(ProcessFieldFilters(tableConfig.FieldFilters));
+			crs.SubSets.Add(ProcessFieldFilters(tableConfig.GlobalFilters));
 
 			if (this.EquipValCodequip != null)
 				crs.Equal(CSGenioAanexd.FldCodequip, this.EquipValCodequip);
+			else
+				tableReload = false;
 
 
 			crs.SubSets.Add(GetCustomizedStaticLimits(StaticLimits));
@@ -332,14 +315,13 @@ namespace GenioMVC.ViewModels.Equip
 			List<ColumnSort> sorts = GetRequestSorts(this.Menu, tableConfig, "anexd", allSortOrders);
 
 
-			FieldRef[] fields = new FieldRef[] { CSGenioAanexd.FldCodanexd, CSGenioAanexd.FldZzstate, CSGenioAanexd.FldDthranex, CSGenioAanexd.FldTitle, CSGenioAanexd.FldDocument, CSGenioAanexd.FldDocumentfk, CSGenioAanexd.FldTittradu, CSGenioAanexd.FldReferenc, CSGenioAanexd.FldCodequip, CSGenioAequip.FldCodequip };
+			FieldRef[] fields = new FieldRef[] { CSGenioAanexd.FldCodanexd, CSGenioAanexd.FldZzstate, CSGenioAanexd.FldDthranex, CSGenioAanexd.FldTitle, CSGenioAanexd.FldDocument, CSGenioAanexd.FldDocumentfk, CSGenioAanexd.FldTittradu, CSGenioAanexd.FldReferenc };
 
-
-			// Totalizers
-			List<FieldRef> fieldsWithTotalizers = fields.Where(field => tableConfig.TotalizerColumns.Contains(field.FullName)).ToList();
+			// List of column names that should display totalized (aggregated) values.
+			List<string> totalizerColumns = [];
+			List<FieldRef> fieldsWithTotalizers = [.. fields.Where(field => totalizerColumns.Contains(field.FullName))];
 
 			FieldRef firstVisibleColumn = null;
-
 			if (sorts.Count == 0)
 			{
 				firstVisibleColumn = tableConfig?.GetFirstVisibleColumn(TableAlias);
@@ -477,17 +459,12 @@ namespace GenioMVC.ViewModels.Equip
 				{
 					case "anexd":
 						model.klass.insertNameValueField(Qfield.FullName, Qfield.Value); break;
-					case "equip":
-						model.Equip.klass.insertNameValueField(Qfield.FullName, Qfield.Value); break;
 					default:
 						break;
 				}
 			}
 
 			model.InitRowData();
-
-			// Use the parent context, so the formulas are calculated with the current values.
-			model.Equip = ParentCtx as Models.Equip;
 
 			return model;
 		}
@@ -537,41 +514,11 @@ namespace GenioMVC.ViewModels.Equip
 		/// <inheritdoc />
 		public override void MapFromModel(Models.Anexd m)
 		{
-			if (m == null)
-			{
-				CSGenio.framework.Log.Error("Map Model (Anexd) to ViewModel (Equdocum_ValLisanex) - Model is a null reference.");
-				throw new ModelNotFoundException("Model not found");
-			}
-
-			try
-			{
-				EquipValCodequip = ViewModelConversion.ToString(m.Equip.ValCodequip);
-			}
-			catch
-			{
-				CSGenio.framework.Log.Error("Map Model (Anexd) to ViewModel (Equdocum_ValLisanex) - Error during mapping.");
-				throw;
-			}
 		}
 
 		/// <inheritdoc />
 		public override void MapToModel(Models.Anexd m)
 		{
-			if (m == null)
-			{
-				CSGenio.framework.Log.Error("Map ViewModel (Equdocum_ValLisanex) to Model (Anexd) - Model is a null reference.");
-				throw new ModelNotFoundException("Model not found");
-			}
-
-			try
-			{
-				m.Equip.ValCodequip = ViewModelConversion.ToString(EquipValCodequip);
-			}
-			catch
-			{
-				CSGenio.framework.Log.Error("Map ViewModel (Equdocum_ValLisanex) to Model (Anexd) - Error during mapping.");
-				throw;
-			}
 		}
 
 		#endregion
@@ -584,7 +531,7 @@ namespace GenioMVC.ViewModels.Equip
 
 		private static readonly string[] _fieldsToSerialize =
 		[
-			"Anexd", "Anexd.ValCodanexd", "Anexd.ValZzstate", "Anexd.ValDthranex", "Anexd.ValTitle", "Anexd.ValDocument", "Anexd.ValTittradu", "Anexd.ValReferenc", "Equip", "Equip.ValCodequip", "Anexd.ValCodequip", "Anexd.ValCodlang"
+			"Anexd", "Anexd.ValCodanexd", "Anexd.ValZzstate", "Anexd.ValDthranex", "Anexd.ValTitle", "Anexd.ValDocument", "Anexd.ValTittradu", "Anexd.ValReferenc", "Anexd.ValCodequip", "Anexd.ValCodlang"
 		];
 
 		private static readonly List<TableSearchColumn> _searchableColumns =

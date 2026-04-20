@@ -47,7 +47,7 @@ namespace CSGenio.business
 			Qfield = new Field(info.Alias, "codpesso", FieldType.KEY_GUID);
 			Qfield.FieldDescription = "Primary key";
 			Qfield.FieldSize =  36;
-			Qfield.CavDesignation = "CHAVE_PRIMARIA61422";
+			Qfield.VisivelCav = CavVisibilityType.Nunca;
 
 			Qfield.Dupmsg = "";
 			info.RegisterFieldDB(Qfield);
@@ -56,7 +56,7 @@ namespace CSGenio.business
 			Qfield = new Field(info.Alias, "codpsw", FieldType.KEY_GUID);
 			Qfield.FieldDescription = "Foreign key";
 			Qfield.FieldSize =  36;
-			Qfield.CavDesignation = "CHAVE_ESTRANGEIRA25502";
+			Qfield.VisivelCav = CavVisibilityType.Nunca;
 
 			Qfield.Dupmsg = "";
 			info.RegisterFieldDB(Qfield);
@@ -111,7 +111,7 @@ namespace CSGenio.business
 			Qfield = new Field(info.Alias, "codorgaf", FieldType.KEY_GUID);
 			Qfield.FieldDescription = "Foreign key";
 			Qfield.FieldSize =  36;
-			Qfield.CavDesignation = "CHAVE_ESTRANGEIRA25502";
+			Qfield.VisivelCav = CavVisibilityType.Nunca;
 
 			Qfield.Dupmsg = "";
 			info.RegisterFieldDB(Qfield);

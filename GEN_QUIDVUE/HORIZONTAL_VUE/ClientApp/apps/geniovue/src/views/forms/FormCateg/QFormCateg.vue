@@ -9,12 +9,13 @@
 			<div
 				v-if="showFormHeader"
 				class="c-action-bar">
-				<h1
+				<component
 					v-if="formControl.uiComponents.header && formInfo.designation"
+					:is="topHeadingTag"
 					:id="formTitleId"
 					class="form-header">
 					{{ formInfo.designation }}
-				</h1>
+				</component>
 
 				<div class="c-action-bar__menu">
 					<template
@@ -40,13 +41,10 @@
 									@click="btn.action">
 									<template v-if="btn.icon">
 										<q-badge-indicator
-											v-if="btn.badge && btn.badge.isVisible"
-											:color="btn.badge.color">
+											:enabled="btn.badge?.isVisible ?? false"
+											:color="btn.badge?.color">
 											<q-icon v-bind="btn.icon" />
 										</q-badge-indicator>
-										<q-icon
-											v-else
-											v-bind="btn.icon" />
 									</template>
 								</q-toggle-group-item>
 							</template>
@@ -97,6 +95,7 @@
 		<q-container
 			fluid
 			data-key="CATEG"
+			:data-identifier="primaryKeyValue"
 			:data-loading="!formInitialDataLoaded || !isActiveForm">
 			<template v-if="formControl.initialized && showFormBody">
 				<q-row v-if="controls.CATEG___CATEGCATEGORY.isVisible || controls.CATEG___CATEGABBREVIA.isVisible">
@@ -106,13 +105,15 @@
 						<base-input-structure
 							v-if="controls.CATEG___CATEGCATEGORY.isVisible"
 							class="i-text"
-							v-bind="controls.CATEG___CATEGCATEGORY"
+							v-bind="controls.CATEG___CATEGCATEGORY.wrapperProps"
+							:id="getControlId(controls.CATEG___CATEGCATEGORY)"
 							v-on="controls.CATEG___CATEGCATEGORY.handlers"
 							:loading="controls.CATEG___CATEGCATEGORY.props.loading"
 							:reporting-mode-on="reportingModeCAV"
 							:suggestion-mode-on="suggestionModeOn">
 							<q-text-field
 								v-bind="controls.CATEG___CATEGCATEGORY.props"
+								:id="getControlId(controls.CATEG___CATEGCATEGORY)"
 								@blur="onBlur(controls.CATEG___CATEGCATEGORY, model.ValCategoria.value)"
 								@change="model.ValCategoria.fnUpdateValueOnChange" />
 						</base-input-structure>
@@ -123,13 +124,15 @@
 						<base-input-structure
 							v-if="controls.CATEG___CATEGABBREVIA.isVisible"
 							class="i-text"
-							v-bind="controls.CATEG___CATEGABBREVIA"
+							v-bind="controls.CATEG___CATEGABBREVIA.wrapperProps"
+							:id="getControlId(controls.CATEG___CATEGABBREVIA)"
 							v-on="controls.CATEG___CATEGABBREVIA.handlers"
 							:loading="controls.CATEG___CATEGABBREVIA.props.loading"
 							:reporting-mode-on="reportingModeCAV"
 							:suggestion-mode-on="suggestionModeOn">
 							<q-text-field
 								v-bind="controls.CATEG___CATEGABBREVIA.props"
+								:id="getControlId(controls.CATEG___CATEGABBREVIA)"
 								@blur="onBlur(controls.CATEG___CATEGABBREVIA, model.ValAbbreviation.value)"
 								@change="model.ValAbbreviation.fnUpdateValueOnChange" />
 						</base-input-structure>
@@ -139,7 +142,7 @@
 		</q-container>
 	</teleport>
 
-	<hr v-if="!isPopup && showFormFooter" />
+	<q-divider v-if="!isPopup && showFormFooter" />
 
 	<teleport
 		v-if="formModalIsReady && showFormFooter"
@@ -884,7 +887,6 @@
 
 				this.afterControlUpdate(controlField, fieldValue)
 			},
-
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
 // USE /[MANUAL GQT FUNCTIONS_JS CATEG]/
 // eslint-disable-next-line

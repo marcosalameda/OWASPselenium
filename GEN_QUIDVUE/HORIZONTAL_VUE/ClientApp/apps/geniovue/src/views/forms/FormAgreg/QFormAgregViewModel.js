@@ -83,6 +83,7 @@ export default class ViewModel extends FormViewModelBase
 			field: 'PROJECTO',
 			maxLength: 50,
 			description: computed(() => this.Resources.PROJECT37121),
+			ignoreFldSubmit: true,
 		}).cloneFrom(values?.TableProjeProjecto))
 		this.stopWatchers.push(watch(() => this.TableProjeProjecto.value, (newValue, oldValue) => this.onUpdate('proje.projecto', this.TableProjeProjecto, newValue, oldValue)))
 
@@ -94,6 +95,7 @@ export default class ViewModel extends FormViewModelBase
 			field: 'YEAR',
 			maxLength: 4,
 			description: computed(() => this.Resources.YEAR61794),
+			ignoreFldSubmit: true,
 		}).cloneFrom(values?.TableYearYear))
 		this.stopWatchers.push(watch(() => this.TableYearYear.value, (newValue, oldValue) => this.onUpdate('year.year', this.TableYearYear, newValue, oldValue)))
 

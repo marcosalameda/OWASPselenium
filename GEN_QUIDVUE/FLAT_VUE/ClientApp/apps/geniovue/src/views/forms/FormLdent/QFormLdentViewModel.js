@@ -106,6 +106,7 @@ export default class ViewModel extends FormViewModelBase
 			maxDigits: 10,
 			decimalDigits: 0,
 			description: computed(() => this.Resources.NO_14817),
+			ignoreFldSubmit: true,
 		}).cloneFrom(values?.TableIndocDocumenr))
 		this.stopWatchers.push(watch(() => this.TableIndocDocumenr.value, (newValue, oldValue) => this.onUpdate('indoc.documenr', this.TableIndocDocumenr, newValue, oldValue)))
 
@@ -117,6 +118,7 @@ export default class ViewModel extends FormViewModelBase
 			field: 'WAREHDES',
 			maxLength: 85,
 			description: computed(() => this.Resources.WAREHOUSE51864),
+			ignoreFldSubmit: true,
 		}).cloneFrom(values?.TableWarehWarehdes))
 		this.stopWatchers.push(watch(() => this.TableWarehWarehdes.value, (newValue, oldValue) => this.onUpdate('wareh.warehdes', this.TableWarehWarehdes, newValue, oldValue)))
 
@@ -148,6 +150,7 @@ export default class ViewModel extends FormViewModelBase
 			field: 'ITEMDES',
 			maxLength: 85,
 			description: computed(() => this.Resources.ARTICLE60065),
+			ignoreFldSubmit: true,
 		}).cloneFrom(values?.TableItemItemdes))
 		this.stopWatchers.push(watch(() => this.TableItemItemdes.value, (newValue, oldValue) => this.onUpdate('item.itemdes', this.TableItemItemdes, newValue, oldValue)))
 

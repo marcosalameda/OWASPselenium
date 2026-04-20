@@ -207,6 +207,8 @@ namespace GenioMVC.ViewModels.Rules
 
 			crs.SubSets.Add(subfilters);
 
+			// Form field filters
+			crs.SubSets.Add(ProcessFieldFilters(tableConfig.GlobalFilters));
 
 			crs.SubSets.Add(GetCustomizedStaticLimits(StaticLimits));
 
@@ -327,12 +329,11 @@ namespace GenioMVC.ViewModels.Rules
 
 			FieldRef[] fields = new FieldRef[] { CSGenioArules.FldCodregra, CSGenioArules.FldZzstate, CSGenioArules.FldTipocond, CSGenioArules.FldDescript, CSGenioArules.FldLocal };
 
-
-			// Totalizers
-			List<FieldRef> fieldsWithTotalizers = fields.Where(field => tableConfig.TotalizerColumns.Contains(field.FullName)).ToList();
+			// List of column names that should display totalized (aggregated) values.
+			List<string> totalizerColumns = [];
+			List<FieldRef> fieldsWithTotalizers = [.. fields.Where(field => totalizerColumns.Contains(field.FullName))];
 
 			FieldRef firstVisibleColumn = null;
-
 			if (sorts.Count == 0)
 			{
 				firstVisibleColumn = tableConfig?.GetFirstVisibleColumn(TableAlias);
@@ -522,7 +523,7 @@ namespace GenioMVC.ViewModels.Rules
 
 		private static readonly string[] _fieldsToSerialize =
 		[
-			"Rules", "Rules.ValCodregra", "Rules.ValZzstate", "Rules.ValTipocond", "Rules.ValDescript", "Rules.ValLocal", "Rules.ValCodup_rules"
+			"Rules", "Rules.ValCodregra", "Rules.ValZzstate", "Rules.ValTipocond", "Rules.ValDescript", "Rules.ValLocal"
 		];
 
 		private static readonly List<TableSearchColumn> _searchableColumns =

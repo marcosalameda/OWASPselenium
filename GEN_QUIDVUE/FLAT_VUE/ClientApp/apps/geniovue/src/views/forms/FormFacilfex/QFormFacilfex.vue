@@ -9,12 +9,13 @@
 			<div
 				v-if="showFormHeader"
 				class="c-action-bar">
-				<h1
+				<component
 					v-if="formControl.uiComponents.header && formInfo.designation"
+					:is="topHeadingTag"
 					:id="formTitleId"
 					class="form-header">
 					{{ formInfo.designation }}
-				</h1>
+				</component>
 
 				<div class="c-action-bar__menu">
 					<template
@@ -40,13 +41,10 @@
 									@click="btn.action">
 									<template v-if="btn.icon">
 										<q-badge-indicator
-											v-if="btn.badge && btn.badge.isVisible"
-											:color="btn.badge.color">
+											:enabled="btn.badge?.isVisible ?? false"
+											:color="btn.badge?.color">
 											<q-icon v-bind="btn.icon" />
 										</q-badge-indicator>
-										<q-icon
-											v-else
-											v-bind="btn.icon" />
 									</template>
 								</q-toggle-group-item>
 							</template>
@@ -97,6 +95,7 @@
 		<q-container
 			fluid
 			data-key="FACILFEX"
+			:data-identifier="primaryKeyValue"
 			:data-loading="!formInitialDataLoaded || !isActiveForm">
 			<template v-if="formControl.initialized && showFormBody">
 				<q-row v-if="controls.FACILFEXENTITNAME____.isVisible">
@@ -106,7 +105,8 @@
 						<base-input-structure
 							v-if="controls.FACILFEXENTITNAME____.isVisible"
 							class="i-text"
-							v-bind="controls.FACILFEXENTITNAME____"
+							v-bind="controls.FACILFEXENTITNAME____.wrapperProps"
+							:id="getControlId(controls.FACILFEXENTITNAME____)"
 							v-on="controls.FACILFEXENTITNAME____.handlers"
 							:loading="controls.FACILFEXENTITNAME____.props.loading"
 							:reporting-mode-on="reportingModeCAV"
@@ -114,6 +114,7 @@
 							<q-lookup
 								v-if="controls.FACILFEXENTITNAME____.isVisible"
 								v-bind="controls.FACILFEXENTITNAME____.props"
+								:id="getControlId(controls.FACILFEXENTITNAME____)"
 								v-on="controls.FACILFEXENTITNAME____.handlers" />
 							<q-see-more-facilfexentitname
 								v-if="controls.FACILFEXENTITNAME____.seeMoreIsVisible"
@@ -129,7 +130,8 @@
 						<base-input-structure
 							v-if="controls.FACILFEXFACILINCORPOR.isVisible"
 							class="i-text"
-							v-bind="controls.FACILFEXFACILINCORPOR"
+							v-bind="controls.FACILFEXFACILINCORPOR.wrapperProps"
+							:id="getControlId(controls.FACILFEXFACILINCORPOR)"
 							v-on="controls.FACILFEXFACILINCORPOR.handlers"
 							:loading="controls.FACILFEXFACILINCORPOR.props.loading"
 							:reporting-mode-on="reportingModeCAV"
@@ -137,6 +139,7 @@
 							<q-date-time-picker
 								v-if="controls.FACILFEXFACILINCORPOR.isVisible"
 								v-bind="controls.FACILFEXFACILINCORPOR.props"
+								:id="getControlId(controls.FACILFEXFACILINCORPOR)"
 								:model-value="model.ValIncorpor.value"
 								@reset-icon-click="model.ValIncorpor.fnUpdateValue(model.ValIncorpor.originalValue ?? new Date())"
 								@update:model-value="model.ValIncorpor.fnUpdateValue($event ?? '')" />
@@ -150,13 +153,15 @@
 						<base-input-structure
 							v-if="controls.FACILFEXFACILNAME____.isVisible"
 							class="i-text"
-							v-bind="controls.FACILFEXFACILNAME____"
+							v-bind="controls.FACILFEXFACILNAME____.wrapperProps"
+							:id="getControlId(controls.FACILFEXFACILNAME____)"
 							v-on="controls.FACILFEXFACILNAME____.handlers"
 							:loading="controls.FACILFEXFACILNAME____.props.loading"
 							:reporting-mode-on="reportingModeCAV"
 							:suggestion-mode-on="suggestionModeOn">
 							<q-text-field
 								v-bind="controls.FACILFEXFACILNAME____.props"
+								:id="getControlId(controls.FACILFEXFACILNAME____)"
 								@blur="onBlur(controls.FACILFEXFACILNAME____, model.ValName.value)"
 								@change="model.ValName.fnUpdateValueOnChange" />
 						</base-input-structure>
@@ -169,7 +174,8 @@
 						<base-input-structure
 							v-if="controls.FACILFEXFACILFACILTYP.isVisible"
 							class="i-text"
-							v-bind="controls.FACILFEXFACILFACILTYP"
+							v-bind="controls.FACILFEXFACILFACILTYP.wrapperProps"
+							:id="getControlId(controls.FACILFEXFACILFACILTYP)"
 							v-on="controls.FACILFEXFACILFACILTYP.handlers"
 							:loading="controls.FACILFEXFACILFACILTYP.props.loading"
 							:reporting-mode-on="reportingModeCAV"
@@ -177,6 +183,7 @@
 							<q-select
 								v-if="controls.FACILFEXFACILFACILTYP.isVisible"
 								v-bind="controls.FACILFEXFACILFACILTYP.props"
+								:id="getControlId(controls.FACILFEXFACILFACILTYP)"
 								@update:model-value="model.ValFaciltyp.fnUpdateValue" />
 						</base-input-structure>
 					</q-col>
@@ -186,7 +193,8 @@
 						<base-input-structure
 							v-if="controls.FACILFEXFACTYTYPE____.isVisible"
 							class="i-text"
-							v-bind="controls.FACILFEXFACTYTYPE____"
+							v-bind="controls.FACILFEXFACTYTYPE____.wrapperProps"
+							:id="getControlId(controls.FACILFEXFACTYTYPE____)"
 							v-on="controls.FACILFEXFACTYTYPE____.handlers"
 							:loading="controls.FACILFEXFACTYTYPE____.props.loading"
 							:reporting-mode-on="reportingModeCAV"
@@ -194,6 +202,7 @@
 							<q-lookup
 								v-if="controls.FACILFEXFACTYTYPE____.isVisible"
 								v-bind="controls.FACILFEXFACTYTYPE____.props"
+								:id="getControlId(controls.FACILFEXFACTYTYPE____)"
 								v-on="controls.FACILFEXFACTYTYPE____.handlers" />
 							<q-see-more-facilfexfactytype
 								v-if="controls.FACILFEXFACTYTYPE____.seeMoreIsVisible"
@@ -207,7 +216,8 @@
 						<base-input-structure
 							v-if="controls.FACILFEXFACILLATITUDE.isVisible"
 							class="i-text"
-							v-bind="controls.FACILFEXFACILLATITUDE"
+							v-bind="controls.FACILFEXFACILLATITUDE.wrapperProps"
+							:id="getControlId(controls.FACILFEXFACILLATITUDE)"
 							v-on="controls.FACILFEXFACILLATITUDE.handlers"
 							:loading="controls.FACILFEXFACILLATITUDE.props.loading"
 							:reporting-mode-on="reportingModeCAV"
@@ -215,6 +225,7 @@
 							<q-numeric-input
 								v-if="controls.FACILFEXFACILLATITUDE.isVisible"
 								v-bind="controls.FACILFEXFACILLATITUDE.props"
+								:id="getControlId(controls.FACILFEXFACILLATITUDE)"
 								@update:model-value="model.ValLatitude.fnUpdateValue" />
 						</base-input-structure>
 					</q-col>
@@ -224,7 +235,8 @@
 						<base-input-structure
 							v-if="controls.FACILFEXFACILLONGITUD.isVisible"
 							class="i-text"
-							v-bind="controls.FACILFEXFACILLONGITUD"
+							v-bind="controls.FACILFEXFACILLONGITUD.wrapperProps"
+							:id="getControlId(controls.FACILFEXFACILLONGITUD)"
 							v-on="controls.FACILFEXFACILLONGITUD.handlers"
 							:loading="controls.FACILFEXFACILLONGITUD.props.loading"
 							:reporting-mode-on="reportingModeCAV"
@@ -232,6 +244,7 @@
 							<q-numeric-input
 								v-if="controls.FACILFEXFACILLONGITUD.isVisible"
 								v-bind="controls.FACILFEXFACILLONGITUD.props"
+								:id="getControlId(controls.FACILFEXFACILLONGITUD)"
 								@update:model-value="model.ValLongitud.fnUpdateValue" />
 						</base-input-structure>
 					</q-col>
@@ -243,7 +256,8 @@
 						<base-input-structure
 							v-if="controls.FACILFEXFACILADDRESS_.isVisible"
 							class="i-textarea"
-							v-bind="controls.FACILFEXFACILADDRESS_"
+							v-bind="controls.FACILFEXFACILADDRESS_.wrapperProps"
+							:id="getControlId(controls.FACILFEXFACILADDRESS_)"
 							v-on="controls.FACILFEXFACILADDRESS_.handlers"
 							:loading="controls.FACILFEXFACILADDRESS_.props.loading"
 							:reporting-mode-on="reportingModeCAV"
@@ -251,6 +265,7 @@
 							<q-text-area
 								v-if="controls.FACILFEXFACILADDRESS_.isVisible"
 								v-bind="controls.FACILFEXFACILADDRESS_.props"
+								:id="getControlId(controls.FACILFEXFACILADDRESS_)"
 								v-on="controls.FACILFEXFACILADDRESS_.handlers" />
 						</base-input-structure>
 					</q-col>
@@ -259,7 +274,7 @@
 		</q-container>
 	</teleport>
 
-	<hr v-if="!isPopup && showFormFooter" />
+	<q-divider v-if="!isPopup && showFormFooter" />
 
 	<teleport
 		v-if="formModalIsReady && showFormFooter"
@@ -668,8 +683,8 @@
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						maxLength: 1,
 						arrayName: 'FacilTyp',
-						helpShortItem: '',
-						helpDetailedItem: '',
+						helpShortItem: 'None',
+						helpDetailedItem: 'None',
 						controlLimits: [
 						],
 					}, this),
@@ -772,8 +787,6 @@
 					Facil: {
 						get ValAddress() { return vm.model.ValAddress.value },
 						set ValAddress(value) { vm.model.ValAddress.updateValue(value) },
-						get ValCodcntry() { return vm.model.ValCodcntry.value },
-						set ValCodcntry(value) { vm.model.ValCodcntry.updateValue(value) },
 						get ValCodentit() { return vm.model.ValCodentit.value },
 						set ValCodentit(value) { vm.model.ValCodentit.updateValue(value) },
 						get ValCodfacty() { return vm.model.ValCodfacty.value },
@@ -804,8 +817,6 @@
 						get entit() { return vm.model.ValCodentit },
 						/** The foreign key to the FACTY table */
 						get facty() { return vm.model.ValCodfacty },
-						/** The foreign key to the CNTRY table */
-						get cntry() { return vm.model.ValCodcntry },
 					},
 					get extraProperties() { return vm.model.extraProperties },
 				},
@@ -1151,7 +1162,6 @@
 
 				this.afterControlUpdate(controlField, fieldValue)
 			},
-
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
 // USE /[MANUAL GQT FUNCTIONS_JS FACILFEX]/
 // eslint-disable-next-line

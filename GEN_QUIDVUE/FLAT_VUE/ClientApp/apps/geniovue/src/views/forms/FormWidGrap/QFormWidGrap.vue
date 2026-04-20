@@ -8,12 +8,13 @@
 		<div
 			v-if="showFormHeader"
 			class="c-action-bar">
-			<h1
+			<component
 				v-if="formControl.uiComponents.header && formInfo.designation"
+				:is="topHeadingTag"
 				:id="formTitleId"
 				class="form-header">
 				{{ formInfo.designation }}
-			</h1>
+			</component>
 
 			<div class="c-action-bar__menu">
 				<template
@@ -39,13 +40,10 @@
 								@click="btn.action">
 								<template v-if="btn.icon">
 									<q-badge-indicator
-										v-if="btn.badge && btn.badge.isVisible"
-										:color="btn.badge.color">
+										:enabled="btn.badge?.isVisible ?? false"
+										:color="btn.badge?.color">
 										<q-icon v-bind="btn.icon" />
 									</q-badge-indicator>
-									<q-icon
-										v-else
-										v-bind="btn.icon" />
 								</template>
 							</q-toggle-group-item>
 						</template>
@@ -57,6 +55,7 @@
 		<q-container
 			fluid
 			data-key="WID_GRAP"
+			:data-identifier="primaryKeyValue"
 			:data-loading="!formInitialDataLoaded || !isActiveForm">
 			<template v-if="formControl.initialized && showFormBody">
 				<q-row v-if="controls.WID_GRAPPSEUDFIELD001.isVisible">
@@ -64,12 +63,13 @@
 						<q-table
 							v-if="controls.WID_GRAPPSEUDFIELD001.isVisible"
 							v-bind="controls.WID_GRAPPSEUDFIELD001"
+							:id="getControlId(controls.WID_GRAPPSEUDFIELD001)"
 							v-on="controls.WID_GRAPPSEUDFIELD001.handlers">
-						<q-table-extra-extension
-							v-if="controls.WID_GRAPPSEUDFIELD001.isVisible"
-							:list-ctrl="controls.WID_GRAPPSEUDFIELD001"
-							:filter-operators="controls.WID_GRAPPSEUDFIELD001.filterOperators"
-							v-on="controls.WID_GRAPPSEUDFIELD001.handlers" />
+							<template #header>
+								<q-table-config
+									:table-ctrl="controls.WID_GRAPPSEUDFIELD001"
+									v-on="controls.WID_GRAPPSEUDFIELD001.handlers" />
+							</template>
 							<!-- USE /[MANUAL GQT CUSTOM_TABLE WID_GRAPPSEUDFIELD001]/ -->
 						</q-table>
 					</q-col>
@@ -173,6 +173,7 @@
 					type: 'widget',
 					name: 'WID_GRAP',
 					route: 'form-WID_GRAP',
+					isEmptyForm: true,
 					area: 'Home',
 					designation: '',
 					identifier: '', // Unique identifier received by route (when it's nested).
@@ -347,6 +348,7 @@
 						label: computed(() => this.Resources.COMPANY_S_PEOPLE_COU57461),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
+						headerLevel: computed(() => this.baseHeadingLevel + 1),
 						controller: 'Home',
 						action: 'Wid_grap_ValField001',
 						hasDependencies: false,
@@ -360,6 +362,7 @@
 								label: computed(() => this.Resources.COMPANY52963),
 								dataLength: 85,
 								scrollData: 30,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.NumericColumn({
 								order: 2,
@@ -370,6 +373,7 @@
 								scrollData: 10,
 								maxDigits: 10,
 								decimalPlaces: 0,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 						],
 						config: {
@@ -387,7 +391,6 @@
 							searchBarConfig: {
 								visibility: false
 							},
-							filtersVisible: false,
 							allowColumnFilters: false,
 							allowColumnSort: true,
 							generalCustomActions: [
@@ -939,7 +942,6 @@
 
 				this.afterControlUpdate(controlField, fieldValue)
 			},
-
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
 // USE /[MANUAL GQT FUNCTIONS_JS WID_GRAP]/
 // eslint-disable-next-line

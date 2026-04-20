@@ -7,6 +7,7 @@ using GenioMVC.Models.Navigation;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Quidgest.Persistence;
 using Quidgest.Persistence.GenericQuery;
+
 using System.Collections;
 using System.Collections.Concurrent;
 using System.Collections.Specialized;
@@ -39,6 +40,7 @@ namespace GenioMVC.ViewModels.Locat
 		public string ValCodfacil { get; set; }
 
 		#endregion
+
 		/// <summary>
 		/// Title: "Legal name" | Type: "C"
 		/// </summary>
@@ -53,8 +55,6 @@ namespace GenioMVC.ViewModels.Locat
 		/// Title: "Global Location Number" | Type: "C"
 		/// </summary>
 		public string ValGln { get; set; }
-
-
 
 		#region Navigations
 		#endregion
@@ -227,12 +227,7 @@ namespace GenioMVC.ViewModels.Locat
 			}
 		}
 
-		/// <summary>
-		/// Sets the value of a single property of the view model based on the provided table and field names.
-		/// </summary>
-		/// <param name="fullFieldName">The full field name in the format "table.field".</param>
-		/// <param name="value">The field value.</param>
-		/// <exception cref="ArgumentNullException">Thrown if <paramref name="fullFieldName"/> is null.</exception>
+		/// <inheritdoc />
 		public override void SetViewModelValue(string fullFieldName, object value)
 		{
 			try
@@ -364,6 +359,7 @@ namespace GenioMVC.ViewModels.Locat
 
 			Load_Locat___entitname____(qs, lazyLoad);
 			Load_Locat___facilname____(qs, lazyLoad);
+
 // USE /[MANUAL GQT VIEWMODEL_LOADPARTIAL LOCAT]/
 		}
 
@@ -434,10 +430,7 @@ namespace GenioMVC.ViewModels.Locat
 				}
 			}
 
-			TableEntitName = new TableDBEdit<Models.Entit>
-			{
-				IsLazyLoad = lazyLoad
-			};
+			TableEntitName = new TableDBEdit<Models.Entit>();
 
 			if (lazyLoad)
 			{
@@ -628,10 +621,7 @@ namespace GenioMVC.ViewModels.Locat
 			// Area limit
 			locat___facilname____DoLoad &= AddCriteriaAreaLimit(locat___facilname____Conds, CSGenio.business.CSGenioAentit.FldCodentit, "entit", this.ValCodentit, true);
 
-			TableFacilName = new TableDBEdit<Models.Facil>
-			{
-				IsLazyLoad = lazyLoad
-			};
+			TableFacilName = new TableDBEdit<Models.Facil>();
 
 			if (lazyLoad)
 			{

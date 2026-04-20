@@ -7,6 +7,7 @@ using GenioMVC.Models.Navigation;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Quidgest.Persistence;
 using Quidgest.Persistence.GenericQuery;
+
 using System.Collections;
 using System.Collections.Concurrent;
 using System.Collections.Specialized;
@@ -39,6 +40,7 @@ namespace GenioMVC.ViewModels.Asspa
 		public string ValCodparam { get; set; }
 
 		#endregion
+
 		/// <summary>
 		/// Title: "Identification name" | Type: "C"
 		/// </summary>
@@ -48,11 +50,6 @@ namespace GenioMVC.ViewModels.Asspa
 		/// Title: "Data type" | Type: "AC"
 		/// </summary>
 		public string ValDatatype { get; set; }
-		/// <summary>
-		/// Title: "" | Type: "PSEUD"
-		/// </summary>
-		[JsonIgnore]
-		public SelectList List_ValDatatype { get; set; }
 		/// <summary>
 		/// Title: "Decimal places" | Type: "N"
 		/// </summary>
@@ -79,8 +76,6 @@ namespace GenioMVC.ViewModels.Asspa
 		/// </summary>
 		[ValidateSetAccess]
 		public string ValToshow { get; set; }
-
-
 
 		#region Navigations
 		#endregion
@@ -271,12 +266,7 @@ namespace GenioMVC.ViewModels.Asspa
 			}
 		}
 
-		/// <summary>
-		/// Sets the value of a single property of the view model based on the provided table and field names.
-		/// </summary>
-		/// <param name="fullFieldName">The full field name in the format "table.field".</param>
-		/// <param name="value">The field value.</param>
-		/// <exception cref="ArgumentNullException">Thrown if <paramref name="fullFieldName"/> is null.</exception>
+		/// <inheritdoc />
 		public override void SetViewModelValue(string fullFieldName, object value)
 		{
 			try
@@ -420,6 +410,7 @@ namespace GenioMVC.ViewModels.Asspa
 
 			Load_Asspa___assetname____(qs, lazyLoad);
 			Load_Asspa___paramparamete(qs, lazyLoad);
+
 // USE /[MANUAL GQT VIEWMODEL_LOADPARTIAL ASSPA]/
 		}
 
@@ -493,10 +484,7 @@ namespace GenioMVC.ViewModels.Asspa
 				}
 			}
 
-			TableAssetName = new TableDBEdit<Models.Asset>
-			{
-				IsLazyLoad = lazyLoad
-			};
+			TableAssetName = new TableDBEdit<Models.Asset>();
 
 			if (lazyLoad)
 			{
@@ -682,15 +670,8 @@ namespace GenioMVC.ViewModels.Asspa
 					this.ValCodparam = DBConversion.ToString(hValue);
 				}
 			}
-			// Limits Generation
 
-			// History limit
-			asspa___paramparameteDoLoad &= AddCriteriaHistoryLimit(asspa___paramparameteConds, CSGenio.business.CSGenioAparam.FldCodkinde, OperationType.EQUAL, "kinde", false);
-
-			TableParamParamete = new TableDBEdit<Models.Param>
-			{
-				IsLazyLoad = lazyLoad
-			};
+			TableParamParamete = new TableDBEdit<Models.Param>();
 
 			if (lazyLoad)
 			{
@@ -734,7 +715,7 @@ namespace GenioMVC.ViewModels.Asspa
 				int numberItems = CSGenio.framework.Configuration.NrRegDBedit;
 				int offset = (page - 1) * numberItems;
 
-				FieldRef[] fields = [CSGenioAparam.FldCodparam, CSGenioAparam.FldParameter, CSGenioAparam.FldDecimalplaces, CSGenioAkinde.FldDesignat, CSGenioAparam.FldDatatype, CSGenioAparam.FldZzstate];
+				FieldRef[] fields = [CSGenioAparam.FldCodparam, CSGenioAparam.FldParameter, CSGenioAparam.FldZzstate];
 
 // USE /[MANUAL GQT OVERRQ ASSPA_PARAMPARAMETE]/
 
@@ -857,7 +838,7 @@ namespace GenioMVC.ViewModels.Asspa
 			}
 		}
 
-		private readonly string[] _fieldsToSerialize_ASSPA___PARAMPARAMETE = ["Param", "Param.ValCodparam", "Param.ValZzstate", "Param.ValParameter", "Param.ValDecimalplaces", "Kinde", "Kinde.ValDesignat", "Param.ValDatatype"];
+		private readonly string[] _fieldsToSerialize_ASSPA___PARAMPARAMETE = ["Param", "Param.ValCodparam", "Param.ValZzstate", "Param.ValParameter"];
 
 		protected override object GetViewModelValue(string identifier, object modelValue)
 		{

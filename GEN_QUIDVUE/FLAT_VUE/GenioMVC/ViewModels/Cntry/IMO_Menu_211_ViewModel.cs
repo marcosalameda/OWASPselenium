@@ -189,7 +189,7 @@ namespace GenioMVC.ViewModels.Cntry
 			{
 				new Exports.QColumn(CSGenioAcntry.FldCountry, FieldType.TEXT, Resources.Resources.COUNTRY64133, 90, 0, true),
 				new Exports.QColumn(CSGenioAcntry.FldActive, FieldType.LOGIC, Resources.Resources.ACTIVE03270, 1, 0, true),
-				new Exports.QColumn(CSGenioAcntry.FldCodigonr, FieldType.TEXT, Resources.Resources.NUMERIC_ISO_316620341, 3, 0, true),
+				new Exports.QColumn(CSGenioAcntry.FldCodigonr, FieldType.TEXT, Resources.Resources.NUMERIC19292, 3, 0, true),
 				new Exports.QColumn(CSGenioAcntry.FldAlfa2, FieldType.TEXT, Resources.Resources.ALPHABETIC_232435, 2, 0, true),
 				new Exports.QColumn(CSGenioAcntry.FldAlfa3, FieldType.TEXT, Resources.Resources.ALPHABETIC_316640, 3, 0, true),
 				new Exports.QColumn(CSGenioAcntry.FldFlag, FieldType.IMAGE, Resources.Resources.FLAG51937, 3, 1, true),
@@ -225,45 +225,39 @@ namespace GenioMVC.ViewModels.Cntry
 
 			if (!tableConfig.GroupFilters.ContainsKey("filter_IMO_Menu_211_ACTIVO"))
 			{
-				string defaultValue = "1";
+				string defaultValue = "";
 				tableConfig.Filters.Add(new GroupFilter { Key = "filter_IMO_Menu_211_ACTIVO", Value = defaultValue });
 			}
 
 			{
 				var groupFilters = CriteriaSet.Or();
-				bool filter_IMO_Menu_211_ACTIVO_1 = false;
-				if (tableConfig.GroupFilters.ContainsKey("filter_IMO_Menu_211_ACTIVO"))
-					filter_IMO_Menu_211_ACTIVO_1 = tableConfig.GroupFilters["filter_IMO_Menu_211_ACTIVO"].Contains("1");
-				else if (!tableConfig.GroupFilters.ContainsKey("filter_IMO_Menu_211_ACTIVO"))
-					filter_IMO_Menu_211_ACTIVO_1 = true;
-				if (filter_IMO_Menu_211_ACTIVO_1)
-				{
-					groupFilters.Equal(CSGenioAcntry.FldActive, 1);
+				subfilters.SubSets.Add(groupFilters);
+			}
+			if (!tableConfig.GroupFilters.ContainsKey("filter_IMO_Menu_211_ACTIVO"))
+			{
+				string defaultValue = "";
+				tableConfig.Filters.Add(new GroupFilter { Key = "filter_IMO_Menu_211_ACTIVO", Value = defaultValue });
+			}
 
-				}
+			{
+				var groupFilters = CriteriaSet.Or();
+				subfilters.SubSets.Add(groupFilters);
+			}
+			if (!tableConfig.GroupFilters.ContainsKey("filter_IMO_Menu_211_ACTIVO"))
+			{
+				string defaultValue = "";
+				tableConfig.Filters.Add(new GroupFilter { Key = "filter_IMO_Menu_211_ACTIVO", Value = defaultValue });
+			}
 
-				bool filter_IMO_Menu_211_ACTIVO_2 = false;
-				if (tableConfig.GroupFilters.ContainsKey("filter_IMO_Menu_211_ACTIVO"))
-					filter_IMO_Menu_211_ACTIVO_2 = tableConfig.GroupFilters["filter_IMO_Menu_211_ACTIVO"].Contains("2");
-				if (filter_IMO_Menu_211_ACTIVO_2)
-				{
-					groupFilters.Equal(CSGenioAcntry.FldActive, 0);
-
-				}
-
-				bool filter_IMO_Menu_211_ACTIVO_3 = false;
-				if (tableConfig.GroupFilters.ContainsKey("filter_IMO_Menu_211_ACTIVO"))
-					filter_IMO_Menu_211_ACTIVO_3 = tableConfig.GroupFilters["filter_IMO_Menu_211_ACTIVO"].Contains("3");
-				if (filter_IMO_Menu_211_ACTIVO_3)
-				{
-
-				}
-
+			{
+				var groupFilters = CriteriaSet.Or();
 				subfilters.SubSets.Add(groupFilters);
 			}
 
 			crs.SubSets.Add(subfilters);
 
+			// Form field filters
+			crs.SubSets.Add(ProcessFieldFilters(tableConfig.GlobalFilters));
 
 			crs.SubSets.Add(GetCustomizedStaticLimits(StaticLimits));
 
@@ -392,12 +386,11 @@ namespace GenioMVC.ViewModels.Cntry
 
 			FieldRef[] fields = new FieldRef[] { CSGenioAcntry.FldCodcntry, CSGenioAcntry.FldZzstate, CSGenioAcntry.FldCountry, CSGenioAcntry.FldActive, CSGenioAcntry.FldCodigonr, CSGenioAcntry.FldAlfa2, CSGenioAcntry.FldAlfa3, CSGenioAcntry.FldFlag };
 
-
-			// Totalizers
-			List<FieldRef> fieldsWithTotalizers = fields.Where(field => tableConfig.TotalizerColumns.Contains(field.FullName)).ToList();
+			// List of column names that should display totalized (aggregated) values.
+			List<string> totalizerColumns = [];
+			List<FieldRef> fieldsWithTotalizers = [.. fields.Where(field => totalizerColumns.Contains(field.FullName))];
 
 			FieldRef firstVisibleColumn = null;
-
 			if (sorts.Count == 0)
 			{
 				firstVisibleColumn = tableConfig?.GetFirstVisibleColumn(TableAlias);

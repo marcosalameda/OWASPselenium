@@ -23,22 +23,22 @@ export function useDropdown(props: QDocumentProps, model: Ref<string | undefined
 			!props.editing &&
 			(!props.versioning || !model.value || versionCount.value === 0)
 	)
-	const canSubmit = computed<boolean | undefined>(
-		() => !props.readonly && props.versioning && props.editing
+	const canSubmit = computed<boolean>(
+		() => !props.readonly && !!props.versioning && !!props.editing
 	)
-	const canEdit = computed<boolean | undefined>(
+	const canEdit = computed<boolean>(
 		() =>
 			!props.readonly &&
-			props.versioning &&
+			!!props.versioning &&
 			!props.editing &&
 			!!model.value &&
 			versionCount.value > 0
 	)
-	const canShowVersions = computed<boolean | undefined>(
-		() => props.versioning && !props.editing && versionCount.value > 1
+	const canShowVersions = computed<boolean>(
+		() => !!props.versioning && !props.editing && versionCount.value > 1
 	)
 	const canDelete = computed<boolean>(() => !props.readonly)
-	const canCreate = computed<boolean | undefined>(() => !props.readonly && props.usesTemplates)
+	const canCreate = computed<boolean>(() => !props.readonly && !!props.usesTemplates)
 
 	/**
 	 * Create a single action for each version
@@ -101,7 +101,8 @@ export function useDropdown(props: QDocumentProps, model: Ref<string | undefined
 					key: 'attach',
 					icon: { icon: 'upload-img' },
 					label: props.texts?.attachLabel || '',
-					group: 'default'
+					group: 'default',
+					disabled: props.readonly
 				}
 			]
 

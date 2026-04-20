@@ -47,7 +47,7 @@ namespace CSGenio.business
 			Qfield = new Field(info.Alias, "codcmpki", FieldType.KEY_GUID);
 			Qfield.FieldDescription = "";
 			Qfield.FieldSize =  36;
-			Qfield.CavDesignation = "";
+			Qfield.VisivelCav = CavVisibilityType.Nunca;
 
 			Qfield.Dupmsg = "";
 			info.RegisterFieldDB(Qfield);
@@ -56,7 +56,7 @@ namespace CSGenio.business
 			Qfield = new Field(info.Alias, "codtpequ", FieldType.KEY_GUID);
 			Qfield.FieldDescription = "TYPE OF EQUIPMENT";
 			Qfield.FieldSize =  36;
-			Qfield.CavDesignation = "TYPE_OF_EQUIPMENT18080";
+			Qfield.VisivelCav = CavVisibilityType.Nunca;
 
 			Qfield.Dupmsg = "";
 			info.RegisterFieldDB(Qfield);
@@ -81,7 +81,7 @@ namespace CSGenio.business
 			Qfield = new Field(info.Alias, "codtpeq1", FieldType.KEY_GUID);
 			Qfield.FieldDescription = "TYPE OF COMPONENT EQUIPMENT";
 			Qfield.FieldSize =  36;
-			Qfield.CavDesignation = "TYPE_OF_COMPONENT_EQ16631";
+			Qfield.VisivelCav = CavVisibilityType.Nunca;
 
 			Qfield.Dupmsg = "";
 			argumentsListByArea= new List<ByAreaArguments>();

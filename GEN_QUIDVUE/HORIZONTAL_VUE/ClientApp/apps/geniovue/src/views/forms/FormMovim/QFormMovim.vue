@@ -9,12 +9,13 @@
 			<div
 				v-if="showFormHeader"
 				class="c-action-bar">
-				<h1
+				<component
 					v-if="formControl.uiComponents.header && formInfo.designation"
+					:is="topHeadingTag"
 					:id="formTitleId"
 					class="form-header">
 					{{ formInfo.designation }}
-				</h1>
+				</component>
 
 				<div class="c-action-bar__menu">
 					<template
@@ -40,13 +41,10 @@
 									@click="btn.action">
 									<template v-if="btn.icon">
 										<q-badge-indicator
-											v-if="btn.badge && btn.badge.isVisible"
-											:color="btn.badge.color">
+											:enabled="btn.badge?.isVisible ?? false"
+											:color="btn.badge?.color">
 											<q-icon v-bind="btn.icon" />
 										</q-badge-indicator>
-										<q-icon
-											v-else
-											v-bind="btn.icon" />
 									</template>
 								</q-toggle-group-item>
 							</template>
@@ -97,6 +95,7 @@
 		<q-container
 			fluid
 			data-key="MOVIM"
+			:data-identifier="primaryKeyValue"
 			:data-loading="!formInitialDataLoaded || !isActiveForm">
 			<template v-if="formControl.initialized && showFormBody">
 				<q-row v-if="controls.MOVIM___MOVIMDHMUDANC.isVisible || controls.MOVIM___EQUIPREGISTNR.isVisible || controls.MOVIM___ROOMSROOMNR__.isVisible || controls.MOVIM___MOVIMOBSERVAT.isVisible">
@@ -106,7 +105,8 @@
 						<base-input-structure
 							v-if="controls.MOVIM___MOVIMDHMUDANC.isVisible"
 							class="i-text"
-							v-bind="controls.MOVIM___MOVIMDHMUDANC"
+							v-bind="controls.MOVIM___MOVIMDHMUDANC.wrapperProps"
+							:id="getControlId(controls.MOVIM___MOVIMDHMUDANC)"
 							v-on="controls.MOVIM___MOVIMDHMUDANC.handlers"
 							:loading="controls.MOVIM___MOVIMDHMUDANC.props.loading"
 							:reporting-mode-on="reportingModeCAV"
@@ -114,6 +114,7 @@
 							<q-date-time-picker
 								v-if="controls.MOVIM___MOVIMDHMUDANC.isVisible"
 								v-bind="controls.MOVIM___MOVIMDHMUDANC.props"
+								:id="getControlId(controls.MOVIM___MOVIMDHMUDANC)"
 								:model-value="model.ValDhmudanc.value"
 								@reset-icon-click="model.ValDhmudanc.fnUpdateValue(model.ValDhmudanc.originalValue ?? new Date())"
 								@update:model-value="model.ValDhmudanc.fnUpdateValue($event ?? '')" />
@@ -121,7 +122,8 @@
 						<base-input-structure
 							v-if="controls.MOVIM___EQUIPREGISTNR.isVisible"
 							class="i-text"
-							v-bind="controls.MOVIM___EQUIPREGISTNR"
+							v-bind="controls.MOVIM___EQUIPREGISTNR.wrapperProps"
+							:id="getControlId(controls.MOVIM___EQUIPREGISTNR)"
 							v-on="controls.MOVIM___EQUIPREGISTNR.handlers"
 							:loading="controls.MOVIM___EQUIPREGISTNR.props.loading"
 							:reporting-mode-on="reportingModeCAV"
@@ -129,6 +131,7 @@
 							<q-lookup
 								v-if="controls.MOVIM___EQUIPREGISTNR.isVisible"
 								v-bind="controls.MOVIM___EQUIPREGISTNR.props"
+								:id="getControlId(controls.MOVIM___EQUIPREGISTNR)"
 								v-on="controls.MOVIM___EQUIPREGISTNR.handlers" />
 							<q-see-more-movim-equipregistnr
 								v-if="controls.MOVIM___EQUIPREGISTNR.seeMoreIsVisible"
@@ -142,7 +145,8 @@
 						<base-input-structure
 							v-if="controls.MOVIM___ROOMSROOMNR__.isVisible"
 							class="i-text"
-							v-bind="controls.MOVIM___ROOMSROOMNR__"
+							v-bind="controls.MOVIM___ROOMSROOMNR__.wrapperProps"
+							:id="getControlId(controls.MOVIM___ROOMSROOMNR__)"
 							v-on="controls.MOVIM___ROOMSROOMNR__.handlers"
 							:loading="controls.MOVIM___ROOMSROOMNR__.props.loading"
 							:reporting-mode-on="reportingModeCAV"
@@ -150,6 +154,7 @@
 							<q-lookup
 								v-if="controls.MOVIM___ROOMSROOMNR__.isVisible"
 								v-bind="controls.MOVIM___ROOMSROOMNR__.props"
+								:id="getControlId(controls.MOVIM___ROOMSROOMNR__)"
 								v-on="controls.MOVIM___ROOMSROOMNR__.handlers" />
 							<q-see-more-movim-roomsroomnr
 								v-if="controls.MOVIM___ROOMSROOMNR__.seeMoreIsVisible"
@@ -163,7 +168,8 @@
 						<base-input-structure
 							v-if="controls.MOVIM___MOVIMOBSERVAT.isVisible"
 							class="i-textarea"
-							v-bind="controls.MOVIM___MOVIMOBSERVAT"
+							v-bind="controls.MOVIM___MOVIMOBSERVAT.wrapperProps"
+							:id="getControlId(controls.MOVIM___MOVIMOBSERVAT)"
 							v-on="controls.MOVIM___MOVIMOBSERVAT.handlers"
 							:loading="controls.MOVIM___MOVIMOBSERVAT.props.loading"
 							:reporting-mode-on="reportingModeCAV"
@@ -171,6 +177,7 @@
 							<q-text-area
 								v-if="controls.MOVIM___MOVIMOBSERVAT.isVisible"
 								v-bind="controls.MOVIM___MOVIMOBSERVAT.props"
+								:id="getControlId(controls.MOVIM___MOVIMOBSERVAT)"
 								v-on="controls.MOVIM___MOVIMOBSERVAT.handlers" />
 						</base-input-structure>
 					</q-col>
@@ -179,7 +186,7 @@
 		</q-container>
 	</teleport>
 
-	<hr v-if="!isPopup && showFormFooter" />
+	<q-divider v-if="!isPopup && showFormFooter" />
 
 	<teleport
 		v-if="formModalIsReady && showFormFooter"
@@ -1001,7 +1008,6 @@
 
 				this.afterControlUpdate(controlField, fieldValue)
 			},
-
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
 // USE /[MANUAL GQT FUNCTIONS_JS MOVIM]/
 // eslint-disable-next-line

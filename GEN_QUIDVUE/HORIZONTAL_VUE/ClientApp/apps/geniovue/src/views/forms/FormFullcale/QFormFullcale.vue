@@ -9,12 +9,13 @@
 			<div
 				v-if="showFormHeader"
 				class="c-action-bar">
-				<h1
+				<component
 					v-if="formControl.uiComponents.header && formInfo.designation"
+					:is="topHeadingTag"
 					:id="formTitleId"
 					class="form-header">
 					{{ formInfo.designation }}
-				</h1>
+				</component>
 
 				<div class="c-action-bar__menu">
 					<template
@@ -40,13 +41,10 @@
 									@click="btn.action">
 									<template v-if="btn.icon">
 										<q-badge-indicator
-											v-if="btn.badge && btn.badge.isVisible"
-											:color="btn.badge.color">
+											:enabled="btn.badge?.isVisible ?? false"
+											:color="btn.badge?.color">
 											<q-icon v-bind="btn.icon" />
 										</q-badge-indicator>
-										<q-icon
-											v-else
-											v-bind="btn.icon" />
 									</template>
 								</q-toggle-group-item>
 							</template>
@@ -97,6 +95,7 @@
 		<q-container
 			fluid
 			data-key="FULLCALE"
+			:data-identifier="primaryKeyValue"
 			:data-loading="!formInitialDataLoaded || !isActiveForm">
 			<template v-if="formControl.initialized && showFormBody">
 				<q-row v-if="controls.FULLCALEPSEUDFULLCALE.isVisible">
@@ -106,21 +105,22 @@
 						<q-table
 							v-if="controls.FULLCALEPSEUDFULLCALE.isVisible"
 							v-bind="controls.FULLCALEPSEUDFULLCALE"
+							:id="getControlId(controls.FULLCALEPSEUDFULLCALE)"
 							v-on="controls.FULLCALEPSEUDFULLCALE.handlers">
+							<template #header>
+								<q-table-config
+									:table-ctrl="controls.FULLCALEPSEUDFULLCALE"
+									v-on="controls.FULLCALEPSEUDFULLCALE.handlers" />
+							</template>
 							<!-- USE /[MANUAL GQT CUSTOM_TABLE FULLCALEPSEUDFULLCALE]/ -->
 						</q-table>
-						<q-table-extra-extension
-							v-if="controls.FULLCALEPSEUDFULLCALE.isVisible"
-							:list-ctrl="controls.FULLCALEPSEUDFULLCALE"
-							:filter-operators="controls.FULLCALEPSEUDFULLCALE.filterOperators"
-							v-on="controls.FULLCALEPSEUDFULLCALE.handlers" />
 					</q-col>
 				</q-row>
 			</template>
 		</q-container>
 	</teleport>
 
-	<hr v-if="!isPopup && showFormFooter" />
+	<q-divider v-if="!isPopup && showFormFooter" />
 
 	<teleport
 		v-if="formModalIsReady && showFormFooter"
@@ -465,10 +465,11 @@
 					FULLCALEPSEUDFULLCALE: new fieldControlClass.TableListControl({
 						id: 'FULLCALEPSEUDFULLCALE',
 						name: 'FULLCALE',
-						size: '',
+						size: 'xxlarge',
 						label: computed(() => this.Resources.VISITS33669),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
+						headerLevel: computed(() => this.baseHeadingLevel + 1),
 						controller: 'EQUIP',
 						action: 'Fullcale_ValFullcale',
 						hasDependencies: false,
@@ -557,7 +558,6 @@
 							searchBarConfig: {
 								visibility: false
 							},
-							filtersVisible: false,
 							allowColumnFilters: false,
 							allowColumnSort: true,
 							crudActions: [
@@ -631,9 +631,7 @@
 									id: 'insert',
 									name: 'insert',
 									title: computed(() => this.Resources.INSERIR43365),
-									icon: {
-										icon: 'add'
-									},
+									icon: { icon: 'add' },
 									isInReadOnly: false,
 									params: {
 										action: vm.openFormAction,
@@ -733,6 +731,8 @@
 						set ValCodwareh(value) { vm.model.ValCodwareh.updateValue(value) },
 						get ValRegistnr() { return vm.model.ValRegistnr.value },
 						set ValRegistnr(value) { vm.model.ValRegistnr.updateValue(value) },
+						get ValSequennr() { return vm.model.ValSequennr.value },
+						set ValSequennr(value) { vm.model.ValSequennr.updateValue(value) },
 					},
 					keys: {
 						/** The primary key of the EQUIP table */
@@ -1096,7 +1096,6 @@
 
 				this.afterControlUpdate(controlField, fieldValue)
 			},
-
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
 // USE /[MANUAL GQT FUNCTIONS_JS FULLCALE]/
 // eslint-disable-next-line

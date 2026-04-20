@@ -6,6 +6,7 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 
+using CSGenio.core.ai;
 using CSGenio.core.di;
 using CSGenio.framework;
 using CSGenio.persistence;
@@ -212,7 +213,7 @@ public abstract class HealthChecker
 	protected bool ValidateChatbotAPI(IDictionary<string, HealthStatus> details)
 	{
 		bool chatbotApiOk = true;
-		string chatbotUrl = Configuration.AiConfig.APIEndpoint;
+		string chatbotUrl = ChatbotService.EnsureApiUrl(Configuration.AiConfig.APIEndpoint);
 
 		if (!string.IsNullOrWhiteSpace(chatbotUrl))
 		{

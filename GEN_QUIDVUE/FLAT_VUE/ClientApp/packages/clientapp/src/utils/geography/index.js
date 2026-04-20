@@ -23,22 +23,23 @@ export function validateCoordinate(value) {
 /**
  * Get formatted string representing a geographic coordinate.
  * @param {string|object} value - The geographic coordinate
- * @param {string} decimalSep - The decimal separator to use in numbers
- * @param {string} groupSep - The group separator to use in numbers
+ * @param {string} decimalSep - The decimal separator to use in numbers(e.g., ',')
+ * @param {string} groupSep - The group separator to use in numbers (e.g., '.')
+ * @param {string} negativeFormat - The format to use for negative numbers (e.g., '-')
  * @returns A string representation of the specified coordinate.
  */
-export function geographicDisplay(value, decimalSep = '.', groupSep = '') {
+export function geographicDisplay(value, decimalSep = '.', groupSep = '', negativeFormat = '-') {
 	if (typeof value === 'string') {
 		if (!validateCoordinate(value)) return ''
 		return value
 	}
 	if (isEmpty(value) || typeof value.Lat !== 'number' || typeof value.Long !== 'number') return ''
 
-	const x = numericDisplay(value.Lat, decimalSep, groupSep, {
+	const x = numericDisplay(value.Lat, decimalSep, groupSep, negativeFormat, {
 		minimumFractionDigits: 0,
 		maximumFractionDigits: 20
 	})
-	const y = numericDisplay(value.Long, decimalSep, groupSep, {
+	const y = numericDisplay(value.Long, decimalSep, groupSep, negativeFormat, {
 		minimumFractionDigits: 0,
 		maximumFractionDigits: 20
 	})

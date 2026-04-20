@@ -39,12 +39,9 @@ public abstract class ListToolBase<TEntity> : McpTool where TEntity : DbArea
                 Description = "Sort order. Allowed values: 'asc' (ascending) or 'desc' (descending). Default is 'asc'"
                 }
             },
-            {"filters" , new McpProperty() {
-                Type = "object",
-                Description = $@"Filter conditions in JSON format. Structure: {{""operator"": ""AND""|""OR"", ""conditions"": [{{""field"": string, ""operator"": string, ""value"": any}}]}}.
-Supported fields: {string.Join(", ", GetSearchableFields())}.
-Supported operators: 'equals', 'notEquals', 'greaterThan', 'greaterOrEqual', 'lessThan', 'lessOrEqual', 'contains', 'notContains', 'in', 'notIn'.
-Conditions can be nested for complex logic. Example: {{""operator"": ""AND"", ""conditions"": [{{""field"": ""name"", ""operator"": ""contains"", ""value"": ""test""}}]}}"
+            {"filter" , new McpProperty() {
+                Type = "string",
+                Description = FilterDslParser.GetSyntaxDescription(GetSearchableFields())
                 }
             },
         },
@@ -149,170 +146,6 @@ Conditions can be nested for complex logic. Example: {{""operator"": ""AND"", ""
         return null;
     }
 
-    private object ExtractValue(JsonElement valueElement)
-    {
-        switch (valueElement.ValueKind)
-        {
-            case JsonValueKind.String:
-                return valueElement.GetString();
-            case JsonValueKind.Number:
-                if (valueElement.TryGetInt32(out int intValue))
-                    return intValue;
-                if (valueElement.TryGetInt64(out long longValue))
-                    return longValue;
-                if (valueElement.TryGetDouble(out double doubleValue))
-                    return doubleValue;
-                return valueElement.GetDecimal();
-            case JsonValueKind.True:
-                return true;
-            case JsonValueKind.False:
-                return false;
-            case JsonValueKind.Null:
-                return null;
-            case JsonValueKind.Array:
-                var list = new List<object>();
-                foreach (var item in valueElement.EnumerateArray())
-                {
-                    list.Add(ExtractValue(item));
-                }
-                return list;
-            default:
-                return valueElement.GetRawText();
-        }
-    }
-
-    private void AddSimpleCondition(CriteriaSet criteriaSet, JsonElement condition)
-    {
-        if (!condition.TryGetProperty("field", out var fieldProp))
-            throw new ArgumentException("Filter condition must have a 'field' property");
-
-        if (!condition.TryGetProperty("operator", out var opProp))
-            throw new ArgumentException("Filter condition must have an 'operator' property");
-
-        if (!condition.TryGetProperty("value", out var valueProp))
-            throw new ArgumentException("Filter condition must have a 'value' property");
-
-        string field = fieldProp.GetString();
-        string op = opProp.GetString();
-
-        // Validate that the field is in the searchable fields list
-        var searchableFields = GetSearchableFields();
-        if (!searchableFields.Contains(field))
-        {
-            throw new ArgumentException($"Invalid filter field: '{field}'. Allowed values are: {string.Join(", ", searchableFields)}");
-        }
-
-        Quidgest.Persistence.FieldRef fieldRef = MapFieldName(field);
-        object value = ExtractValue(valueProp);
-
-        switch (op?.ToLower())
-        {
-            case "equals":
-                criteriaSet.Equal(fieldRef, value);
-                break;
-            case "notequals":
-                criteriaSet.NotEqual(fieldRef, value);
-                break;
-            case "greaterthan":
-                criteriaSet.Greater(fieldRef, value);
-                break;
-            case "greaterorequal":
-                criteriaSet.GreaterOrEqual(fieldRef, value);
-                break;
-            case "lessthan":
-                criteriaSet.Lesser(fieldRef, value);
-                break;
-            case "lessorequal":
-                criteriaSet.LesserOrEqual(fieldRef, value);
-                break;
-            case "contains":
-                // Add wildcards for LIKE operator
-                criteriaSet.Like(fieldRef, $"%{value}%");
-                break;
-            case "notcontains":
-                criteriaSet.NotLike(fieldRef, $"%{value}%");
-                break;
-            case "in":
-                if (value is List<object> listValue)
-                    criteriaSet.In(fieldRef, listValue);
-                else
-                    throw new ArgumentException("The 'in' operator requires an array value");
-                break;
-            case "notin":
-                if (value is List<object> listValue2)
-                    criteriaSet.NotIn(fieldRef, listValue2);
-                else
-                    throw new ArgumentException("The 'notIn' operator requires an array value");
-                break;
-            default:
-                throw new ArgumentException($"Invalid operator: '{op}'. Allowed values are: 'equals', 'notEquals', 'greaterThan', 'greaterOrEqual', 'lessThan', 'lessOrEqual', 'contains', 'notContains', 'in', 'notIn'");
-        }
-    }
-
-    private CriteriaSet ParseFilters(JsonElement filterElement)
-    {
-        // Handle null or undefined filter
-        if (filterElement.ValueKind == JsonValueKind.Null || filterElement.ValueKind == JsonValueKind.Undefined)
-            return null;
-
-        // If no operator property, return null (no filtering)
-        if (!filterElement.TryGetProperty("operator", out var opProp))
-            return null;
-
-        string logicalOp = opProp.GetString()?.ToUpper();
-        if (string.IsNullOrEmpty(logicalOp))
-            return null;
-
-        CriteriaSet criteriaSet;
-        switch (logicalOp)
-        {
-            case "AND":
-                criteriaSet = CriteriaSet.And();
-                break;
-            case "OR":
-                criteriaSet = CriteriaSet.Or();
-                break;
-            case "NOTAND":
-                criteriaSet = CriteriaSet.NotAnd();
-                break;
-            case "NOTOR":
-                criteriaSet = CriteriaSet.NotOr();
-                break;
-            default:
-                throw new ArgumentException($"Invalid logical operator: '{logicalOp}'. Allowed values are: 'AND', 'OR', 'NOTAND', 'NOTOR'");
-        }
-
-        if (filterElement.TryGetProperty("conditions", out var conditionsArray))
-        {
-            foreach (var condition in conditionsArray.EnumerateArray())
-            {
-                // Check if this is a simple condition (has "field" property) or nested (has "operator" property)
-                if (condition.TryGetProperty("field", out var _))
-                {
-                    // Simple condition
-                    AddSimpleCondition(criteriaSet, condition);
-                }
-                else if (condition.TryGetProperty("operator", out var _))
-                {
-                    // Nested condition - recursive call
-                    var subSet = ParseFilters(condition);
-                    if (subSet != null)
-                        criteriaSet.SubSet(subSet);
-                }
-                else
-                {
-                    throw new ArgumentException("Each condition must have either a 'field' property (simple condition) or an 'operator' property (nested condition)");
-                }
-            }
-        }
-
-        // Return null if no conditions were added
-        if (criteriaSet.Criterias.Count == 0 && criteriaSet.SubSets.Count == 0)
-            return null;
-
-        return criteriaSet;
-    }
-
     public override object Execute(PersistentSupport sp, User user, JsonElement input)
     {
         //Prepare record
@@ -326,11 +159,16 @@ Conditions can be nested for complex logic. Example: {{""operator"": ""AND"", ""
 
         var sorts = ParseSortParameters(input);
 
-        // Parse filters if provided
+        // Parse filter if provided
         CriteriaSet filters = null;
-        if (input.TryGetProperty("filters", out var propFilters))
+        if (input.TryGetProperty("filter", out var propFilter))
         {
-            filters = ParseFilters(propFilters);
+            string filterStr = propFilter.GetString();
+            if (!string.IsNullOrWhiteSpace(filterStr))
+            {
+                var parser = new FilterDslParser(MapFieldName, GetSearchableFields());
+                filters = parser.Parse(filterStr);
+            }
         }
 
         var list = new ListingMVC<TEntity>(

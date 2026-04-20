@@ -28,13 +28,22 @@ namespace CSGenio.core.ai
         public ChatbotService(HttpClient httpClient)
         {
             _httpClient = httpClient;
-            _chatbotEndpointUrl = Configuration.AiConfig?.APIEndpoint?.TrimEnd('/');
+            _chatbotEndpointUrl = EnsureApiUrl(Configuration.AiConfig?.APIEndpoint);
         }
 
         public ChatbotService()
         {
             _httpClient = GenioDI.HttpFactory.CreateClient();
-            _chatbotEndpointUrl = Configuration.AiConfig?.APIEndpoint?.TrimEnd('/');
+            _chatbotEndpointUrl = EnsureApiUrl(Configuration.AiConfig?.APIEndpoint);
+        }
+
+        // Normalizes the API backend URL by ensuring it ends with '/api'.
+        public static string EnsureApiUrl(string url)
+        {
+            if (string.IsNullOrEmpty(url)) return url;
+            var clean = url.Trim().TrimEnd('/');
+            if (clean.EndsWith("/api", StringComparison.OrdinalIgnoreCase)) return clean;
+            return $"{clean}/api";
         }
 
         // Constructs the full endpoint URL by appending the specified path.
@@ -124,6 +133,7 @@ namespace CSGenio.core.ai
             json["project"] = Configuration.Application.Name;
             json["user"] = user.Name;
             json["appVersion"] = VersionInfo.GenAssemblyVersion;
+            json["mcpUrl"] = Configuration.AiConfig.AppMCPEndpoint;
 
             return json.ToJsonString();
         }
@@ -251,6 +261,7 @@ namespace CSGenio.core.ai
             enrichedFields["project"] = Configuration.Application.Name;
             enrichedFields["user"] = user.Name;
             enrichedFields["appVersion"] = VersionInfo.GenAssemblyVersion;
+            enrichedFields["mcpUrl"] = Configuration.AiConfig.AppMCPEndpoint ?? string.Empty;
 
             //Add fields
             foreach (var field in enrichedFields)
@@ -307,7 +318,7 @@ namespace CSGenio.core.ai
                     "application/json");
             }
 
-            var response = await _httpClient.PostAsync($"{_chatbotEndpointUrl}/{endpointPath}", content);
+            var response = await _httpClient.PostAsync($"{_chatbotEndpointUrl}/{endpointPath}", content).ConfigureAwait(false);
             response.EnsureSuccessStatusCode();
 
             string responseContent = await response.Content.ReadAsStringAsync();

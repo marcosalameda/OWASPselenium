@@ -7,8 +7,7 @@
 			id="CTRL_1"
 			label="Full Calendar"
 			label-position="right"
-			readonly
-			:label-attrs="{ class: 'i-checkbox i-checkbox__label' }">
+			readonly>
 			<q-calendar
 				id="qfc-1"
 				:list-config="listConfig"

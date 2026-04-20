@@ -7,6 +7,7 @@ using GenioMVC.Models.Navigation;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Quidgest.Persistence;
 using Quidgest.Persistence.GenericQuery;
+
 using System.Collections;
 using System.Collections.Concurrent;
 using System.Collections.Specialized;
@@ -39,6 +40,7 @@ namespace GenioMVC.ViewModels.Prope
 		public string ValCodcity { get; set; }
 
 		#endregion
+
 		/// <summary>
 		/// Title: "Foto principal" | Type: "IJ"
 		/// </summary>
@@ -65,7 +67,7 @@ namespace GenioMVC.ViewModels.Prope
 		/// Title: "Country" | Type: "C"
 		/// </summary>
 		[ValidateSetAccess]
-		public string CityCtryValCountry 
+		public string CityCtryValCountry
 		{
 			get
 			{
@@ -99,7 +101,7 @@ namespace GenioMVC.ViewModels.Prope
 		/// Title: "Email" | Type: "C"
 		/// </summary>
 		[ValidateSetAccess]
-		public string AgentValEmail 
+		public string AgentValEmail
 		{
 			get
 			{
@@ -117,7 +119,7 @@ namespace GenioMVC.ViewModels.Prope
 		/// </summary>
 		[ImageThumbnailJsonConverter(480, 10)]
 		[ValidateSetAccess]
-		public GenioMVC.Models.ImageModel AgentValPhoto 
+		public GenioMVC.Models.ImageModel AgentValPhoto
 		{
 			get
 			{
@@ -130,8 +132,6 @@ namespace GenioMVC.ViewModels.Prope
 		public Func<GenioMVC.Models.ImageModel> funcAgentValPhoto { get; set; }
 
 		private GenioMVC.Models.ImageModel _auxAgentValPhoto { get; set; }
-
-
 
 		#region Navigations
 		#endregion
@@ -327,12 +327,7 @@ namespace GenioMVC.ViewModels.Prope
 			}
 		}
 
-		/// <summary>
-		/// Sets the value of a single property of the view model based on the provided table and field names.
-		/// </summary>
-		/// <param name="fullFieldName">The full field name in the format "table.field".</param>
-		/// <param name="value">The field value.</param>
-		/// <exception cref="ArgumentNullException">Thrown if <paramref name="fullFieldName"/> is null.</exception>
+		/// <inheritdoc />
 		public override void SetViewModelValue(string fullFieldName, object value)
 		{
 			try
@@ -482,6 +477,7 @@ namespace GenioMVC.ViewModels.Prope
 
 			Load_Prope08_city_city____(qs, lazyLoad);
 			Load_Prope08_agentname____(qs, lazyLoad);
+
 // USE /[MANUAL GQT VIEWMODEL_LOADPARTIAL PROPE08]/
 		}
 
@@ -555,10 +551,7 @@ namespace GenioMVC.ViewModels.Prope
 				}
 			}
 
-			TableCityCity = new TableDBEdit<Models.City>
-			{
-				IsLazyLoad = lazyLoad
-			};
+			TableCityCity = new TableDBEdit<Models.City>();
 
 			if (lazyLoad)
 			{
@@ -746,10 +739,7 @@ namespace GenioMVC.ViewModels.Prope
 				}
 			}
 
-			TableAgentName = new TableDBEdit<Models.Agent>
-			{
-				IsLazyLoad = lazyLoad
-			};
+			TableAgentName = new TableDBEdit<Models.Agent>();
 
 			if (lazyLoad)
 			{

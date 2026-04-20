@@ -47,7 +47,7 @@ namespace CSGenio.business
 			Qfield = new Field(info.Alias, "coddttyp", FieldType.KEY_GUID);
 			Qfield.FieldDescription = "";
 			Qfield.FieldSize =  36;
-			Qfield.CavDesignation = "";
+			Qfield.VisivelCav = CavVisibilityType.Nunca;
 
 			Qfield.Dupmsg = "";
 			info.RegisterFieldDB(Qfield);
@@ -138,7 +138,7 @@ namespace CSGenio.business
 			Qfield.FieldDescription = "Conditional (smallint) (storage: 2 byte)";
 			Qfield.FieldSize =  1;
 			Qfield.MQueue = false;
-			Qfield.CavDesignation = "CONDITIONAL__SMALLIN41010";
+			Qfield.VisivelCav = CavVisibilityType.Nunca;
 
 			Qfield.Dupmsg = "";
 			info.RegisterFieldDB(Qfield);
@@ -314,7 +314,7 @@ namespace CSGenio.business
 			Qfield.FieldSize =  3;
 			Qfield.MQueue = false;
 			Qfield.Decimals = 1;
-			Qfield.CavDesignation = "IMAGE__BINARY_46903";
+			Qfield.VisivelCav = CavVisibilityType.Nunca;
 
 			Qfield.Dupmsg = "";
 			info.RegisterFieldDB(Qfield);

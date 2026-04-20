@@ -1,13 +1,12 @@
 ﻿<template>
 	<q-radio-group
-		v-show="showRadio"
 		:class="containerClasses"
 		:model-value="options.checkedValue"
-		:name="options.optionGroupName"
-		:readonly="options.readonly"
+		:name="options.name"
+		:readonly="options.readonly || !editable"
 		@update:model-value="update">
 		<q-radio-button
-			:value="row.Value"
+			:value="row.value"
 			:label="options.optionLabel"
 			data-table-action-selected="false"
 			tabindex="-1" />
@@ -54,9 +53,9 @@
 		},
 
 		computed: {
-			showRadio()
+			editable()
 			{
-				const optionName = this.options.optionGroupName
+				const optionName = this.options.name
 				return optionName
 					? this.row.Fields[optionName] ?? false
 					: true

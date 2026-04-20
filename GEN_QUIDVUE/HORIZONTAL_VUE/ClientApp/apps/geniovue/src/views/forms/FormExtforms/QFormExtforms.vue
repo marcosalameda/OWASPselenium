@@ -9,12 +9,13 @@
 			<div
 				v-if="showFormHeader"
 				class="c-action-bar">
-				<h1
+				<component
 					v-if="formControl.uiComponents.header && formInfo.designation"
+					:is="topHeadingTag"
 					:id="formTitleId"
 					class="form-header">
 					{{ formInfo.designation }}
-				</h1>
+				</component>
 
 				<div class="c-action-bar__menu">
 					<template
@@ -40,13 +41,10 @@
 									@click="btn.action">
 									<template v-if="btn.icon">
 										<q-badge-indicator
-											v-if="btn.badge && btn.badge.isVisible"
-											:color="btn.badge.color">
+											:enabled="btn.badge?.isVisible ?? false"
+											:color="btn.badge?.color">
 											<q-icon v-bind="btn.icon" />
 										</q-badge-indicator>
-										<q-icon
-											v-else
-											v-bind="btn.icon" />
 									</template>
 								</q-toggle-group-item>
 							</template>
@@ -97,6 +95,7 @@
 		<q-container
 			fluid
 			data-key="EXTFORMS"
+			:data-identifier="primaryKeyValue"
 			:data-loading="!formInitialDataLoaded || !isActiveForm">
 			<template v-if="formControl.initialized && showFormBody">
 				<q-row v-if="controls.EXTFORMSPSEUDARTIGAPO.isVisible">
@@ -107,6 +106,7 @@
 							v-if="controls.EXTFORMSPSEUDARTIGAPO.isVisible"
 							:ref="controls.EXTFORMSPSEUDARTIGAPO.id"
 							v-bind="controls.EXTFORMSPSEUDARTIGAPO"
+							:id="getControlId(controls.EXTFORMSPSEUDARTIGAPO)"
 							v-on="controls.EXTFORMSPSEUDARTIGAPO.handlers" />
 					</q-col>
 				</q-row>
@@ -117,21 +117,22 @@
 						<q-table
 							v-if="controls.EXTFORMSPSEUDARTIGOS_.isVisible"
 							v-bind="controls.EXTFORMSPSEUDARTIGOS_"
+							:id="getControlId(controls.EXTFORMSPSEUDARTIGOS_)"
 							v-on="controls.EXTFORMSPSEUDARTIGOS_.handlers">
+							<template #header>
+								<q-table-config
+									:table-ctrl="controls.EXTFORMSPSEUDARTIGOS_"
+									v-on="controls.EXTFORMSPSEUDARTIGOS_.handlers" />
+							</template>
 							<!-- USE /[MANUAL GQT CUSTOM_TABLE EXTFORMSPSEUDARTIGOS_]/ -->
 						</q-table>
-						<q-table-extra-extension
-							v-if="controls.EXTFORMSPSEUDARTIGOS_.isVisible"
-							:list-ctrl="controls.EXTFORMSPSEUDARTIGOS_"
-							:filter-operators="controls.EXTFORMSPSEUDARTIGOS_.filterOperators"
-							v-on="controls.EXTFORMSPSEUDARTIGOS_.handlers" />
 					</q-col>
 				</q-row>
 			</template>
 		</q-container>
 	</teleport>
 
-	<hr v-if="!isPopup && showFormFooter" />
+	<q-divider v-if="!isPopup && showFormFooter" />
 
 	<teleport
 		v-if="formModalIsReady && showFormFooter"
@@ -495,10 +496,11 @@
 					EXTFORMSPSEUDARTIGOS_: new fieldControlClass.TableListControl({
 						id: 'EXTFORMSPSEUDARTIGOS_',
 						name: 'ARTIGOS',
-						size: '',
+						size: 'xxlarge',
 						label: computed(() => this.Resources.CATALOG_ITEMS20029),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
+						headerLevel: computed(() => this.baseHeadingLevel + 1),
 						controller: 'WAREH',
 						action: 'Extforms_ValArtigos',
 						hasDependencies: false,
@@ -586,7 +588,6 @@
 							searchBarConfig: {
 								visibility: true
 							},
-							filtersVisible: true,
 							allowColumnFilters: true,
 							allowColumnSort: true,
 							generalCustomActions: [
@@ -608,7 +609,7 @@
 								sortOrder: 'asc'
 							}
 						},
-						globalEvents: ['changed-WAREH', 'changed-ITEM', 'changed-GITEM'],
+						globalEvents: ['changed-GITEM', 'changed-ITEM', 'changed-WAREH'],
 						uuid: 'Extforms_ValArtigos',
 						allSelectedRows: 'false',
 						controlLimits: [
@@ -995,7 +996,6 @@
 
 				this.afterControlUpdate(controlField, fieldValue)
 			},
-
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
 // USE /[MANUAL GQT FUNCTIONS_JS EXTFORMS]/
 // eslint-disable-next-line

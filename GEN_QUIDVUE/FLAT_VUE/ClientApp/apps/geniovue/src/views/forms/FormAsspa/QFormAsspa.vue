@@ -9,12 +9,13 @@
 			<div
 				v-if="showFormHeader"
 				class="c-action-bar">
-				<h1
+				<component
 					v-if="formControl.uiComponents.header && formInfo.designation"
+					:is="topHeadingTag"
 					:id="formTitleId"
 					class="form-header">
 					{{ formInfo.designation }}
-				</h1>
+				</component>
 
 				<div class="c-action-bar__menu">
 					<template
@@ -40,13 +41,10 @@
 									@click="btn.action">
 									<template v-if="btn.icon">
 										<q-badge-indicator
-											v-if="btn.badge && btn.badge.isVisible"
-											:color="btn.badge.color">
+											:enabled="btn.badge?.isVisible ?? false"
+											:color="btn.badge?.color">
 											<q-icon v-bind="btn.icon" />
 										</q-badge-indicator>
-										<q-icon
-											v-else
-											v-bind="btn.icon" />
 									</template>
 								</q-toggle-group-item>
 							</template>
@@ -97,6 +95,7 @@
 		<q-container
 			fluid
 			data-key="ASSPA"
+			:data-identifier="primaryKeyValue"
 			:data-loading="!formInitialDataLoaded || !isActiveForm">
 			<template v-if="formControl.initialized && showFormBody">
 				<q-row v-if="controls.ASSPA___ASSETNAME____.isVisible">
@@ -106,7 +105,8 @@
 						<base-input-structure
 							v-if="controls.ASSPA___ASSETNAME____.isVisible"
 							class="i-text"
-							v-bind="controls.ASSPA___ASSETNAME____"
+							v-bind="controls.ASSPA___ASSETNAME____.wrapperProps"
+							:id="getControlId(controls.ASSPA___ASSETNAME____)"
 							v-on="controls.ASSPA___ASSETNAME____.handlers"
 							:loading="controls.ASSPA___ASSETNAME____.props.loading"
 							:reporting-mode-on="reportingModeCAV"
@@ -114,6 +114,7 @@
 							<q-lookup
 								v-if="controls.ASSPA___ASSETNAME____.isVisible"
 								v-bind="controls.ASSPA___ASSETNAME____.props"
+								:id="getControlId(controls.ASSPA___ASSETNAME____)"
 								v-on="controls.ASSPA___ASSETNAME____.handlers" />
 							<q-see-more-asspa-assetname
 								v-if="controls.ASSPA___ASSETNAME____.seeMoreIsVisible"
@@ -129,7 +130,8 @@
 						<base-input-structure
 							v-if="controls.ASSPA___ASSPADATATYPE.isVisible"
 							class="i-text"
-							v-bind="controls.ASSPA___ASSPADATATYPE"
+							v-bind="controls.ASSPA___ASSPADATATYPE.wrapperProps"
+							:id="getControlId(controls.ASSPA___ASSPADATATYPE)"
 							v-on="controls.ASSPA___ASSPADATATYPE.handlers"
 							:loading="controls.ASSPA___ASSPADATATYPE.props.loading"
 							:reporting-mode-on="reportingModeCAV"
@@ -137,6 +139,7 @@
 							<q-select
 								v-if="controls.ASSPA___ASSPADATATYPE.isVisible"
 								v-bind="controls.ASSPA___ASSPADATATYPE.props"
+								:id="getControlId(controls.ASSPA___ASSPADATATYPE)"
 								@update:model-value="model.ValDatatype.fnUpdateValue" />
 						</base-input-structure>
 					</q-col>
@@ -146,7 +149,8 @@
 						<base-input-structure
 							v-if="controls.ASSPA___ASSPADECPLACE.isVisible"
 							class="i-text"
-							v-bind="controls.ASSPA___ASSPADECPLACE"
+							v-bind="controls.ASSPA___ASSPADECPLACE.wrapperProps"
+							:id="getControlId(controls.ASSPA___ASSPADECPLACE)"
 							v-on="controls.ASSPA___ASSPADECPLACE.handlers"
 							:loading="controls.ASSPA___ASSPADECPLACE.props.loading"
 							:reporting-mode-on="reportingModeCAV"
@@ -154,6 +158,7 @@
 							<q-numeric-input
 								v-if="controls.ASSPA___ASSPADECPLACE.isVisible"
 								v-bind="controls.ASSPA___ASSPADECPLACE.props"
+								:id="getControlId(controls.ASSPA___ASSPADECPLACE)"
 								@update:model-value="model.ValDecimalplaces.fnUpdateValue" />
 						</base-input-structure>
 					</q-col>
@@ -163,7 +168,8 @@
 						<base-input-structure
 							v-if="controls.ASSPA___PARAMPARAMETE.isVisible"
 							class="i-text"
-							v-bind="controls.ASSPA___PARAMPARAMETE"
+							v-bind="controls.ASSPA___PARAMPARAMETE.wrapperProps"
+							:id="getControlId(controls.ASSPA___PARAMPARAMETE)"
 							v-on="controls.ASSPA___PARAMPARAMETE.handlers"
 							:loading="controls.ASSPA___PARAMPARAMETE.props.loading"
 							:reporting-mode-on="reportingModeCAV"
@@ -171,6 +177,7 @@
 							<q-lookup
 								v-if="controls.ASSPA___PARAMPARAMETE.isVisible"
 								v-bind="controls.ASSPA___PARAMPARAMETE.props"
+								:id="getControlId(controls.ASSPA___PARAMPARAMETE)"
 								v-on="controls.ASSPA___PARAMPARAMETE.handlers" />
 							<q-see-more-asspa-paramparamete
 								v-if="controls.ASSPA___PARAMPARAMETE.seeMoreIsVisible"
@@ -186,13 +193,15 @@
 						<base-input-structure
 							v-if="controls.ASSPA___ASSPATEXT____.isVisible"
 							class="i-text"
-							v-bind="controls.ASSPA___ASSPATEXT____"
+							v-bind="controls.ASSPA___ASSPATEXT____.wrapperProps"
+							:id="getControlId(controls.ASSPA___ASSPATEXT____)"
 							v-on="controls.ASSPA___ASSPATEXT____.handlers"
 							:loading="controls.ASSPA___ASSPATEXT____.props.loading"
 							:reporting-mode-on="reportingModeCAV"
 							:suggestion-mode-on="suggestionModeOn">
 							<q-text-field
 								v-bind="controls.ASSPA___ASSPATEXT____.props"
+								:id="getControlId(controls.ASSPA___ASSPATEXT____)"
 								@blur="onBlur(controls.ASSPA___ASSPATEXT____, model.ValText.value)"
 								@change="model.ValText.fnUpdateValueOnChange" />
 						</base-input-structure>
@@ -205,7 +214,8 @@
 						<base-input-structure
 							v-if="controls.ASSPA___ASSPAQUANTITY.isVisible"
 							class="i-text"
-							v-bind="controls.ASSPA___ASSPAQUANTITY"
+							v-bind="controls.ASSPA___ASSPAQUANTITY.wrapperProps"
+							:id="getControlId(controls.ASSPA___ASSPAQUANTITY)"
 							v-on="controls.ASSPA___ASSPAQUANTITY.handlers"
 							:loading="controls.ASSPA___ASSPAQUANTITY.props.loading"
 							:reporting-mode-on="reportingModeCAV"
@@ -213,6 +223,7 @@
 							<q-numeric-input
 								v-if="controls.ASSPA___ASSPAQUANTITY.isVisible"
 								v-bind="controls.ASSPA___ASSPAQUANTITY.props"
+								:id="getControlId(controls.ASSPA___ASSPAQUANTITY)"
 								@update:model-value="model.ValQuantity.fnUpdateValue" />
 						</base-input-structure>
 					</q-col>
@@ -224,7 +235,8 @@
 						<base-input-structure
 							v-if="controls.ASSPA___ASSPADATE____.isVisible"
 							class="i-text"
-							v-bind="controls.ASSPA___ASSPADATE____"
+							v-bind="controls.ASSPA___ASSPADATE____.wrapperProps"
+							:id="getControlId(controls.ASSPA___ASSPADATE____)"
 							v-on="controls.ASSPA___ASSPADATE____.handlers"
 							:loading="controls.ASSPA___ASSPADATE____.props.loading"
 							:reporting-mode-on="reportingModeCAV"
@@ -232,6 +244,7 @@
 							<q-date-time-picker
 								v-if="controls.ASSPA___ASSPADATE____.isVisible"
 								v-bind="controls.ASSPA___ASSPADATE____.props"
+								:id="getControlId(controls.ASSPA___ASSPADATE____)"
 								:model-value="model.ValDate.value"
 								@reset-icon-click="model.ValDate.fnUpdateValue(model.ValDate.originalValue ?? new Date())"
 								@update:model-value="model.ValDate.fnUpdateValue($event ?? '')" />
@@ -245,13 +258,15 @@
 						<base-input-structure
 							v-if="controls.ASSPA___ASSPATOSHOW__.isVisible"
 							class="i-text"
-							v-bind="controls.ASSPA___ASSPATOSHOW__"
+							v-bind="controls.ASSPA___ASSPATOSHOW__.wrapperProps"
+							:id="getControlId(controls.ASSPA___ASSPATOSHOW__)"
 							v-on="controls.ASSPA___ASSPATOSHOW__.handlers"
 							:loading="controls.ASSPA___ASSPATOSHOW__.props.loading"
 							:reporting-mode-on="reportingModeCAV"
 							:suggestion-mode-on="suggestionModeOn">
 							<q-text-field
 								v-bind="controls.ASSPA___ASSPATOSHOW__.props"
+								:id="getControlId(controls.ASSPA___ASSPATOSHOW__)"
 								@blur="onBlur(controls.ASSPA___ASSPATOSHOW__, model.ValToshow.value)"
 								@change="model.ValToshow.fnUpdateValueOnChange" />
 						</base-input-structure>
@@ -261,7 +276,7 @@
 		</q-container>
 	</teleport>
 
-	<hr v-if="!isPopup && showFormFooter" />
+	<q-divider v-if="!isPopup && showFormFooter" />
 
 	<teleport
 		v-if="formModalIsReady && showFormFooter"
@@ -645,8 +660,8 @@
 						maxLength: 1,
 						mustBeFilled: true,
 						arrayName: 'DataType',
-						helpShortItem: '',
-						helpDetailedItem: '',
+						helpShortItem: 'None',
+						helpDetailedItem: 'None',
 						controlLimits: [
 						],
 					}, this),
@@ -1176,7 +1191,6 @@
 
 				this.afterControlUpdate(controlField, fieldValue)
 			},
-
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
 // USE /[MANUAL GQT FUNCTIONS_JS ASSPA]/
 // eslint-disable-next-line

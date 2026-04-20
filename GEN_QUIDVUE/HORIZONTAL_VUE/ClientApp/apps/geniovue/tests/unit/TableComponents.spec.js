@@ -7,7 +7,6 @@ import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { nextTick } from 'vue'
 import { render } from './utils'
 
-import listFunctions from '@/mixins/listFunctions.js'
 import fakeData from '../cases/Table.mock.js'
 
 import QTableCurrentFilters from '@/components/table/QTableCurrentFilters.vue'
@@ -16,7 +15,6 @@ import QTableExport from '@/components/table/QTableExport.vue'
 import QTableLimitInfo from '@/components/table/QTableLimitInfo.vue'
 import QTablePagination from '@/components/table/QTablePagination.vue'
 import QTablePaginationAlt from '@/components/table/QTablePaginationAlt.vue'
-import QTableRecordActionsMenu from '@/components/table/QTableRecordActionsMenu.vue'
 import QTableStaticFilters from '@/components/table/QTableStaticFilters.vue'
 
 const global = {
@@ -25,289 +23,6 @@ const global = {
 
 let tableTest
 beforeEach(() => (tableTest = fakeData.getTableTest()))
-
-describe('QTableRecordActionsMenu.vue', () => {
-	const setupWrapper = function (actionsMenu, displayType) {
-		return render(QTableRecordActionsMenu, {
-			global,
-			props: {
-				...actionsMenu,
-				display: displayType || actionsMenu.display,
-				texts: tableTest.texts
-			}
-		})
-	}
-
-	it('In normal mode with 0 actions, dropdown display, component has no menu or button', async () => {
-		const actionsMenu = fakeData.actionsMenu0
-		const wrapper = setupWrapper(actionsMenu, 'dropdown')
-
-		await nextTick()
-
-		// No button
-		const button = await wrapper.queryByRole('button')
-		expect(button).toBeNull()
-	})
-
-	it('In normal mode with 0 actions, inline display, component has no menu or button', async () => {
-		const actionsMenu = fakeData.actionsMenu0
-		const wrapper = setupWrapper(actionsMenu, 'inline')
-
-		await nextTick()
-
-		// No button
-		const button = await wrapper.queryByRole('button')
-		expect(button).toBeNull()
-	})
-
-	it('In normal mode with 0 actions, inlineAll display, component has no menu or button', async () => {
-		const actionsMenu = fakeData.actionsMenu0
-		const wrapper = setupWrapper(actionsMenu, 'inlineAll')
-
-		await nextTick()
-
-		// No button
-		const button = await wrapper.queryByRole('button')
-		expect(button).toBeNull()
-	})
-
-	it('In read-only mode with 1 action, 0 available in read-only, dropdown display, component has no button or menu', async () => {
-		const actionsMenu = fakeData.actionsMenu1ReadOnly0
-		const wrapper = setupWrapper(actionsMenu, 'dropdown')
-
-		await nextTick()
-
-		// No button
-		const button = await wrapper.queryByRole('button')
-		expect(button).toBeNull()
-	})
-
-	it('In read-only mode with 1 action, 0 available in read-only, inline display, component has no button or menu', async () => {
-		const actionsMenu = fakeData.actionsMenu1ReadOnly0
-		const wrapper = setupWrapper(actionsMenu, 'inline')
-
-		await nextTick()
-
-		// No button
-		const button = await wrapper.queryByRole('button')
-		expect(button).toBeNull()
-	})
-
-	it('In read-only mode with 1 action, 0 available in read-only, inlineAll display, component has no button or menu', async () => {
-		const actionsMenu = fakeData.actionsMenu1ReadOnly0
-		const wrapper = setupWrapper(actionsMenu, 'inlineAll')
-
-		await nextTick()
-
-		// No button
-		const button = await wrapper.queryByRole('button')
-		expect(button).toBeNull()
-	})
-
-	it('In read-only mode with 1 action, 1 available in read-only, dropdown display, component has button, clicking action emits action', async () => {
-		const actionsMenu = fakeData.actionsMenu1ReadOnly1
-		const idx = 0
-		const wrapper = setupWrapper(actionsMenu, 'dropdown')
-
-		await nextTick()
-
-		// Get action reference (whether it is in custom actions or CRUD actions)
-		const actionsMenuActions = actionsMenu.customActions.concat(actionsMenu.crudActions)
-		const action = actionsMenuActions[idx]
-		// Get and click button
-		const button = await wrapper.findByRole('button')
-		expect(button).toBeInTheDocument()
-		await fireEvent.click(button)
-		expect(wrapper.emitted()).toHaveProperty('row-action')
-		expect(wrapper.emitted()['row-action'][0][0]['name']).toBe(action.name)
-	})
-
-	it('In read-only mode with 1 action, 1 available in read-only, inline display, component has button, clicking action emits action', async () => {
-		const actionsMenu = fakeData.actionsMenu1ReadOnly1
-		const idx = 0
-		const wrapper = setupWrapper(actionsMenu, 'inline')
-
-		await nextTick()
-
-		// Get action reference (whether it is in custom actions or CRUD actions)
-		const actionsMenuActions = actionsMenu.customActions.concat(actionsMenu.crudActions)
-		const action = actionsMenuActions[idx]
-		// Get and click button
-		const button = await wrapper.findByRole('button')
-		expect(button).toBeInTheDocument()
-		await fireEvent.click(button)
-		expect(wrapper.emitted()).toHaveProperty('row-action')
-		expect(wrapper.emitted()['row-action'][0][0]['name']).toBe(action.name)
-	})
-
-	it('In read-only mode with 1 action, 1 available in read-only, inlineAll display, component has button, clicking action emits action', async () => {
-		const actionsMenu = fakeData.actionsMenu1ReadOnly1
-		const idx = 0
-		const wrapper = setupWrapper(actionsMenu, 'inlineAll')
-
-		await nextTick()
-
-		// Get action reference (whether it is in custom actions or CRUD actions)
-		const actionsMenuActions = actionsMenu.customActions.concat(actionsMenu.crudActions)
-		const action = actionsMenuActions[idx]
-		// Get and click button
-		const button = await wrapper.findByRole('button')
-		expect(button).toBeInTheDocument()
-		await fireEvent.click(button)
-		expect(wrapper.emitted()).toHaveProperty('row-action')
-		expect(wrapper.emitted()['row-action'][0][0]['name']).toBe(action.name)
-	})
-
-	it('In read-only mode with N actions, 0 available in read-only, dropdown display, component has no button or menu', async () => {
-		const actionsMenu = fakeData.actionsMenuNReadOnly0
-		const wrapper = setupWrapper(actionsMenu, 'dropdown')
-
-		await nextTick()
-
-		// No button
-		const button = await wrapper.queryByRole('button')
-		expect(button).toBeNull()
-	})
-
-	it('In read-only mode with N actions, 0 available in read-only, inline display, component has no button or menu', async () => {
-		const actionsMenu = fakeData.actionsMenuNReadOnly0
-		const wrapper = setupWrapper(actionsMenu, 'inline')
-
-		await nextTick()
-
-		// No button
-		const button = await wrapper.queryByRole('button')
-		expect(button).toBeNull()
-	})
-
-	it('In read-only mode with N actions, 0 available in read-only, inlineAll display, component has no button or menu', async () => {
-		const actionsMenu = fakeData.actionsMenuNReadOnly0
-		const wrapper = setupWrapper(actionsMenu, 'inlineAll')
-
-		await nextTick()
-
-		// No button
-		const button = await wrapper.queryByRole('button')
-		expect(button).toBeNull()
-	})
-
-	it('In read-only mode with N actions, 1 available in read-only, dropdown display, component has button, clicking action emits action', async () => {
-		const actionsMenu = fakeData.actionsMenuNReadOnly1
-		const idx = 0
-		const wrapper = setupWrapper(actionsMenu, 'dropdown')
-
-		await nextTick()
-
-		// Get action reference (whether it is in custom actions or CRUD actions)
-		const actionsMenuActions = actionsMenu.customActions.concat(actionsMenu.crudActions)
-		const action = actionsMenuActions[idx]
-		// Get and click button
-		const button = await wrapper.findByTestId('table-action')
-		expect(button).toBeInTheDocument()
-		await fireEvent.click(button)
-		expect(wrapper.emitted()).toHaveProperty('row-action')
-		expect(wrapper.emitted()['row-action'][0][0]['name']).toBe(action.name)
-	})
-
-	it('In read-only mode with N actions, 1 available in read-only, inline display, component has button, clicking action emits action', async () => {
-		const actionsMenu = fakeData.actionsMenuNReadOnly1
-		const idx = 0
-		const wrapper = setupWrapper(actionsMenu, 'inline')
-
-		await nextTick()
-
-		// Get action reference (whether it is in custom actions or CRUD actions)
-		const actionsMenuActions = actionsMenu.customActions.concat(actionsMenu.crudActions)
-		const action = actionsMenuActions[idx]
-		// Get and click button
-		const button = await wrapper.findByTestId('table-action')
-		expect(button).toBeInTheDocument()
-		await fireEvent.click(button)
-		expect(wrapper.emitted()).toHaveProperty('row-action')
-		expect(wrapper.emitted()['row-action'][0][0]['name']).toBe(action.name)
-	})
-
-	it('In read-only mode with N actions, 1 available in read-only, inlineAll display, component has button, clicking action emits action', async () => {
-		const actionsMenu = fakeData.actionsMenuNReadOnly1
-		const idx = 0
-		const wrapper = setupWrapper(actionsMenu, 'inlineAll')
-
-		await nextTick()
-
-		// Get action reference (whether it is in custom actions or CRUD actions)
-		const actionsMenuActions = actionsMenu.customActions.concat(actionsMenu.crudActions)
-		const action = actionsMenuActions[idx]
-		// Get and click button
-		const button = await wrapper.findByTestId('table-action')
-		expect(button).toBeInTheDocument()
-		await fireEvent.click(button)
-		expect(wrapper.emitted()).toHaveProperty('row-action')
-		expect(wrapper.emitted()['row-action'][0][0]['name']).toBe(action.name)
-	})
-
-	it('In read-only mode with N actions, N available in read-only, dropdown display, component has menu, clicking action emits action', async () => {
-		const actionsMenu = fakeData.actionsMenuNReadOnlyN
-		const idx = 0
-		const wrapper = setupWrapper(actionsMenu, 'dropdown')
-
-		await nextTick()
-
-		// Get action reference (whether it is in custom actions or CRUD actions)
-		const actionsMenuActions = actionsMenu.customActions.concat(actionsMenu.crudActions)
-		const action = actionsMenuActions[idx]
-		// Get and click toggle button
-		const button = await wrapper.findByRole('button')
-		expect(button).toBeInTheDocument()
-		await fireEvent.click(button)
-		// Get menu
-		const menu = await wrapper.findByRole('menu')
-		expect(menu).toBeInTheDocument()
-		// Get and click action
-		const actions = await wrapper.findAllByTestId('table-action')
-		expect(actions[idx]).toBeInTheDocument()
-		await fireEvent.click(actions[idx])
-		expect(wrapper.emitted()).toHaveProperty('row-action')
-		expect(wrapper.emitted()['row-action'][0][0]['name']).toBe(action.name)
-	})
-
-	it('In read-only mode with N actions, N available in read-only, inline display, component has multiple buttons, clicking action emits action', async () => {
-		const actionsMenu = fakeData.actionsMenuNReadOnlyN
-		const idx = 0
-		const wrapper = setupWrapper(actionsMenu, 'inline')
-
-		await nextTick()
-
-		// Get action reference (whether it is in custom actions or CRUD actions)
-		const actionsMenuActions = actionsMenu.customActions.concat(actionsMenu.crudActions)
-		const numVisibleActions = listFunctions.numArrayVisibleActions(actionsMenuActions)
-		const action = actionsMenuActions[idx]
-		// Get and click button
-		const buttons = await wrapper.findAllByTestId('table-action')
-		expect(buttons).toHaveLength(numVisibleActions)
-		await fireEvent.click(buttons[0])
-		expect(wrapper.emitted()).toHaveProperty('row-action')
-		expect(wrapper.emitted()['row-action'][0][0]['name']).toBe(action.name)
-	})
-
-	it('In read-only mode with N actions, N available in read-only, inlineAll display, component has multiple buttons, clicking action emits action', async () => {
-		const actionsMenu = fakeData.actionsMenuNReadOnlyN
-		const idx = 0
-		const wrapper = setupWrapper(actionsMenu, 'inlineAll')
-
-		await nextTick()
-
-		// Get action reference (whether it is in custom actions or CRUD actions)
-		const actionsMenuActions = actionsMenu.customActions.concat(actionsMenu.crudActions)
-		const numVisibleActions = listFunctions.numArrayVisibleActions(actionsMenuActions)
-		const action = actionsMenuActions[idx]
-		// Get and click button
-		const buttons = await wrapper.findAllByTestId('table-action')
-		expect(buttons).toHaveLength(numVisibleActions)
-		await fireEvent.click(buttons[0])
-		expect(wrapper.emitted()).toHaveProperty('row-action')
-		expect(wrapper.emitted()['row-action'][0][0]['name']).toBe(action.name)
-	})
-})
 
 describe('QTableExport.vue', () => {
 	it('File export menu item emits selected format', async () => {
@@ -433,7 +148,7 @@ describe('QTablePagination.vue', () => {
 				page: dataPagination.page,
 				perPage: dataPagination.perPage,
 				total: dataPagination.rowCount,
-				numVisibilePaginationButtons: dataPagination.numVisibilePaginationButtons,
+				numVisiblePaginationButtons: dataPagination.numVisiblePaginationButtons,
 				texts: tableTest.texts
 			}
 		})
@@ -456,7 +171,7 @@ describe('QTablePagination.vue', () => {
 				page: dataPagination.page,
 				perPage: dataPagination.perPage,
 				total: dataPagination.rowCount,
-				numVisibilePaginationButtons: dataPagination.numVisibilePaginationButtons,
+				numVisiblePaginationButtons: dataPagination.numVisiblePaginationButtons,
 				texts: tableTest.texts
 			}
 		})
@@ -471,7 +186,7 @@ describe('QTablePagination.vue', () => {
 		expect(wrapper.emitted()['update:page'][0][0]).toBe(dataPagination.page - 1)
 	})
 
-	it('Clicking current pagination button emits event and current page number', async () => {
+	it('Clicking current pagination button does nothing', async () => {
 		const dataPagination = fakeData.paginationNormal01
 		const wrapper = render(QTablePagination, {
 			global,
@@ -479,7 +194,7 @@ describe('QTablePagination.vue', () => {
 				page: dataPagination.page,
 				perPage: dataPagination.perPage,
 				total: dataPagination.rowCount,
-				numVisibilePaginationButtons: dataPagination.numVisibilePaginationButtons,
+				numVisiblePaginationButtons: dataPagination.numVisiblePaginationButtons,
 				texts: tableTest.texts
 			}
 		})
@@ -490,8 +205,7 @@ describe('QTablePagination.vue', () => {
 		const buttons = await wrapper.findAllByRole('button')
 		// Click page button and check emit
 		await fireEvent.click(buttons[4])
-		expect(wrapper.emitted()).toHaveProperty('update:page')
-		expect(wrapper.emitted()['update:page'][0][0]).toBe(dataPagination.page)
+		expect(wrapper.emitted()).not.toHaveProperty('update:page')
 	})
 
 	it('Clicking next pagination button emits event and next page number', async () => {
@@ -502,7 +216,7 @@ describe('QTablePagination.vue', () => {
 				page: dataPagination.page,
 				perPage: dataPagination.perPage,
 				total: dataPagination.rowCount,
-				numVisibilePaginationButtons: dataPagination.numVisibilePaginationButtons,
+				numVisiblePaginationButtons: dataPagination.numVisiblePaginationButtons,
 				texts: tableTest.texts
 			}
 		})
@@ -525,7 +239,7 @@ describe('QTablePagination.vue', () => {
 				page: dataPagination.page,
 				perPage: dataPagination.perPage,
 				total: dataPagination.rowCount,
-				numVisibilePaginationButtons: dataPagination.numVisibilePaginationButtons,
+				numVisiblePaginationButtons: dataPagination.numVisiblePaginationButtons,
 				texts: tableTest.texts
 			}
 		})
@@ -550,7 +264,7 @@ describe('QTablePagination.vue', () => {
 				page: 0,
 				perPage: dataPagination.perPage,
 				total: 0,
-				numVisibilePaginationButtons: dataPagination.numVisibilePaginationButtons,
+				numVisiblePaginationButtons: dataPagination.numVisiblePaginationButtons,
 				texts: tableTest.texts
 			}
 		})
@@ -571,7 +285,7 @@ describe('QTablePagination.vue', () => {
 				page: dataPagination.page,
 				perPage: dataPagination.perPage,
 				total: dataPagination.rowCount,
-				numVisibilePaginationButtons: dataPagination.numVisibilePaginationButtons,
+				numVisiblePaginationButtons: dataPagination.numVisiblePaginationButtons,
 				texts: tableTest.texts
 			}
 		})
@@ -600,7 +314,7 @@ describe('QTablePagination.vue', () => {
 				page: dataPagination.page,
 				perPage: dataPagination.perPage,
 				total: dataPagination.rowCount,
-				numVisibilePaginationButtons: dataPagination.numVisibilePaginationButtons,
+				numVisiblePaginationButtons: dataPagination.numVisiblePaginationButtons,
 				texts: tableTest.texts
 			}
 		})
@@ -628,7 +342,7 @@ describe('QTablePagination.vue', () => {
 				page: dataPagination.page,
 				perPage: dataPagination.perPage,
 				total: dataPagination.rowCount,
-				numVisibilePaginationButtons: dataPagination.numVisibilePaginationButtons,
+				numVisiblePaginationButtons: dataPagination.numVisiblePaginationButtons,
 				texts: tableTest.texts
 			}
 		})
@@ -657,7 +371,7 @@ describe('QTablePagination.vue', () => {
 				page: dataPagination.page,
 				perPage: dataPagination.perPage,
 				total: dataPagination.rowCount,
-				numVisibilePaginationButtons: dataPagination.numVisibilePaginationButtons,
+				numVisiblePaginationButtons: dataPagination.numVisiblePaginationButtons,
 				texts: tableTest.texts
 			}
 		})
@@ -685,7 +399,7 @@ describe('QTablePagination.vue', () => {
 				page: dataPagination.page,
 				perPage: dataPagination.perPage,
 				total: dataPagination.rowCount,
-				numVisibilePaginationButtons: dataPagination.numVisibilePaginationButtons,
+				numVisiblePaginationButtons: dataPagination.numVisiblePaginationButtons,
 				texts: tableTest.texts
 			}
 		})
@@ -906,9 +620,14 @@ describe('QTableLimitInfo.vue', () => {
 		expect(button).toBeInTheDocument()
 		// Click button
 		await fireEvent.click(button)
+
+		// Let all async operations complete
+		await flushPromises()
+		await vi.dynamicImportSettled()
+
 		// Get list items
-		const listitems = await wrapper.findAllByRole('listitem')
-		expect(listitems).toHaveLength(dataLimits.length + 1)
+		const listItems = await wrapper.getAllByTestId('limit-info')
+		expect(listItems).toHaveLength(dataLimits.length)
 	})
 })
 
@@ -983,30 +702,6 @@ describe('QTableCurrentFilters.vue', () => {
 		expect(badges).toHaveLength(filterCount)
 	})
 
-	it('Clicking the remove all filters tag emits update event to remove all filters', async () => {
-		const dataFilters = fakeData.filterArray01
-		const hasFiltersActive = true
-		const searchableColumns = fakeData.searchableColumns01
-		const wrapper = render(QTableCurrentFilters, {
-			global,
-			props: {
-				searchableColumns: searchableColumns,
-				filters: dataFilters,
-				hasFiltersActive: hasFiltersActive,
-				texts: tableTest.texts
-			}
-		})
-
-		await nextTick()
-
-		const clearBadge = await wrapper.findByTestId('clear-filters')
-		// Click badge
-		await fireEvent.click(clearBadge)
-		// Check emit
-		expect(wrapper.emitted()).toHaveProperty('update:filters')
-		expect(wrapper.emitted()['update:filters'][0][0]).toStrictEqual([])
-	})
-
 	it('Clicking advanced filter tag emits event to edit filter', async () => {
 		const dataFilters = fakeData.filterArray01
 		const hasFiltersActive = true
@@ -1028,7 +723,7 @@ describe('QTableCurrentFilters.vue', () => {
 		// Click badge
 		await fireEvent.click(badges[idx])
 		// Check emit
-		expect(wrapper.emitted()).toHaveProperty('show-advanced-filters')
-		expect(wrapper.emitted()['show-advanced-filters'][0][0]).toStrictEqual(idx)
+		expect(wrapper.emitted()).toHaveProperty('show-filters')
+		expect(wrapper.emitted()['show-filters'][0][0]).toStrictEqual(idx)
 	})
 })

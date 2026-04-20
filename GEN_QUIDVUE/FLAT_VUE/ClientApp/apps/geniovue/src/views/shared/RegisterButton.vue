@@ -1,12 +1,12 @@
-﻿<template>
+<template>
 	<template v-if="props.registrationTypes.length === 1">
 		<q-button
 			v-if="isButton"
 			id="register-btn"
 			variant="bold"
 			block
-			:title="Resources[hardcodedTexts.register]"
-			:label="Resources[hardcodedTexts.register]"
+			:title="Resources[registrationTypes[0].designation]"
+			:label="Resources[registrationTypes[0].designation]"
 			@click="navigateToRegisterRoute" />
 
 		<q-router-link
@@ -19,7 +19,7 @@
 					id: registrationTypes[0].id
 				}
 			}">
-			{{ Resources[hardcodedTexts.register] }}
+			{{ Resources[registrationTypes[0].designation] }}
 		</q-router-link>
 	</template>
 

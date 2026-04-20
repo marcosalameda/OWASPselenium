@@ -196,4 +196,18 @@
 	enterCaptcha: 'ENTER_THE_TEXT_YOU_S10625',
 	ok: 'OK15819',
 	selectAnOption: 'SELECIONE_UMA_OPCAO51988',
+	recordSuccessSave: 'REGISTO_CRIADO_COM_S18746',
+	viewAll: 'VER_TODAS10532',
+	viewPersonal: 'VER_PESSOAIS46174',
+	private: 'PRIVADA41640',
+	forOthers: 'PARA_OUTROS31226',
+	note: 'NOTA43857',
+	notes: 'NOTAS03232',
+	filters: 'FILTROS01340',
+	emptyNotes: 'SEM_NOTAS_PARA_MOSTR56386',
+	forSpecificUser: 'PARA_UM_UTILIZADOR_E50234',
+	leaveBlankForEveryone: 'DEIXE_EM_BRANCO_PARA43219',
+	expirationDate: 'DATA_DE_EXPIRACAO12585',
+	from: 'DE_32055',
+	to: 'PARA_64096'
 }

@@ -7,6 +7,7 @@ using GenioMVC.Models.Navigation;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Quidgest.Persistence;
 using Quidgest.Persistence.GenericQuery;
+
 using System.Collections;
 using System.Collections.Concurrent;
 using System.Collections.Specialized;
@@ -52,6 +53,7 @@ namespace GenioMVC.ViewModels.Pesso
 		public string ValCodregia { get; set; }
 
 		#endregion
+
 		/// <summary>
 		/// Title: "Photo" | Type: "IJ"
 		/// </summary>
@@ -69,11 +71,6 @@ namespace GenioMVC.ViewModels.Pesso
 		/// Title: "Gender" | Type: "AC"
 		/// </summary>
 		public string ValGender { get; set; }
-		/// <summary>
-		/// Title: "" | Type: "PSEUD"
-		/// </summary>
-		[JsonIgnore]
-		public SelectList List_ValGender { get; set; }
 		/// <summary>
 		/// Title: "Birth" | Type: "D"
 		/// </summary>
@@ -140,7 +137,7 @@ namespace GenioMVC.ViewModels.Pesso
 		/// Title: "Country" | Type: "C"
 		/// </summary>
 		[ValidateSetAccess]
-		public string CntryValCountry 
+		public string CntryValCountry
 		{
 			get
 			{
@@ -234,8 +231,6 @@ namespace GenioMVC.ViewModels.Pesso
 		/// Title: "Terrain" | Type: "GS"
 		/// </summary>
 		public CSGenio.framework.Geography.GeographicData ValTerrain { get; set; }
-
-
 
 		#region Navigations
 		#endregion
@@ -498,12 +493,7 @@ namespace GenioMVC.ViewModels.Pesso
 			}
 		}
 
-		/// <summary>
-		/// Sets the value of a single property of the view model based on the provided table and field names.
-		/// </summary>
-		/// <param name="fullFieldName">The full field name in the format "table.field".</param>
-		/// <param name="value">The field value.</param>
-		/// <exception cref="ArgumentNullException">Thrown if <paramref name="fullFieldName"/> is null.</exception>
+		/// <inheritdoc />
 		public override void SetViewModelValue(string fullFieldName, object value)
 		{
 			try
@@ -724,6 +714,7 @@ namespace GenioMVC.ViewModels.Pesso
 			Load_Pesso___pais1country_(qs, lazyLoad);
 			Load_Pesso___cmpnydesignat(qs, lazyLoad);
 			Load_Pesso___regi1regiao__(qs, lazyLoad);
+
 // USE /[MANUAL GQT VIEWMODEL_LOADPARTIAL PESSO]/
 		}
 
@@ -739,6 +730,8 @@ namespace GenioMVC.ViewModels.Pesso
 			CrudViewModelFieldValidator validator = new(m_userContext.User.Language);
 
 			validator.StringLength("ValName", Resources.Resources.NAME_23841, ValName, 85);
+
+			validator.Required("ValName", Resources.Resources.NAME_23841, ViewModelConversion.ToString(ValName), FieldType.TEXT.GetFormatting());
 			validator.StringLength("ValTelephon", Resources.Resources.TELEPHONE28697, ValTelephon, 20);
 			validator.StringLength("ValEmail", Resources.Resources.EMAIL_44228, ValEmail, 254);
 			validator.StringLength("CntryValCountry", Resources.Resources.COUNTRY64133, CntryValCountry, 90);
@@ -803,10 +796,7 @@ namespace GenioMVC.ViewModels.Pesso
 				}
 			}
 
-			TableCategCategory = new TableDBEdit<Models.Categ>
-			{
-				IsLazyLoad = lazyLoad
-			};
+			TableCategCategory = new TableDBEdit<Models.Categ>();
 
 			if (lazyLoad)
 			{
@@ -994,10 +984,7 @@ namespace GenioMVC.ViewModels.Pesso
 				}
 			}
 
-			TablePais1Country = new TableDBEdit<Models.Pais1>
-			{
-				IsLazyLoad = lazyLoad
-			};
+			TablePais1Country = new TableDBEdit<Models.Pais1>();
 
 			if (lazyLoad)
 			{
@@ -1236,10 +1223,7 @@ namespace GenioMVC.ViewModels.Pesso
 				}
 			}
 
-			TableCmpnyDesignat = new TableDBEdit<Models.Cmpny>
-			{
-				IsLazyLoad = lazyLoad
-			};
+			TableCmpnyDesignat = new TableDBEdit<Models.Cmpny>();
 
 			if (lazyLoad)
 			{
@@ -1436,10 +1420,7 @@ namespace GenioMVC.ViewModels.Pesso
 			// Area limit
 			pesso___regi1regiao__DoLoad &= AddCriteriaAreaLimit(pesso___regi1regiao__Conds, CSGenio.business.CSGenioApais1.FldCodcntry, "pais1", this.ValCodcntry, true);
 
-			TableRegi1Regiao = new TableDBEdit<Models.Regi1>
-			{
-				IsLazyLoad = lazyLoad
-			};
+			TableRegi1Regiao = new TableDBEdit<Models.Regi1>();
 
 			if (lazyLoad)
 			{

@@ -187,14 +187,13 @@ namespace GenioMVC.ViewModels.Pedid
 			crs.SubSets.Add(subfilters);
 
 			// Form field filters
-			if (tableConfig.FieldFilters != null)
-				crs.SubSets.Add(ProcessFieldFilters(tableConfig.FieldFilters));
+			crs.SubSets.Add(ProcessFieldFilters(tableConfig.GlobalFilters));
 
 			if (this.PedidValCodpedid != null)
 				crs.Equal(CSGenioAlnhag.FldCodpedid, this.PedidValCodpedid);
 			else
 				tableReload = false;
-				
+
 
 			crs.SubSets.Add(GetCustomizedStaticLimits(StaticLimits));
 
@@ -323,12 +322,11 @@ namespace GenioMVC.ViewModels.Pedid
 
 			FieldRef[] fields = new FieldRef[] { CSGenioAlnhag.FldCodlnhag, CSGenioAlnhag.FldZzstate, CSGenioAlnhag.FldCodtpequ, CSGenioAtpeq1.FldCodtpequ, CSGenioAtpeq1.FldTipoequi, CSGenioAlnhag.FldQtdtpequ };
 
-
-			// Totalizers
-			List<FieldRef> fieldsWithTotalizers = fields.Where(field => tableConfig.TotalizerColumns.Contains(field.FullName)).ToList();
+			// List of column names that should display totalized (aggregated) values.
+			List<string> totalizerColumns = [];
+			List<FieldRef> fieldsWithTotalizers = [.. fields.Where(field => totalizerColumns.Contains(field.FullName))];
 
 			FieldRef firstVisibleColumn = null;
-
 			if (sorts.Count == 0)
 			{
 				firstVisibleColumn = tableConfig?.GetFirstVisibleColumn(TableAlias);

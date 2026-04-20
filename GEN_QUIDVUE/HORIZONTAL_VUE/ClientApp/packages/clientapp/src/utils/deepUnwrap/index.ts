@@ -15,6 +15,7 @@
  *
  *  * Arrays, Maps, Sets and plain objects are copied recursively.
  *  * `Date`, `RegExp` and `Error` are copied with their sensible state.
+ *  * `File` instances are cloned with their name, type, and lastModified.
  *  * Circular references are handled gracefully – the second
  *    occurrence is replaced by the string `"[Circular]"`.
  *
@@ -44,6 +45,12 @@ export function deepUnwrap<T>(
 	if (value instanceof Error) {
 		// copy basic properties; stack often enough for debugging
 		return { name: value.name, message: value.message, stack: value.stack }
+	}
+	if (value instanceof File) {
+		return new File([value], value.name, {
+			type: value.type,
+			lastModified: value.lastModified
+		})
 	}
 
 	/* ----- Arrays ----------------------------------------------------- */

@@ -89,7 +89,7 @@ public class TestColumnConfiguration
 	}
 
 	[Test]
-	public void GetTableName_MultipleDots_ReturnsFirstPart()
+	public void GetTableName_MultipleDots_ReturnsSecondToLastPart()
 	{
 		// Arrange
 		const string mainTableName = "users";
@@ -99,7 +99,7 @@ public class TestColumnConfiguration
 		string result = ColumnConfiguration.GetTableName(mainTableName, fieldName);
 
 		// Assert
-		Assert.That(result, Is.EqualTo("schema"));
+		Assert.That(result, Is.EqualTo("table"));
 	}
 
 	[Test]

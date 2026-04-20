@@ -19,5 +19,3 @@ Replicas.sql;false
 LimparVlCalculados.sql;false
 GerarFormulas.sql;false
 ReconstrucaoCodInt.sql;false
-CreateLogTriggers.sql;false
-CreateLogViews.sql;false

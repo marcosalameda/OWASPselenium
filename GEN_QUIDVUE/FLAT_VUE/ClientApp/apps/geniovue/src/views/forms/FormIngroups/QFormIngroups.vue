@@ -9,12 +9,13 @@
 			<div
 				v-if="showFormHeader"
 				class="c-action-bar">
-				<h1
+				<component
 					v-if="formControl.uiComponents.header && formInfo.designation"
+					:is="topHeadingTag"
 					:id="formTitleId"
 					class="form-header">
 					{{ formInfo.designation }}
-				</h1>
+				</component>
 
 				<div class="c-action-bar__menu">
 					<template
@@ -40,13 +41,10 @@
 									@click="btn.action">
 									<template v-if="btn.icon">
 										<q-badge-indicator
-											v-if="btn.badge && btn.badge.isVisible"
-											:color="btn.badge.color">
+											:enabled="btn.badge?.isVisible ?? false"
+											:color="btn.badge?.color">
 											<q-icon v-bind="btn.icon" />
 										</q-badge-indicator>
-										<q-icon
-											v-else
-											v-bind="btn.icon" />
 									</template>
 								</q-toggle-group-item>
 							</template>
@@ -97,15 +95,16 @@
 		<q-container
 			fluid
 			data-key="INGROUPS"
+			:data-identifier="primaryKeyValue"
 			:data-loading="!formInitialDataLoaded || !isActiveForm">
 			<template v-if="formControl.initialized && showFormBody">
 				<q-row v-if="controls.INGROUPSPSEUDGROUP1__.isVisible">
 					<q-col v-if="controls.INGROUPSPSEUDGROUP1__.isVisible">
 						<q-group-box-container
 							v-if="controls.INGROUPSPSEUDGROUP1__.isVisible"
-							id="INGROUPSPSEUDGROUP1__"
 							v-bind="controls.INGROUPSPSEUDGROUP1__"
-							:is-visible="controls.INGROUPSPSEUDGROUP1__.isVisible">
+							:id="getControlId(controls.INGROUPSPSEUDGROUP1__)"
+							:no-border="controls.INGROUPSPSEUDGROUP1__.borderless">
 							<!-- Start INGROUPSPSEUDGROUP1__ -->
 							<q-row v-if="controls.INGROUPSPSEUDINPUTGR1.isVisible">
 								<q-col
@@ -113,9 +112,9 @@
 									cols="auto">
 									<base-input-structure
 										v-if="controls.INGROUPSPSEUDINPUTGR1.isVisible"
-										id="INGROUPSPSEUDINPUTGR1"
 										class="i-text"
 										v-bind="controls.INGROUPSPSEUDINPUTGR1"
+										:id="getControlId(controls.INGROUPSPSEUDINPUTGR1)"
 										v-on="controls.INGROUPSPSEUDINPUTGR1.handlers">
 										<q-input-group
 											v-bind="controls.INGROUPSPSEUDINPUTGR1.props"
@@ -125,13 +124,14 @@
 												<span>
 													<q-static-text
 														v-if="controls.INGROUPSPSEUDTEXTSPAN.isVisible"
-														id="INGROUPSPSEUDTEXTSPAN"
+														:id="getControlId(controls.INGROUPSPSEUDTEXTSPAN)"
 														:size="controls.INGROUPSPSEUDTEXTSPAN.size"
 														:text="controls.INGROUPSPSEUDTEXTSPAN.label" />
 												</span>
 											</template>
 											<q-text-field
 												v-bind="controls.INGROUPSINPGRTEXTGRO_.props"
+												:id="getControlId(controls.INGROUPSINPGRTEXTGRO_)"
 												@blur="onBlur(controls.INGROUPSINPGRTEXTGRO_, model.ValTextgro.value)"
 												@change="model.ValTextgro.fnUpdateValueOnChange" />
 											<!-- End INGROUPSINPGRTEXTGRO_ -->
@@ -147,9 +147,9 @@
 					<q-col v-if="controls.INGROUPSPSEUDGROUP2__.isVisible">
 						<q-group-box-container
 							v-if="controls.INGROUPSPSEUDGROUP2__.isVisible"
-							id="INGROUPSPSEUDGROUP2__"
 							v-bind="controls.INGROUPSPSEUDGROUP2__"
-							:is-visible="controls.INGROUPSPSEUDGROUP2__.isVisible">
+							:id="getControlId(controls.INGROUPSPSEUDGROUP2__)"
+							:no-border="controls.INGROUPSPSEUDGROUP2__.borderless">
 							<!-- Start INGROUPSPSEUDGROUP2__ -->
 							<q-row v-if="controls.INGROUPSPSEUDINPUTGR2.isVisible">
 								<q-col
@@ -157,9 +157,9 @@
 									cols="auto">
 									<base-input-structure
 										v-if="controls.INGROUPSPSEUDINPUTGR2.isVisible"
-										id="INGROUPSPSEUDINPUTGR2"
 										class="i-text"
 										v-bind="controls.INGROUPSPSEUDINPUTGR2"
+										:id="getControlId(controls.INGROUPSPSEUDINPUTGR2)"
 										v-on="controls.INGROUPSPSEUDINPUTGR2.handlers">
 										<q-input-group
 											v-bind="controls.INGROUPSPSEUDINPUTGR2.props"
@@ -169,17 +169,19 @@
 												<span>
 													<q-static-text
 														v-if="controls.INGROUPSPSEUDSPANGRO_.isVisible"
-														id="INGROUPSPSEUDSPANGRO_"
+														:id="getControlId(controls.INGROUPSPSEUDSPANGRO_)"
 														:size="controls.INGROUPSPSEUDSPANGRO_.size"
 														:text="controls.INGROUPSPSEUDSPANGRO_.label" />
 												</span>
 											</template>
 											<q-text-field
 												v-bind="controls.INGROUPSINPGRNAME____.props"
+												:id="getControlId(controls.INGROUPSINPGRNAME____)"
 												@blur="onBlur(controls.INGROUPSINPGRNAME____, model.ValName.value)"
 												@change="model.ValName.fnUpdateValueOnChange" />
 											<q-text-field
 												v-bind="controls.INGROUPSINPGRLASTNAME.props"
+												:id="getControlId(controls.INGROUPSINPGRLASTNAME)"
 												@blur="onBlur(controls.INGROUPSINPGRLASTNAME, model.ValLastname.value)"
 												@change="model.ValLastname.fnUpdateValueOnChange" />
 											<!-- End INGROUPSINPGRLASTNAME -->
@@ -193,9 +195,9 @@
 									cols="auto">
 									<base-input-structure
 										v-if="controls.INGROUPSPSEUDINPUTGR5.isVisible"
-										id="INGROUPSPSEUDINPUTGR5"
 										class="i-text"
 										v-bind="controls.INGROUPSPSEUDINPUTGR5"
+										:id="getControlId(controls.INGROUPSPSEUDINPUTGR5)"
 										v-on="controls.INGROUPSPSEUDINPUTGR5.handlers">
 										<q-input-group
 											v-bind="controls.INGROUPSPSEUDINPUTGR5.props"
@@ -203,11 +205,13 @@
 											<!-- Start INGROUPSPSEUDINPUTGR5 -->
 											<q-mask
 												v-if="controls.INGROUPSINPGREMAIL___.isVisible"
-												v-bind="controls.INGROUPSINPGREMAIL___"
+												v-bind="controls.INGROUPSINPGREMAIL___.props"
+												:id="getControlId(controls.INGROUPSINPGREMAIL___)"
 												:model-value="model.ValEmail.value"
 												@change="model.ValEmail.fnUpdateValueOnChange" />
 											<q-text-field
 												v-bind="controls.INGROUPSINPGRWEB_____.props"
+												:id="getControlId(controls.INGROUPSINPGRWEB_____)"
 												@blur="onBlur(controls.INGROUPSINPGRWEB_____, model.ValWeb.value)"
 												@change="model.ValWeb.fnUpdateValueOnChange" />
 											<!-- End INGROUPSINPGRWEB_____ -->
@@ -223,9 +227,9 @@
 					<q-col v-if="controls.INGROUPSPSEUDGROUP3__.isVisible">
 						<q-group-box-container
 							v-if="controls.INGROUPSPSEUDGROUP3__.isVisible"
-							id="INGROUPSPSEUDGROUP3__"
 							v-bind="controls.INGROUPSPSEUDGROUP3__"
-							:is-visible="controls.INGROUPSPSEUDGROUP3__.isVisible">
+							:id="getControlId(controls.INGROUPSPSEUDGROUP3__)"
+							:no-border="controls.INGROUPSPSEUDGROUP3__.borderless">
 							<!-- Start INGROUPSPSEUDGROUP3__ -->
 							<q-row v-if="controls.INGROUPSPSEUDINPUTGR3.isVisible">
 								<q-col
@@ -233,9 +237,9 @@
 									cols="auto">
 									<base-input-structure
 										v-if="controls.INGROUPSPSEUDINPUTGR3.isVisible"
-										id="INGROUPSPSEUDINPUTGR3"
 										class="i-text"
 										v-bind="controls.INGROUPSPSEUDINPUTGR3"
+										:id="getControlId(controls.INGROUPSPSEUDINPUTGR3)"
 										v-on="controls.INGROUPSPSEUDINPUTGR3.handlers">
 										<q-input-group
 											v-bind="controls.INGROUPSPSEUDINPUTGR3.props"
@@ -244,11 +248,13 @@
 											<q-numeric-input
 												v-if="controls.INGROUPSINPGRNUMBGRO_.isVisible"
 												v-bind="controls.INGROUPSINPGRNUMBGRO_.props"
+												:id="getControlId(controls.INGROUPSINPGRNUMBGRO_)"
 												@update:model-value="model.ValNumbgro.fnUpdateValue" />
 											<template #append>
 												<q-button
 													v-if="controls.INGROUPSPSEUDBUTTNGRO.isVisible"
 													v-bind="controls.INGROUPSPSEUDBUTTNGRO.props"
+													:id="getControlId(controls.INGROUPSPSEUDBUTTNGRO)"
 													@click="controls.INGROUPSPSEUDBUTTNGRO.action($event)">
 													<q-icon v-bind="controls.INGROUPSPSEUDBUTTNGRO.icon" />
 												</q-button>
@@ -266,9 +272,9 @@
 					<q-col v-if="controls.INGROUPSPSEUDGROUP4__.isVisible">
 						<q-group-box-container
 							v-if="controls.INGROUPSPSEUDGROUP4__.isVisible"
-							id="INGROUPSPSEUDGROUP4__"
 							v-bind="controls.INGROUPSPSEUDGROUP4__"
-							:is-visible="controls.INGROUPSPSEUDGROUP4__.isVisible">
+							:id="getControlId(controls.INGROUPSPSEUDGROUP4__)"
+							:no-border="controls.INGROUPSPSEUDGROUP4__.borderless">
 							<!-- Start INGROUPSPSEUDGROUP4__ -->
 							<q-row v-if="controls.INGROUPSPSEUDINPUTGR4.isVisible">
 								<q-col
@@ -276,9 +282,9 @@
 									cols="auto">
 									<base-input-structure
 										v-if="controls.INGROUPSPSEUDINPUTGR4.isVisible"
-										id="INGROUPSPSEUDINPUTGR4"
 										class="i-text"
 										v-bind="controls.INGROUPSPSEUDINPUTGR4"
+										:id="getControlId(controls.INGROUPSPSEUDINPUTGR4)"
 										v-on="controls.INGROUPSPSEUDINPUTGR4.handlers">
 										<q-input-group
 											v-bind="controls.INGROUPSPSEUDINPUTGR4.props"
@@ -287,17 +293,21 @@
 											<q-select
 												v-if="controls.INGROUPSINPGRPREFIX__.isVisible"
 												v-bind="controls.INGROUPSINPGRPREFIX__.props"
+												:id="getControlId(controls.INGROUPSINPGRPREFIX__)"
 												@update:model-value="model.ValPrefix.fnUpdateValue" />
 											<q-numeric-input
 												v-if="controls.INGROUPSINPGRPHONE___.isVisible"
 												v-bind="controls.INGROUPSINPGRPHONE___.props"
+												:id="getControlId(controls.INGROUPSINPGRPHONE___)"
 												@update:model-value="model.ValPhone.fnUpdateValue" />
 											<q-select
 												v-if="controls.INGROUPSINPGRADRESS__.isVisible"
 												v-bind="controls.INGROUPSINPGRADRESS__.props"
+												:id="getControlId(controls.INGROUPSINPGRADRESS__)"
 												@update:model-value="model.ValAdress.fnUpdateValue" />
 											<q-text-field
 												v-bind="controls.INGROUPSINPGRDIRECTIO.props"
+												:id="getControlId(controls.INGROUPSINPGRDIRECTIO)"
 												@blur="onBlur(controls.INGROUPSINPGRDIRECTIO, model.ValDirectio.value)"
 												@change="model.ValDirectio.fnUpdateValueOnChange" />
 											<!-- End INGROUPSINPGRDIRECTIO -->
@@ -313,9 +323,9 @@
 					<q-col v-if="controls.INGROUPSPSEUDGROUP6__.isVisible">
 						<q-group-box-container
 							v-if="controls.INGROUPSPSEUDGROUP6__.isVisible"
-							id="INGROUPSPSEUDGROUP6__"
 							v-bind="controls.INGROUPSPSEUDGROUP6__"
-							:is-visible="controls.INGROUPSPSEUDGROUP6__.isVisible">
+							:id="getControlId(controls.INGROUPSPSEUDGROUP6__)"
+							:no-border="controls.INGROUPSPSEUDGROUP6__.borderless">
 							<!-- Start INGROUPSPSEUDGROUP6__ -->
 							<q-row v-if="controls.INGROUPSPSEUDINPUTGR6.isVisible">
 								<q-col
@@ -323,9 +333,9 @@
 									cols="auto">
 									<base-input-structure
 										v-if="controls.INGROUPSPSEUDINPUTGR6.isVisible"
-										id="INGROUPSPSEUDINPUTGR6"
 										class="i-text"
 										v-bind="controls.INGROUPSPSEUDINPUTGR6"
+										:id="getControlId(controls.INGROUPSPSEUDINPUTGR6)"
 										v-on="controls.INGROUPSPSEUDINPUTGR6.handlers">
 										<q-input-group
 											v-bind="controls.INGROUPSPSEUDINPUTGR6.props"
@@ -334,26 +344,31 @@
 											<q-select
 												v-if="controls.INGROUPSINPGRBANKCOMP.isVisible"
 												v-bind="controls.INGROUPSINPGRBANKCOMP.props"
+												:id="getControlId(controls.INGROUPSINPGRBANKCOMP)"
 												@update:model-value="model.ValBankcomp.fnUpdateValue" />
 											<q-mask
 												v-if="controls.INGROUPSINPGRIBAN____.isVisible"
-												v-bind="controls.INGROUPSINPGRIBAN____"
+												v-bind="controls.INGROUPSINPGRIBAN____.props"
+												:id="getControlId(controls.INGROUPSINPGRIBAN____)"
 												:model-value="model.ValIban.value"
 												@change="model.ValIban.fnUpdateValueOnChange" />
 											<q-mask
 												v-if="controls.INGROUPSINPGRBANKACCO.isVisible"
-												v-bind="controls.INGROUPSINPGRBANKACCO"
+												v-bind="controls.INGROUPSINPGRBANKACCO.props"
+												:id="getControlId(controls.INGROUPSINPGRBANKACCO)"
 												:model-value="model.ValBankacco.value"
 												@change="model.ValBankacco.fnUpdateValueOnChange" />
 											<template #append>
 												<q-button
 													v-if="controls.INGROUPSPSEUDSAVEBTT_.isVisible"
 													v-bind="controls.INGROUPSPSEUDSAVEBTT_.props"
+													:id="getControlId(controls.INGROUPSPSEUDSAVEBTT_)"
 													@click="controls.INGROUPSPSEUDSAVEBTT_.action($event)">
 												</q-button>
 												<q-button
 													v-if="controls.INGROUPSPSEUDSENDBTT_.isVisible"
 													v-bind="controls.INGROUPSPSEUDSENDBTT_.props"
+													:id="getControlId(controls.INGROUPSPSEUDSENDBTT_)"
 													@click="controls.INGROUPSPSEUDSENDBTT_.action($event)">
 												</q-button>
 											</template>
@@ -370,7 +385,7 @@
 		</q-container>
 	</teleport>
 
-	<hr v-if="!isPopup && showFormFooter" />
+	<q-divider v-if="!isPopup && showFormFooter" />
 
 	<teleport
 		v-if="formModalIsReady && showFormFooter"
@@ -827,8 +842,8 @@
 						container: 'INGROUPSPSEUDINPUTGR4',
 						maxLength: 3,
 						arrayName: 'phonepre',
-						helpShortItem: '',
-						helpDetailedItem: '',
+						helpShortItem: 'None',
+						helpDetailedItem: 'None',
 						controlLimits: [
 						],
 					}, this),
@@ -853,6 +868,7 @@
 						label: computed(() => this.Resources.SINGLE_INPUTS14159),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
+						borderless: false,
 						isCollapsible: false,
 						anchored: false,
 						directChildren: ['INGROUPSPSEUDINPUTGR1'],
@@ -866,6 +882,7 @@
 						label: computed(() => this.Resources.MULTIPLE_INPUTS39000),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
+						borderless: false,
 						isCollapsible: false,
 						anchored: false,
 						directChildren: ['INGROUPSPSEUDINPUTGR2', 'INGROUPSPSEUDINPUTGR5'],
@@ -893,6 +910,7 @@
 						label: computed(() => this.Resources.BUTON_ADDON17405),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
+						borderless: false,
 						isCollapsible: false,
 						anchored: false,
 						directChildren: ['INGROUPSPSEUDINPUTGR3'],
@@ -935,6 +953,7 @@
 						label: computed(() => this.Resources.CONTACT_DATA02225),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
+						borderless: false,
 						isCollapsible: false,
 						anchored: false,
 						directChildren: ['INGROUPSPSEUDINPUTGR4'],
@@ -967,8 +986,8 @@
 						container: 'INGROUPSPSEUDINPUTGR4',
 						maxLength: 8,
 						arrayName: 'AddressT',
-						helpShortItem: '',
-						helpDetailedItem: '',
+						helpShortItem: 'None',
+						helpDetailedItem: 'None',
 						controlLimits: [
 						],
 					}, this),
@@ -1012,8 +1031,8 @@
 						container: 'INGROUPSPSEUDINPUTGR6',
 						maxLength: 2,
 						arrayName: 'bankComp',
-						helpShortItem: '',
-						helpDetailedItem: '',
+						helpShortItem: 'None',
+						helpDetailedItem: 'None',
 						controlLimits: [
 						],
 					}, this),
@@ -1169,6 +1188,7 @@
 						label: computed(() => this.Resources.BANK_DATA61943),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
+						borderless: false,
 						isCollapsible: false,
 						anchored: false,
 						directChildren: ['INGROUPSPSEUDINPUTGR6'],
@@ -1600,7 +1620,6 @@
 
 				this.afterControlUpdate(controlField, fieldValue)
 			},
-
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
 // USE /[MANUAL GQT FUNCTIONS_JS INGROUPS]/
 // eslint-disable-next-line

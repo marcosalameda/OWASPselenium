@@ -72,6 +72,7 @@ export default class ViewModel extends FormViewModelBase
 			area: 'FLDS',
 			field: 'DESCRIP',
 			description: computed(() => this.Resources.DESCRIPTION07383),
+			ignoreFldSubmit: true,
 		}).cloneFrom(values?.TableFldsDescrip))
 		this.stopWatchers.push(watch(() => this.TableFldsDescrip.value, (newValue, oldValue) => this.onUpdate('flds.descrip', this.TableFldsDescrip, newValue, oldValue)))
 
@@ -112,6 +113,7 @@ export default class ViewModel extends FormViewModelBase
 			field: 'ATTACHFK'
 		}).cloneFrom(values?.FldsValAttachfk))
 		this.stopWatchers.push(watch(() => this.FldsValAttachfk.value, (newValue, oldValue) => this.onUpdate('flds.attachfk', this.FldsValAttachfk, newValue, oldValue)))
+
 		this.FldsValAttachData = reactive(new modelFieldType.DocumentData({
 			id: 'FldsValAttachData',
 			isFixed: true,

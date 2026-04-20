@@ -1,20 +1,20 @@
-﻿using JsonIgnoreAttribute = System.Text.Json.Serialization.JsonIgnoreAttribute;
+﻿using CSGenio.business;
+using CSGenio.framework;
+using CSGenio.persistence;
+using GenioMVC.Helpers;
+using GenioMVC.Models.Exception;
+using GenioMVC.Models.Navigation;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Quidgest.Persistence;
+using Quidgest.Persistence.GenericQuery;
+
 using System.Collections;
 using System.Collections.Concurrent;
 using System.Collections.Specialized;
 using System.ComponentModel.DataAnnotations;
 using System.Data;
 using System.Globalization;
-
-using CSGenio.business;
-using CSGenio.framework;
-using CSGenio.persistence;
-using GenioMVC.Helpers;
-using GenioMVC.Models.Exception;
-using GenioMVC.Models.Navigation;
-using Quidgest.Persistence;
-using Quidgest.Persistence.GenericQuery;
+using System.Text.Json.Serialization;
 
 namespace GenioMVC.ViewModels.Dilin
 {
@@ -40,6 +40,7 @@ namespace GenioMVC.ViewModels.Dilin
 		public string ValCodprodu { get; set; }
 
 		#endregion
+
 		/// <summary>
 		/// Title: "Dispatch number" | Type: "N"
 		/// </summary>
@@ -67,8 +68,6 @@ namespace GenioMVC.ViewModels.Dilin
 		/// </summary>
 		[ValidateSetAccess]
 		public decimal? ValOutstand { get; set; }
-
-
 
 		#region Navigations
 		#endregion
@@ -255,12 +254,7 @@ namespace GenioMVC.ViewModels.Dilin
 			}
 		}
 
-		/// <summary>
-		/// Sets the value of a single property of the view model based on the provided table and field names.
-		/// </summary>
-		/// <param name="fullFieldName">The full field name in the format "table.field".</param>
-		/// <param name="value">The field value.</param>
-		/// <exception cref="ArgumentNullException">Thrown if <paramref name="fullFieldName"/> is null.</exception>
+		/// <inheritdoc />
 		public override void SetViewModelValue(string fullFieldName, object value)
 		{
 			try
@@ -398,6 +392,7 @@ namespace GenioMVC.ViewModels.Dilin
 
 			Load_Dilin___dispadispanr_(qs, lazyLoad);
 			Load_Dilin___produproduct_(qs, lazyLoad);
+
 // USE /[MANUAL GQT VIEWMODEL_LOADPARTIAL DILIN]/
 		}
 
@@ -469,10 +464,7 @@ namespace GenioMVC.ViewModels.Dilin
 				}
 			}
 
-			TableDispaDispanr = new TableDBEdit<Models.Dispa>
-			{
-				IsLazyLoad = lazyLoad
-			};
+			TableDispaDispanr = new TableDBEdit<Models.Dispa>();
 
 			if (lazyLoad)
 			{
@@ -515,7 +507,7 @@ namespace GenioMVC.ViewModels.Dilin
 				int numberItems = CSGenio.framework.Configuration.NrRegDBedit;
 				int offset = (page - 1) * numberItems;
 
-				FieldRef[] fields = new FieldRef[] { CSGenioAdispa.FldCoddispa, CSGenioAdispa.FldDispanr, CSGenioAdispa.FldZzstate };
+				FieldRef[] fields = [CSGenioAdispa.FldCoddispa, CSGenioAdispa.FldDispanr, CSGenioAdispa.FldZzstate];
 
 // USE /[MANUAL GQT OVERRQ DILIN_DISPADISPANR]/
 
@@ -658,10 +650,7 @@ namespace GenioMVC.ViewModels.Dilin
 				}
 			}
 
-			TableProduProduct = new TableDBEdit<Models.Produ>
-			{
-				IsLazyLoad = lazyLoad
-			};
+			TableProduProduct = new TableDBEdit<Models.Produ>();
 
 			if (lazyLoad)
 			{
@@ -705,7 +694,7 @@ namespace GenioMVC.ViewModels.Dilin
 				int numberItems = CSGenio.framework.Configuration.NrRegDBedit;
 				int offset = (page - 1) * numberItems;
 
-				FieldRef[] fields = new FieldRef[] { CSGenioAprodu.FldCodprodu, CSGenioAprodu.FldProduct, CSGenioAprodu.FldZzstate };
+				FieldRef[] fields = [CSGenioAprodu.FldCodprodu, CSGenioAprodu.FldProduct, CSGenioAprodu.FldZzstate];
 
 // USE /[MANUAL GQT OVERRQ DILIN_PRODUPRODUCT]/
 

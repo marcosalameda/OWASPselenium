@@ -5,7 +5,13 @@
 		<q-row>
 			<q-table
 				v-bind="listCtrl"
-				v-on="listCtrl.handlers" />
+				v-on="listCtrl.handlers">
+				<template #header>
+					<q-table-config
+						:table-ctrl="listCtrl"
+						v-on="listCtrl.handlers" />
+				</template>
+			</q-table>
 		</q-row>
 	</teleport>
 </template>
@@ -239,7 +245,7 @@
 								area: 'ENTIT',
 								field: 'TAXNUMBE',
 								label: computed(() => this.Resources.VAT_NUMBER24236),
-								dataLength: 30,
+								dataLength: 20,
 								scrollData: 20,
 								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
@@ -269,7 +275,7 @@
 								area: 'ENTIT',
 								field: 'CONTACT',
 								label: computed(() => this.Resources.CONTACT59247),
-								dataLength: 30,
+								dataLength: 20,
 								scrollData: 20,
 								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
@@ -298,7 +304,6 @@
 							searchBarConfig: {
 								visibility: true
 							},
-							filtersVisible: true,
 							allowColumnFilters: true,
 							allowColumnSort: true,
 							generalCustomActions: [
@@ -322,7 +327,7 @@
 								sortOrder: 'asc'
 							}
 						},
-						globalEvents: ['changed-ENTIT', 'changed-FACI1', 'changed-FACI2'],
+						globalEvents: ['changed-ENTIT', 'changed-FACI2', 'changed-FACI1'],
 						uuid: 'Recei_Recei_EntitValName',
 						allSelectedRows: 'false',
 						handlers: {

@@ -17,7 +17,7 @@
 			:readonly="readonly"
 			:disabled="disabled"
 			:required="isRequired"
-			:aria-labelledby="labelId"
+			:aria-labelledby="$attrs.ariaLabel ? null : labelId"
 			:size="inputSize"
 			:placeholder="inputPlaceholder"
 			@keydown="onKeydown"
@@ -50,11 +50,6 @@
 			 * Unique identifier for the control.
 			 */
 			id: String,
-
-			/**
-			 * The testing identifier
-			 */
-			dataTestid: String,
 
 			/**
 			 * For accessibility (aria-labelledby)
@@ -161,7 +156,6 @@
 		data()
 		{
 			return {
-				controlId: this.id || `q-numeric-${this._.uid}`,
 				styleClass: [
 					'q-numeric-input',
 					...this.classes
@@ -193,6 +187,11 @@
 		},
 
 		computed: {
+			controlId()
+			{
+				return this.id || `q-numeric-${this._.uid}`
+			},
+
 			inputPlaceholder()
 			{
 				// Add '1' to the beginning so the formatting function does not remove the 0s

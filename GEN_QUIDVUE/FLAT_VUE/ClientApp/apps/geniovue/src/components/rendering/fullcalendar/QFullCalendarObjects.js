@@ -147,7 +147,7 @@ export class ResourceObject
 
 		if (_has(mappedValue, 'eventGroup3Id'))
 		{
-			let childGr3 = new ResourceObject({
+			const childGr3 = new ResourceObject({
 				id: _get(mappedValue, 'eventGroup3Id.rawData'),
 				title: _get(mappedValue, 'eventGroup3Title.rawData', '')
 			})

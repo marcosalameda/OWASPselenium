@@ -47,7 +47,7 @@ namespace CSGenio.business
 			Qfield = new Field(info.Alias, "codasset", FieldType.KEY_GUID);
 			Qfield.FieldDescription = "";
 			Qfield.FieldSize =  36;
-			Qfield.CavDesignation = "";
+			Qfield.VisivelCav = CavVisibilityType.Nunca;
 
 			Qfield.Dupmsg = "";
 			info.RegisterFieldDB(Qfield);
@@ -68,7 +68,6 @@ namespace CSGenio.business
 			Qfield.FieldSize =  10;
 			Qfield.MQueue = false;
 			Qfield.IntegerDigits = 10;
-			Qfield.CriaLog = true;
 			Qfield.CavDesignation = "ASSET_NUMBER52372";
 
             Qfield.NotNull = true;
@@ -148,7 +147,7 @@ namespace CSGenio.business
 			Qfield.FieldSize =  3;
 			Qfield.MQueue = false;
 			Qfield.Decimals = 1;
-			Qfield.CavDesignation = "PHOTO51874";
+			Qfield.VisivelCav = CavVisibilityType.Nunca;
 
 			Qfield.Dupmsg = "";
 			info.RegisterFieldDB(Qfield);
@@ -158,7 +157,7 @@ namespace CSGenio.business
 			Qfield.FieldDescription = ">>Kind of equipment";
 			Qfield.FieldSize =  36;
 			Qfield.MQueue = false;
-			Qfield.CavDesignation = "__KIND_OF_EQUIPMENT01899";
+			Qfield.VisivelCav = CavVisibilityType.Nunca;
 
 			Qfield.Dupmsg = "";
 			info.RegisterFieldDB(Qfield);
@@ -168,51 +167,7 @@ namespace CSGenio.business
 			Qfield.FieldDescription = "";
 			Qfield.FieldSize =  36;
 			Qfield.MQueue = false;
-			Qfield.CavDesignation = "";
-
-			Qfield.Dupmsg = "";
-			info.RegisterFieldDB(Qfield);
-
-			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "description", FieldType.MEMO);
-			Qfield.FieldDescription = "Description";
-			Qfield.FieldSize =  250;
-			Qfield.MQueue = false;
-			Qfield.Decimals = 5;
-			Qfield.CavDesignation = "DESCRIPTION07383";
-
-			Qfield.Dupmsg = "";
-			info.RegisterFieldDB(Qfield);
-
-			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "longdesc", FieldType.MEMO);
-			Qfield.FieldDescription = "Detailed description";
-			Qfield.FieldSize =  250;
-			Qfield.MQueue = false;
-			Qfield.Decimals = 10;
-			Qfield.CavDesignation = "DETAILED_DESCRIPTION36560";
-
-			Qfield.Dupmsg = "";
-			info.RegisterFieldDB(Qfield);
-
-			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "category", FieldType.ARRAY_TEXT);
-			Qfield.FieldDescription = "Category";
-			Qfield.FieldSize =  5;
-			Qfield.MQueue = false;
-			Qfield.CavDesignation = "CATEGORY18978";
-
-			Qfield.Dupmsg = "";
-            Qfield.ArrayName = "dbo.GetValArrayCassetcategory";
-            Qfield.ArrayClassName = "Assetcategory";
-			info.RegisterFieldDB(Qfield);
-
-			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "bg_color", FieldType.TEXT);
-			Qfield.FieldDescription = "Background color for category";
-			Qfield.FieldSize =  50;
-			Qfield.MQueue = false;
-			Qfield.CavDesignation = "BACKGROUND_COLOR_FOR59228";
+			Qfield.VisivelCav = CavVisibilityType.Nunca;
 
 			Qfield.Dupmsg = "";
 			info.RegisterFieldDB(Qfield);
@@ -231,11 +186,10 @@ namespace CSGenio.business
 		{
 			// Daughters Relations
 			//------------------------------
-			info.ChildTable = new ChildRelation[4];
-			info.ChildTable[0]= new ChildRelation("atags", new String[] {"codasset"}, DeleteProc.NA);
-			info.ChildTable[1]= new ChildRelation("assma", new String[] {"codasset"}, DeleteProc.NA);
-			info.ChildTable[2]= new ChildRelation("asspa", new String[] {"codasset"}, DeleteProc.NA);
-			info.ChildTable[3]= new ChildRelation("attac", new String[] {"codasset"}, DeleteProc.NA);
+			info.ChildTable = new ChildRelation[3];
+			info.ChildTable[0]= new ChildRelation("assma", new String[] {"codasset"}, DeleteProc.NA);
+			info.ChildTable[1]= new ChildRelation("asspa", new String[] {"codasset"}, DeleteProc.NA);
+			info.ChildTable[2]= new ChildRelation("attac", new String[] {"codasset"}, DeleteProc.NA);
 
 			// Mother Relations
 			//------------------------------
@@ -486,50 +440,6 @@ namespace CSGenio.business
 			set { insertNameValueField(FldCodmanuf, value); }
 		}
 
-		/// <summary>Field : "Description" Tipo: "MO" Formula:  ""</summary>
-		public static FieldRef FldDescription { get { return m_fldDescription; } }
-		private static FieldRef m_fldDescription = new FieldRef("asset", "description");
-
-		/// <summary>Field : "Description" Tipo: "MO" Formula:  ""</summary>
-		public string ValDescription
-		{
-			get { return (string)returnValueField(FldDescription); }
-			set { insertNameValueField(FldDescription, value); }
-		}
-
-		/// <summary>Field : "Detailed description" Tipo: "MO" Formula:  ""</summary>
-		public static FieldRef FldLongdesc { get { return m_fldLongdesc; } }
-		private static FieldRef m_fldLongdesc = new FieldRef("asset", "longdesc");
-
-		/// <summary>Field : "Detailed description" Tipo: "MO" Formula:  ""</summary>
-		public string ValLongdesc
-		{
-			get { return (string)returnValueField(FldLongdesc); }
-			set { insertNameValueField(FldLongdesc, value); }
-		}
-
-		/// <summary>Field : "Category" Tipo: "AC" Formula:  ""</summary>
-		public static FieldRef FldCategory { get { return m_fldCategory; } }
-		private static FieldRef m_fldCategory = new FieldRef("asset", "category");
-
-		/// <summary>Field : "Category" Tipo: "AC" Formula:  ""</summary>
-		public string ValCategory
-		{
-			get { return (string)returnValueField(FldCategory); }
-			set { insertNameValueField(FldCategory, value); }
-		}
-
-		/// <summary>Field : "Background color for category" Tipo: "C" Formula:  ""</summary>
-		public static FieldRef FldBg_color { get { return m_fldBg_color; } }
-		private static FieldRef m_fldBg_color = new FieldRef("asset", "bg_color");
-
-		/// <summary>Field : "Background color for category" Tipo: "C" Formula:  ""</summary>
-		public string ValBg_color
-		{
-			get { return (string)returnValueField(FldBg_color); }
-			set { insertNameValueField(FldBg_color, value); }
-		}
-
 		/// <summary>Field : "ZZSTATE" Type: "INT" Formula:  ""</summary>
 		public static FieldRef FldZzstate { get { return m_fldZzstate; } }
 		private static FieldRef m_fldZzstate = new FieldRef("asset", "zzstate");
@@ -704,7 +614,7 @@ namespace CSGenio.business
 			return StatusMessage.OK();
 		}
      
-               
+           
 
 	}
 }

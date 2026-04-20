@@ -83,6 +83,7 @@ export default class ViewModel extends FormViewModelBase
 			field: 'REGISTNR',
 			maxLength: 6,
 			description: computed(() => this.Resources.NO__REGISTER04207),
+			ignoreFldSubmit: true,
 		}).cloneFrom(values?.TableEquipRegistnr))
 		this.stopWatchers.push(watch(() => this.TableEquipRegistnr.value, (newValue, oldValue) => this.onUpdate('equip.registnr', this.TableEquipRegistnr, newValue, oldValue)))
 
@@ -123,6 +124,7 @@ export default class ViewModel extends FormViewModelBase
 			field: 'LANGUA',
 			maxLength: 50,
 			description: computed(() => this.Resources.LANGUAGE16872),
+			ignoreFldSubmit: true,
 		}).cloneFrom(values?.TableLanguLangua))
 		this.stopWatchers.push(watch(() => this.TableLanguLangua.value, (newValue, oldValue) => this.onUpdate('langu.langua', this.TableLanguLangua, newValue, oldValue)))
 

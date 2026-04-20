@@ -47,7 +47,7 @@ namespace CSGenio.business
 			Qfield = new Field(info.Alias, "codyear", FieldType.KEY_GUID);
 			Qfield.FieldDescription = "";
 			Qfield.FieldSize =  36;
-			Qfield.CavDesignation = "";
+			Qfield.VisivelCav = CavVisibilityType.Nunca;
 
 			Qfield.Dupmsg = "";
 			info.RegisterFieldDB(Qfield);
@@ -145,7 +145,7 @@ namespace CSGenio.business
 
 
 			info.FieldsParametersReplicas = new string[] {
-			 "year","yearnum"
+			 "yearnum","year"
 			};
 
 			//Write conditions

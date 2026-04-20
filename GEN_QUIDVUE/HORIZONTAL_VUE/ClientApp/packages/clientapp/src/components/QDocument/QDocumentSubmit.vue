@@ -2,22 +2,24 @@
 	<q-dialog
 		v-model="model"
 		class="q-document__popup"
-		:title="texts?.filesSubmission"
+		:title="texts.filesSubmission"
 		:buttons="buttons"
 		dismissible
 		size="medium">
 		<template #body>
-			<q-container
-				class="q-document__popup-container"
-				fluid>
-				<q-row>
-					<q-label for="submit-file">{{ texts?.submitHeaderLabel }}</q-label>
+			<q-row>
+				<q-col>
 					<q-file-upload
+						:label="texts.submitHeaderLabel"
 						size="block"
 						v-model="submitValue" />
-				</q-row>
-				<q-divider />
-				<q-row>
+				</q-col>
+			</q-row>
+
+			<q-divider />
+
+			<q-row>
+				<q-col>
 					<q-radio-group
 						:id="`q-document-submit-options-${props.id}`"
 						v-model="versionSubmitType"
@@ -28,9 +30,13 @@
 							:label="radio.value"
 							:value="radio.key" />
 					</q-radio-group>
-				</q-row>
-				<q-divider />
-				<q-row>
+				</q-col>
+			</q-row>
+
+			<q-divider />
+
+			<q-row>
+				<q-col>
 					<q-radio-group
 						:id="`q-document-version-options-${props.id}`"
 						v-model="versionType"
@@ -42,15 +48,23 @@
 							:value="radio.key"
 							:label="radio.value" />
 					</q-radio-group>
-				</q-row>
-			</q-container>
+				</q-col>
+			</q-row>
 		</template>
 	</q-dialog>
 </template>
 
 <script setup lang="ts">
 	// Components
-	import { QDialog, QFileUpload, QContainer, QRow, QLabel } from '@quidgest/ui/components'
+	import {
+		QCol,
+		QDialog,
+		QDivider,
+		QFileUpload,
+		QRadioButton,
+		QRadioGroup,
+		QRow
+	} from '@quidgest/ui/components'
 
 	// Utils
 	import { ref, computed } from 'vue'

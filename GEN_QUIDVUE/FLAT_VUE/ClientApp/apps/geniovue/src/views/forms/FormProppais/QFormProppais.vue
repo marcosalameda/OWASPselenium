@@ -9,12 +9,13 @@
 			<div
 				v-if="showFormHeader"
 				class="c-action-bar">
-				<h1
+				<component
 					v-if="formControl.uiComponents.header && formInfo.designation"
+					:is="topHeadingTag"
 					:id="formTitleId"
 					class="form-header">
 					{{ formInfo.designation }}
-				</h1>
+				</component>
 
 				<div class="c-action-bar__menu">
 					<template
@@ -40,13 +41,10 @@
 									@click="btn.action">
 									<template v-if="btn.icon">
 										<q-badge-indicator
-											v-if="btn.badge && btn.badge.isVisible"
-											:color="btn.badge.color">
+											:enabled="btn.badge?.isVisible ?? false"
+											:color="btn.badge?.color">
 											<q-icon v-bind="btn.icon" />
 										</q-badge-indicator>
-										<q-icon
-											v-else
-											v-bind="btn.icon" />
 									</template>
 								</q-toggle-group-item>
 							</template>
@@ -97,6 +95,7 @@
 		<q-container
 			fluid
 			data-key="PROPPAIS"
+			:data-identifier="primaryKeyValue"
 			:data-loading="!formInitialDataLoaded || !isActiveForm">
 			<template v-if="formControl.initialized && showFormBody">
 				<q-row v-if="controls.PROPPAISPSEUDNOVOGR02.isVisible">
@@ -105,9 +104,9 @@
 						cols="auto">
 						<q-group-box-container
 							v-if="controls.PROPPAISPSEUDNOVOGR02.isVisible"
-							id="PROPPAISPSEUDNOVOGR02"
 							v-bind="controls.PROPPAISPSEUDNOVOGR02"
-							:is-visible="controls.PROPPAISPSEUDNOVOGR02.isVisible">
+							:id="getControlId(controls.PROPPAISPSEUDNOVOGR02)"
+							:no-border="controls.PROPPAISPSEUDNOVOGR02.borderless">
 							<!-- Start PROPPAISPSEUDNOVOGR02 -->
 							<q-row v-if="controls.PROPPAISCNTRYCOUNTRY_.isVisible || controls.PROPPAISCNTRYACTIVE__.isVisible || controls.PROPPAISPSEUDNOVOGR01.isVisible">
 								<q-col
@@ -116,13 +115,15 @@
 									<base-input-structure
 										v-if="controls.PROPPAISCNTRYCOUNTRY_.isVisible"
 										class="i-text"
-										v-bind="controls.PROPPAISCNTRYCOUNTRY_"
+										v-bind="controls.PROPPAISCNTRYCOUNTRY_.wrapperProps"
+										:id="getControlId(controls.PROPPAISCNTRYCOUNTRY_)"
 										v-on="controls.PROPPAISCNTRYCOUNTRY_.handlers"
 										:loading="controls.PROPPAISCNTRYCOUNTRY_.props.loading"
 										:reporting-mode-on="reportingModeCAV"
 										:suggestion-mode-on="suggestionModeOn">
 										<q-text-field
 											v-bind="controls.PROPPAISCNTRYCOUNTRY_.props"
+											:id="getControlId(controls.PROPPAISCNTRYCOUNTRY_)"
 											@blur="onBlur(controls.PROPPAISCNTRYCOUNTRY_, model.ValCountry.value)"
 											@change="model.ValCountry.fnUpdateValueOnChange" />
 									</base-input-structure>
@@ -132,8 +133,9 @@
 									cols="auto">
 									<base-input-structure
 										v-if="controls.PROPPAISCNTRYACTIVE__.isVisible"
-										class="i-checkbox"
-										v-bind="controls.PROPPAISCNTRYACTIVE__"
+										class="i-text"
+										v-bind="controls.PROPPAISCNTRYACTIVE__.wrapperProps"
+										:id="getControlId(controls.PROPPAISCNTRYACTIVE__)"
 										v-on="controls.PROPPAISCNTRYACTIVE__.handlers"
 										:loading="controls.PROPPAISCNTRYACTIVE__.props.loading"
 										:reporting-mode-on="reportingModeCAV"
@@ -142,6 +144,7 @@
 											<q-checkbox
 												v-if="controls.PROPPAISCNTRYACTIVE__.isVisible"
 												v-bind="controls.PROPPAISCNTRYACTIVE__.props"
+												:id="getControlId(controls.PROPPAISCNTRYACTIVE__)"
 												v-on="controls.PROPPAISCNTRYACTIVE__.handlers" />
 										</template>
 									</base-input-structure>
@@ -151,8 +154,8 @@
 									cols="auto">
 									<q-group-collapsible
 										v-if="controls.PROPPAISPSEUDNOVOGR01.isVisible"
-										id="PROPPAISPSEUDNOVOGR01"
 										v-bind="controls.PROPPAISPSEUDNOVOGR01"
+										:id="getControlId(controls.PROPPAISPSEUDNOVOGR01)"
 										v-on="controls.PROPPAISPSEUDNOVOGR01.handlers">
 										<!-- Start PROPPAISPSEUDNOVOGR01 -->
 										<q-row v-if="controls.PROPPAISCNTRYCODIGONR.isVisible || controls.PROPPAISCNTRYALFA2___.isVisible || controls.PROPPAISCNTRYALFA3___.isVisible">
@@ -162,13 +165,15 @@
 												<base-input-structure
 													v-if="controls.PROPPAISCNTRYCODIGONR.isVisible"
 													class="i-text"
-													v-bind="controls.PROPPAISCNTRYCODIGONR"
+													v-bind="controls.PROPPAISCNTRYCODIGONR.wrapperProps"
+													:id="getControlId(controls.PROPPAISCNTRYCODIGONR)"
 													v-on="controls.PROPPAISCNTRYCODIGONR.handlers"
 													:loading="controls.PROPPAISCNTRYCODIGONR.props.loading"
 													:reporting-mode-on="reportingModeCAV"
 													:suggestion-mode-on="suggestionModeOn">
 													<q-text-field
 														v-bind="controls.PROPPAISCNTRYCODIGONR.props"
+														:id="getControlId(controls.PROPPAISCNTRYCODIGONR)"
 														@blur="onBlur(controls.PROPPAISCNTRYCODIGONR, model.ValCodigonr.value)"
 														@change="model.ValCodigonr.fnUpdateValueOnChange" />
 												</base-input-structure>
@@ -179,13 +184,15 @@
 												<base-input-structure
 													v-if="controls.PROPPAISCNTRYALFA2___.isVisible"
 													class="i-text"
-													v-bind="controls.PROPPAISCNTRYALFA2___"
+													v-bind="controls.PROPPAISCNTRYALFA2___.wrapperProps"
+													:id="getControlId(controls.PROPPAISCNTRYALFA2___)"
 													v-on="controls.PROPPAISCNTRYALFA2___.handlers"
 													:loading="controls.PROPPAISCNTRYALFA2___.props.loading"
 													:reporting-mode-on="reportingModeCAV"
 													:suggestion-mode-on="suggestionModeOn">
 													<q-text-field
 														v-bind="controls.PROPPAISCNTRYALFA2___.props"
+														:id="getControlId(controls.PROPPAISCNTRYALFA2___)"
 														@blur="onBlur(controls.PROPPAISCNTRYALFA2___, model.ValAlfa2.value)"
 														@change="model.ValAlfa2.fnUpdateValueOnChange" />
 												</base-input-structure>
@@ -196,13 +203,15 @@
 												<base-input-structure
 													v-if="controls.PROPPAISCNTRYALFA3___.isVisible"
 													class="i-text"
-													v-bind="controls.PROPPAISCNTRYALFA3___"
+													v-bind="controls.PROPPAISCNTRYALFA3___.wrapperProps"
+													:id="getControlId(controls.PROPPAISCNTRYALFA3___)"
 													v-on="controls.PROPPAISCNTRYALFA3___.handlers"
 													:loading="controls.PROPPAISCNTRYALFA3___.props.loading"
 													:reporting-mode-on="reportingModeCAV"
 													:suggestion-mode-on="suggestionModeOn">
 													<q-text-field
 														v-bind="controls.PROPPAISCNTRYALFA3___.props"
+														:id="getControlId(controls.PROPPAISCNTRYALFA3___)"
 														@blur="onBlur(controls.PROPPAISCNTRYALFA3___, model.ValAlfa3.value)"
 														@change="model.ValAlfa3.fnUpdateValueOnChange" />
 												</base-input-structure>
@@ -223,12 +232,13 @@
 						<q-table
 							v-if="controls.PROPPAISPSEUDPROPRIED.isVisible"
 							v-bind="controls.PROPPAISPSEUDPROPRIED"
+							:id="getControlId(controls.PROPPAISPSEUDPROPRIED)"
 							v-on="controls.PROPPAISPSEUDPROPRIED.handlers">
-						<q-table-extra-extension
-							v-if="controls.PROPPAISPSEUDPROPRIED.isVisible"
-							:list-ctrl="controls.PROPPAISPSEUDPROPRIED"
-							:filter-operators="controls.PROPPAISPSEUDPROPRIED.filterOperators"
-							v-on="controls.PROPPAISPSEUDPROPRIED.handlers" />
+							<template #header>
+								<q-table-config
+									:table-ctrl="controls.PROPPAISPSEUDPROPRIED"
+									v-on="controls.PROPPAISPSEUDPROPRIED.handlers" />
+							</template>
 							<!-- USE /[MANUAL GQT CUSTOM_TABLE PROPPAISPSEUDPROPRIED]/ -->
 						</q-table>
 					</q-col>
@@ -237,7 +247,7 @@
 		</q-container>
 	</teleport>
 
-	<hr v-if="!isPopup && showFormFooter" />
+	<q-divider v-if="!isPopup && showFormFooter" />
 
 	<teleport
 		v-if="formModalIsReady && showFormFooter"
@@ -586,6 +596,7 @@
 						label: computed(() => this.Resources.COUNTRY64133),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
+						borderless: false,
 						isCollapsible: false,
 						anchored: false,
 						directChildren: ['PROPPAISCNTRYCOUNTRY_', 'PROPPAISCNTRYACTIVE__', 'PROPPAISPSEUDNOVOGR01'],
@@ -627,6 +638,7 @@
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'PROPPAISPSEUDNOVOGR02',
+						startsExpanded: false,
 						isCollapsible: true,
 						anchored: false,
 						directChildren: ['PROPPAISCNTRYCODIGONR', 'PROPPAISCNTRYALFA2___', 'PROPPAISCNTRYALFA3___'],
@@ -682,6 +694,7 @@
 						label: computed(() => this.Resources.PROPERTIES34868),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
+						headerLevel: computed(() => this.baseHeadingLevel + 1),
 						controller: 'CNTRY',
 						action: 'Proppais_ValPropried',
 						hasDependencies: false,
@@ -698,6 +711,7 @@
 								label: computed(() => this.Resources.PROPERTY_NAME18934),
 								dataLength: 85,
 								scrollData: 30,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.CurrencyColumn({
 								order: 2,
@@ -708,6 +722,7 @@
 								scrollData: 12,
 								maxDigits: 9,
 								decimalPlaces: 2,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 3,
@@ -717,6 +732,7 @@
 								label: computed(() => this.Resources.PROPERTY_TYPE51419),
 								dataLength: 20,
 								scrollData: 20,
+								export: 1,
 								pkColumn: 'ValCodtppro',
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
@@ -727,6 +743,7 @@
 								label: computed(() => this.Resources.REGION12723),
 								dataLength: 50,
 								scrollData: 30,
+								export: 1,
 								pkColumn: 'ValCodregia',
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
@@ -737,6 +754,7 @@
 								label: computed(() => this.Resources.LOCALE34521),
 								dataLength: 50,
 								scrollData: 30,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 6,
@@ -746,6 +764,7 @@
 								label: computed(() => this.Resources.ADDRESS04342),
 								scrollData: 30,
 								isVisible: false,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 7,
@@ -756,6 +775,7 @@
 								dataLength: 20,
 								scrollData: 20,
 								isVisible: false,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 8,
@@ -766,6 +786,7 @@
 								dataLength: 50,
 								scrollData: 30,
 								isVisible: false,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.BooleanColumn({
 								order: 9,
@@ -774,6 +795,7 @@
 								field: 'MOBILADA',
 								label: computed(() => this.Resources.FURNISHED37431),
 								scrollData: 1,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.NumericColumn({
 								order: 10,
@@ -784,6 +806,7 @@
 								scrollData: 6,
 								maxDigits: 6,
 								decimalPlaces: 0,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.NumericColumn({
 								order: 11,
@@ -794,6 +817,7 @@
 								scrollData: 6,
 								maxDigits: 6,
 								decimalPlaces: 0,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.NumericColumn({
 								order: 12,
@@ -804,6 +828,7 @@
 								scrollData: 6,
 								maxDigits: 6,
 								decimalPlaces: 0,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.DateColumn({
 								order: 13,
@@ -813,6 +838,7 @@
 								label: computed(() => this.Resources.AVAILABILITY56489),
 								scrollData: 8,
 								dateTimeType: 'date',
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.ImageColumn({
 								order: 14,
@@ -824,6 +850,7 @@
 								scrollData: 3,
 								sortable: false,
 								searchable: false,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 15,
@@ -832,6 +859,7 @@
 								field: 'DESCRIPT',
 								label: computed(() => this.Resources.DESCRIPTION07383),
 								scrollData: 30,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 						],
 						config: {
@@ -849,7 +877,6 @@
 							searchBarConfig: {
 								visibility: false
 							},
-							filtersVisible: false,
 							allowColumnFilters: false,
 							allowColumnSort: true,
 							crudActions: [
@@ -927,9 +954,7 @@
 									id: 'insert',
 									name: 'insert',
 									title: computed(() => this.Resources.INSERIR43365),
-									icon: {
-										icon: 'add'
-									},
+									icon: { icon: 'add' },
 									isInReadOnly: false,
 									params: {
 										canExecuteAction: vm.applyChanges,
@@ -978,7 +1003,7 @@
 								sortOrder: 'asc'
 							}
 						},
-						globalEvents: ['changed-REGIO', 'changed-PAIS1', 'changed-CNTRY', 'changed-PESSO', 'changed-PROPR', 'changed-TPPRO'],
+						globalEvents: ['changed-CNTRY', 'changed-REGIO', 'changed-PAIS1', 'changed-PROPR', 'changed-TPPRO', 'changed-PESSO'],
 						uuid: 'Proppais_ValPropried',
 						allSelectedRows: 'false',
 						component: 'QFormProprall',
@@ -1418,7 +1443,6 @@
 
 				this.afterControlUpdate(controlField, fieldValue)
 			},
-
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
 // USE /[MANUAL GQT FUNCTIONS_JS PROPPAIS]/
 // eslint-disable-next-line

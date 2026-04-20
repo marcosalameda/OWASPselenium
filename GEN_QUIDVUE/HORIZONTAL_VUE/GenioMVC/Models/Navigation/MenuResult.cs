@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
@@ -68,7 +68,7 @@ namespace GenioMVC.Models.Navigation
 
 			if (menu.Type == "ITEM" && menu.TreeLevel > 0)
 			{
-				if (!menu.HasCondition || (menu.HasCondition && Menus.ValidateCondition(userContext, menu, parent.Module)))
+				if (!menu.HasCondition || (menu.HasCondition && new MenuConditionValidator(userContext).ValidateCondition(menu, parent.Module)))
 				{
 					string menuText = Resources.Resources.ResourceManager.GetString(menu.Title);
 					MenuResult result = new MenuResult(menu.ID, parent.Module, menuText, parent.ModuleText);

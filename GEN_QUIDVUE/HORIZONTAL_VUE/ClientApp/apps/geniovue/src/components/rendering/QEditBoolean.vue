@@ -6,7 +6,7 @@
 		data-table-action-selected="false"
 		tabindex="-1"
 		:readonly="props.options.readonly"
-		:aria-label="props.options?.label"
+		:aria-label="props.options.label"
 		@update:model-value="updateValue" />
 </template>
 

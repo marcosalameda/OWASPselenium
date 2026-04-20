@@ -54,6 +54,17 @@ export default class ViewModel extends FormViewModelBase
 		this.stopWatchers.push(watch(() => this.ValCodequip.value, (newValue, oldValue) => this.onUpdate('equip.codequip', this.ValCodequip, newValue, oldValue)))
 
 		/** The hidden foreign keys. */
+		this.ValCoddeco = reactive(new modelFieldType.ForeignKey({
+			id: 'ValCoddeco',
+			originId: 'ValCoddeco',
+			area: 'EQUIP',
+			field: 'CODDECO',
+			relatedArea: 'DECOM',
+			isFixed: true,
+			description: '',
+		}).cloneFrom(values?.ValCoddeco))
+		this.stopWatchers.push(watch(() => this.ValCoddeco.value, (newValue, oldValue) => this.onUpdate('equip.coddeco', this.ValCoddeco, newValue, oldValue)))
+
 		this.ValCodpess1 = reactive(new modelFieldType.ForeignKey({
 			id: 'ValCodpess1',
 			originId: 'ValCodpess1',
@@ -75,17 +86,6 @@ export default class ViewModel extends FormViewModelBase
 			description: computed(() => this.Resources._COMPANY02087),
 		}).cloneFrom(values?.ValCodempre))
 		this.stopWatchers.push(watch(() => this.ValCodempre.value, (newValue, oldValue) => this.onUpdate('equip.codempre', this.ValCodempre, newValue, oldValue)))
-
-		this.ValCoddeco = reactive(new modelFieldType.ForeignKey({
-			id: 'ValCoddeco',
-			originId: 'ValCoddeco',
-			area: 'EQUIP',
-			field: 'CODDECO',
-			relatedArea: 'DECOM',
-			isFixed: true,
-			description: '',
-		}).cloneFrom(values?.ValCoddeco))
-		this.stopWatchers.push(watch(() => this.ValCoddeco.value, (newValue, oldValue) => this.onUpdate('equip.coddeco', this.ValCoddeco, newValue, oldValue)))
 
 		/** The used foreign keys. */
 		this.ValCodtpequ = reactive(new modelFieldType.ForeignKey({
@@ -171,6 +171,7 @@ export default class ViewModel extends FormViewModelBase
 			field: 'TIPOEQUI',
 			maxLength: 50,
 			description: computed(() => this.Resources.TYPE_OF_EQUIPMENT18080),
+			ignoreFldSubmit: true,
 		}).cloneFrom(values?.TableTpequTipoequi))
 		this.stopWatchers.push(watch(() => this.TableTpequTipoequi.value, (newValue, oldValue) => this.onUpdate('tpequ.tipoequi', this.TableTpequTipoequi, newValue, oldValue)))
 
@@ -192,6 +193,7 @@ export default class ViewModel extends FormViewModelBase
 			field: 'WAREHDES',
 			maxLength: 85,
 			description: computed(() => this.Resources.WAREHOUSE51864),
+			ignoreFldSubmit: true,
 		}).cloneFrom(values?.TableWarehWarehdes))
 		this.stopWatchers.push(watch(() => this.TableWarehWarehdes.value, (newValue, oldValue) => this.onUpdate('wareh.warehdes', this.TableWarehWarehdes, newValue, oldValue)))
 
@@ -203,10 +205,11 @@ export default class ViewModel extends FormViewModelBase
 			field: 'ITEMDES',
 			maxLength: 85,
 			description: computed(() => this.Resources.ARTICLE60065),
+			ignoreFldSubmit: true,
 		}).cloneFrom(values?.TableItemItemdes))
 		this.stopWatchers.push(watch(() => this.TableItemItemdes.value, (newValue, oldValue) => this.onUpdate('item.itemdes', this.TableItemItemdes, newValue, oldValue)))
 
-		this.ValDtdeco = reactive(new modelFieldType.DateTime({
+		this.ValDtdeco = reactive(new modelFieldType.Date({
 			id: 'ValDtdeco',
 			originId: 'ValDtdeco',
 			area: 'EQUIP',
@@ -238,6 +241,7 @@ export default class ViewModel extends FormViewModelBase
 			maxLength: 10,
 			isFixed: true,
 			description: computed(() => this.Resources.N_R__ROOM43805),
+			ignoreFldSubmit: true,
 		}).cloneFrom(values?.TableRoom1Roomnr))
 		this.stopWatchers.push(watch(() => this.TableRoom1Roomnr.value, (newValue, oldValue) => this.onUpdate('room1.roomnr', this.TableRoom1Roomnr, newValue, oldValue)))
 
@@ -385,6 +389,18 @@ export default class ViewModel extends FormViewModelBase
 			description: computed(() => this.Resources.BOUGHT32044),
 		}).cloneFrom(values?.ValBought))
 		this.stopWatchers.push(watch(() => this.ValBought.value, (newValue, oldValue) => this.onUpdate('equip.bought', this.ValBought, newValue, oldValue)))
+
+		/** The form fields used only in formulas. */
+		this.ItemValItemdes = reactive(new modelFieldType.String({
+			id: 'ItemValItemdes',
+			originId: 'ValItemdes',
+			area: 'ITEM',
+			field: 'ITEMDES',
+			maxLength: 85,
+			isFixed: true,
+			description: computed(() => this.Resources.ARTICLE60065),
+		}).cloneFrom(values?.ItemValItemdes))
+		this.stopWatchers.push(watch(() => this.ItemValItemdes.value, (newValue, oldValue) => this.onUpdate('item.itemdes', this.ItemValItemdes, newValue, oldValue)))
 	}
 
 	/**

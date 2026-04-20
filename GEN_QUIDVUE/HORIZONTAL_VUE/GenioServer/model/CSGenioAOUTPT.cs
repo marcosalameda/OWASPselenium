@@ -47,7 +47,7 @@ namespace CSGenio.business
 			Qfield = new Field(info.Alias, "codoutpt", FieldType.KEY_GUID);
 			Qfield.FieldDescription = "";
 			Qfield.FieldSize =  36;
-			Qfield.CavDesignation = "";
+			Qfield.VisivelCav = CavVisibilityType.Nunca;
 
 			Qfield.Dupmsg = "";
 			info.RegisterFieldDB(Qfield);
@@ -56,7 +56,7 @@ namespace CSGenio.business
 			Qfield = new Field(info.Alias, "codwareh", FieldType.KEY_GUID);
 			Qfield.FieldDescription = "BY OMISSION";
 			Qfield.FieldSize =  36;
-			Qfield.CavDesignation = "BY_OMISSION13050";
+			Qfield.VisivelCav = CavVisibilityType.Nunca;
 
             Qfield.NotNull = true;
 			Qfield.Dupmsg = "";

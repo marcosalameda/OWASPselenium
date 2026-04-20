@@ -9,12 +9,13 @@
 			<div
 				v-if="showFormHeader"
 				class="c-action-bar">
-				<h1
+				<component
 					v-if="formControl.uiComponents.header && formInfo.designation"
+					:is="topHeadingTag"
 					:id="formTitleId"
 					class="form-header">
 					{{ formInfo.designation }}
-				</h1>
+				</component>
 
 				<div class="c-action-bar__menu">
 					<template
@@ -40,13 +41,10 @@
 									@click="btn.action">
 									<template v-if="btn.icon">
 										<q-badge-indicator
-											v-if="btn.badge && btn.badge.isVisible"
-											:color="btn.badge.color">
+											:enabled="btn.badge?.isVisible ?? false"
+											:color="btn.badge?.color">
 											<q-icon v-bind="btn.icon" />
 										</q-badge-indicator>
-										<q-icon
-											v-else
-											v-bind="btn.icon" />
 									</template>
 								</q-toggle-group-item>
 							</template>
@@ -97,6 +95,7 @@
 		<q-container
 			fluid
 			data-key="FEECA"
+			:data-identifier="primaryKeyValue"
 			:data-loading="!formInitialDataLoaded || !isActiveForm">
 			<template v-if="formControl.initialized && showFormBody">
 				<q-row v-if="controls.FEECA___FLDS_DESCRIP_.isVisible">
@@ -106,7 +105,8 @@
 						<base-input-structure
 							v-if="controls.FEECA___FLDS_DESCRIP_.isVisible"
 							class="i-text"
-							v-bind="controls.FEECA___FLDS_DESCRIP_"
+							v-bind="controls.FEECA___FLDS_DESCRIP_.wrapperProps"
+							:id="getControlId(controls.FEECA___FLDS_DESCRIP_)"
 							v-on="controls.FEECA___FLDS_DESCRIP_.handlers"
 							:loading="controls.FEECA___FLDS_DESCRIP_.props.loading"
 							:reporting-mode-on="reportingModeCAV"
@@ -114,6 +114,7 @@
 							<q-lookup
 								v-if="controls.FEECA___FLDS_DESCRIP_.isVisible"
 								v-bind="controls.FEECA___FLDS_DESCRIP_.props"
+								:id="getControlId(controls.FEECA___FLDS_DESCRIP_)"
 								v-on="controls.FEECA___FLDS_DESCRIP_.handlers" />
 							<q-see-more-feeca-flds-descrip
 								v-if="controls.FEECA___FLDS_DESCRIP_.seeMoreIsVisible"
@@ -129,13 +130,15 @@
 						<base-input-structure
 							v-if="controls.FEECA___FEECAFEEDBACK.isVisible"
 							class="i-text"
-							v-bind="controls.FEECA___FEECAFEEDBACK"
+							v-bind="controls.FEECA___FEECAFEEDBACK.wrapperProps"
+							:id="getControlId(controls.FEECA___FEECAFEEDBACK)"
 							v-on="controls.FEECA___FEECAFEEDBACK.handlers"
 							:loading="controls.FEECA___FEECAFEEDBACK.props.loading"
 							:reporting-mode-on="reportingModeCAV"
 							:suggestion-mode-on="suggestionModeOn">
 							<q-text-field
 								v-bind="controls.FEECA___FEECAFEEDBACK.props"
+								:id="getControlId(controls.FEECA___FEECAFEEDBACK)"
 								@blur="onBlur(controls.FEECA___FEECAFEEDBACK, model.ValFeedback.value)"
 								@change="model.ValFeedback.fnUpdateValueOnChange" />
 						</base-input-structure>
@@ -148,7 +151,8 @@
 						<base-input-structure
 							v-if="controls.FEECA___FLDS_ATTACH__.isVisible"
 							class="i-text"
-							v-bind="controls.FEECA___FLDS_ATTACH__"
+							v-bind="controls.FEECA___FLDS_ATTACH__.wrapperProps"
+							:id="getControlId(controls.FEECA___FLDS_ATTACH__)"
 							v-on="controls.FEECA___FLDS_ATTACH__.handlers"
 							:loading="controls.FEECA___FLDS_ATTACH__.props.loading"
 							:reporting-mode-on="reportingModeCAV"
@@ -156,6 +160,7 @@
 							<q-document
 								v-if="controls.FEECA___FLDS_ATTACH__.isVisible"
 								v-bind="controls.FEECA___FLDS_ATTACH__.props"
+								:id="getControlId(controls.FEECA___FLDS_ATTACH__)"
 								v-on="controls.FEECA___FLDS_ATTACH__.handlers" />
 						</base-input-structure>
 					</q-col>
@@ -167,7 +172,8 @@
 						<base-input-structure
 							v-if="controls.FEECA___FLDS_NPASSAGE.isVisible"
 							class="i-text"
-							v-bind="controls.FEECA___FLDS_NPASSAGE"
+							v-bind="controls.FEECA___FLDS_NPASSAGE.wrapperProps"
+							:id="getControlId(controls.FEECA___FLDS_NPASSAGE)"
 							v-on="controls.FEECA___FLDS_NPASSAGE.handlers"
 							:loading="controls.FEECA___FLDS_NPASSAGE.props.loading"
 							:reporting-mode-on="reportingModeCAV"
@@ -175,6 +181,7 @@
 							<q-numeric-input
 								v-if="controls.FEECA___FLDS_NPASSAGE.isVisible"
 								v-bind="controls.FEECA___FLDS_NPASSAGE.props"
+								:id="getControlId(controls.FEECA___FLDS_NPASSAGE)"
 								@update:model-value="model.FldsValNpassage.fnUpdateValue" />
 						</base-input-structure>
 					</q-col>
@@ -183,7 +190,7 @@
 		</q-container>
 	</teleport>
 
-	<hr v-if="!isPopup && showFormFooter" />
+	<q-divider v-if="!isPopup && showFormFooter" />
 
 	<teleport
 		v-if="formModalIsReady && showFormFooter"
@@ -987,7 +994,6 @@
 
 				this.afterControlUpdate(controlField, fieldValue)
 			},
-
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
 // USE /[MANUAL GQT FUNCTIONS_JS FEECA]/
 // eslint-disable-next-line

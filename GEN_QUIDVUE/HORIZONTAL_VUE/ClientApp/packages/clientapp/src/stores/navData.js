@@ -14,7 +14,7 @@ import { MAIN_HISTORY_BRANCH_ID } from '../network/constants'
 
 class NavigationState {
 	constructor() {
-		let mainHistoryBranch = new Map(),
+		const mainHistoryBranch = new Map(),
 			mainHistory = new NavigationContext(MAIN_HISTORY_BRANCH_ID)
 		mainHistoryBranch.set(MAIN_HISTORY_BRANCH_ID, mainHistory)
 
@@ -186,7 +186,7 @@ const actions = {
 	setNavProperties({ navigationId, properties }) {
 		if (typeof properties !== 'object') return
 
-		for (let i in properties) {
+		for (const i in properties) {
 			const navigation = this.navigation.getHistory(navigationId)
 			navigation.setProperty({ key: i, value: properties[i] })
 		}

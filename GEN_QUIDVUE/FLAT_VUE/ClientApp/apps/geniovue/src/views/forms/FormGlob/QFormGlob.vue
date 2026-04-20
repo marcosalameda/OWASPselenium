@@ -9,12 +9,13 @@
 			<div
 				v-if="showFormHeader"
 				class="c-action-bar">
-				<h1
+				<component
 					v-if="formControl.uiComponents.header && formInfo.designation"
+					:is="topHeadingTag"
 					:id="formTitleId"
 					class="form-header">
 					{{ formInfo.designation }}
-				</h1>
+				</component>
 
 				<div class="c-action-bar__menu">
 					<template
@@ -40,13 +41,10 @@
 									@click="btn.action">
 									<template v-if="btn.icon">
 										<q-badge-indicator
-											v-if="btn.badge && btn.badge.isVisible"
-											:color="btn.badge.color">
+											:enabled="btn.badge?.isVisible ?? false"
+											:color="btn.badge?.color">
 											<q-icon v-bind="btn.icon" />
 										</q-badge-indicator>
-										<q-icon
-											v-else
-											v-bind="btn.icon" />
 									</template>
 								</q-toggle-group-item>
 							</template>
@@ -97,6 +95,7 @@
 		<q-container
 			fluid
 			data-key="GLOB"
+			:data-identifier="primaryKeyValue"
 			:data-loading="!formInitialDataLoaded || !isActiveForm">
 			<template v-if="formControl.initialized && showFormBody">
 				<q-row v-if="controls.GLOB____GLOB_HOME____.isVisible">
@@ -106,7 +105,8 @@
 						<base-input-structure
 							v-if="controls.GLOB____GLOB_HOME____.isVisible"
 							class="i-text"
-							v-bind="controls.GLOB____GLOB_HOME____"
+							v-bind="controls.GLOB____GLOB_HOME____.wrapperProps"
+							:id="getControlId(controls.GLOB____GLOB_HOME____)"
 							v-on="controls.GLOB____GLOB_HOME____.handlers"
 							:loading="controls.GLOB____GLOB_HOME____.props.loading"
 							:reporting-mode-on="reportingModeCAV"
@@ -114,6 +114,7 @@
 							<q-text-editor
 								v-if="controls.GLOB____GLOB_HOME____.isVisible"
 								v-bind="controls.GLOB____GLOB_HOME____.props"
+								:id="getControlId(controls.GLOB____GLOB_HOME____)"
 								v-on="controls.GLOB____GLOB_HOME____.handlers" />
 						</base-input-structure>
 					</q-col>
@@ -123,13 +124,15 @@
 						<base-input-structure
 							v-if="controls.GLOB____GLOB_APIURL__.isVisible"
 							class="i-text"
-							v-bind="controls.GLOB____GLOB_APIURL__"
+							v-bind="controls.GLOB____GLOB_APIURL__.wrapperProps"
+							:id="getControlId(controls.GLOB____GLOB_APIURL__)"
 							v-on="controls.GLOB____GLOB_APIURL__.handlers"
 							:loading="controls.GLOB____GLOB_APIURL__.props.loading"
 							:reporting-mode-on="reportingModeCAV"
 							:suggestion-mode-on="suggestionModeOn">
 							<q-text-field
 								v-bind="controls.GLOB____GLOB_APIURL__.props"
+								:id="getControlId(controls.GLOB____GLOB_APIURL__)"
 								@blur="onBlur(controls.GLOB____GLOB_APIURL__, model.ValApiurl.value)"
 								@change="model.ValApiurl.fnUpdateValueOnChange" />
 						</base-input-structure>
@@ -142,7 +145,8 @@
 						<base-input-structure
 							v-if="controls.GLOB____GLOB_LEGEND__.isVisible"
 							class="q-image"
-							v-bind="controls.GLOB____GLOB_LEGEND__"
+							v-bind="controls.GLOB____GLOB_LEGEND__.wrapperProps"
+							:id="getControlId(controls.GLOB____GLOB_LEGEND__)"
 							v-on="controls.GLOB____GLOB_LEGEND__.handlers"
 							:loading="controls.GLOB____GLOB_LEGEND__.props.loading"
 							:reporting-mode-on="reportingModeCAV"
@@ -150,6 +154,7 @@
 							<q-image
 								v-if="controls.GLOB____GLOB_LEGEND__.isVisible"
 								v-bind="controls.GLOB____GLOB_LEGEND__.props"
+								:id="getControlId(controls.GLOB____GLOB_LEGEND__)"
 								v-on="controls.GLOB____GLOB_LEGEND__.handlers" />
 						</base-input-structure>
 					</q-col>
@@ -158,7 +163,7 @@
 		</q-container>
 	</teleport>
 
-	<hr v-if="!isPopup && showFormFooter" />
+	<q-divider v-if="!isPopup && showFormFooter" />
 
 	<teleport
 		v-if="formModalIsReady && showFormFooter"
@@ -924,7 +929,6 @@
 
 				this.afterControlUpdate(controlField, fieldValue)
 			},
-
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
 // USE /[MANUAL GQT FUNCTIONS_JS GLOB]/
 // eslint-disable-next-line

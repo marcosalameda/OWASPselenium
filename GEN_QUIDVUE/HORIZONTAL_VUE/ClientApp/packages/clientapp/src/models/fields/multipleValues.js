@@ -1,4 +1,5 @@
 import _assignIn from 'lodash-es/assignIn'
+import _isEmpty from 'lodash-es/isEmpty'
 
 import { Base } from './base'
 
@@ -18,6 +19,15 @@ export class MultipleValues extends Base {
 	/**
 	 * @override
 	 */
+	get displayValue() {
+		return this.value === MultipleValues.EMPTY_VALUE
+			? '[]'
+			: JSON.stringify(this.value)
+	}
+
+	/**
+	 * @override
+	 */
 	clearValue() {
 		super.clearValue([])
 	}
@@ -26,6 +36,17 @@ export class MultipleValues extends Base {
 	 * @override
 	 */
 	isValidType(value) {
-		return typeof value === 'object'
+		return Array.isArray(value) || value === MultipleValues.EMPTY_VALUE
+	}
+
+	/**
+	 * @override
+	 */
+	sanitizeValue(value) {
+		const sanitizedVal = super.sanitizeValue(value)
+
+		if (_isEmpty(sanitizedVal)) return []
+
+		return sanitizedVal
 	}
 }

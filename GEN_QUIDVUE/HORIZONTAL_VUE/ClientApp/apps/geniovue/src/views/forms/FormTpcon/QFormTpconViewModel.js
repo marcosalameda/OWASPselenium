@@ -73,6 +73,7 @@ export default class ViewModel extends FormViewModelBase
 			field: 'GENDER',
 			maxLength: 20,
 			description: computed(() => this.Resources.GENRE63303),
+			ignoreFldSubmit: true,
 		}).cloneFrom(values?.TableGenreGender))
 		this.stopWatchers.push(watch(() => this.TableGenreGender.value, (newValue, oldValue) => this.onUpdate('genre.gender', this.TableGenreGender, newValue, oldValue)))
 

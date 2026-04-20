@@ -124,8 +124,8 @@ nav[aria-label='breadcrumb'] {
 		}
 
 		&:last-of-type::before {
-		background-color: var(--q-theme-neutral-dark);
-	}
+			background-color: var(--q-theme-neutral-dark);
+		}
 	}
 }
 

@@ -7,6 +7,7 @@ using GenioMVC.Models.Navigation;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Quidgest.Persistence;
 using Quidgest.Persistence.GenericQuery;
+
 using System.Collections;
 using System.Collections.Concurrent;
 using System.Collections.Specialized;
@@ -39,6 +40,7 @@ namespace GenioMVC.ViewModels.Pwcom
 		public string ValCodpsw { get; set; }
 
 		#endregion
+
 		/// <summary>
 		/// Title: "Login Name" | Type: "C"
 		/// </summary>
@@ -54,8 +56,6 @@ namespace GenioMVC.ViewModels.Pwcom
 		/// </summary>
 		[ImageThumbnailJsonConverter(100, 135)]
 		public GenioMVC.Models.ImageModel ValFoto { get; set; }
-
-
 
 		#region Navigations
 		#endregion
@@ -243,12 +243,7 @@ namespace GenioMVC.ViewModels.Pwcom
 			}
 		}
 
-		/// <summary>
-		/// Sets the value of a single property of the view model based on the provided table and field names.
-		/// </summary>
-		/// <param name="fullFieldName">The full field name in the format "table.field".</param>
-		/// <param name="value">The field value.</param>
-		/// <exception cref="ArgumentNullException">Thrown if <paramref name="fullFieldName"/> is null.</exception>
+		/// <inheritdoc />
 		public override void SetViewModelValue(string fullFieldName, object value)
 		{
 			try
@@ -380,6 +375,7 @@ namespace GenioMVC.ViewModels.Pwcom
 
 			Load_Pwcom___psw__nome____(qs, lazyLoad);
 			Load_Pwcom___pess1name____(qs, lazyLoad);
+
 // USE /[MANUAL GQT VIEWMODEL_LOADPARTIAL PWCOM]/
 		}
 
@@ -449,10 +445,7 @@ namespace GenioMVC.ViewModels.Pwcom
 				}
 			}
 
-			TablePswNome = new TableDBEdit<Models.Psw>
-			{
-				IsLazyLoad = lazyLoad
-			};
+			TablePswNome = new TableDBEdit<Models.Psw>();
 
 			if (lazyLoad)
 			{
@@ -639,10 +632,7 @@ namespace GenioMVC.ViewModels.Pwcom
 				}
 			}
 
-			TablePess1Name = new TableDBEdit<Models.Pess1>
-			{
-				IsLazyLoad = lazyLoad
-			};
+			TablePess1Name = new TableDBEdit<Models.Pess1>();
 
 			if (lazyLoad)
 			{

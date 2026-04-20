@@ -1,20 +1,20 @@
-﻿using JsonIgnoreAttribute = System.Text.Json.Serialization.JsonIgnoreAttribute;
+﻿using CSGenio.business;
+using CSGenio.framework;
+using CSGenio.persistence;
+using GenioMVC.Helpers;
+using GenioMVC.Models.Exception;
+using GenioMVC.Models.Navigation;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Quidgest.Persistence;
+using Quidgest.Persistence.GenericQuery;
+
 using System.Collections;
 using System.Collections.Concurrent;
 using System.Collections.Specialized;
 using System.ComponentModel.DataAnnotations;
 using System.Data;
 using System.Globalization;
-
-using CSGenio.business;
-using CSGenio.framework;
-using CSGenio.persistence;
-using GenioMVC.Helpers;
-using GenioMVC.Models.Exception;
-using GenioMVC.Models.Navigation;
-using Quidgest.Persistence;
-using Quidgest.Persistence.GenericQuery;
+using System.Text.Json.Serialization;
 
 namespace GenioMVC.ViewModels.Inpgr
 {
@@ -32,6 +32,7 @@ namespace GenioMVC.ViewModels.Inpgr
 		#region Foreign keys
 
 		#endregion
+
 		/// <summary>
 		/// Title: "VAT Number" | Type: "N"
 		/// </summary>
@@ -49,11 +50,6 @@ namespace GenioMVC.ViewModels.Inpgr
 		/// </summary>
 		public string ValPrefix { get; set; }
 		/// <summary>
-		/// Title: "" | Type: "PSEUD"
-		/// </summary>
-		[JsonIgnore]
-		public SelectList List_ValPrefix { get; set; }
-		/// <summary>
 		/// Title: "Phone number" | Type: "N"
 		/// </summary>
 		public decimal? ValPhone { get; set; }
@@ -61,11 +57,6 @@ namespace GenioMVC.ViewModels.Inpgr
 		/// Title: "Address type" | Type: "AC"
 		/// </summary>
 		public string ValAdress { get; set; }
-		/// <summary>
-		/// Title: "" | Type: "PSEUD"
-		/// </summary>
-		[JsonIgnore]
-		public SelectList List_ValAdress { get; set; }
 		/// <summary>
 		/// Title: "E-mail" | Type: "C"
 		/// </summary>
@@ -78,11 +69,6 @@ namespace GenioMVC.ViewModels.Inpgr
 		/// Title: "Entity" | Type: "AC"
 		/// </summary>
 		public string ValBankcomp { get; set; }
-		/// <summary>
-		/// Title: "" | Type: "PSEUD"
-		/// </summary>
-		[JsonIgnore]
-		public SelectList List_ValBankcomp { get; set; }
 		/// <summary>
 		/// Title: "IBAN" | Type: "C"
 		/// </summary>
@@ -99,8 +85,6 @@ namespace GenioMVC.ViewModels.Inpgr
 		/// Title: "Adress" | Type: "C"
 		/// </summary>
 		public string ValDirectio { get; set; }
-
-
 
 		#region Navigations
 		#endregion
@@ -307,12 +291,7 @@ namespace GenioMVC.ViewModels.Inpgr
 			}
 		}
 
-		/// <summary>
-		/// Sets the value of a single property of the view model based on the provided table and field names.
-		/// </summary>
-		/// <param name="fullFieldName">The full field name in the format "table.field".</param>
-		/// <param name="value">The field value.</param>
-		/// <exception cref="ArgumentNullException">Thrown if <paramref name="fullFieldName"/> is null.</exception>
+		/// <inheritdoc />
 		public override void SetViewModelValue(string fullFieldName, object value)
 		{
 			try
@@ -471,6 +450,7 @@ namespace GenioMVC.ViewModels.Inpgr
 			}
 			// Add characteristics
 			Characs = new List<string>();
+
 
 // USE /[MANUAL GQT VIEWMODEL_LOADPARTIAL INGROUPS]/
 		}

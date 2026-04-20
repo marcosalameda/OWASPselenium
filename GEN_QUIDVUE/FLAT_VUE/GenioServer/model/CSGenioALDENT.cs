@@ -47,7 +47,7 @@ namespace CSGenio.business
 			Qfield = new Field(info.Alias, "codldent", FieldType.KEY_GUID);
 			Qfield.FieldDescription = "";
 			Qfield.FieldSize =  36;
-			Qfield.CavDesignation = "";
+			Qfield.VisivelCav = CavVisibilityType.Nunca;
 
 			Qfield.Dupmsg = "";
 			info.RegisterFieldDB(Qfield);
@@ -56,7 +56,7 @@ namespace CSGenio.business
 			Qfield = new Field(info.Alias, "coddentr", FieldType.KEY_GUID);
 			Qfield.FieldDescription = "";
 			Qfield.FieldSize =  36;
-			Qfield.CavDesignation = "";
+			Qfield.VisivelCav = CavVisibilityType.Nunca;
 
 			Qfield.Dupmsg = "";
 			info.RegisterFieldDB(Qfield);
@@ -81,7 +81,7 @@ namespace CSGenio.business
 			Qfield = new Field(info.Alias, "codwareh", FieldType.KEY_GUID);
 			Qfield.FieldDescription = ">ARMAZEM";
 			Qfield.FieldSize =  36;
-			Qfield.CavDesignation = "_ARMAZEM43996";
+			Qfield.VisivelCav = CavVisibilityType.Nunca;
 
 			Qfield.Dupmsg = "";
 			argumentsListByArea= new List<ByAreaArguments>();
@@ -96,7 +96,7 @@ namespace CSGenio.business
 			Qfield = new Field(info.Alias, "coditem", FieldType.KEY_GUID);
 			Qfield.FieldDescription = ">ARTICLE";
 			Qfield.FieldSize =  36;
-			Qfield.CavDesignation = "_ARTICLE38266";
+			Qfield.VisivelCav = CavVisibilityType.Nunca;
 
 			Qfield.Dupmsg = "";
 			info.RegisterFieldDB(Qfield);
@@ -495,10 +495,10 @@ namespace CSGenio.business
 
 			// ROW_REORDERING
 			CriteriaSet criteria = CriteriaSet.And();
+			var prefixField = DBFields[FldCoddentr.Field];
 			// For key fields, an empty prefix means 'no value', so we normalise it to null
 			// to generate a WHERE ... IS NULL filter. For non-empty values, we convert the
 			// prefix to a database-safe value (e.g. Guid) before applying the equality filter.
-			var prefixField = DBFields[FldCoddentr.Field];
 			object prefixRealValue = prefixField.isEmptyValue(ValCoddentr) ? null : QueryUtils.ToValidDbValue(ValCoddentr, prefixField);
 			criteria.Equal(FldCoddentr, prefixRealValue);
 			sp.ReorderSequence(this, DBFields[FldLine.Field], criteria);

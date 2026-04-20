@@ -105,6 +105,7 @@ export default class ViewModel extends FormViewModelBase
 			field: 'WAREHDES',
 			maxLength: 85,
 			description: computed(() => this.Resources.WAREHOUSE51864),
+			ignoreFldSubmit: true,
 		}).cloneFrom(values?.TableWarehWarehdes))
 		this.stopWatchers.push(watch(() => this.TableWarehWarehdes.value, (newValue, oldValue) => this.onUpdate('wareh.warehdes', this.TableWarehWarehdes, newValue, oldValue)))
 
@@ -127,6 +128,7 @@ export default class ViewModel extends FormViewModelBase
 			field: 'ITEMDES',
 			maxLength: 85,
 			description: computed(() => this.Resources.GLOBAL_ARTICLE63861),
+			ignoreFldSubmit: true,
 		}).cloneFrom(values?.TableGitemItemdes))
 		this.stopWatchers.push(watch(() => this.TableGitemItemdes.value, (newValue, oldValue) => this.onUpdate('gitem.itemdes', this.TableGitemItemdes, newValue, oldValue)))
 
@@ -285,6 +287,18 @@ export default class ViewModel extends FormViewModelBase
 			id: 'List_Categor',
 			ignoreFldSubmit: true
 		}).cloneFrom(values?.List_Categor)
+
+		/** The form fields used only in formulas. */
+		this.GitemValItemdes = reactive(new modelFieldType.String({
+			id: 'GitemValItemdes',
+			originId: 'ValItemdes',
+			area: 'GITEM',
+			field: 'ITEMDES',
+			maxLength: 85,
+			isFixed: true,
+			description: computed(() => this.Resources.GLOBAL_ARTICLE63861),
+		}).cloneFrom(values?.GitemValItemdes))
+		this.stopWatchers.push(watch(() => this.GitemValItemdes.value, (newValue, oldValue) => this.onUpdate('gitem.itemdes', this.GitemValItemdes, newValue, oldValue)))
 	}
 
 	/**

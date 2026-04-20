@@ -156,9 +156,7 @@ namespace Administration.Controllers
             model.Modules.Add(new Module("STY", Resources.Resources.STYLE47121));
             model.Modules.Add(new Module("TBS", Resources.Resources.BASE_TABLES04823));
             model.Modules.Add(new Module("TRN", Resources.Resources.TRAINING_EXERCISES07801));
-            model.Modules.Add(new Module("UIS", Resources.Resources.USER_INTERFACE32384));
             model.Modules.Add(new Module("WMS", Resources.Resources.WAREHOUSE_MANAGEMENT10443));
-            model.Modules.Add(new Module("XRS", Resources.Resources.WHAREHOUSE_API10412));
 
             //Check if the module only has levels.
             foreach(var module in model.Modules)
@@ -211,7 +209,7 @@ namespace Administration.Controllers
 
                 if (userExist != null)
                 {
-                    //replace de %s to o format do c#
+                    //replace de %s to o format do csharp
                     var regex = new Regex(Regex.Escape("%s"));
                     var msg = regex.Replace(Resources.Resources.A_FICHA_COM_O_VALOR_35649, "{0}", 1);
                     msg = regex.Replace(msg, "{1}", 1);
@@ -454,6 +452,7 @@ namespace Administration.Controllers
 
         private string saveUser(ref ManageUsersModel model, PersistentSupport sp)
         {
+            string message = "";
             User user = SysConfiguration.CreateWebAdminUser();
 
             if (model.CodUser == null || model.CodUser == String.Empty)
@@ -500,15 +499,33 @@ namespace Administration.Controllers
                 }
                 if (model.PasswordChange)
                 {
-                    var factory = new UserFactory(sp, user);
-                    factory.ChangePassword(userPsw, model.PasswordNew, model.PasswordConfirm);
+                    try
+                    {
+                        // Authorize user to get object with information about all years
+                        User userBeingChanged = SecurityFactory.Authorize(new()
+                        {
+                            AuthenticationType = "internal",
+                            Name = model.Username,
+                            IsAuthenticated = true,
+                            IdProperty = GenioIdentityType.InternalId
+                        });
+
+                        // Change the user's password
+                        foreach (var identityProvider in SecurityFactory.IdentityProviderList)
+                            if (identityProvider.HasUsernameAuth())
+                                SecurityFactory.StoreCredential(identityProvider.Id, userBeingChanged, null, model.PasswordNew);
+                    }
+                    catch (Exception e)
+                    {
+                        message = e.Message;
+                    }
                 }
                 
                 userPsw.ValOpermuda = "WebAdmin";
                 userPsw.ValDatamuda = DateTime.Now;
                 userPsw.update(sp);
             }
-            return ""; //sucesso
+            return message;
         }
 
         [HttpGet]

@@ -1,20 +1,20 @@
-﻿using JsonIgnoreAttribute = System.Text.Json.Serialization.JsonIgnoreAttribute;
+﻿using CSGenio.business;
+using CSGenio.framework;
+using CSGenio.persistence;
+using GenioMVC.Helpers;
+using GenioMVC.Models.Exception;
+using GenioMVC.Models.Navigation;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Quidgest.Persistence;
+using Quidgest.Persistence.GenericQuery;
+
 using System.Collections;
 using System.Collections.Concurrent;
 using System.Collections.Specialized;
 using System.ComponentModel.DataAnnotations;
 using System.Data;
 using System.Globalization;
-
-using CSGenio.business;
-using CSGenio.framework;
-using CSGenio.persistence;
-using GenioMVC.Helpers;
-using GenioMVC.Models.Exception;
-using GenioMVC.Models.Navigation;
-using Quidgest.Persistence;
-using Quidgest.Persistence.GenericQuery;
+using System.Text.Json.Serialization;
 
 namespace GenioMVC.ViewModels.Wareh
 {
@@ -32,6 +32,7 @@ namespace GenioMVC.ViewModels.Wareh
 		#region Foreign keys
 
 		#endregion
+
 		/// <summary>
 		/// Title: "Warehouse" | Type: "C"
 		/// </summary>
@@ -40,8 +41,6 @@ namespace GenioMVC.ViewModels.Wareh
 		/// Title: "Acronym" | Type: "C"
 		/// </summary>
 		public string ValWarehcod { get; set; }
-
-
 
 		#region Navigations
 		#endregion
@@ -212,12 +211,7 @@ namespace GenioMVC.ViewModels.Wareh
 			}
 		}
 
-		/// <summary>
-		/// Sets the value of a single property of the view model based on the provided table and field names.
-		/// </summary>
-		/// <param name="fullFieldName">The full field name in the format "table.field".</param>
-		/// <param name="value">The field value.</param>
-		/// <exception cref="ArgumentNullException">Thrown if <paramref name="fullFieldName"/> is null.</exception>
+		/// <inheritdoc />
 		public override void SetViewModelValue(string fullFieldName, object value)
 		{
 			try
@@ -343,6 +337,7 @@ namespace GenioMVC.ViewModels.Wareh
 			}
 			// Add characteristics
 			Characs = new List<string>();
+
 
 // USE /[MANUAL GQT VIEWMODEL_LOADPARTIAL MLTFORM]/
 		}

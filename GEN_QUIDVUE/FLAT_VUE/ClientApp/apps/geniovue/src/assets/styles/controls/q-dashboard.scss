@@ -13,7 +13,6 @@
 	.q-alert-widget .q-counter-widget__value,
 	.q-text-field__input,
 	.i-text__label,
-	.i-checkbox,
 	input,
 	.form-header {
 		color: $on-color;
@@ -127,6 +126,7 @@
 		}
 
 		&__message {
+			font-size: 1.125rem;
 			font-weight: bold;
 			margin: 1rem 0;
 		}
@@ -613,7 +613,7 @@
 		.footer-pagination-row {
 			.q-button {
 				background: $background;
-	  
+
 				&:hover:not(:disabled) {
 					background: $primary-dark;
 				}

@@ -67,15 +67,6 @@ public class Equip_ValAnexos_RowViewModel : Models.Anexd
 
 		using (new CSGenio.persistence.ScopedPersistentSupport(m_userContext.PersistentSupport))
 		{
-
-			// Table ANEXD CRUD conditions.
-			// HasRole("A") && !isEmptyG([EQUIP->CODEQUIP])
-			{
-				bool formulaResult = (Logical)(CSGenio.business.GlobalFunctions.HasRole(m_userContext.User,"A")&&!(((string)this.Equip.ValCodequip) == ""));
-				canInsert &= formulaResult;
-				// If Insert is blocked by CRUD condition, Duplicate should also be blocked.
-				canDuplicate &= formulaResult;
-			}
 		}
 
 		BtnPermission = new TableRowCrudButtonPermissions()

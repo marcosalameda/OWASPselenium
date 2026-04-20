@@ -7,6 +7,7 @@ using GenioMVC.Models.Navigation;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Quidgest.Persistence;
 using Quidgest.Persistence.GenericQuery;
+
 using System.Collections;
 using System.Collections.Concurrent;
 using System.Collections.Specialized;
@@ -35,6 +36,7 @@ namespace GenioMVC.ViewModels.Sale
 		public string ValCodorgan { get; set; }
 
 		#endregion
+
 		/// <summary>
 		/// Title: "Organization" | Type: "C"
 		/// </summary>
@@ -52,8 +54,6 @@ namespace GenioMVC.ViewModels.Sale
 		/// Title: "Prospecting carried out" | Type: "L"
 		/// </summary>
 		public bool ValProspecc { get; set; }
-
-
 
 		#region Navigations
 		#endregion
@@ -228,12 +228,7 @@ namespace GenioMVC.ViewModels.Sale
 			}
 		}
 
-		/// <summary>
-		/// Sets the value of a single property of the view model based on the provided table and field names.
-		/// </summary>
-		/// <param name="fullFieldName">The full field name in the format "table.field".</param>
-		/// <param name="value">The field value.</param>
-		/// <exception cref="ArgumentNullException">Thrown if <paramref name="fullFieldName"/> is null.</exception>
+		/// <inheritdoc />
 		public override void SetViewModelValue(string fullFieldName, object value)
 		{
 			try
@@ -367,6 +362,7 @@ namespace GenioMVC.ViewModels.Sale
 			Characs = new List<string>();
 
 			Load_Vendaw01organorganiza(qs, lazyLoad);
+
 // USE /[MANUAL GQT VIEWMODEL_LOADPARTIAL VENDAW01]/
 		}
 
@@ -438,10 +434,7 @@ namespace GenioMVC.ViewModels.Sale
 				}
 			}
 
-			TableOrganOrganiza = new TableDBEdit<Models.Organ>
-			{
-				IsLazyLoad = lazyLoad
-			};
+			TableOrganOrganiza = new TableDBEdit<Models.Organ>();
 
 			if (lazyLoad)
 			{

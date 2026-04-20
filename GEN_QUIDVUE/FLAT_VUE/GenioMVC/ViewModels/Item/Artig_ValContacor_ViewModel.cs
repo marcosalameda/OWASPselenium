@@ -191,11 +191,12 @@ namespace GenioMVC.ViewModels.Item
 			crs.SubSets.Add(subfilters);
 
 			// Form field filters
-			if (tableConfig.FieldFilters != null)
-				crs.SubSets.Add(ProcessFieldFilters(tableConfig.FieldFilters));
+			crs.SubSets.Add(ProcessFieldFilters(tableConfig.GlobalFilters));
 
 			if (this.ItemValCoditem != null)
 				crs.Equal(CSGenioAccorr.FldCoditem, this.ItemValCoditem);
+			else
+				tableReload = false;
 
 
 			crs.SubSets.Add(GetCustomizedStaticLimits(StaticLimits));
@@ -325,12 +326,11 @@ namespace GenioMVC.ViewModels.Item
 
 			FieldRef[] fields = new FieldRef[] { CSGenioAccorr.FldCodccorr, CSGenioAccorr.FldZzstate, CSGenioAccorr.FldNorder, CSGenioAccorr.FldDate, CSGenioAccorr.FldType, CSGenioAccorr.FldReferenc, CSGenioAccorr.FldQnty, CSGenioAccorr.FldBalance };
 
-
-			// Totalizers
-			List<FieldRef> fieldsWithTotalizers = fields.Where(field => tableConfig.TotalizerColumns.Contains(field.FullName)).ToList();
+			// List of column names that should display totalized (aggregated) values.
+			List<string> totalizerColumns = [];
+			List<FieldRef> fieldsWithTotalizers = [.. fields.Where(field => totalizerColumns.Contains(field.FullName))];
 
 			FieldRef firstVisibleColumn = null;
-
 			if (sorts.Count == 0)
 			{
 				firstVisibleColumn = tableConfig?.GetFirstVisibleColumn(TableAlias);

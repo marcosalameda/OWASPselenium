@@ -107,27 +107,6 @@
 						size="xlarge"
 						@click="TestServerConection"
 						:loading="showLoader" />
-					<hr />
-					<h5>
-						{{ 'GQP ' +  resources.sharedTablesLabel }}
-					</h5>
-					<q-text-field
-						v-model="model.GQP_Schema"
-						:label="resources.databaseName"
-						required
-						size="xlarge"
-						:readonly="isTestingConnection">
-						<template #extras>
-							<q-icon icon="information-outline" />
-							{{ resources.databaseNameInfo }}
-						</template>
-					</q-text-field>
-					<q-checkbox
-						v-model="model.GQP_ConnEncrypt"
-						:label="resources.encryptConnectionLabel" />
-					<q-checkbox
-						v-model="model.GQP_ConnWithDomainUser"
-						:label="resources.domainUserLabel" />
 				</q-row-container>
 			</q-card>
 		</row>

@@ -7,6 +7,7 @@ using GenioMVC.Models.Navigation;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Quidgest.Persistence;
 using Quidgest.Persistence.GenericQuery;
+
 using System.Collections;
 using System.Collections.Concurrent;
 using System.Collections.Specialized;
@@ -39,6 +40,7 @@ namespace GenioMVC.ViewModels.Evcat
 		public string ValCodpesso { get; set; }
 
 		#endregion
+
 		/// <summary>
 		/// Title: "Name" | Type: "C"
 		/// </summary>
@@ -71,8 +73,6 @@ namespace GenioMVC.ViewModels.Evcat
 		/// Title: "Observation" | Type: "MO"
 		/// </summary>
 		public string ValObservat { get; set; }
-
-
 
 		#region Navigations
 		#endregion
@@ -261,12 +261,7 @@ namespace GenioMVC.ViewModels.Evcat
 			}
 		}
 
-		/// <summary>
-		/// Sets the value of a single property of the view model based on the provided table and field names.
-		/// </summary>
-		/// <param name="fullFieldName">The full field name in the format "table.field".</param>
-		/// <param name="value">The field value.</param>
-		/// <exception cref="ArgumentNullException">Thrown if <paramref name="fullFieldName"/> is null.</exception>
+		/// <inheritdoc />
 		public override void SetViewModelValue(string fullFieldName, object value)
 		{
 			try
@@ -404,6 +399,7 @@ namespace GenioMVC.ViewModels.Evcat
 
 			Load_Evcat___pessoname____(qs, lazyLoad);
 			Load_Evcat___cate1category(qs, lazyLoad);
+
 // USE /[MANUAL GQT VIEWMODEL_LOADPARTIAL EVCAT]/
 		}
 
@@ -473,10 +469,7 @@ namespace GenioMVC.ViewModels.Evcat
 				}
 			}
 
-			TablePessoName = new TableDBEdit<Models.Pesso>
-			{
-				IsLazyLoad = lazyLoad
-			};
+			TablePessoName = new TableDBEdit<Models.Pesso>();
 
 			if (lazyLoad)
 			{
@@ -663,10 +656,7 @@ namespace GenioMVC.ViewModels.Evcat
 				}
 			}
 
-			TableCate1Category = new TableDBEdit<Models.Cate1>
-			{
-				IsLazyLoad = lazyLoad
-			};
+			TableCate1Category = new TableDBEdit<Models.Cate1>();
 
 			if (lazyLoad)
 			{

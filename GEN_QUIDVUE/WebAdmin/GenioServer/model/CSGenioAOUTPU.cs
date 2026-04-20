@@ -47,7 +47,7 @@ namespace CSGenio.business
 			Qfield = new Field(info.Alias, "codoutpu", FieldType.KEY_GUID);
 			Qfield.FieldDescription = "";
 			Qfield.FieldSize =  36;
-			Qfield.CavDesignation = "";
+			Qfield.VisivelCav = CavVisibilityType.Nunca;
 
 			Qfield.Dupmsg = "";
 			info.RegisterFieldDB(Qfield);
@@ -56,7 +56,7 @@ namespace CSGenio.business
 			Qfield = new Field(info.Alias, "codoutpt", FieldType.KEY_GUID);
 			Qfield.FieldDescription = "";
 			Qfield.FieldSize =  36;
-			Qfield.CavDesignation = "";
+			Qfield.VisivelCav = CavVisibilityType.Nunca;
 
 			Qfield.Dupmsg = "";
 			info.RegisterFieldDB(Qfield);
@@ -81,7 +81,7 @@ namespace CSGenio.business
 			Qfield = new Field(info.Alias, "codwareh", FieldType.KEY_GUID);
 			Qfield.FieldDescription = ">WAREHOUSE";
 			Qfield.FieldSize =  36;
-			Qfield.CavDesignation = "_WAREHOUSE19861";
+			Qfield.VisivelCav = CavVisibilityType.Nunca;
 
 			Qfield.Dupmsg = "";
 			argumentsListByArea= new List<ByAreaArguments>();
@@ -96,7 +96,7 @@ namespace CSGenio.business
 			Qfield = new Field(info.Alias, "coditem", FieldType.KEY_GUID);
 			Qfield.FieldDescription = ">ARTICLE";
 			Qfield.FieldSize =  36;
-			Qfield.CavDesignation = "_ARTICLE38266";
+			Qfield.VisivelCav = CavVisibilityType.Nunca;
 
 			Qfield.Dupmsg = "";
 			info.RegisterFieldDB(Qfield);
@@ -115,7 +115,7 @@ namespace CSGenio.business
 			Qfield = new Field(info.Alias, "coddocsd", FieldType.KEY_GUID);
 			Qfield.FieldDescription = ">EXIT DOCUMENT";
 			Qfield.FieldSize =  36;
-			Qfield.CavDesignation = "_EXIT_DOCUMENT48701";
+			Qfield.VisivelCav = CavVisibilityType.Nunca;
 
 			Qfield.Dupmsg = "";
 			info.RegisterFieldDB(Qfield);
@@ -164,8 +164,8 @@ namespace CSGenio.business
 			// Pathways
 			//------------------------------
 			info.Pathways = new Dictionary<string, string>(6);
-			info.Pathways.Add("wareh","wareh");
 			info.Pathways.Add("oudoc","oudoc");
+			info.Pathways.Add("wareh","wareh");
 			info.Pathways.Add("item","item");
 			info.Pathways.Add("outpt","outpt");
 			info.Pathways.Add("gitem","item");
@@ -181,8 +181,8 @@ namespace CSGenio.business
 			//------------------------------
 			//Actualiza as seguintes somas relacionadas:
 			info.RelatedSumArgs = new List<RelatedSumArgument>();
-			info.RelatedSumArgs.Add( new RelatedSumArgument("outpu", "item", "exits", "exitqnty", '+', true));
 			info.RelatedSumArgs.Add( new RelatedSumArgument("outpu", "item", "existenc", "exitqnty", '-', true));
+			info.RelatedSumArgs.Add( new RelatedSumArgument("outpu", "item", "exits", "exitqnty", '+', true));
 
 
 

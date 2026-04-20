@@ -9,12 +9,13 @@
 			<div
 				v-if="showFormHeader"
 				class="c-action-bar">
-				<h1
+				<component
 					v-if="formControl.uiComponents.header && formInfo.designation"
+					:is="topHeadingTag"
 					:id="formTitleId"
 					class="form-header">
 					{{ formInfo.designation }}
-				</h1>
+				</component>
 
 				<div class="c-action-bar__menu">
 					<template
@@ -40,13 +41,10 @@
 									@click="btn.action">
 									<template v-if="btn.icon">
 										<q-badge-indicator
-											v-if="btn.badge && btn.badge.isVisible"
-											:color="btn.badge.color">
+											:enabled="btn.badge?.isVisible ?? false"
+											:color="btn.badge?.color">
 											<q-icon v-bind="btn.icon" />
 										</q-badge-indicator>
-										<q-icon
-											v-else
-											v-bind="btn.icon" />
 									</template>
 								</q-toggle-group-item>
 							</template>
@@ -97,6 +95,7 @@
 		<q-container
 			fluid
 			data-key="CONTAC19"
+			:data-identifier="primaryKeyValue"
 			:data-loading="!formInitialDataLoaded || !isActiveForm">
 			<template v-if="formControl.initialized && showFormBody">
 				<q-row v-if="controls.CONTAC19PROCNNAME____.isVisible">
@@ -106,13 +105,15 @@
 						<base-input-structure
 							v-if="controls.CONTAC19PROCNNAME____.isVisible"
 							class="i-text"
-							v-bind="controls.CONTAC19PROCNNAME____"
+							v-bind="controls.CONTAC19PROCNNAME____.wrapperProps"
+							:id="getControlId(controls.CONTAC19PROCNNAME____)"
 							v-on="controls.CONTAC19PROCNNAME____.handlers"
 							:loading="controls.CONTAC19PROCNNAME____.props.loading"
 							:reporting-mode-on="reportingModeCAV"
 							:suggestion-mode-on="suggestionModeOn">
 							<q-text-field
 								v-bind="controls.CONTAC19PROCNNAME____.props"
+								:id="getControlId(controls.CONTAC19PROCNNAME____)"
 								@blur="onBlur(controls.CONTAC19PROCNNAME____, model.ValName.value)"
 								@change="model.ValName.fnUpdateValueOnChange" />
 						</base-input-structure>
@@ -125,13 +126,15 @@
 						<base-input-structure
 							v-if="controls.CONTAC19PROCNEMAIL___.isVisible"
 							class="i-text"
-							v-bind="controls.CONTAC19PROCNEMAIL___"
+							v-bind="controls.CONTAC19PROCNEMAIL___.wrapperProps"
+							:id="getControlId(controls.CONTAC19PROCNEMAIL___)"
 							v-on="controls.CONTAC19PROCNEMAIL___.handlers"
 							:loading="controls.CONTAC19PROCNEMAIL___.props.loading"
 							:reporting-mode-on="reportingModeCAV"
 							:suggestion-mode-on="suggestionModeOn">
 							<q-text-field
 								v-bind="controls.CONTAC19PROCNEMAIL___.props"
+								:id="getControlId(controls.CONTAC19PROCNEMAIL___)"
 								@blur="onBlur(controls.CONTAC19PROCNEMAIL___, model.ValEmail.value)"
 								@change="model.ValEmail.fnUpdateValueOnChange" />
 						</base-input-structure>
@@ -144,13 +147,15 @@
 						<base-input-structure
 							v-if="controls.CONTAC19PROCNTELEPHON.isVisible"
 							class="i-text"
-							v-bind="controls.CONTAC19PROCNTELEPHON"
+							v-bind="controls.CONTAC19PROCNTELEPHON.wrapperProps"
+							:id="getControlId(controls.CONTAC19PROCNTELEPHON)"
 							v-on="controls.CONTAC19PROCNTELEPHON.handlers"
 							:loading="controls.CONTAC19PROCNTELEPHON.props.loading"
 							:reporting-mode-on="reportingModeCAV"
 							:suggestion-mode-on="suggestionModeOn">
 							<q-text-field
 								v-bind="controls.CONTAC19PROCNTELEPHON.props"
+								:id="getControlId(controls.CONTAC19PROCNTELEPHON)"
 								@blur="onBlur(controls.CONTAC19PROCNTELEPHON, model.ValTelephon.value)"
 								@change="model.ValTelephon.fnUpdateValueOnChange" />
 						</base-input-structure>
@@ -163,7 +168,8 @@
 						<base-input-structure
 							v-if="controls.CONTAC19PROCNDESCRIPT.isVisible"
 							class="i-textarea"
-							v-bind="controls.CONTAC19PROCNDESCRIPT"
+							v-bind="controls.CONTAC19PROCNDESCRIPT.wrapperProps"
+							:id="getControlId(controls.CONTAC19PROCNDESCRIPT)"
 							v-on="controls.CONTAC19PROCNDESCRIPT.handlers"
 							:loading="controls.CONTAC19PROCNDESCRIPT.props.loading"
 							:reporting-mode-on="reportingModeCAV"
@@ -171,6 +177,7 @@
 							<q-text-area
 								v-if="controls.CONTAC19PROCNDESCRIPT.isVisible"
 								v-bind="controls.CONTAC19PROCNDESCRIPT.props"
+								:id="getControlId(controls.CONTAC19PROCNDESCRIPT)"
 								v-on="controls.CONTAC19PROCNDESCRIPT.handlers" />
 						</base-input-structure>
 					</q-col>
@@ -182,7 +189,8 @@
 						<base-input-structure
 							v-if="controls.CONTAC19PROCNDATE____.isVisible"
 							class="i-text"
-							v-bind="controls.CONTAC19PROCNDATE____"
+							v-bind="controls.CONTAC19PROCNDATE____.wrapperProps"
+							:id="getControlId(controls.CONTAC19PROCNDATE____)"
 							v-on="controls.CONTAC19PROCNDATE____.handlers"
 							:loading="controls.CONTAC19PROCNDATE____.props.loading"
 							:reporting-mode-on="reportingModeCAV"
@@ -190,6 +198,7 @@
 							<q-date-time-picker
 								v-if="controls.CONTAC19PROCNDATE____.isVisible"
 								v-bind="controls.CONTAC19PROCNDATE____.props"
+								:id="getControlId(controls.CONTAC19PROCNDATE____)"
 								:model-value="model.ValDate.value"
 								@reset-icon-click="model.ValDate.fnUpdateValue(model.ValDate.originalValue ?? new Date())"
 								@update:model-value="model.ValDate.fnUpdateValue($event ?? '')" />
@@ -203,7 +212,8 @@
 						<base-input-structure
 							v-if="controls.CONTAC19PROPETITLE___.isVisible"
 							class="i-text"
-							v-bind="controls.CONTAC19PROPETITLE___"
+							v-bind="controls.CONTAC19PROPETITLE___.wrapperProps"
+							:id="getControlId(controls.CONTAC19PROPETITLE___)"
 							v-on="controls.CONTAC19PROPETITLE___.handlers"
 							:loading="controls.CONTAC19PROPETITLE___.props.loading"
 							:reporting-mode-on="reportingModeCAV"
@@ -211,6 +221,7 @@
 							<q-lookup
 								v-if="controls.CONTAC19PROPETITLE___.isVisible"
 								v-bind="controls.CONTAC19PROPETITLE___.props"
+								:id="getControlId(controls.CONTAC19PROPETITLE___)"
 								v-on="controls.CONTAC19PROPETITLE___.handlers" />
 							<q-see-more-contac19propetitle
 								v-if="controls.CONTAC19PROPETITLE___.seeMoreIsVisible"
@@ -223,7 +234,7 @@
 		</q-container>
 	</teleport>
 
-	<hr v-if="!isPopup && showFormFooter" />
+	<q-divider v-if="!isPopup && showFormFooter" />
 
 	<teleport
 		v-if="formModalIsReady && showFormFooter"
@@ -1060,7 +1071,6 @@
 
 				this.afterControlUpdate(controlField, fieldValue)
 			},
-
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
 // USE /[MANUAL GQT FUNCTIONS_JS CONTAC19]/
 // eslint-disable-next-line

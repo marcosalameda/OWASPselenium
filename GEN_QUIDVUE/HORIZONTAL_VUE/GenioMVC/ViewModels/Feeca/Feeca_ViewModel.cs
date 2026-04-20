@@ -7,6 +7,7 @@ using GenioMVC.Models.Navigation;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Quidgest.Persistence;
 using Quidgest.Persistence.GenericQuery;
+
 using System.Collections;
 using System.Collections.Concurrent;
 using System.Collections.Specialized;
@@ -35,6 +36,7 @@ namespace GenioMVC.ViewModels.Feeca
 		public string ValCodflds { get; set; }
 
 		#endregion
+
 		/// <summary>
 		/// Title: "Description" | Type: "MO"
 		/// </summary>
@@ -49,7 +51,7 @@ namespace GenioMVC.ViewModels.Feeca
 		/// </summary>
 		[Document("FldsValAttach", true, false, false, DocumentViewTypeMode.Preview)]
 		[ValidateSetAccess]
-		public string FldsValAttach 
+		public string FldsValAttach
 		{
 			get
 			{
@@ -74,7 +76,7 @@ namespace GenioMVC.ViewModels.Feeca
 		/// Title: "Passenger capacity on the plane" | Type: "N"
 		/// </summary>
 		[ValidateSetAccess]
-		public decimal? FldsValNpassage 
+		public decimal? FldsValNpassage
 		{
 			get
 			{
@@ -87,8 +89,6 @@ namespace GenioMVC.ViewModels.Feeca
 		public Func<decimal?> funcFldsValNpassage { get; set; }
 
 		private decimal? _auxFldsValNpassage { get; set; }
-
-
 
 		#region Navigations
 		#endregion
@@ -270,12 +270,7 @@ namespace GenioMVC.ViewModels.Feeca
 			}
 		}
 
-		/// <summary>
-		/// Sets the value of a single property of the view model based on the provided table and field names.
-		/// </summary>
-		/// <param name="fullFieldName">The full field name in the format "table.field".</param>
-		/// <param name="value">The field value.</param>
-		/// <exception cref="ArgumentNullException">Thrown if <paramref name="fullFieldName"/> is null.</exception>
+		/// <inheritdoc />
 		public override void SetViewModelValue(string fullFieldName, object value)
 		{
 			try
@@ -411,6 +406,7 @@ namespace GenioMVC.ViewModels.Feeca
 			Characs = new List<string>();
 
 			Load_Feeca___flds_descrip_(qs, lazyLoad);
+
 // USE /[MANUAL GQT VIEWMODEL_LOADPARTIAL FEECA]/
 		}
 
@@ -481,10 +477,7 @@ namespace GenioMVC.ViewModels.Feeca
 				}
 			}
 
-			TableFldsDescrip = new TableDBEdit<Models.Flds>
-			{
-				IsLazyLoad = lazyLoad
-			};
+			TableFldsDescrip = new TableDBEdit<Models.Flds>();
 
 			if (lazyLoad)
 			{

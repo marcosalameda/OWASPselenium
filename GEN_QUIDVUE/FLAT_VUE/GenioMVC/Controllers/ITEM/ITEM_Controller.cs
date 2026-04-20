@@ -144,30 +144,6 @@ namespace GenioMVC.Controllers
 							result = model.TableWarehWarehdes;
 						}
 						break;
-					case "ITEM____GITEMITEMDES_":	// Field (DB)
-						{
-							var model = new Item_ViewModel(UserContext.Current) { editable = false };
-							model.MapFromModel(row);
-							model.Load_Item____gitemitemdes_(qs);
-							result = model.TableGitemItemdes;
-						}
-						break;
-					case "ITEM____WAREHWAREHDES":	// Field (DB)
-						{
-							var model = new Item_ViewModel(UserContext.Current) { editable = false };
-							model.MapFromModel(row);
-							model.Load_Item____warehwarehdes(qs);
-							result = model.TableWarehWarehdes;
-						}
-						break;
-					case "PLIST___WAREHWAREHDES":	// Field (DB)
-						{
-							var model = new Plist_ViewModel(UserContext.Current) { editable = false };
-							model.MapFromModel(row);
-							model.Load_Plist___warehwarehdes(qs);
-							result = model.TableWarehWarehdes;
-						}
-						break;
 					default:
 						break;
 				}
@@ -178,7 +154,7 @@ namespace GenioMVC.Controllers
 			}
 
 			if (result != null)
-				return JsonOK(new { List = result.List, TotalRows = result.Pagination.TotalRows, Selected = result.Selected, Value = result.Value });
+				return JsonOK(result);
 			return JsonERROR("Not found any valid result");
 		}
 
@@ -224,15 +200,6 @@ namespace GenioMVC.Controllers
 						break;
 					case "ARTIGVALWAREHWAREHDES":	// Field (DB)
 						values = new Artigval_ViewModel(UserContext.Current).GetDependant_ArtigvalTableWarehWarehdes(Selected);
-						break;
-					case "ITEM____GITEMITEMDES_":	// Field (DB)
-						values = new Item_ViewModel(UserContext.Current).GetDependant_ItemTableGitemItemdes(Selected);
-						break;
-					case "ITEM____WAREHWAREHDES":	// Field (DB)
-						values = new Item_ViewModel(UserContext.Current).GetDependant_ItemTableWarehWarehdes(Selected);
-						break;
-					case "PLIST___WAREHWAREHDES":	// Field (DB)
-						values = new Plist_ViewModel(UserContext.Current).GetDependant_PlistTableWarehWarehdes(Selected);
 						break;
 					default: break;
 				}
@@ -320,38 +287,6 @@ namespace GenioMVC.Controllers
 		{
 			return GenericRecalculateFormulas(formData, "item",
 				(primaryKey) => Models.Item.Find(primaryKey, UserContext.Current, "FARTIGVAL"),
-				(model) => formData.MapToModel(model as Models.Item)
-			);
-		}
-
-
-
-		/// <summary>
-		/// Recalculate formulas of the "Item" form. (++, CT, SR, CL and U1)
-		/// </summary>
-		/// <param name="formData">Current form data</param>
-		/// <returns></returns>
-		[HttpPost]
-		public JsonResult RecalculateFormulas_Item([FromBody]Item_ViewModel formData)
-		{
-			return GenericRecalculateFormulas(formData, "item",
-				(primaryKey) => Models.Item.Find(primaryKey, UserContext.Current, "FITEM"),
-				(model) => formData.MapToModel(model as Models.Item)
-			);
-		}
-
-
-
-		/// <summary>
-		/// Recalculate formulas of the "Plist" form. (++, CT, SR, CL and U1)
-		/// </summary>
-		/// <param name="formData">Current form data</param>
-		/// <returns></returns>
-		[HttpPost]
-		public JsonResult RecalculateFormulas_Plist([FromBody]Plist_ViewModel formData)
-		{
-			return GenericRecalculateFormulas(formData, "item",
-				(primaryKey) => Models.Item.Find(primaryKey, UserContext.Current, "FPLIST"),
 				(model) => formData.MapToModel(model as Models.Item)
 			);
 		}

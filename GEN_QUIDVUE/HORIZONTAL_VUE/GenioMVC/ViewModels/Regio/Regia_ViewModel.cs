@@ -7,6 +7,7 @@ using GenioMVC.Models.Navigation;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Quidgest.Persistence;
 using Quidgest.Persistence.GenericQuery;
+
 using System.Collections;
 using System.Collections.Concurrent;
 using System.Collections.Specialized;
@@ -40,6 +41,7 @@ namespace GenioMVC.ViewModels.Regio
 		public string ValCodpais1 { get; set; }
 
 		#endregion
+
 		/// <summary>
 		/// Title: "Country" | Type: "C"
 		/// </summary>
@@ -49,8 +51,6 @@ namespace GenioMVC.ViewModels.Regio
 		/// Title: "Region" | Type: "C"
 		/// </summary>
 		public string ValRegiao { get; set; }
-
-
 
 		#region Navigations
 		#endregion
@@ -231,12 +231,7 @@ namespace GenioMVC.ViewModels.Regio
 			}
 		}
 
-		/// <summary>
-		/// Sets the value of a single property of the view model based on the provided table and field names.
-		/// </summary>
-		/// <param name="fullFieldName">The full field name in the format "table.field".</param>
-		/// <param name="value">The field value.</param>
-		/// <exception cref="ArgumentNullException">Thrown if <paramref name="fullFieldName"/> is null.</exception>
+		/// <inheritdoc />
 		public override void SetViewModelValue(string fullFieldName, object value)
 		{
 			try
@@ -364,6 +359,7 @@ namespace GenioMVC.ViewModels.Regio
 			Characs = new List<string>();
 
 			Load_Regia___cntrycountry_(qs, lazyLoad);
+
 // USE /[MANUAL GQT VIEWMODEL_LOADPARTIAL REGIA]/
 		}
 
@@ -434,10 +430,7 @@ namespace GenioMVC.ViewModels.Regio
 				}
 			}
 
-			TableCntryCountry = new TableDBEdit<Models.Cntry>
-			{
-				IsLazyLoad = lazyLoad
-			};
+			TableCntryCountry = new TableDBEdit<Models.Cntry>();
 
 			if (lazyLoad)
 			{

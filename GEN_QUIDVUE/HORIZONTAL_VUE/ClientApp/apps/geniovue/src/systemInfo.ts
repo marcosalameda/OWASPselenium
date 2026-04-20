@@ -56,9 +56,11 @@ export const systemInfo = {
 
 	isCavAvailable: true,
 
-	isChatBotAvailable: true,
+	isChatBotAvailable: false,
 
 	isSuggestionsAvailable: true,
+
+	isNotesAvailable: false,
 
 	appAlerts: [
 		{
@@ -92,16 +94,6 @@ export const systemInfo = {
 			disableIfLowerThan: 0,
 		},
 		{
-			id: 'NOTUSEDITEMS',
-			module: 'GQT',
-			tag: '{GQT_UNUSED_ITEMS_Count}',
-			title: '_GQT_UNUSED_ITEMS_CO34020',
-			description: '_GQT_UNUSED_ITEMS_CO35460',
-			isResource: true,
-			isDismissible: true,
-			disableIfLowerThan: 0,
-		},
-		{
 			id: 'DEVOLUCAO',
 			module: 'GQT',
 			tag: '{GQT_DEVOL_Count}',
@@ -126,14 +118,6 @@ export const systemInfo = {
 	userRegistration: {
 		allowRegistration: true,
 		registrationTypes: [
-			{
-				id: '38736086-6c5c-4d7c-868b-99965d00f117',
-				designation: 'REGISTO48087',
-				component: 'QFormRegis',
-				form: 'Regis',
-				pswForm: 'Defaultpsw',
-				PswComponent: 'QFormAccountInfo'
-			},
 		]
 	},
 

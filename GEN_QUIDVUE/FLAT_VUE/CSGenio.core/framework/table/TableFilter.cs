@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json;
@@ -42,6 +43,54 @@ public enum FilterBinaryOperator
 	/// </summary>
 	OR
 }
+
+/// <summary>
+/// Defines the types of values that can be used in filters.
+/// </summary>
+public enum GlobalFilterType
+{
+	/// <summary>
+	/// String value type.
+	/// </summary>
+	STRING,
+
+	/// <summary>
+	/// Boolean value type.
+	/// </summary>
+	BOOLEAN,
+
+	/// <summary>
+	/// Numeric value type (integer or decimal).
+	/// </summary>
+	NUMERIC,
+
+	/// <summary>
+	/// DateTime value type (nullable).
+	/// </summary>
+	DATETIME,
+
+	/// <summary>
+	/// List of string values.
+	/// </summary>
+	STRING_LIST,
+
+	/// <summary>
+	/// List of boolean values.
+	/// </summary>
+	BOOLEAN_LIST,
+
+	/// <summary>
+	/// List of numeric values.
+	/// </summary>
+	NUMERIC_LIST,
+
+	/// <summary>
+	/// List/range of 2 DateTime values (nullable).
+	/// </summary>
+	DATETIME_RANGE
+}
+
+#region Converters
 
 /// <summary>
 /// Custom JSON converter for FilterBinaryOperator that serializes to boolean.
@@ -161,6 +210,367 @@ internal class ObjectToInferredTypesConverter : JsonConverter<List<object>>
 	public override void Write(Utf8JsonWriter writer, List<object> value, JsonSerializerOptions options)
 	{
 		JsonSerializer.Serialize(writer, value, options);
+	}
+}
+
+#endregion
+
+/// <summary>
+/// Defines the contract for polymorphic filter values that can be strings, booleans or numbers.
+/// </summary>
+/// <remarks>
+/// Filter values use polymorphic serialization with a "type" discriminator to preserve type information
+/// during JSON deserialization. This allows heterogeneous collections of values to maintain their original types
+/// (string, boolean, number, datetime, etc.) rather than being deserialized as generic JsonElement objects.
+/// </remarks>
+[JsonPolymorphic(TypeDiscriminatorPropertyName = "type")]
+[JsonDerivedType(typeof(StringGlobalFilter), nameof(GlobalFilterType.STRING))]
+[JsonDerivedType(typeof(BooleanGlobalFilter), nameof(GlobalFilterType.BOOLEAN))]
+[JsonDerivedType(typeof(NumericGlobalFilter), nameof(GlobalFilterType.NUMERIC))]
+[JsonDerivedType(typeof(DateTimeGlobalFilter), nameof(GlobalFilterType.DATETIME))]
+[JsonDerivedType(typeof(StringListGlobalFilter), nameof(GlobalFilterType.STRING_LIST))]
+[JsonDerivedType(typeof(BooleanListGlobalFilter), nameof(GlobalFilterType.BOOLEAN_LIST))]
+[JsonDerivedType(typeof(NumericListGlobalFilter), nameof(GlobalFilterType.NUMERIC_LIST))]
+[JsonDerivedType(typeof(DateTimeListGlobalFilter), nameof(GlobalFilterType.DATETIME_RANGE))]
+public interface IGlobalFilter
+{
+	/// <summary>
+	/// Gets the type identifier for this filter value.
+	/// </summary>
+	/// <value>A GlobalFilterType enum value identifying the value's data type.</value>
+	GlobalFilterType Type { get; }
+
+	/// <summary>
+	/// Gets the underlying value as an object.
+	/// </summary>
+	/// <value>The filter value that can be cast to the appropriate type based on the Type property.</value>
+	object Value { get; }
+
+	/// <summary>
+	/// Gets or sets the list of possible array values for this filter.
+	/// </summary>
+	/// <remarks>
+	/// This property contains the collection of possible values that can be used when the filter
+	/// is applied to an array/enumeration field. The list type matches the filter's value type:
+	/// - List&lt;string&gt; for StringGlobalFilter
+	/// - List&lt;bool&gt; for BooleanGlobalFilter
+	/// - List&lt;decimal&gt; for NumericGlobalFilter
+	/// - List&lt;DateTime?&gt; for DateTimeGlobalFilter
+	/// </remarks>
+	/// <value>A list of possible values; an empty list if no array values are specified.</value>
+	object Array { get; set; }
+
+	/// <summary>
+	/// Gets or sets a value indicating whether the filter is applied only to the current table.
+	/// </summary>
+	/// <remarks>
+	/// When true, the filter is unique to a single table and can be saved along with the table configuration.
+	/// When false, the filter is shared across multiple tables and cannot be safely saved in the configuration,
+	/// as it could create incoherences in filtered results across tables.
+	/// </remarks>
+	/// <value>True if the filter is unique to the current table; otherwise, false.</value>
+	bool IsUnique { get; set; }
+
+	/// <summary>
+	/// Checks if a given value exists in the Array property.
+	/// </summary>
+	/// <param name="value">The value to check for in the Array property.</param>
+	/// <returns>True if the value exists in the Array property; otherwise, false.</returns>
+	bool IsArrayOption(object value);
+}
+
+/// <summary>
+/// Abstract base class for filter values that provides common functionality for all filter value types.
+/// </summary>
+/// <param name="type">The GlobalFilterType enum value for this filter value implementation.</param>
+/// <remarks>
+/// This base class handles the common properties and JSON serialization for all filter value types,
+/// while derived classes implement specific value storage and the Value property.
+/// </remarks>
+public abstract class GlobalFilter(GlobalFilterType type) : IGlobalFilter
+{
+	/// <inheritdoc/>
+	[JsonIgnore]
+	public GlobalFilterType Type { get; } = type;
+
+	/// <inheritdoc/>
+	public abstract object Value { get; }
+
+	/// <inheritdoc/>
+	public abstract object Array { get; set; }
+
+	/// <inheritdoc/>
+	[JsonPropertyName("isUnique")]
+	[JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
+	public bool IsUnique { get; set; } = true;
+
+	/// <inheritdoc/>
+	public virtual bool IsArrayOption(object value)
+	{
+		if (Array is not IEnumerable enumerable)
+			return false;
+
+		foreach (object item in enumerable)
+			if (Equals(item, value))
+				return true;
+
+		return false;
+	}
+}
+
+/// <summary>
+/// Represents a string-typed filter value.
+/// </summary>
+public class StringGlobalFilter() : GlobalFilter(GlobalFilterType.STRING)
+{
+	/// <summary>
+	/// Gets or sets the string value.
+	/// </summary>
+	/// <value>The string data to use in filter comparisons.</value>
+	[JsonPropertyName("value")]
+	public string StringValue { get; set; }
+
+	/// <inheritdoc/>
+	[JsonIgnore]
+	public override object Value => StringValue;
+
+	/// <summary>
+	/// Gets or sets the list of possible string array values.
+	/// </summary>
+	/// <value>A collection of string values that can be used for array filtering.</value>
+	[JsonPropertyName("array")]
+	[JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
+	public List<string> StringArray { get; set; } = [];
+
+	/// <inheritdoc/>
+	[JsonIgnore]
+	public override object Array
+	{
+		get => StringArray;
+		set => StringArray = value as List<string> ?? [];
+	}
+}
+
+/// <summary>
+/// Represents a boolean-typed filter value.
+/// </summary>
+public class BooleanGlobalFilter() : GlobalFilter(GlobalFilterType.BOOLEAN)
+{
+	/// <summary>
+	/// Gets or sets the boolean value.
+	/// </summary>
+	/// <value>The boolean data to use in filter comparisons.</value>
+	[JsonPropertyName("value")]
+	public bool BooleanValue { get; set; }
+
+	/// <inheritdoc/>
+	[JsonIgnore]
+	public override object Value => BooleanValue;
+
+	/// <summary>
+	/// Gets or sets the list of possible boolean array values.
+	/// </summary>
+	/// <value>A collection of boolean values that can be used for array filtering.</value>
+	[JsonPropertyName("array")]
+	[JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
+	public List<bool> BooleanArray { get; set; } = [];
+
+	/// <inheritdoc/>
+	[JsonIgnore]
+	public override object Array
+	{
+		get => BooleanArray;
+		set => BooleanArray = value as List<bool> ?? [];
+	}
+}
+
+/// <summary>
+/// Represents a numeric-typed filter value (integer or decimal).
+/// </summary>
+public class NumericGlobalFilter() : GlobalFilter(GlobalFilterType.NUMERIC)
+{
+	/// <summary>
+	/// Gets or sets the numeric value.
+	/// </summary>
+	/// <value>The numeric data (as decimal to support both integers and decimals) to use in filter comparisons.</value>
+	[JsonPropertyName("value")]
+	public decimal NumericValue { get; set; }
+
+	/// <inheritdoc/>
+	[JsonIgnore]
+	public override object Value => NumericValue;
+
+	/// <summary>
+	/// Gets or sets the list of possible numeric array values.
+	/// </summary>
+	/// <value>A collection of decimal values that can be used for array filtering.</value>
+	[JsonPropertyName("array")]
+	[JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
+	public List<decimal> NumericArray { get; set; } = [];
+
+	/// <inheritdoc/>
+	[JsonIgnore]
+	public override object Array
+	{
+		get => NumericArray;
+		set => NumericArray = value as List<decimal> ?? [];
+	}
+}
+
+/// <summary>
+/// Represents a list of string values filter value.
+/// </summary>
+public class StringListGlobalFilter() : GlobalFilter(GlobalFilterType.STRING_LIST)
+{
+	/// <summary>
+	/// Gets or sets the list of string values.
+	/// </summary>
+	/// <value>A collection of string values to use in filter comparisons.</value>
+	[JsonPropertyName("value")]
+	public List<string> StringListValue { get; set; } = [];
+
+	/// <inheritdoc/>
+	[JsonIgnore]
+	public override object Value => StringListValue;
+
+	/// <summary>
+	/// Gets or sets the list of possible string array values.
+	/// </summary>
+	/// <value>A collection of string values that can be used for array filtering.</value>
+	[JsonPropertyName("array")]
+	[JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
+	public List<string> StringArray { get; set; } = [];
+
+	/// <inheritdoc/>
+	[JsonIgnore]
+	public override object Array
+	{
+		get => StringArray;
+		set => StringArray = value as List<string> ?? [];
+	}
+}
+
+/// <summary>
+/// Represents a list of boolean values filter value.
+/// </summary>
+public class BooleanListGlobalFilter() : GlobalFilter(GlobalFilterType.BOOLEAN_LIST)
+{
+	/// <summary>
+	/// Gets or sets the list of boolean values.
+	/// </summary>
+	/// <value>A collection of boolean values to use in filter comparisons.</value>
+	[JsonPropertyName("value")]
+	public List<bool> BooleanListValue { get; set; } = [];
+
+	/// <inheritdoc/>
+	[JsonIgnore]
+	public override object Value => BooleanListValue;
+
+	/// <summary>
+	/// Gets or sets the list of possible boolean array values.
+	/// </summary>
+	/// <value>A collection of boolean values that can be used for array filtering.</value>
+	[JsonPropertyName("array")]
+	[JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
+	public List<bool> BooleanArray { get; set; } = [];
+
+	/// <inheritdoc/>
+	[JsonIgnore]
+	public override object Array
+	{
+		get => BooleanArray;
+		set => BooleanArray = value as List<bool> ?? [];
+	}
+}
+
+/// <summary>
+/// Represents a list of numeric values filter value.
+/// </summary>
+public class NumericListGlobalFilter() : GlobalFilter(GlobalFilterType.NUMERIC_LIST)
+{
+	/// <summary>
+	/// Gets or sets the list of numeric values.
+	/// </summary>
+	/// <value>A collection of numeric values (as decimal to support both integers and decimals) to use in filter comparisons.</value>
+	[JsonPropertyName("value")]
+	public List<decimal> NumericListValue { get; set; } = [];
+
+	/// <inheritdoc/>
+	[JsonIgnore]
+	public override object Value => NumericListValue;
+
+	/// <summary>
+	/// Gets or sets the list of possible numeric array values.
+	/// </summary>
+	/// <value>A collection of decimal values that can be used for array filtering.</value>
+	[JsonPropertyName("array")]
+	[JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
+	public List<decimal> NumericArray { get; set; } = [];
+
+	/// <inheritdoc/>
+	[JsonIgnore]
+	public override object Array
+	{
+		get => NumericArray;
+		set => NumericArray = value as List<decimal> ?? [];
+	}
+}
+
+/// <summary>
+/// Represents a DateTime-typed filter value (nullable).
+/// </summary>
+/// <remarks>
+/// DateTime filters use nullable DateTime to support the absence of a date value.
+/// Dates are serialized to and from ISO 8601 format strings for JSON compatibility.
+/// </remarks>
+public class DateTimeGlobalFilter() : GlobalFilter(GlobalFilterType.DATETIME)
+{
+	/// <summary>
+	/// Gets or sets the DateTime value.
+	/// </summary>
+	/// <value>The DateTime data (nullable) to use in filter comparisons.</value>
+	[JsonPropertyName("value")]
+	public DateTime? DateTimeValue { get; set; }
+
+	/// <inheritdoc/>
+	[JsonIgnore]
+	public override object Value => DateTimeValue;
+
+	/// <inheritdoc/>
+	[JsonIgnore]
+	public override object Array
+	{
+		get => null;
+		set { }
+	}
+}
+
+/// <summary>
+/// Represents a list of DateTime values filter value (nullable).
+/// </summary>
+/// <remarks>
+/// DateTime list filters store multiple nullable DateTime values for filtering operations.
+/// Individual DateTime values within the list are serialized to and from ISO 8601 format strings.
+/// </remarks>
+public class DateTimeListGlobalFilter() : GlobalFilter(GlobalFilterType.DATETIME_RANGE)
+{
+	/// <summary>
+	/// Gets or sets the list of DateTime values.
+	/// </summary>
+	/// <value>A collection of nullable DateTime values to use in filter comparisons.</value>
+	[JsonPropertyName("value")]
+	public List<DateTime?> DateTimeListValue { get; set; } = [];
+
+	/// <inheritdoc/>
+	[JsonIgnore]
+	public override object Value => DateTimeListValue;
+
+	/// <inheritdoc/>
+	[JsonIgnore]
+	public override object Array
+	{
+		get => null;
+		set { }
 	}
 }
 

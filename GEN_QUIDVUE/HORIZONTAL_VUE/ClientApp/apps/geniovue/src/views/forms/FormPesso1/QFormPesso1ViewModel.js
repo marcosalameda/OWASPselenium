@@ -54,17 +54,6 @@ export default class ViewModel extends FormViewModelBase
 		this.stopWatchers.push(watch(() => this.ValCodpesso.value, (newValue, oldValue) => this.onUpdate('pesso.codpesso', this.ValCodpesso, newValue, oldValue)))
 
 		/** The hidden foreign keys. */
-		this.ValCodcntry = reactive(new modelFieldType.ForeignKey({
-			id: 'ValCodcntry',
-			originId: 'ValCodcntry',
-			area: 'PESSO',
-			field: 'CODCNTRY',
-			relatedArea: 'PAIS1',
-			isFixed: true,
-			description: computed(() => this.Resources.PERSON_S_PARENTS05687),
-		}).cloneFrom(values?.ValCodcntry))
-		this.stopWatchers.push(watch(() => this.ValCodcntry.value, (newValue, oldValue) => this.onUpdate('pesso.codcntry', this.ValCodcntry, newValue, oldValue)))
-
 		this.ValCodpaise = reactive(new modelFieldType.ForeignKey({
 			id: 'ValCodpaise',
 			originId: 'ValCodpaise',
@@ -75,6 +64,17 @@ export default class ViewModel extends FormViewModelBase
 			description: computed(() => this.Resources.COMPANY_PARENTS01581),
 		}).cloneFrom(values?.ValCodpaise))
 		this.stopWatchers.push(watch(() => this.ValCodpaise.value, (newValue, oldValue) => this.onUpdate('pesso.codpaise', this.ValCodpaise, newValue, oldValue)))
+
+		this.ValCodcntry = reactive(new modelFieldType.ForeignKey({
+			id: 'ValCodcntry',
+			originId: 'ValCodcntry',
+			area: 'PESSO',
+			field: 'CODCNTRY',
+			relatedArea: 'PAIS1',
+			isFixed: true,
+			description: computed(() => this.Resources.PERSON_S_PARENTS05687),
+		}).cloneFrom(values?.ValCodcntry))
+		this.stopWatchers.push(watch(() => this.ValCodcntry.value, (newValue, oldValue) => this.onUpdate('pesso.codcntry', this.ValCodcntry, newValue, oldValue)))
 
 		/** The used foreign keys. */
 		this.ValCodcateg = reactive(new modelFieldType.ForeignKey({
@@ -208,6 +208,7 @@ export default class ViewModel extends FormViewModelBase
 			field: 'CATEGORY',
 			maxLength: 50,
 			description: computed(() => this.Resources.CATEGORY18978),
+			ignoreFldSubmit: true,
 		}).cloneFrom(values?.TableCategCategory))
 		this.stopWatchers.push(watch(() => this.TableCategCategory.value, (newValue, oldValue) => this.onUpdate('categ.categoria', this.TableCategCategory, newValue, oldValue)))
 
@@ -249,6 +250,7 @@ export default class ViewModel extends FormViewModelBase
 			field: 'DESIGNAT',
 			maxLength: 85,
 			description: computed(() => this.Resources.DESIGNATION35876),
+			ignoreFldSubmit: true,
 		}).cloneFrom(values?.TableCmpnyDesignat))
 		this.stopWatchers.push(watch(() => this.TableCmpnyDesignat.value, (newValue, oldValue) => this.onUpdate('cmpny.designat', this.TableCmpnyDesignat, newValue, oldValue)))
 
@@ -271,6 +273,7 @@ export default class ViewModel extends FormViewModelBase
 			field: 'REGIAO',
 			maxLength: 50,
 			description: computed(() => this.Resources.REGION12723),
+			ignoreFldSubmit: true,
 		}).cloneFrom(values?.TableRegi1Regiao))
 		this.stopWatchers.push(watch(() => this.TableRegi1Regiao.value, (newValue, oldValue) => this.onUpdate('regi1.regiao', this.TableRegi1Regiao, newValue, oldValue)))
 

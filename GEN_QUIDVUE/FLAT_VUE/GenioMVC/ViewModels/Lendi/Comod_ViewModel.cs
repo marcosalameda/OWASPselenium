@@ -1,20 +1,20 @@
-﻿using JsonIgnoreAttribute = System.Text.Json.Serialization.JsonIgnoreAttribute;
+﻿using CSGenio.business;
+using CSGenio.framework;
+using CSGenio.persistence;
+using GenioMVC.Helpers;
+using GenioMVC.Models.Exception;
+using GenioMVC.Models.Navigation;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Quidgest.Persistence;
+using Quidgest.Persistence.GenericQuery;
+
 using System.Collections;
 using System.Collections.Concurrent;
 using System.Collections.Specialized;
 using System.ComponentModel.DataAnnotations;
 using System.Data;
 using System.Globalization;
-
-using CSGenio.business;
-using CSGenio.framework;
-using CSGenio.persistence;
-using GenioMVC.Helpers;
-using GenioMVC.Models.Exception;
-using GenioMVC.Models.Navigation;
-using Quidgest.Persistence;
-using Quidgest.Persistence.GenericQuery;
+using System.Text.Json.Serialization;
 
 namespace GenioMVC.ViewModels.Lendi
 {
@@ -44,6 +44,7 @@ namespace GenioMVC.ViewModels.Lendi
 		public string ValCodpess2 { get; set; }
 
 		#endregion
+
 		/// <summary>
 		/// Title: "Lending" | Type: "C"
 		/// </summary>
@@ -63,7 +64,7 @@ namespace GenioMVC.ViewModels.Lendi
 		/// Title: "Equipment" | Type: "C"
 		/// </summary>
 		[ValidateSetAccess]
-		public string EquipValDesignat 
+		public string EquipValDesignat
 		{
 			get
 			{
@@ -80,7 +81,7 @@ namespace GenioMVC.ViewModels.Lendi
 		/// Title: "Loan Frequency" | Type: "AN"
 		/// </summary>
 		[ValidateSetAccess]
-		public decimal EquipValFrequenc 
+		public decimal EquipValFrequenc
 		{
 			get
 			{
@@ -93,11 +94,6 @@ namespace GenioMVC.ViewModels.Lendi
 		public Func<decimal> funcEquipValFrequenc { get; set; }
 
 		private decimal _auxEquipValFrequenc { get; set; }
-		/// <summary>
-		/// Title: "" | Type: "PSEUD"
-		/// </summary>
-		[JsonIgnore]
-		public SelectList List_EquipValFrequenc { get; set; }
 		/// <summary>
 		/// Title: "Lending No" | Type: "N"
 		/// </summary>
@@ -129,8 +125,6 @@ namespace GenioMVC.ViewModels.Lendi
 		/// </summary>
 		[ValidateSetAccess]
 		public bool ValReturned { get; set; }
-
-
 
 		#region Navigations
 		#endregion
@@ -327,12 +321,7 @@ namespace GenioMVC.ViewModels.Lendi
 			}
 		}
 
-		/// <summary>
-		/// Sets the value of a single property of the view model based on the provided table and field names.
-		/// </summary>
-		/// <param name="fullFieldName">The full field name in the format "table.field".</param>
-		/// <param name="value">The field value.</param>
-		/// <exception cref="ArgumentNullException">Thrown if <paramref name="fullFieldName"/> is null.</exception>
+		/// <inheritdoc />
 		public override void SetViewModelValue(string fullFieldName, object value)
 		{
 			try
@@ -477,6 +466,7 @@ namespace GenioMVC.ViewModels.Lendi
 			Load_Comod___pess1name____(qs, lazyLoad);
 			Load_Comod___pess2name____(qs, lazyLoad);
 			Load_Comod___equipregistnr(qs, lazyLoad);
+
 // USE /[MANUAL GQT VIEWMODEL_LOADPARTIAL COMOD]/
 		}
 
@@ -551,10 +541,7 @@ namespace GenioMVC.ViewModels.Lendi
 				}
 			}
 
-			TablePess1Name = new TableDBEdit<Models.Pess1>
-			{
-				IsLazyLoad = lazyLoad
-			};
+			TablePess1Name = new TableDBEdit<Models.Pess1>();
 
 			if (lazyLoad)
 			{
@@ -598,7 +585,7 @@ namespace GenioMVC.ViewModels.Lendi
 				int numberItems = CSGenio.framework.Configuration.NrRegDBedit;
 				int offset = (page - 1) * numberItems;
 
-				FieldRef[] fields = new FieldRef[] { CSGenioApess1.FldCodpesso, CSGenioApess1.FldName, CSGenioApess1.FldZzstate };
+				FieldRef[] fields = [CSGenioApess1.FldCodpesso, CSGenioApess1.FldName, CSGenioApess1.FldZzstate];
 
 // USE /[MANUAL GQT OVERRQ COMOD_PESS1NAME]/
 
@@ -741,10 +728,7 @@ namespace GenioMVC.ViewModels.Lendi
 				}
 			}
 
-			TablePess2Name = new TableDBEdit<Models.Pess2>
-			{
-				IsLazyLoad = lazyLoad
-			};
+			TablePess2Name = new TableDBEdit<Models.Pess2>();
 
 			if (lazyLoad)
 			{
@@ -788,7 +772,7 @@ namespace GenioMVC.ViewModels.Lendi
 				int numberItems = CSGenio.framework.Configuration.NrRegDBedit;
 				int offset = (page - 1) * numberItems;
 
-				FieldRef[] fields = new FieldRef[] { CSGenioApess2.FldCodpesso, CSGenioApess2.FldName, CSGenioApess2.FldZzstate };
+				FieldRef[] fields = [CSGenioApess2.FldCodpesso, CSGenioApess2.FldName, CSGenioApess2.FldZzstate];
 
 // USE /[MANUAL GQT OVERRQ COMOD_PESS2NAME]/
 
@@ -935,10 +919,7 @@ namespace GenioMVC.ViewModels.Lendi
 			// Area limit
 			comod___equipregistnrDoLoad &= AddCriteriaAreaLimit(comod___equipregistnrConds, CSGenio.business.CSGenioApess1.FldCodpesso, "pess1", this.ValCodpess1, true);
 
-			TableEquipRegistnr = new TableDBEdit<Models.Equip>
-			{
-				IsLazyLoad = lazyLoad
-			};
+			TableEquipRegistnr = new TableDBEdit<Models.Equip>();
 
 			if (lazyLoad)
 			{
@@ -985,7 +966,7 @@ namespace GenioMVC.ViewModels.Lendi
 				int numberItems = CSGenio.framework.Configuration.NrRegDBedit;
 				int offset = (page - 1) * numberItems;
 
-				FieldRef[] fields = new FieldRef[] { CSGenioAequip.FldCodequip, CSGenioAequip.FldRegistnr, CSGenioAtpequ.FldTipoequi, CSGenioAequip.FldDesignat, CSGenioAequip.FldDtaquisi, CSGenioAequip.FldDtdeco, CSGenioAequip.FldPhotogra, CSGenioAequip.FldValortot, CSGenioAequip.FldZzstate };
+				FieldRef[] fields = [CSGenioAequip.FldCodequip, CSGenioAequip.FldRegistnr, CSGenioAtpequ.FldTipoequi, CSGenioAequip.FldDesignat, CSGenioAequip.FldDtaquisi, CSGenioAequip.FldDtdeco, CSGenioAequip.FldPhotogra, CSGenioAequip.FldValortot, CSGenioAequip.FldZzstate];
 
 // USE /[MANUAL GQT OVERRQ COMOD_EQUIPREGISTNR]/
 

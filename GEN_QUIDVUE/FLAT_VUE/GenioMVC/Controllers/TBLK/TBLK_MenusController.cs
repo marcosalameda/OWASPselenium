@@ -28,18 +28,18 @@ namespace GenioMVC.Controllers
 {
 	public partial class TblkController : ControllerBase
 	{
-		private static readonly NavigationLocation ACTION_PTN_MENU_3161 = new NavigationLocation("TABLES__FOREIGN_KEYS59930", "PTN_Menu_3161", "Tblk") { vueRouteName = "menu-PTN_3161" };
+		private static readonly NavigationLocation ACTION_PTN_MENU_3151 = new NavigationLocation("TABLES__FOREIGN_KEYS59930", "PTN_Menu_3151", "Tblk") { vueRouteName = "menu-PTN_3151" };
 
 
 		//
-		// GET: /Tblk/PTN_Menu_3161
-		[ActionName("PTN_Menu_3161")]
+		// GET: /Tblk/PTN_Menu_3151
+		[ActionName("PTN_Menu_3151")]
 		[HttpPost]
-		public ActionResult PTN_Menu_3161([FromBody] RequestMenuModel requestModel)
+		public ActionResult PTN_Menu_3151([FromBody] RequestMenuModel requestModel)
 		{
 			var queryParams = requestModel.QueryParams;
 
-			PTN_Menu_3161_ViewModel model = new(m_userContext);
+			PTN_Menu_3151_ViewModel model = new(m_userContext);
 
 			CSGenio.core.framework.table.TableConfiguration tableConfig = model.GetTableConfig(
 				requestModel.TableConfiguration,
@@ -49,20 +49,11 @@ namespace GenioMVC.Controllers
 			// Determine rows per page
 			tableConfig.RowsPerPage = tableConfig.DetermineRowsPerPage(CSGenio.framework.Configuration.NrRegDBedit, "");
 
-			// Determine what columns have totalizers
-			tableConfig.TotalizerColumns = requestModel.TotalizerColumns;
-
-			// For tables with multiple selection enabled, determine currently selected rows
-			tableConfig.SelectedRows = requestModel.SelectedRows;
-
-			// Add form field filters to the table configuration
-			tableConfig.FieldFilters = requestModel.RelatedFilterValues;
-
 			bool isHomePage = RouteData.Values.ContainsKey("isHomePage") ? (bool)RouteData.Values["isHomePage"] : false;
 			if (isHomePage)
-				Navigation.SetValue("HomePage", "PTN_Menu_3161");
+				Navigation.SetValue("HomePage", "PTN_Menu_3151");
 
-			//If there was a recent operation on this table then force the primary persistence server to be called and ignore the read only feature
+			// If there was a recent operation on this table then force the primary persistence server to be called and ignore the read only feature
 			if (string.IsNullOrEmpty(Navigation.GetStrValue("ForcePrimaryRead_tblk")))
 				UserContext.Current.SetPersistenceReadOnly(true);
 			else
@@ -79,18 +70,18 @@ namespace GenioMVC.Controllers
 				querystring.AddRange(queryParams);
 
 			if (!isHomePage &&
-				(Navigation.CurrentLevel == null || !ACTION_PTN_MENU_3161.IsSameAction(Navigation.CurrentLevel.Location)) &&
-				Navigation.CurrentLevel.Location.Action != ACTION_PTN_MENU_3161.Action)
+				(Navigation.CurrentLevel == null || !ACTION_PTN_MENU_3151.IsSameAction(Navigation.CurrentLevel.Location)) &&
+				Navigation.CurrentLevel.Location.Action != ACTION_PTN_MENU_3151.Action)
 				CSGenio.framework.Audit.registAction(UserContext.Current.User, Resources.Resources.MENU01948 + " " + Navigation.CurrentLevel.Location.ShortDescription());
 			else if (isHomePage)
 			{
-				CSGenio.framework.Audit.registAction(UserContext.Current.User, Resources.Resources.MENU01948 + " " + ACTION_PTN_MENU_3161.ShortDescription());
+				CSGenio.framework.Audit.registAction(UserContext.Current.User, Resources.Resources.MENU01948 + " " + ACTION_PTN_MENU_3151.ShortDescription());
 				Navigation.SetValue("HomePageContainsList", true);
 			}
 
 
 
-// USE /[MANUAL PTN MENU_GET 3161]/
+// USE /[MANUAL PTN MENU_GET 3151]/
 
 			try
 			{

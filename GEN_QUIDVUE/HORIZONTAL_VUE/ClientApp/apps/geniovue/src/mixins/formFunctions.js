@@ -64,15 +64,21 @@ export function fieldIsVisible(controls, fieldId, checkCollapsed)
 	if (typeof checkCollapsed !== 'boolean')
 		checkCollapsed = false
 
-	const field = controls[fieldId]
+	const field = controls?.[fieldId]
 
-	var formTabs = 'formTabs'
-	if (field.type === 'Tab' && field.container) {
+	// If the specified indentifier isn't part of the controls,
+	// means this isn't a form, so we just return true.
+	if (typeof field === 'undefined')
+		return true
+
+	let formTabs = 'formTabs'
+	if (field.type === 'Tab' && field.container)
+	{
 		const tabContainer = controls[field.container]
-		formTabs = tabContainer ?`formTabs_${tabContainer.name}` : 'formTabs'
+		formTabs = tabContainer ? `formTabs_${tabContainer.name}` : 'formTabs'
 	}
 
-	if (!field?.isVisible ||
+	if (!field.isVisible ||
 		checkCollapsed && field.type === 'Group' && field.isCollapsible && !field.modelValue ||
 		checkCollapsed && field.type === 'Tab' && controls[formTabs].selectedTab !== fieldId)
 		return false

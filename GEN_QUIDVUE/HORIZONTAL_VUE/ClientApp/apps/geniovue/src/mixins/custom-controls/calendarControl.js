@@ -73,7 +73,7 @@ export default class CalendarControl extends CustomControl
 	{
 		if (typeof viewMode.customMappedValues === 'function')
 		{
-			let customMappedValues = viewMode.customMappedValues(viewMode)
+			const customMappedValues = viewMode.customMappedValues(viewMode)
 			_forEach(customMappedValues, (customMappedValue) => viewMode.mappedValues.push(customMappedValue))
 		}
 	}
@@ -129,7 +129,7 @@ export default class CalendarControl extends CustomControl
 			&& typeof this.controlContext.onTableListExecuteAction === 'function'
 			&& _some(this.controlContext.config.generalActions, { name: 'insert' }))
 		{
-			let insertAction = _find(this.controlContext.config.generalActions, { name: 'insert' })
+			const insertAction = _find(this.controlContext.config.generalActions, { name: 'insert' })
 			this.controlContext.onTableListExecuteAction({ action: insertAction })
 		}
 	}

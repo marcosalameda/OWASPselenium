@@ -9,12 +9,13 @@
 			<div
 				v-if="showFormHeader"
 				class="c-action-bar">
-				<h1
+				<component
 					v-if="formControl.uiComponents.header && formInfo.designation"
+					:is="topHeadingTag"
 					:id="formTitleId"
 					class="form-header">
 					{{ formInfo.designation }}
-				</h1>
+				</component>
 
 				<div class="c-action-bar__menu">
 					<template
@@ -40,13 +41,10 @@
 									@click="btn.action">
 									<template v-if="btn.icon">
 										<q-badge-indicator
-											v-if="btn.badge && btn.badge.isVisible"
-											:color="btn.badge.color">
+											:enabled="btn.badge?.isVisible ?? false"
+											:color="btn.badge?.color">
 											<q-icon v-bind="btn.icon" />
 										</q-badge-indicator>
-										<q-icon
-											v-else
-											v-bind="btn.icon" />
 									</template>
 								</q-toggle-group-item>
 							</template>
@@ -97,6 +95,7 @@
 		<q-container
 			fluid
 			data-key="PROPR00"
+			:data-identifier="primaryKeyValue"
 			:data-loading="!formInitialDataLoaded || !isActiveForm">
 			<template v-if="formControl.initialized && showFormBody">
 				<q-row v-if="controls.PROPR00_PSEUDNOVOGR04.isVisible">
@@ -105,18 +104,17 @@
 						cols="auto">
 						<q-group-box-container
 							v-if="controls.PROPR00_PSEUDNOVOGR04.isVisible"
-							id="PROPR00_PSEUDNOVOGR04"
 							v-bind="controls.PROPR00_PSEUDNOVOGR04"
-							:is-visible="controls.PROPR00_PSEUDNOVOGR04.isVisible">
+							:id="getControlId(controls.PROPR00_PSEUDNOVOGR04)"
+							:no-border="controls.PROPR00_PSEUDNOVOGR04.borderless">
 							<!-- Start PROPR00_PSEUDNOVOGR04 -->
 							<q-row v-if="controls.PROPR00_PSEUDNOVOGR02.isVisible">
 								<q-col v-if="controls.PROPR00_PSEUDNOVOGR02.isVisible">
 									<q-group-box-container
 										v-if="controls.PROPR00_PSEUDNOVOGR02.isVisible"
-										id="PROPR00_PSEUDNOVOGR02"
 										v-bind="controls.PROPR00_PSEUDNOVOGR02"
-										no-border
-										:is-visible="controls.PROPR00_PSEUDNOVOGR02.isVisible">
+										:id="getControlId(controls.PROPR00_PSEUDNOVOGR02)"
+										:no-border="controls.PROPR00_PSEUDNOVOGR02.borderless">
 										<!-- Start PROPR00_PSEUDNOVOGR02 -->
 										<q-row v-if="controls.PROPR00_PROPRNAME____.isVisible || controls.PROPR00_PROPRPRECOEST.isVisible || controls.PROPR00_TPPROTPPROPRI.isVisible || controls.PROPR00_PROPRMOBILADA.isVisible">
 											<q-col
@@ -125,13 +123,15 @@
 												<base-input-structure
 													v-if="controls.PROPR00_PROPRNAME____.isVisible"
 													class="i-text"
-													v-bind="controls.PROPR00_PROPRNAME____"
+													v-bind="controls.PROPR00_PROPRNAME____.wrapperProps"
+													:id="getControlId(controls.PROPR00_PROPRNAME____)"
 													v-on="controls.PROPR00_PROPRNAME____.handlers"
 													:loading="controls.PROPR00_PROPRNAME____.props.loading"
 													:reporting-mode-on="reportingModeCAV"
 													:suggestion-mode-on="suggestionModeOn">
 													<q-text-field
 														v-bind="controls.PROPR00_PROPRNAME____.props"
+														:id="getControlId(controls.PROPR00_PROPRNAME____)"
 														@blur="onBlur(controls.PROPR00_PROPRNAME____, model.ValName.value)"
 														@change="model.ValName.fnUpdateValueOnChange" />
 												</base-input-structure>
@@ -142,7 +142,8 @@
 												<base-input-structure
 													v-if="controls.PROPR00_PROPRPRECOEST.isVisible"
 													class="i-text"
-													v-bind="controls.PROPR00_PROPRPRECOEST"
+													v-bind="controls.PROPR00_PROPRPRECOEST.wrapperProps"
+													:id="getControlId(controls.PROPR00_PROPRPRECOEST)"
 													v-on="controls.PROPR00_PROPRPRECOEST.handlers"
 													:loading="controls.PROPR00_PROPRPRECOEST.props.loading"
 													:reporting-mode-on="reportingModeCAV"
@@ -150,12 +151,14 @@
 													<q-numeric-input
 														v-if="controls.PROPR00_PROPRPRECOEST.isVisible"
 														v-bind="controls.PROPR00_PROPRPRECOEST.props"
+														:id="getControlId(controls.PROPR00_PROPRPRECOEST)"
 														@update:model-value="model.ValPrecoest.fnUpdateValue" />
 												</base-input-structure>
 												<base-input-structure
 													v-if="controls.PROPR00_TPPROTPPROPRI.isVisible"
 													class="i-text"
-													v-bind="controls.PROPR00_TPPROTPPROPRI"
+													v-bind="controls.PROPR00_TPPROTPPROPRI.wrapperProps"
+													:id="getControlId(controls.PROPR00_TPPROTPPROPRI)"
 													v-on="controls.PROPR00_TPPROTPPROPRI.handlers"
 													:loading="controls.PROPR00_TPPROTPPROPRI.props.loading"
 													:reporting-mode-on="reportingModeCAV"
@@ -163,6 +166,7 @@
 													<q-lookup
 														v-if="controls.PROPR00_TPPROTPPROPRI.isVisible"
 														v-bind="controls.PROPR00_TPPROTPPROPRI.props"
+														:id="getControlId(controls.PROPR00_TPPROTPPROPRI)"
 														v-on="controls.PROPR00_TPPROTPPROPRI.handlers" />
 													<q-see-more-propr00-tpprotppropri
 														v-if="controls.PROPR00_TPPROTPPROPRI.seeMoreIsVisible"
@@ -175,8 +179,9 @@
 												cols="auto">
 												<base-input-structure
 													v-if="controls.PROPR00_PROPRMOBILADA.isVisible"
-													class="i-checkbox"
-													v-bind="controls.PROPR00_PROPRMOBILADA"
+													class="i-text"
+													v-bind="controls.PROPR00_PROPRMOBILADA.wrapperProps"
+													:id="getControlId(controls.PROPR00_PROPRMOBILADA)"
 													v-on="controls.PROPR00_PROPRMOBILADA.handlers"
 													:loading="controls.PROPR00_PROPRMOBILADA.props.loading"
 													:reporting-mode-on="reportingModeCAV"
@@ -185,6 +190,7 @@
 														<q-checkbox
 															v-if="controls.PROPR00_PROPRMOBILADA.isVisible"
 															v-bind="controls.PROPR00_PROPRMOBILADA.props"
+															:id="getControlId(controls.PROPR00_PROPRMOBILADA)"
 															v-on="controls.PROPR00_PROPRMOBILADA.handlers" />
 													</template>
 												</base-input-structure>
@@ -201,7 +207,8 @@
 									<base-input-structure
 										v-if="controls.PROPR00_PESSONAME____.isVisible"
 										class="i-text"
-										v-bind="controls.PROPR00_PESSONAME____"
+										v-bind="controls.PROPR00_PESSONAME____.wrapperProps"
+										:id="getControlId(controls.PROPR00_PESSONAME____)"
 										v-on="controls.PROPR00_PESSONAME____.handlers"
 										:loading="controls.PROPR00_PESSONAME____.props.loading"
 										:reporting-mode-on="reportingModeCAV"
@@ -209,6 +216,7 @@
 										<q-lookup
 											v-if="controls.PROPR00_PESSONAME____.isVisible"
 											v-bind="controls.PROPR00_PESSONAME____.props"
+											:id="getControlId(controls.PROPR00_PESSONAME____)"
 											v-on="controls.PROPR00_PESSONAME____.handlers" />
 										<q-see-more-propr00-pessoname
 											v-if="controls.PROPR00_PESSONAME____.seeMoreIsVisible"
@@ -221,10 +229,9 @@
 								<q-col v-if="controls.PROPR00_PSEUDNOVOGR01.isVisible">
 									<q-group-box-container
 										v-if="controls.PROPR00_PSEUDNOVOGR01.isVisible"
-										id="PROPR00_PSEUDNOVOGR01"
 										v-bind="controls.PROPR00_PSEUDNOVOGR01"
-										no-border
-										:is-visible="controls.PROPR00_PSEUDNOVOGR01.isVisible">
+										:id="getControlId(controls.PROPR00_PSEUDNOVOGR01)"
+										:no-border="controls.PROPR00_PSEUDNOVOGR01.borderless">
 										<!-- Start PROPR00_PSEUDNOVOGR01 -->
 										<q-row v-if="controls.PROPR00_PROPRPHOTOGRA.isVisible">
 											<q-col
@@ -233,7 +240,8 @@
 												<base-input-structure
 													v-if="controls.PROPR00_PROPRPHOTOGRA.isVisible"
 													class="q-image"
-													v-bind="controls.PROPR00_PROPRPHOTOGRA"
+													v-bind="controls.PROPR00_PROPRPHOTOGRA.wrapperProps"
+													:id="getControlId(controls.PROPR00_PROPRPHOTOGRA)"
 													v-on="controls.PROPR00_PROPRPHOTOGRA.handlers"
 													:loading="controls.PROPR00_PROPRPHOTOGRA.props.loading"
 													:reporting-mode-on="reportingModeCAV"
@@ -241,6 +249,7 @@
 													<q-image
 														v-if="controls.PROPR00_PROPRPHOTOGRA.isVisible"
 														v-bind="controls.PROPR00_PROPRPHOTOGRA.props"
+														:id="getControlId(controls.PROPR00_PROPRPHOTOGRA)"
 														v-on="controls.PROPR00_PROPRPHOTOGRA.handlers" />
 												</base-input-structure>
 											</q-col>
@@ -259,274 +268,296 @@
 						cols="auto">
 						<q-tab-container
 							v-if="controls.formTabs.isVisible"
-							id="q-tabs-PROPR00"
+							:id="getId('q-tabs-PROPR00')"
 							v-bind="controls.formTabs.props"
 							@tab-changed="controls.formTabs.selectTab($event)">
-							<template #tab-panel>
-								<section
-									v-if="controls.PROPR00_PSEUDPROPR02_.isVisible"
-									v-show="controls.formTabs.selectedTab === 'PROPR00_PSEUDPROPR02_'">
-									<div
-										id="PROPR00_PSEUDPROPR02_"
-										role="tabpanel"
-										aria-labelledby="tab-container-PROPR00_PSEUDPROPR02_">
-										<q-row v-if="controls.PROPR02_PROPRQTD_WC__.isVisible || controls.PROPR02_PROPRQTDQUART.isVisible || controls.PROPR02_PROPRM2______.isVisible">
-											<q-col
+							<section
+								v-if="controls.PROPR00_PSEUDPROPR02_.isVisible"
+								v-show="controls.formTabs.selectedTab === 'PROPR00_PSEUDPROPR02_'">
+								<div
+									id="PROPR00_PSEUDPROPR02_"
+									role="tabpanel"
+									aria-labelledby="q-tabs-PROPR00-tab-PROPR00_PSEUDPROPR02_">
+									<q-row v-if="controls.PROPR02_PROPRQTD_WC__.isVisible || controls.PROPR02_PROPRQTDQUART.isVisible || controls.PROPR02_PROPRM2______.isVisible">
+										<q-col
+											v-if="controls.PROPR02_PROPRQTD_WC__.isVisible"
+											cols="auto">
+											<base-input-structure
 												v-if="controls.PROPR02_PROPRQTD_WC__.isVisible"
-												cols="auto">
-												<base-input-structure
+												class="i-text"
+												v-bind="controls.PROPR02_PROPRQTD_WC__.wrapperProps"
+												:id="getControlId(controls.PROPR02_PROPRQTD_WC__)"
+												v-on="controls.PROPR02_PROPRQTD_WC__.handlers"
+												:loading="controls.PROPR02_PROPRQTD_WC__.props.loading"
+												:reporting-mode-on="reportingModeCAV"
+												:suggestion-mode-on="suggestionModeOn">
+												<q-numeric-input
 													v-if="controls.PROPR02_PROPRQTD_WC__.isVisible"
-													class="i-text"
-													v-bind="controls.PROPR02_PROPRQTD_WC__"
-													v-on="controls.PROPR02_PROPRQTD_WC__.handlers"
-													:loading="controls.PROPR02_PROPRQTD_WC__.props.loading"
-													:reporting-mode-on="reportingModeCAV"
-													:suggestion-mode-on="suggestionModeOn">
-													<q-numeric-input
-														v-if="controls.PROPR02_PROPRQTD_WC__.isVisible"
-														v-bind="controls.PROPR02_PROPRQTD_WC__.props"
-														@update:model-value="model.ValQtd_wc.fnUpdateValue" />
-												</base-input-structure>
-											</q-col>
-											<q-col
+													v-bind="controls.PROPR02_PROPRQTD_WC__.props"
+													:id="getControlId(controls.PROPR02_PROPRQTD_WC__)"
+													@update:model-value="model.ValQtd_wc.fnUpdateValue" />
+											</base-input-structure>
+										</q-col>
+										<q-col
+											v-if="controls.PROPR02_PROPRQTDQUART.isVisible"
+											cols="auto">
+											<base-input-structure
 												v-if="controls.PROPR02_PROPRQTDQUART.isVisible"
-												cols="auto">
-												<base-input-structure
+												class="i-text"
+												v-bind="controls.PROPR02_PROPRQTDQUART.wrapperProps"
+												:id="getControlId(controls.PROPR02_PROPRQTDQUART)"
+												v-on="controls.PROPR02_PROPRQTDQUART.handlers"
+												:loading="controls.PROPR02_PROPRQTDQUART.props.loading"
+												:reporting-mode-on="reportingModeCAV"
+												:suggestion-mode-on="suggestionModeOn">
+												<q-numeric-input
 													v-if="controls.PROPR02_PROPRQTDQUART.isVisible"
-													class="i-text"
-													v-bind="controls.PROPR02_PROPRQTDQUART"
-													v-on="controls.PROPR02_PROPRQTDQUART.handlers"
-													:loading="controls.PROPR02_PROPRQTDQUART.props.loading"
-													:reporting-mode-on="reportingModeCAV"
-													:suggestion-mode-on="suggestionModeOn">
-													<q-numeric-input
-														v-if="controls.PROPR02_PROPRQTDQUART.isVisible"
-														v-bind="controls.PROPR02_PROPRQTDQUART.props"
-														@update:model-value="model.ValQtdquart.fnUpdateValue" />
-												</base-input-structure>
-											</q-col>
-											<q-col
+													v-bind="controls.PROPR02_PROPRQTDQUART.props"
+													:id="getControlId(controls.PROPR02_PROPRQTDQUART)"
+													@update:model-value="model.ValQtdquart.fnUpdateValue" />
+											</base-input-structure>
+										</q-col>
+										<q-col
+											v-if="controls.PROPR02_PROPRM2______.isVisible"
+											cols="auto">
+											<base-input-structure
 												v-if="controls.PROPR02_PROPRM2______.isVisible"
-												cols="auto">
-												<base-input-structure
+												class="i-text"
+												v-bind="controls.PROPR02_PROPRM2______.wrapperProps"
+												:id="getControlId(controls.PROPR02_PROPRM2______)"
+												v-on="controls.PROPR02_PROPRM2______.handlers"
+												:loading="controls.PROPR02_PROPRM2______.props.loading"
+												:reporting-mode-on="reportingModeCAV"
+												:suggestion-mode-on="suggestionModeOn">
+												<q-numeric-input
 													v-if="controls.PROPR02_PROPRM2______.isVisible"
-													class="i-text"
-													v-bind="controls.PROPR02_PROPRM2______"
-													v-on="controls.PROPR02_PROPRM2______.handlers"
-													:loading="controls.PROPR02_PROPRM2______.props.loading"
-													:reporting-mode-on="reportingModeCAV"
-													:suggestion-mode-on="suggestionModeOn">
-													<q-numeric-input
-														v-if="controls.PROPR02_PROPRM2______.isVisible"
-														v-bind="controls.PROPR02_PROPRM2______.props"
-														@update:model-value="model.ValM2.fnUpdateValue" />
-												</base-input-structure>
-											</q-col>
-										</q-row>
-										<q-row v-if="controls.PROPR02_PROPRDTDISPON.isVisible">
-											<q-col
+													v-bind="controls.PROPR02_PROPRM2______.props"
+													:id="getControlId(controls.PROPR02_PROPRM2______)"
+													@update:model-value="model.ValM2.fnUpdateValue" />
+											</base-input-structure>
+										</q-col>
+									</q-row>
+									<q-row v-if="controls.PROPR02_PROPRDTDISPON.isVisible">
+										<q-col
+											v-if="controls.PROPR02_PROPRDTDISPON.isVisible"
+											cols="auto">
+											<base-input-structure
 												v-if="controls.PROPR02_PROPRDTDISPON.isVisible"
-												cols="auto">
-												<base-input-structure
+												class="i-text"
+												v-bind="controls.PROPR02_PROPRDTDISPON.wrapperProps"
+												:id="getControlId(controls.PROPR02_PROPRDTDISPON)"
+												v-on="controls.PROPR02_PROPRDTDISPON.handlers"
+												:loading="controls.PROPR02_PROPRDTDISPON.props.loading"
+												:reporting-mode-on="reportingModeCAV"
+												:suggestion-mode-on="suggestionModeOn">
+												<q-date-time-picker
 													v-if="controls.PROPR02_PROPRDTDISPON.isVisible"
-													class="i-text"
-													v-bind="controls.PROPR02_PROPRDTDISPON"
-													v-on="controls.PROPR02_PROPRDTDISPON.handlers"
-													:loading="controls.PROPR02_PROPRDTDISPON.props.loading"
-													:reporting-mode-on="reportingModeCAV"
-													:suggestion-mode-on="suggestionModeOn">
-													<q-date-time-picker
-														v-if="controls.PROPR02_PROPRDTDISPON.isVisible"
-														v-bind="controls.PROPR02_PROPRDTDISPON.props"
-														:model-value="model.ValDtdispon.value"
-														@reset-icon-click="model.ValDtdispon.fnUpdateValue(model.ValDtdispon.originalValue ?? new Date())"
-														@update:model-value="model.ValDtdispon.fnUpdateValue($event ?? '')" />
-												</base-input-structure>
-											</q-col>
-										</q-row>
-									</div>
-								</section>
-								<section
-									v-if="controls.PROPR00_PSEUDPROPR01_.isVisible"
-									v-show="controls.formTabs.selectedTab === 'PROPR00_PSEUDPROPR01_'">
-									<div
-										id="PROPR00_PSEUDPROPR01_"
-										role="tabpanel"
-										aria-labelledby="tab-container-PROPR00_PSEUDPROPR01_">
-										<q-row v-if="controls.PROPR01_PSEUDNOVOGR01.isVisible">
-											<q-col v-if="controls.PROPR01_PSEUDNOVOGR01.isVisible">
-												<q-group-box-container
-													v-if="controls.PROPR01_PSEUDNOVOGR01.isVisible"
-													id="PROPR01_PSEUDNOVOGR01"
-													v-bind="controls.PROPR01_PSEUDNOVOGR01"
-													:is-visible="controls.PROPR01_PSEUDNOVOGR01.isVisible">
-													<!-- Start PROPR01_PSEUDNOVOGR01 -->
-													<q-row v-if="controls.PROPR01_PROPRENDERECO.isVisible || controls.PROPR01_PROPRLOCALIDA.isVisible">
-														<q-col
+													v-bind="controls.PROPR02_PROPRDTDISPON.props"
+													:id="getControlId(controls.PROPR02_PROPRDTDISPON)"
+													:model-value="model.ValDtdispon.value"
+													@reset-icon-click="model.ValDtdispon.fnUpdateValue(model.ValDtdispon.originalValue ?? new Date())"
+													@update:model-value="model.ValDtdispon.fnUpdateValue($event ?? '')" />
+											</base-input-structure>
+										</q-col>
+									</q-row>
+								</div>
+							</section>
+							<section
+								v-if="controls.PROPR00_PSEUDPROPR01_.isVisible"
+								v-show="controls.formTabs.selectedTab === 'PROPR00_PSEUDPROPR01_'">
+								<div
+									id="PROPR00_PSEUDPROPR01_"
+									role="tabpanel"
+									aria-labelledby="q-tabs-PROPR00-tab-PROPR00_PSEUDPROPR01_">
+									<q-row v-if="controls.PROPR01_PSEUDNOVOGR01.isVisible">
+										<q-col v-if="controls.PROPR01_PSEUDNOVOGR01.isVisible">
+											<q-group-box-container
+												v-if="controls.PROPR01_PSEUDNOVOGR01.isVisible"
+												v-bind="controls.PROPR01_PSEUDNOVOGR01"
+												:id="getControlId(controls.PROPR01_PSEUDNOVOGR01)"
+												:no-border="controls.PROPR01_PSEUDNOVOGR01.borderless">
+												<!-- Start PROPR01_PSEUDNOVOGR01 -->
+												<q-row v-if="controls.PROPR01_PROPRENDERECO.isVisible || controls.PROPR01_PROPRLOCALIDA.isVisible">
+													<q-col
+														v-if="controls.PROPR01_PROPRENDERECO.isVisible"
+														cols="auto">
+														<base-input-structure
 															v-if="controls.PROPR01_PROPRENDERECO.isVisible"
-															cols="auto">
-															<base-input-structure
+															class="i-textarea"
+															v-bind="controls.PROPR01_PROPRENDERECO.wrapperProps"
+															:id="getControlId(controls.PROPR01_PROPRENDERECO)"
+															v-on="controls.PROPR01_PROPRENDERECO.handlers"
+															:loading="controls.PROPR01_PROPRENDERECO.props.loading"
+															:reporting-mode-on="reportingModeCAV"
+															:suggestion-mode-on="suggestionModeOn">
+															<q-text-area
 																v-if="controls.PROPR01_PROPRENDERECO.isVisible"
-																class="i-textarea"
-																v-bind="controls.PROPR01_PROPRENDERECO"
-																v-on="controls.PROPR01_PROPRENDERECO.handlers"
-																:loading="controls.PROPR01_PROPRENDERECO.props.loading"
-																:reporting-mode-on="reportingModeCAV"
-																:suggestion-mode-on="suggestionModeOn">
-																<q-text-area
-																	v-if="controls.PROPR01_PROPRENDERECO.isVisible"
-																	v-bind="controls.PROPR01_PROPRENDERECO.props"
-																	v-on="controls.PROPR01_PROPRENDERECO.handlers" />
-															</base-input-structure>
-														</q-col>
-														<q-col
+																v-bind="controls.PROPR01_PROPRENDERECO.props"
+																:id="getControlId(controls.PROPR01_PROPRENDERECO)"
+																v-on="controls.PROPR01_PROPRENDERECO.handlers" />
+														</base-input-structure>
+													</q-col>
+													<q-col
+														v-if="controls.PROPR01_PROPRLOCALIDA.isVisible"
+														cols="auto">
+														<base-input-structure
 															v-if="controls.PROPR01_PROPRLOCALIDA.isVisible"
-															cols="auto">
-															<base-input-structure
-																v-if="controls.PROPR01_PROPRLOCALIDA.isVisible"
-																class="i-text"
-																v-bind="controls.PROPR01_PROPRLOCALIDA"
-																v-on="controls.PROPR01_PROPRLOCALIDA.handlers"
-																:loading="controls.PROPR01_PROPRLOCALIDA.props.loading"
-																:reporting-mode-on="reportingModeCAV"
-																:suggestion-mode-on="suggestionModeOn">
-																<q-text-field
-																	v-bind="controls.PROPR01_PROPRLOCALIDA.props"
-																	@blur="onBlur(controls.PROPR01_PROPRLOCALIDA, model.ValLocalida.value)"
-																	@change="model.ValLocalida.fnUpdateValueOnChange" />
-															</base-input-structure>
-														</q-col>
-													</q-row>
-													<q-row v-if="controls.PROPR01_PROPRPOSTALCO.isVisible || controls.PROPR01_PROPRPOSTALLO.isVisible">
-														<q-col
-															v-if="controls.PROPR01_PROPRPOSTALCO.isVisible || controls.PROPR01_PROPRPOSTALLO.isVisible"
-															cols="auto">
-															<base-input-structure
-																v-if="controls.PROPR01_PROPRPOSTALCO.isVisible"
-																class="i-text"
-																v-bind="controls.PROPR01_PROPRPOSTALCO"
-																v-on="controls.PROPR01_PROPRPOSTALCO.handlers"
-																:loading="controls.PROPR01_PROPRPOSTALCO.props.loading"
-																:reporting-mode-on="reportingModeCAV"
-																:suggestion-mode-on="suggestionModeOn">
-																<q-text-field
-																	v-bind="controls.PROPR01_PROPRPOSTALCO.props"
-																	@blur="onBlur(controls.PROPR01_PROPRPOSTALCO, model.ValPostalco.value)"
-																	@change="model.ValPostalco.fnUpdateValueOnChange" />
-															</base-input-structure>
-															<base-input-structure
-																v-if="controls.PROPR01_PROPRPOSTALLO.isVisible"
-																class="i-text"
-																v-bind="controls.PROPR01_PROPRPOSTALLO"
-																v-on="controls.PROPR01_PROPRPOSTALLO.handlers"
-																:loading="controls.PROPR01_PROPRPOSTALLO.props.loading"
-																:reporting-mode-on="reportingModeCAV"
-																:suggestion-mode-on="suggestionModeOn">
-																<q-text-field
-																	v-bind="controls.PROPR01_PROPRPOSTALLO.props"
-																	@blur="onBlur(controls.PROPR01_PROPRPOSTALLO, model.ValPostallo.value)"
-																	@change="model.ValPostallo.fnUpdateValueOnChange" />
-															</base-input-structure>
-														</q-col>
-													</q-row>
-													<q-row v-if="controls.PROPR01_CNTRYCOUNTRY_.isVisible || controls.PROPR01_REGIOREGIAO__.isVisible">
-														<q-col
+															class="i-text"
+															v-bind="controls.PROPR01_PROPRLOCALIDA.wrapperProps"
+															:id="getControlId(controls.PROPR01_PROPRLOCALIDA)"
+															v-on="controls.PROPR01_PROPRLOCALIDA.handlers"
+															:loading="controls.PROPR01_PROPRLOCALIDA.props.loading"
+															:reporting-mode-on="reportingModeCAV"
+															:suggestion-mode-on="suggestionModeOn">
+															<q-text-field
+																v-bind="controls.PROPR01_PROPRLOCALIDA.props"
+																:id="getControlId(controls.PROPR01_PROPRLOCALIDA)"
+																@blur="onBlur(controls.PROPR01_PROPRLOCALIDA, model.ValLocalida.value)"
+																@change="model.ValLocalida.fnUpdateValueOnChange" />
+														</base-input-structure>
+													</q-col>
+												</q-row>
+												<q-row v-if="controls.PROPR01_PROPRPOSTALCO.isVisible || controls.PROPR01_PROPRPOSTALLO.isVisible">
+													<q-col
+														v-if="controls.PROPR01_PROPRPOSTALCO.isVisible || controls.PROPR01_PROPRPOSTALLO.isVisible"
+														cols="auto">
+														<base-input-structure
+															v-if="controls.PROPR01_PROPRPOSTALCO.isVisible"
+															class="i-text"
+															v-bind="controls.PROPR01_PROPRPOSTALCO.wrapperProps"
+															:id="getControlId(controls.PROPR01_PROPRPOSTALCO)"
+															v-on="controls.PROPR01_PROPRPOSTALCO.handlers"
+															:loading="controls.PROPR01_PROPRPOSTALCO.props.loading"
+															:reporting-mode-on="reportingModeCAV"
+															:suggestion-mode-on="suggestionModeOn">
+															<q-text-field
+																v-bind="controls.PROPR01_PROPRPOSTALCO.props"
+																:id="getControlId(controls.PROPR01_PROPRPOSTALCO)"
+																@blur="onBlur(controls.PROPR01_PROPRPOSTALCO, model.ValPostalco.value)"
+																@change="model.ValPostalco.fnUpdateValueOnChange" />
+														</base-input-structure>
+														<base-input-structure
+															v-if="controls.PROPR01_PROPRPOSTALLO.isVisible"
+															class="i-text"
+															v-bind="controls.PROPR01_PROPRPOSTALLO.wrapperProps"
+															:id="getControlId(controls.PROPR01_PROPRPOSTALLO)"
+															v-on="controls.PROPR01_PROPRPOSTALLO.handlers"
+															:loading="controls.PROPR01_PROPRPOSTALLO.props.loading"
+															:reporting-mode-on="reportingModeCAV"
+															:suggestion-mode-on="suggestionModeOn">
+															<q-text-field
+																v-bind="controls.PROPR01_PROPRPOSTALLO.props"
+																:id="getControlId(controls.PROPR01_PROPRPOSTALLO)"
+																@blur="onBlur(controls.PROPR01_PROPRPOSTALLO, model.ValPostallo.value)"
+																@change="model.ValPostallo.fnUpdateValueOnChange" />
+														</base-input-structure>
+													</q-col>
+												</q-row>
+												<q-row v-if="controls.PROPR01_CNTRYCOUNTRY_.isVisible || controls.PROPR01_REGIOREGIAO__.isVisible">
+													<q-col
+														v-if="controls.PROPR01_CNTRYCOUNTRY_.isVisible"
+														cols="auto">
+														<base-input-structure
 															v-if="controls.PROPR01_CNTRYCOUNTRY_.isVisible"
-															cols="auto">
-															<base-input-structure
+															class="i-text"
+															v-bind="controls.PROPR01_CNTRYCOUNTRY_.wrapperProps"
+															:id="getControlId(controls.PROPR01_CNTRYCOUNTRY_)"
+															v-on="controls.PROPR01_CNTRYCOUNTRY_.handlers"
+															:loading="controls.PROPR01_CNTRYCOUNTRY_.props.loading"
+															:reporting-mode-on="reportingModeCAV"
+															:suggestion-mode-on="suggestionModeOn">
+															<q-lookup
 																v-if="controls.PROPR01_CNTRYCOUNTRY_.isVisible"
-																class="i-text"
-																v-bind="controls.PROPR01_CNTRYCOUNTRY_"
-																v-on="controls.PROPR01_CNTRYCOUNTRY_.handlers"
-																:loading="controls.PROPR01_CNTRYCOUNTRY_.props.loading"
-																:reporting-mode-on="reportingModeCAV"
-																:suggestion-mode-on="suggestionModeOn">
-																<q-lookup
-																	v-if="controls.PROPR01_CNTRYCOUNTRY_.isVisible"
-																	v-bind="controls.PROPR01_CNTRYCOUNTRY_.props"
-																	v-on="controls.PROPR01_CNTRYCOUNTRY_.handlers" />
-																<q-see-more-propr01-cntrycountry
-																	v-if="controls.PROPR01_CNTRYCOUNTRY_.seeMoreIsVisible"
-																	v-bind="controls.PROPR01_CNTRYCOUNTRY_.seeMoreParams"
-																	v-on="controls.PROPR01_CNTRYCOUNTRY_.handlers" />
-															</base-input-structure>
-														</q-col>
-														<q-col
+																v-bind="controls.PROPR01_CNTRYCOUNTRY_.props"
+																:id="getControlId(controls.PROPR01_CNTRYCOUNTRY_)"
+																v-on="controls.PROPR01_CNTRYCOUNTRY_.handlers" />
+															<q-see-more-propr01-cntrycountry
+																v-if="controls.PROPR01_CNTRYCOUNTRY_.seeMoreIsVisible"
+																v-bind="controls.PROPR01_CNTRYCOUNTRY_.seeMoreParams"
+																v-on="controls.PROPR01_CNTRYCOUNTRY_.handlers" />
+														</base-input-structure>
+													</q-col>
+													<q-col
+														v-if="controls.PROPR01_REGIOREGIAO__.isVisible"
+														cols="auto">
+														<base-input-structure
 															v-if="controls.PROPR01_REGIOREGIAO__.isVisible"
-															cols="auto">
-															<base-input-structure
+															class="i-text"
+															v-bind="controls.PROPR01_REGIOREGIAO__.wrapperProps"
+															:id="getControlId(controls.PROPR01_REGIOREGIAO__)"
+															v-on="controls.PROPR01_REGIOREGIAO__.handlers"
+															:loading="controls.PROPR01_REGIOREGIAO__.props.loading"
+															:reporting-mode-on="reportingModeCAV"
+															:suggestion-mode-on="suggestionModeOn">
+															<q-lookup
 																v-if="controls.PROPR01_REGIOREGIAO__.isVisible"
-																class="i-text"
-																v-bind="controls.PROPR01_REGIOREGIAO__"
-																v-on="controls.PROPR01_REGIOREGIAO__.handlers"
-																:loading="controls.PROPR01_REGIOREGIAO__.props.loading"
-																:reporting-mode-on="reportingModeCAV"
-																:suggestion-mode-on="suggestionModeOn">
-																<q-lookup
-																	v-if="controls.PROPR01_REGIOREGIAO__.isVisible"
-																	v-bind="controls.PROPR01_REGIOREGIAO__.props"
-																	v-on="controls.PROPR01_REGIOREGIAO__.handlers" />
-																<q-see-more-propr01-regioregiao
-																	v-if="controls.PROPR01_REGIOREGIAO__.seeMoreIsVisible"
-																	v-bind="controls.PROPR01_REGIOREGIAO__.seeMoreParams"
-																	v-on="controls.PROPR01_REGIOREGIAO__.handlers" />
-															</base-input-structure>
-														</q-col>
-													</q-row>
-													<!-- End PROPR01_PSEUDNOVOGR01 -->
-												</q-group-box-container>
-											</q-col>
-										</q-row>
-										<q-row v-if="controls.PROPR01_PROPRCOORDGEO.isVisible">
-											<q-col
+																v-bind="controls.PROPR01_REGIOREGIAO__.props"
+																:id="getControlId(controls.PROPR01_REGIOREGIAO__)"
+																v-on="controls.PROPR01_REGIOREGIAO__.handlers" />
+															<q-see-more-propr01-regioregiao
+																v-if="controls.PROPR01_REGIOREGIAO__.seeMoreIsVisible"
+																v-bind="controls.PROPR01_REGIOREGIAO__.seeMoreParams"
+																v-on="controls.PROPR01_REGIOREGIAO__.handlers" />
+														</base-input-structure>
+													</q-col>
+												</q-row>
+												<!-- End PROPR01_PSEUDNOVOGR01 -->
+											</q-group-box-container>
+										</q-col>
+									</q-row>
+									<q-row v-if="controls.PROPR01_PROPRCOORDGEO.isVisible">
+										<q-col
+											v-if="controls.PROPR01_PROPRCOORDGEO.isVisible"
+											cols="auto">
+											<base-input-structure
 												v-if="controls.PROPR01_PROPRCOORDGEO.isVisible"
-												cols="auto">
-												<base-input-structure
-													v-if="controls.PROPR01_PROPRCOORDGEO.isVisible"
-													class="i-text"
-													v-bind="controls.PROPR01_PROPRCOORDGEO"
-													v-on="controls.PROPR01_PROPRCOORDGEO.handlers"
-													:loading="controls.PROPR01_PROPRCOORDGEO.props.loading"
-													:reporting-mode-on="reportingModeCAV"
-													:suggestion-mode-on="suggestionModeOn">
-													<q-text-field
-														v-bind="controls.PROPR01_PROPRCOORDGEO.props"
-														@blur="onBlur(controls.PROPR01_PROPRCOORDGEO, model.ValCoordgeo.value)"
-														@change="model.ValCoordgeo.fnUpdateValueOnChange" />
-												</base-input-structure>
-											</q-col>
-										</q-row>
-									</div>
-								</section>
-								<section
-									v-if="controls.PROPR00_PSEUDPROPR03_.isVisible"
-									v-show="controls.formTabs.selectedTab === 'PROPR00_PSEUDPROPR03_'">
-									<div
-										id="PROPR00_PSEUDPROPR03_"
-										role="tabpanel"
-										aria-labelledby="tab-container-PROPR00_PSEUDPROPR03_">
-										<q-row v-if="controls.PROPR03_PROPRDESCRIPT.isVisible">
-											<q-col
+												class="i-text"
+												v-bind="controls.PROPR01_PROPRCOORDGEO.wrapperProps"
+												:id="getControlId(controls.PROPR01_PROPRCOORDGEO)"
+												v-on="controls.PROPR01_PROPRCOORDGEO.handlers"
+												:loading="controls.PROPR01_PROPRCOORDGEO.props.loading"
+												:reporting-mode-on="reportingModeCAV"
+												:suggestion-mode-on="suggestionModeOn">
+												<q-text-field
+													v-bind="controls.PROPR01_PROPRCOORDGEO.props"
+													:id="getControlId(controls.PROPR01_PROPRCOORDGEO)"
+													@blur="onBlur(controls.PROPR01_PROPRCOORDGEO, model.ValCoordgeo.value)"
+													@change="model.ValCoordgeo.fnUpdateValueOnChange" />
+											</base-input-structure>
+										</q-col>
+									</q-row>
+								</div>
+							</section>
+							<section
+								v-if="controls.PROPR00_PSEUDPROPR03_.isVisible"
+								v-show="controls.formTabs.selectedTab === 'PROPR00_PSEUDPROPR03_'">
+								<div
+									id="PROPR00_PSEUDPROPR03_"
+									role="tabpanel"
+									aria-labelledby="q-tabs-PROPR00-tab-PROPR00_PSEUDPROPR03_">
+									<q-row v-if="controls.PROPR03_PROPRDESCRIPT.isVisible">
+										<q-col
+											v-if="controls.PROPR03_PROPRDESCRIPT.isVisible"
+											cols="auto">
+											<base-input-structure
 												v-if="controls.PROPR03_PROPRDESCRIPT.isVisible"
-												cols="auto">
-												<base-input-structure
+												class="i-text"
+												v-bind="controls.PROPR03_PROPRDESCRIPT.wrapperProps"
+												:id="getControlId(controls.PROPR03_PROPRDESCRIPT)"
+												v-on="controls.PROPR03_PROPRDESCRIPT.handlers"
+												:loading="controls.PROPR03_PROPRDESCRIPT.props.loading"
+												:reporting-mode-on="reportingModeCAV"
+												:suggestion-mode-on="suggestionModeOn">
+												<q-text-editor
 													v-if="controls.PROPR03_PROPRDESCRIPT.isVisible"
-													class="i-text"
-													v-bind="controls.PROPR03_PROPRDESCRIPT"
-													v-on="controls.PROPR03_PROPRDESCRIPT.handlers"
-													:loading="controls.PROPR03_PROPRDESCRIPT.props.loading"
-													:reporting-mode-on="reportingModeCAV"
-													:suggestion-mode-on="suggestionModeOn">
-													<q-text-editor
-														v-if="controls.PROPR03_PROPRDESCRIPT.isVisible"
-														v-bind="controls.PROPR03_PROPRDESCRIPT.props"
-														v-on="controls.PROPR03_PROPRDESCRIPT.handlers" />
-												</base-input-structure>
-											</q-col>
-										</q-row>
-									</div>
-								</section>
-							</template>
+													v-bind="controls.PROPR03_PROPRDESCRIPT.props"
+													:id="getControlId(controls.PROPR03_PROPRDESCRIPT)"
+													v-on="controls.PROPR03_PROPRDESCRIPT.handlers" />
+											</base-input-structure>
+										</q-col>
+									</q-row>
+								</div>
+							</section>
 						</q-tab-container>
 					</q-col>
 				</q-row>
@@ -534,7 +565,7 @@
 		</q-container>
 	</teleport>
 
-	<hr v-if="!isPopup && showFormFooter" />
+	<q-divider v-if="!isPopup && showFormFooter" />
 
 	<teleport
 		v-if="formModalIsReady && showFormFooter"
@@ -887,6 +918,7 @@
 						label: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
+						borderless: false,
 						isCollapsible: false,
 						anchored: false,
 						directChildren: ['PROPR00_PSEUDNOVOGR02', 'PROPR00_PESSONAME____', 'PROPR00_PSEUDNOVOGR01'],
@@ -901,6 +933,7 @@
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'PROPR00_PSEUDNOVOGR04',
+						borderless: true,
 						isCollapsible: false,
 						anchored: false,
 						directChildren: ['PROPR00_PROPRNAME____', 'PROPR00_PROPRPRECOEST', 'PROPR00_TPPROTPPROPRI', 'PROPR00_PROPRMOBILADA'],
@@ -1035,6 +1068,7 @@
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'PROPR00_PSEUDNOVOGR04',
+						borderless: true,
 						isCollapsible: false,
 						anchored: false,
 						directChildren: ['PROPR00_PROPRPHOTOGRA'],
@@ -1141,6 +1175,7 @@
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						tab: 'PROPR00_PSEUDPROPR01_',
+						borderless: false,
 						isCollapsible: false,
 						anchored: false,
 						directChildren: ['PROPR01_PROPRENDERECO', 'PROPR01_PROPRLOCALIDA', 'PROPR01_PROPRPOSTALCO', 'PROPR01_PROPRPOSTALLO', 'PROPR01_CNTRYCOUNTRY_', 'PROPR01_REGIOREGIAO__'],
@@ -1757,7 +1792,6 @@
 
 				this.afterControlUpdate(controlField, fieldValue)
 			},
-
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
 // USE /[MANUAL GQT FUNCTIONS_JS PROPR00]/
 // eslint-disable-next-line

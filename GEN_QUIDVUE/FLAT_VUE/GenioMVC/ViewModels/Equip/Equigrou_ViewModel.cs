@@ -1,20 +1,20 @@
-﻿using JsonIgnoreAttribute = System.Text.Json.Serialization.JsonIgnoreAttribute;
+﻿using CSGenio.business;
+using CSGenio.framework;
+using CSGenio.persistence;
+using GenioMVC.Helpers;
+using GenioMVC.Models.Exception;
+using GenioMVC.Models.Navigation;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Quidgest.Persistence;
+using Quidgest.Persistence.GenericQuery;
+
 using System.Collections;
 using System.Collections.Concurrent;
 using System.Collections.Specialized;
 using System.ComponentModel.DataAnnotations;
 using System.Data;
 using System.Globalization;
-
-using CSGenio.business;
-using CSGenio.framework;
-using CSGenio.persistence;
-using GenioMVC.Helpers;
-using GenioMVC.Models.Exception;
-using GenioMVC.Models.Navigation;
-using Quidgest.Persistence;
-using Quidgest.Persistence.GenericQuery;
+using System.Text.Json.Serialization;
 
 namespace GenioMVC.ViewModels.Equip
 {
@@ -64,12 +64,13 @@ namespace GenioMVC.ViewModels.Equip
 		public string ValCodwareh { get; set; }
 
 		#endregion
+
 		/// <summary>
 		/// Title: "Photo" | Type: "IJ"
 		/// </summary>
 		[ImageThumbnailJsonConverter(30, 50)]
 		[ValidateSetAccess]
-		public GenioMVC.Models.ImageModel Pess1ValPhotogra 
+		public GenioMVC.Models.ImageModel Pess1ValPhotogra
 		{
 			get
 			{
@@ -91,7 +92,7 @@ namespace GenioMVC.ViewModels.Equip
 		/// Title: "Genre" | Type: "AC"
 		/// </summary>
 		[ValidateSetAccess]
-		public string Pess1ValGender 
+		public string Pess1ValGender
 		{
 			get
 			{
@@ -105,15 +106,10 @@ namespace GenioMVC.ViewModels.Equip
 
 		private string _auxPess1ValGender { get; set; }
 		/// <summary>
-		/// Title: "" | Type: "PSEUD"
-		/// </summary>
-		[JsonIgnore]
-		public SelectList List_Pess1ValGender { get; set; }
-		/// <summary>
 		/// Title: "Birth" | Type: "D"
 		/// </summary>
 		[ValidateSetAccess]
-		public DateTime? Pess1ValDtnascim 
+		public DateTime? Pess1ValDtnascim
 		{
 			get
 			{
@@ -130,7 +126,7 @@ namespace GenioMVC.ViewModels.Equip
 		/// Title: "Age" | Type: "N"
 		/// </summary>
 		[ValidateSetAccess]
-		public decimal? Pess1ValIdade 
+		public decimal? Pess1ValIdade
 		{
 			get
 			{
@@ -147,7 +143,7 @@ namespace GenioMVC.ViewModels.Equip
 		/// Title: "Official No." | Type: "N"
 		/// </summary>
 		[ValidateSetAccess]
-		public decimal? Pess1ValIdfuncio 
+		public decimal? Pess1ValIdfuncio
 		{
 			get
 			{
@@ -164,7 +160,7 @@ namespace GenioMVC.ViewModels.Equip
 		/// Title: "Phone" | Type: "C"
 		/// </summary>
 		[ValidateSetAccess]
-		public string Pess1ValTelephon 
+		public string Pess1ValTelephon
 		{
 			get
 			{
@@ -181,7 +177,7 @@ namespace GenioMVC.ViewModels.Equip
 		/// Title: "Email 1" | Type: "C"
 		/// </summary>
 		[ValidateSetAccess]
-		public string Pess1ValEmail 
+		public string Pess1ValEmail
 		{
 			get
 			{
@@ -198,7 +194,7 @@ namespace GenioMVC.ViewModels.Equip
 		/// Title: "Email 2" | Type: "C"
 		/// </summary>
 		[ValidateSetAccess]
-		public string Pess1ValEmail2 
+		public string Pess1ValEmail2
 		{
 			get
 			{
@@ -216,7 +212,7 @@ namespace GenioMVC.ViewModels.Equip
 		/// </summary>
 		[ImageThumbnailJsonConverter(30, 50)]
 		[ValidateSetAccess]
-		public GenioMVC.Models.ImageModel CmpnyValLogo 
+		public GenioMVC.Models.ImageModel CmpnyValLogo
 		{
 			get
 			{
@@ -233,7 +229,7 @@ namespace GenioMVC.ViewModels.Equip
 		/// Title: "Designation" | Type: "C"
 		/// </summary>
 		[ValidateSetAccess]
-		public string CmpnyValDesignat 
+		public string CmpnyValDesignat
 		{
 			get
 			{
@@ -250,7 +246,7 @@ namespace GenioMVC.ViewModels.Equip
 		/// Title: "Acronym" | Type: "C"
 		/// </summary>
 		[ValidateSetAccess]
-		public string CmpnyValAcronym 
+		public string CmpnyValAcronym
 		{
 			get
 			{
@@ -267,7 +263,7 @@ namespace GenioMVC.ViewModels.Equip
 		/// Title: "Tax identification" | Type: "C"
 		/// </summary>
 		[ValidateSetAccess]
-		public string CmpnyValNif 
+		public string CmpnyValNif
 		{
 			get
 			{
@@ -284,7 +280,7 @@ namespace GenioMVC.ViewModels.Equip
 		/// Title: "Phone" | Type: "C"
 		/// </summary>
 		[ValidateSetAccess]
-		public string CmpnyValTelephon 
+		public string CmpnyValTelephon
 		{
 			get
 			{
@@ -301,7 +297,7 @@ namespace GenioMVC.ViewModels.Equip
 		/// Title: "Email" | Type: "C"
 		/// </summary>
 		[ValidateSetAccess]
-		public string CmpnyValEmail 
+		public string CmpnyValEmail
 		{
 			get
 			{
@@ -332,7 +328,7 @@ namespace GenioMVC.ViewModels.Equip
 		/// Title: "Code" | Type: "TF"
 		/// </summary>
 		[ValidateSetAccess]
-		public string TpequValTpequcod 
+		public string TpequValTpequcod
 		{
 			get
 			{
@@ -349,7 +345,7 @@ namespace GenioMVC.ViewModels.Equip
 		/// Title: "Maximum price" | Type: "$D"
 		/// </summary>
 		[ValidateSetAccess]
-		public decimal? TpequValPrecomax 
+		public decimal? TpequValPrecomax
 		{
 			get
 			{
@@ -366,7 +362,7 @@ namespace GenioMVC.ViewModels.Equip
 		/// Title: "Dependent on" | Type: "TP"
 		/// </summary>
 		[ValidateSetAccess]
-		public string TpequValTpequpai 
+		public string TpequValTpequpai
 		{
 			get
 			{
@@ -383,7 +379,7 @@ namespace GenioMVC.ViewModels.Equip
 		/// Title: "Level" | Type: "TN"
 		/// </summary>
 		[ValidateSetAccess]
-		public decimal TpequValNivel 
+		public decimal TpequValNivel
 		{
 			get
 			{
@@ -400,7 +396,7 @@ namespace GenioMVC.ViewModels.Equip
 		/// Title: "Background color" | Type: "C"
 		/// </summary>
 		[ValidateSetAccess]
-		public string TpequValBackcolo 
+		public string TpequValBackcolo
 		{
 			get
 			{
@@ -417,7 +413,7 @@ namespace GenioMVC.ViewModels.Equip
 		/// Title: "Letter color" | Type: "C"
 		/// </summary>
 		[ValidateSetAccess]
-		public string TpequValCorletra 
+		public string TpequValCorletra
 		{
 			get
 			{
@@ -449,11 +445,6 @@ namespace GenioMVC.ViewModels.Equip
 		/// </summary>
 		public decimal ValFrequenc { get; set; }
 		/// <summary>
-		/// Title: "" | Type: "PSEUD"
-		/// </summary>
-		[JsonIgnore]
-		public SelectList List_ValFrequenc { get; set; }
-		/// <summary>
 		/// Title: "Bought" | Type: "L"
 		/// </summary>
 		[ValidateSetAccess]
@@ -476,8 +467,6 @@ namespace GenioMVC.ViewModels.Equip
 		/// Title: "Designation" | Type: "C"
 		/// </summary>
 		public string ValDesignat { get; set; }
-
-
 
 		#region Navigations
 		#endregion
@@ -719,12 +708,7 @@ namespace GenioMVC.ViewModels.Equip
 			}
 		}
 
-		/// <summary>
-		/// Sets the value of a single property of the view model based on the provided table and field names.
-		/// </summary>
-		/// <param name="fullFieldName">The full field name in the format "table.field".</param>
-		/// <param name="value">The field value.</param>
-		/// <exception cref="ArgumentNullException">Thrown if <paramref name="fullFieldName"/> is null.</exception>
+		/// <inheritdoc />
 		public override void SetViewModelValue(string fullFieldName, object value)
 		{
 			try
@@ -874,6 +858,7 @@ namespace GenioMVC.ViewModels.Equip
 
 			Load_Equigroupess1name____(qs, lazyLoad);
 			Load_Equigroutpequtipoequi(qs, lazyLoad);
+
 // USE /[MANUAL GQT VIEWMODEL_LOADPARTIAL EQUIGROU]/
 		}
 
@@ -962,10 +947,7 @@ namespace GenioMVC.ViewModels.Equip
 			// Area limit
 			equigroupess1name____DoLoad &= AddCriteriaAreaLimit(equigroupess1name____Conds, CSGenio.business.CSGenioAcmpny.FldCodempre, "cmpny", this.ValCodempre, true);
 
-			TablePess1Name = new TableDBEdit<Models.Pess1>
-			{
-				IsLazyLoad = lazyLoad
-			};
+			TablePess1Name = new TableDBEdit<Models.Pess1>();
 
 			if (lazyLoad)
 			{
@@ -1011,7 +993,7 @@ namespace GenioMVC.ViewModels.Equip
 				int numberItems = CSGenio.framework.Configuration.NrRegDBedit;
 				int offset = (page - 1) * numberItems;
 
-				FieldRef[] fields = new FieldRef[] { CSGenioApess1.FldCodpesso, CSGenioApess1.FldName, CSGenioApess1.FldZzstate };
+				FieldRef[] fields = [CSGenioApess1.FldCodpesso, CSGenioApess1.FldName, CSGenioApess1.FldZzstate];
 
 // USE /[MANUAL GQT OVERRQ EQUIGROU_PESS1NAME]/
 
@@ -1178,10 +1160,7 @@ namespace GenioMVC.ViewModels.Equip
 				}
 			}
 
-			TableTpequTipoequi = new TableDBEdit<Models.Tpequ>
-			{
-				IsLazyLoad = lazyLoad
-			};
+			TableTpequTipoequi = new TableDBEdit<Models.Tpequ>();
 
 			if (lazyLoad)
 			{
@@ -1224,7 +1203,7 @@ namespace GenioMVC.ViewModels.Equip
 				int numberItems = CSGenio.framework.Configuration.NrRegDBedit;
 				int offset = (page - 1) * numberItems;
 
-				FieldRef[] fields = new FieldRef[] { CSGenioAtpequ.FldCodtpequ, CSGenioAtpequ.FldTipoequi, CSGenioAtpequ.FldZzstate };
+				FieldRef[] fields = [CSGenioAtpequ.FldCodtpequ, CSGenioAtpequ.FldTipoequi, CSGenioAtpequ.FldZzstate];
 
 // USE /[MANUAL GQT OVERRQ EQUIGROU_TPEQUTIPOEQUI]/
 

@@ -9,12 +9,13 @@
 			<div
 				v-if="showFormHeader"
 				class="c-action-bar">
-				<h1
+				<component
 					v-if="formControl.uiComponents.header && formInfo.designation"
+					:is="topHeadingTag"
 					:id="formTitleId"
 					class="form-header">
 					{{ formInfo.designation }}
-				</h1>
+				</component>
 
 				<div class="c-action-bar__menu">
 					<template
@@ -40,13 +41,10 @@
 									@click="btn.action">
 									<template v-if="btn.icon">
 										<q-badge-indicator
-											v-if="btn.badge && btn.badge.isVisible"
-											:color="btn.badge.color">
+											:enabled="btn.badge?.isVisible ?? false"
+											:color="btn.badge?.color">
 											<q-icon v-bind="btn.icon" />
 										</q-badge-indicator>
-										<q-icon
-											v-else
-											v-bind="btn.icon" />
 									</template>
 								</q-toggle-group-item>
 							</template>
@@ -97,28 +95,9 @@
 		<q-container
 			fluid
 			data-key="PESS1"
+			:data-identifier="primaryKeyValue"
 			:data-loading="!formInitialDataLoaded || !isActiveForm">
 			<template v-if="formControl.initialized && showFormBody">
-				<q-row v-if="controls.PESS1___PSEUDFIELD001.isVisible">
-					<q-col
-						v-if="controls.PESS1___PSEUDFIELD001.isVisible"
-						cols="auto">
-						<base-input-structure
-							v-if="controls.PESS1___PSEUDFIELD001.isVisible"
-							class="i-button"
-							v-bind="controls.PESS1___PSEUDFIELD001"
-							v-on="controls.PESS1___PSEUDFIELD001.handlers"
-							:loading="controls.PESS1___PSEUDFIELD001.props.loading"
-							:reporting-mode-on="reportingModeCAV"
-							:suggestion-mode-on="suggestionModeOn">
-							<q-button
-								v-if="controls.PESS1___PSEUDFIELD001.isVisible"
-								v-bind="controls.PESS1___PSEUDFIELD001.props"
-								@click="controls.PESS1___PSEUDFIELD001.action($event)">
-							</q-button>
-						</base-input-structure>
-					</q-col>
-				</q-row>
 				<q-row v-if="controls.PESS1___CMPNYDESIGNAT.isVisible">
 					<q-col
 						v-if="controls.PESS1___CMPNYDESIGNAT.isVisible"
@@ -126,7 +105,8 @@
 						<base-input-structure
 							v-if="controls.PESS1___CMPNYDESIGNAT.isVisible"
 							class="i-text"
-							v-bind="controls.PESS1___CMPNYDESIGNAT"
+							v-bind="controls.PESS1___CMPNYDESIGNAT.wrapperProps"
+							:id="getControlId(controls.PESS1___CMPNYDESIGNAT)"
 							v-on="controls.PESS1___CMPNYDESIGNAT.handlers"
 							:loading="controls.PESS1___CMPNYDESIGNAT.props.loading"
 							:reporting-mode-on="reportingModeCAV"
@@ -134,6 +114,7 @@
 							<q-lookup
 								v-if="controls.PESS1___CMPNYDESIGNAT.isVisible"
 								v-bind="controls.PESS1___CMPNYDESIGNAT.props"
+								:id="getControlId(controls.PESS1___CMPNYDESIGNAT)"
 								v-on="controls.PESS1___CMPNYDESIGNAT.handlers" />
 							<q-see-more-pess1-cmpnydesignat
 								v-if="controls.PESS1___CMPNYDESIGNAT.seeMoreIsVisible"
@@ -149,7 +130,8 @@
 						<base-input-structure
 							v-if="controls.PESS1___STAKEDESIGNAT.isVisible"
 							class="i-text"
-							v-bind="controls.PESS1___STAKEDESIGNAT"
+							v-bind="controls.PESS1___STAKEDESIGNAT.wrapperProps"
+							:id="getControlId(controls.PESS1___STAKEDESIGNAT)"
 							v-on="controls.PESS1___STAKEDESIGNAT.handlers"
 							:loading="controls.PESS1___STAKEDESIGNAT.props.loading"
 							:reporting-mode-on="reportingModeCAV"
@@ -157,6 +139,7 @@
 							<q-lookup
 								v-if="controls.PESS1___STAKEDESIGNAT.isVisible"
 								v-bind="controls.PESS1___STAKEDESIGNAT.props"
+								:id="getControlId(controls.PESS1___STAKEDESIGNAT)"
 								v-on="controls.PESS1___STAKEDESIGNAT.handlers" />
 							<q-see-more-pess1-stakedesignat
 								v-if="controls.PESS1___STAKEDESIGNAT.seeMoreIsVisible"
@@ -172,13 +155,15 @@
 						<base-input-structure
 							v-if="controls.PESS1___PESS1NAME____.isVisible"
 							class="i-text"
-							v-bind="controls.PESS1___PESS1NAME____"
+							v-bind="controls.PESS1___PESS1NAME____.wrapperProps"
+							:id="getControlId(controls.PESS1___PESS1NAME____)"
 							v-on="controls.PESS1___PESS1NAME____.handlers"
 							:loading="controls.PESS1___PESS1NAME____.props.loading"
 							:reporting-mode-on="reportingModeCAV"
 							:suggestion-mode-on="suggestionModeOn">
 							<q-text-field
 								v-bind="controls.PESS1___PESS1NAME____.props"
+								:id="getControlId(controls.PESS1___PESS1NAME____)"
 								@blur="onBlur(controls.PESS1___PESS1NAME____, model.ValName.value)"
 								@change="model.ValName.fnUpdateValueOnChange" />
 						</base-input-structure>
@@ -191,7 +176,8 @@
 						<base-input-structure
 							v-if="controls.PESS1___PESS1GENDER__.isVisible"
 							class="i-text"
-							v-bind="controls.PESS1___PESS1GENDER__"
+							v-bind="controls.PESS1___PESS1GENDER__.wrapperProps"
+							:id="getControlId(controls.PESS1___PESS1GENDER__)"
 							v-on="controls.PESS1___PESS1GENDER__.handlers"
 							:loading="controls.PESS1___PESS1GENDER__.props.loading"
 							:reporting-mode-on="reportingModeCAV"
@@ -199,6 +185,7 @@
 							<q-select
 								v-if="controls.PESS1___PESS1GENDER__.isVisible"
 								v-bind="controls.PESS1___PESS1GENDER__.props"
+								:id="getControlId(controls.PESS1___PESS1GENDER__)"
 								@update:model-value="model.ValGender.fnUpdateValue" />
 						</base-input-structure>
 					</q-col>
@@ -210,7 +197,8 @@
 						<base-input-structure
 							v-if="controls.PESS1___PESS1DTNASCIM.isVisible"
 							class="i-text"
-							v-bind="controls.PESS1___PESS1DTNASCIM"
+							v-bind="controls.PESS1___PESS1DTNASCIM.wrapperProps"
+							:id="getControlId(controls.PESS1___PESS1DTNASCIM)"
 							v-on="controls.PESS1___PESS1DTNASCIM.handlers"
 							:loading="controls.PESS1___PESS1DTNASCIM.props.loading"
 							:reporting-mode-on="reportingModeCAV"
@@ -218,6 +206,7 @@
 							<q-date-time-picker
 								v-if="controls.PESS1___PESS1DTNASCIM.isVisible"
 								v-bind="controls.PESS1___PESS1DTNASCIM.props"
+								:id="getControlId(controls.PESS1___PESS1DTNASCIM)"
 								:model-value="model.ValDtnascim.value"
 								@reset-icon-click="model.ValDtnascim.fnUpdateValue(model.ValDtnascim.originalValue ?? new Date())"
 								@update:model-value="model.ValDtnascim.fnUpdateValue($event ?? '')" />
@@ -225,7 +214,8 @@
 						<base-input-structure
 							v-if="controls.PESS1___PESS1IDFUNCIO.isVisible"
 							class="i-text"
-							v-bind="controls.PESS1___PESS1IDFUNCIO"
+							v-bind="controls.PESS1___PESS1IDFUNCIO.wrapperProps"
+							:id="getControlId(controls.PESS1___PESS1IDFUNCIO)"
 							v-on="controls.PESS1___PESS1IDFUNCIO.handlers"
 							:loading="controls.PESS1___PESS1IDFUNCIO.props.loading"
 							:reporting-mode-on="reportingModeCAV"
@@ -233,18 +223,21 @@
 							<q-numeric-input
 								v-if="controls.PESS1___PESS1IDFUNCIO.isVisible"
 								v-bind="controls.PESS1___PESS1IDFUNCIO.props"
+								:id="getControlId(controls.PESS1___PESS1IDFUNCIO)"
 								@update:model-value="model.ValIdfuncio.fnUpdateValue" />
 						</base-input-structure>
 						<base-input-structure
 							v-if="controls.PESS1___PESS1TELEPHON.isVisible"
 							class="i-text"
-							v-bind="controls.PESS1___PESS1TELEPHON"
+							v-bind="controls.PESS1___PESS1TELEPHON.wrapperProps"
+							:id="getControlId(controls.PESS1___PESS1TELEPHON)"
 							v-on="controls.PESS1___PESS1TELEPHON.handlers"
 							:loading="controls.PESS1___PESS1TELEPHON.props.loading"
 							:reporting-mode-on="reportingModeCAV"
 							:suggestion-mode-on="suggestionModeOn">
 							<q-text-field
 								v-bind="controls.PESS1___PESS1TELEPHON.props"
+								:id="getControlId(controls.PESS1___PESS1TELEPHON)"
 								@blur="onBlur(controls.PESS1___PESS1TELEPHON, model.ValTelephon.value)"
 								@change="model.ValTelephon.fnUpdateValueOnChange" />
 						</base-input-structure>
@@ -257,13 +250,15 @@
 						<base-input-structure
 							v-if="controls.PESS1___PESS1EMAIL___.isVisible"
 							class="i-text"
-							v-bind="controls.PESS1___PESS1EMAIL___"
+							v-bind="controls.PESS1___PESS1EMAIL___.wrapperProps"
+							:id="getControlId(controls.PESS1___PESS1EMAIL___)"
 							v-on="controls.PESS1___PESS1EMAIL___.handlers"
 							:loading="controls.PESS1___PESS1EMAIL___.props.loading"
 							:reporting-mode-on="reportingModeCAV"
 							:suggestion-mode-on="suggestionModeOn">
 							<q-text-field
 								v-bind="controls.PESS1___PESS1EMAIL___.props"
+								:id="getControlId(controls.PESS1___PESS1EMAIL___)"
 								@blur="onBlur(controls.PESS1___PESS1EMAIL___, model.ValEmail.value)"
 								@change="model.ValEmail.fnUpdateValueOnChange" />
 						</base-input-structure>
@@ -276,13 +271,15 @@
 						<base-input-structure
 							v-if="controls.PESS1___PESS1EMAIL2__.isVisible"
 							class="i-text"
-							v-bind="controls.PESS1___PESS1EMAIL2__"
+							v-bind="controls.PESS1___PESS1EMAIL2__.wrapperProps"
+							:id="getControlId(controls.PESS1___PESS1EMAIL2__)"
 							v-on="controls.PESS1___PESS1EMAIL2__.handlers"
 							:loading="controls.PESS1___PESS1EMAIL2__.props.loading"
 							:reporting-mode-on="reportingModeCAV"
 							:suggestion-mode-on="suggestionModeOn">
 							<q-text-field
 								v-bind="controls.PESS1___PESS1EMAIL2__.props"
+								:id="getControlId(controls.PESS1___PESS1EMAIL2__)"
 								@blur="onBlur(controls.PESS1___PESS1EMAIL2__, model.ValEmail2.value)"
 								@change="model.ValEmail2.fnUpdateValueOnChange" />
 						</base-input-structure>
@@ -295,7 +292,8 @@
 						<base-input-structure
 							v-if="controls.PESS1___PESS1PHOTOGRA.isVisible"
 							class="q-image"
-							v-bind="controls.PESS1___PESS1PHOTOGRA"
+							v-bind="controls.PESS1___PESS1PHOTOGRA.wrapperProps"
+							:id="getControlId(controls.PESS1___PESS1PHOTOGRA)"
 							v-on="controls.PESS1___PESS1PHOTOGRA.handlers"
 							:loading="controls.PESS1___PESS1PHOTOGRA.props.loading"
 							:reporting-mode-on="reportingModeCAV"
@@ -303,6 +301,7 @@
 							<q-image
 								v-if="controls.PESS1___PESS1PHOTOGRA.isVisible"
 								v-bind="controls.PESS1___PESS1PHOTOGRA.props"
+								:id="getControlId(controls.PESS1___PESS1PHOTOGRA)"
 								v-on="controls.PESS1___PESS1PHOTOGRA.handlers" />
 						</base-input-structure>
 					</q-col>
@@ -314,7 +313,8 @@
 						<base-input-structure
 							v-if="controls.PESS1___PESS1DTULTCAT.isVisible"
 							class="i-text"
-							v-bind="controls.PESS1___PESS1DTULTCAT"
+							v-bind="controls.PESS1___PESS1DTULTCAT.wrapperProps"
+							:id="getControlId(controls.PESS1___PESS1DTULTCAT)"
 							v-on="controls.PESS1___PESS1DTULTCAT.handlers"
 							:loading="controls.PESS1___PESS1DTULTCAT.props.loading"
 							:reporting-mode-on="reportingModeCAV"
@@ -322,14 +322,16 @@
 							<q-date-time-picker
 								v-if="controls.PESS1___PESS1DTULTCAT.isVisible"
 								v-bind="controls.PESS1___PESS1DTULTCAT.props"
+								:id="getControlId(controls.PESS1___PESS1DTULTCAT)"
 								:model-value="model.ValDtultcat.value"
 								@reset-icon-click="model.ValDtultcat.fnUpdateValue(model.ValDtultcat.originalValue ?? new Date())"
 								@update:model-value="model.ValDtultcat.fnUpdateValue($event ?? '')" />
 						</base-input-structure>
 						<base-input-structure
 							v-if="controls.PESS1___PESS1EXTERNA_.isVisible"
-							class="i-checkbox"
-							v-bind="controls.PESS1___PESS1EXTERNA_"
+							class="i-text"
+							v-bind="controls.PESS1___PESS1EXTERNA_.wrapperProps"
+							:id="getControlId(controls.PESS1___PESS1EXTERNA_)"
 							v-on="controls.PESS1___PESS1EXTERNA_.handlers"
 							:loading="controls.PESS1___PESS1EXTERNA_.props.loading"
 							:reporting-mode-on="reportingModeCAV"
@@ -338,13 +340,15 @@
 								<q-checkbox
 									v-if="controls.PESS1___PESS1EXTERNA_.isVisible"
 									v-bind="controls.PESS1___PESS1EXTERNA_.props"
+									:id="getControlId(controls.PESS1___PESS1EXTERNA_)"
 									v-on="controls.PESS1___PESS1EXTERNA_.handlers" />
 							</template>
 						</base-input-structure>
 						<base-input-structure
 							v-if="controls.PESS1___PESS1INTERNA_.isVisible"
-							class="i-checkbox"
-							v-bind="controls.PESS1___PESS1INTERNA_"
+							class="i-text"
+							v-bind="controls.PESS1___PESS1INTERNA_.wrapperProps"
+							:id="getControlId(controls.PESS1___PESS1INTERNA_)"
 							v-on="controls.PESS1___PESS1INTERNA_.handlers"
 							:loading="controls.PESS1___PESS1INTERNA_.props.loading"
 							:reporting-mode-on="reportingModeCAV"
@@ -353,6 +357,7 @@
 								<q-checkbox
 									v-if="controls.PESS1___PESS1INTERNA_.isVisible"
 									v-bind="controls.PESS1___PESS1INTERNA_.props"
+									:id="getControlId(controls.PESS1___PESS1INTERNA_)"
 									v-on="controls.PESS1___PESS1INTERNA_.handlers" />
 							</template>
 						</base-input-structure>
@@ -363,7 +368,8 @@
 						<base-input-structure
 							v-if="controls.PESS1___PESS1IDADE___.isVisible"
 							class="i-text"
-							v-bind="controls.PESS1___PESS1IDADE___"
+							v-bind="controls.PESS1___PESS1IDADE___.wrapperProps"
+							:id="getControlId(controls.PESS1___PESS1IDADE___)"
 							v-on="controls.PESS1___PESS1IDADE___.handlers"
 							:loading="controls.PESS1___PESS1IDADE___.props.loading"
 							:reporting-mode-on="reportingModeCAV"
@@ -371,6 +377,7 @@
 							<q-numeric-input
 								v-if="controls.PESS1___PESS1IDADE___.isVisible"
 								v-bind="controls.PESS1___PESS1IDADE___.props"
+								:id="getControlId(controls.PESS1___PESS1IDADE___)"
 								@update:model-value="model.ValIdade.fnUpdateValue" />
 						</base-input-structure>
 					</q-col>
@@ -379,7 +386,7 @@
 		</q-container>
 	</teleport>
 
-	<hr v-if="!isPopup && showFormFooter" />
+	<q-divider v-if="!isPopup && showFormFooter" />
 
 	<teleport
 		v-if="formModalIsReady && showFormFooter"
@@ -508,12 +515,10 @@
 					route: 'form-PESS1',
 					area: 'PESS1',
 					primaryKey: 'ValCodpesso',
-					designation: computed(() => this.Resources.PERSON10446),
+					designation: computed(() => this.Resources.COMODANTE63029),
 					identifier: '', // Unique identifier received by route (when it's nested).
 					mode: '',
-					availableAgents: [
-						'MockPersonCreator',
-					],
+					availableAgents: [],
 				},
 
 				formButtons: {
@@ -725,27 +730,6 @@
 				},
 
 				controls: {
-					PESS1___PSEUDFIELD001: new fieldControlClass.ButtonControl({
-						id: 'PESS1___PSEUDFIELD001',
-						name: 'FIELD001',
-						hasLabel: false,
-						label: computed(() => this.Resources.CREATE_MOCK_PERSON54221),
-						placeholder: '',
-						labelPosition: computed(() => this.labelAlignment.topleft),
-						// eslint-disable-next-line
-						action: (event) => {
-							const btnAction = () => {
-								vm.PESS1_MockPersonCreator_CB()
-							}
-							const options = {
-								form: 'PESS1',
-								callback: btnAction
-							}
-							vm.$eventHub.emit('form-apply', options)
-						},
-						controlLimits: [
-						],
-					}, this),
 					PESS1___CMPNYDESIGNAT: new fieldControlClass.LookupControl({
 						modelField: 'TableCmpnyDesignat',
 						valueChangeEvent: 'fieldChange:cmpny.designat',
@@ -781,7 +765,7 @@
 						valueChangeEvent: 'fieldChange:stake.designat',
 						id: 'PESS1___STAKEDESIGNAT',
 						name: 'DESIGNAT',
-						size: 'mini',
+						size: 'xxlarge',
 						label: computed(() => this.Resources.INTERESTED34576),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
@@ -814,6 +798,7 @@
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						maxLength: 85,
+						mustBeFilled: true,
 						controlLimits: [
 						],
 					}, this),
@@ -828,8 +813,8 @@
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						maxLength: 1,
 						arrayName: 'Genero',
-						helpShortItem: '',
-						helpDetailedItem: '',
+						helpShortItem: 'None',
+						helpDetailedItem: 'None',
 						controlLimits: [
 						],
 					}, this),
@@ -858,6 +843,7 @@
 						maxIntegers: 6,
 						maxDecimals: 0,
 						isSequencial: true,
+						mustBeFilled: true,
 						controlLimits: [
 						],
 					}, this),
@@ -910,7 +896,7 @@
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						height: 50,
-						width: 30,
+						width: 100,
 						dataTitle: computed(() => genericFunctions.formatString(vm.Resources.IMAGEM_UTILIZADA_PAR17299, vm.Resources.PHOTO51874)),
 						controlLimits: [
 						],
@@ -936,7 +922,7 @@
 						size: 'small',
 						label: computed(() => this.Resources.EXTERNAL13375),
 						placeholder: '',
-						labelPosition: computed(() => this.$app.layout.CheckboxLabelAlignment),
+						labelPosition: computed(() => this.labelAlignment.right),
 						controlLimits: [
 						],
 					}, this),
@@ -948,7 +934,7 @@
 						size: 'mini',
 						label: computed(() => this.Resources.INTERN65375),
 						placeholder: '',
-						labelPosition: computed(() => this.$app.layout.CheckboxLabelAlignment),
+						labelPosition: computed(() => this.labelAlignment.right),
 						controlLimits: [
 						],
 					}, this),
@@ -1381,116 +1367,6 @@
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 
 				this.afterControlUpdate(controlField, fieldValue)
-			},
-			/**
-			* Call agent MockPersonCreator
-			*/
-			async PESS1_MockPersonCreator_CB()
-			{
-				const handleError = (error) => {
-					genericFunctions.displayMessage(this.Resources.NAO_FOI_POSSIVEL_CON55944, 'error');
-					this.$eventTracker.addError({
-						origin: 'Agent PESS1_MockPersonCreator_CB',
-						message: error?.toString()
-					});
-				}
-
-				try {
-					const agentData = await this.get_PESS1_MockPersonCreator_CB_data();
-
-					this.setCurrentAgent({
-						...agentData
-					})
-					this.$eventHub.emit('open-sidebar-on-tab', 'chatbot-tab')
-				} catch (e) {
-					handleError(e);
-				}
-			},
-
-			async get_PESS1_MockPersonCreator_CB_data(userPrompt)
-			{
-				//Call server and wait for response
-				const data = await netAPI.postData(
-					"PESS1",
-					"PESS1_MockPersonCreator_CB",
-					{
-						...this.model.serverObjModel,
-						ChatBotUserPrompt: userPrompt || '',
-					},
-					undefined,
-					undefined,
-					undefined,
-					this.navigationId)
-
-				if(data?.success === true)
-				{
-					const agentId = data.data?.agentId
-					const agentData = {
-						...data.data,
-						formId: this.$route.params.id,
-					}
-
-					if(this.currentAgent?.id === agentId)
-					{
-						this.setCurrentAgent(agentData);
-					}
-					else {
-						this.setCurrentAgent({
-							id: agentId,
-							...agentData,
-						});
-					}
-				}
-				else throw new Error("Unexpected agent response");
-			},
-
-			async setAgentData(agentData)
-			{
-				let data;
-				switch (agentData.agentId) {
-					case 'MockPersonCreator':
-						data = await this.get_PESS1_MockPersonCreator_CB_data(agentData.userPrompt);
-						break;
-				}
-
-				if (!data) return;
-
-				this.setCurrentAgent({
-					...data,
-				})
-			},
-
-			applyAgentFields(fields)
-			{
-				if (!fields || !Array.isArray(fields)) return;
-				const highlightClass = 'highlight-field'
-
-				fields.forEach((field) => {
-					switch (field.id) {
-						case 'Employee_Number':
-							this.model.ValIdfuncio.value = field.text;
-							this.controls.PESS1___PESS1IDFUNCIO.addControlClass(highlightClass);
-							break;
-						case 'Telephone':
-							this.model.ValTelephon.value = field.text;
-							this.controls.PESS1___PESS1TELEPHON.addControlClass(highlightClass);
-							break;
-						case 'Name':
-							this.model.ValName.value = field.text;
-							this.controls.PESS1___PESS1NAME____.addControlClass(highlightClass);
-							break;
-						case 'Email':
-							this.model.ValEmail.value = field.text;
-							this.controls.PESS1___PESS1EMAIL___.addControlClass(highlightClass);
-							break;
-						default:
-							this.$eventTracker.addError({
-								origin: 'applyAgentFields',
-								message: `Unknown field name: ${field.name}`
-							});
-							break;
-					}
-				})
 			},
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
 // USE /[MANUAL GQT FUNCTIONS_JS PESS1]/

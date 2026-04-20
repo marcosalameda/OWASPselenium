@@ -17,6 +17,21 @@ public abstract class Form : PageObject
     public string Id { get; }
 
     /// <summary>
+    /// Whether to use the primary key of the form when finding controls.
+    /// </summary>
+    public bool UsePkInId { get; }
+
+    /// <summary>
+    /// The primary key of the form.
+    /// </summary>
+    public string PrimaryKey => Container.FindElement(BodyLocator).GetAttribute("data-identifier");
+
+    /// <summary>
+    /// The ID of the form.
+    /// </summary>
+    public string IdSuffix => UsePkInId ? "_" + PrimaryKey : string.Empty;
+
+    /// <summary>
     /// Gets the mode of the form.
     /// </summary>
     public FORM_MODE Mode { get; }
@@ -60,10 +75,11 @@ public abstract class Form : PageObject
     /// <param name="mode">The mode of the form (e.g. Create, Edit, View).</param>
     /// <param name="containerLocator">A custom locator for the form container.</param>
     /// <param name="bodyLocator">A custom locator for the form body.</param>
-    public Form(IWebDriver driver, FORM_MODE mode, string id, By? containerLocator = null, By? bodyLocator = null) : base(driver)
+    public Form(IWebDriver driver, FORM_MODE mode, string id, By? containerLocator = null, By? bodyLocator = null, bool usePkInId = false) : base(driver)
     {
         Id = id;
         Mode = mode;
+        UsePkInId = usePkInId;
         
         _containerLocator = containerLocator;
         _bodyLocator = bodyLocator;

@@ -73,6 +73,7 @@ export default class ViewModel extends FormViewModelBase
 			field: 'WAREHDES',
 			maxLength: 85,
 			description: computed(() => this.Resources.WAREHOUSE51864),
+			ignoreFldSubmit: true,
 		}).cloneFrom(values?.TableWare1Warehdes))
 		this.stopWatchers.push(watch(() => this.TableWare1Warehdes.value, (newValue, oldValue) => this.onUpdate('ware1.warehdes', this.TableWare1Warehdes, newValue, oldValue)))
 

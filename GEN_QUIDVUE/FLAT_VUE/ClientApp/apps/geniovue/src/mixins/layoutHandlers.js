@@ -112,12 +112,12 @@ export default {
 			// If the menu is an accordion, removes all entries outside the current branch.
 			if (this.isAccordionMenu)
 			{
-				let otherMenus = []
-				for (let menuId of this.menuPath)
+				const otherMenus = []
+				for (const menuId of this.menuPath)
 					if (!menu.Order.startsWith(menuId))
 						otherMenus.push(menuId)
 
-				for (let menuId of otherMenus)
+				for (const menuId of otherMenus)
 					this.removeFromMenuPath(menuId)
 
 				this.removeFromMenuPath(menu.Order)

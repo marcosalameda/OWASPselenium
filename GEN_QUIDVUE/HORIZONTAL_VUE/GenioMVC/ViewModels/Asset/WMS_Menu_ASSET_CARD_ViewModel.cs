@@ -108,7 +108,7 @@ namespace GenioMVC.ViewModels.Asset
 			conditions.SubSets.Add(GetCustomizedStaticLimits(StaticLimits));
 
 			// Checks for foreign tables in fields and conditions
-			FieldRef[] fields = new FieldRef[] { CSGenioAasset.FldCodasset, CSGenioAasset.FldZzstate, CSGenioAasset.FldAssetnum, CSGenioAasset.FldName, CSGenioAasset.FldCodkinde, CSGenioAkinde.FldCodkinde, CSGenioAkinde.FldDesignat, CSGenioAasset.FldIdenttyp, CSGenioAasset.FldGrai, CSGenioAasset.FldGiai, CSGenioAasset.FldPhoto, CSGenioAasset.FldCodmanuf, CSGenioAmanuf.FldCodentit, CSGenioAmanuf.FldName, CSGenioAmanuf.FldWebsite, CSGenioAasset.FldDescription, CSGenioAasset.FldLongdesc };
+			FieldRef[] fields = new FieldRef[] { CSGenioAasset.FldCodasset, CSGenioAasset.FldZzstate, CSGenioAasset.FldAssetnum, CSGenioAasset.FldName, CSGenioAasset.FldCodkinde, CSGenioAkinde.FldCodkinde, CSGenioAkinde.FldDesignat, CSGenioAasset.FldIdenttyp, CSGenioAasset.FldGrai, CSGenioAasset.FldGiai, CSGenioAasset.FldPhoto, CSGenioAasset.FldCodmanuf, CSGenioAmanuf.FldCodentit, CSGenioAmanuf.FldName, CSGenioAmanuf.FldWebsite };
 
 			ListingMVC<CSGenioAasset> listing = new(fields, null, 1, 1, false, user, true, string.Empty, false);
 			SelectQuery qs = sp.getSelectQueryFromListingMVC(conditions, listing);
@@ -164,8 +164,6 @@ namespace GenioMVC.ViewModels.Asset
 				new Exports.QColumn(CSGenioAasset.FldGiai, FieldType.TEXT, Resources.Resources.GIAI50592, 30, 0, true),
 				new Exports.QColumn(CSGenioAmanuf.FldName, FieldType.TEXT, Resources.Resources.MANUFACTURER50759, 30, 0, true),
 				new Exports.QColumn(CSGenioAmanuf.FldWebsite, FieldType.TEXT, Resources.Resources.WEB_SITE06263, 30, 0, true),
-				new Exports.QColumn(CSGenioAasset.FldDescription, FieldType.MEMO, Resources.Resources.DESCRIPTION07383, 30, 5, true),
-				new Exports.QColumn(CSGenioAasset.FldLongdesc, FieldType.MEMO, Resources.Resources.DETAILED_DESCRIPTION36560, 30, 10, false),
 			];
 		}
 
@@ -221,6 +219,8 @@ namespace GenioMVC.ViewModels.Asset
 
 			crs.SubSets.Add(subfilters);
 
+			// Form field filters
+			crs.SubSets.Add(ProcessFieldFilters(tableConfig.GlobalFilters));
 
 			crs.SubSets.Add(GetCustomizedStaticLimits(StaticLimits));
 
@@ -348,14 +348,13 @@ namespace GenioMVC.ViewModels.Asset
 
 			}
 
-			FieldRef[] fields = new FieldRef[] { CSGenioAasset.FldCodasset, CSGenioAasset.FldZzstate, CSGenioAasset.FldAssetnum, CSGenioAasset.FldName, CSGenioAasset.FldCodkinde, CSGenioAkinde.FldCodkinde, CSGenioAkinde.FldDesignat, CSGenioAasset.FldIdenttyp, CSGenioAasset.FldGrai, CSGenioAasset.FldGiai, CSGenioAasset.FldPhoto, CSGenioAasset.FldCodmanuf, CSGenioAmanuf.FldCodentit, CSGenioAmanuf.FldName, CSGenioAmanuf.FldWebsite, CSGenioAasset.FldDescription, CSGenioAasset.FldLongdesc };
+			FieldRef[] fields = new FieldRef[] { CSGenioAasset.FldCodasset, CSGenioAasset.FldZzstate, CSGenioAasset.FldAssetnum, CSGenioAasset.FldName, CSGenioAasset.FldCodkinde, CSGenioAkinde.FldCodkinde, CSGenioAkinde.FldDesignat, CSGenioAasset.FldIdenttyp, CSGenioAasset.FldGrai, CSGenioAasset.FldGiai, CSGenioAasset.FldPhoto, CSGenioAasset.FldCodmanuf, CSGenioAmanuf.FldCodentit, CSGenioAmanuf.FldName, CSGenioAmanuf.FldWebsite };
 
-
-			// Totalizers
-			List<FieldRef> fieldsWithTotalizers = fields.Where(field => tableConfig.TotalizerColumns.Contains(field.FullName)).ToList();
+			// List of column names that should display totalized (aggregated) values.
+			List<string> totalizerColumns = [];
+			List<FieldRef> fieldsWithTotalizers = [.. fields.Where(field => totalizerColumns.Contains(field.FullName))];
 
 			FieldRef firstVisibleColumn = null;
-
 			if (sorts.Count == 0)
 			{
 				firstVisibleColumn = tableConfig?.GetFirstVisibleColumn(TableAlias);
@@ -406,23 +405,7 @@ namespace GenioMVC.ViewModels.Asset
 
 // USE /[MANUAL WMS OVERRQ ASSET_CARD]/
 
-			List<string> listOfTablesBelow = ["atags"];
-
 			bool distinct = false;
-			int nDistinctSearchTables = tableConfig.SearchFilters
-				.Concat(tableConfig.SearchFilters.SelectMany(f => f.SubFilters).OfType<ColumnFilter>())
-				.Where(filter =>
-					_searchableColumnsRefs.ContainsKey(filter.Field)
-						? listOfTablesBelow.Contains(_searchableColumnsRefs[filter.Field].Area)
-						: false
-				)
-				.Distinct()
-				.Count();
-
-			if (nDistinctSearchTables == 1)
-				distinct = true;
-			else if (nDistinctSearchTables > 1)
-				tableReload = false;
 
 			if (isToExport)
 			{
@@ -466,9 +449,7 @@ namespace GenioMVC.ViewModels.Asset
 				//Set document field values to objects
 				SetDocumentFields(listing);
 
-				var rowKeys = listing.Rows.Select(r => r.QPrimaryKey);
-				var belowRows = GetRecordsFromTablesBelow(rowKeys);
-				Menu.Elements = MapWMS_Menu_ASSET_CARD(listing, belowRows);
+				Menu.Elements = MapWMS_Menu_ASSET_CARD(listing);
 
 				Menu.Identifier = "MLASSET_CARD";
 				Menu.Slots = new Dictionary<string, List<object>>();
@@ -493,12 +474,9 @@ namespace GenioMVC.ViewModels.Asset
 
 			// Load the user table configuration names and default name
 			LoadUserTableConfigNameProperties();
-
-			if (nDistinctSearchTables > 1)
-				throw new BusinessException(Resources.Resources.NAO_E_POSSIVEL_EFETU17380, "WMS_Menu_ASSET_CARD_ViewModel.Load", "Error: MultipleFiltersTablesBelow", null);
 		}
 
-		private List<WMS_Menu_ASSET_CARD_RowViewModel> MapWMS_Menu_ASSET_CARD(ListingMVC<CSGenioAasset> Qlisting, System.Collections.Hashtable tableBelowRows = null)
+		private List<WMS_Menu_ASSET_CARD_RowViewModel> MapWMS_Menu_ASSET_CARD(ListingMVC<CSGenioAasset> Qlisting)
 		{
 			List<WMS_Menu_ASSET_CARD_RowViewModel> Elements = [];
 			int i = 0;
@@ -509,7 +487,7 @@ namespace GenioMVC.ViewModels.Asset
 				{
 					if (Qlisting.NumRegs > 0 && i >= Qlisting.NumRegs) // Copiado da versão antiga do RowsToViewModels
 						break;
-					Elements.Add(MapWMS_Menu_ASSET_CARD(row, tableBelowRows));
+					Elements.Add(MapWMS_Menu_ASSET_CARD(row));
 					i++;
 				}
 			}
@@ -522,7 +500,7 @@ namespace GenioMVC.ViewModels.Asset
 		/// to a WMS_Menu_ASSET_CARD_RowViewModel object.
 		/// </summary>
 		/// <param name="row">The row.</param>
-		private WMS_Menu_ASSET_CARD_RowViewModel MapWMS_Menu_ASSET_CARD(CSGenioAasset row, System.Collections.Hashtable tableBelowRows = null)
+		private WMS_Menu_ASSET_CARD_RowViewModel MapWMS_Menu_ASSET_CARD(CSGenioAasset row)
 		{
 			var model = new WMS_Menu_ASSET_CARD_RowViewModel(m_userContext, true, _fieldsToSerialize);
 			if (row == null)
@@ -544,16 +522,6 @@ namespace GenioMVC.ViewModels.Asset
 			}
 
 			model.InitRowData();
-
-			// ATAGS columns
-			if ((bool)tableBelowRows?.ContainsKey("atags"))
-			{
-				var rowsByKey = tableBelowRows["atags"] as Dictionary<string, List<CSGenioAatags>>;
-				if (rowsByKey?.TryGetValue(row.QPrimaryKey, out List<CSGenioAatags> rows) == true)
-				{
-					model.AtagsValIcon = [.. rows.Where(r => !CSGenio.framework.Field.isEmptyValue(r.ValIcon, FieldType.ARRAY_NUMERIC.GetFormatting())).Select(r => ViewModelConversion.ToNumeric(r.ValIcon))];
-				}
-			}
 
 			SetTicketToImageFields(model);
 			return model;
@@ -600,7 +568,7 @@ namespace GenioMVC.ViewModels.Asset
 
 		private static readonly string[] _fieldsToSerialize =
 		[
-			"Asset", "Asset.ValCodasset", "Asset.ValZzstate", "Asset.ValAssetnum", "Asset.ValName", "Kinde", "Kinde.ValDesignat", "Asset.ValIdenttyp", "Asset.ValGrai", "Asset.ValGiai", "Asset.ValPhoto", "Manuf", "Manuf.ValName", "Manuf.ValWebsite", "Asset.ValDescription", "Asset.ValLongdesc", "Asset.ValCodkinde", "Asset.ValCodmanuf", "Atags.ValIcon"
+			"Asset", "Asset.ValCodasset", "Asset.ValZzstate", "Asset.ValAssetnum", "Asset.ValName", "Kinde", "Kinde.ValDesignat", "Asset.ValIdenttyp", "Asset.ValGrai", "Asset.ValGiai", "Asset.ValPhoto", "Manuf", "Manuf.ValName", "Manuf.ValWebsite", "Asset.ValCodkinde", "Asset.ValCodmanuf"
 		];
 
 		private static readonly List<TableSearchColumn> _searchableColumns =
@@ -613,45 +581,7 @@ namespace GenioMVC.ViewModels.Asset
 			new TableSearchColumn("ValGiai", CSGenioAasset.FldGiai, typeof(string)),
 			new TableSearchColumn("Manuf_ValName", CSGenioAmanuf.FldName, typeof(string)),
 			new TableSearchColumn("Manuf_ValWebsite", CSGenioAmanuf.FldWebsite, typeof(string)),
-			new TableSearchColumn("ValDescription", CSGenioAasset.FldDescription, typeof(string)),
-			new TableSearchColumn("ValLongdesc", CSGenioAasset.FldLongdesc, typeof(string), visible : false),
-			new TableSearchColumn("ValIcon", CSGenioAatags.FldIcon, typeof(decimal), array : "assetTags"),
 		];
-		private static readonly Dictionary<string, FieldRef> _searchableColumnsRefs = new()
-		{
-			{ "ASSET.ASSETNUM", CSGenioAasset.FldAssetnum },
-			{ "ASSET.NAME", CSGenioAasset.FldName },
-			{ "KINDE.DESIGNAT", CSGenioAkinde.FldDesignat },
-			{ "ASSET.IDENTTYP", CSGenioAasset.FldIdenttyp },
-			{ "ASSET.GRAI", CSGenioAasset.FldGrai },
-			{ "ASSET.GIAI", CSGenioAasset.FldGiai },
-			{ "MANUF.NAME", CSGenioAmanuf.FldName },
-			{ "MANUF.WEBSITE", CSGenioAmanuf.FldWebsite },
-			{ "ASSET.DESCRIPT", CSGenioAasset.FldDescription },
-			{ "ASSET.LONGDESC", CSGenioAasset.FldLongdesc },
-			{ "ATAGS.ICON", CSGenioAatags.FldIcon },
-		};
-
-		/// <summary>
-		/// Retrieves values from the database for the related tables. Each table fetches all necessary fields required for visualization in the table
-		/// </summary>
-		/// <param name="keys">Current row keys</param>
-		/// <returns></returns>
-		private System.Collections.Hashtable GetRecordsFromTablesBelow(IEnumerable<string> keys)
-		{
-			System.Collections.Hashtable result = [];
-			if (keys?.Any() == false)
-				return result;
-
-			// ATAGS columns
-			{
-				var criteriaSetTBelow = CriteriaSet.And().In(CSGenioAatags.FldCodasset, keys).Equal(CSGenioAatags.FldZzstate, 0);
-				FieldRef[] fields = [CSGenioAatags.FldCodtags, CSGenioAatags.FldCodasset, CSGenioAatags.FldIcon];
-				var listing = Models.ModelBase.Where<CSGenioAatags>(m_userContext, false, criteriaSetTBelow, numRegs: -1, fields: fields, identifier: "MLASSET_CARD_ATAGS");
-				result.Add("atags", listing.Rows.GroupBy(row => row.ValCodasset).ToDictionary(group => group.Key, group => group.ToList()));
-			}
-			return result;
-		}
 		protected void SetTicketToImageFields(Models.Asset row)
 		{
 			if (row == null)

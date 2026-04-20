@@ -3,7 +3,7 @@ packages:
   - 'packages/*'
 
 catalog:
-  '@quidgest/ui': 0.16.54
+  '@quidgest/ui': 0.16.68
   '@vitejs/plugin-vue': 5.2.1
   '@vue/test-utils': 2.4.6
   axios: 1.11.0

@@ -26,13 +26,25 @@ namespace GenioServer.security
             var sp = ResolvePersistentSupport(psw, area);
 
             //prevalidate business record, to prevent having to rollback external user creation
-            if (area is Area business)
+            if (area is DbArea dbArea)
             {
                 sp.openConnection();
-                StatusMessage status = Validation.validateFieldsChange(business, sp, area.User);
+
+                dbArea.fillValuesDefault(sp, FunctionType.INS);
+                FormulaDbContext fdc = new FormulaDbContext(dbArea);
+                fdc.AddInternalOperations();
+                dbArea.fillInternalOperations(sp, dbArea, fdc);
+
+
+                StatusMessage status = Validation.validateFieldsChange(dbArea, sp, area.User);
                 if (status.Status == Status.E)
                     throw new FieldValidationException(status, "BaseUserRegistration.Register");
+
                 sp.closeConnection();
+            }
+            else
+            {
+                throw new ArgumentException($"Expected area to be of type DbArea, but got {area.GetType().Name}.", nameof(area));
             }
 
             User newUser = CreateUser(psw, secret);

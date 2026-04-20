@@ -97,7 +97,7 @@ export class TelemetryHandler {
 		this.eventQueue = [] // Clear the queue before sending to avoid duplication
 
 		try {
-			let url = apiActionURL('InternalProcess', 'RegisterTelemetry'),
+			const url = apiActionURL('InternalProcess', 'RegisterTelemetry'),
 				tokenElements = document.getElementsByName('__RequestVerificationToken'),
 				antiForgeryToken = tokenElements.length > 0 ? tokenElements[0].value : null
 

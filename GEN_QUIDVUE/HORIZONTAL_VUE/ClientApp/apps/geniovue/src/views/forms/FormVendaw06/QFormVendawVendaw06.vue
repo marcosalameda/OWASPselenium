@@ -9,12 +9,13 @@
 			<div
 				v-if="showFormHeader"
 				class="c-action-bar">
-				<h1
+				<component
 					v-if="formControl.uiComponents.header && formInfo.designation"
+					:is="topHeadingTag"
 					:id="formTitleId"
 					class="form-header">
 					{{ formInfo.designation }}
-				</h1>
+				</component>
 
 				<div class="c-action-bar__menu">
 					<template
@@ -40,13 +41,10 @@
 									@click="btn.action">
 									<template v-if="btn.icon">
 										<q-badge-indicator
-											v-if="btn.badge && btn.badge.isVisible"
-											:color="btn.badge.color">
+											:enabled="btn.badge?.isVisible ?? false"
+											:color="btn.badge?.color">
 											<q-icon v-bind="btn.icon" />
 										</q-badge-indicator>
-										<q-icon
-											v-else
-											v-bind="btn.icon" />
 									</template>
 								</q-toggle-group-item>
 							</template>
@@ -97,6 +95,7 @@
 		<q-container
 			fluid
 			data-key="VENDAW06"
+			:data-identifier="primaryKeyValue"
 			:data-loading="!formInitialDataLoaded || !isActiveForm">
 			<template v-if="formControl.initialized && showFormBody">
 				<q-row v-if="controls.VENDAW__PSEUDFASES___.isVisible">
@@ -105,18 +104,19 @@
 						cols="auto">
 						<q-wizard
 							v-if="controls.VENDAW__PSEUDFASES___.isVisible"
-							id="VENDAW__PSEUDFASES___"
 							:is-required="controls.VENDAW__PSEUDFASES___.isRequired"
+							:base-heading-level="baseHeadingLevel + 1"
 							v-bind="controls.VENDAW__PSEUDFASES___.wizardData"
+							:id="getControlId(controls.VENDAW__PSEUDFASES___)"
 							v-on="controls.VENDAW__PSEUDFASES___.handlers">
 							<!-- Start VENDAW__PSEUDFASES___ -->
 							<q-row v-if="controls.VENDAW06PSEUDNOVOGR06.isVisible">
 								<q-col v-if="controls.VENDAW06PSEUDNOVOGR06.isVisible">
 									<q-group-box-container
 										v-if="controls.VENDAW06PSEUDNOVOGR06.isVisible"
-										id="VENDAW06PSEUDNOVOGR06"
 										v-bind="controls.VENDAW06PSEUDNOVOGR06"
-										:is-visible="controls.VENDAW06PSEUDNOVOGR06.isVisible">
+										:id="getControlId(controls.VENDAW06PSEUDNOVOGR06)"
+										:no-border="controls.VENDAW06PSEUDNOVOGR06.borderless">
 										<!-- Start VENDAW06PSEUDNOVOGR06 -->
 										<q-row v-if="controls.VENDAW06SALE_DTSUPERA.isVisible">
 											<q-col
@@ -125,7 +125,8 @@
 												<base-input-structure
 													v-if="controls.VENDAW06SALE_DTSUPERA.isVisible"
 													class="i-text"
-													v-bind="controls.VENDAW06SALE_DTSUPERA"
+													v-bind="controls.VENDAW06SALE_DTSUPERA.wrapperProps"
+													:id="getControlId(controls.VENDAW06SALE_DTSUPERA)"
 													v-on="controls.VENDAW06SALE_DTSUPERA.handlers"
 													:loading="controls.VENDAW06SALE_DTSUPERA.props.loading"
 													:reporting-mode-on="reportingModeCAV"
@@ -133,6 +134,7 @@
 													<q-date-time-picker
 														v-if="controls.VENDAW06SALE_DTSUPERA.isVisible"
 														v-bind="controls.VENDAW06SALE_DTSUPERA.props"
+														:id="getControlId(controls.VENDAW06SALE_DTSUPERA)"
 														:model-value="model.ValDtsupera.value"
 														@reset-icon-click="model.ValDtsupera.fnUpdateValue(model.ValDtsupera.originalValue ?? new Date())"
 														@update:model-value="model.ValDtsupera.fnUpdateValue($event ?? '')" />
@@ -151,7 +153,7 @@
 		</q-container>
 	</teleport>
 
-	<hr v-if="!isPopup && showFormFooter" />
+	<q-divider v-if="!isPopup && showFormFooter" />
 
 	<teleport
 		v-if="formModalIsReady && showFormFooter"
@@ -621,6 +623,7 @@
 						label: computed(() => this.Resources.OVERCOMING_OBJECTION04521),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
+						borderless: false,
 						isCollapsible: false,
 						anchored: false,
 						directChildren: ['VENDAW06SALE_DTSUPERA'],
@@ -1036,7 +1039,6 @@
 
 				this.afterControlUpdate(controlField, fieldValue)
 			},
-
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
 // USE /[MANUAL GQT FUNCTIONS_JS VENDAW06]/
 // eslint-disable-next-line

@@ -3,22 +3,23 @@
 		v-if="menuModalIsReady"
 		:to="`#${uiContainersId.body}`"
 		:disabled="!menuInfo.isPopup">
-		<form
+		<div
 			class="form-horizontal"
 			@submit.prevent>
 			<q-row-container>
 				<q-table
 					v-bind="controls.menu"
 					v-on="controls.menu.handlers">
+					<template #header>
+						<q-table-config
+							:table-ctrl="controls.menu"
+							v-on="controls.menu.handlers">
+						</q-table-config>
+					</template>
 					<!-- USE /[MANUAL GQT CUSTOM_TABLE PTN_Menu_3151]/ -->
 				</q-table>
-
-				<q-table-extra-extension
-					:list-ctrl="controls.menu"
-					:filter-operators="controls.menu.filterOperators"
-					v-on="controls.menu.handlers" />
 			</q-row-container>
-		</form>
+		</div>
 	</teleport>
 
 	<teleport
@@ -121,12 +122,12 @@
 				menuInfo: {
 					id: '3151',
 					isMenuList: true,
-					designation: computed(() => this.Resources.RELATED_TABLES__BASI34539),
+					designation: computed(() => this.Resources.TABLES__FOREIGN_KEYS59930),
 					acronym: 'PTN_3151',
-					name: 'TRSB',
+					name: 'TBLK',
 					route: 'menu-PTN_3151',
 					order: '3151',
-					controller: 'TRSB',
+					controller: 'TBLK',
 					action: 'PTN_Menu_3151',
 					isPopup: false
 				},
@@ -137,7 +138,7 @@
 					menu: new controlClass.TableListControl({
 						fnHydrateViewModel: (data) => vm.model.hydrate(data),
 						id: 'PTN_Menu_3151',
-						controller: 'TRSB',
+						controller: 'TBLK',
 						action: 'PTN_Menu_3151',
 						hasDependencies: false,
 						isInCollapsible: false,
@@ -149,29 +150,51 @@
 							new listColumnTypes.TextColumn({
 								order: 1,
 								name: 'ValName',
+								area: 'TBLK',
+								field: 'NAME',
+								label: computed(() => this.Resources.NAME31974),
+								dataLength: 50,
+								scrollData: 30,
+								export: 1,
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
+							new listColumnTypes.TextColumn({
+								order: 2,
+								name: 'Grpb.ValName',
+								area: 'GRPB',
+								field: 'NAME',
+								label: computed(() => this.Resources.NAME31974),
+								dataLength: 50,
+								scrollData: 30,
+								export: 1,
+								pkColumn: 'ValCodgrpb',
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
+							new listColumnTypes.TextColumn({
+								order: 3,
+								name: 'Trsb.ValName',
 								area: 'TRSB',
 								field: 'NAME',
 								label: computed(() => this.Resources.NAME31974),
 								dataLength: 50,
 								scrollData: 30,
+								export: 1,
+								pkColumn: 'ValCodtrsb',
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 						],
 						config: {
 							name: 'PTN_Menu_3151',
 							serverMode: true,
-							pkColumn: 'ValCodtrsb',
-							tableAlias: 'TRSB',
-							tableNamePlural: computed(() => this.Resources.RELATED_TABLES__BASI34539),
+							pkColumn: 'ValCodtblk',
+							tableAlias: 'TBLK',
+							tableNamePlural: computed(() => this.Resources.TABLES__FOREIGN_KEYS59930),
 							viewManagement: 'U',
 							showLimitsInfo: true,
-							tableTitle: computed(() => this.Resources.RELATED_TABLES__BASI34539),
+							tableTitle: computed(() => this.Resources.TABLES__FOREIGN_KEYS59930),
 							showAlternatePagination: true,
 							permissions: {
 							},
 							searchBarConfig: {
 								visibility: true
 							},
-							filtersVisible: true,
 							allowColumnFilters: true,
 							allowColumnSort: true,
 							crudActions: [
@@ -186,7 +209,7 @@
 									params: {
 										action: vm.openFormAction,
 										type: 'form',
-										formName: 'TRSB',
+										formName: 'TBLK',
 										mode: 'SHOW',
 										isControlled: true
 									}
@@ -202,7 +225,7 @@
 									params: {
 										action: vm.openFormAction,
 										type: 'form',
-										formName: 'TRSB',
+										formName: 'TBLK',
 										mode: 'EDIT',
 										isControlled: true
 									}
@@ -218,7 +241,7 @@
 									params: {
 										action: vm.openFormAction,
 										type: 'form',
-										formName: 'TRSB',
+										formName: 'TBLK',
 										mode: 'DUPLICATE',
 										isControlled: true
 									}
@@ -234,7 +257,7 @@
 									params: {
 										action: vm.openFormAction,
 										type: 'form',
-										formName: 'TRSB',
+										formName: 'TBLK',
 										mode: 'DELETE',
 										isControlled: true
 									}
@@ -245,14 +268,12 @@
 									id: 'insert',
 									name: 'insert',
 									title: computed(() => this.Resources.INSERIR43365),
-									icon: {
-										icon: 'add'
-									},
+									icon: { icon: 'add' },
 									isInReadOnly: true,
 									params: {
 										action: vm.openFormAction,
 										type: 'form',
-										formName: 'TRSB',
+										formName: 'TBLK',
 										mode: 'NEW',
 										repeatInsertion: false,
 										isControlled: true
@@ -269,23 +290,23 @@
 							],
 							rowClickAction: {
 								id: 'RCA_PTN_31511',
-								name: 'form-TRSB',
+								name: 'form-TBLK',
 								isVisible: true,
 								params: {
 									isRoute: true,
 									limits: [
 										{
 											identifier: 'id',
-											fnValueSelector: (row) => row.ValCodtrsb
+											fnValueSelector: (row) => row.ValCodtblk
 										},
 									],
 									isControlled: true,
-									action: vm.openFormAction, type: 'form', mode: 'SHOW', formName: 'TRSB'
+									action: vm.openFormAction, type: 'form', mode: 'SHOW', formName: 'TBLK'
 								}
 							},
 							formsDefinition: {
-								'TRSB': {
-									fnKeySelector: (row) => row.Fields.ValCodtrsb,
+								'TBLK': {
+									fnKeySelector: (row) => row.Fields.ValCodtblk,
 									isPopup: false
 								},
 							},
@@ -296,8 +317,8 @@
 								sortOrder: 'asc'
 							}
 						},
-						globalEvents: ['changed-TRSB'],
-						uuid: 'af8a7b0d-5af1-4fed-b40f-75b9abd0d802',
+						globalEvents: ['changed-GRPB', 'changed-TBLK', 'changed-TRSB'],
+						uuid: '3b185cfa-ac50-486e-9679-724d526a89a7',
 						allSelectedRows: 'false',
 						headerLevel: 1,
 						isActiveControl: computed(() => this.isActiveMenu)

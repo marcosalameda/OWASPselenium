@@ -7,6 +7,7 @@ using GenioMVC.Models.Navigation;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Quidgest.Persistence;
 using Quidgest.Persistence.GenericQuery;
+
 using System.Collections;
 using System.Collections.Concurrent;
 using System.Collections.Specialized;
@@ -36,6 +37,7 @@ namespace GenioMVC.ViewModels.Tblb
 		public string ValFkey1 { get; set; }
 
 		#endregion
+
 		/// <summary>
 		/// Title: "Text" | Type: "C"
 		/// </summary>
@@ -85,21 +87,9 @@ namespace GenioMVC.ViewModels.Tblb
 		/// </summary>
 		public string ValEnumt { get; set; }
 		/// <summary>
-		/// Title: "" | Type: "PSEUD"
-		/// </summary>
-		[JsonIgnore]
-		public SelectList List_ValEnumt { get; set; }
-		/// <summary>
 		/// Title: "Enumeration (Numeric)" | Type: "AN"
 		/// </summary>
 		public decimal ValEnumn { get; set; }
-		/// <summary>
-		/// Title: "" | Type: "PSEUD"
-		/// </summary>
-		[JsonIgnore]
-		public SelectList List_ValEnumn { get; set; }
-
-
 
 		#region Navigations
 		#endregion
@@ -302,12 +292,7 @@ namespace GenioMVC.ViewModels.Tblb
 			}
 		}
 
-		/// <summary>
-		/// Sets the value of a single property of the view model based on the provided table and field names.
-		/// </summary>
-		/// <param name="fullFieldName">The full field name in the format "table.field".</param>
-		/// <param name="value">The field value.</param>
-		/// <exception cref="ArgumentNullException">Thrown if <paramref name="fullFieldName"/> is null.</exception>
+		/// <inheritdoc />
 		public override void SetViewModelValue(string fullFieldName, object value)
 		{
 			try
@@ -416,6 +401,7 @@ namespace GenioMVC.ViewModels.Tblb
 			}
 			// Add characteristics
 			Characs = new List<string>();
+
 
 // USE /[MANUAL GQT VIEWMODEL_LOADPARTIAL GRPB____PSEUDTBLB____]/
 		}

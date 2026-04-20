@@ -511,9 +511,14 @@ namespace GenioMVC.ViewModels
 				// Set the visibility to match the configuration of this column
 				currentColumn.Visible = currentConfiguredColumn.Visibility == 1;
 
-				// If the column is visible and exportable, add it to the list of columns to export
-				if (currentColumn.Visible && currentConfiguredColumn.Exportability == 1)
+				// Determine export logic
+				bool shouldExport =
+					currentConfiguredColumn.Exportability == 2 ||
+					(currentConfiguredColumn.Exportability == 1 && currentColumn.Visible);
+
+				if (shouldExport)
 					configuredColumns.Add(currentColumn);
+
 			}
 
 			return configuredColumns;

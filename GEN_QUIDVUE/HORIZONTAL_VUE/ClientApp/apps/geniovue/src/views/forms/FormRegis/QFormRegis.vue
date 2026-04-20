@@ -9,12 +9,13 @@
 			<div
 				v-if="showFormHeader"
 				class="c-action-bar">
-				<h1
+				<component
 					v-if="formControl.uiComponents.header && formInfo.designation"
+					:is="topHeadingTag"
 					:id="formTitleId"
 					class="form-header">
 					{{ formInfo.designation }}
-				</h1>
+				</component>
 
 				<div class="c-action-bar__menu">
 					<template
@@ -40,13 +41,10 @@
 									@click="btn.action">
 									<template v-if="btn.icon">
 										<q-badge-indicator
-											v-if="btn.badge && btn.badge.isVisible"
-											:color="btn.badge.color">
+											:enabled="btn.badge?.isVisible ?? false"
+											:color="btn.badge?.color">
 											<q-icon v-bind="btn.icon" />
 										</q-badge-indicator>
-										<q-icon
-											v-else
-											v-bind="btn.icon" />
 									</template>
 								</q-toggle-group-item>
 							</template>
@@ -97,15 +95,16 @@
 		<q-container
 			fluid
 			data-key="REGIS"
+			:data-identifier="primaryKeyValue"
 			:data-loading="!formInitialDataLoaded || !isActiveForm">
 			<template v-if="formControl.initialized && showFormBody">
 				<q-row v-if="controls.REGIS___PSEUDNOVOGR01.isVisible">
 					<q-col v-if="controls.REGIS___PSEUDNOVOGR01.isVisible">
 						<q-group-box-container
 							v-if="controls.REGIS___PSEUDNOVOGR01.isVisible"
-							id="REGIS___PSEUDNOVOGR01"
 							v-bind="controls.REGIS___PSEUDNOVOGR01"
-							:is-visible="controls.REGIS___PSEUDNOVOGR01.isVisible">
+							:id="getControlId(controls.REGIS___PSEUDNOVOGR01)"
+							:no-border="controls.REGIS___PSEUDNOVOGR01.borderless">
 							<!-- Start REGIS___PSEUDNOVOGR01 -->
 							<q-row v-if="controls.REGIS___REGISNAME____.isVisible || controls.REGIS___REGISNIF_____.isVisible || controls.REGIS___REGISTELEPHON.isVisible || controls.REGIS___REGISEMAIL1__.isVisible">
 								<q-col
@@ -114,13 +113,15 @@
 									<base-input-structure
 										v-if="controls.REGIS___REGISNAME____.isVisible"
 										class="i-text"
-										v-bind="controls.REGIS___REGISNAME____"
+										v-bind="controls.REGIS___REGISNAME____.wrapperProps"
+										:id="getControlId(controls.REGIS___REGISNAME____)"
 										v-on="controls.REGIS___REGISNAME____.handlers"
 										:loading="controls.REGIS___REGISNAME____.props.loading"
 										:reporting-mode-on="reportingModeCAV"
 										:suggestion-mode-on="suggestionModeOn">
 										<q-text-field
 											v-bind="controls.REGIS___REGISNAME____.props"
+											:id="getControlId(controls.REGIS___REGISNAME____)"
 											@blur="onBlur(controls.REGIS___REGISNAME____, model.ValName.value)"
 											@change="model.ValName.fnUpdateValueOnChange" />
 									</base-input-structure>
@@ -131,26 +132,30 @@
 									<base-input-structure
 										v-if="controls.REGIS___REGISNIF_____.isVisible"
 										class="i-text"
-										v-bind="controls.REGIS___REGISNIF_____"
+										v-bind="controls.REGIS___REGISNIF_____.wrapperProps"
+										:id="getControlId(controls.REGIS___REGISNIF_____)"
 										v-on="controls.REGIS___REGISNIF_____.handlers"
 										:loading="controls.REGIS___REGISNIF_____.props.loading"
 										:reporting-mode-on="reportingModeCAV"
 										:suggestion-mode-on="suggestionModeOn">
 										<q-text-field
 											v-bind="controls.REGIS___REGISNIF_____.props"
+											:id="getControlId(controls.REGIS___REGISNIF_____)"
 											@blur="onBlur(controls.REGIS___REGISNIF_____, model.ValNif.value)"
 											@change="model.ValNif.fnUpdateValueOnChange" />
 									</base-input-structure>
 									<base-input-structure
 										v-if="controls.REGIS___REGISTELEPHON.isVisible"
 										class="i-text"
-										v-bind="controls.REGIS___REGISTELEPHON"
+										v-bind="controls.REGIS___REGISTELEPHON.wrapperProps"
+										:id="getControlId(controls.REGIS___REGISTELEPHON)"
 										v-on="controls.REGIS___REGISTELEPHON.handlers"
 										:loading="controls.REGIS___REGISTELEPHON.props.loading"
 										:reporting-mode-on="reportingModeCAV"
 										:suggestion-mode-on="suggestionModeOn">
 										<q-text-field
 											v-bind="controls.REGIS___REGISTELEPHON.props"
+											:id="getControlId(controls.REGIS___REGISTELEPHON)"
 											@blur="onBlur(controls.REGIS___REGISTELEPHON, model.ValTelephon.value)"
 											@change="model.ValTelephon.fnUpdateValueOnChange" />
 									</base-input-structure>
@@ -161,13 +166,15 @@
 									<base-input-structure
 										v-if="controls.REGIS___REGISEMAIL1__.isVisible"
 										class="i-text"
-										v-bind="controls.REGIS___REGISEMAIL1__"
+										v-bind="controls.REGIS___REGISEMAIL1__.wrapperProps"
+										:id="getControlId(controls.REGIS___REGISEMAIL1__)"
 										v-on="controls.REGIS___REGISEMAIL1__.handlers"
 										:loading="controls.REGIS___REGISEMAIL1__.props.loading"
 										:reporting-mode-on="reportingModeCAV"
 										:suggestion-mode-on="suggestionModeOn">
 										<q-text-field
 											v-bind="controls.REGIS___REGISEMAIL1__.props"
+											:id="getControlId(controls.REGIS___REGISEMAIL1__)"
 											@blur="onBlur(controls.REGIS___REGISEMAIL1__, model.ValEmail1.value)"
 											@change="model.ValEmail1.fnUpdateValueOnChange" />
 									</base-input-structure>
@@ -180,13 +187,15 @@
 									<base-input-structure
 										v-if="controls.REGIS___REGISEMAIL2__.isVisible"
 										class="i-text"
-										v-bind="controls.REGIS___REGISEMAIL2__"
+										v-bind="controls.REGIS___REGISEMAIL2__.wrapperProps"
+										:id="getControlId(controls.REGIS___REGISEMAIL2__)"
 										v-on="controls.REGIS___REGISEMAIL2__.handlers"
 										:loading="controls.REGIS___REGISEMAIL2__.props.loading"
 										:reporting-mode-on="reportingModeCAV"
 										:suggestion-mode-on="suggestionModeOn">
 										<q-text-field
 											v-bind="controls.REGIS___REGISEMAIL2__.props"
+											:id="getControlId(controls.REGIS___REGISEMAIL2__)"
 											@blur="onBlur(controls.REGIS___REGISEMAIL2__, model.ValEmail2.value)"
 											@change="model.ValEmail2.fnUpdateValueOnChange" />
 									</base-input-structure>
@@ -203,14 +212,15 @@
 						<base-input-structure
 							v-if="controls.REGIS___PSEUDOBRIGATO.isVisible"
 							class="i-static-text"
-							v-bind="controls.REGIS___PSEUDOBRIGATO"
+							v-bind="controls.REGIS___PSEUDOBRIGATO.wrapperProps"
+							:id="getControlId(controls.REGIS___PSEUDOBRIGATO)"
 							v-on="controls.REGIS___PSEUDOBRIGATO.handlers"
 							:loading="controls.REGIS___PSEUDOBRIGATO.props.loading"
 							:reporting-mode-on="reportingModeCAV"
 							:suggestion-mode-on="suggestionModeOn">
 							<q-static-text
 								v-if="controls.REGIS___PSEUDOBRIGATO.isVisible"
-								id="REGIS___PSEUDOBRIGATO"
+								:id="getControlId(controls.REGIS___PSEUDOBRIGATO)"
 								:size="controls.REGIS___PSEUDOBRIGATO.size"
 								:text="controls.REGIS___PSEUDOBRIGATO.label"
 								supports-html />
@@ -221,7 +231,7 @@
 		</q-container>
 	</teleport>
 
-	<hr v-if="!isPopup && showFormFooter" />
+	<q-divider v-if="!isPopup && showFormFooter" />
 
 	<teleport
 		v-if="formModalIsReady && showFormFooter"
@@ -570,6 +580,7 @@
 						label: computed(() => this.Resources.REGISTRATION_IN_THE_64490),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
+						borderless: false,
 						isCollapsible: false,
 						anchored: false,
 						directChildren: ['REGIS___REGISNAME____', 'REGIS___REGISNIF_____', 'REGIS___REGISTELEPHON', 'REGIS___REGISEMAIL1__', 'REGIS___REGISEMAIL2__'],
@@ -1044,7 +1055,6 @@
 
 				this.afterControlUpdate(controlField, fieldValue)
 			},
-
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
 // USE /[MANUAL GQT FUNCTIONS_JS REGIS]/
 // eslint-disable-next-line

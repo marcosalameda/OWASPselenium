@@ -83,6 +83,7 @@ export default class ViewModel extends FormViewModelBase
 			field: 'ITEMDES',
 			maxLength: 85,
 			description: computed(() => this.Resources.ARTICLE60065),
+			ignoreFldSubmit: true,
 		}).cloneFrom(values?.TableItemItemdes))
 		this.stopWatchers.push(watch(() => this.TableItemItemdes.value, (newValue, oldValue) => this.onUpdate('item.itemdes', this.TableItemItemdes, newValue, oldValue)))
 
@@ -94,6 +95,7 @@ export default class ViewModel extends FormViewModelBase
 			field: 'TPCATEGO',
 			maxLength: 85,
 			description: computed(() => this.Resources.CATEGORY_TYPE23058),
+			ignoreFldSubmit: true,
 		}).cloneFrom(values?.TableCattpTpcatego))
 		this.stopWatchers.push(watch(() => this.TableCattpTpcatego.value, (newValue, oldValue) => this.onUpdate('cattp.tpcatego', this.TableCattpTpcatego, newValue, oldValue)))
 

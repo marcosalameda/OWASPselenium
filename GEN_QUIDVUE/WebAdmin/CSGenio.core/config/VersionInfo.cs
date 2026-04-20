@@ -40,12 +40,12 @@ namespace CSGenio.framework
         /// <summary>
         /// Genio generator version
         /// </summary>
-        public const string GenioVersion = "354.08";
+        public const string GenioVersion = "383.19";
 
         /// <summary>
         /// Generated version. Is incremented each time there is a generation
         /// </summary>
-        public const int Generation = 2827;
+        public const int Generation = 2828;
 
 
         /// <summary>

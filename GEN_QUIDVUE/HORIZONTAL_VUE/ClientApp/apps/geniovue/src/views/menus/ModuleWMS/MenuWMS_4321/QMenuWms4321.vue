@@ -17,8 +17,7 @@
 				<td>
 					<a
 						class="btn"
-						role="button"
-						href="#"
+						href="javascript:void(0)"
 						@click.prevent="followUp(item.key)">
 						<span>
 							<q-icon icon="play" />
@@ -81,7 +80,7 @@
 				},
 
 				model: {
-					listArray: new QArrayGender(this.$getResource).elements
+					listArray: QArrayGender.setResources(this.$getResource).elements
 				}
 			}
 		},

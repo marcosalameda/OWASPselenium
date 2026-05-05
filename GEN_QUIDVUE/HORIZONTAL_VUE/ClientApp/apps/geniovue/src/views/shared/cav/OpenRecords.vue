@@ -10,30 +10,32 @@
 		v-if="showQueryList"
 		:to="`#q-modal-${modalId}-body`">
 		<div class="content">
-			<table class="c-table c-table-hover table-resizable">
-				<thead class="c-table__head">
-					<tr>
-						<th>{{ texts.queryName }}</th>
-						<th>{{ texts.queryAccess }}</th>
-					</tr>
-				</thead>
+			<div class="bootbox-body">
+				<table class="c-table c-table-hover table-resizable">
+					<thead class="c-table__head">
+						<tr>
+							<th>{{ texts.queryName }}</th>
+							<th>{{ texts.queryAccess }}</th>
+						</tr>
+					</thead>
 
-				<tbody class="c-table__body">
-					<tr
-						v-for="row in reportList"
-						:key="`cav-query-list-row-${row.ID}`"
-						@click.stop.prevent="onSelectedQueryToLoad(row.ID)">
-						<td>{{ row.Title }}</td>
-						<td>{{ getAccessTypeTitle(row.Acess) }}</td>
-					</tr>
-				</tbody>
-			</table>
+					<tbody class="c-table__body">
+						<tr
+							v-for="row in reportList"
+							:key="`cav-query-list-row-${row.ID}`"
+							@click.stop.prevent="onSelectedQueryToLoad(row.ID)">
+							<td>{{ row.Title }}</td>
+							<td>{{ getAccessTypeTitle(row.Acess) }}</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
 		</div>
 	</teleport>
 </template>
 
 <script>
-	import { computed, nextTick } from 'vue'
+	import { computed } from 'vue'
 	import { mapActions } from 'pinia'
 
 	import { useGenericDataStore } from '@quidgest/clientapp/stores'
@@ -79,37 +81,27 @@
 				'setModal'
 			]),
 
-			async fnShowQueryList()
+			removeModal,
+
+			fnShowQueryList()
 			{
-				const props = {
-					title: this.texts.selectQuery,
-					class: 'q-dialog-form',
-					buttons: [
-						{
-							id: 'dialog-button-close',
-							action: this.fnHideQueryList,
-							icon: { icon: 'close' },
-							props: {
-								label: computed(() => this.Resources[hardcodedTexts.close]),
-								title: computed(() => this.Resources[hardcodedTexts.close])
-							}
-						}
-					]
-				}
 				const modalProps = {
 					id: this.modalId,
+					headerTitle: this.texts.selectQuery,
+					closeButtonEnable: true,
 					isActive: true,
+					hideFooter: true,
+					dismissWithEsc: true,
 					dismissAction: this.fnHideQueryList
 				}
-				this.setModal(props, modalProps)
+				this.setModal(modalProps)
 
-				await nextTick()
-				this.showQueryList = true
+				this.$nextTick().then(() => this.showQueryList = true)
 			},
 
 			fnHideQueryList()
 			{
-				removeModal(this.modalId)
+				this.removeModal(this.modalId)
 				this.showQueryList = false
 			},
 
@@ -118,14 +110,10 @@
 			 */
 			loadQueryList()
 			{
-				fetchData(
-					'Cav',
-					'LoadQueryList',
-					null,
-					(data) => { // { ID, Title, Acess, Opercria }
-						this.reportList = data
-						this.fnShowQueryList()
-					})
+				fetchData('Cav', 'LoadQueryList', null, data => { // { ID, Title, Acess, Opercria }
+					this.reportList = data
+					this.fnShowQueryList()
+				})
 			},
 
 			getAccessTypeTitle(access)

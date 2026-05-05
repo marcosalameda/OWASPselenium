@@ -10,68 +10,66 @@
 				:selected-tab="controls.tabGroup.selectedTab"
 				:is-visible="controls.tabGroup.isVisible"
 				@tab-changed="controls.tabGroup.selectTab($event)">
-				<section v-show="controls.tabGroup.selectedTab === 'firstTab'">
-					<q-row-container is-large>
-						<q-control-wrapper class="row-line-group">
-							<q-table
-								v-bind="controls.firstTable"
-								v-on="controls.firstTable.handlers">
-								<template #header>
-									<q-table-config
-										:table-ctrl="controls.firstTable"
-										v-on="controls.firstTable.handlers" />
-								</template>
-							</q-table>
-						</q-control-wrapper>
-					</q-row-container>
-				</section>
+				<template #tab-panel>
+					<section v-show="controls.tabGroup.selectedTab === 'firstTab'">
+						<q-row-container is-large>
+							<q-control-wrapper class="row-line-group">
+								<q-table
+									v-bind="controls.firstTable"
+									v-on="controls.firstTable.handlers" />
 
-				<section v-show="controls.tabGroup.selectedTab === 'secondTab'">
-					<q-row-container is-large>
-						<q-control-wrapper class="row-line-group">
-							<q-table
-								v-bind="controls.secondTable"
-								v-on="controls.secondTable.handlers">
-								<template #header>
-									<q-table-config
-										:table-ctrl="controls.secondTable"
-										v-on="controls.secondTable.handlers" />
-								</template>
-							</q-table>
-						</q-control-wrapper>
-					</q-row-container>
+								<q-table-extra-extension
+									:list-ctrl="controls.firstTable"
+									v-on="controls.firstTable.handlers" />
+							</q-control-wrapper>
+						</q-row-container>
+					</section>
 
-					<q-row-container is-large>
-						<q-control-wrapper class="row-line-group">
-							<q-button
-								:label="Resources.APLICAR33981"
-								:title="Resources.APLICAR33981"
-								@click="applyChanges">
-								<q-icon icon="bring-forward" />
-							</q-button>
-						</q-control-wrapper>
-					</q-row-container>
+					<section v-show="controls.tabGroup.selectedTab === 'secondTab'">
+						<q-row-container is-large>
+							<q-control-wrapper class="row-line-group">
+								<q-table
+									v-bind="controls.secondTable"
+									v-on="controls.secondTable.handlers" />
 
-					<q-row-container is-large>
-						<q-control-wrapper class="row-line-group">
-							<q-table
-								:rows="selectedItems"
-								:columns="mainTable.columns"
-								:config="controls.thirdTable.config"
-								:total-rows="controls.thirdTable.totalRows"
-								:has-more-pages="controls.thirdTable.hasMorePages"
-								readonly
-								v-on="controls.thirdTable.handlers" />
-						</q-control-wrapper>
-					</q-row-container>
-				</section>
+								<q-table-extra-extension
+									:list-ctrl="controls.secondTable"
+									v-on="controls.secondTable.handlers" />
+							</q-control-wrapper>
+						</q-row-container>
+
+						<q-row-container is-large>
+							<q-control-wrapper class="row-line-group">
+								<q-button
+									:label="Resources.APLICAR33981"
+									:title="Resources.APLICAR33981"
+									@click="applyChanges">
+									<q-icon icon="bring-forward" />
+								</q-button>
+							</q-control-wrapper>
+						</q-row-container>
+
+						<q-row-container is-large>
+							<q-control-wrapper class="row-line-group">
+								<q-table
+									:rows="selectedItems"
+									:columns="mainTable.columns"
+									:config="controls.thirdTable.config"
+									:total-rows="controls.thirdTable.totalRows"
+									:has-more-pages="controls.thirdTable.hasMorePages"
+									readonly
+									v-on="controls.thirdTable.handlers" />
+							</q-control-wrapper>
+						</q-row-container>
+					</section>
+				</template>
 			</q-tab-container>
 		</q-control-wrapper>
 	</q-row-container>
 </template>
 
 <script>
-	/* eslint-disable @typescript-eslint/no-unused-vars */
+	/* eslint-disable no-unused-vars */
 	import { computed } from 'vue'
 
 	import { loadResources } from '@/plugins/i18n.js'
@@ -90,7 +88,7 @@
 	import qFunctions from '@/api/genio/projectFunctions.js'
 	import qProjArrays from '@/api/genio/projectArrays.js'
 	import qEnums from '@quidgest/clientapp/constants/enums'
-	/* eslint-enable @typescript-eslint/no-unused-vars */
+	/* eslint-enable no-unused-vars */
 
 	import MenuViewModel from './QMenuPTN_341ViewModel.js'
 
@@ -179,7 +177,6 @@
 								label: computed(() => this.Resources.DESIGNATION35876),
 								dataLength: 85,
 								scrollData: 30,
-								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 						],
 						config: {
@@ -200,8 +197,10 @@
 								canInsert: false
 							},
 							searchBarConfig: {
-								visibility: true
+								visibility: true,
+								searchOnPressEnter: true
 							},
+							filtersVisible: true,
 							allowColumnFilters: true,
 							allowColumnSort: true,
 							generalCustomActions: [
@@ -223,7 +222,7 @@
 								sortOrder: 'asc'
 							}
 						},
-						globalEvents: ['changed-EQUIP', 'changed-TPEQU', 'changed-ROOM1', 'changed-DECOM', 'changed-PESS1', 'changed-WAREH', 'changed-ITEM', 'changed-CMPNY'],
+						globalEvents: ['changed-TPEQU', 'changed-ROOM1', 'changed-CMPNY', 'changed-EQUIP', 'changed-WAREH', 'changed-ITEM', 'changed-DECOM', 'changed-PESS1'],
 						uuid: 'ca3ef0a0-cece-4811-810f-91450c0387b3',
 						allSelectedRows: 'false',
 						headerLevel: 1,
@@ -259,7 +258,6 @@
 								label: computed(() => this.Resources.N_R__ROOM43805),
 								dataLength: 10,
 								scrollData: 10,
-								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 2,
@@ -269,7 +267,6 @@
 								label: computed(() => this.Resources.ROOM_DESIGNATION37895),
 								dataLength: 50,
 								scrollData: 30,
-								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 						],
 						config: {
@@ -290,8 +287,10 @@
 								canInsert: false
 							},
 							searchBarConfig: {
-								visibility: true
+								visibility: true,
+								searchOnPressEnter: true
 							},
+							filtersVisible: true,
 							allowColumnFilters: true,
 							allowColumnSort: true,
 							generalCustomActions: [
@@ -319,13 +318,13 @@
 						headerLevel: 1,
 						handlers: {
 							selectRow: (eventData) => {
-								this.controls.secondTable.onSelectRow(eventData)
+								this.onSelectRow(this.controls.secondTable, eventData)
 							},
 							unselectRow: (eventData) => {
-								this.controls.secondTable.onUnselectRow(eventData)
+								this.onUnselectRow(this.controls.secondTable, eventData)
 							},
 							unselectAllRows: () => {
-								this.controls.secondTable.onUnselectAllRows()
+								this.onUnselectAllRows(this.controls.secondTable)
 							}
 						}
 					}, this),
@@ -368,11 +367,11 @@
 						headerLevel: 1,
 						handlers: {
 							removeRow: (eventData) => {
-								this.mainTable.onUnselectRow(eventData)
+								this.onUnselectRow(this.mainTable, eventData)
 								this.unselectRowData(eventData)
 							},
-							unselectAllRows: () => {
-								this.mainTable.onUnselectAllRows()
+							unselectAllRows: (eventData) => {
+								this.onUnselectAllRows(this.mainTable, eventData)
 								this.unselectAllRowsData()
 							}
 						}

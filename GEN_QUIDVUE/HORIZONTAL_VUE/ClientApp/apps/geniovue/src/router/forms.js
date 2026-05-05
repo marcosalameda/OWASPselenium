@@ -11,8 +11,7 @@ export default function getFormsRoutes()
 			meta: {
 				routeType: 'form',
 				baseArea: 'DECOM',
-				humanKeyFields: ['ValDecomnr'],
-				isPopup: false
+				humanKeyFields: ['ValDecomnr']
 			}
 		},
 		{
@@ -23,8 +22,7 @@ export default function getFormsRoutes()
 			meta: {
 				routeType: 'form',
 				baseArea: 'DECOM',
-				humanKeyFields: ['ValDecomnr'],
-				isPopup: false
+				humanKeyFields: ['ValDecomnr']
 			}
 		},
 		{
@@ -35,8 +33,7 @@ export default function getFormsRoutes()
 			meta: {
 				routeType: 'form',
 				baseArea: 'EQUIP',
-				humanKeyFields: ['ValRegistnr'],
-				isPopup: false
+				humanKeyFields: ['ValRegistnr']
 			}
 		},
 		{
@@ -47,8 +44,7 @@ export default function getFormsRoutes()
 			meta: {
 				routeType: 'form',
 				baseArea: 'ADDRE',
-				humanKeyFields: ['ValAddressuse'],
-				isPopup: false
+				humanKeyFields: ['ValAddressuse']
 			}
 		},
 		{
@@ -59,8 +55,7 @@ export default function getFormsRoutes()
 			meta: {
 				routeType: 'form',
 				baseArea: 'AERO',
-				humanKeyFields: ['ValName'],
-				isPopup: false
+				humanKeyFields: ['ValName']
 			}
 		},
 		{
@@ -71,8 +66,7 @@ export default function getFormsRoutes()
 			meta: {
 				routeType: 'form',
 				baseArea: 'AGENT',
-				humanKeyFields: ['ValName'],
-				isPopup: false
+				humanKeyFields: ['ValName']
 			}
 		},
 		{
@@ -83,8 +77,7 @@ export default function getFormsRoutes()
 			meta: {
 				routeType: 'form',
 				baseArea: 'AGENT',
-				humanKeyFields: ['ValName'],
-				isPopup: false
+				humanKeyFields: ['ValName']
 			}
 		},
 		{
@@ -95,8 +88,7 @@ export default function getFormsRoutes()
 			meta: {
 				routeType: 'form',
 				baseArea: 'AGENT',
-				humanKeyFields: ['ValName'],
-				isPopup: false
+				humanKeyFields: ['ValName']
 			}
 		},
 		{
@@ -107,8 +99,7 @@ export default function getFormsRoutes()
 			meta: {
 				routeType: 'form',
 				baseArea: 'AGREG',
-				humanKeyFields: ['ValValue'],
-				isPopup: false
+				humanKeyFields: ['ValValue']
 			}
 		},
 		{
@@ -119,8 +110,7 @@ export default function getFormsRoutes()
 			meta: {
 				routeType: 'form',
 				baseArea: 'ANEXD',
-				humanKeyFields: ['ValTitle'],
-				isPopup: false
+				humanKeyFields: ['ValTitle']
 			}
 		},
 		{
@@ -131,8 +121,7 @@ export default function getFormsRoutes()
 			meta: {
 				routeType: 'form',
 				baseArea: 'YEAR',
-				humanKeyFields: ['ValYear'],
-				isPopup: false
+				humanKeyFields: ['ValYear']
 			}
 		},
 		{
@@ -143,8 +132,7 @@ export default function getFormsRoutes()
 			meta: {
 				routeType: 'form',
 				baseArea: 'WPESS',
-				humanKeyFields: ['ValName'],
-				isPopup: false
+				humanKeyFields: ['ValName']
 			}
 		},
 		{
@@ -155,8 +143,7 @@ export default function getFormsRoutes()
 			meta: {
 				routeType: 'form',
 				baseArea: 'WAREH',
-				humanKeyFields: ['ValWarehdes'],
-				isPopup: false
+				humanKeyFields: ['ValWarehdes']
 			}
 		},
 		{
@@ -167,8 +154,7 @@ export default function getFormsRoutes()
 			meta: {
 				routeType: 'form',
 				baseArea: 'WAREH',
-				humanKeyFields: ['ValWarehdes'],
-				isPopup: true
+				humanKeyFields: ['ValWarehdes']
 			}
 		},
 		{
@@ -179,8 +165,7 @@ export default function getFormsRoutes()
 			meta: {
 				routeType: 'form',
 				baseArea: 'WAREH',
-				humanKeyFields: ['ValWarehdes'],
-				isPopup: true
+				humanKeyFields: ['ValWarehdes']
 			}
 		},
 		{
@@ -191,8 +176,7 @@ export default function getFormsRoutes()
 			meta: {
 				routeType: 'form',
 				baseArea: 'GITEM',
-				humanKeyFields: ['ValItemdes'],
-				isPopup: true
+				humanKeyFields: ['ValItemdes']
 			}
 		},
 		{
@@ -203,8 +187,7 @@ export default function getFormsRoutes()
 			meta: {
 				routeType: 'form',
 				baseArea: 'ITEM',
-				humanKeyFields: ['ValItemdes'],
-				isPopup: false
+				humanKeyFields: ['ValItemdes']
 			}
 		},
 		{
@@ -215,8 +198,7 @@ export default function getFormsRoutes()
 			meta: {
 				routeType: 'form',
 				baseArea: 'ITEM',
-				humanKeyFields: ['ValItemdes'],
-				isPopup: false
+				humanKeyFields: ['ValItemdes']
 			}
 		},
 		{
@@ -227,8 +209,7 @@ export default function getFormsRoutes()
 			meta: {
 				routeType: 'form',
 				baseArea: 'ITEM',
-				humanKeyFields: ['ValItemdes'],
-				isPopup: true
+				humanKeyFields: ['ValItemdes']
 			}
 		},
 		{
@@ -239,8 +220,7 @@ export default function getFormsRoutes()
 			meta: {
 				routeType: 'form',
 				baseArea: 'ITEM',
-				humanKeyFields: ['ValItemdes'],
-				isPopup: true
+				humanKeyFields: ['ValItemdes']
 			}
 		},
 		{
@@ -251,8 +231,7 @@ export default function getFormsRoutes()
 			meta: {
 				routeType: 'form',
 				baseArea: 'ASSMA',
-				humanKeyFields: ['ValName'],
-				isPopup: false
+				humanKeyFields: ['ValName']
 			}
 		},
 		{
@@ -263,8 +242,7 @@ export default function getFormsRoutes()
 			meta: {
 				routeType: 'form',
 				baseArea: 'ASSPA',
-				humanKeyFields: ['ValText'],
-				isPopup: false
+				humanKeyFields: ['ValText']
 			}
 		},
 		{
@@ -275,8 +253,7 @@ export default function getFormsRoutes()
 			meta: {
 				routeType: 'form',
 				baseArea: 'ATTAC',
-				humanKeyFields: ['ValAttached'],
-				isPopup: false
+				humanKeyFields: ['ValAttached']
 			}
 		},
 		{
@@ -287,8 +264,29 @@ export default function getFormsRoutes()
 			meta: {
 				routeType: 'form',
 				baseArea: 'WAREH',
-				humanKeyFields: ['ValWarehdes'],
-				isPopup: false
+				humanKeyFields: ['ValWarehdes']
+			}
+		},
+		{
+			path: '/:culture/:system/:module/form/AUTHENTCLASS/:mode/:id?',
+			name: 'form-AUTHENTCLASS',
+			props: route => propsConverter(route),
+			component: () => import('@/views/forms/FormAuthentclass/QFormAuthentclass.vue'),
+			meta: {
+				routeType: 'form',
+				baseArea: 'AUTHENTICATOPT',
+				humanKeyFields: ['ValAuthoptions']
+			}
+		},
+		{
+			path: '/:culture/:system/:module/form/AUTHENTCOPT/:mode/:id?',
+			name: 'form-AUTHENTCOPT',
+			props: route => propsConverter(route),
+			component: () => import('@/views/forms/FormAuthentcopt/QFormAuthentcopt.vue'),
+			meta: {
+				routeType: 'form',
+				baseArea: 'AUTHENTICATOPT',
+				humanKeyFields: ['ValAuthoptions']
 			}
 		},
 		{
@@ -299,8 +297,7 @@ export default function getFormsRoutes()
 			meta: {
 				routeType: 'form',
 				baseArea: 'WAREH',
-				humanKeyFields: ['ValWarehdes'],
-				isPopup: false
+				humanKeyFields: ['ValWarehdes']
 			}
 		},
 		{
@@ -311,8 +308,7 @@ export default function getFormsRoutes()
 			meta: {
 				routeType: 'form',
 				baseArea: 'C_ADD',
-				humanKeyFields: ['ValCountry'],
-				isPopup: false
+				humanKeyFields: ['ValCountry']
 			}
 		},
 		{
@@ -323,8 +319,7 @@ export default function getFormsRoutes()
 			meta: {
 				routeType: 'form',
 				baseArea: 'C_BRN',
-				humanKeyFields: ['ValCountry'],
-				isPopup: false
+				humanKeyFields: ['ValCountry']
 			}
 		},
 		{
@@ -335,8 +330,29 @@ export default function getFormsRoutes()
 			meta: {
 				routeType: 'form',
 				baseArea: 'FLDS',
-				humanKeyFields: ['ValDescrip'],
-				isPopup: false
+				humanKeyFields: ['ValDescrip']
+			}
+		},
+		{
+			path: '/:culture/:system/:module/form/CARDCONFIG/:mode/:id?',
+			name: 'form-CARDCONFIG',
+			props: route => propsConverter(route),
+			component: () => import('@/views/forms/FormCardconfig/QFormCardconfig.vue'),
+			meta: {
+				routeType: 'form',
+				baseArea: 'CARDS',
+				humanKeyFields: ['ValTitle']
+			}
+		},
+		{
+			path: '/:culture/:system/:module/form/CARDS/:mode/:id?',
+			name: 'form-CARDS',
+			props: route => propsConverter(route),
+			component: () => import('@/views/forms/FormCards/QFormCards.vue'),
+			meta: {
+				routeType: 'form',
+				baseArea: 'CARDS',
+				humanKeyFields: ['ValTitle']
 			}
 		},
 		{
@@ -347,8 +363,7 @@ export default function getFormsRoutes()
 			meta: {
 				routeType: 'form',
 				baseArea: 'ITEMC',
-				humanKeyFields: ['ValTpcateg'],
-				isPopup: false
+				humanKeyFields: ['ValTpcateg']
 			}
 		},
 		{
@@ -359,8 +374,7 @@ export default function getFormsRoutes()
 			meta: {
 				routeType: 'form',
 				baseArea: 'CATE1',
-				humanKeyFields: ['ValCategoria', 'ValAbbreviation'],
-				isPopup: false
+				humanKeyFields: ['ValCategoria', 'ValAbbreviation']
 			}
 		},
 		{
@@ -371,8 +385,7 @@ export default function getFormsRoutes()
 			meta: {
 				routeType: 'form',
 				baseArea: 'CATEG',
-				humanKeyFields: ['ValCategoria', 'ValAbbreviation'],
-				isPopup: false
+				humanKeyFields: ['ValCategoria', 'ValAbbreviation']
 			}
 		},
 		{
@@ -383,8 +396,7 @@ export default function getFormsRoutes()
 			meta: {
 				routeType: 'form',
 				baseArea: 'CFAQS',
-				humanKeyFields: ['ValCategory'],
-				isPopup: false
+				humanKeyFields: ['ValCategory']
 			}
 		},
 		{
@@ -395,8 +407,7 @@ export default function getFormsRoutes()
 			meta: {
 				routeType: 'form',
 				baseArea: 'CITY',
-				humanKeyFields: ['ValCity'],
-				isPopup: false
+				humanKeyFields: ['ValCity']
 			}
 		},
 		{
@@ -407,8 +418,7 @@ export default function getFormsRoutes()
 			meta: {
 				routeType: 'form',
 				baseArea: 'CMPKI',
-				humanKeyFields: ['ValOrder'],
-				isPopup: false
+				humanKeyFields: ['ValOrder']
 			}
 		},
 		{
@@ -419,8 +429,40 @@ export default function getFormsRoutes()
 			meta: {
 				routeType: 'form',
 				baseArea: 'LENDI',
-				humanKeyFields: ['ValLendinnr'],
-				isPopup: false
+				humanKeyFields: ['ValLendinnr']
+			}
+		},
+		{
+			path: '/:culture/:system/:module/form/COMPBEH/:mode/:id?',
+			name: 'form-COMPBEH',
+			props: route => propsConverter(route),
+			component: () => import('@/views/forms/FormCompbeh/QFormCompbeh.vue'),
+			meta: {
+				routeType: 'form',
+				baseArea: 'COMPB',
+				humanKeyFields: []
+			}
+		},
+		{
+			path: '/:culture/:system/:module/form/COMPCLAS/:mode/:id?',
+			name: 'form-COMPCLAS',
+			props: route => propsConverter(route),
+			component: () => import('@/views/forms/FormCompclas/QFormCompclas.vue'),
+			meta: {
+				routeType: 'form',
+				baseArea: 'COMPC',
+				humanKeyFields: ['ValCompclas']
+			}
+		},
+		{
+			path: '/:culture/:system/:module/form/COMPTYPE/:mode/:id?',
+			name: 'form-COMPTYPE',
+			props: route => propsConverter(route),
+			component: () => import('@/views/forms/FormComptype/QFormComptype.vue'),
+			meta: {
+				routeType: 'form',
+				baseArea: 'COMPO',
+				humanKeyFields: ['ValComptype']
 			}
 		},
 		{
@@ -431,8 +473,7 @@ export default function getFormsRoutes()
 			meta: {
 				routeType: 'form',
 				baseArea: 'CONTA',
-				humanKeyFields: ['ValContacto'],
-				isPopup: true
+				humanKeyFields: ['ValContacto']
 			}
 		},
 		{
@@ -443,8 +484,7 @@ export default function getFormsRoutes()
 			meta: {
 				routeType: 'form',
 				baseArea: 'PROCN',
-				humanKeyFields: ['ValName'],
-				isPopup: false
+				humanKeyFields: ['ValName']
 			}
 		},
 		{
@@ -455,8 +495,7 @@ export default function getFormsRoutes()
 			meta: {
 				routeType: 'form',
 				baseArea: 'PROCN',
-				humanKeyFields: ['ValName'],
-				isPopup: true
+				humanKeyFields: ['ValName']
 			}
 		},
 		{
@@ -467,8 +506,7 @@ export default function getFormsRoutes()
 			meta: {
 				routeType: 'form',
 				baseArea: 'PROCN',
-				humanKeyFields: ['ValName'],
-				isPopup: true
+				humanKeyFields: ['ValName']
 			}
 		},
 		{
@@ -479,8 +517,7 @@ export default function getFormsRoutes()
 			meta: {
 				routeType: 'form',
 				baseArea: 'CTRY',
-				humanKeyFields: ['ValCountry'],
-				isPopup: false
+				humanKeyFields: ['ValCountry']
 			}
 		},
 		{
@@ -491,8 +528,7 @@ export default function getFormsRoutes()
 			meta: {
 				routeType: 'form',
 				baseArea: 'INDOC',
-				humanKeyFields: ['ValDocumenr'],
-				isPopup: false
+				humanKeyFields: ['ValDocumenr']
 			}
 		},
 		{
@@ -503,8 +539,18 @@ export default function getFormsRoutes()
 			meta: {
 				routeType: 'form',
 				baseArea: 'EXPEN',
-				humanKeyFields: ['ValDescript'],
-				isPopup: false
+				humanKeyFields: ['ValDescript']
+			}
+		},
+		{
+			path: '/:culture/:system/:module/form/DETAILEDFEEDBACK/:mode/:id?',
+			name: 'form-DETAILEDFEEDBACK',
+			props: route => propsConverter(route),
+			component: () => import('@/views/forms/FormDetailedfeedback/QFormDetailedfeedback.vue'),
+			meta: {
+				routeType: 'form',
+				baseArea: 'UFEEDBACK',
+				humanKeyFields: []
 			}
 		},
 		{
@@ -515,8 +561,7 @@ export default function getFormsRoutes()
 			meta: {
 				routeType: 'form',
 				baseArea: 'DILIN',
-				humanKeyFields: ['ValLinenumb'],
-				isPopup: false
+				humanKeyFields: ['ValLinenumb']
 			}
 		},
 		{
@@ -527,8 +572,18 @@ export default function getFormsRoutes()
 			meta: {
 				routeType: 'form',
 				baseArea: 'DISPA',
-				humanKeyFields: ['ValDispanr'],
-				isPopup: false
+				humanKeyFields: ['ValDispanr']
+			}
+		},
+		{
+			path: '/:culture/:system/:module/form/DISST/:mode/:id?',
+			name: 'form-DISST',
+			props: route => propsConverter(route),
+			component: () => import('@/views/forms/FormDisst/QFormDisst.vue'),
+			meta: {
+				routeType: 'form',
+				baseArea: 'DISST',
+				humanKeyFields: ['ValStatus']
 			}
 		},
 		{
@@ -539,8 +594,7 @@ export default function getFormsRoutes()
 			meta: {
 				routeType: 'form',
 				baseArea: 'OUDOC',
-				humanKeyFields: ['ValNrdocsda'],
-				isPopup: false
+				humanKeyFields: ['ValNrdocsda']
 			}
 		},
 		{
@@ -551,8 +605,7 @@ export default function getFormsRoutes()
 			meta: {
 				routeType: 'form',
 				baseArea: 'OUTPT',
-				humanKeyFields: ['ValDocumenr'],
-				isPopup: false
+				humanKeyFields: ['ValDocumenr']
 			}
 		},
 		{
@@ -563,8 +616,7 @@ export default function getFormsRoutes()
 			meta: {
 				routeType: 'form',
 				baseArea: 'DTTYP',
-				humanKeyFields: ['ValString'],
-				isPopup: false
+				humanKeyFields: ['ValString']
 			}
 		},
 		{
@@ -575,8 +627,7 @@ export default function getFormsRoutes()
 			meta: {
 				routeType: 'form',
 				baseArea: 'CMPNY',
-				humanKeyFields: ['ValDesignat'],
-				isPopup: true
+				humanKeyFields: ['ValDesignat']
 			}
 		},
 		{
@@ -587,8 +638,7 @@ export default function getFormsRoutes()
 			meta: {
 				routeType: 'form',
 				baseArea: 'ENTIT',
-				humanKeyFields: ['ValName', 'ValInitials'],
-				isPopup: false
+				humanKeyFields: ['ValName', 'ValInitials']
 			}
 		},
 		{
@@ -599,8 +649,7 @@ export default function getFormsRoutes()
 			meta: {
 				routeType: 'form',
 				baseArea: 'ENTIT',
-				humanKeyFields: ['ValName', 'ValInitials'],
-				isPopup: false
+				humanKeyFields: ['ValName', 'ValInitials']
 			}
 		},
 		{
@@ -611,8 +660,7 @@ export default function getFormsRoutes()
 			meta: {
 				routeType: 'form',
 				baseArea: 'EQUIP',
-				humanKeyFields: ['ValRegistnr'],
-				isPopup: false
+				humanKeyFields: ['ValRegistnr']
 			}
 		},
 		{
@@ -623,8 +671,7 @@ export default function getFormsRoutes()
 			meta: {
 				routeType: 'form',
 				baseArea: 'EQUIP',
-				humanKeyFields: ['ValRegistnr'],
-				isPopup: false
+				humanKeyFields: ['ValRegistnr']
 			}
 		},
 		{
@@ -635,8 +682,7 @@ export default function getFormsRoutes()
 			meta: {
 				routeType: 'form',
 				baseArea: 'EQUIP',
-				humanKeyFields: ['ValRegistnr'],
-				isPopup: false
+				humanKeyFields: ['ValRegistnr']
 			}
 		},
 		{
@@ -647,8 +693,7 @@ export default function getFormsRoutes()
 			meta: {
 				routeType: 'form',
 				baseArea: 'ASSET',
-				humanKeyFields: ['ValName'],
-				isPopup: false
+				humanKeyFields: ['ValName']
 			}
 		},
 		{
@@ -659,8 +704,7 @@ export default function getFormsRoutes()
 			meta: {
 				routeType: 'form',
 				baseArea: 'SPECI',
-				humanKeyFields: ['ValEspecial'],
-				isPopup: false
+				humanKeyFields: ['ValEspecial']
 			}
 		},
 		{
@@ -671,8 +715,7 @@ export default function getFormsRoutes()
 			meta: {
 				routeType: 'form',
 				baseArea: 'ESPPE',
-				humanKeyFields: [],
-				isPopup: false
+				humanKeyFields: []
 			}
 		},
 		{
@@ -683,8 +726,7 @@ export default function getFormsRoutes()
 			meta: {
 				routeType: 'form',
 				baseArea: 'EVCAT',
-				humanKeyFields: ['ValSince'],
-				isPopup: false
+				humanKeyFields: ['ValSince']
 			}
 		},
 		{
@@ -695,8 +737,7 @@ export default function getFormsRoutes()
 			meta: {
 				routeType: 'form',
 				baseArea: 'PESSO',
-				humanKeyFields: ['ValName'],
-				isPopup: false
+				humanKeyFields: ['ValName']
 			}
 		},
 		{
@@ -707,8 +748,29 @@ export default function getFormsRoutes()
 			meta: {
 				routeType: 'form',
 				baseArea: 'WAREH',
-				humanKeyFields: ['ValWarehdes'],
-				isPopup: false
+				humanKeyFields: ['ValWarehdes']
+			}
+		},
+		{
+			path: '/:culture/:system/:module/form/F_MENUC/:mode/:id?',
+			name: 'form-F_MENUC',
+			props: route => propsConverter(route),
+			component: () => import('@/views/forms/FormFMenuc/QFormFMenuc.vue'),
+			meta: {
+				routeType: 'form',
+				baseArea: 'MENUC',
+				humanKeyFields: ['ValMenucl']
+			}
+		},
+		{
+			path: '/:culture/:system/:module/form/F_MENUIT/:mode/:id?',
+			name: 'form-F_MENUIT',
+			props: route => propsConverter(route),
+			component: () => import('@/views/forms/FormFMenuit/QFormFMenuit.vue'),
+			meta: {
+				routeType: 'form',
+				baseArea: 'MENUIT',
+				humanKeyFields: ['ValMtype']
 			}
 		},
 		{
@@ -719,8 +781,7 @@ export default function getFormsRoutes()
 			meta: {
 				routeType: 'form',
 				baseArea: 'FACIL',
-				humanKeyFields: ['ValName'],
-				isPopup: false
+				humanKeyFields: ['ValName']
 			}
 		},
 		{
@@ -731,8 +792,7 @@ export default function getFormsRoutes()
 			meta: {
 				routeType: 'form',
 				baseArea: 'FACIL',
-				humanKeyFields: ['ValName'],
-				isPopup: false
+				humanKeyFields: ['ValName']
 			}
 		},
 		{
@@ -743,8 +803,7 @@ export default function getFormsRoutes()
 			meta: {
 				routeType: 'form',
 				baseArea: 'FACTY',
-				humanKeyFields: ['ValType'],
-				isPopup: false
+				humanKeyFields: ['ValType']
 			}
 		},
 		{
@@ -755,8 +814,7 @@ export default function getFormsRoutes()
 			meta: {
 				routeType: 'form',
 				baseArea: 'FAMI1',
-				humanKeyFields: ['ValFamily'],
-				isPopup: false
+				humanKeyFields: ['ValFamily']
 			}
 		},
 		{
@@ -767,8 +825,7 @@ export default function getFormsRoutes()
 			meta: {
 				routeType: 'form',
 				baseArea: 'FAQS',
-				humanKeyFields: ['ValQuestion'],
-				isPopup: false
+				humanKeyFields: ['ValQuestion']
 			}
 		},
 		{
@@ -779,8 +836,7 @@ export default function getFormsRoutes()
 			meta: {
 				routeType: 'form',
 				baseArea: 'FEECA',
-				humanKeyFields: ['ValFeedback'],
-				isPopup: false
+				humanKeyFields: ['ValFeedback']
 			}
 		},
 		{
@@ -791,8 +847,29 @@ export default function getFormsRoutes()
 			meta: {
 				routeType: 'form',
 				baseArea: 'FLDS',
-				humanKeyFields: ['ValDescrip'],
-				isPopup: false
+				humanKeyFields: ['ValDescrip']
+			}
+		},
+		{
+			path: '/:culture/:system/:module/form/FLDSCOND/:mode/:id?',
+			name: 'form-FLDSCOND',
+			props: route => propsConverter(route),
+			component: () => import('@/views/forms/FormFldscond/QFormFldscond.vue'),
+			meta: {
+				routeType: 'form',
+				baseArea: 'FLDS',
+				humanKeyFields: ['ValDescrip']
+			}
+		},
+		{
+			path: '/:culture/:system/:module/form/FLDSTBL/:mode/:id?',
+			name: 'form-FLDSTBL',
+			props: route => propsConverter(route),
+			component: () => import('@/views/forms/FormFldstbl/QFormFldstbl.vue'),
+			meta: {
+				routeType: 'form',
+				baseArea: 'FLDS',
+				humanKeyFields: ['ValDescrip']
 			}
 		},
 		{
@@ -803,8 +880,7 @@ export default function getFormsRoutes()
 			meta: {
 				routeType: 'form',
 				baseArea: 'PHOTO',
-				humanKeyFields: ['ValTitle'],
-				isPopup: false
+				humanKeyFields: ['ValTitle']
 			}
 		},
 		{
@@ -815,8 +891,7 @@ export default function getFormsRoutes()
 			meta: {
 				routeType: 'form',
 				baseArea: 'EQUIP',
-				humanKeyFields: ['ValRegistnr'],
-				isPopup: false
+				humanKeyFields: ['ValRegistnr']
 			}
 		},
 		{
@@ -827,8 +902,7 @@ export default function getFormsRoutes()
 			meta: {
 				routeType: 'form',
 				baseArea: 'GENRE',
-				humanKeyFields: ['ValGender'],
-				isPopup: false
+				humanKeyFields: ['ValGender']
 			}
 		},
 		{
@@ -839,8 +913,7 @@ export default function getFormsRoutes()
 			meta: {
 				routeType: 'form',
 				baseArea: 'GLOB',
-				humanKeyFields: ['ValHome'],
-				isPopup: false
+				humanKeyFields: ['ValHome']
 			}
 		},
 		{
@@ -851,8 +924,7 @@ export default function getFormsRoutes()
 			meta: {
 				routeType: 'form',
 				baseArea: 'GLOB',
-				humanKeyFields: ['ValHome'],
-				isPopup: false
+				humanKeyFields: ['ValHome']
 			}
 		},
 		{
@@ -863,8 +935,7 @@ export default function getFormsRoutes()
 			meta: {
 				routeType: 'form',
 				baseArea: 'EQUIP',
-				humanKeyFields: ['ValRegistnr'],
-				isPopup: false
+				humanKeyFields: ['ValRegistnr']
 			}
 		},
 		{
@@ -875,8 +946,7 @@ export default function getFormsRoutes()
 			meta: {
 				routeType: 'form',
 				baseArea: 'EQUIP',
-				humanKeyFields: ['ValRegistnr'],
-				isPopup: false
+				humanKeyFields: ['ValRegistnr']
 			}
 		},
 		{
@@ -887,8 +957,18 @@ export default function getFormsRoutes()
 			meta: {
 				routeType: 'form',
 				baseArea: 'GRPB',
-				humanKeyFields: ['ValName'],
-				isPopup: false
+				humanKeyFields: ['ValName']
+			}
+		},
+		{
+			path: '/:culture/:system/:module/form/HEROCSEC/:mode/:id?',
+			name: 'form-HEROCSEC',
+			props: route => propsConverter(route),
+			component: () => import('@/views/forms/FormHerocsec/QFormHerocsec.vue'),
+			meta: {
+				routeType: 'form',
+				baseArea: 'HERODESCRIP',
+				humanKeyFields: []
 			}
 		},
 		{
@@ -899,8 +979,7 @@ export default function getFormsRoutes()
 			meta: {
 				routeType: 'form',
 				baseArea: 'GLOB',
-				humanKeyFields: ['ValHome'],
-				isPopup: false
+				humanKeyFields: ['ValHome']
 			}
 		},
 		{
@@ -911,8 +990,7 @@ export default function getFormsRoutes()
 			meta: {
 				routeType: 'form',
 				baseArea: 'LANGU',
-				humanKeyFields: ['ValLangua'],
-				isPopup: false
+				humanKeyFields: ['ValLangua']
 			}
 		},
 		{
@@ -923,8 +1001,7 @@ export default function getFormsRoutes()
 			meta: {
 				routeType: 'form',
 				baseArea: 'WPESS',
-				humanKeyFields: ['ValName'],
-				isPopup: false
+				humanKeyFields: ['ValName']
 			}
 		},
 		{
@@ -935,8 +1012,7 @@ export default function getFormsRoutes()
 			meta: {
 				routeType: 'form',
 				baseArea: 'FLDS',
-				humanKeyFields: ['ValDescrip'],
-				isPopup: false
+				humanKeyFields: ['ValDescrip']
 			}
 		},
 		{
@@ -947,8 +1023,7 @@ export default function getFormsRoutes()
 			meta: {
 				routeType: 'form',
 				baseArea: 'INPGR',
-				humanKeyFields: ['ValIcongro'],
-				isPopup: false
+				humanKeyFields: ['ValIcongro']
 			}
 		},
 		{
@@ -959,8 +1034,18 @@ export default function getFormsRoutes()
 			meta: {
 				routeType: 'form',
 				baseArea: 'INSTA',
-				humanKeyFields: ['ValSince'],
-				isPopup: false
+				humanKeyFields: ['ValSince']
+			}
+		},
+		{
+			path: '/:culture/:system/:module/form/ITEM/:mode/:id?',
+			name: 'form-ITEM',
+			props: route => propsConverter(route),
+			component: () => import('@/views/forms/FormItem/QFormItem.vue'),
+			meta: {
+				routeType: 'form',
+				baseArea: 'ITEM',
+				humanKeyFields: ['ValItemdes']
 			}
 		},
 		{
@@ -971,8 +1056,7 @@ export default function getFormsRoutes()
 			meta: {
 				routeType: 'form',
 				baseArea: 'KINDE',
-				humanKeyFields: ['ValDesignat'],
-				isPopup: false
+				humanKeyFields: ['ValDesignat']
 			}
 		},
 		{
@@ -983,8 +1067,7 @@ export default function getFormsRoutes()
 			meta: {
 				routeType: 'form',
 				baseArea: 'LCEXT',
-				humanKeyFields: ['ValGlnext'],
-				isPopup: false
+				humanKeyFields: ['ValGlnext']
 			}
 		},
 		{
@@ -995,8 +1078,7 @@ export default function getFormsRoutes()
 			meta: {
 				routeType: 'form',
 				baseArea: 'LDENT',
-				humanKeyFields: ['ValLine'],
-				isPopup: true
+				humanKeyFields: ['ValLine']
 			}
 		},
 		{
@@ -1007,8 +1089,7 @@ export default function getFormsRoutes()
 			meta: {
 				routeType: 'form',
 				baseArea: 'LDENT',
-				humanKeyFields: ['ValLine'],
-				isPopup: false
+				humanKeyFields: ['ValLine']
 			}
 		},
 		{
@@ -1019,8 +1100,7 @@ export default function getFormsRoutes()
 			meta: {
 				routeType: 'form',
 				baseArea: 'OUTPU',
-				humanKeyFields: ['ValLine'],
-				isPopup: false
+				humanKeyFields: ['ValLine']
 			}
 		},
 		{
@@ -1031,8 +1111,7 @@ export default function getFormsRoutes()
 			meta: {
 				routeType: 'form',
 				baseArea: 'INSTA',
-				humanKeyFields: ['ValSince'],
-				isPopup: false
+				humanKeyFields: ['ValSince']
 			}
 		},
 		{
@@ -1043,8 +1122,18 @@ export default function getFormsRoutes()
 			meta: {
 				routeType: 'form',
 				baseArea: 'INSTA',
-				humanKeyFields: ['ValSince'],
-				isPopup: false
+				humanKeyFields: ['ValSince']
+			}
+		},
+		{
+			path: '/:culture/:system/:module/form/LENDEXPL/:mode/:id?',
+			name: 'form-LENDEXPL',
+			props: route => propsConverter(route),
+			component: () => import('@/views/forms/FormLendexpl/QFormLendexpl.vue'),
+			meta: {
+				routeType: 'form',
+				baseArea: '',
+				humanKeyFields: []
 			}
 		},
 		{
@@ -1055,8 +1144,7 @@ export default function getFormsRoutes()
 			meta: {
 				routeType: 'form',
 				baseArea: 'FLDS',
-				humanKeyFields: ['ValDescrip'],
-				isPopup: false
+				humanKeyFields: ['ValDescrip']
 			}
 		},
 		{
@@ -1067,8 +1155,7 @@ export default function getFormsRoutes()
 			meta: {
 				routeType: 'form',
 				baseArea: 'LNHAG',
-				humanKeyFields: ['ValQtdtpequ'],
-				isPopup: false
+				humanKeyFields: ['ValQtdtpequ']
 			}
 		},
 		{
@@ -1079,8 +1166,7 @@ export default function getFormsRoutes()
 			meta: {
 				routeType: 'form',
 				baseArea: 'LNHDE',
-				humanKeyFields: ['ValOrdem'],
-				isPopup: false
+				humanKeyFields: ['ValOrdem']
 			}
 		},
 		{
@@ -1091,8 +1177,7 @@ export default function getFormsRoutes()
 			meta: {
 				routeType: 'form',
 				baseArea: 'LNHDF',
-				humanKeyFields: ['ValName'],
-				isPopup: true
+				humanKeyFields: ['ValName']
 			}
 		},
 		{
@@ -1103,8 +1188,7 @@ export default function getFormsRoutes()
 			meta: {
 				routeType: 'form',
 				baseArea: 'LNHPD',
-				humanKeyFields: ['ValLine'],
-				isPopup: false
+				humanKeyFields: ['ValLine']
 			}
 		},
 		{
@@ -1115,8 +1199,7 @@ export default function getFormsRoutes()
 			meta: {
 				routeType: 'form',
 				baseArea: 'LOCAT',
-				humanKeyFields: ['ValGln'],
-				isPopup: false
+				humanKeyFields: ['ValGln']
 			}
 		},
 		{
@@ -1127,8 +1210,7 @@ export default function getFormsRoutes()
 			meta: {
 				routeType: 'form',
 				baseArea: 'MANUA',
-				humanKeyFields: ['ValName'],
-				isPopup: false
+				humanKeyFields: ['ValName']
 			}
 		},
 		{
@@ -1139,8 +1221,7 @@ export default function getFormsRoutes()
 			meta: {
 				routeType: 'form',
 				baseArea: 'MESSA',
-				humanKeyFields: ['ValIdnotif'],
-				isPopup: false
+				humanKeyFields: ['ValIdnotif']
 			}
 		},
 		{
@@ -1151,8 +1232,7 @@ export default function getFormsRoutes()
 			meta: {
 				routeType: 'form',
 				baseArea: 'WAREH',
-				humanKeyFields: ['ValWarehdes'],
-				isPopup: false
+				humanKeyFields: ['ValWarehdes']
 			}
 		},
 		{
@@ -1163,8 +1243,7 @@ export default function getFormsRoutes()
 			meta: {
 				routeType: 'form',
 				baseArea: 'MOVIM',
-				humanKeyFields: ['ValDhmudanc'],
-				isPopup: false
+				humanKeyFields: ['ValDhmudanc']
 			}
 		},
 		{
@@ -1175,8 +1254,18 @@ export default function getFormsRoutes()
 			meta: {
 				routeType: 'form',
 				baseArea: 'NOTIF',
-				humanKeyFields: ['ValNrcomoda'],
-				isPopup: false
+				humanKeyFields: ['ValNrcomoda']
+			}
+		},
+		{
+			path: '/:culture/:system/:module/form/OPTTABLE/:mode/:id?',
+			name: 'form-OPTTABLE',
+			props: route => propsConverter(route),
+			component: () => import('@/views/forms/FormOpttable/QFormOpttable.vue'),
+			meta: {
+				routeType: 'form',
+				baseArea: 'COMPV',
+				humanKeyFields: []
 			}
 		},
 		{
@@ -1187,8 +1276,7 @@ export default function getFormsRoutes()
 			meta: {
 				routeType: 'form',
 				baseArea: 'CNTRY',
-				humanKeyFields: ['ValCountry'],
-				isPopup: false
+				humanKeyFields: ['ValCountry']
 			}
 		},
 		{
@@ -1199,8 +1287,7 @@ export default function getFormsRoutes()
 			meta: {
 				routeType: 'form',
 				baseArea: 'PARAM',
-				humanKeyFields: ['ValParameter'],
-				isPopup: false
+				humanKeyFields: ['ValParameter']
 			}
 		},
 		{
@@ -1211,8 +1298,7 @@ export default function getFormsRoutes()
 			meta: {
 				routeType: 'form',
 				baseArea: 'PEDID',
-				humanKeyFields: ['ValNrpedido'],
-				isPopup: false
+				humanKeyFields: ['ValNrpedido']
 			}
 		},
 		{
@@ -1223,8 +1309,7 @@ export default function getFormsRoutes()
 			meta: {
 				routeType: 'form',
 				baseArea: '',
-				humanKeyFields: [],
-				isPopup: false
+				humanKeyFields: []
 			}
 		},
 		{
@@ -1235,8 +1320,7 @@ export default function getFormsRoutes()
 			meta: {
 				routeType: 'form',
 				baseArea: 'PERSO',
-				humanKeyFields: ['ValName'],
-				isPopup: false
+				humanKeyFields: ['ValName']
 			}
 		},
 		{
@@ -1247,8 +1331,7 @@ export default function getFormsRoutes()
 			meta: {
 				routeType: 'form',
 				baseArea: 'PESS1',
-				humanKeyFields: ['ValName'],
-				isPopup: false
+				humanKeyFields: ['ValName']
 			}
 		},
 		{
@@ -1259,8 +1342,7 @@ export default function getFormsRoutes()
 			meta: {
 				routeType: 'form',
 				baseArea: 'PESSO',
-				humanKeyFields: ['ValName'],
-				isPopup: false
+				humanKeyFields: ['ValName']
 			}
 		},
 		{
@@ -1271,8 +1353,7 @@ export default function getFormsRoutes()
 			meta: {
 				routeType: 'form',
 				baseArea: 'PESSO',
-				humanKeyFields: ['ValName'],
-				isPopup: false
+				humanKeyFields: ['ValName']
 			}
 		},
 		{
@@ -1283,8 +1364,7 @@ export default function getFormsRoutes()
 			meta: {
 				routeType: 'form',
 				baseArea: 'PESSO',
-				humanKeyFields: ['ValName'],
-				isPopup: false
+				humanKeyFields: ['ValName']
 			}
 		},
 		{
@@ -1295,8 +1375,7 @@ export default function getFormsRoutes()
 			meta: {
 				routeType: 'form',
 				baseArea: 'PESSO',
-				humanKeyFields: ['ValName'],
-				isPopup: false
+				humanKeyFields: ['ValName']
 			}
 		},
 		{
@@ -1307,8 +1386,7 @@ export default function getFormsRoutes()
 			meta: {
 				routeType: 'form',
 				baseArea: 'WPESS',
-				humanKeyFields: ['ValName'],
-				isPopup: true
+				humanKeyFields: ['ValName']
 			}
 		},
 		{
@@ -1319,8 +1397,18 @@ export default function getFormsRoutes()
 			meta: {
 				routeType: 'form',
 				baseArea: 'PROPH',
-				humanKeyFields: ['ValTitle'],
-				isPopup: false
+				humanKeyFields: ['ValTitle']
+			}
+		},
+		{
+			path: '/:culture/:system/:module/form/PLIST/:mode/:id?',
+			name: 'form-PLIST',
+			props: route => propsConverter(route),
+			component: () => import('@/views/forms/FormPlist/QFormPlist.vue'),
+			meta: {
+				routeType: 'form',
+				baseArea: 'ITEM',
+				humanKeyFields: ['ValItemdes']
 			}
 		},
 		{
@@ -1331,8 +1419,7 @@ export default function getFormsRoutes()
 			meta: {
 				routeType: 'form',
 				baseArea: 'PRODU',
-				humanKeyFields: ['ValProduct'],
-				isPopup: false
+				humanKeyFields: ['ValProduct']
 			}
 		},
 		{
@@ -1343,8 +1430,7 @@ export default function getFormsRoutes()
 			meta: {
 				routeType: 'form',
 				baseArea: 'PRODU',
-				humanKeyFields: ['ValProduct'],
-				isPopup: false
+				humanKeyFields: ['ValProduct']
 			}
 		},
 		{
@@ -1355,8 +1441,7 @@ export default function getFormsRoutes()
 			meta: {
 				routeType: 'form',
 				baseArea: 'PROJE',
-				humanKeyFields: ['ValProjecto'],
-				isPopup: false
+				humanKeyFields: ['ValProjecto']
 			}
 		},
 		{
@@ -1367,8 +1452,7 @@ export default function getFormsRoutes()
 			meta: {
 				routeType: 'form',
 				baseArea: 'PROPE',
-				humanKeyFields: ['ValTitle'],
-				isPopup: false
+				humanKeyFields: ['ValTitle']
 			}
 		},
 		{
@@ -1379,8 +1463,7 @@ export default function getFormsRoutes()
 			meta: {
 				routeType: 'form',
 				baseArea: 'PROPE',
-				humanKeyFields: ['ValTitle'],
-				isPopup: false
+				humanKeyFields: ['ValTitle']
 			}
 		},
 		{
@@ -1391,8 +1474,7 @@ export default function getFormsRoutes()
 			meta: {
 				routeType: 'form',
 				baseArea: 'PROPE',
-				humanKeyFields: ['ValTitle'],
-				isPopup: false
+				humanKeyFields: ['ValTitle']
 			}
 		},
 		{
@@ -1403,8 +1485,7 @@ export default function getFormsRoutes()
 			meta: {
 				routeType: 'form',
 				baseArea: 'PROPE',
-				humanKeyFields: ['ValTitle'],
-				isPopup: false
+				humanKeyFields: ['ValTitle']
 			}
 		},
 		{
@@ -1415,8 +1496,7 @@ export default function getFormsRoutes()
 			meta: {
 				routeType: 'form',
 				baseArea: 'PROPE',
-				humanKeyFields: ['ValTitle'],
-				isPopup: false
+				humanKeyFields: ['ValTitle']
 			}
 		},
 		{
@@ -1427,8 +1507,7 @@ export default function getFormsRoutes()
 			meta: {
 				routeType: 'form',
 				baseArea: 'PROPE',
-				humanKeyFields: ['ValTitle'],
-				isPopup: false
+				humanKeyFields: ['ValTitle']
 			}
 		},
 		{
@@ -1439,8 +1518,7 @@ export default function getFormsRoutes()
 			meta: {
 				routeType: 'form',
 				baseArea: 'PROPE',
-				humanKeyFields: ['ValTitle'],
-				isPopup: false
+				humanKeyFields: ['ValTitle']
 			}
 		},
 		{
@@ -1451,8 +1529,7 @@ export default function getFormsRoutes()
 			meta: {
 				routeType: 'form',
 				baseArea: 'PROPE',
-				humanKeyFields: ['ValTitle'],
-				isPopup: false
+				humanKeyFields: ['ValTitle']
 			}
 		},
 		{
@@ -1463,8 +1540,7 @@ export default function getFormsRoutes()
 			meta: {
 				routeType: 'form',
 				baseArea: 'PROPE',
-				humanKeyFields: ['ValTitle'],
-				isPopup: false
+				humanKeyFields: ['ValTitle']
 			}
 		},
 		{
@@ -1475,8 +1551,7 @@ export default function getFormsRoutes()
 			meta: {
 				routeType: 'form',
 				baseArea: 'PROPE',
-				humanKeyFields: ['ValTitle'],
-				isPopup: false
+				humanKeyFields: ['ValTitle']
 			}
 		},
 		{
@@ -1487,8 +1562,7 @@ export default function getFormsRoutes()
 			meta: {
 				routeType: 'form',
 				baseArea: 'PROPE',
-				humanKeyFields: ['ValTitle'],
-				isPopup: false
+				humanKeyFields: ['ValTitle']
 			}
 		},
 		{
@@ -1499,8 +1573,7 @@ export default function getFormsRoutes()
 			meta: {
 				routeType: 'form',
 				baseArea: 'CNTRY',
-				humanKeyFields: ['ValCountry'],
-				isPopup: false
+				humanKeyFields: ['ValCountry']
 			}
 		},
 		{
@@ -1511,8 +1584,7 @@ export default function getFormsRoutes()
 			meta: {
 				routeType: 'form',
 				baseArea: 'PROPR',
-				humanKeyFields: ['ValName'],
-				isPopup: false
+				humanKeyFields: ['ValName']
 			}
 		},
 		{
@@ -1523,8 +1595,7 @@ export default function getFormsRoutes()
 			meta: {
 				routeType: 'form',
 				baseArea: 'PROPR',
-				humanKeyFields: ['ValName'],
-				isPopup: false
+				humanKeyFields: ['ValName']
 			}
 		},
 		{
@@ -1535,8 +1606,7 @@ export default function getFormsRoutes()
 			meta: {
 				routeType: 'form',
 				baseArea: 'PWCOM',
-				humanKeyFields: ['ValName'],
-				isPopup: false
+				humanKeyFields: ['ValName']
 			}
 		},
 		{
@@ -1547,8 +1617,7 @@ export default function getFormsRoutes()
 			meta: {
 				routeType: 'form',
 				baseArea: 'PWORG',
-				humanKeyFields: [],
-				isPopup: false
+				humanKeyFields: []
 			}
 		},
 		{
@@ -1559,8 +1628,18 @@ export default function getFormsRoutes()
 			meta: {
 				routeType: 'form',
 				baseArea: 'PWREG',
-				humanKeyFields: [],
-				isPopup: false
+				humanKeyFields: []
+			}
+		},
+		{
+			path: '/:culture/:system/:module/form/QUICKFEEDBACK/:mode/:id?',
+			name: 'form-QUICKFEEDBACK',
+			props: route => propsConverter(route),
+			component: () => import('@/views/forms/FormQuickfeedback/QFormQuickfeedback.vue'),
+			meta: {
+				routeType: 'form',
+				baseArea: 'UFEEDBACK',
+				humanKeyFields: []
 			}
 		},
 		{
@@ -1571,8 +1650,18 @@ export default function getFormsRoutes()
 			meta: {
 				routeType: 'form',
 				baseArea: 'RECEI',
-				humanKeyFields: ['ValNumber'],
-				isPopup: false
+				humanKeyFields: ['ValNumber']
+			}
+		},
+		{
+			path: '/:culture/:system/:module/form/RECORDINFOR/:mode/:id?',
+			name: 'form-RECORDINFOR',
+			props: route => propsConverter(route),
+			component: () => import('@/views/forms/FormRecordinfor/QFormRecordinfor.vue'),
+			meta: {
+				routeType: 'form',
+				baseArea: 'RECORDINFO',
+				humanKeyFields: []
 			}
 		},
 		{
@@ -1583,8 +1672,7 @@ export default function getFormsRoutes()
 			meta: {
 				routeType: 'form',
 				baseArea: 'REGIO',
-				humanKeyFields: ['ValRegiao'],
-				isPopup: false
+				humanKeyFields: ['ValRegiao']
 			}
 		},
 		{
@@ -1595,8 +1683,7 @@ export default function getFormsRoutes()
 			meta: {
 				routeType: 'form',
 				baseArea: 'REGIO',
-				humanKeyFields: ['ValRegiao'],
-				isPopup: false
+				humanKeyFields: ['ValRegiao']
 			}
 		},
 		{
@@ -1607,8 +1694,7 @@ export default function getFormsRoutes()
 			meta: {
 				routeType: 'form',
 				baseArea: 'REGIO',
-				humanKeyFields: ['ValRegiao'],
-				isPopup: false
+				humanKeyFields: ['ValRegiao']
 			}
 		},
 		{
@@ -1619,8 +1705,7 @@ export default function getFormsRoutes()
 			meta: {
 				routeType: 'form',
 				baseArea: 'REGIO',
-				humanKeyFields: ['ValRegiao'],
-				isPopup: false
+				humanKeyFields: ['ValRegiao']
 			}
 		},
 		{
@@ -1631,8 +1716,7 @@ export default function getFormsRoutes()
 			meta: {
 				routeType: 'form',
 				baseArea: 'REGIS',
-				humanKeyFields: ['ValName'],
-				isPopup: false
+				humanKeyFields: ['ValName']
 			}
 		},
 		{
@@ -1643,8 +1727,7 @@ export default function getFormsRoutes()
 			meta: {
 				routeType: 'form',
 				baseArea: 'RULES',
-				humanKeyFields: ['ValDescript'],
-				isPopup: false
+				humanKeyFields: ['ValDescript']
 			}
 		},
 		{
@@ -1655,8 +1738,7 @@ export default function getFormsRoutes()
 			meta: {
 				routeType: 'form',
 				baseArea: 'RELIN',
-				humanKeyFields: ['ValLinenumb'],
-				isPopup: false
+				humanKeyFields: ['ValLinenumb']
 			}
 		},
 		{
@@ -1667,8 +1749,7 @@ export default function getFormsRoutes()
 			meta: {
 				routeType: 'form',
 				baseArea: 'REPAR',
-				humanKeyFields: ['ValDtrepara'],
-				isPopup: false
+				humanKeyFields: ['ValDtrepara']
 			}
 		},
 		{
@@ -1679,8 +1760,7 @@ export default function getFormsRoutes()
 			meta: {
 				routeType: 'form',
 				baseArea: 'ROGL1',
-				humanKeyFields: ['ValTitle'],
-				isPopup: false
+				humanKeyFields: ['ValTitle']
 			}
 		},
 		{
@@ -1691,8 +1771,7 @@ export default function getFormsRoutes()
 			meta: {
 				routeType: 'form',
 				baseArea: 'ROIGF',
-				humanKeyFields: ['ValOrder'],
-				isPopup: false
+				humanKeyFields: ['ValOrder']
 			}
 		},
 		{
@@ -1703,8 +1782,7 @@ export default function getFormsRoutes()
 			meta: {
 				routeType: 'form',
 				baseArea: 'ROIGI',
-				humanKeyFields: ['ValOrder'],
-				isPopup: false
+				humanKeyFields: ['ValOrder']
 			}
 		},
 		{
@@ -1715,8 +1793,7 @@ export default function getFormsRoutes()
 			meta: {
 				routeType: 'form',
 				baseArea: 'RORDF',
-				humanKeyFields: ['ValOrder'],
-				isPopup: false
+				humanKeyFields: ['ValOrder']
 			}
 		},
 		{
@@ -1727,8 +1804,7 @@ export default function getFormsRoutes()
 			meta: {
 				routeType: 'form',
 				baseArea: 'RORDI',
-				humanKeyFields: ['ValOrder'],
-				isPopup: false
+				humanKeyFields: ['ValOrder']
 			}
 		},
 		{
@@ -1739,8 +1815,7 @@ export default function getFormsRoutes()
 			meta: {
 				routeType: 'form',
 				baseArea: 'ROOMS',
-				humanKeyFields: ['ValRoomnr'],
-				isPopup: false
+				humanKeyFields: ['ValRoomnr']
 			}
 		},
 		{
@@ -1751,8 +1826,18 @@ export default function getFormsRoutes()
 			meta: {
 				routeType: 'form',
 				baseArea: 'SBCAT',
-				humanKeyFields: ['ValSubcateg'],
-				isPopup: false
+				humanKeyFields: ['ValSubcateg']
+			}
+		},
+		{
+			path: '/:culture/:system/:module/form/STARFEEDB/:mode/:id?',
+			name: 'form-STARFEEDB',
+			props: route => propsConverter(route),
+			component: () => import('@/views/forms/FormStarfeedb/QFormStarfeedb.vue'),
+			meta: {
+				routeType: 'form',
+				baseArea: 'UFEEDBACK',
+				humanKeyFields: []
 			}
 		},
 		{
@@ -1763,8 +1848,7 @@ export default function getFormsRoutes()
 			meta: {
 				routeType: 'form',
 				baseArea: 'TABPR',
-				humanKeyFields: ['ValSince'],
-				isPopup: false
+				humanKeyFields: ['ValSince']
 			}
 		},
 		{
@@ -1775,8 +1859,7 @@ export default function getFormsRoutes()
 			meta: {
 				routeType: 'form',
 				baseArea: 'TBLB',
-				humanKeyFields: ['ValText'],
-				isPopup: false
+				humanKeyFields: ['ValText']
 			}
 		},
 		{
@@ -1787,8 +1870,7 @@ export default function getFormsRoutes()
 			meta: {
 				routeType: 'form',
 				baseArea: 'TBLK',
-				humanKeyFields: ['ValName'],
-				isPopup: false
+				humanKeyFields: ['ValName']
 			}
 		},
 		{
@@ -1799,8 +1881,7 @@ export default function getFormsRoutes()
 			meta: {
 				routeType: 'form',
 				baseArea: 'EQUIP',
-				humanKeyFields: ['ValRegistnr'],
-				isPopup: false
+				humanKeyFields: ['ValRegistnr']
 			}
 		},
 		{
@@ -1811,8 +1892,7 @@ export default function getFormsRoutes()
 			meta: {
 				routeType: 'form',
 				baseArea: 'WAREH',
-				humanKeyFields: ['ValWarehdes'],
-				isPopup: false
+				humanKeyFields: ['ValWarehdes']
 			}
 		},
 		{
@@ -1823,8 +1903,7 @@ export default function getFormsRoutes()
 			meta: {
 				routeType: 'form',
 				baseArea: 'CATTP',
-				humanKeyFields: ['ValTpcatego'],
-				isPopup: false
+				humanKeyFields: ['ValTpcatego']
 			}
 		},
 		{
@@ -1835,8 +1914,7 @@ export default function getFormsRoutes()
 			meta: {
 				routeType: 'form',
 				baseArea: 'TPCON',
-				humanKeyFields: ['ValTipocont'],
-				isPopup: false
+				humanKeyFields: ['ValTipocont']
 			}
 		},
 		{
@@ -1847,8 +1925,7 @@ export default function getFormsRoutes()
 			meta: {
 				routeType: 'form',
 				baseArea: 'TPEQ1',
-				humanKeyFields: ['ValTipoequi'],
-				isPopup: false
+				humanKeyFields: ['ValTipoequi']
 			}
 		},
 		{
@@ -1859,8 +1936,7 @@ export default function getFormsRoutes()
 			meta: {
 				routeType: 'form',
 				baseArea: 'TPEQU',
-				humanKeyFields: ['ValTipoequi'],
-				isPopup: false
+				humanKeyFields: ['ValTipoequi']
 			}
 		},
 		{
@@ -1871,8 +1947,7 @@ export default function getFormsRoutes()
 			meta: {
 				routeType: 'form',
 				baseArea: 'TPPRO',
-				humanKeyFields: ['ValTppropri'],
-				isPopup: false
+				humanKeyFields: ['ValTppropri']
 			}
 		},
 		{
@@ -1883,8 +1958,7 @@ export default function getFormsRoutes()
 			meta: {
 				routeType: 'form',
 				baseArea: 'TRADU',
-				humanKeyFields: ['ValReferenc'],
-				isPopup: false
+				humanKeyFields: ['ValReferenc']
 			}
 		},
 		{
@@ -1895,8 +1969,7 @@ export default function getFormsRoutes()
 			meta: {
 				routeType: 'form',
 				baseArea: 'TRSB',
-				humanKeyFields: ['ValName'],
-				isPopup: false
+				humanKeyFields: ['ValName']
 			}
 		},
 		{
@@ -1907,8 +1980,18 @@ export default function getFormsRoutes()
 			meta: {
 				routeType: 'form',
 				baseArea: 'UICOM',
-				humanKeyFields: ['ValName'],
-				isPopup: false
+				humanKeyFields: ['ValName']
+			}
+		},
+		{
+			path: '/:culture/:system/:module/form/USEFULFEEDBACK/:mode/:id?',
+			name: 'form-USEFULFEEDBACK',
+			props: route => propsConverter(route),
+			component: () => import('@/views/forms/FormUsefulfeedback/QFormUsefulfeedback.vue'),
+			meta: {
+				routeType: 'form',
+				baseArea: 'UFEEDBACK',
+				humanKeyFields: []
 			}
 		},
 		{
@@ -1919,8 +2002,7 @@ export default function getFormsRoutes()
 			meta: {
 				routeType: 'form',
 				baseArea: 'USERS',
-				humanKeyFields: [],
-				isPopup: false
+				humanKeyFields: []
 			}
 		},
 		{
@@ -1931,8 +2013,7 @@ export default function getFormsRoutes()
 			meta: {
 				routeType: 'form',
 				baseArea: 'SALE',
-				humanKeyFields: ['ValIdentifi'],
-				isPopup: false
+				humanKeyFields: ['ValIdentifi']
 			}
 		},
 		{
@@ -1944,8 +2025,7 @@ export default function getFormsRoutes()
 				isWizard: true,
 				wizardId: 'Vendaw_Fases',
 				baseArea: 'SALE',
-				humanKeyFields: ['ValIdentifi'],
-				isPopup: false
+				humanKeyFields: ['ValIdentifi']
 			}
 		},
 		{
@@ -2061,8 +2141,7 @@ export default function getFormsRoutes()
 				isWizard: true,
 				wizardId: 'Vendawp_Fases',
 				baseArea: 'SALE',
-				humanKeyFields: ['ValIdentifi'],
-				isPopup: false
+				humanKeyFields: ['ValIdentifi']
 			}
 		},
 		{
@@ -2178,8 +2257,7 @@ export default function getFormsRoutes()
 				isWizard: true,
 				wizardId: 'Vendawv_Fases',
 				baseArea: 'SALE',
-				humanKeyFields: ['ValIdentifi'],
-				isPopup: false
+				humanKeyFields: ['ValIdentifi']
 			}
 		},
 		{
@@ -2294,8 +2372,7 @@ export default function getFormsRoutes()
 			meta: {
 				routeType: 'form',
 				baseArea: 'VISIT',
-				humanKeyFields: ['ValTitle'],
-				isPopup: false
+				humanKeyFields: ['ValTitle']
 			}
 		},
 		{
@@ -2306,8 +2383,18 @@ export default function getFormsRoutes()
 			meta: {
 				routeType: 'form',
 				baseArea: 'VISIT',
-				humanKeyFields: ['ValTitle'],
-				isPopup: true
+				humanKeyFields: ['ValTitle']
+			}
+		},
+		{
+			path: '/:culture/:system/:module/form/WARE_WS/:mode/:id?',
+			name: 'form-WARE_WS',
+			props: route => propsConverter(route),
+			component: () => import('@/views/forms/FormWareWs/QFormWareWs.vue'),
+			meta: {
+				routeType: 'form',
+				baseArea: 'WAREH',
+				humanKeyFields: ['ValWarehdes']
 			}
 		},
 		{
@@ -2318,8 +2405,18 @@ export default function getFormsRoutes()
 			meta: {
 				routeType: 'form',
 				baseArea: 'CMPNY',
-				humanKeyFields: ['ValDesignat'],
-				isPopup: false
+				humanKeyFields: ['ValDesignat']
+			}
+		},
+		{
+			path: '/:culture/:system/:module/form/WID_EQUI/:mode/:id?',
+			name: 'form-WID_EQUI',
+			props: route => propsConverter(route),
+			component: () => import('@/views/forms/FormWidEqui/QFormWidEqui.vue'),
+			meta: {
+				routeType: 'form',
+				baseArea: '',
+				humanKeyFields: []
 			}
 		},
 		{
@@ -2330,8 +2427,18 @@ export default function getFormsRoutes()
 			meta: {
 				routeType: 'form',
 				baseArea: '',
-				humanKeyFields: [],
-				isPopup: false
+				humanKeyFields: []
+			}
+		},
+		{
+			path: '/:culture/:system/:module/form/WID_IEQU/:mode/:id?',
+			name: 'form-WID_IEQU',
+			props: route => propsConverter(route),
+			component: () => import('@/views/forms/FormWidIequ/QFormWidIequ.vue'),
+			meta: {
+				routeType: 'form',
+				baseArea: 'EQUIP',
+				humanKeyFields: ['ValRegistnr']
 			}
 		},
 		{
@@ -2342,8 +2449,7 @@ export default function getFormsRoutes()
 			meta: {
 				routeType: 'form',
 				baseArea: '',
-				humanKeyFields: [],
-				isPopup: false
+				humanKeyFields: []
 			}
 		},
 	]

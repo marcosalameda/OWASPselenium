@@ -3,23 +3,20 @@
 		v-if="menuModalIsReady"
 		:to="`#${uiContainersId.body}`"
 		:disabled="!menuInfo.isPopup">
-		<div
+		<form
 			class="form-horizontal"
 			@submit.prevent>
 			<q-row-container>
 				<q-table
 					v-bind="controls.menu"
 					v-on="controls.menu.handlers">
-					<template #header>
-						<q-table-config
-							:table-ctrl="controls.menu"
-							v-on="controls.menu.handlers">
-						</q-table-config>
-					</template>
-					<!-- USE /[MANUAL GQT CUSTOM_TABLE WMS_Menu_4241]/ -->
 				</q-table>
+
+				<q-table-extra-extension
+					:list-ctrl="controls.menu"
+					v-on="controls.menu.handlers" />
 			</q-row-container>
-		</div>
+		</form>
 	</teleport>
 
 	<teleport
@@ -51,7 +48,7 @@
 </template>
 
 <script>
-	/* eslint-disable @typescript-eslint/no-unused-vars */
+	/* eslint-disable no-unused-vars */
 	import asyncProcM from '@quidgest/clientapp/composables/async'
 	import qEnums from '@quidgest/clientapp/constants/enums'
 	import netAPI from '@quidgest/clientapp/network'
@@ -71,7 +68,7 @@
 	import qApi from '@/api/genio/quidgestFunctions.js'
 	import qFunctions from '@/api/genio/projectFunctions.js'
 	import qProjArrays from '@/api/genio/projectArrays.js'
-	/* eslint-enable @typescript-eslint/no-unused-vars */
+	/* eslint-enable no-unused-vars */
 
 	import MenuViewModel from './QMenuWMS_4241ViewModel.js'
 
@@ -155,7 +152,6 @@
 								label: computed(() => this.Resources.FACILITY_TYPE44577),
 								dataLength: 25,
 								scrollData: 25,
-								export: 1,
 								pkColumn: 'ValCodfacty',
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 						],
@@ -172,8 +168,10 @@
 							permissions: {
 							},
 							searchBarConfig: {
-								visibility: true
+								visibility: true,
+								searchOnPressEnter: true
 							},
+							filtersVisible: true,
 							allowColumnFilters: true,
 							allowColumnSort: true,
 							crudActions: [
@@ -247,7 +245,9 @@
 									id: 'insert',
 									name: 'insert',
 									title: computed(() => this.Resources.INSERIR43365),
-									icon: { icon: 'add' },
+									icon: {
+										icon: 'add'
+									},
 									isInReadOnly: true,
 									params: {
 										action: vm.openFormAction,
@@ -270,7 +270,6 @@
 							rowClickAction: {
 								id: 'RCA_WMS_42411',
 								name: 'form-GLOBFACT',
-								isVisible: true,
 								params: {
 									isRoute: true,
 									limits: [
@@ -300,7 +299,6 @@
 						uuid: '0666b85e-6c85-44dd-a3e5-555d90e861d9',
 						allSelectedRows: 'false',
 						headerLevel: 1,
-						isActiveControl: computed(() => this.isActiveMenu)
 					}, this),
 				}
 			}
@@ -324,14 +322,6 @@
 		{
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
 // USE /[MANUAL GQT FORM_CODEJS WMS_MENU_4241]/
-// eslint-disable-next-line
-/* eslint-enable indent, vue/html-indent, vue/script-indent */
-		},
-
-		beforeUnmount()
-		{
-/* eslint-disable indent, vue/html-indent, vue/script-indent */
-// USE /[MANUAL GQT COMPONENT_BEFORE_UNMOUNT WMS_MENU_4241]/
 // eslint-disable-next-line
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 		},

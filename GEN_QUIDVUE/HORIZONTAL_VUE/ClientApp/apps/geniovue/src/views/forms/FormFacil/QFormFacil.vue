@@ -9,13 +9,12 @@
 			<div
 				v-if="showFormHeader"
 				class="c-action-bar">
-				<component
+				<h1
 					v-if="formControl.uiComponents.header && formInfo.designation"
-					:is="topHeadingTag"
 					:id="formTitleId"
 					class="form-header">
 					{{ formInfo.designation }}
-				</component>
+				</h1>
 
 				<div class="c-action-bar__menu">
 					<template
@@ -39,13 +38,9 @@
 									:label="btn.label"
 									:disabled="btn.disabled"
 									@click="btn.action">
-									<template v-if="btn.icon">
-										<q-badge-indicator
-											:enabled="btn.badge?.isVisible ?? false"
-											:color="btn.badge?.color">
-											<q-icon v-bind="btn.icon" />
-										</q-badge-indicator>
-									</template>
+									<q-icon
+										v-if="btn.icon"
+										v-bind="btn.icon" />
 								</q-toggle-group-item>
 							</template>
 						</q-toggle-group>
@@ -57,7 +52,7 @@
 				v-if="$app.layout.FormAnchorsPosition === 'form-header' && visibleGroups.length > 0"
 				:anchors="anchorGroups"
 				:controls="visibleControls"
-				@focus-control="focusControl" />
+				@focus-control="(...args) => focusControl(...args)" />
 		</div>
 	</teleport>
 
@@ -78,7 +73,6 @@
 						v-if="btn.isActive && btn.isVisible && btn.showInHeading"
 						:id="`heading-${btn.id}`"
 						:label="btn.text"
-						:color="btn.color"
 						:variant="btn.variant"
 						:disabled="btn.disabled"
 						:icon-pos="btn.iconPos"
@@ -92,21 +86,18 @@
 			</q-button-group>
 		</div>
 
-		<q-container
-			fluid
+		<div
+			class="form-flow"
 			data-key="FACIL"
-			:data-identifier="primaryKeyValue"
-			:data-loading="!formInitialDataLoaded || !isActiveForm">
+			:data-loading="!formInitialDataLoaded">
 			<template v-if="formControl.initialized && showFormBody">
-				<q-row v-if="controls.FACIL___ENTITNAME____.isVisible">
-					<q-col
-						v-if="controls.FACIL___ENTITNAME____.isVisible"
-						cols="auto">
+				<q-row-container v-show="controls.FACIL___ENTITNAME____.isVisible">
+					<q-control-wrapper
+						v-show="controls.FACIL___ENTITNAME____.isVisible"
+						class="${Vue.GetControlWrapperClass($controlsColumn)}">
 						<base-input-structure
-							v-if="controls.FACIL___ENTITNAME____.isVisible"
 							class="i-text"
-							v-bind="controls.FACIL___ENTITNAME____.wrapperProps"
-							:id="getControlId(controls.FACIL___ENTITNAME____)"
+							v-bind="controls.FACIL___ENTITNAME____"
 							v-on="controls.FACIL___ENTITNAME____.handlers"
 							:loading="controls.FACIL___ENTITNAME____.props.loading"
 							:reporting-mode-on="reportingModeCAV"
@@ -114,24 +105,21 @@
 							<q-lookup
 								v-if="controls.FACIL___ENTITNAME____.isVisible"
 								v-bind="controls.FACIL___ENTITNAME____.props"
-								:id="getControlId(controls.FACIL___ENTITNAME____)"
 								v-on="controls.FACIL___ENTITNAME____.handlers" />
 							<q-see-more-facil-entitname
 								v-if="controls.FACIL___ENTITNAME____.seeMoreIsVisible"
 								v-bind="controls.FACIL___ENTITNAME____.seeMoreParams"
 								v-on="controls.FACIL___ENTITNAME____.handlers" />
 						</base-input-structure>
-					</q-col>
-				</q-row>
-				<q-row v-if="controls.FACIL___FACILINCORPOR.isVisible">
-					<q-col
-						v-if="controls.FACIL___FACILINCORPOR.isVisible"
-						cols="auto">
+					</q-control-wrapper>
+				</q-row-container>
+				<q-row-container v-show="controls.FACIL___FACILINCORPOR.isVisible">
+					<q-control-wrapper
+						v-show="controls.FACIL___FACILINCORPOR.isVisible"
+						class="${Vue.GetControlWrapperClass($controlsColumn)}">
 						<base-input-structure
-							v-if="controls.FACIL___FACILINCORPOR.isVisible"
 							class="i-text"
-							v-bind="controls.FACIL___FACILINCORPOR.wrapperProps"
-							:id="getControlId(controls.FACIL___FACILINCORPOR)"
+							v-bind="controls.FACIL___FACILINCORPOR"
 							v-on="controls.FACIL___FACILINCORPOR.handlers"
 							:loading="controls.FACIL___FACILINCORPOR.props.loading"
 							:reporting-mode-on="reportingModeCAV"
@@ -139,43 +127,37 @@
 							<q-date-time-picker
 								v-if="controls.FACIL___FACILINCORPOR.isVisible"
 								v-bind="controls.FACIL___FACILINCORPOR.props"
-								:id="getControlId(controls.FACIL___FACILINCORPOR)"
 								:model-value="model.ValIncorpor.value"
 								@reset-icon-click="model.ValIncorpor.fnUpdateValue(model.ValIncorpor.originalValue ?? new Date())"
 								@update:model-value="model.ValIncorpor.fnUpdateValue($event ?? '')" />
 						</base-input-structure>
-					</q-col>
-				</q-row>
-				<q-row v-if="controls.FACIL___FACILNAME____.isVisible">
-					<q-col
-						v-if="controls.FACIL___FACILNAME____.isVisible"
-						cols="auto">
+					</q-control-wrapper>
+				</q-row-container>
+				<q-row-container v-show="controls.FACIL___FACILNAME____.isVisible">
+					<q-control-wrapper
+						v-show="controls.FACIL___FACILNAME____.isVisible"
+						class="${Vue.GetControlWrapperClass($controlsColumn)}">
 						<base-input-structure
-							v-if="controls.FACIL___FACILNAME____.isVisible"
 							class="i-text"
-							v-bind="controls.FACIL___FACILNAME____.wrapperProps"
-							:id="getControlId(controls.FACIL___FACILNAME____)"
+							v-bind="controls.FACIL___FACILNAME____"
 							v-on="controls.FACIL___FACILNAME____.handlers"
 							:loading="controls.FACIL___FACILNAME____.props.loading"
 							:reporting-mode-on="reportingModeCAV"
 							:suggestion-mode-on="suggestionModeOn">
 							<q-text-field
 								v-bind="controls.FACIL___FACILNAME____.props"
-								:id="getControlId(controls.FACIL___FACILNAME____)"
 								@blur="onBlur(controls.FACIL___FACILNAME____, model.ValName.value)"
 								@change="model.ValName.fnUpdateValueOnChange" />
 						</base-input-structure>
-					</q-col>
-				</q-row>
-				<q-row v-if="controls.FACIL___FACILFACILTYP.isVisible || controls.FACIL___FACTYTYPE____.isVisible || controls.FACIL___FACILADDRESS_.isVisible">
-					<q-col
-						v-if="controls.FACIL___FACILFACILTYP.isVisible"
-						cols="auto">
+					</q-control-wrapper>
+				</q-row-container>
+				<q-row-container v-show="controls.FACIL___FACILFACILTYP.isVisible || controls.FACIL___FACTYTYPE____.isVisible || controls.FACIL___FACILADDRESS_.isVisible">
+					<q-control-wrapper
+						v-show="controls.FACIL___FACILFACILTYP.isVisible"
+						class="${Vue.GetControlWrapperClass($controlsColumn)}">
 						<base-input-structure
-							v-if="controls.FACIL___FACILFACILTYP.isVisible"
 							class="i-text"
-							v-bind="controls.FACIL___FACILFACILTYP.wrapperProps"
-							:id="getControlId(controls.FACIL___FACILFACILTYP)"
+							v-bind="controls.FACIL___FACILFACILTYP"
 							v-on="controls.FACIL___FACILFACILTYP.handlers"
 							:loading="controls.FACIL___FACILFACILTYP.props.loading"
 							:reporting-mode-on="reportingModeCAV"
@@ -183,18 +165,15 @@
 							<q-select
 								v-if="controls.FACIL___FACILFACILTYP.isVisible"
 								v-bind="controls.FACIL___FACILFACILTYP.props"
-								:id="getControlId(controls.FACIL___FACILFACILTYP)"
 								@update:model-value="model.ValFaciltyp.fnUpdateValue" />
 						</base-input-structure>
-					</q-col>
-					<q-col
-						v-if="controls.FACIL___FACTYTYPE____.isVisible"
-						cols="auto">
+					</q-control-wrapper>
+					<q-control-wrapper
+						v-show="controls.FACIL___FACTYTYPE____.isVisible"
+						class="${Vue.GetControlWrapperClass($controlsColumn)}">
 						<base-input-structure
-							v-if="controls.FACIL___FACTYTYPE____.isVisible"
 							class="i-text"
-							v-bind="controls.FACIL___FACTYTYPE____.wrapperProps"
-							:id="getControlId(controls.FACIL___FACTYTYPE____)"
+							v-bind="controls.FACIL___FACTYTYPE____"
 							v-on="controls.FACIL___FACTYTYPE____.handlers"
 							:loading="controls.FACIL___FACTYTYPE____.props.loading"
 							:reporting-mode-on="reportingModeCAV"
@@ -202,22 +181,19 @@
 							<q-lookup
 								v-if="controls.FACIL___FACTYTYPE____.isVisible"
 								v-bind="controls.FACIL___FACTYTYPE____.props"
-								:id="getControlId(controls.FACIL___FACTYTYPE____)"
 								v-on="controls.FACIL___FACTYTYPE____.handlers" />
 							<q-see-more-facil-factytype
 								v-if="controls.FACIL___FACTYTYPE____.seeMoreIsVisible"
 								v-bind="controls.FACIL___FACTYTYPE____.seeMoreParams"
 								v-on="controls.FACIL___FACTYTYPE____.handlers" />
 						</base-input-structure>
-					</q-col>
-					<q-col
-						v-if="controls.FACIL___FACILADDRESS_.isVisible"
-						cols="auto">
+					</q-control-wrapper>
+					<q-control-wrapper
+						v-show="controls.FACIL___FACILADDRESS_.isVisible"
+						class="${Vue.GetControlWrapperClass($controlsColumn)}">
 						<base-input-structure
-							v-if="controls.FACIL___FACILADDRESS_.isVisible"
 							class="i-textarea"
-							v-bind="controls.FACIL___FACILADDRESS_.wrapperProps"
-							:id="getControlId(controls.FACIL___FACILADDRESS_)"
+							v-bind="controls.FACIL___FACILADDRESS_"
 							v-on="controls.FACIL___FACILADDRESS_.handlers"
 							:loading="controls.FACIL___FACILADDRESS_.props.loading"
 							:reporting-mode-on="reportingModeCAV"
@@ -225,20 +201,17 @@
 							<q-text-area
 								v-if="controls.FACIL___FACILADDRESS_.isVisible"
 								v-bind="controls.FACIL___FACILADDRESS_.props"
-								:id="getControlId(controls.FACIL___FACILADDRESS_)"
 								v-on="controls.FACIL___FACILADDRESS_.handlers" />
 						</base-input-structure>
-					</q-col>
-				</q-row>
-				<q-row v-if="controls.FACIL___FACILIMAGE___.isVisible">
-					<q-col
-						v-if="controls.FACIL___FACILIMAGE___.isVisible"
-						cols="auto">
+					</q-control-wrapper>
+				</q-row-container>
+				<q-row-container v-show="controls.FACIL___FACILIMAGE___.isVisible">
+					<q-control-wrapper
+						v-show="controls.FACIL___FACILIMAGE___.isVisible"
+						class="${Vue.GetControlWrapperClass($controlsColumn)}">
 						<base-input-structure
-							v-if="controls.FACIL___FACILIMAGE___.isVisible"
 							class="q-image"
-							v-bind="controls.FACIL___FACILIMAGE___.wrapperProps"
-							:id="getControlId(controls.FACIL___FACILIMAGE___)"
+							v-bind="controls.FACIL___FACILIMAGE___"
 							v-on="controls.FACIL___FACILIMAGE___.handlers"
 							:loading="controls.FACIL___FACILIMAGE___.props.loading"
 							:reporting-mode-on="reportingModeCAV"
@@ -246,20 +219,17 @@
 							<q-image
 								v-if="controls.FACIL___FACILIMAGE___.isVisible"
 								v-bind="controls.FACIL___FACILIMAGE___.props"
-								:id="getControlId(controls.FACIL___FACILIMAGE___)"
 								v-on="controls.FACIL___FACILIMAGE___.handlers" />
 						</base-input-structure>
-					</q-col>
-				</q-row>
-				<q-row v-if="controls.FACIL___FACILGPSINPUT.isVisible">
-					<q-col
-						v-if="controls.FACIL___FACILGPSINPUT.isVisible"
-						cols="auto">
+					</q-control-wrapper>
+				</q-row-container>
+				<q-row-container v-show="controls.FACIL___FACILGPSINPUT.isVisible">
+					<q-control-wrapper
+						v-show="controls.FACIL___FACILGPSINPUT.isVisible"
+						class="${Vue.GetControlWrapperClass($controlsColumn)}">
 						<base-input-structure
-							v-if="controls.FACIL___FACILGPSINPUT.isVisible"
 							class="i-radio-container"
-							v-bind="controls.FACIL___FACILGPSINPUT.wrapperProps"
-							:id="getControlId(controls.FACIL___FACILGPSINPUT)"
+							v-bind="controls.FACIL___FACILGPSINPUT"
 							v-on="controls.FACIL___FACILGPSINPUT.handlers"
 							:label-position="labelAlignment.topleft"
 							:loading="controls.FACIL___FACILGPSINPUT.props.loading"
@@ -267,27 +237,25 @@
 							:suggestion-mode-on="suggestionModeOn">
 							<q-radio-group
 								v-if="controls.FACIL___FACILGPSINPUT.isVisible"
-								v-bind="controls.FACIL___FACILGPSINPUT.props"
-								:id="getControlId(controls.FACIL___FACILGPSINPUT)"
-								v-on="controls.FACIL___FACILGPSINPUT.handlers">
-								<q-radio-button
-									v-for="radio in controls.FACIL___FACILGPSINPUT.items"
-									:key="radio.key"
-									:label="radio.value"
-									:value="radio.key" />
-							</q-radio-group>
+								id="FACIL___FACILGPSINPUT"
+								:model-value="model.ValGpsinput.value"
+								deselect-radio
+								:label-left-side="controls.FACIL___FACILGPSINPUT.labelPosition === labelAlignment.left"
+								:number-of-columns="controls.FACIL___FACILGPSINPUT.columnNumber"
+								:is-required="controls.FACIL___FACILGPSINPUT.isRequired"
+								:readonly="controls.FACIL___FACILGPSINPUT.readonly"
+								:options-list="controls.FACIL___FACILGPSINPUT.items"
+								@update:model-value="model.ValGpsinput.fnUpdateValue" />
 						</base-input-structure>
-					</q-col>
-				</q-row>
-				<q-row v-if="controls.FACIL___FACILLATITUDE.isVisible || controls.FACIL___FACILLONGITUD.isVisible">
-					<q-col
-						v-if="controls.FACIL___FACILLATITUDE.isVisible"
-						cols="auto">
+					</q-control-wrapper>
+				</q-row-container>
+				<q-row-container v-show="controls.FACIL___FACILLATITUDE.isVisible || controls.FACIL___FACILLONGITUD.isVisible">
+					<q-control-wrapper
+						v-show="controls.FACIL___FACILLATITUDE.isVisible"
+						class="${Vue.GetControlWrapperClass($controlsColumn)}">
 						<base-input-structure
-							v-if="controls.FACIL___FACILLATITUDE.isVisible"
 							class="i-text"
-							v-bind="controls.FACIL___FACILLATITUDE.wrapperProps"
-							:id="getControlId(controls.FACIL___FACILLATITUDE)"
+							v-bind="controls.FACIL___FACILLATITUDE"
 							v-on="controls.FACIL___FACILLATITUDE.handlers"
 							:loading="controls.FACIL___FACILLATITUDE.props.loading"
 							:reporting-mode-on="reportingModeCAV"
@@ -295,18 +263,15 @@
 							<q-numeric-input
 								v-if="controls.FACIL___FACILLATITUDE.isVisible"
 								v-bind="controls.FACIL___FACILLATITUDE.props"
-								:id="getControlId(controls.FACIL___FACILLATITUDE)"
 								@update:model-value="model.ValLatitude.fnUpdateValue" />
 						</base-input-structure>
-					</q-col>
-					<q-col
-						v-if="controls.FACIL___FACILLONGITUD.isVisible"
-						cols="auto">
+					</q-control-wrapper>
+					<q-control-wrapper
+						v-show="controls.FACIL___FACILLONGITUD.isVisible"
+						class="${Vue.GetControlWrapperClass($controlsColumn)}">
 						<base-input-structure
-							v-if="controls.FACIL___FACILLONGITUD.isVisible"
 							class="i-text"
-							v-bind="controls.FACIL___FACILLONGITUD.wrapperProps"
-							:id="getControlId(controls.FACIL___FACILLONGITUD)"
+							v-bind="controls.FACIL___FACILLONGITUD"
 							v-on="controls.FACIL___FACILLONGITUD.handlers"
 							:loading="controls.FACIL___FACILLONGITUD.props.loading"
 							:reporting-mode-on="reportingModeCAV"
@@ -314,43 +279,39 @@
 							<q-numeric-input
 								v-if="controls.FACIL___FACILLONGITUD.isVisible"
 								v-bind="controls.FACIL___FACILLONGITUD.props"
-								:id="getControlId(controls.FACIL___FACILLONGITUD)"
 								@update:model-value="model.ValLongitud.fnUpdateValue" />
 						</base-input-structure>
-					</q-col>
-				</q-row>
-				<q-row v-if="controls.FACIL___FACILGEOCOORI.isVisible">
-					<q-col
-						v-if="controls.FACIL___FACILGEOCOORI.isVisible"
-						cols="auto">
+					</q-control-wrapper>
+				</q-row-container>
+				<q-row-container v-show="controls.FACIL___FACILGEOCOORI.isVisible">
+					<q-control-wrapper
+						v-show="controls.FACIL___FACILGEOCOORI.isVisible"
+						class="${Vue.GetControlWrapperClass($controlsColumn)}">
 						<base-input-structure
-							v-if="controls.FACIL___FACILGEOCOORI.isVisible"
 							class="i-text"
-							v-bind="controls.FACIL___FACILGEOCOORI.wrapperProps"
-							:id="getControlId(controls.FACIL___FACILGEOCOORI)"
+							v-bind="controls.FACIL___FACILGEOCOORI"
 							v-on="controls.FACIL___FACILGEOCOORI.handlers"
 							:loading="controls.FACIL___FACILGEOCOORI.props.loading"
 							:reporting-mode-on="reportingModeCAV"
 							:suggestion-mode-on="suggestionModeOn">
 							<q-text-field
 								v-bind="controls.FACIL___FACILGEOCOORI.props"
-								:id="getControlId(controls.FACIL___FACILGEOCOORI)"
 								@blur="onBlur(controls.FACIL___FACILGEOCOORI, model.ValGeocoori.value)"
 								@change="model.ValGeocoori.fnUpdateValueOnChange" />
 						</base-input-structure>
-					</q-col>
-				</q-row>
+					</q-control-wrapper>
+				</q-row-container>
 			</template>
-		</q-container>
+		</div>
 	</teleport>
 
-	<q-divider v-if="!isPopup && showFormFooter" />
+	<hr v-if="!isPopup && showFormFooter" />
 
 	<teleport
 		v-if="formModalIsReady && showFormFooter"
 		:to="`#${uiContainersId.footer}`"
 		:disabled="!isPopup || isNested">
-		<q-row v-if="showFormFooter">
+		<q-row-container v-if="showFormFooter">
 			<div id="footer-action-btns">
 				<template
 					v-for="btn in formButtons"
@@ -359,7 +320,6 @@
 						v-if="btn.isActive && btn.isVisible && btn.showInFooter"
 						:id="`bottom-${btn.id}`"
 						:label="btn.text"
-						:color="btn.color"
 						:variant="btn.variant"
 						:disabled="btn.disabled"
 						:icon-pos="btn.iconPos"
@@ -371,12 +331,12 @@
 					</q-button>
 				</template>
 			</div>
-		</q-row>
+		</q-row-container>
 	</teleport>
 </template>
 
 <script>
-	/* eslint-disable @typescript-eslint/no-unused-vars */
+	/* eslint-disable no-unused-vars */
 	import { computed, defineAsyncComponent, readonly } from 'vue'
 	import { useRoute } from 'vue-router'
 
@@ -396,7 +356,7 @@
 	import qApi from '@/api/genio/quidgestFunctions.js'
 	import qFunctions from '@/api/genio/projectFunctions.js'
 	import qProjArrays from '@/api/genio/projectArrays.js'
-	/* eslint-enable @typescript-eslint/no-unused-vars */
+	/* eslint-enable no-unused-vars */
 
 	import FormViewModel from './QFormFacilViewModel.js'
 
@@ -475,8 +435,7 @@
 					primaryKey: 'ValCodfacil',
 					designation: computed(() => this.Resources.FACILITY55206),
 					identifier: '', // Unique identifier received by route (when it's nested).
-					mode: '',
-					availableAgents: [],
+					mode: ''
 				},
 
 				formButtons: {
@@ -584,11 +543,7 @@
 						showInFooter: true,
 						isActive: true,
 						isVisible: computed(() => vm.authData.isAllowed && vm.isEditable),
-						action: vm.saveForm,
-						badge: {
-							isVisible: computed(() => vm.model?.isDirty === true),
-							color: 'highlight'
-						}
+						action: vm.saveForm
 					},
 					confirmBtn: {
 						id: 'confirm-btn',
@@ -725,7 +680,7 @@
 						label: computed(() => this.Resources.INCORPORATION10135),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						dateTimeType: 'date',
+						format: 'date',
 						controlLimits: [
 						],
 					}, this),
@@ -739,6 +694,7 @@
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						maxLength: 85,
+						labelId: 'label_FACIL___FACILNAME____',
 						controlLimits: [
 						],
 					}, this),
@@ -752,6 +708,7 @@
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						maxLength: 1,
+						labelId: 'label_FACIL___FACILFACILTYP',
 						arrayName: 'FacilTyp',
 						helpShortItem: 'None',
 						helpDetailedItem: 'None',
@@ -815,17 +772,19 @@
 						controlLimits: [
 						],
 					}, this),
-					FACIL___FACILGPSINPUT: new fieldControlClass.RadioGroupControl({
+					FACIL___FACILGPSINPUT: new fieldControlClass.ArrayStringControl({
 						modelField: 'ValGpsinput',
 						valueChangeEvent: 'fieldChange:facil.gpsinput',
 						id: 'FACIL___FACILGPSINPUT',
 						name: 'GPSINPUT',
+						size: 'medium',
 						label: computed(() => this.Resources.GPS_INPUT13625),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						maxLength: 1,
+						labelId: 'label_FACIL___FACILGPSINPUT',
 						arrayName: 'GpsInput',
-						columns: 1,
+						columnNumber: 1,
 						controlLimits: [
 						],
 					}, this),
@@ -843,7 +802,7 @@
 						controlLimits: [
 						],
 						showWhen: {
-							// eslint-disable-next-line @typescript-eslint/no-unused-vars
+							// eslint-disable-next-line no-unused-vars
 							fnFormula(params)
 							{
 								// Formula: [FACIL->GPSINPUT]=="L"
@@ -867,7 +826,7 @@
 						controlLimits: [
 						],
 						showWhen: {
-							// eslint-disable-next-line @typescript-eslint/no-unused-vars
+							// eslint-disable-next-line no-unused-vars
 							fnFormula(params)
 							{
 								// Formula: [FACIL->GPSINPUT]=="L"
@@ -891,7 +850,7 @@
 						controlLimits: [
 						],
 						showWhen: {
-							// eslint-disable-next-line @typescript-eslint/no-unused-vars
+							// eslint-disable-next-line no-unused-vars
 							fnFormula(params)
 							{
 								// Formula: [FACIL->GPSINPUT]=="P"
@@ -930,6 +889,8 @@
 					Facil: {
 						get ValAddress() { return vm.model.ValAddress.value },
 						set ValAddress(value) { vm.model.ValAddress.updateValue(value) },
+						get ValCodcntry() { return vm.model.ValCodcntry.value },
+						set ValCodcntry(value) { vm.model.ValCodcntry.updateValue(value) },
 						get ValCodentit() { return vm.model.ValCodentit.value },
 						set ValCodentit(value) { vm.model.ValCodentit.updateValue(value) },
 						get ValCodfacty() { return vm.model.ValCodfacty.value },
@@ -966,6 +927,8 @@
 						get entit() { return vm.model.ValCodentit },
 						/** The foreign key to the FACTY table */
 						get facty() { return vm.model.ValCodfacty },
+						/** The foreign key to the CNTRY table */
+						get cntry() { return vm.model.ValCodcntry },
 					},
 					get extraProperties() { return vm.model.extraProperties },
 				},
@@ -1010,23 +973,17 @@
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 		},
 
-		beforeUnmount()
-		{
-/* eslint-disable indent, vue/html-indent, vue/script-indent */
-// USE /[MANUAL GQT COMPONENT_BEFORE_UNMOUNT FACIL]/
-// eslint-disable-next-line
-/* eslint-enable indent, vue/html-indent, vue/script-indent */
-		},
-
 		methods: {
 			/**
 			 * Called before form init.
 			 */
 			async beforeLoad()
 			{
+				let loadForm = true
+
 				// Execute the "Before init" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.beforeInit)
-				for (const trigger of triggers)
+				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
 				this.emitEvent('before-load-form')
@@ -1036,7 +993,7 @@
 // eslint-disable-next-line
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 
-				return true
+				return loadForm
 			},
 
 			/**
@@ -1046,7 +1003,7 @@
 			{
 				// Execute the "After init" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.afterInit)
-				for (const trigger of triggers)
+				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
 				this.emitEvent('after-load-form')
@@ -1066,33 +1023,19 @@
 
 				// Execute the "Before apply" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.beforeApply)
-				for (const trigger of triggers)
+				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
-				const ticketsPromise = this.model.updateFilesTickets(true)
-				this.addBusy(ticketsPromise, this.Resources[hardcodedTexts.processing])
-				const canSetDocums = await ticketsPromise
+				const canSetDocums = await this.model.updateFilesTickets(true)
 
 				if (canSetDocums)
 				{
-					let results
-					const changesPromise = this.model.setDocumentChanges()
-					this.addBusy(changesPromise, this.Resources[hardcodedTexts.processing])
-					applyForm = await changesPromise
+					applyForm = await this.model.setDocumentChanges()
 
 					if (applyForm)
 					{
-						const insertsPromise = this.model.saveDocuments()
-						this.addBusy(insertsPromise, this.Resources[hardcodedTexts.processing])
-						results = await insertsPromise
+						const results = await this.model.saveDocuments()
 						applyForm = results.every((e) => e === true)
-					}
-
-					if (!changesPromise || (results && !results.every((e) => e === true)))
-					{
-						this.validationErrors = {
-							Erro: this.Resources.OCORREU_UM_ERRO_AO_T51884
-						}
 					}
 				}
 
@@ -1113,7 +1056,7 @@
 			{
 				// Execute the "After apply" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.afterApply)
-				for (const trigger of triggers)
+				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
 				this.emitEvent('after-apply-form')
@@ -1133,33 +1076,19 @@
 
 				// Execute the "Before save" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.beforeSave)
-				for (const trigger of triggers)
+				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
-				const ticketsPromise = this.model.updateFilesTickets()
-				this.addBusy(ticketsPromise, this.Resources[hardcodedTexts.processing])
-				const canSetDocums = await ticketsPromise
+				const canSetDocums = await this.model.updateFilesTickets()
 
 				if (canSetDocums)
 				{
-					let results
-					const changesPromise = this.model.setDocumentChanges()
-					this.addBusy(changesPromise, this.Resources[hardcodedTexts.processing])
-					saveForm = await changesPromise
+					saveForm = await this.model.setDocumentChanges()
 
 					if (saveForm)
 					{
-						const insertsPromise = this.model.saveDocuments()
-						this.addBusy(insertsPromise, this.Resources[hardcodedTexts.processing])
-						results = await insertsPromise
+						const results = await this.model.saveDocuments()
 						saveForm = results.every((e) => e === true)
-					}
-
-					if (!changesPromise || (results && !results.every((e) => e === true)))
-					{
-						this.validationErrors = {
-							Erro: this.Resources.OCORREU_UM_ERRO_AO_T51884
-						}
 					}
 				}
 
@@ -1178,9 +1107,11 @@
 			 */
 			async afterSave()
 			{
+				let redirectPage = true // Set to 'false' to cancel page redirect.
+
 				// Execute the "After save" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.afterSave)
-				for (const trigger of triggers)
+				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
 				this.emitEvent('after-save-form')
@@ -1190,7 +1121,7 @@
 // eslint-disable-next-line
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 
-				return true
+				return redirectPage
 			},
 
 			/**
@@ -1198,6 +1129,8 @@
 			 */
 			async beforeDel()
 			{
+				let deleteForm = true // Set to 'false' to cancel form delete.
+
 				this.emitEvent('before-delete-form')
 
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
@@ -1205,7 +1138,7 @@
 // eslint-disable-next-line
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 
-				return true
+				return deleteForm
 			},
 
 			/**
@@ -1213,6 +1146,8 @@
 			 */
 			async afterDel()
 			{
+				let redirectPage = true // Set to 'false' to cancel page redirect.
+
 				this.emitEvent('after-delete-form')
 
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
@@ -1220,7 +1155,7 @@
 // eslint-disable-next-line
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 
-				return true
+				return redirectPage
 			},
 
 			/**
@@ -1228,9 +1163,11 @@
 			 */
 			async beforeExit()
 			{
+				let leaveForm = true // Set to 'false' to cancel page redirect.
+
 				// Execute the "Before exit" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.beforeExit)
-				for (const trigger of triggers)
+				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
 				this.emitEvent('before-exit-form')
@@ -1240,7 +1177,7 @@
 // eslint-disable-next-line
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 
-				return true
+				return leaveForm
 			},
 
 			/**
@@ -1250,7 +1187,7 @@
 			{
 				// Execute the "After exit" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.afterExit)
-				for (const trigger of triggers)
+				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
 				this.emitEvent('after-exit-form')

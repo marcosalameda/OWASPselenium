@@ -216,7 +216,7 @@ namespace CSGenio.core
             }
             catch (Exception ex)
             {
-                throw new Exception("CSmail.Send - Error sending email. " + ex?.Message, ex);
+                throw new Exception("CSmail.Send - Error sending email.", ex);
             }
         }
 
@@ -486,7 +486,7 @@ namespace CSGenio.core
         /// <param name="inputEmail"></param>
         public static bool validateMail(string inputEmail)
         {
-            string strRegex = @"^[a-zA-Z0-9_+&*-]+(?>\.[a-zA-Z0-9_+&*-]+)*@(?>[a-zA-Z0-9-]+\.)+[a-zA-Z]{2,20}$";
+            string strRegex = @"^[a-zA-Z0-9_+&*-]+(?>\.[a-zA-Z0-9_+&*-]+)*@(?>[a-zA-Z0-9-]+\.)+[a-zA-Z]{2,7}$";
             Regex re = new Regex(strRegex, RegexOptions.IgnoreCase, TimeSpan.FromSeconds(1));
             if (re.IsMatch(inputEmail))
                 return (true);

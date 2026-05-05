@@ -13,6 +13,7 @@
 	.q-alert-widget .q-counter-widget__value,
 	.q-text-field__input,
 	.i-text__label,
+	.i-checkbox,
 	input,
 	.form-header {
 		color: $on-color;
@@ -30,6 +31,10 @@
 
 	.q-widget__group {
 		color: rgb($on-color-rgb / 0.7);
+	}
+
+	.q-custom-widget .i-checkbox__container.disabled input:checked ~ span.i-checkbox__field::after {
+		border-color: $on-color;
 	}
 
 	.q-custom-widget .q-table-list {
@@ -53,7 +58,7 @@
 
 				.footer-pagination-row {
 					.q-button {
-						&:not(:disabled):hover {
+						&:not(.q-button--active):hover {
 							background: $color;
 
 							.q-icon__svg {
@@ -126,7 +131,6 @@
 		}
 
 		&__message {
-			font-size: 1.125rem;
 			font-weight: bold;
 			margin: 1rem 0;
 		}
@@ -542,6 +546,15 @@
 		}
 	}
 
+	.i-checkbox__container.disabled input:checked ~ .i-checkbox__field {
+		background: none;
+		border: none;
+
+		&::after {
+			border-color: $primary;
+		}
+	}
+
 	.suggest--hidden {
 		display: none;
 	}
@@ -611,10 +624,10 @@
 		}
 
 		.footer-pagination-row {
-			.q-button {
+			.q-button:not(.q-button--active) {
 				background: $background;
 
-				&:hover:not(:disabled) {
+				&:hover {
 					background: $primary-dark;
 				}
 			}

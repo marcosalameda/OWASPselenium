@@ -86,13 +86,6 @@ namespace Administration.AuxClass
             [Display(Name = "[   ] blank")]
             Blank            
         }
-        public enum DisplayNumberFormatNegative
-        {
-            [Display(Name = "[ - ] minus sign")]
-            Minus,
-            [Display(Name = "[ () ] parentheses")]
-            Parentheses
-        }
 
         /// <summary>
         /// Tipos de SGBD to BD's auxiliares

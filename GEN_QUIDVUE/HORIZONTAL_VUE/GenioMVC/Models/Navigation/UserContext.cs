@@ -1,4 +1,5 @@
-﻿using CSGenio.framework;
+﻿using AspNetCore.LegacyAuthCookieCompat;
+using CSGenio.framework;
 using CSGenio.persistence;
 using GenioServer.security;
 using Newtonsoft.Json;
@@ -16,6 +17,7 @@ namespace GenioMVC.Models.Navigation
     [Serializable]
 	public class UserContext
 	{
+		private readonly object m_lock = new object();
 		/// <summary>
 		/// The active navigations
 		/// </summary>
@@ -53,7 +55,7 @@ namespace GenioMVC.Models.Navigation
 
                 //Look into the session if we already established our identity
                 string? user_identity = m_httpContext.Session.GetString("user.identity");
-				string guest_identity = SecurityFactory.GetGuest().Name ?? "";
+				string guest_identity = SecurityFactory.GetGuest().Identity?.Name ?? "";
 
                 //If the identity is not in session, then check if we need to autologin the user
                 //We also retry autologin if the session previously knew we are a guest user but our http request is signaling as authenticated
@@ -113,10 +115,10 @@ namespace GenioMVC.Models.Navigation
 		private User GetUserObjectAsGuest()
 		{
 			//If the user identity is valid but we are unable to authorize it then we revert back to a guest identity
-			User user = SecurityFactory.GetGuest();
-			user.SessionId = m_httpContext.Session.Id;
-			user.Location = m_httpContext.GetIpAddress();
-			return user;
+			IPrincipal principal = SecurityFactory.GetGuest();
+			string user_identity = principal.Identity.Name;
+			User user = new User(user_identity, m_httpContext.Session.Id, Configuration.DefaultYear, m_httpContext.GetIpAddress());
+			return UserFactory.FillUser(principal, user);
 		}
 
 		/// <summary>
@@ -128,20 +130,14 @@ namespace GenioMVC.Models.Navigation
 		{
 			try
 			{
-				var user = SecurityFactory.Authorize(new()
-				{
-					AuthenticationType = "internal",
-					Name = user_identity,
-					IsAuthenticated = true,
-					IdProperty = GenioIdentityType.InternalId
-				});
-				user.SessionId = m_httpContext.Session.Id;
-				user.Location = m_httpContext.GetIpAddress();
-				user.Year = GetYearFromRoute();
+				IPrincipal principal = SecurityFactory.GetUserRoles(new GenericIdentity(user_identity));
+				if (principal is ErrorPrincipal)
+					return null;
+
+				User user = new User(user_identity, m_httpContext.Session.Id, GetYearFromRoute(), m_httpContext.GetIpAddress());
 				user.Language = Thread.CurrentThread.CurrentCulture.Name.Replace("-", "").ToUpperInvariant();
 				user.CurrentModule = GetModuleFromRoute();
-
-				user = UserFactory.ReadEphs(user);
+				user = UserFactory.FillUser(principal, user);
 				// An attempt will be made to recover the Initial EPH if necessary
 				TryRestoreInitialEPH(ref user);
 				return user;
@@ -253,7 +249,7 @@ namespace GenioMVC.Models.Navigation
 				if (identity_name == null && SecurityFactory.AutoLoginGuest)
 				{
 					//create a guest user
-					identity_name = SecurityFactory.GetGuest().Name;
+					identity_name = SecurityFactory.GetGuest().Identity.Name;
 				}
 
 				return identity_name;
@@ -265,6 +261,7 @@ namespace GenioMVC.Models.Navigation
 			}
 		}
 
+
         /// <summary>
         /// An attempt will be made to recover the Initial EPH if necessary.
         /// </summary>
@@ -275,9 +272,10 @@ namespace GenioMVC.Models.Navigation
 			if (user != null && !user.EphOk)
 			{
 				Dictionary<string, InitialEPHCache>? initialEphCache = GetInitialEph();
-                UserFactory.FillEphRuntime(user, initialEphCache);
+                UserFactory.FillEphRuntime(ref user, initialEphCache);
 			}
 		}
+
 
 		public Dictionary<string, InitialEPHCache> ?GetInitialEph()
 		{
@@ -299,6 +297,8 @@ namespace GenioMVC.Models.Navigation
             var bytes = Encoding.UTF8.GetBytes(utf8);
 			m_httpContext.Session.Set("user.eph.initial", bytes);
         }
+
+
 
         private readonly HttpContext m_httpContext;
         private readonly IConfiguration m_configuration;
@@ -416,8 +416,33 @@ namespace GenioMVC.Models.Navigation
 			}
 		}
 
+		/*
+		public static UserContext GetCurrent(HttpContext context)
+		{
+			//get
+			//{
+				//The context might have been already initialized by a request redirecting to this one
+				//So if we already have a context in this thread we keep it
+				UserContext? ctx = context.Items["appContext"] as UserContext;
+				if (ctx != null)
+					return ctx;
+
+				//else create a new one
+				ctx = new UserContext(context);
+
+				//save in the current response thread
+				context.Items["appContext"] = ctx;
+				return ctx;
+			//}
+		}
+		*/
+
 		public void Destroy()
 		{
+			//var current = m_httpContext.Items["appContext"] as UserContext;
+			//if (current != null)
+			//	current.User = null;
+
 			m_httpContext.Session.Remove("user.identity");
 			QCache.Instance.User.Invalidate("user." + m_httpContext.User.Identity.Name);
 		}

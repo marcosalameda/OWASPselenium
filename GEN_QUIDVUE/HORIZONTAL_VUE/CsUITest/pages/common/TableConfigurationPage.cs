@@ -1,23 +1,38 @@
 ﻿namespace quidgest.uitests.pages;
 
-public class TableConfigurationPage : PageObject
-{
+public class TableConfigurationPage : PageObject {
     /// <summary>
     /// Table configuration container element
     /// </summary>
-    private IWebElement tableConfigurationContainer => GetElement(driver, By.CssSelector(".q-table-config"));
+    private IWebElement tableConfigurationContainer => driver.FindElement(By.Id("q-modal-config"));
+
+    /// <summary>
+    /// Table configuration tab elements
+    /// </summary>
+    private IWebElement columnConfigurationTab => driver.FindElement(By.Id("tab-container-column-config"));
+    private IWebElement advancedFiltersTab => driver.FindElement(By.Id("tab-container-advanced-filters"));
+    private IWebElement saveViewTab => driver.FindElement(By.Id("tab-container-view-save"));
+    private IWebElement viewManagerTab => driver.FindElement(By.Id("tab-container-views"));
+
+    /// <summary>
+    /// Table configuration tab content elements that contain the controls
+    /// </summary>
+    private IWebElement columnConfigurationForm => driver.FindElement(By.Id("q-modal-column-config-body"));
+    private IWebElement advancedFiltersForm => driver.FindElement(By.Id("q-modal-advanced-filters-body"));
+    private IWebElement saveViewForm => driver.FindElement(By.Id("q-modal-view-save-body"));
+    private IWebElement viewManagerForm => driver.FindElement(By.Id("q-modal-views-body"));
 
     /// <summary>
     /// Column configuration buttons
     /// </summary>
-    private IWebElement resetColumnConfigBtn => GetElement(driver, By.Id("reset-column-config-btn"));
-    private IWebElement applyColumnConfigBtn => GetElement(driver, By.Id("apply-config-btn"));
-    private IWebElement cancelColumnConfigBtn => GetElement(driver, By.Id("cancel-config-btn"));
+    private IWebElement resetColumnConfigBtn => driver.FindElement(By.Id("reset-column-config-btn"));
+    private IWebElement applyColumnConfigBtn => driver.FindElement(By.Id("apply-column-config-btn"));
+    private IWebElement cancelColumnConfigBtn => driver.FindElement(By.Id("cancel-column-config-btn"));
 
     /// <summary>
     /// Column configuration table
     /// </summary>
-    public ListControl columnConfigList => new ListControl(driver, By.CssSelector(".q-table-config"), "[data-testid='table-container']");
+    public ListControl columnConfigList => new ListControl(driver, By.Id("q-modal-column-config-body"), ".q-table-list");
 
     public TableConfigurationPage(IWebDriver driver) : base(driver)
     {

@@ -1,41 +1,67 @@
 ﻿<template>
-	<q-action-list
+	<!-- BEGIN: Multiple actions -->
+	<div
 		v-if="numVisibleActions > 1"
-		data-testid="options-btn"
-		placement="bottom-start"
-		variant="bold"
-		:disabled="rowsSelectedCount === 0"
-		:groups="groupActionGroups"
-		:items="groupActionItems"
-		:label="texts.groupActionsText"
-		:title="texts.groupActionsText"
-		@click="groupActionOption">
-		<q-icon icon="checkbox-multiple-marked" />
-	</q-action-list>
+		:class="[classDropDown, 'position-static']">
+		<!-- BEGIN: Menu button -->
+		<q-toggle-dropdown
+			ref="optionsButton"
+			data-testid="options-btn"
+			data-boundary="window"
+			aria-expanded="false"
+			variant="bold"
+			:disabled="rowsSelectedCount === 0"
+			:title="texts.groupActionsText">
+			{{ texts.groupActionsText }}
+		</q-toggle-dropdown>
+		<!-- END: Menu button -->
+		<!-- BEGIN: Dropdown menu -->
+		<div
+			:class="[classDropPull, 'dropdown-menu']"
+			:x-placement="xPlacement"
+			:style="{
+				'position': 'absolute',
+				'transform': classDropTransform,
+				'top': '0',
+				'left': '0',
+				'will-change': 'transform'
+			}"
+			role="menu">
+			<!-- BEGIN: CRUD action links -->
+			<q-table-actions
+				:actions="groupActions"
+				@action-click="groupAction" />
+			<!-- END: CRUD action links -->
+		</div>
+		<!-- END: Dropdown menu -->
+	</div>
+	<!-- END: Multiple actions -->
+	<!-- BEGIN: Single action -->
 	<q-button
 		v-else-if="followUpAction"
-		data-testid="options-btn"
 		variant="bold"
 		:label="followUpAction.title"
-		:title="followUpAction.title"
 		:disabled="rowsSelectedCount === 0"
 		@click="groupAction(followUpAction)">
 		<q-icon
 			v-if="followUpAction.icon"
 			v-bind="followUpAction.icon" />
 	</q-button>
+	<!-- END: Single action -->
 </template>
 
 <script>
 	import { numArrayVisibleActions } from '@/mixins/listFunctions.js'
-	import { QActionList } from '@quidgest/clientapp/components'
+	import QToggleDropdown from '@/components/QToggleDropdown.vue'
 
 	export default {
 		name: 'QTableGroupActionsMenu',
 
 		emits: ['group-action'],
 
-		components: { QActionList },
+		components: {
+			QToggleDropdown
+		},
 
 		props: {
 			/**
@@ -73,18 +99,6 @@
 
 		expose: [],
 
-		data()
-		{
-			return {
-				groupActionGroups: [
-					{
-						id: 'default',
-						display: 'dropdown'
-					}
-				]
-			}
-		},
-
 		computed: {
 			/**
 			 * Determine total number of actions that are visible
@@ -102,38 +116,37 @@
 				return this.numVisibleActions === 1 ? this.groupActions[0] : null
 			},
 
-			/**
-			 * The list of possible actions.
-			 */
-			groupActionItems()
+			//BEGIN: Props for styles
+			classDropDown()
 			{
-				return this.groupActions.map((act) => ({
-					...act,
-					key: act.id,
-					label: act.title,
-					group: 'default'
-				}))
+				return this.actionsPlacement === 'right' ? 'dropleft' : 'dropdown'
+			},
+
+			classDropPull()
+			{
+				return this.actionsPlacement === 'right' ? 'pull-right' : 'pull-left'
+			},
+
+			classDropTransform()
+			{
+				return this.actionsPlacement === 'right' ? 'translate3d(1299px, 113px, 0)' : 'translate3d(2px, 97px, 0)'
+			},
+
+			xPlacement()
+			{
+				return this.actionsPlacement === 'right' ? 'left-start' : 'bottom-start'
 			}
+			//END: Props for styles
 		},
 
 		methods: {
 			/**
 			 * Emit data for executing action
-			 * @param {object} action
+			 * @param action {String}
 			 */
 			groupAction(action)
 			{
-				this.$emit('group-action', { action })
-			},
-
-			/**
-			 * Emit data for executing action
-			 * @param {string} optionKey The identifier of the selected action
-			 */
-			groupActionOption(optionKey)
-			{
-				const action = this.groupActionItems.find((e) => e.key === optionKey)
-				this.groupAction(action)
+				this.$emit('group-action', { action: action })
 			}
 		}
 	}

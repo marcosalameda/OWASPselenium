@@ -48,16 +48,10 @@ namespace CSGenio.framework
 		/// </summary>
 		public string GroupSeparator { get; }
 
-        /// <summary>
-		/// Negative format
-		/// </summary>
-		public string NegativeFormat { get; }
-
-		public NumericFieldFormatter(string decimalSeparator, string groupSeparator, string negativeFormat)
+		public NumericFieldFormatter(string decimalSeparator, string groupSeparator)
 		{
 			DecimalSeparator = decimalSeparator;
 			GroupSeparator = groupSeparator;
-			NegativeFormat = negativeFormat;
 		}
 	}
 

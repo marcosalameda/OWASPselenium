@@ -6,12 +6,9 @@ import _isArray from 'lodash-es/isArray'
 import _isDate from 'lodash-es/isDate'
 import _isEmpty from 'lodash-es/isEmpty'
 import _set from 'lodash-es/set'
+import Swal from 'sweetalert2/dist/sweetalert2.js'
 import tinycolor from 'tinycolor2'
 import { isRef } from 'vue'
-
-import { useDialog } from '@quidgest/ui'
-
-import MessageBoxModel from '../../models/messageBoxModel.js'
 
 import { formModes } from '../../constants/enums'
 
@@ -20,7 +17,8 @@ import { formModes } from '../../constants/enums'
  * @param {string} backgroundColor The background color for which to determine the readable text color
  * @returns {string} The readable text color (either 'black' or 'white').
  */
-export function getReadableTextColor(backgroundColor) {
+export function getReadableTextColor(backgroundColor)
+{
 	// Create a tinycolor instance from the given background color
 	const color = tinycolor(backgroundColor)
 	// Calculate the luminance of the background color
@@ -34,9 +32,12 @@ export function getReadableTextColor(backgroundColor) {
  * Changes the window's onbeforeunload event, so the user will be asked if he wants to leave, in case the form is dirty.
  * @param {boolean} isDirty True if the form is dirty, false otherwise
  */
-export function setNavigationState(isDirty) {
-	if (isDirty) window.onbeforeunload = () => ''
-	else window.onbeforeunload = () => {}
+export function setNavigationState(isDirty)
+{
+	if (isDirty)
+		window.onbeforeunload = () => ''
+	else
+		window.onbeforeunload = () => { }
 }
 
 /**
@@ -46,19 +47,23 @@ export function setNavigationState(isDirty) {
  * @param {Object|Array} obj - The input object or array that need be normalized.
  * @returns {Object|Array} A new object or array with normalized data.
  */
-export function normalizeDataInNavigationParams(obj) {
+export function normalizeDataInNavigationParams(obj)
+{
 	// Determine whether the input is an array or object, and initialize the output accordingly
 	const newObj = Array.isArray(obj) ? [] : {}
 
 	// Iterate through all keys in the input object or array
-	for (const key in obj) {
+	for (const key in obj)
+	{
 		// If the current property is a Date object, convert it to an ISO string
-		if (obj[key] instanceof Date) newObj[key] = dateToISOString(obj[key])
+		if (obj[key] instanceof Date)
+			newObj[key] = dateToISOString(obj[key])
 		// If the current property is a non-null object or array, call the function recursively
 		else if (typeof obj[key] === 'object' && obj[key] !== null)
 			newObj[key] = normalizeDataInNavigationParams(obj[key])
 		// Otherwise, just copy the property to the output object or array
-		else newObj[key] = obj[key]
+		else
+			newObj[key] = obj[key]
 	}
 
 	// Return the output object or array
@@ -69,10 +74,10 @@ export function normalizeDataInNavigationParams(obj) {
  * Should be called whenever there's a route change, to update the navigation history.
  * @param {object} routeData The route where the user is navigating to
  */
-export function normalizeRouteForSaveNavigation(routeData) {
+export function normalizeRouteForSaveNavigation(routeData)
+{
 	const routeBranch = routeData.meta.order
 	const args = {
-		routeType: routeData.meta.routeType,
 		location: routeData.name,
 		params: routeData.params,
 		properties: {
@@ -88,8 +93,10 @@ export function normalizeRouteForSaveNavigation(routeData) {
  * @param {object} routeData The route where the user is navigating to
  * @param {function} updateHistory A function that will update the navigation history
  */
-export function saveNavigation(routeData, updateHistory) {
-	if (typeof updateHistory !== 'function') return
+export function saveNavigation(routeData, updateHistory)
+{
+	if (typeof updateHistory !== 'function')
+		return
 
 	const args = normalizeRouteForSaveNavigation(routeData)
 
@@ -97,23 +104,62 @@ export function saveNavigation(routeData, updateHistory) {
 }
 
 /**
+ * Builds the human key of the current record.
+ * @param {object} humanKeyFields An array with the keys of the fields in the model needed for the human key
+ * @param {object} model The form/menu model
+ * @returns A string with the human key.
+ */
+export function buildHumanKey(humanKeyFields, model)
+{
+	if (!Array.isArray(humanKeyFields) || _isEmpty(humanKeyFields) || typeof model !== 'object' || _isEmpty(model))
+		return ''
+
+	var humanKey = ''
+
+	for (let fieldId of humanKeyFields)
+	{
+		let field = model[fieldId]
+		if (_isEmpty(field))
+			break
+
+		let value = field.displayValue
+
+		if (_isEmpty(value))
+			continue
+
+		if (humanKey.length > 0)
+			humanKey += '; '
+
+		humanKey += `${field.description}: ${value}`
+	}
+
+	return humanKey
+}
+
+/**
  * Converts the specified raw layout variables data to the format expected by the application.
  * @param {object} layoutConfig The raw layout variables data
  * @returns An object with variables in the expected format.
  */
-export function getLayoutVariables(layoutConfig) {
+export function getLayoutVariables(layoutConfig)
+{
 	const layoutVariables = {}
 
-	for (const i in layoutConfig) {
+	for (let i in layoutConfig)
+	{
 		const chosenValue = layoutConfig[i].chosen
 		const defaultValue = layoutConfig[i].default
 		const possibleValues = layoutConfig[i].values
 
-		if (typeof chosenValue !== 'undefined') {
+		if (typeof chosenValue !== 'undefined')
+		{
 			if (Array.isArray(possibleValues) && possibleValues.includes(chosenValue))
 				layoutVariables[i] = chosenValue
-			else layoutVariables[i] = defaultValue
-		} else layoutVariables[i] = defaultValue
+			else
+				layoutVariables[i] = defaultValue
+		}
+		else
+			layoutVariables[i] = defaultValue
 	}
 
 	return layoutVariables
@@ -121,41 +167,195 @@ export function getLayoutVariables(layoutConfig) {
 
 /**
  * Displays a popup window with information, it can also receive some user input.
+ * Documentation: https://sweetalert2.github.io/#configuration
  *
- * @param {string} text The message to display
+ * Usage examples:
+ *
+ *   buttons: {
+ *     confirm: {
+ *       label: 'Confirm',
+ *       action: () => {} // Callback function to be called when the user clicks on the "confirm" button.
+ *     },
+ *     cancel: {
+ *       label: 'Cancel',
+ *       action: () => {} // Callback function to be called when the user clicks on the "cancel" button.
+ *     }
+ *   }
+ *
+ *   options: {
+ *     input: { // More info: https://sweetalert2.github.io/#input-types
+ *       type: 'text', // The type can be: text, email, url, password, textarea, select, radio, checkbox, file, range.
+ *       label: 'Input label',
+ *       placeholder: 'Input placeholder',
+ *       validator: () => {}, // Function to validate the user input.
+ *       choices: { // Used only for the types: select, radio.
+ *         '#ff0000': 'Red',
+ *         '#00ff00': 'Green',
+ *         '#0000ff': 'Blue'
+ *       },
+ *       attrs: { // Used only for the types: password, textarea, file, range.
+ *         'aria-label': 'Type your message here'
+ *       }
+ *     },
+ *     image: {
+ *       url: 'https://placeholder.pics/svg/300x1500',
+ *       alt: 'Custom image',
+ *       height: 1500
+ *     },
+ *     timeout: 3000,
+ *     hideCloseBtn: false,
+ *     hideFooterBtns: false,
+ *     useHtml: true
+ *   }
+ *
+ * @param {string} message The message to display
  * @param {string} icon The icon of the message (e.g.: info, error, warning, success, question) (optional)
  * @param {string} title The title of the message (optional)
  * @param {object} buttons The available buttons (optional)
  * @param {object} options Additional supported options (optional)
- * @param {object} handlers Event handlers (optional)
  */
-export function displayMessage(text, icon, title, buttons, options, handlers) {
-	const { addDialog } = useDialog()
+export function displayMessage(message, icon, title, buttons, options)
+{
+	return new Promise((resolve) => {
+		const defaultOpts = {
+			input: null,
+			image: null,
+			timeout: undefined,
+			hideCloseBtn: false,
+			hideFooterBtns: false,
+			useHtml: true
+		}
 
-	// Set object in store
-	const messageBox = new MessageBoxModel(text, icon, title, buttons, options, handlers)
+		const usedOpts = {
+			...defaultOpts,
+			...(options ?? {})
+		}
 
-	addDialog(messageBox.props, undefined, undefined, messageBox.handlers)
+		const prefs = {
+			titleText: title,
+			text: message,
+			icon: icon ?? 'info',
+			allowOutsideClick: false,
+			allowEscapeKey: false,
+			showCloseButton: true,
+			buttonsStyling: false,
+			customClass: {
+				actions: 'swal2-my-actions',
+				cancelButton: 'q-button q-button--outlined q-button--primary',
+				confirmButton: 'q-button q-button--bold q-button--primary',
+				denyButton: 'q-button q-button--bold q-button--danger'
+			}
+		}
+
+		if (buttons)
+		{
+			if (buttons.confirm)
+			{
+				prefs.showConfirmButton = true
+				prefs.confirmButtonText = buttons.confirm.label
+			}
+
+			if (buttons.cancel)
+			{
+				prefs.showCancelButton = true
+				prefs.cancelButtonText = buttons.cancel.label
+			}
+
+			if (buttons.deny)
+			{
+				prefs.showDenyButton = true
+				prefs.denyButtonText = buttons.deny.label
+			}
+		}
+
+		if (usedOpts.input)
+		{
+			prefs.input = usedOpts.input.type || 'text'
+			prefs.inputLabel = usedOpts.input.label
+			prefs.inputPlaceholder = usedOpts.input.placeholder
+			prefs.inputValidator = usedOpts.input.validator
+			prefs.inputOptions = usedOpts.input.choices
+			prefs.inputAttributes = usedOpts.input.attrs
+		}
+
+		if (usedOpts.timeout)
+			prefs.timer = usedOpts.timeout
+
+		if (usedOpts.hideCloseBtn)
+			prefs.showCloseButton = false
+
+		if (usedOpts.hideFooterBtns)
+		{
+			prefs.showConfirmButton = false
+			prefs.showCancelButton = false
+			prefs.showDenyButton = false
+		}
+
+		if (usedOpts.useHtml)
+			prefs.html = message
+
+		if (usedOpts.image)
+		{
+			if (usedOpts.image.url)
+				prefs.imageUrl = usedOpts.image.url
+			if (usedOpts.image.height)
+				prefs.imageHeight = usedOpts.image.height
+			prefs.imageAlt = usedOpts.image.alt || 'Custom image'
+		}
+
+		Swal.fire(prefs).then((result) => {
+			/*
+			 * This check must be done this way because callbackParams is not always an object
+			 * and it shouldn't necessarily be. It can be a single value. Using isEmpty() can prevent this from working.
+			 */
+			if (usedOpts?.callbackParams !== undefined && usedOpts?.callbackParams !== null)
+				result.value = usedOpts.callbackParams
+
+			if (buttons)
+			{
+				if (result.isConfirmed && buttons.confirm && typeof buttons.confirm.action === 'function')
+				{
+					buttons.confirm.action(result.value)
+					resolve(true)
+				}
+
+				if (result.isDismissed && buttons.cancel && typeof buttons.cancel.action === 'function')
+				{
+					buttons.cancel.action(result.value)
+					resolve(false)
+				}
+
+				if (result.isDenied && buttons.deny && typeof buttons.deny.action === 'function')
+				{
+					buttons.deny.action(result.value)
+					resolve(false)
+				}
+			}
+		})
+	})
 }
 
 /**
  * Scrolls to the top of the page.
  */
-export function scrollToTop() {
+export function scrollToTop()
+{
 	document.body.scrollTop = document.documentElement.scrollTop = 0
 }
 
 /**
  * Scrolls to the bottom of the page.
  */
-export function scrollToBottom() {
+export function scrollToBottom()
+{
 	window.scrollTo(0, document.body.scrollHeight)
 }
 
 /**
  * Gets the starting Y coordinate of the visible scroll area.
  */
-export function scrollYStart() {
+export function scrollYStart()
+{
 	// Header bar height (only in vertical layout)
 	const headerbar = document.getElementById('header-container')
 	const headerbarHeight = headerbar ? headerbar.offsetHeight : 0
@@ -181,7 +381,8 @@ export function scrollYStart() {
  * @param {string} position The scroll position - center or start
  * @param {string} behavior The behavior of the scroll, either instant or smooth
  */
-export function scrollTo(id, position = 'center', behavior = 'smooth') {
+export function scrollTo(id, position = 'center', behavior = 'smooth')
+{
 	// The behavior property should be 'instant'
 	// The 'smooth' option has a bug that prevents scrolling to the right location
 	const options = {
@@ -190,7 +391,8 @@ export function scrollTo(id, position = 'center', behavior = 'smooth') {
 	}
 
 	const elem = document.getElementById(id)
-	if (!elem) return
+	if (!elem)
+		return
 
 	const initialSPT = document.documentElement.style.scrollPaddingTop
 
@@ -207,34 +409,19 @@ export function scrollTo(id, position = 'center', behavior = 'smooth') {
 
 /**
  * Focus on a DOM element.
- * @param {object || string} target A reference to the DOM element or ID of the DOM element
+ * @param {object || string} element A reference to the DOM element or ID of the DOM element
  */
-export function focusElement(target) {
-	let el = target
+export function focusElement(element)
+{
+	// If element is a string, get DOM element with that ID
+	if (typeof element === 'string' && element !== '')
+		element = document.getElementById(element)
 
-	// If target is a string, get DOM element with that ID
-	if (typeof target === 'string' && target !== '') el = document.getElementById(target)
-
-	if (!el) return
+	if (!element)
+		return
 
 	// If the element can be focused, focus on it
-	if (el instanceof HTMLElement && typeof el.focus === 'function') el.focus()
-}
-
-/**
- * Focus on a DOM element.
- * @param {string} selector A CSS selector
- */
-export function focusElementBySelector(selector)
-{
-	// Type check
-	if (typeof selector !== 'string') return
-
-	const el = document.querySelector(selector)
-
-	if (typeof el?.focus !== 'function') return
-
-	el.focus()
+	element.focus?.()
 }
 
 /**
@@ -243,15 +430,20 @@ export function focusElementBySelector(selector)
  * Can receive any number of parameters, the first of which must be the string to format.
  * @returns A formatted string.
  */
-export function formatString() {
-	if (arguments.length < 1) return ''
+export function formatString()
+{
+	if (arguments.length < 1)
+		return ''
 
 	let string = arguments[0]
 
-	if (typeof string !== 'string' || string.length === 0) return ''
-	if (arguments.length < 2) return string
+	if (typeof string !== 'string' || string.length === 0)
+		return ''
+	if (arguments.length < 2)
+		return string
 
-	for (let i = 0; i < arguments.length - 1; i++) {
+	for (let i = 0; i < arguments.length - 1; i++)
+	{
 		const reg = new RegExp('\\{' + i + '\\}', 'gm')
 		string = string.replace(reg, arguments[i + 1] ?? '')
 	}
@@ -266,10 +458,15 @@ export function formatString() {
  * @param {string} defaultLang A fallback language, in case the first one is invalid (optional)
  * @returns The date in a string format.
  */
-export function dateToString(date, currentLang, defaultLang) {
-	if (!(date instanceof Date)) return ''
+export function dateToString(date, currentLang, defaultLang)
+{
+	if (!(date instanceof Date))
+		return ''
 
-	const langs = [currentLang, defaultLang || 'en-GB']
+	const langs = [
+		currentLang,
+		defaultLang || 'en-GB'
+	]
 
 	const options = {
 		dateStyle: 'short',
@@ -286,26 +483,20 @@ export function dateToString(date, currentLang, defaultLang) {
  * @param {string} date The date time
  * @returns The date in an ISO string format.
  */
-export function dateToISOString(date) {
-	if (!(date instanceof Date)) return ''
+export function dateToISOString(date)
+{
+	if (!(date instanceof Date))
+		return ''
 
 	const pad = (number) => `${number < 10 ? '0' : ''}${number}`
 
-	return (
-		date.getFullYear() +
-		'-' +
-		pad(date.getMonth() + 1) +
-		'-' +
-		pad(date.getDate()) +
-		'T' +
-		pad(date.getHours()) +
-		':' +
-		pad(date.getMinutes()) +
-		':' +
-		pad(date.getSeconds()) +
-		'.' +
-		String(date.getMilliseconds()).padStart(3, '0')
-	)
+	return date.getFullYear()
+		+ '-' + pad(date.getMonth() + 1)
+		+ '-' + pad(date.getDate())
+		+ 'T' + pad(date.getHours())
+		+ ':' + pad(date.getMinutes())
+		+ ':' + pad(date.getSeconds())
+		+ '.' + String(date.getMilliseconds()).padStart(3, '0')
 }
 
 /**
@@ -314,18 +505,22 @@ export function dateToISOString(date) {
  * @param {string} isoString The date-time string in ISO-8601 format.
  * @returns {Date} A Date object representing the given date and time.
  */
-export function isoStringToDate(isoString) {
-	if (typeof isoString !== 'string') throw new Error('Input must be a string.')
+export function isoStringToDate(isoString)
+{
+	if (typeof isoString !== 'string')
+		throw new Error('Input must be a string.')
 
-	const isoDateTimeFormat =
-		/^(\d{4})-(\d{2})-(\d{2})[T](\d{2}):(\d{2}):(\d{2})(\.\d+)?([+-]\d{2}:?\d{2}|Z)?$/
+	const isoDateTimeFormat = /^(\d{4})-(\d{2})-(\d{2})[T](\d{2}):(\d{2}):(\d{2})(\.\d+)?([+-]\d{2}:?\d{2}|Z)?$/
 	const parts = isoString.match(isoDateTimeFormat)
 
-	if (!parts) throw new Error('Invalid ISO-8601 date-time format.')
+	if (!parts)
+		throw new Error('Invalid ISO-8601 date-time format.')
 
 	// If the string ends with 'Z', treat it as UTC.
-	if (parts[8] === 'Z') return new Date(isoString)
-	else {
+	if (parts[8] === 'Z')
+		return new Date(isoString)
+	else
+	{
 		// Extract components from the match.
 		const year = parseInt(parts[1], 10),
 			month = parseInt(parts[2], 10) - 1, // Adjust for 0-based index
@@ -346,14 +541,16 @@ export function isoStringToDate(isoString) {
  * @param {string} dateFormat A string with the date format
  * @returns {Date} A Date object representing the given date and time.
  */
-export function stringToDate(value, dateFormat) {
+export function stringToDate(value, dateFormat)
+{
 	// Date used to fill in missing pieces of parsed date
 	const emptyDate = new Date(0, 0, 1, 0, 0, 0, 0)
 
-	const date = parse(value, dateFormat, emptyDate)
+	let date = parse(value, dateFormat, emptyDate)
 
 	// If not a valid date
-	if (isNaN(date.getTime())) return null
+	if (isNaN(date.getTime()))
+		return null
 
 	// Valid date
 	return date
@@ -364,7 +561,8 @@ export function stringToDate(value, dateFormat) {
  * @param {object} time The date time object to be converted
  * @returns The time in a string format like: HH:mm.
  */
-export function timeToString(time) {
+export function timeToString(time)
+{
 	const hours = time?.hours?.toString().padStart(2, '0') || '00'
 	const minutes = time?.minutes?.toString().padStart(2, '0') || '00'
 
@@ -376,8 +574,10 @@ export function timeToString(time) {
  * @param {Object} obj - The object to check for time properties.
  * @returns {boolean} Returns true if the object has all three keys, otherwise false.
  */
-export function hasTimeProperties(obj) {
-	if (typeof obj !== 'object' || _isEmpty(obj)) return false
+export function hasTimeProperties(obj)
+{
+	if (typeof obj !== 'object' || _isEmpty(obj))
+		return false
 
 	return 'hours' in obj && 'minutes' in obj && 'seconds' in obj
 }
@@ -387,7 +587,8 @@ export function hasTimeProperties(obj) {
  * @param {any} value The value
  * @returns True if it's a date, false otherwise.
  */
-export function isDate(value) {
+export function isDate(value)
+{
 	return _isDate(value)
 }
 
@@ -396,11 +597,12 @@ export function isDate(value) {
  * @param {object|string} value - The image representation, either as an object or string (url)
  * @returns True if it's a valid image, false otherwise.
  */
-export function validateImageFormat(value) {
+export function validateImageFormat(value)
+{
 	return typeof value === 'object'
-		? value === null || ('data' in value && 'dataFormat' in value && 'encoding' in value)
-		: // A string value means it can be either a path for the image or a base64 representation of one.
-		typeof value === 'string' && value.includes('/')
+		? value === null || 'data' in value && 'dataFormat' in value && 'encoding' in value
+		// A string value means it can be either a path for the image or a base64 representation of one.
+		: typeof value === 'string' && value.includes('/')
 }
 
 /**
@@ -408,10 +610,13 @@ export function validateImageFormat(value) {
  * @param {object|string} data The raw image data or URL
  * @returns {string} The image's data in string format.
  */
-export function imageObjToSrc(data) {
+export function imageObjToSrc(data)
+{
 	// URL
-	if (typeof data === 'string') return data
-	else if (typeof data !== 'object' || data === null) return null
+	if (typeof data === 'string')
+		return data
+	else if (typeof data !== 'object' || data === null)
+		return null
 	// Base64 / inline
 	return `data:image/${data.dataFormat};${data.encoding},${data.data}`
 }
@@ -420,16 +625,19 @@ export function imageObjToSrc(data) {
  * Computes a placeholder color according to the colors of the specified image source.
  * @param {object} src The image source
  */
-export async function computeColorPlaceholder(src) {
-	if (_isEmpty(src)) return null
+export async function computeColorPlaceholder(src)
+{
+	if (_isEmpty(src))
+		return null
 
 	return new Promise((resolve, reject) => {
-		let img = new Image()
+		var img = new Image()
 
 		img.onload = () => {
 			const canvas = document.createElement('canvas')
 
-			if (canvas) {
+			if (canvas)
+			{
 				canvas.width = img.width
 				canvas.height = img.height
 
@@ -473,13 +681,16 @@ export async function computeColorPlaceholder(src) {
  * Class representing the formatted value.
  * Includes the original value so we can use it in tooltips for example.
  */
-export class FormattedValueToDisplay {
-	constructor(value, originalValue) {
+export class FormattedValueToDisplay
+{
+	constructor(value, originalValue)
+	{
 		this.value = value
 		this.originalValue = originalValue
 	}
 
-	toString() {
+	toString()
+	{
 		return this.value
 	}
 }
@@ -490,9 +701,12 @@ export class FormattedValueToDisplay {
  * @param {function} fnFormat The formatting function.
  * @returns {any|Array.<any>} The formatted value or the original value if no formatting function is provided.
  */
-export function formatValueToDisplay(value, fnFormat) {
-	if (typeof fnFormat === 'function') {
-		if (Array.isArray(value)) return value.map((item) => fnFormat(item))
+export function formatValueToDisplay(value, fnFormat)
+{
+	if (typeof fnFormat === 'function')
+	{
+		if (Array.isArray(value))
+			return value.map((item) => fnFormat(item))
 		return fnFormat(value)
 	}
 
@@ -505,15 +719,13 @@ export function formatValueToDisplay(value, fnFormat) {
  * @param {object} options [optional] Optional formatting options.
  * @returns {string|FormattedValueToDisplay} The formatted string. In the case of multiple values, it will be a FormattedValueToDisplay object with both a short and a full string.
  */
-export function textDisplay(value, options) {
+export function textDisplay(value, options)
+{
 	value = _isEmpty(value) ? '' : value
 
 	// Optional options
-	if (
-		Number.isInteger(options?.scrollData) &&
-		value.length > options.scrollData &&
-		!options?.isHtml
-	) {
+	if (Number.isInteger(options?.scrollData) && value.length > options.scrollData && !options?.isHtml)
+	{
 		const shortText = value.substring(0, options.scrollData) + ' (...)'
 		value = options.multipleValues ? new FormattedValueToDisplay(shortText, value) : shortText
 	}
@@ -522,74 +734,24 @@ export function textDisplay(value, options) {
 }
 
 /**
- * Determine if a number is negative.
- * @param {string|number} value - The number
- * @returns {boolean} Whether the number is negative or not
+ * Get formatted string representing a number
+ * @param {string} value
+ * @param {string} decimalSep
+ * @param {string} groupSep
+ * @param {object} numberFormatOptions
+ * @returns {string}
  */
-export function isNegative(value) {
-	if (typeof value === 'number')
-		return value < 0
-
-	if (typeof value === 'string' && value?.length > 0)
-		return value.at(0) === '-' || (value.at(0) === '(' && value.at(0) === ')')
-
-	return false
-}
-
-/**
- * Formats a number's negative display.
- * @param {string|number} value - The number to format
- * @param {string} negativeFormat - The format to use for negative numbers (e.g., '-')
- * @param {boolean} makeNegative - Whether to make the number negative
- * @returns {string} The formatted number as a string
- */
-export function numericNegativeDisplay(value, negativeFormat, makeNegative) {
-	let strValue = value ? value.toString() : ''
-
-	if (makeNegative || isNegative(value))
-	{
-		// Remove negative symbols since they will be added based on the parameter
-		strValue = strValue.replace(/-/g, '').replace(/\(/g, '').replace(/\)/g, '')
-
-		switch(negativeFormat)
-		{
-			case '()':
-				strValue = '(' + strValue + ')'
-				break
-			case '-':
-			default:
-				strValue = '-' + strValue
-				break
-		}
-	}
-
-	return strValue
-}
-
-/**
- * Formats a number with custom thousands and decimal separators.
- * @param {string|number} value - The number to format
- * @param {string} decimalSep - The character to use as decimal separator (e.g., ',')
- * @param {string} groupSep - The character to use as thousands separator (e.g., '.')
- * @param {string} negativeFormat - The format to use for negative numbers (e.g., '-')
- * @param {object} numberFormatOptions - Extra formatting options
- * @returns {string} The formatted number as a string
- *
- * @example
- * numericDisplay(5453.04, '.', ',') // "5.453,04"
- * numericDisplay(5000000, '.', ',') // "5.000.000"
- */
-export function numericDisplay(value, decimalSep, groupSep, negativeFormat, numberFormatOptions) {
-	let strValue = ''
+export function numericDisplay(value, decimalSep, groupSep, numberFormatOptions)
+{
+	var strValue = ''
 
 	if (numberFormatOptions !== undefined)
 		strValue = new Intl.NumberFormat('en-US', numberFormatOptions).format(value)
-	else strValue = new Intl.NumberFormat('en-US').format(value)
+	else
+		strValue = new Intl.NumberFormat('en-US').format(value)
 
 	strValue = strValue.replace(/,/g, ';').replace('.', ':')
 	strValue = strValue.replace(':', decimalSep ?? '.').replace(/;/g, groupSep ?? ',')
-
-	strValue = numericNegativeDisplay(strValue, negativeFormat)
 
 	return strValue
 }
@@ -599,53 +761,27 @@ export function numericDisplay(value, decimalSep, groupSep, negativeFormat, numb
  * @param value {string}
  * @param decimalSep {string}
  * @param groupSep {string}
- * @param negativeFormat {string}
  * @param decimalPlaces {Number}
  * @param currencyCode {string}
  * @param lcidCode {string}
  * @param symbolType {string}
  * @returns String
  */
-export function currencyDisplay(
-	value,
-	decimalSep,
-	groupSep,
-	negativeFormat,
-	decimalPlaces,
-	currencyCode,
-	lcidCode,
-	symbolType
-) {
+export function currencyDisplay(value, decimalSep, groupSep, decimalPlaces, currencyCode, lcidCode, symbolType)
+{
 	// Optional symbol type: "symbol", "narrowSymbol", "code", "name"
-	let symbolTypeUse = 'symbol'
-	if (symbolType !== undefined) symbolTypeUse = symbolType
-
-	const valueIsNegative = isNegative(value)
-	const valueAbsolute = Math.abs(parseFloat(value))
+	var symbolTypeUse = 'symbol'
+	if (symbolType !== undefined)
+		symbolTypeUse = symbolType
 
 	// Get number formatted according to location code without currency symbol
-	const strNumber = new Intl.NumberFormat(lcidCode, {
-		minimumFractionDigits: decimalPlaces,
-		maximumFractionDigits: decimalPlaces
-	}).format(valueAbsolute)
+	var strNumber = new Intl.NumberFormat(lcidCode, { minimumFractionDigits: decimalPlaces, maximumFractionDigits: decimalPlaces }).format(value)
 	// Get number formatted according to location code with currency symbol
-	const strCurrency = new Intl.NumberFormat(lcidCode, {
-		minimumFractionDigits: decimalPlaces,
-		maximumFractionDigits: decimalPlaces,
-		style: 'currency',
-		currency: currencyCode.toUpperCase(),
-		currencyDisplay: symbolTypeUse
-	}).format(valueAbsolute)
+	var strCurrency = new Intl.NumberFormat(lcidCode, { minimumFractionDigits: decimalPlaces, maximumFractionDigits: decimalPlaces, style: 'currency', currency: currencyCode.toUpperCase(), currencyDisplay: symbolTypeUse }).format(value)
 	// Get number formatted according to application configuration
-	const strNumberDisplay = numericDisplay(valueAbsolute, decimalSep, groupSep, negativeFormat, {
-		minimumFractionDigits: decimalPlaces,
-		maximumFractionDigits: decimalPlaces
-	})
-
+	var strNumberDisplay = numericDisplay(value, decimalSep, groupSep, { minimumFractionDigits: decimalPlaces, maximumFractionDigits: decimalPlaces })
 	// In number formatted according to location code with currency symbol, replace number with number formatted according to application configuration
-	let strValue = strCurrency.replace(strNumber, strNumberDisplay)
-	if (valueIsNegative)
-		strValue = numericNegativeDisplay(strValue, negativeFormat, true)
+	var strValue = strCurrency.replace(strNumber, strNumberDisplay)
 
 	return strValue
 }
@@ -656,20 +792,27 @@ export function currencyDisplay(
  * @param dateTimeFormat {string}
  * @returns String
  */
-export function dateDisplay(dateTime, dateTimeFormat) {
+export function dateDisplay(dateTime, dateTimeFormat)
+{
 	let date
 
-	if (_isDate(dateTime)) date = dateTime
-	else if (typeof dateTime === 'string' || dateTime instanceof String) {
+	if (_isDate(dateTime))
+		date = dateTime
+	else if (typeof dateTime === 'string' || dateTime instanceof String)
+	{
 		// NULL dates
-		if (isEmpty(dateTime)) return ''
+		if (isEmpty(dateTime))
+			return ''
 
 		// Parse
 		date = new Date(dateTime)
 
 		// If date is invalid, return raw value
-		if (isNaN(date.getTime())) return ''
-	} else return ''
+		if (isNaN(date.getTime()))
+			return ''
+	}
+	else
+		return ''
 
 	// If date is valid, return formatted value
 	return format(date, dateTimeFormat ?? 'dd/MM/yyyy HH:mm:ss')
@@ -680,10 +823,14 @@ export function dateDisplay(dateTime, dateTimeFormat) {
  * @param value {string}
  * @returns Boolean
  */
-export function booleanDisplay(value) {
-	if (typeof value === 'boolean') return value
-	else if (typeof value === 'number') return value !== 0
-	else if (typeof value === 'string') return value.toLowerCase() === 'true'
+export function booleanDisplay(value)
+{
+	if (typeof value === 'boolean')
+		return value
+	else if (typeof value === 'number')
+		return value !== 0
+	else if (typeof value === 'string')
+		return value.toLowerCase() === 'true'
 
 	return false
 }
@@ -693,8 +840,10 @@ export function booleanDisplay(value) {
  * @param {object|string} value - The image representation, either as an object or string (url)
  * @returns {string|object} - Formatted string or object representing the image.
  */
-export function imageDisplay(value) {
-	if (validateImageFormat(value)) return value
+export function imageDisplay(value)
+{
+	if (validateImageFormat(value))
+		return value
 	return ''
 }
 
@@ -704,19 +853,23 @@ export function imageDisplay(value) {
  * @param options {object} [optional]
  * @returns String || Object
  */
-export function documentDisplay(value, options) {
-	const rtnValue = cloneDeep(value)
+export function documentDisplay(value, options)
+{
+	let rtnValue = cloneDeep(value)
 
-	if (_isEmpty(rtnValue)) return null
+	if (_isEmpty(rtnValue))
+		return null
 
 	// Optional options
-	if (!_isEmpty(options)) {
+	if (!_isEmpty(options))
+	{
 		// Column scroll
 		if (options.scrollData !== undefined && rtnValue.fileName.length > options.scrollData)
 			rtnValue.fileName = rtnValue.fileName.substring(0, options.scrollData) + ' (...)'
 
 		// Output object instead of string
-		if (options.outputObject === true) return rtnValue
+		if (options.outputObject === true)
+			return rtnValue
 	}
 
 	return _get(rtnValue, 'fileName', null)
@@ -727,7 +880,8 @@ export function documentDisplay(value, options) {
  * @param value {object}
  * @returns String || Object
  */
-export function radioDisplay(value) {
+export function radioDisplay(value)
+{
 	return cloneDeep(value)
 }
 
@@ -737,7 +891,8 @@ export function radioDisplay(value) {
  * @param value {string}
  * @returns String
  */
-export function getValueFromEnumeration(enumeration, value) {
+export function getValueFromEnumeration(enumeration, value)
+{
 	return _get(enumeration, value, '')
 }
 
@@ -747,7 +902,8 @@ export function getValueFromEnumeration(enumeration, value) {
  * @param value {string}
  * @returns String
  */
-export function enumerationDisplay(enumeration, value) {
+export function enumerationDisplay(enumeration, value)
+{
 	return getValueFromEnumeration(enumeration, value)
 }
 
@@ -759,7 +915,8 @@ export function enumerationDisplay(enumeration, value) {
  * @param value The value to inspect.
  * @return Returns true if value is empty, else false.
  */
-export function isEmpty(value) {
+export function isEmpty(value)
+{
 	return isDate(value) ? false : _isEmpty(value)
 }
 
@@ -769,13 +926,18 @@ export function isEmpty(value) {
  * @param {object/array} srcValue Source array
  * @returns An array with all the elements.
  */
-export function mergeOptions(objValue, srcValue) {
-	if (isRef(objValue)) {
-		if (_isArray(objValue.value)) {
+export function mergeOptions(objValue, srcValue)
+{
+	if (isRef(objValue))
+	{
+		if (_isArray(objValue.value))
+		{
 			objValue.value.push(...(srcValue || []))
 			return objValue
 		}
-	} else if (_isArray(objValue) && _isArray(srcValue)) {
+	}
+	else if (_isArray(objValue) && _isArray(srcValue))
+	{
 		objValue.push(...(srcValue || []))
 		return objValue
 	}
@@ -787,10 +949,10 @@ export function mergeOptions(objValue, srcValue) {
  * @param {object} texts The provided texts
  * @returns True if `requiredTexts` is a subset of `texts`, false otherwise.
  */
-export function validateTexts(requiredTexts, texts) {
-	const requiredKeys = Object.keys(requiredTexts)
-	const textsKeys = new Set(Object.keys(texts))
-	return requiredKeys.every((key) => textsKeys.has(key))
+export function validateTexts(requiredTexts, texts)
+{
+	const textKeys = [...Object.keys(requiredTexts)]
+	return textKeys.every((element) => Object.keys(texts).includes(element))
 }
 
 /**
@@ -800,15 +962,19 @@ export function validateTexts(requiredTexts, texts) {
  * @param {number} maxSize The max allowed size, in bytes (0 means there's no max size)
  * @returns 0 if the specified file is valid, 1 if it's extension is invalid and 2 if it's size is invalid.
  */
-export function validateFileExtAndSize(file, extensions = [], maxSize = 0) {
-	if (typeof file !== 'object') return -1
+export function validateFileExtAndSize(file, extensions = [], maxSize = 0)
+{
+	if (typeof file !== 'object')
+		return -1
 
 	const fileExtension = '.' + file?.name.split('.')?.pop()?.toLowerCase()
 	const exts = extensions.map((ext) => ext.toLowerCase())
 
-	if (extensions.length > 0 && !exts.includes(fileExtension)) return 1
+	if (extensions.length > 0 && !exts.includes(fileExtension))
+		return 1
 
-	if (maxSize > 0 && file?.size > maxSize) return 2
+	if (maxSize > 0 && file?.size > maxSize)
+		return 2
 
 	return 0
 }
@@ -819,30 +985,29 @@ export function validateFileExtAndSize(file, extensions = [], maxSize = 0) {
  * @param {object} errorTexts An object with the error messages
  * @param {object} extraInfo Extra info to display in the error message
  */
-export function handleFileError(error, errorTexts = {}, extraInfo = {}) {
+export function handleFileError(error, errorTexts = {}, extraInfo = {})
+{
 	let errorMsg
 
-	switch (error) {
+	switch (error)
+	{
 		// Invalid extension.
 		case 1:
-			if (
-				typeof errorTexts.extensionError === 'string' &&
+			if (typeof errorTexts.extensionError === 'string' &&
 				Array.isArray(extraInfo.extensions) &&
-				extraInfo.extensions.length > 0
-			)
+				extraInfo.extensions.length > 0)
 				errorMsg = `${errorTexts.extensionError} ${extraInfo.extensions.join(', ')}`
 			break
 		// Invalid size.
 		case 2:
-			if (
-				typeof errorTexts.fileSizeError === 'string' &&
-				typeof extraInfo.maxSize === 'string'
-			)
+			if (typeof errorTexts.fileSizeError === 'string' &&
+				typeof extraInfo.maxSize === 'string')
 				errorMsg = formatString(errorTexts.fileSizeError, extraInfo.maxSize)
 			break
 	}
 
-	if (errorMsg) displayMessage(errorMsg, 'error')
+	if (errorMsg)
+		displayMessage(errorMsg, 'error')
 }
 
 /**
@@ -851,11 +1016,13 @@ export function handleFileError(error, errorTexts = {}, extraInfo = {}) {
  * @param {string} actionType The action type
  * @returns True if the user has permission, false otherwise.
  */
-export function btnHasPermission(permissions, actionType) {
+export function btnHasPermission(permissions, actionType)
+{
 	if (!permissions || typeof permissions !== 'object' || typeof actionType !== 'string')
 		return false
 
-	switch (actionType.toUpperCase()) {
+	switch (actionType.toUpperCase())
+	{
 		case formModes.show:
 			return permissions.viewBtnDisabled !== true
 		case formModes.edit:
@@ -865,7 +1032,7 @@ export function btnHasPermission(permissions, actionType) {
 		case formModes.delete:
 			return permissions.deleteBtnDisabled !== true
 		case formModes.new:
-		case 'INSERT' /* There should never be an INSERT option, but the ID of this button is already scattered around the templates. */:
+		case 'INSERT': /* There should never be an INSERT option, but the ID of this button is already scattered around the templates. */
 			return permissions.insertBtnDisabled !== true
 	}
 
@@ -878,8 +1045,10 @@ export function btnHasPermission(permissions, actionType) {
  * @param {object} mode The mode the form will be opened with
  * @returns The mode to open the form.
  */
-export function getDefaultFormModesForMode(mode) {
-	switch (mode) {
+export function getDefaultFormModesForMode(mode)
+{
+	switch (mode)
+	{
 		case formModes.show:
 			return 'v'
 		case formModes.edit:
@@ -901,11 +1070,10 @@ export function getDefaultFormModesForMode(mode) {
  * @param {Object} objectStructure - Object structure in the format: 'Area.ValField': () => (rowFields) => rowFields['area.field']
  * @returns {Object} - The created Model structure object.
  */
-export function getModelStructureObj(row, objectStructure) {
-	const obj = {}
-	_forEach(objectStructure, (fnValueSelector, modelPath) =>
-		_set(obj, modelPath, fnValueSelector(row))
-	)
+export function getModelStructureObj(row, objectStructure)
+{
+	let obj = {}
+	_forEach(objectStructure, (fnValueSelector, modelPath) => _set(obj, modelPath, fnValueSelector(row)))
 	return obj
 }
 
@@ -915,136 +1083,9 @@ export function getModelStructureObj(row, objectStructure) {
  * @param {string} columnField The column's field.
  * @returns The list column identifier (of type 'table.field')
  */
-export function formatColumnIdentifier(columnArea, columnField) {
+export function formatColumnIdentifier(columnArea, columnField)
+{
 	return `${columnArea.toLowerCase()}.${columnField.toLowerCase()}`
-}
-
-/**
- * Creates a debounced version of an async function that also deduplicates in-flight calls with the same arguments.
- * @param {Function} fn - The async function to debounce and dedupe
- * @param {Object} options - Configuration options
- * @param {Function} [options.getKey] - Function to generate a key from arguments for dedupe, default is JSON.stringify
- * @param {number} [options.wait=500] - Debounce wait time in milliseconds
- * @param {boolean} [options.leading=false] - If true, execute on the leading edge (lodash default: false)
- * @param {boolean} [options.trailing=true] - If true, execute on the trailing edge (lodash default: true)
- * @returns {Function} A debounced async function that returns a Promise.
- *
- * Usage:
- * const fetchUserDeduped = dedupe(fetchUser, { wait: 500 })
- * await fetchUserDeduped(1) // fires after 500ms of inactivity, deduped if same args are in-flight
- */
-export function dedupe(
-	fn,
-	{
-		getKey = (...args) => JSON.stringify(args),
-		wait = 500,
-		leading = false,
-		trailing = true
-	} = {}
-) {
-	// Map to track in-flight Promises for dedupe
-	const inFlight = new Map()
-
-	// Timer for scheduling trailing calls
-	let timer = null
-
-	// Last arguments and context for trailing call
-	let lastArgs = null
-	let lastContext = null
-
-	// Timestamp of last execution
-	let lastCallTime = 0
-
-	// Queue of resolve/reject for Promises waiting on the next execution
-	let pendingPromises = []
-
-	// Executes the async function with dedupe
-	async function execute(args, context) {
-		const key = getKey(...args)
-
-		// If a request with the same key is in-flight, reuse it
-		if (inFlight.has(key)) {
-			return inFlight.get(key)
-		}
-
-		// Execute the function and track it in-flight
-		const promise = (async () => {
-			try {
-				return await fn.apply(context, args)
-			} finally {
-				inFlight.delete(key)
-			}
-		})()
-
-		inFlight.set(key, promise)
-		return promise
-	}
-
-	// Runs all queued promises with the current args/context
-	function flush(args, context) {
-		// Copy and clear queue
-		const promises = pendingPromises.slice()
-		pendingPromises = []
-
-		// Execute function and resolve all queued Promises
-		const result = execute(args, context)
-		promises.forEach(({ resolve, reject }) => {
-			result.then(resolve).catch(reject)
-		})
-	}
-
-	return function (...args) {
-		lastArgs = args
-		lastContext = this
-
-		return new Promise((resolve, reject) => {
-			// Queue this call's resolve/reject
-			pendingPromises.push({ resolve, reject })
-
-			const now = Date.now()
-			const elapsed = now - lastCallTime
-
-			// Determine if we should call on the leading edge
-			const callLeading = leading && elapsed >= wait
-
-			// Leading call executes immediately if enough time has passed
-			if (callLeading) {
-				lastCallTime = now
-				flush(lastArgs, lastContext)
-				return
-			}
-
-			// Clear previous trailing timer if any
-			if (timer) {
-				clearTimeout(timer)
-			}
-
-			// Schedule trailing call if enabled
-			if (trailing) {
-				// Remaining time until trailing call
-				const remaining = Math.max(wait - elapsed, 0)
-
-				timer = setTimeout(() => {
-					lastCallTime = Date.now()
-					timer = null
-
-					// Execute the trailing call
-					flush(lastArgs, lastContext)
-				}, remaining)
-			}
-		})
-	}
-}
-
-/**
- * Get the name of a heading tag based on a level.
- * @param {string} level The level.
- * @returns The tag name
- */
-export function getHeadingTagNameByLevel(level) {
-	// Heading tags go up to 6
-	// For levels above 6 (very unlikely), a div element is used
-	return level > 6 ? 'div' : 'h' + level
 }
 
 export default {
@@ -1053,6 +1094,7 @@ export default {
 	normalizeDataInNavigationParams,
 	normalizeRouteForSaveNavigation,
 	saveNavigation,
+	buildHumanKey,
 	getLayoutVariables,
 	displayMessage,
 	scrollToTop,
@@ -1072,8 +1114,6 @@ export default {
 	computeColorPlaceholder,
 	formatValueToDisplay,
 	textDisplay,
-	isNegative,
-	numericNegativeDisplay,
 	numericDisplay,
 	currencyDisplay,
 	dateDisplay,
@@ -1091,8 +1131,5 @@ export default {
 	getModelStructureObj,
 	formatColumnIdentifier,
 	focusElement,
-	focusElementBySelector,
-	getDefaultFormModesForMode,
-	dedupe,
-	getHeadingTagNameByLevel
+	getDefaultFormModesForMode
 }

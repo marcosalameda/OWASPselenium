@@ -1,4 +1,4 @@
-﻿/* eslint-disable @typescript-eslint/no-unused-vars */
+﻿/* eslint-disable no-unused-vars */
 import { computed, reactive, watch } from 'vue'
 import _merge from 'lodash-es/merge'
 
@@ -11,7 +11,7 @@ import netAPI from '@quidgest/clientapp/network'
 import qApi from '@/api/genio/quidgestFunctions.js'
 import qFunctions from '@/api/genio/projectFunctions.js'
 import qProjArrays from '@/api/genio/projectArrays.js'
-/* eslint-enable @typescript-eslint/no-unused-vars */
+/* eslint-enable no-unused-vars */
 
 /**
  * Represents a ViewModel class.
@@ -25,11 +25,11 @@ export default class ViewModel extends FormViewModelBase
 	 * @param {object} options - The options for the ViewModel
 	 * @param {object} values - A ViewModel instance to copy values from
 	 */
-	// eslint-disable-next-line @typescript-eslint/no-unused-vars
+	// eslint-disable-next-line no-unused-vars
 	constructor(vueContext, options, values)
 	{
 		super(vueContext, options)
-		// eslint-disable-next-line @typescript-eslint/no-unused-vars
+		// eslint-disable-next-line no-unused-vars
 		const vm = this.vueContext
 
 		// The view model metadata
@@ -37,9 +37,8 @@ export default class ViewModel extends FormViewModelBase
 			name: 'LOCAT',
 			area: 'LOCAT',
 			actions: {
-				recalculateFormulas: 'RecalculateFormulas_Locat',
-				updateFilesTickets: 'UpdateFilesTicketsLocat',
-				setFile: 'SetFileLocat'
+				recalculateFormulas: 'RecalculateFormulas_LOCAT',
+				updateFilesTickets: 'UpdateFilesTicketsLOCAT'
 			}
 		})
 
@@ -51,7 +50,7 @@ export default class ViewModel extends FormViewModelBase
 			field: 'CODLOCAT',
 			description: '',
 		}).cloneFrom(values?.ValCodlocat))
-		this.stopWatchers.push(watch(() => this.ValCodlocat.value, (newValue, oldValue) => this.onUpdate('locat.codlocat', this.ValCodlocat, newValue, oldValue)))
+		watch(() => this.ValCodlocat.value, (newValue, oldValue) => this.onUpdate('locat.codlocat', this.ValCodlocat, newValue, oldValue))
 
 		/** The used foreign keys. */
 		this.ValCodentit = reactive(new modelFieldType.ForeignKey({
@@ -62,7 +61,7 @@ export default class ViewModel extends FormViewModelBase
 			relatedArea: 'ENTIT',
 			description: '',
 		}).cloneFrom(values?.ValCodentit))
-		this.stopWatchers.push(watch(() => this.ValCodentit.value, (newValue, oldValue) => this.onUpdate('locat.codentit', this.ValCodentit, newValue, oldValue)))
+		watch(() => this.ValCodentit.value, (newValue, oldValue) => this.onUpdate('locat.codentit', this.ValCodentit, newValue, oldValue))
 
 		this.ValCodfacil = reactive(new modelFieldType.ForeignKey({
 			id: 'ValCodfacil',
@@ -72,7 +71,7 @@ export default class ViewModel extends FormViewModelBase
 			relatedArea: 'FACIL',
 			description: '',
 		}).cloneFrom(values?.ValCodfacil))
-		this.stopWatchers.push(watch(() => this.ValCodfacil.value, (newValue, oldValue) => this.onUpdate('locat.codfacil', this.ValCodfacil, newValue, oldValue)))
+		watch(() => this.ValCodfacil.value, (newValue, oldValue) => this.onUpdate('locat.codfacil', this.ValCodfacil, newValue, oldValue))
 
 		/** The remaining form fields. */
 		this.TableEntitName = reactive(new modelFieldType.String({
@@ -83,9 +82,8 @@ export default class ViewModel extends FormViewModelBase
 			field: 'NAME',
 			maxLength: 85,
 			description: computed(() => this.Resources.LEGAL_NAME42902),
-			ignoreFldSubmit: true,
 		}).cloneFrom(values?.TableEntitName))
-		this.stopWatchers.push(watch(() => this.TableEntitName.value, (newValue, oldValue) => this.onUpdate('entit.name', this.TableEntitName, newValue, oldValue)))
+		watch(() => this.TableEntitName.value, (newValue, oldValue) => this.onUpdate('entit.name', this.TableEntitName, newValue, oldValue))
 
 		this.TableFacilName = reactive(new modelFieldType.String({
 			type: 'Lookup',
@@ -95,9 +93,8 @@ export default class ViewModel extends FormViewModelBase
 			field: 'NAME',
 			maxLength: 85,
 			description: computed(() => this.Resources.FACILITY_NAME19514),
-			ignoreFldSubmit: true,
 		}).cloneFrom(values?.TableFacilName))
-		this.stopWatchers.push(watch(() => this.TableFacilName.value, (newValue, oldValue) => this.onUpdate('facil.name', this.TableFacilName, newValue, oldValue)))
+		watch(() => this.TableFacilName.value, (newValue, oldValue) => this.onUpdate('facil.name', this.TableFacilName, newValue, oldValue))
 
 		this.ValGln = reactive(new modelFieldType.String({
 			id: 'ValGln',
@@ -107,7 +104,7 @@ export default class ViewModel extends FormViewModelBase
 			maxLength: 50,
 			description: computed(() => this.Resources.GLOBAL_LOCATION_NUMB24637),
 		}).cloneFrom(values?.ValGln))
-		this.stopWatchers.push(watch(() => this.ValGln.value, (newValue, oldValue) => this.onUpdate('locat.gln', this.ValGln, newValue, oldValue)))
+		watch(() => this.ValGln.value, (newValue, oldValue) => this.onUpdate('locat.gln', this.ValGln, newValue, oldValue))
 	}
 
 	/**

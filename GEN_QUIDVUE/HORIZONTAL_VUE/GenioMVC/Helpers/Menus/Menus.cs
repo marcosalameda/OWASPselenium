@@ -3,6 +3,7 @@ using CSGenio.persistence;
 using GenioMVC.Models.Navigation;
 using GenioMVC.ViewModels;
 using System.Text;
+using System.Linq.Expressions;
 using System.Xml.Serialization;
 using JsonIgnoreAttribute = System.Text.Json.Serialization.JsonIgnoreAttribute;
 using JsonPropertyName = System.Text.Json.Serialization.JsonPropertyNameAttribute;
@@ -402,9 +403,16 @@ namespace GenioMVC.Helpers.Menus
 
 	public class Menus
 	{
-		private static readonly IMenuLoader m_menuLoader = new XmlMenuLoaderService();
+		public static List<MenuEntry> AllMenus
+		{
+			get
+			{
+				if (m_allMenus == null)
+					m_allMenus = LoadMenuXml(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "menus.xml"));
 
-		public static List<MenuEntry> AllMenus => m_menuLoader.GetAllMenus();
+				return m_allMenus;
+			}
+		}
 
 		public static MenuEntry FindMenu(string module, string menuID)
 		{
@@ -460,7 +468,7 @@ namespace GenioMVC.Helpers.Menus
 		private static bool AllowMenu(UserContext userContext, MenuEntry menu, string module)
 		{
 			bool hasUserAcess = (menu.TreeLevel > -1 && menu.Allows(userContext.User, module)) || menu.TreeLevel == -1;
-			bool hideMenu = menu.HasCondition && !new MenuConditionValidator(userContext).ValidateCondition(menu, module);
+			bool hideMenu = menu.HasCondition && !Menus.ValidateCondition(userContext, menu, module);
 
 			return hasUserAcess && !hideMenu;
 		}
@@ -478,6 +486,23 @@ namespace GenioMVC.Helpers.Menus
 
 		private static Dictionary<string, MenuEntry> m_flatMenus = null;
 
+		/// <summary>
+		/// Deserializes a list of menu entries contained in a xml file
+		/// </summary>
+		/// <param name="filePath">Path to the xml file</param>
+		/// <returns></returns>
+		public static List<MenuEntry> LoadMenuXml(string fileLocation)
+		{
+			List<MenuEntry> entries;
+			XmlSerializer s = new XmlSerializer(typeof(List<MenuEntry>));
+			using (StreamReader r = new StreamReader(fileLocation, Encoding.UTF8))
+			{
+				entries = s.Deserialize(r) as List<MenuEntry>;
+			}
+			return entries;
+		}
+
+		private static List<MenuEntry> m_allMenus = null;
 
 		public static List<MenuEntry> MenusForUser(UserContext userContext)
 		{
@@ -503,9 +528,24 @@ namespace GenioMVC.Helpers.Menus
 
 		public static List<MenuEntry> AvailableModules(UserContext userContext)
 		{
-			var conditionValidator = new MenuConditionValidator(userContext);
-			var menuService = new UserMenuService(m_menuLoader, conditionValidator, userContext.User);
-			return menuService.GetAvailableModules();
+			List<MenuEntry> result = new List<MenuEntry>();
+
+			foreach (MenuEntry mod in AllMenus)
+			{
+				List<MenuEntry> modMenus = MenusForUserRec(userContext, mod.Children, mod.ID);
+
+				// só se o módulo tiver entradas de menu é que se adiciona às entradas de módulos
+				foreach (var item in modMenus)
+				{
+					if (item.Allows(userContext.User, mod.ID))
+					{
+						result.Add(mod);
+						break;
+					}
+				}
+			}
+
+			return result;
 		}
 
 		public static List<MenuEntry> GetModuleMenus(UserContext userContext, string module, bool count = false)
@@ -594,7 +634,6 @@ namespace GenioMVC.Helpers.Menus
 
 			return result;
 		}
-
 		/// <summary>
 		/// Gets the menu entry and checks show when conditions of the children
 		/// </summary>
@@ -604,15 +643,43 @@ namespace GenioMVC.Helpers.Menus
 		/// <returns>The menu with the submenus filtered</returns>
 		public static MenuEntry GetFilteredMenu(UserContext userContext, string module, string menuID)
 		{
-			MenuEntry originalMenu = FindMenu(module, menuID);
-			MenuEntry menu = new(originalMenu)
-			{
-				Children = [.. originalMenu.Children.Where(child => AllowMenu(userContext, child, module))]
-			};
+			MenuEntry menu = FindMenu(module, menuID);
+			menu.Children = menu.Children.Where(child => AllowMenu(userContext, child, module)).ToList();
 
 			return menu;
 		}
 
+		/// <summary>
+		/// Validate the menu condition
+		/// </summary>
+		/// <param name="userContext">The context of the user</param>
+		/// <param name="menu">The menu entry object</param>
+		/// <param name="module">The module ID</param>
+		/// <returns></returns>
+		public static bool ValidateCondition(UserContext userContext, MenuEntry menu, string module = "")
+		{
+			UserContext m_userContext = userContext;
+			User user = m_userContext.User;
+			string currentModule = (string.IsNullOrEmpty(module) ? user.CurrentModule : module);
+
+			PersistentSupport ps = m_userContext.PersistentSupport;
+			// If the Glob record does not exist, a new one will be created.
+			// For this it's needed a previously opened connection.
+			ps.openConnection();
+			CSGenio.business.CSGenioAglob globalConfig = CSGenio.business.CSGenioAglob.searchGlob(ps, user);
+			ps.closeConnection();
+
+			// The menu ID must be "Module + ID"
+			string menuID = currentModule + menu.ID;
+
+			switch (menuID)
+			{
+				default:
+					break;
+			}
+
+			return false;
+		}
 
 		public static List<string> MenuTextPath(string module, string menuID)
 		{

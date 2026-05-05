@@ -77,7 +77,8 @@ export default {
 							dataType: "Text",
 							dataDisplay: listFunctions.textDisplayCell,
 							dataSearch: listFunctions.textSearchCell,
-							sortable: true
+							sortable: true,
+							distinctValues: [],
 						},
 						{
 							label: "Text",
@@ -92,6 +93,7 @@ export default {
 						name: "DFLDS",
 						pkColumn: "PrimaryKey",
 						tableTitle: "Basic Types",
+						lcid: "pt-PT",
 						numberFormat: {
 							decimalSeparator: ",",
 							groupSeparator: ".",
@@ -108,6 +110,10 @@ export default {
 							type: "popup",
 							mode: "insert",
 							repeatInsert: false,
+						},
+						globalSearch: {
+							placeholder: "PESQUISAR34506",
+							visibility: false,
 						},
 						customActions: [
 							{
@@ -209,44 +215,56 @@ export default {
 					readonly: false,
 					groupFilters: [
 						{
-							id: 'filter_GQT_Menu_111_DEVOLUCAO',
+							id: "filter_GQT_Menu_111_DEVOLUCAO",
 							isMultiple: false,
-							selected: '3',
+							value: "2",
 							filters: [
 								{
-									key: '1',
-									value: 'To return'
+									key: "0",
+									value: "POR_DEVOLVER13204",
+									selected: false,
+									id: "filter_GQT_Menu_111_DEVOLUCAO_0",
 								},
 								{
-									key: '2',
-									value: 'Returned'
+									key: "1",
+									value: "DEVOLVIDOS52106",
+									selected: false,
+									id: "filter_GQT_Menu_111_DEVOLUCAO_1",
 								},
 								{
-									key: '3',
-									value: 'All'
-								}
-							]
-						}
+									key: "2",
+									value: "TODOS59977",
+									selected: true,
+									id: "filter_GQT_Menu_111_DEVOLUCAO_2",
+								},
+							],
+						},
 					],
 					activeFilters: {
-						selected: ['upcoming'],
-						items: [
+						options: [
 							{
-								key: 'current',
-								value: 'Active'
+								key: "0",
+								value: "ACTIVE",
+								selected: false,
+								id: "filter_GQT_Menu_111_ActiveFilter_A",
 							},
 							{
-								key: 'previous',
-								value: 'Inactive'
+								key: "1",
+								value: "INACTIVE",
+								selected: false,
+								id: "filter_GQT_Menu_111_ActiveFilter_I",
 							},
 							{
-								key: 'upcoming',
-								value: 'Futures'
-							}
+								key: "2",
+								value: "FUTURE",
+								selected: true,
+								id: "filter_GQT_Menu_111_ActiveFilter_F",
+							},
 						],
 						dateValue: {
 							type: "date",
 							title: "Date",
+							id: "GQT_Menu_111_dataRef",
 							value: "",
 						},
 					},
@@ -254,7 +272,6 @@ export default {
 					dataImportResponse: {},
 				},
 				this,
-				{},
 				{}
 			),
 			tableTestScroll: new controlClass.TableListControl(
@@ -617,6 +634,7 @@ export default {
 						name: "DFLDS",
 						pkColumn: "PrimaryKey",
 						tableTitle: "Basic Types (scroll)",
+						lcid: "pt-PT",
 						numberFormat: {
 							decimalSeparator: ",",
 							groupSeparator: ".",
@@ -633,6 +651,9 @@ export default {
 							type: "popup",
 							mode: "insert",
 							repeatInsert: false,
+						},
+						globalSearch: {
+							visibility: true,
 						},
 						crudActions: [
 							{
@@ -690,7 +711,6 @@ export default {
 					},
 				},
 				this,
-				{},
 				{}
 			),
 			tableTestLimit_1: new controlClass.TableListControl(
@@ -958,7 +978,8 @@ export default {
 							dataType: "Text",
 							dataDisplay: listFunctions.textDisplayCell,
 							dataSearch: listFunctions.textSearchCell,
-							sortable: true
+							sortable: true,
+							distinctValues: [],
 						},
 						{
 							label: "Text",
@@ -1038,6 +1059,7 @@ export default {
 						tableAlias: "DFLDS",
 						tableNamePlural: "D Fields",
 						tableTitle: "Basic Types (Limit)",
+						lcid: "pt-PT",
 						numberFormat: {
 							decimalSeparator: ",",
 							groupSeparator: ".",
@@ -1054,6 +1076,9 @@ export default {
 							type: "popup",
 							mode: "insert",
 							repeatInsert: false,
+						},
+						globalSearch: {
+							visibility: false,
 						},
 						crudActions: [
 							{
@@ -1345,7 +1370,6 @@ export default {
 					],
 				},
 				this,
-				{},
 				{}
 			),
 			tableTestEdit: new controlClass.TableListControl(
@@ -1614,6 +1638,7 @@ export default {
 							dataDisplay: listFunctions.textDisplayCell,
 							dataSearch: listFunctions.textSearchCell,
 							sortable: true,
+							distinctValues: [],
 							component: "q-edit-text",
 							componentOptions: {},
 						},
@@ -1700,6 +1725,7 @@ export default {
 						name: "DFLDS",
 						pkColumn: "PrimaryKey",
 						tableTitle: "Basic Types (Edit)",
+						lcid: "pt-PT",
 						numberFormat: {
 							decimalSeparator: ",",
 							groupSeparator: ".",
@@ -1716,6 +1742,9 @@ export default {
 							type: "popup",
 							mode: "insert",
 							repeatInsert: false,
+						},
+						globalSearch: {
+							visibility: true,
 						},
 						crudActions: [
 							{
@@ -1796,51 +1825,62 @@ export default {
 					readonly: false,
 					groupFilters: [
 						{
-							id: 'filter_GQT_Menu_111_DEVOLUCAO',
+							id: "filter_GQT_Menu_111_DEVOLUCAO",
 							isMultiple: false,
-							selected: '3',
+							value: "2",
 							filters: [
 								{
-									key: '1',
-									value: 'To return'
+									key: "0",
+									value: "POR_DEVOLVER13204",
+									selected: false,
+									id: "filter_GQT_Menu_111_DEVOLUCAO_0",
 								},
 								{
-									key: '2',
-									value: 'Returned'
+									key: "1",
+									value: "DEVOLVIDOS52106",
+									selected: false,
+									id: "filter_GQT_Menu_111_DEVOLUCAO_1",
 								},
 								{
-									key: '3',
-									value: 'All'
-								}
-							]
-						}
+									key: "2",
+									value: "TODOS59977",
+									selected: true,
+									id: "filter_GQT_Menu_111_DEVOLUCAO_2",
+								},
+							],
+						},
 					],
 					activeFilters: {
-						selected: ['upcoming'],
-						items: [
+						options: [
 							{
-								key: 'current',
-								value: 'Active'
+								key: "0",
+								value: "ACTIVE",
+								selected: false,
+								id: "filter_GQT_Menu_111_ActiveFilter_A",
 							},
 							{
-								key: 'previous',
-								value: 'Inactive'
+								key: "1",
+								value: "INACTIVE",
+								selected: false,
+								id: "filter_GQT_Menu_111_ActiveFilter_I",
 							},
 							{
-								key: 'upcoming',
-								value: 'Futures'
-							}
+								key: "2",
+								value: "FUTURE",
+								selected: true,
+								id: "filter_GQT_Menu_111_ActiveFilter_F",
+							},
 						],
 						dateValue: {
 							type: "date",
 							title: "Date",
+							id: "GQT_Menu_111_dataRef",
 							value: "",
 						},
 					},
 					dataImportResponse: {},
 				},
 				this,
-				{},
 				{}
 			),
 			tableTestReorder: new controlClass.TableListControl(
@@ -2107,6 +2147,7 @@ export default {
 							dataDisplay: listFunctions.textDisplayCell,
 							dataSearch: listFunctions.textSearchCell,
 							sortable: true,
+							distinctValues: [],
 							component: "q-edit-text",
 						},
 						{
@@ -2123,6 +2164,7 @@ export default {
 							dataType: "Numeric",
 							dataDisplay: listFunctions.textDisplayCell,
 							dataSearch: listFunctions.numericSearchCell,
+							dataOnChange: listFunctions.reCalcCellOrder,
 							decimalPlaces: 3,
 							columnClasses: "c-table__cell-numeric row-numeric",
 							columnHeaderClasses: "c-table__head-numeric",
@@ -2133,7 +2175,8 @@ export default {
 								isDecimal: false,
 								thousandsSep: " ",
 								decimalSep: ".",
-							}
+							},
+							isOrderingColumn: true,
 						},
 						{
 							label: "Date",
@@ -2192,6 +2235,7 @@ export default {
 						name: "DFLDS_REORDER",
 						pkColumn: "PrimaryKey",
 						tableTitle: "Basic Types (Reorder)",
+						lcid: "pt-PT",
 						numberFormat: {
 							decimalSeparator: ",",
 							groupSeparator: ".",
@@ -2208,6 +2252,9 @@ export default {
 							type: "popup",
 							mode: "insert",
 							repeatInsert: false,
+						},
+						globalSearch: {
+							visibility: true,
 						},
 						crudActions: [
 							{
@@ -2290,51 +2337,62 @@ export default {
 					readonly: false,
 					groupFilters: [
 						{
-							id: 'filter_GQT_Menu_111_DEVOLUCAO',
+							id: "filter_GQT_Menu_111_DEVOLUCAO",
 							isMultiple: false,
-							selected: '3',
+							value: "2",
 							filters: [
 								{
-									key: '1',
-									value: 'To return'
+									key: "0",
+									value: "POR_DEVOLVER13204",
+									selected: false,
+									id: "filter_GQT_Menu_111_DEVOLUCAO_0",
 								},
 								{
-									key: '2',
-									value: 'Returned'
+									key: "1",
+									value: "DEVOLVIDOS52106",
+									selected: false,
+									id: "filter_GQT_Menu_111_DEVOLUCAO_1",
 								},
 								{
-									key: '3',
-									value: 'All'
-								}
-							]
-						}
+									key: "2",
+									value: "TODOS59977",
+									selected: true,
+									id: "filter_GQT_Menu_111_DEVOLUCAO_2",
+								},
+							],
+						},
 					],
 					activeFilters: {
-						selected: ['upcoming'],
-						items: [
+						options: [
 							{
-								key: 'current',
-								value: 'Active'
+								key: "0",
+								value: "ACTIVE",
+								selected: false,
+								id: "filter_GQT_Menu_111_ActiveFilter_A",
 							},
 							{
-								key: 'previous',
-								value: 'Inactive'
+								key: "1",
+								value: "INACTIVE",
+								selected: false,
+								id: "filter_GQT_Menu_111_ActiveFilter_I",
 							},
 							{
-								key: 'upcoming',
-								value: 'Futures'
-							}
+								key: "2",
+								value: "FUTURE",
+								selected: true,
+								id: "filter_GQT_Menu_111_ActiveFilter_F",
+							},
 						],
 						dateValue: {
 							type: "date",
 							title: "Date",
+							id: "GQT_Menu_111_dataRef",
 							value: "",
 						},
 					},
 					dataImportResponse: {},
 				},
 				this,
-				{},
 				{}
 			),
 			tableTestDates: new controlClass.TableListControl(
@@ -2494,6 +2552,7 @@ export default {
 						name: "DDATE",
 						pkColumn: "",
 						tableTitle: "Date Types",
+						lcid: "pt-PT",
 						numberFormat: {
 							decimalSeparator: ",",
 							groupSeparator: ".",
@@ -2510,6 +2569,9 @@ export default {
 							type: "popup",
 							mode: "insert",
 							repeatInsert: false,
+						},
+						globalSearch: {
+							visibility: true,
 						},
 						crudActions: [
 							{
@@ -2547,7 +2609,6 @@ export default {
 					},
 				},
 				this,
-				{},
 				{}
 			),
 			tableTestOther: new controlClass.TableListControl(
@@ -2829,12 +2890,16 @@ export default {
 						name: "DMISC",
 						pkColumn: "Key",
 						tableTitle: "Other Types",
+						lcid: "pt-PT",
 						system: 0,
 						supportForm: {
 							name: "FORMX",
 							type: "popup",
 							mode: "insert",
 							repeatInsert: false,
+						},
+						globalSearch: {
+							visibility: true,
 						},
 						crudActions: [
 							{
@@ -2872,7 +2937,6 @@ export default {
 					},
 				},
 				this,
-				{},
 				{}
 			),
 			tableTestOtherScroll: new controlClass.TableListControl(
@@ -3160,12 +3224,16 @@ export default {
 						name: "DMISC",
 						pkColumn: "Key",
 						tableTitle: "Other Types (scroll)",
+						lcid: "pt-PT",
 						system: 0,
 						supportForm: {
 							name: "FORMX",
 							type: "popup",
 							mode: "insert",
 							repeatInsert: false,
+						},
+						globalSearch: {
+							visibility: true,
 						},
 						crudActions: [
 							{
@@ -3203,7 +3271,6 @@ export default {
 					},
 				},
 				this,
-				{},
 				{}
 			),
 			tableTestTotaler: new controlClass.TableListControl(
@@ -3394,7 +3461,8 @@ export default {
 							dataType: "Text",
 							dataDisplay: listFunctions.textDisplayCell,
 							dataSearch: listFunctions.textSearchCell,
-							sortable: true
+							sortable: true,
+							distinctValues: [],
 						},
 						{
 							label: "Numeric1",
@@ -3474,6 +3542,7 @@ export default {
 						name: "DFLDS",
 						pkColumn: "PrimaryKey",
 						tableTitle: "Column Totalers",
+						lcid: "pt-PT",
 						numberFormat: {
 							decimalSeparator: ",",
 							groupSeparator: ".",
@@ -3490,6 +3559,9 @@ export default {
 							type: "popup",
 							mode: "insert",
 							repeatInsert: false,
+						},
+						globalSearch: {
+							visibility: true,
 						},
 						crudActions: [
 							{
@@ -3528,7 +3600,6 @@ export default {
 					},
 				},
 				this,
-				{},
 				{}
 			),
 			tableTestTotalerSelected: new controlClass.TableListControl(
@@ -3719,7 +3790,8 @@ export default {
 							dataType: "Text",
 							dataDisplay: listFunctions.textDisplayCell,
 							dataSearch: listFunctions.textSearchCell,
-							sortable: true
+							sortable: true,
+							distinctValues: [],
 						},
 						{
 							label: "Numeric1",
@@ -3799,6 +3871,7 @@ export default {
 						name: "DFLDS",
 						pkColumn: "PrimaryKey",
 						tableTitle: "Column Totalers (selected)",
+						lcid: "pt-PT",
 						numberFormat: {
 							decimalSeparator: ",",
 							groupSeparator: ".",
@@ -3815,6 +3888,9 @@ export default {
 							type: "popup",
 							mode: "insert",
 							repeatInsert: false,
+						},
+						globalSearch: {
+							visibility: true,
 						},
 						crudActions: [
 							{
@@ -3856,7 +3932,6 @@ export default {
 					},
 				},
 				this,
-				{},
 				{}
 			),
 			tableTestSelectMultiple: new controlClass.TableListControl(
@@ -4047,7 +4122,8 @@ export default {
 							dataType: "Text",
 							dataDisplay: listFunctions.textDisplayCell,
 							dataSearch: listFunctions.textSearchCell,
-							sortable: true
+							sortable: true,
+							distinctValues: [],
 						},
 						{
 							label: "Numeric1",
@@ -4127,6 +4203,7 @@ export default {
 						name: "DFLDS_SELECT_CHECK",
 						pkColumn: "PrimaryKey",
 						tableTitle: "Select Multiple Rows",
+						lcid: "pt-PT",
 						numberFormat: {
 							decimalSeparator: ",",
 							groupSeparator: ".",
@@ -4143,6 +4220,9 @@ export default {
 							type: "popup",
 							mode: "insert",
 							repeatInsert: false,
+						},
+						globalSearch: {
+							visibility: true,
 						},
 						crudActions: [
 							{
@@ -4188,7 +4268,6 @@ export default {
 					rowsChecked: {},
 				},
 				this,
-				{},
 				{}
 			),
 			tableTestSelectMultipleMultiAction: new controlClass.TableListControl(
@@ -4379,7 +4458,8 @@ export default {
 							dataType: "Text",
 							dataDisplay: listFunctions.textDisplayCell,
 							dataSearch: listFunctions.textSearchCell,
-							sortable: true
+							sortable: true,
+							distinctValues: [],
 						},
 						{
 							label: "Numeric1",
@@ -4459,6 +4539,7 @@ export default {
 						name: "DFLDS_SELECT_CHECK_MULTI",
 						pkColumn: "PrimaryKey",
 						tableTitle: "Select Multiple Rows (Multiple Actions)",
+						lcid: "pt-PT",
 						numberFormat: {
 							decimalSeparator: ",",
 							groupSeparator: ".",
@@ -4475,6 +4556,9 @@ export default {
 							type: "popup",
 							mode: "insert",
 							repeatInsert: false,
+						},
+						globalSearch: {
+							visibility: true,
 						},
 						crudActions: [
 							{
@@ -4552,7 +4636,6 @@ export default {
 					rowsChecked: {},
 				},
 				this,
-				{},
 				{}
 			),
 			tableTestSelectSingle: new controlClass.TableListControl(
@@ -4743,7 +4826,8 @@ export default {
 							dataType: "Text",
 							dataDisplay: listFunctions.textDisplayCell,
 							dataSearch: listFunctions.textSearchCell,
-							sortable: true
+							sortable: true,
+							distinctValues: [],
 						},
 						{
 							label: "Numeric1",
@@ -4823,6 +4907,7 @@ export default {
 						name: "DFLDS",
 						pkColumn: "PrimaryKey",
 						tableTitle: "Select Single Row",
+						lcid: "pt-PT",
 						numberFormat: {
 							decimalSeparator: ",",
 							groupSeparator: ".",
@@ -4839,6 +4924,9 @@ export default {
 							type: "popup",
 							mode: "insert",
 							repeatInsert: false,
+						},
+						globalSearch: {
+							visibility: true,
 						},
 						crudActions: [
 							{
@@ -4880,7 +4968,6 @@ export default {
 					rowsChecked: {},
 				},
 				this,
-				{},
 				{}
 			),
 			tableTestRemoveRows: new controlClass.TableListControl(
@@ -5071,7 +5158,8 @@ export default {
 							dataType: "Text",
 							dataDisplay: listFunctions.textDisplayCell,
 							dataSearch: listFunctions.textSearchCell,
-							sortable: true
+							sortable: true,
+							distinctValues: [],
 						},
 						{
 							label: "Numeric1",
@@ -5145,6 +5233,7 @@ export default {
 						name: "DFLDS",
 						pkColumn: "PrimaryKey",
 						tableTitle: "Remove Rows",
+						lcid: "pt-PT",
 						numberFormat: {
 							decimalSeparator: ",",
 							groupSeparator: ".",
@@ -5162,6 +5251,9 @@ export default {
 							mode: "insert",
 							repeatInsert: false,
 						},
+						globalSearch: {
+							visibility: true,
+						},
 						actionsPlacement: "left",
 						rowClickActionInternal: "",
 						rowBgColorSelected: "#e0e0e0",
@@ -5171,7 +5263,6 @@ export default {
 					},
 				},
 				this,
-				{},
 				{}
 			),
 			tableTestPaginationNormal: new controlClass.TableListControl(
@@ -5302,13 +5393,15 @@ export default {
 							dataType: "Text",
 							dataDisplay: listFunctions.textDisplayCell,
 							dataSearch: listFunctions.textSearchCell,
-							sortable: true
+							sortable: true,
+							distinctValues: [],
 						},
 					],
 					config: {
 						name: "DFLDS",
 						pkColumn: "PrimaryKey",
 						tableTitle: "Pagination (normal)",
+						lcid: "pt-PT",
 						numberFormat: {
 							decimalSeparator: ",",
 							groupSeparator: ".",
@@ -5319,6 +5412,9 @@ export default {
 							dateTimeSeconds: "yyyy/MM/dd HH:mm:ss",
 							hours: "HH:mm",
 							use12Hour: false,
+						},
+						globalSearch: {
+							visibility: true,
 						},
 						crudActions: [
 							{
@@ -5356,12 +5452,11 @@ export default {
 						actionsPlacement: "left",
 						rowClickActionInternal: "",
 						perPage: 1,
-						numVisiblePaginationButtons: 5,
+						numVisibilePaginationButtons: 5,
 						showRecordCount: true,
 					},
 				},
 				this,
-				{},
 				{}
 			),
 			tableTestPaginationNormalServer: new controlClass.TableListControl(
@@ -5370,6 +5465,7 @@ export default {
 						name: "DFLDS",
 						pkColumn: "PrimaryKey",
 						tableTitle: "Pagination (normal, server)",
+						lcid: "pt-PT",
 						numberFormat: {
 							decimalSeparator: ",",
 							groupSeparator: ".",
@@ -5380,6 +5476,9 @@ export default {
 							dateTimeSeconds: "yyyy/MM/dd HH:mm:ss",
 							hours: "HH:mm",
 							use12Hour: false,
+						},
+						globalSearch: {
+							visibility: true,
 						},
 						crudActions: [
 							{
@@ -5417,13 +5516,14 @@ export default {
 						actionsPlacement: "left",
 						rowClickActionInternal: "",
 						perPage: 1,
-						numVisiblePaginationButtons: 5,
+						numVisibilePaginationButtons: 5,
 						showRecordCount: true,
+						serverMode: true,
+						canEmitQueries: true,
 						hydrate: listFunctions.hydrateTableData,
 					},
 				},
 				this,
-				{},
 				{}
 			),
 			tableTestPaginationAlt: new controlClass.TableListControl(
@@ -5554,13 +5654,15 @@ export default {
 							dataType: "Text",
 							dataDisplay: listFunctions.textDisplayCell,
 							dataSearch: listFunctions.textSearchCell,
-							sortable: true
+							sortable: true,
+							distinctValues: [],
 						},
 					],
 					config: {
 						name: "DFLDS",
 						pkColumn: "PrimaryKey",
 						tableTitle: "Pagination (alternate)",
+						lcid: "pt-PT",
 						numberFormat: {
 							decimalSeparator: ",",
 							groupSeparator: ".",
@@ -5571,6 +5673,9 @@ export default {
 							dateTimeSeconds: "yyyy/MM/dd HH:mm:ss",
 							hours: "HH:mm",
 							use12Hour: false,
+						},
+						globalSearch: {
+							visibility: true,
 						},
 						crudActions: [
 							{
@@ -5612,22 +5717,21 @@ export default {
 					},
 				},
 				this,
-				{},
 				{}
 			),
 		};
 	},
 	simpleUsageMethods: {
 		runAction(eventName, emittedAction) {
-			const str = eventName + ":\n" + JSON.stringify(emittedAction);
+			var str = eventName + ":\n" + JSON.stringify(emittedAction);
 			alert(str);
 		},
 		displayEmit(emittedAction) {
-			const str = JSON.stringify(emittedAction);
+			var str = JSON.stringify(emittedAction);
 			alert(str);
 		},
 		displayAction(eventName, emittedAction) {
-			const str = eventName + ":\n" + JSON.stringify(emittedAction);
+			var str = eventName + ":\n" + JSON.stringify(emittedAction);
 			alert(str);
 		},
 		executeAction(emittedAction) {
@@ -5662,7 +5766,7 @@ export default {
 		},
 		//FOR: EXTENDED ROW ACTIONS - REMOVE
 		removeRow(rows, rowNum) {
-			const rowIdx = rows.findIndex((elem) => elem.Rownum === rowNum);
+			var rowIdx = rows.findIndex((elem) => elem.Rownum === rowNum);
 			rows.splice(rowIdx, 1);
 		},
 		/**
@@ -5690,8 +5794,20 @@ export default {
 		 * @returns Boolean
 		 */
 		checkRows(rowArray, rowKeys) {
-			for (const rowKey in rowKeys) {
+			for (let rowKey in rowKeys) {
 				rowArray[rowKey] = true;
+			}
+			alert(JSON.stringify(rowArray));
+		},
+		/**
+		 * Remove rows from array of rows checked in checklist column
+		 * @param rowArray {Object}
+		 * @param rowKey {Object}
+		 * @returns Boolean
+		 */
+		uncheckRows(rowArray, rowKeys) {
+			for (let rowKey in rowKeys) {
+				delete rowArray[rowKey];
 			}
 			alert(JSON.stringify(rowArray));
 		},
@@ -5701,7 +5817,7 @@ export default {
 		 * @returns Boolean
 		 */
 		uncheckAllRows(rowArray) {
-			for (const rowKey in rowArray) {
+			for (let rowKey in rowArray) {
 				delete rowArray[rowKey];
 			}
 			alert(JSON.stringify(rowArray));

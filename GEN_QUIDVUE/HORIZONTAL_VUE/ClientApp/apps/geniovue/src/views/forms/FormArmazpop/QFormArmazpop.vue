@@ -9,13 +9,12 @@
 			<div
 				v-if="showFormHeader"
 				class="c-action-bar">
-				<component
+				<h1
 					v-if="formControl.uiComponents.header && formInfo.designation"
-					:is="topHeadingTag"
 					:id="formTitleId"
 					class="form-header">
 					{{ formInfo.designation }}
-				</component>
+				</h1>
 
 				<div class="c-action-bar__menu">
 					<template
@@ -39,13 +38,9 @@
 									:label="btn.label"
 									:disabled="btn.disabled"
 									@click="btn.action">
-									<template v-if="btn.icon">
-										<q-badge-indicator
-											:enabled="btn.badge?.isVisible ?? false"
-											:color="btn.badge?.color">
-											<q-icon v-bind="btn.icon" />
-										</q-badge-indicator>
-									</template>
+									<q-icon
+										v-if="btn.icon"
+										v-bind="btn.icon" />
 								</q-toggle-group-item>
 							</template>
 						</q-toggle-group>
@@ -57,7 +52,7 @@
 				v-if="$app.layout.FormAnchorsPosition === 'form-header' && visibleGroups.length > 0"
 				:anchors="anchorGroups"
 				:controls="visibleControls"
-				@focus-control="focusControl" />
+				@focus-control="(...args) => focusControl(...args)" />
 		</div>
 	</teleport>
 
@@ -78,7 +73,6 @@
 						v-if="btn.isActive && btn.isVisible && btn.showInHeading"
 						:id="`heading-${btn.id}`"
 						:label="btn.text"
-						:color="btn.color"
 						:variant="btn.variant"
 						:disabled="btn.disabled"
 						:icon-pos="btn.iconPos"
@@ -92,144 +86,128 @@
 			</q-button-group>
 		</div>
 
-		<q-container
-			fluid
+		<div
+			class="form-flow"
 			data-key="ARMAZPOP"
-			:data-identifier="primaryKeyValue"
-			:data-loading="!formInitialDataLoaded || !isActiveForm">
+			:data-loading="!formInitialDataLoaded">
 			<template v-if="formControl.initialized && showFormBody">
-				<q-row v-if="controls.ARMAZPOPPSEUDARMAZ01_.isVisible || controls.ARMAZPOPPSEUDARMAZ02_.isVisible">
-					<q-col
-						v-if="controls.ARMAZPOPPSEUDARMAZ01_.isVisible || controls.ARMAZPOPPSEUDARMAZ02_.isVisible"
-						cols="auto">
+				<q-row-container v-show="controls.ARMAZPOPPSEUDARMAZ01_.isVisible || controls.ARMAZPOPPSEUDARMAZ02_.isVisible">
+					<q-control-wrapper
+						v-show="controls.ARMAZPOPPSEUDARMAZ01_.isVisible || controls.ARMAZPOPPSEUDARMAZ02_.isVisible"
+						class="${Vue.GetControlWrapperClass($controlsColumn)}">
 						<q-tab-container
-							v-if="controls.formTabs.isVisible"
-							:id="getId('q-tabs-ARMAZPOP')"
+							id="q-tabs-ARMAZPOP"
 							v-bind="controls.formTabs.props"
 							@tab-changed="controls.formTabs.selectTab($event)">
-							<section
-								v-if="controls.ARMAZPOPPSEUDARMAZ01_.isVisible"
-								v-show="controls.formTabs.selectedTab === 'ARMAZPOPPSEUDARMAZ01_'">
-								<div
-									id="ARMAZPOPPSEUDARMAZ01_"
-									role="tabpanel"
-									aria-labelledby="q-tabs-ARMAZPOP-tab-ARMAZPOPPSEUDARMAZ01_">
-									<q-row v-if="controls.ARMAZ01_WAREHWAREHCOD.isVisible || controls.ARMAZ01_WAREHACTIVITY.isVisible">
-										<q-col
-											v-if="controls.ARMAZ01_WAREHWAREHCOD.isVisible"
-											cols="auto">
-											<base-input-structure
-												v-if="controls.ARMAZ01_WAREHWAREHCOD.isVisible"
-												class="i-text"
-												v-bind="controls.ARMAZ01_WAREHWAREHCOD.wrapperProps"
-												:id="getControlId(controls.ARMAZ01_WAREHWAREHCOD)"
-												v-on="controls.ARMAZ01_WAREHWAREHCOD.handlers"
-												:loading="controls.ARMAZ01_WAREHWAREHCOD.props.loading"
-												:reporting-mode-on="reportingModeCAV"
-												:suggestion-mode-on="suggestionModeOn">
-												<q-text-field
-													v-bind="controls.ARMAZ01_WAREHWAREHCOD.props"
-													:id="getControlId(controls.ARMAZ01_WAREHWAREHCOD)"
-													@blur="onBlur(controls.ARMAZ01_WAREHWAREHCOD, model.ValWarehcod.value)"
-													@change="model.ValWarehcod.fnUpdateValueOnChange" />
-											</base-input-structure>
-										</q-col>
-										<q-col
-											v-if="controls.ARMAZ01_WAREHACTIVITY.isVisible"
-											cols="auto">
-											<base-input-structure
-												v-if="controls.ARMAZ01_WAREHACTIVITY.isVisible"
-												class="i-text"
-												v-bind="controls.ARMAZ01_WAREHACTIVITY.wrapperProps"
-												:id="getControlId(controls.ARMAZ01_WAREHACTIVITY)"
-												v-on="controls.ARMAZ01_WAREHACTIVITY.handlers"
-												:loading="controls.ARMAZ01_WAREHACTIVITY.props.loading"
-												:reporting-mode-on="reportingModeCAV"
-												:suggestion-mode-on="suggestionModeOn">
-												<q-switch
-													v-if="controls.ARMAZ01_WAREHACTIVITY.isVisible"
-													v-bind="controls.ARMAZ01_WAREHACTIVITY.props"
-													:id="getControlId(controls.ARMAZ01_WAREHACTIVITY)"
-													v-on="controls.ARMAZ01_WAREHACTIVITY.handlers" />
-											</base-input-structure>
-										</q-col>
-									</q-row>
-									<q-row v-if="controls.ARMAZ01_WAREHWAREHDES.isVisible">
-										<q-col
-											v-if="controls.ARMAZ01_WAREHWAREHDES.isVisible"
-											cols="auto">
-											<base-input-structure
-												v-if="controls.ARMAZ01_WAREHWAREHDES.isVisible"
-												class="i-text"
-												v-bind="controls.ARMAZ01_WAREHWAREHDES.wrapperProps"
-												:id="getControlId(controls.ARMAZ01_WAREHWAREHDES)"
-												v-on="controls.ARMAZ01_WAREHWAREHDES.handlers"
-												:loading="controls.ARMAZ01_WAREHWAREHDES.props.loading"
-												:reporting-mode-on="reportingModeCAV"
-												:suggestion-mode-on="suggestionModeOn">
-												<q-text-field
-													v-bind="controls.ARMAZ01_WAREHWAREHDES.props"
-													:id="getControlId(controls.ARMAZ01_WAREHWAREHDES)"
-													@blur="onBlur(controls.ARMAZ01_WAREHWAREHDES, model.ValWarehdes.value)"
-													@change="model.ValWarehdes.fnUpdateValueOnChange" />
-											</base-input-structure>
-										</q-col>
-									</q-row>
-								</div>
-							</section>
-							<section
-								v-if="controls.ARMAZPOPPSEUDARMAZ02_.isVisible"
-								v-show="controls.formTabs.selectedTab === 'ARMAZPOPPSEUDARMAZ02_'">
-								<div
-									id="ARMAZPOPPSEUDARMAZ02_"
-									role="tabpanel"
-									aria-labelledby="q-tabs-ARMAZPOP-tab-ARMAZPOPPSEUDARMAZ02_">
-									<q-row v-if="controls.ARMAZ02_PSEUDARTIGAPO.isVisible">
-										<q-col
-											v-if="controls.ARMAZ02_PSEUDARTIGAPO.isVisible"
-											cols="auto">
-											<q-form-container
-												v-if="controls.ARMAZ02_PSEUDARTIGAPO.isVisible"
-												:ref="controls.ARMAZ02_PSEUDARTIGAPO.id"
-												v-bind="controls.ARMAZ02_PSEUDARTIGAPO"
-												:id="getControlId(controls.ARMAZ02_PSEUDARTIGAPO)"
-												v-on="controls.ARMAZ02_PSEUDARTIGAPO.handlers" />
-										</q-col>
-									</q-row>
-									<q-row v-if="controls.ARMAZ02_PSEUDARTIGOS_.isVisible">
-										<q-col
-											v-if="controls.ARMAZ02_PSEUDARTIGOS_.isVisible"
-											cols="auto">
-											<q-table
-												v-if="controls.ARMAZ02_PSEUDARTIGOS_.isVisible"
-												v-bind="controls.ARMAZ02_PSEUDARTIGOS_"
-												:id="getControlId(controls.ARMAZ02_PSEUDARTIGOS_)"
-												v-on="controls.ARMAZ02_PSEUDARTIGOS_.handlers">
-												<template #header>
-													<q-table-config
-														:table-ctrl="controls.ARMAZ02_PSEUDARTIGOS_"
-														v-on="controls.ARMAZ02_PSEUDARTIGOS_.handlers" />
-												</template>
-												<!-- USE /[MANUAL GQT CUSTOM_TABLE ARMAZ02_PSEUDARTIGOS_]/ -->
-											</q-table>
-										</q-col>
-									</q-row>
-								</div>
-							</section>
+							<template #tab-panel>
+								<section
+									v-if="controls.ARMAZPOPPSEUDARMAZ01_.isVisible"
+									v-show="controls.formTabs.selectedTab === 'ARMAZPOPPSEUDARMAZ01_'">
+									<div
+										id="ARMAZPOPPSEUDARMAZ01_"
+										role="tabpanel"
+										aria-labelledby="tab-container-ARMAZPOPPSEUDARMAZ01_">
+										<q-row-container v-show="controls.ARMAZ01_WAREHWAREHCOD.isVisible || controls.ARMAZ01_WAREHACTIVITY.isVisible">
+											<q-control-wrapper
+												v-show="controls.ARMAZ01_WAREHWAREHCOD.isVisible"
+												class="${Vue.GetControlWrapperClass($controlsColumn)}">
+												<base-input-structure
+													class="i-text"
+													v-bind="controls.ARMAZ01_WAREHWAREHCOD"
+													v-on="controls.ARMAZ01_WAREHWAREHCOD.handlers"
+													:loading="controls.ARMAZ01_WAREHWAREHCOD.props.loading"
+													:reporting-mode-on="reportingModeCAV"
+													:suggestion-mode-on="suggestionModeOn">
+													<q-text-field
+														v-bind="controls.ARMAZ01_WAREHWAREHCOD.props"
+														@blur="onBlur(controls.ARMAZ01_WAREHWAREHCOD, model.ValWarehcod.value)"
+														@change="model.ValWarehcod.fnUpdateValueOnChange" />
+												</base-input-structure>
+											</q-control-wrapper>
+											<q-control-wrapper
+												v-show="controls.ARMAZ01_WAREHACTIVITY.isVisible"
+												class="${Vue.GetControlWrapperClass($controlsColumn)}">
+												<base-input-structure
+													class="i-text"
+													v-bind="controls.ARMAZ01_WAREHACTIVITY"
+													v-on="controls.ARMAZ01_WAREHACTIVITY.handlers"
+													:loading="controls.ARMAZ01_WAREHACTIVITY.props.loading"
+													:reporting-mode-on="reportingModeCAV"
+													:suggestion-mode-on="suggestionModeOn">
+													<q-toggle-input
+														v-if="controls.ARMAZ01_WAREHACTIVITY.isVisible"
+														v-bind="controls.ARMAZ01_WAREHACTIVITY.props"
+														v-on="controls.ARMAZ01_WAREHACTIVITY.handlers" />
+												</base-input-structure>
+											</q-control-wrapper>
+										</q-row-container>
+										<q-row-container v-show="controls.ARMAZ01_WAREHWAREHDES.isVisible">
+											<q-control-wrapper
+												v-show="controls.ARMAZ01_WAREHWAREHDES.isVisible"
+												class="${Vue.GetControlWrapperClass($controlsColumn)}">
+												<base-input-structure
+													class="i-text"
+													v-bind="controls.ARMAZ01_WAREHWAREHDES"
+													v-on="controls.ARMAZ01_WAREHWAREHDES.handlers"
+													:loading="controls.ARMAZ01_WAREHWAREHDES.props.loading"
+													:reporting-mode-on="reportingModeCAV"
+													:suggestion-mode-on="suggestionModeOn">
+													<q-text-field
+														v-bind="controls.ARMAZ01_WAREHWAREHDES.props"
+														@blur="onBlur(controls.ARMAZ01_WAREHWAREHDES, model.ValWarehdes.value)"
+														@change="model.ValWarehdes.fnUpdateValueOnChange" />
+												</base-input-structure>
+											</q-control-wrapper>
+										</q-row-container>
+									</div>
+								</section>
+								<section
+									v-if="controls.ARMAZPOPPSEUDARMAZ02_.isVisible"
+									v-show="controls.formTabs.selectedTab === 'ARMAZPOPPSEUDARMAZ02_'">
+									<div
+										id="ARMAZPOPPSEUDARMAZ02_"
+										role="tabpanel"
+										aria-labelledby="tab-container-ARMAZPOPPSEUDARMAZ02_">
+										<q-row-container v-show="controls.ARMAZ02_PSEUDARTIGAPO.isVisible">
+											<q-control-wrapper
+												v-show="controls.ARMAZ02_PSEUDARTIGAPO.isVisible"
+												class="${Vue.GetControlWrapperClass($controlsColumn)}">
+												<q-form-container
+													:ref="controls.ARMAZ02_PSEUDARTIGAPO.id"
+													v-bind="controls.ARMAZ02_PSEUDARTIGAPO"
+													v-on="controls.ARMAZ02_PSEUDARTIGAPO.handlers" />
+											</q-control-wrapper>
+										</q-row-container>
+										<q-row-container v-show="controls.ARMAZ02_PSEUDARTIGOS_.isVisible">
+											<q-control-wrapper
+												v-show="controls.ARMAZ02_PSEUDARTIGOS_.isVisible"
+												class="${Vue.GetControlWrapperClass($controlsColumn)}">
+												<q-table
+													v-show="controls.ARMAZ02_PSEUDARTIGOS_.isVisible"
+													v-bind="controls.ARMAZ02_PSEUDARTIGOS_"
+													v-on="controls.ARMAZ02_PSEUDARTIGOS_.handlers" />
+												<q-table-extra-extension
+													:list-ctrl="controls.ARMAZ02_PSEUDARTIGOS_"
+													v-on="controls.ARMAZ02_PSEUDARTIGOS_.handlers" />
+											</q-control-wrapper>
+										</q-row-container>
+									</div>
+								</section>
+							</template>
 						</q-tab-container>
-					</q-col>
-				</q-row>
+					</q-control-wrapper>
+				</q-row-container>
 			</template>
-		</q-container>
+		</div>
 	</teleport>
 
-	<q-divider v-if="!isPopup && showFormFooter" />
+	<hr v-if="!isPopup && showFormFooter" />
 
 	<teleport
 		v-if="formModalIsReady && showFormFooter"
 		:to="`#${uiContainersId.footer}`"
 		:disabled="!isPopup || isNested">
-		<q-row v-if="showFormFooter">
+		<q-row-container v-if="showFormFooter">
 			<div id="footer-action-btns">
 				<template
 					v-for="btn in formButtons"
@@ -238,7 +216,6 @@
 						v-if="btn.isActive && btn.isVisible && btn.showInFooter"
 						:id="`bottom-${btn.id}`"
 						:label="btn.text"
-						:color="btn.color"
 						:variant="btn.variant"
 						:disabled="btn.disabled"
 						:icon-pos="btn.iconPos"
@@ -250,12 +227,12 @@
 					</q-button>
 				</template>
 			</div>
-		</q-row>
+		</q-row-container>
 	</teleport>
 </template>
 
 <script>
-	/* eslint-disable @typescript-eslint/no-unused-vars */
+	/* eslint-disable no-unused-vars */
 	import { computed, defineAsyncComponent, readonly } from 'vue'
 	import { useRoute } from 'vue-router'
 
@@ -275,7 +252,7 @@
 	import qApi from '@/api/genio/quidgestFunctions.js'
 	import qFunctions from '@/api/genio/projectFunctions.js'
 	import qProjArrays from '@/api/genio/projectArrays.js'
-	/* eslint-enable @typescript-eslint/no-unused-vars */
+	/* eslint-enable no-unused-vars */
 
 	import FormViewModel from './QFormArmazpopViewModel.js'
 
@@ -352,8 +329,7 @@
 					primaryKey: 'ValCodwareh',
 					designation: computed(() => this.Resources.WAREHOUSE51864),
 					identifier: '', // Unique identifier received by route (when it's nested).
-					mode: '',
-					availableAgents: [],
+					mode: ''
 				},
 
 				formButtons: {
@@ -461,11 +437,7 @@
 						showInFooter: true,
 						isActive: true,
 						isVisible: computed(() => vm.authData.isAllowed && vm.isEditable),
-						action: vm.saveForm,
-						badge: {
-							isVisible: computed(() => vm.model?.isDirty === true),
-							color: 'highlight'
-						}
+						action: vm.saveForm
 					},
 					confirmBtn: {
 						id: 'confirm-btn',
@@ -598,6 +570,7 @@
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						tab: 'ARMAZPOPPSEUDARMAZ01_',
 						maxLength: 10,
+						labelId: 'label_ARMAZ01_WAREHWAREHCOD',
 						controlLimits: [
 						],
 					}, this),
@@ -630,6 +603,7 @@
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						tab: 'ARMAZPOPPSEUDARMAZ01_',
 						maxLength: 85,
+						labelId: 'label_ARMAZ01_WAREHWAREHDES',
 						controlLimits: [
 						],
 					}, this),
@@ -656,12 +630,11 @@
 					ARMAZ02_PSEUDARTIGOS_: new fieldControlClass.TableListControl({
 						id: 'ARMAZ02_PSEUDARTIGOS_',
 						name: 'ARTIGOS',
-						size: 'xxlarge',
+						size: '',
 						label: computed(() => this.Resources.CATALOG_ARTICLES06740),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						tab: 'ARMAZPOPPSEUDARMAZ02_',
-						headerLevel: computed(() => this.baseHeadingLevel + 1),
 						controller: 'WAREH',
 						action: 'Armaz02_ValArtigos',
 						hasDependencies: false,
@@ -675,7 +648,6 @@
 								label: computed(() => this.Resources.ARTICLE60065),
 								dataLength: 85,
 								scrollData: 30,
-								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 2,
@@ -685,7 +657,6 @@
 								label: computed(() => this.Resources.CODE49225),
 								dataLength: 15,
 								scrollData: 15,
-								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.NumericColumn({
 								order: 3,
@@ -696,7 +667,6 @@
 								scrollData: 10,
 								maxDigits: 10,
 								decimalPlaces: 0,
-								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.NumericColumn({
 								order: 4,
@@ -707,7 +677,6 @@
 								scrollData: 10,
 								maxDigits: 10,
 								decimalPlaces: 0,
-								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.NumericColumn({
 								order: 5,
@@ -718,7 +687,6 @@
 								scrollData: 10,
 								maxDigits: 10,
 								decimalPlaces: 0,
-								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.ImageColumn({
 								order: 6,
@@ -730,7 +698,6 @@
 								scrollData: 3,
 								sortable: false,
 								searchable: false,
-								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 						],
 						config: {
@@ -747,8 +714,10 @@
 							permissions: {
 							},
 							searchBarConfig: {
-								visibility: true
+								visibility: true,
+								searchOnPressEnter: true
 							},
+							filtersVisible: true,
 							allowColumnFilters: true,
 							allowColumnSort: true,
 							generalCustomActions: [
@@ -783,7 +752,6 @@
 						],
 					}, this),
 					formTabs: new fieldControlClass.TabsControl({
-						id: 'formTabs',
 						tabControlsIds: readonly([
 							'ARMAZPOPPSEUDARMAZ01_',
 							'ARMAZPOPPSEUDARMAZ02_',
@@ -837,6 +805,8 @@
 			// Does NOT have access to `this` component instance, because
 			// it has not been created yet when this guard is called!
 
+			to.params.isPopup = 'true'
+
 			next((vm) => {
 				vm.initFormProperties(to)
 			})
@@ -869,23 +839,17 @@
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 		},
 
-		beforeUnmount()
-		{
-/* eslint-disable indent, vue/html-indent, vue/script-indent */
-// USE /[MANUAL GQT COMPONENT_BEFORE_UNMOUNT ARMAZPOP]/
-// eslint-disable-next-line
-/* eslint-enable indent, vue/html-indent, vue/script-indent */
-		},
-
 		methods: {
 			/**
 			 * Called before form init.
 			 */
 			async beforeLoad()
 			{
+				let loadForm = true
+
 				// Execute the "Before init" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.beforeInit)
-				for (const trigger of triggers)
+				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
 				this.emitEvent('before-load-form')
@@ -895,7 +859,7 @@
 // eslint-disable-next-line
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 
-				return true
+				return loadForm
 			},
 
 			/**
@@ -905,7 +869,7 @@
 			{
 				// Execute the "After init" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.afterInit)
-				for (const trigger of triggers)
+				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
 				this.emitEvent('after-load-form')
@@ -925,33 +889,19 @@
 
 				// Execute the "Before apply" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.beforeApply)
-				for (const trigger of triggers)
+				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
-				const ticketsPromise = this.model.updateFilesTickets(true)
-				this.addBusy(ticketsPromise, this.Resources[hardcodedTexts.processing])
-				const canSetDocums = await ticketsPromise
+				const canSetDocums = await this.model.updateFilesTickets(true)
 
 				if (canSetDocums)
 				{
-					let results
-					const changesPromise = this.model.setDocumentChanges()
-					this.addBusy(changesPromise, this.Resources[hardcodedTexts.processing])
-					applyForm = await changesPromise
+					applyForm = await this.model.setDocumentChanges()
 
 					if (applyForm)
 					{
-						const insertsPromise = this.model.saveDocuments()
-						this.addBusy(insertsPromise, this.Resources[hardcodedTexts.processing])
-						results = await insertsPromise
+						const results = await this.model.saveDocuments()
 						applyForm = results.every((e) => e === true)
-					}
-
-					if (!changesPromise || (results && !results.every((e) => e === true)))
-					{
-						this.validationErrors = {
-							Erro: this.Resources.OCORREU_UM_ERRO_AO_T51884
-						}
 					}
 				}
 
@@ -972,7 +922,7 @@
 			{
 				// Execute the "After apply" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.afterApply)
-				for (const trigger of triggers)
+				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
 				this.emitEvent('after-apply-form')
@@ -992,33 +942,19 @@
 
 				// Execute the "Before save" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.beforeSave)
-				for (const trigger of triggers)
+				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
-				const ticketsPromise = this.model.updateFilesTickets()
-				this.addBusy(ticketsPromise, this.Resources[hardcodedTexts.processing])
-				const canSetDocums = await ticketsPromise
+				const canSetDocums = await this.model.updateFilesTickets()
 
 				if (canSetDocums)
 				{
-					let results
-					const changesPromise = this.model.setDocumentChanges()
-					this.addBusy(changesPromise, this.Resources[hardcodedTexts.processing])
-					saveForm = await changesPromise
+					saveForm = await this.model.setDocumentChanges()
 
 					if (saveForm)
 					{
-						const insertsPromise = this.model.saveDocuments()
-						this.addBusy(insertsPromise, this.Resources[hardcodedTexts.processing])
-						results = await insertsPromise
+						const results = await this.model.saveDocuments()
 						saveForm = results.every((e) => e === true)
-					}
-
-					if (!changesPromise || (results && !results.every((e) => e === true)))
-					{
-						this.validationErrors = {
-							Erro: this.Resources.OCORREU_UM_ERRO_AO_T51884
-						}
 					}
 				}
 
@@ -1037,9 +973,11 @@
 			 */
 			async afterSave()
 			{
+				let redirectPage = true // Set to 'false' to cancel page redirect.
+
 				// Execute the "After save" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.afterSave)
-				for (const trigger of triggers)
+				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
 				this.emitEvent('after-save-form')
@@ -1049,7 +987,7 @@
 // eslint-disable-next-line
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 
-				return true
+				return redirectPage
 			},
 
 			/**
@@ -1057,6 +995,8 @@
 			 */
 			async beforeDel()
 			{
+				let deleteForm = true // Set to 'false' to cancel form delete.
+
 				this.emitEvent('before-delete-form')
 
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
@@ -1064,7 +1004,7 @@
 // eslint-disable-next-line
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 
-				return true
+				return deleteForm
 			},
 
 			/**
@@ -1072,6 +1012,8 @@
 			 */
 			async afterDel()
 			{
+				let redirectPage = true // Set to 'false' to cancel page redirect.
+
 				this.emitEvent('after-delete-form')
 
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
@@ -1079,7 +1021,7 @@
 // eslint-disable-next-line
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 
-				return true
+				return redirectPage
 			},
 
 			/**
@@ -1087,9 +1029,11 @@
 			 */
 			async beforeExit()
 			{
+				let leaveForm = true // Set to 'false' to cancel page redirect.
+
 				// Execute the "Before exit" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.beforeExit)
-				for (const trigger of triggers)
+				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
 				this.emitEvent('before-exit-form')
@@ -1099,7 +1043,7 @@
 // eslint-disable-next-line
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 
-				return true
+				return leaveForm
 			},
 
 			/**
@@ -1109,7 +1053,7 @@
 			{
 				// Execute the "After exit" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.afterExit)
-				for (const trigger of triggers)
+				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
 				this.emitEvent('after-exit-form')
@@ -1177,6 +1121,18 @@
 		},
 
 		watch: {
+			// Watchers for changes in the state of tabs.
+			'controls.formTabs.selectedTab'(newVal)
+			{
+				const data = {
+					navigationId: this.navigationId,
+					key: this.storeKey,
+					formInfo: this.formInfo,
+					fieldId: 'formTabs',
+					containerState: newVal
+				}
+				this.storeContainerState(data)
+			},
 		}
 	}
 </script>

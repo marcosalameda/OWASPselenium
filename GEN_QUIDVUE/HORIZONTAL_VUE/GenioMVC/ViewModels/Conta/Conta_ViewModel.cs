@@ -1,20 +1,20 @@
-﻿using CSGenio.business;
-using CSGenio.framework;
-using CSGenio.persistence;
-using GenioMVC.Helpers;
-using GenioMVC.Models.Exception;
-using GenioMVC.Models.Navigation;
+﻿using JsonIgnoreAttribute = System.Text.Json.Serialization.JsonIgnoreAttribute;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Quidgest.Persistence;
-using Quidgest.Persistence.GenericQuery;
-
 using System.Collections;
 using System.Collections.Concurrent;
 using System.Collections.Specialized;
 using System.ComponentModel.DataAnnotations;
 using System.Data;
 using System.Globalization;
-using System.Text.Json.Serialization;
+
+using CSGenio.business;
+using CSGenio.framework;
+using CSGenio.persistence;
+using GenioMVC.Helpers;
+using GenioMVC.Models.Exception;
+using GenioMVC.Models.Navigation;
+using Quidgest.Persistence;
+using Quidgest.Persistence.GenericQuery;
 
 namespace GenioMVC.ViewModels.Conta
 {
@@ -44,7 +44,6 @@ namespace GenioMVC.ViewModels.Conta
 		public string ValCodtpcon { get; set; }
 
 		#endregion
-
 		/// <summary>
 		/// Title: "Name:" | Type: "C"
 		/// </summary>
@@ -238,7 +237,12 @@ namespace GenioMVC.ViewModels.Conta
 			}
 		}
 
-		/// <inheritdoc />
+		/// <summary>
+		/// Sets the value of a single property of the view model based on the provided table and field names.
+		/// </summary>
+		/// <param name="fullFieldName">The full field name in the format "table.field".</param>
+		/// <param name="value">The field value.</param>
+		/// <exception cref="ArgumentNullException">Thrown if <paramref name="fullFieldName"/> is null.</exception>
 		public override void SetViewModelValue(string fullFieldName, object value)
 		{
 			try
@@ -319,17 +323,6 @@ namespace GenioMVC.ViewModels.Conta
 				// Conexão deve estar aberta de fora. Podem haver formulas que utilizam funções "manuais".
 				// TODO: It needs to be analyzed whether we should disable the security of field filling here. If there is any case where the field with the block condition can only be calculated after the double calculation of the formulas.
 				MapToModel(Model);
-
-				// If it's inserting or duplicating, needs to fill the default values.
-				if (Navigation.CurrentLevel.FormMode == FormMode.New || Navigation.CurrentLevel.FormMode == FormMode.Duplicate)
-				{
-					FunctionType funcType = Navigation.CurrentLevel.FormMode == FormMode.New
-						? FunctionType.INS
-						: FunctionType.DUP;
-
-					Model.baseklass.fillValuesDefault(m_userContext.PersistentSupport, funcType);
-				}
-
 				// Preencher operações internas
 				Model.klass.fillInternalOperations(m_userContext.PersistentSupport, oldvalues);
 				MapFromModel(Model);
@@ -374,7 +367,6 @@ namespace GenioMVC.ViewModels.Conta
 			Load_Conta___pessoname____(qs, lazyLoad);
 			Load_Conta___genregender__(qs, lazyLoad);
 			Load_Conta___tpcontipocont(qs, lazyLoad);
-
 // USE /[MANUAL GQT VIEWMODEL_LOADPARTIAL CONTA]/
 		}
 
@@ -445,7 +437,10 @@ namespace GenioMVC.ViewModels.Conta
 				}
 			}
 
-			TablePessoName = new TableDBEdit<Models.Pesso>();
+			TablePessoName = new TableDBEdit<Models.Pesso>
+			{
+				IsLazyLoad = lazyLoad
+			};
 
 			if (lazyLoad)
 			{
@@ -460,7 +455,7 @@ namespace GenioMVC.ViewModels.Conta
 
 			if (conta___pessoname____DoLoad)
 			{
-				List<ColumnSort> sorts = [];
+				List<ColumnSort> sorts = new List<ColumnSort>();
 				ColumnSort requestedSort = GetRequestSort(TablePessoName, "sTablePessoName", "dTablePessoName", qs, "pesso");
 				if (requestedSort != null)
 					sorts.Add(requestedSort);
@@ -510,7 +505,7 @@ namespace GenioMVC.ViewModels.Conta
 
 				TablePessoName.SetPagination(page, numberItems, listing.HasMore, listing.GetTotal, listing.TotalRecords);
 				TablePessoName.Query = query;
-				TablePessoName.Elements = listing.RowsForViewModel((r) => new GenioMVC.Models.Pesso(m_userContext, r, true, _fieldsToSerialize_CONTA___PESSONAME____));
+				TablePessoName.Elements = listing.RowsForViewModel<GenioMVC.Models.Pesso>((r) => new GenioMVC.Models.Pesso(m_userContext, r, true, _fieldsToSerialize_CONTA___PESSONAME____));
 
 				//created by [ MH ] at [ 14.04.2016 ] - Foi alterada a forma de retornar a key do novo registo inserido / editado no form de apoio do DBEdit.
 				//last update by [ MH ] at [ 10.05.2016 ] - Validação se key encontra-se no level atual, as chaves dos niveis anteriores devem ser ignorados.
@@ -632,7 +627,10 @@ namespace GenioMVC.ViewModels.Conta
 				}
 			}
 
-			TableGenreGender = new TableDBEdit<Models.Genre>();
+			TableGenreGender = new TableDBEdit<Models.Genre>
+			{
+				IsLazyLoad = lazyLoad
+			};
 
 			if (lazyLoad)
 			{
@@ -647,7 +645,7 @@ namespace GenioMVC.ViewModels.Conta
 
 			if (conta___genregender__DoLoad)
 			{
-				List<ColumnSort> sorts = [];
+				List<ColumnSort> sorts = new List<ColumnSort>();
 				ColumnSort requestedSort = GetRequestSort(TableGenreGender, "sTableGenreGender", "dTableGenreGender", qs, "genre");
 				if (requestedSort != null)
 					sorts.Add(requestedSort);
@@ -697,7 +695,7 @@ namespace GenioMVC.ViewModels.Conta
 
 				TableGenreGender.SetPagination(page, numberItems, listing.HasMore, listing.GetTotal, listing.TotalRecords);
 				TableGenreGender.Query = query;
-				TableGenreGender.Elements = listing.RowsForViewModel((r) => new GenioMVC.Models.Genre(m_userContext, r, true, _fieldsToSerialize_CONTA___GENREGENDER__));
+				TableGenreGender.Elements = listing.RowsForViewModel<GenioMVC.Models.Genre>((r) => new GenioMVC.Models.Genre(m_userContext, r, true, _fieldsToSerialize_CONTA___GENREGENDER__));
 
 				//created by [ MH ] at [ 14.04.2016 ] - Foi alterada a forma de retornar a key do novo registo inserido / editado no form de apoio do DBEdit.
 				//last update by [ MH ] at [ 10.05.2016 ] - Validação se key encontra-se no level atual, as chaves dos niveis anteriores devem ser ignorados.
@@ -823,7 +821,10 @@ namespace GenioMVC.ViewModels.Conta
 			// Area limit
 			conta___tpcontipocontDoLoad &= AddCriteriaAreaLimit(conta___tpcontipocontConds, CSGenio.business.CSGenioAgenre.FldCodgenre, "genre", this.ValCodgenre, true);
 
-			TableTpconTipocont = new TableDBEdit<Models.Tpcon>();
+			TableTpconTipocont = new TableDBEdit<Models.Tpcon>
+			{
+				IsLazyLoad = lazyLoad
+			};
 
 			if (lazyLoad)
 			{
@@ -841,7 +842,7 @@ namespace GenioMVC.ViewModels.Conta
 
 			if (conta___tpcontipocontDoLoad)
 			{
-				List<ColumnSort> sorts = [];
+				List<ColumnSort> sorts = new List<ColumnSort>();
 				ColumnSort requestedSort = GetRequestSort(TableTpconTipocont, "sTableTpconTipocont", "dTableTpconTipocont", qs, "tpcon");
 				if (requestedSort != null)
 					sorts.Add(requestedSort);
@@ -891,7 +892,7 @@ namespace GenioMVC.ViewModels.Conta
 
 				TableTpconTipocont.SetPagination(page, numberItems, listing.HasMore, listing.GetTotal, listing.TotalRecords);
 				TableTpconTipocont.Query = query;
-				TableTpconTipocont.Elements = listing.RowsForViewModel((r) => new GenioMVC.Models.Tpcon(m_userContext, r, true, _fieldsToSerialize_CONTA___TPCONTIPOCONT));
+				TableTpconTipocont.Elements = listing.RowsForViewModel<GenioMVC.Models.Tpcon>((r) => new GenioMVC.Models.Tpcon(m_userContext, r, true, _fieldsToSerialize_CONTA___TPCONTIPOCONT));
 
 				//created by [ MH ] at [ 14.04.2016 ] - Foi alterada a forma de retornar a key do novo registo inserido / editado no form de apoio do DBEdit.
 				//last update by [ MH ] at [ 10.05.2016 ] - Validação se key encontra-se no level atual, as chaves dos niveis anteriores devem ser ignorados.

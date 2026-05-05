@@ -1,4 +1,4 @@
-﻿/* eslint-disable @typescript-eslint/no-unused-vars */
+﻿/* eslint-disable no-unused-vars */
 import { computed, reactive, watch } from 'vue'
 import _merge from 'lodash-es/merge'
 
@@ -11,7 +11,7 @@ import netAPI from '@quidgest/clientapp/network'
 import qApi from '@/api/genio/quidgestFunctions.js'
 import qFunctions from '@/api/genio/projectFunctions.js'
 import qProjArrays from '@/api/genio/projectArrays.js'
-/* eslint-enable @typescript-eslint/no-unused-vars */
+/* eslint-enable no-unused-vars */
 
 /**
  * Represents a ViewModel class.
@@ -25,11 +25,11 @@ export default class ViewModel extends FormViewModelBase
 	 * @param {object} options - The options for the ViewModel
 	 * @param {object} values - A ViewModel instance to copy values from
 	 */
-	// eslint-disable-next-line @typescript-eslint/no-unused-vars
+	// eslint-disable-next-line no-unused-vars
 	constructor(vueContext, options, values)
 	{
 		super(vueContext, options)
-		// eslint-disable-next-line @typescript-eslint/no-unused-vars
+		// eslint-disable-next-line no-unused-vars
 		const vm = this.vueContext
 
 		// The view model metadata
@@ -37,9 +37,8 @@ export default class ViewModel extends FormViewModelBase
 			name: 'CTRY03',
 			area: 'CTRY',
 			actions: {
-				recalculateFormulas: 'RecalculateFormulas_Ctry03',
-				updateFilesTickets: 'UpdateFilesTicketsCtry03',
-				setFile: 'SetFileCtry03'
+				recalculateFormulas: 'RecalculateFormulas_CTRY03',
+				updateFilesTickets: 'UpdateFilesTicketsCTRY03'
 			}
 		})
 
@@ -51,7 +50,7 @@ export default class ViewModel extends FormViewModelBase
 			field: 'CODCTRY',
 			description: '',
 		}).cloneFrom(values?.ValCodctry))
-		this.stopWatchers.push(watch(() => this.ValCodctry.value, (newValue, oldValue) => this.onUpdate('ctry.codctry', this.ValCodctry, newValue, oldValue)))
+		watch(() => this.ValCodctry.value, (newValue, oldValue) => this.onUpdate('ctry.codctry', this.ValCodctry, newValue, oldValue))
 
 		/** The remaining form fields. */
 		this.ValCountry = reactive(new modelFieldType.String({
@@ -62,7 +61,7 @@ export default class ViewModel extends FormViewModelBase
 			maxLength: 50,
 			description: computed(() => this.Resources.COUNTRY64133),
 		}).cloneFrom(values?.ValCountry))
-		this.stopWatchers.push(watch(() => this.ValCountry.value, (newValue, oldValue) => this.onUpdate('ctry.country', this.ValCountry, newValue, oldValue)))
+		watch(() => this.ValCountry.value, (newValue, oldValue) => this.onUpdate('ctry.country', this.ValCountry, newValue, oldValue))
 	}
 
 	/**

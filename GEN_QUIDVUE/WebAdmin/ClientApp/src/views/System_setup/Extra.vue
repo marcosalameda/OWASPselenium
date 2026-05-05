@@ -324,7 +324,7 @@
 						break;
 						case 'edit':
 							const newPropIndex = this.advancedProps.findIndex(value => value.Key == this.rowKey)
-							this.advancedProps[newPropIndex].Val = data.moreProperty.Val;
+							this.advancedProps[newPropIndex].Val = this.rowValue;
 							break;
 						case 'delete':
 							this.advancedProps = this.advancedProps.filter(prop => prop.Key != this.rowKey);
@@ -353,13 +353,7 @@
 			},
 			changeAdvancedProperty(moreProperty) {
 				this.rowKey = moreProperty.Key
-
-				let advancedItem = this.SelectLists.PropertyList.find(item => item.Value == moreProperty.Key);
-				if (advancedItem?.Type === 'P')
-					this.rowValue = ''
-				else
-					this.rowValue = moreProperty.Val
-					
+				this.rowValue = moreProperty.Val
 				this.showAdvancedPropertyModal('edit');
 			},
 			deleteAdvancedProperty(moreProperty) {

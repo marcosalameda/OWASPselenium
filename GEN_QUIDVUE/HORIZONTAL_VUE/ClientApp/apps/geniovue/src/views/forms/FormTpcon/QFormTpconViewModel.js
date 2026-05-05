@@ -1,4 +1,4 @@
-﻿/* eslint-disable @typescript-eslint/no-unused-vars */
+﻿/* eslint-disable no-unused-vars */
 import { computed, reactive, watch } from 'vue'
 import _merge from 'lodash-es/merge'
 
@@ -11,7 +11,7 @@ import netAPI from '@quidgest/clientapp/network'
 import qApi from '@/api/genio/quidgestFunctions.js'
 import qFunctions from '@/api/genio/projectFunctions.js'
 import qProjArrays from '@/api/genio/projectArrays.js'
-/* eslint-enable @typescript-eslint/no-unused-vars */
+/* eslint-enable no-unused-vars */
 
 /**
  * Represents a ViewModel class.
@@ -25,11 +25,11 @@ export default class ViewModel extends FormViewModelBase
 	 * @param {object} options - The options for the ViewModel
 	 * @param {object} values - A ViewModel instance to copy values from
 	 */
-	// eslint-disable-next-line @typescript-eslint/no-unused-vars
+	// eslint-disable-next-line no-unused-vars
 	constructor(vueContext, options, values)
 	{
 		super(vueContext, options)
-		// eslint-disable-next-line @typescript-eslint/no-unused-vars
+		// eslint-disable-next-line no-unused-vars
 		const vm = this.vueContext
 
 		// The view model metadata
@@ -37,9 +37,8 @@ export default class ViewModel extends FormViewModelBase
 			name: 'TPCON',
 			area: 'TPCON',
 			actions: {
-				recalculateFormulas: 'RecalculateFormulas_Tpcon',
-				updateFilesTickets: 'UpdateFilesTicketsTpcon',
-				setFile: 'SetFileTpcon'
+				recalculateFormulas: 'RecalculateFormulas_TPCON',
+				updateFilesTickets: 'UpdateFilesTicketsTPCON'
 			}
 		})
 
@@ -51,7 +50,7 @@ export default class ViewModel extends FormViewModelBase
 			field: 'CODTPCON',
 			description: '',
 		}).cloneFrom(values?.ValCodtpcon))
-		this.stopWatchers.push(watch(() => this.ValCodtpcon.value, (newValue, oldValue) => this.onUpdate('tpcon.codtpcon', this.ValCodtpcon, newValue, oldValue)))
+		watch(() => this.ValCodtpcon.value, (newValue, oldValue) => this.onUpdate('tpcon.codtpcon', this.ValCodtpcon, newValue, oldValue))
 
 		/** The used foreign keys. */
 		this.ValCodgenre = reactive(new modelFieldType.ForeignKey({
@@ -62,7 +61,7 @@ export default class ViewModel extends FormViewModelBase
 			relatedArea: 'GENRE',
 			description: '',
 		}).cloneFrom(values?.ValCodgenre))
-		this.stopWatchers.push(watch(() => this.ValCodgenre.value, (newValue, oldValue) => this.onUpdate('tpcon.codgenre', this.ValCodgenre, newValue, oldValue)))
+		watch(() => this.ValCodgenre.value, (newValue, oldValue) => this.onUpdate('tpcon.codgenre', this.ValCodgenre, newValue, oldValue))
 
 		/** The remaining form fields. */
 		this.TableGenreGender = reactive(new modelFieldType.String({
@@ -73,9 +72,8 @@ export default class ViewModel extends FormViewModelBase
 			field: 'GENDER',
 			maxLength: 20,
 			description: computed(() => this.Resources.GENRE63303),
-			ignoreFldSubmit: true,
 		}).cloneFrom(values?.TableGenreGender))
-		this.stopWatchers.push(watch(() => this.TableGenreGender.value, (newValue, oldValue) => this.onUpdate('genre.gender', this.TableGenreGender, newValue, oldValue)))
+		watch(() => this.TableGenreGender.value, (newValue, oldValue) => this.onUpdate('genre.gender', this.TableGenreGender, newValue, oldValue))
 
 		this.ValTipocont = reactive(new modelFieldType.String({
 			id: 'ValTipocont',
@@ -85,7 +83,7 @@ export default class ViewModel extends FormViewModelBase
 			maxLength: 50,
 			description: computed(() => this.Resources.DESIGNATION35876),
 		}).cloneFrom(values?.ValTipocont))
-		this.stopWatchers.push(watch(() => this.ValTipocont.value, (newValue, oldValue) => this.onUpdate('tpcon.tipocont', this.ValTipocont, newValue, oldValue)))
+		watch(() => this.ValTipocont.value, (newValue, oldValue) => this.onUpdate('tpcon.tipocont', this.ValTipocont, newValue, oldValue))
 	}
 
 	/**

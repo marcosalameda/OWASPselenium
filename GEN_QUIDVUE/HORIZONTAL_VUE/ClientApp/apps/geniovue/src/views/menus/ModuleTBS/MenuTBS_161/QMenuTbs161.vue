@@ -3,23 +3,20 @@
 		v-if="menuModalIsReady"
 		:to="`#${uiContainersId.body}`"
 		:disabled="!menuInfo.isPopup">
-		<div
+		<form
 			class="form-horizontal"
 			@submit.prevent>
 			<q-row-container>
 				<q-table
 					v-bind="controls.menu"
 					v-on="controls.menu.handlers">
-					<template #header>
-						<q-table-config
-							:table-ctrl="controls.menu"
-							v-on="controls.menu.handlers">
-						</q-table-config>
-					</template>
-					<!-- USE /[MANUAL GQT CUSTOM_TABLE TBS_Menu_161]/ -->
 				</q-table>
+
+				<q-table-extra-extension
+					:list-ctrl="controls.menu"
+					v-on="controls.menu.handlers" />
 			</q-row-container>
-		</div>
+		</form>
 	</teleport>
 
 	<teleport
@@ -51,7 +48,7 @@
 </template>
 
 <script>
-	/* eslint-disable @typescript-eslint/no-unused-vars */
+	/* eslint-disable no-unused-vars */
 	import asyncProcM from '@quidgest/clientapp/composables/async'
 	import qEnums from '@quidgest/clientapp/constants/enums'
 	import netAPI from '@quidgest/clientapp/network'
@@ -71,7 +68,7 @@
 	import qApi from '@/api/genio/quidgestFunctions.js'
 	import qFunctions from '@/api/genio/projectFunctions.js'
 	import qProjArrays from '@/api/genio/projectArrays.js'
-	/* eslint-enable @typescript-eslint/no-unused-vars */
+	/* eslint-enable no-unused-vars */
 
 	import MenuViewModel from './QMenuTBS_161ViewModel.js'
 
@@ -155,7 +152,6 @@
 								label: computed(() => this.Resources.GENUS37471),
 								dataLength: 20,
 								scrollData: 20,
-								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.ArrayColumn({
 								order: 2,
@@ -165,8 +161,8 @@
 								label: computed(() => this.Resources.GENDER_CONTACT17830),
 								dataLength: 1,
 								scrollData: 1,
-								export: 1,
-								array: computed(() => new qProjArrays.QArrayGenconta(vm.$getResource).elements),
+								array: computed(() => qProjArrays.QArrayGenconta.setResources(vm.$getResource).elements),
+								arrayType: qProjArrays.QArrayGenconta.type,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 3,
@@ -177,7 +173,6 @@
 								dataLength: 50,
 								scrollData: 30,
 								isVisible: false,
-								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 4,
@@ -188,7 +183,6 @@
 								dataLength: 50,
 								scrollData: 30,
 								isVisible: false,
-								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 						],
 						config: {
@@ -204,8 +198,10 @@
 							permissions: {
 							},
 							searchBarConfig: {
-								visibility: true
+								visibility: true,
+								searchOnPressEnter: true
 							},
+							filtersVisible: true,
 							allowColumnFilters: true,
 							allowColumnSort: true,
 							crudActions: [
@@ -279,7 +275,9 @@
 									id: 'insert',
 									name: 'insert',
 									title: computed(() => this.Resources.INSERIR43365),
-									icon: { icon: 'add' },
+									icon: {
+										icon: 'add'
+									},
 									isInReadOnly: true,
 									params: {
 										action: vm.openFormAction,
@@ -302,7 +300,6 @@
 							rowClickAction: {
 								id: 'RCA_TBS_1611',
 								name: 'form-GENCO',
-								isVisible: true,
 								params: {
 									isRoute: true,
 									limits: [
@@ -332,7 +329,6 @@
 						uuid: '367a8002-7b01-45e4-9022-ea27414db6de',
 						allSelectedRows: 'false',
 						headerLevel: 1,
-						isActiveControl: computed(() => this.isActiveMenu)
 					}, this),
 				}
 			}
@@ -356,14 +352,6 @@
 		{
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
 // USE /[MANUAL GQT FORM_CODEJS TBS_MENU_161]/
-// eslint-disable-next-line
-/* eslint-enable indent, vue/html-indent, vue/script-indent */
-		},
-
-		beforeUnmount()
-		{
-/* eslint-disable indent, vue/html-indent, vue/script-indent */
-// USE /[MANUAL GQT COMPONENT_BEFORE_UNMOUNT TBS_MENU_161]/
 // eslint-disable-next-line
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 		},

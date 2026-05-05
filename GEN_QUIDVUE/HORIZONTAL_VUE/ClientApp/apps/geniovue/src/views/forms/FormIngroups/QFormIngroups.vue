@@ -9,13 +9,12 @@
 			<div
 				v-if="showFormHeader"
 				class="c-action-bar">
-				<component
+				<h1
 					v-if="formControl.uiComponents.header && formInfo.designation"
-					:is="topHeadingTag"
 					:id="formTitleId"
 					class="form-header">
 					{{ formInfo.designation }}
-				</component>
+				</h1>
 
 				<div class="c-action-bar__menu">
 					<template
@@ -39,13 +38,9 @@
 									:label="btn.label"
 									:disabled="btn.disabled"
 									@click="btn.action">
-									<template v-if="btn.icon">
-										<q-badge-indicator
-											:enabled="btn.badge?.isVisible ?? false"
-											:color="btn.badge?.color">
-											<q-icon v-bind="btn.icon" />
-										</q-badge-indicator>
-									</template>
+									<q-icon
+										v-if="btn.icon"
+										v-bind="btn.icon" />
 								</q-toggle-group-item>
 							</template>
 						</q-toggle-group>
@@ -57,7 +52,7 @@
 				v-if="$app.layout.FormAnchorsPosition === 'form-header' && visibleGroups.length > 0"
 				:anchors="anchorGroups"
 				:controls="visibleControls"
-				@focus-control="focusControl" />
+				@focus-control="(...args) => focusControl(...args)" />
 		</div>
 	</teleport>
 
@@ -78,7 +73,6 @@
 						v-if="btn.isActive && btn.isVisible && btn.showInHeading"
 						:id="`heading-${btn.id}`"
 						:label="btn.text"
-						:color="btn.color"
 						:variant="btn.variant"
 						:disabled="btn.disabled"
 						:icon-pos="btn.iconPos"
@@ -92,29 +86,30 @@
 			</q-button-group>
 		</div>
 
-		<q-container
-			fluid
+		<div
+			class="form-flow"
 			data-key="INGROUPS"
-			:data-identifier="primaryKeyValue"
-			:data-loading="!formInitialDataLoaded || !isActiveForm">
+			:data-loading="!formInitialDataLoaded">
 			<template v-if="formControl.initialized && showFormBody">
-				<q-row v-if="controls.INGROUPSPSEUDGROUP1__.isVisible">
-					<q-col v-if="controls.INGROUPSPSEUDGROUP1__.isVisible">
+				<q-row-container
+					v-show="controls.INGROUPSPSEUDGROUP1__.isVisible"
+					is-large>
+					<q-control-wrapper
+						v-show="controls.INGROUPSPSEUDGROUP1__.isVisible"
+						class="${Vue.GetControlWrapperClass($controlsColumn)}">
 						<q-group-box-container
-							v-if="controls.INGROUPSPSEUDGROUP1__.isVisible"
+							id="INGROUPSPSEUDGROUP1__"
 							v-bind="controls.INGROUPSPSEUDGROUP1__"
-							:id="getControlId(controls.INGROUPSPSEUDGROUP1__)"
-							:no-border="controls.INGROUPSPSEUDGROUP1__.borderless">
+							:is-visible="controls.INGROUPSPSEUDGROUP1__.isVisible">
 							<!-- Start INGROUPSPSEUDGROUP1__ -->
-							<q-row v-if="controls.INGROUPSPSEUDINPUTGR1.isVisible">
-								<q-col
-									v-if="controls.INGROUPSPSEUDINPUTGR1.isVisible"
-									cols="auto">
+							<q-row-container v-show="controls.INGROUPSPSEUDINPUTGR1.isVisible">
+								<q-control-wrapper
+									v-show="controls.INGROUPSPSEUDINPUTGR1.isVisible"
+									class="${Vue.GetControlWrapperClass($controlsColumn)}">
 									<base-input-structure
-										v-if="controls.INGROUPSPSEUDINPUTGR1.isVisible"
+										id="INGROUPSPSEUDINPUTGR1"
 										class="i-text"
 										v-bind="controls.INGROUPSPSEUDINPUTGR1"
-										:id="getControlId(controls.INGROUPSPSEUDINPUTGR1)"
 										v-on="controls.INGROUPSPSEUDINPUTGR1.handlers">
 										<q-input-group
 											v-bind="controls.INGROUPSPSEUDINPUTGR1.props"
@@ -124,42 +119,43 @@
 												<span>
 													<q-static-text
 														v-if="controls.INGROUPSPSEUDTEXTSPAN.isVisible"
-														:id="getControlId(controls.INGROUPSPSEUDTEXTSPAN)"
+														id="INGROUPSPSEUDTEXTSPAN"
 														:size="controls.INGROUPSPSEUDTEXTSPAN.size"
 														:text="controls.INGROUPSPSEUDTEXTSPAN.label" />
 												</span>
 											</template>
 											<q-text-field
 												v-bind="controls.INGROUPSINPGRTEXTGRO_.props"
-												:id="getControlId(controls.INGROUPSINPGRTEXTGRO_)"
 												@blur="onBlur(controls.INGROUPSINPGRTEXTGRO_, model.ValTextgro.value)"
 												@change="model.ValTextgro.fnUpdateValueOnChange" />
 											<!-- End INGROUPSINPGRTEXTGRO_ -->
 										</q-input-group>
 									</base-input-structure>
-								</q-col>
-							</q-row>
+								</q-control-wrapper>
+							</q-row-container>
 							<!-- End INGROUPSPSEUDGROUP1__ -->
 						</q-group-box-container>
-					</q-col>
-				</q-row>
-				<q-row v-if="controls.INGROUPSPSEUDGROUP2__.isVisible">
-					<q-col v-if="controls.INGROUPSPSEUDGROUP2__.isVisible">
+					</q-control-wrapper>
+				</q-row-container>
+				<q-row-container
+					v-show="controls.INGROUPSPSEUDGROUP2__.isVisible"
+					is-large>
+					<q-control-wrapper
+						v-show="controls.INGROUPSPSEUDGROUP2__.isVisible"
+						class="${Vue.GetControlWrapperClass($controlsColumn)}">
 						<q-group-box-container
-							v-if="controls.INGROUPSPSEUDGROUP2__.isVisible"
+							id="INGROUPSPSEUDGROUP2__"
 							v-bind="controls.INGROUPSPSEUDGROUP2__"
-							:id="getControlId(controls.INGROUPSPSEUDGROUP2__)"
-							:no-border="controls.INGROUPSPSEUDGROUP2__.borderless">
+							:is-visible="controls.INGROUPSPSEUDGROUP2__.isVisible">
 							<!-- Start INGROUPSPSEUDGROUP2__ -->
-							<q-row v-if="controls.INGROUPSPSEUDINPUTGR2.isVisible">
-								<q-col
-									v-if="controls.INGROUPSPSEUDINPUTGR2.isVisible"
-									cols="auto">
+							<q-row-container v-show="controls.INGROUPSPSEUDINPUTGR2.isVisible">
+								<q-control-wrapper
+									v-show="controls.INGROUPSPSEUDINPUTGR2.isVisible"
+									class="${Vue.GetControlWrapperClass($controlsColumn)}">
 									<base-input-structure
-										v-if="controls.INGROUPSPSEUDINPUTGR2.isVisible"
+										id="INGROUPSPSEUDINPUTGR2"
 										class="i-text"
 										v-bind="controls.INGROUPSPSEUDINPUTGR2"
-										:id="getControlId(controls.INGROUPSPSEUDINPUTGR2)"
 										v-on="controls.INGROUPSPSEUDINPUTGR2.handlers">
 										<q-input-group
 											v-bind="controls.INGROUPSPSEUDINPUTGR2.props"
@@ -169,35 +165,32 @@
 												<span>
 													<q-static-text
 														v-if="controls.INGROUPSPSEUDSPANGRO_.isVisible"
-														:id="getControlId(controls.INGROUPSPSEUDSPANGRO_)"
+														id="INGROUPSPSEUDSPANGRO_"
 														:size="controls.INGROUPSPSEUDSPANGRO_.size"
 														:text="controls.INGROUPSPSEUDSPANGRO_.label" />
 												</span>
 											</template>
 											<q-text-field
 												v-bind="controls.INGROUPSINPGRNAME____.props"
-												:id="getControlId(controls.INGROUPSINPGRNAME____)"
 												@blur="onBlur(controls.INGROUPSINPGRNAME____, model.ValName.value)"
 												@change="model.ValName.fnUpdateValueOnChange" />
 											<q-text-field
 												v-bind="controls.INGROUPSINPGRLASTNAME.props"
-												:id="getControlId(controls.INGROUPSINPGRLASTNAME)"
 												@blur="onBlur(controls.INGROUPSINPGRLASTNAME, model.ValLastname.value)"
 												@change="model.ValLastname.fnUpdateValueOnChange" />
 											<!-- End INGROUPSINPGRLASTNAME -->
 										</q-input-group>
 									</base-input-structure>
-								</q-col>
-							</q-row>
-							<q-row v-if="controls.INGROUPSPSEUDINPUTGR5.isVisible">
-								<q-col
-									v-if="controls.INGROUPSPSEUDINPUTGR5.isVisible"
-									cols="auto">
+								</q-control-wrapper>
+							</q-row-container>
+							<q-row-container v-show="controls.INGROUPSPSEUDINPUTGR5.isVisible">
+								<q-control-wrapper
+									v-show="controls.INGROUPSPSEUDINPUTGR5.isVisible"
+									class="${Vue.GetControlWrapperClass($controlsColumn)}">
 									<base-input-structure
-										v-if="controls.INGROUPSPSEUDINPUTGR5.isVisible"
+										id="INGROUPSPSEUDINPUTGR5"
 										class="i-text"
 										v-bind="controls.INGROUPSPSEUDINPUTGR5"
-										:id="getControlId(controls.INGROUPSPSEUDINPUTGR5)"
 										v-on="controls.INGROUPSPSEUDINPUTGR5.handlers">
 										<q-input-group
 											v-bind="controls.INGROUPSPSEUDINPUTGR5.props"
@@ -205,41 +198,41 @@
 											<!-- Start INGROUPSPSEUDINPUTGR5 -->
 											<q-mask
 												v-if="controls.INGROUPSINPGREMAIL___.isVisible"
-												v-bind="controls.INGROUPSINPGREMAIL___.props"
-												:id="getControlId(controls.INGROUPSINPGREMAIL___)"
+												v-bind="controls.INGROUPSINPGREMAIL___"
 												:model-value="model.ValEmail.value"
-												@change="model.ValEmail.fnUpdateValueOnChange" />
+												@update:model-value="model.ValEmail.fnUpdateValue" />
 											<q-text-field
 												v-bind="controls.INGROUPSINPGRWEB_____.props"
-												:id="getControlId(controls.INGROUPSINPGRWEB_____)"
 												@blur="onBlur(controls.INGROUPSINPGRWEB_____, model.ValWeb.value)"
 												@change="model.ValWeb.fnUpdateValueOnChange" />
 											<!-- End INGROUPSINPGRWEB_____ -->
 										</q-input-group>
 									</base-input-structure>
-								</q-col>
-							</q-row>
+								</q-control-wrapper>
+							</q-row-container>
 							<!-- End INGROUPSPSEUDGROUP2__ -->
 						</q-group-box-container>
-					</q-col>
-				</q-row>
-				<q-row v-if="controls.INGROUPSPSEUDGROUP3__.isVisible">
-					<q-col v-if="controls.INGROUPSPSEUDGROUP3__.isVisible">
+					</q-control-wrapper>
+				</q-row-container>
+				<q-row-container
+					v-show="controls.INGROUPSPSEUDGROUP3__.isVisible"
+					is-large>
+					<q-control-wrapper
+						v-show="controls.INGROUPSPSEUDGROUP3__.isVisible"
+						class="${Vue.GetControlWrapperClass($controlsColumn)}">
 						<q-group-box-container
-							v-if="controls.INGROUPSPSEUDGROUP3__.isVisible"
+							id="INGROUPSPSEUDGROUP3__"
 							v-bind="controls.INGROUPSPSEUDGROUP3__"
-							:id="getControlId(controls.INGROUPSPSEUDGROUP3__)"
-							:no-border="controls.INGROUPSPSEUDGROUP3__.borderless">
+							:is-visible="controls.INGROUPSPSEUDGROUP3__.isVisible">
 							<!-- Start INGROUPSPSEUDGROUP3__ -->
-							<q-row v-if="controls.INGROUPSPSEUDINPUTGR3.isVisible">
-								<q-col
-									v-if="controls.INGROUPSPSEUDINPUTGR3.isVisible"
-									cols="auto">
+							<q-row-container v-show="controls.INGROUPSPSEUDINPUTGR3.isVisible">
+								<q-control-wrapper
+									v-show="controls.INGROUPSPSEUDINPUTGR3.isVisible"
+									class="${Vue.GetControlWrapperClass($controlsColumn)}">
 									<base-input-structure
-										v-if="controls.INGROUPSPSEUDINPUTGR3.isVisible"
+										id="INGROUPSPSEUDINPUTGR3"
 										class="i-text"
 										v-bind="controls.INGROUPSPSEUDINPUTGR3"
-										:id="getControlId(controls.INGROUPSPSEUDINPUTGR3)"
 										v-on="controls.INGROUPSPSEUDINPUTGR3.handlers">
 										<q-input-group
 											v-bind="controls.INGROUPSPSEUDINPUTGR3.props"
@@ -248,13 +241,13 @@
 											<q-numeric-input
 												v-if="controls.INGROUPSINPGRNUMBGRO_.isVisible"
 												v-bind="controls.INGROUPSINPGRNUMBGRO_.props"
-												:id="getControlId(controls.INGROUPSINPGRNUMBGRO_)"
 												@update:model-value="model.ValNumbgro.fnUpdateValue" />
 											<template #append>
 												<q-button
 													v-if="controls.INGROUPSPSEUDBUTTNGRO.isVisible"
-													v-bind="controls.INGROUPSPSEUDBUTTNGRO.props"
-													:id="getControlId(controls.INGROUPSPSEUDBUTTNGRO)"
+													id="INGROUPSPSEUDBUTTNGRO"
+													:label="controls.INGROUPSPSEUDBUTTNGRO.label"
+													:disabled="controls.INGROUPSPSEUDBUTTNGRO.isBlocked"
 													@click="controls.INGROUPSPSEUDBUTTNGRO.action($event)">
 													<q-icon v-bind="controls.INGROUPSPSEUDBUTTNGRO.icon" />
 												</q-button>
@@ -262,29 +255,31 @@
 											<!-- End INGROUPSPSEUDBUTTNGRO -->
 										</q-input-group>
 									</base-input-structure>
-								</q-col>
-							</q-row>
+								</q-control-wrapper>
+							</q-row-container>
 							<!-- End INGROUPSPSEUDGROUP3__ -->
 						</q-group-box-container>
-					</q-col>
-				</q-row>
-				<q-row v-if="controls.INGROUPSPSEUDGROUP4__.isVisible">
-					<q-col v-if="controls.INGROUPSPSEUDGROUP4__.isVisible">
+					</q-control-wrapper>
+				</q-row-container>
+				<q-row-container
+					v-show="controls.INGROUPSPSEUDGROUP4__.isVisible"
+					is-large>
+					<q-control-wrapper
+						v-show="controls.INGROUPSPSEUDGROUP4__.isVisible"
+						class="${Vue.GetControlWrapperClass($controlsColumn)}">
 						<q-group-box-container
-							v-if="controls.INGROUPSPSEUDGROUP4__.isVisible"
+							id="INGROUPSPSEUDGROUP4__"
 							v-bind="controls.INGROUPSPSEUDGROUP4__"
-							:id="getControlId(controls.INGROUPSPSEUDGROUP4__)"
-							:no-border="controls.INGROUPSPSEUDGROUP4__.borderless">
+							:is-visible="controls.INGROUPSPSEUDGROUP4__.isVisible">
 							<!-- Start INGROUPSPSEUDGROUP4__ -->
-							<q-row v-if="controls.INGROUPSPSEUDINPUTGR4.isVisible">
-								<q-col
-									v-if="controls.INGROUPSPSEUDINPUTGR4.isVisible"
-									cols="auto">
+							<q-row-container v-show="controls.INGROUPSPSEUDINPUTGR4.isVisible">
+								<q-control-wrapper
+									v-show="controls.INGROUPSPSEUDINPUTGR4.isVisible"
+									class="${Vue.GetControlWrapperClass($controlsColumn)}">
 									<base-input-structure
-										v-if="controls.INGROUPSPSEUDINPUTGR4.isVisible"
+										id="INGROUPSPSEUDINPUTGR4"
 										class="i-text"
 										v-bind="controls.INGROUPSPSEUDINPUTGR4"
-										:id="getControlId(controls.INGROUPSPSEUDINPUTGR4)"
 										v-on="controls.INGROUPSPSEUDINPUTGR4.handlers">
 										<q-input-group
 											v-bind="controls.INGROUPSPSEUDINPUTGR4.props"
@@ -293,49 +288,47 @@
 											<q-select
 												v-if="controls.INGROUPSINPGRPREFIX__.isVisible"
 												v-bind="controls.INGROUPSINPGRPREFIX__.props"
-												:id="getControlId(controls.INGROUPSINPGRPREFIX__)"
 												@update:model-value="model.ValPrefix.fnUpdateValue" />
 											<q-numeric-input
 												v-if="controls.INGROUPSINPGRPHONE___.isVisible"
 												v-bind="controls.INGROUPSINPGRPHONE___.props"
-												:id="getControlId(controls.INGROUPSINPGRPHONE___)"
 												@update:model-value="model.ValPhone.fnUpdateValue" />
 											<q-select
 												v-if="controls.INGROUPSINPGRADRESS__.isVisible"
 												v-bind="controls.INGROUPSINPGRADRESS__.props"
-												:id="getControlId(controls.INGROUPSINPGRADRESS__)"
 												@update:model-value="model.ValAdress.fnUpdateValue" />
 											<q-text-field
 												v-bind="controls.INGROUPSINPGRDIRECTIO.props"
-												:id="getControlId(controls.INGROUPSINPGRDIRECTIO)"
 												@blur="onBlur(controls.INGROUPSINPGRDIRECTIO, model.ValDirectio.value)"
 												@change="model.ValDirectio.fnUpdateValueOnChange" />
 											<!-- End INGROUPSINPGRDIRECTIO -->
 										</q-input-group>
 									</base-input-structure>
-								</q-col>
-							</q-row>
+								</q-control-wrapper>
+							</q-row-container>
 							<!-- End INGROUPSPSEUDGROUP4__ -->
 						</q-group-box-container>
-					</q-col>
-				</q-row>
-				<q-row v-if="controls.INGROUPSPSEUDGROUP6__.isVisible">
-					<q-col v-if="controls.INGROUPSPSEUDGROUP6__.isVisible">
+					</q-control-wrapper>
+				</q-row-container>
+				<q-row-container
+					v-show="controls.INGROUPSPSEUDGROUP6__.isVisible"
+					is-large>
+					<q-control-wrapper
+						v-show="controls.INGROUPSPSEUDGROUP6__.isVisible"
+						class="${Vue.GetControlWrapperClass($controlsColumn)}">
 						<q-group-box-container
-							v-if="controls.INGROUPSPSEUDGROUP6__.isVisible"
+							id="INGROUPSPSEUDGROUP6__"
 							v-bind="controls.INGROUPSPSEUDGROUP6__"
-							:id="getControlId(controls.INGROUPSPSEUDGROUP6__)"
-							:no-border="controls.INGROUPSPSEUDGROUP6__.borderless">
+							:is-visible="controls.INGROUPSPSEUDGROUP6__.isVisible">
 							<!-- Start INGROUPSPSEUDGROUP6__ -->
-							<q-row v-if="controls.INGROUPSPSEUDINPUTGR6.isVisible">
-								<q-col
-									v-if="controls.INGROUPSPSEUDINPUTGR6.isVisible"
-									cols="auto">
+							<q-row-container v-show="controls.INGROUPSPSEUDINPUTGR6.isVisible">
+								<q-control-wrapper
+									v-show="controls.INGROUPSPSEUDINPUTGR6.isVisible"
+									class="${Vue.GetControlWrapperClass($controlsColumn)}">
 									<base-input-structure
-										v-if="controls.INGROUPSPSEUDINPUTGR6.isVisible"
+										id="INGROUPSPSEUDINPUTGR6"
 										class="i-text"
 										v-bind="controls.INGROUPSPSEUDINPUTGR6"
-										:id="getControlId(controls.INGROUPSPSEUDINPUTGR6)"
 										v-on="controls.INGROUPSPSEUDINPUTGR6.handlers">
 										<q-input-group
 											v-bind="controls.INGROUPSPSEUDINPUTGR6.props"
@@ -344,54 +337,53 @@
 											<q-select
 												v-if="controls.INGROUPSINPGRBANKCOMP.isVisible"
 												v-bind="controls.INGROUPSINPGRBANKCOMP.props"
-												:id="getControlId(controls.INGROUPSINPGRBANKCOMP)"
 												@update:model-value="model.ValBankcomp.fnUpdateValue" />
 											<q-mask
 												v-if="controls.INGROUPSINPGRIBAN____.isVisible"
-												v-bind="controls.INGROUPSINPGRIBAN____.props"
-												:id="getControlId(controls.INGROUPSINPGRIBAN____)"
+												v-bind="controls.INGROUPSINPGRIBAN____"
 												:model-value="model.ValIban.value"
-												@change="model.ValIban.fnUpdateValueOnChange" />
+												@update:model-value="model.ValIban.fnUpdateValue" />
 											<q-mask
 												v-if="controls.INGROUPSINPGRBANKACCO.isVisible"
-												v-bind="controls.INGROUPSINPGRBANKACCO.props"
-												:id="getControlId(controls.INGROUPSINPGRBANKACCO)"
+												v-bind="controls.INGROUPSINPGRBANKACCO"
 												:model-value="model.ValBankacco.value"
-												@change="model.ValBankacco.fnUpdateValueOnChange" />
+												@update:model-value="model.ValBankacco.fnUpdateValue" />
 											<template #append>
 												<q-button
 													v-if="controls.INGROUPSPSEUDSAVEBTT_.isVisible"
-													v-bind="controls.INGROUPSPSEUDSAVEBTT_.props"
-													:id="getControlId(controls.INGROUPSPSEUDSAVEBTT_)"
+													id="INGROUPSPSEUDSAVEBTT_"
+													:label="controls.INGROUPSPSEUDSAVEBTT_.label"
+													:disabled="controls.INGROUPSPSEUDSAVEBTT_.isBlocked"
 													@click="controls.INGROUPSPSEUDSAVEBTT_.action($event)">
 												</q-button>
 												<q-button
 													v-if="controls.INGROUPSPSEUDSENDBTT_.isVisible"
-													v-bind="controls.INGROUPSPSEUDSENDBTT_.props"
-													:id="getControlId(controls.INGROUPSPSEUDSENDBTT_)"
+													id="INGROUPSPSEUDSENDBTT_"
+													:label="controls.INGROUPSPSEUDSENDBTT_.label"
+													:disabled="controls.INGROUPSPSEUDSENDBTT_.isBlocked"
 													@click="controls.INGROUPSPSEUDSENDBTT_.action($event)">
 												</q-button>
 											</template>
 											<!-- End INGROUPSPSEUDSENDBTT_ -->
 										</q-input-group>
 									</base-input-structure>
-								</q-col>
-							</q-row>
+								</q-control-wrapper>
+							</q-row-container>
 							<!-- End INGROUPSPSEUDGROUP6__ -->
 						</q-group-box-container>
-					</q-col>
-				</q-row>
+					</q-control-wrapper>
+				</q-row-container>
 			</template>
-		</q-container>
+		</div>
 	</teleport>
 
-	<q-divider v-if="!isPopup && showFormFooter" />
+	<hr v-if="!isPopup && showFormFooter" />
 
 	<teleport
 		v-if="formModalIsReady && showFormFooter"
 		:to="`#${uiContainersId.footer}`"
 		:disabled="!isPopup || isNested">
-		<q-row v-if="showFormFooter">
+		<q-row-container v-if="showFormFooter">
 			<div id="footer-action-btns">
 				<template
 					v-for="btn in formButtons"
@@ -400,7 +392,6 @@
 						v-if="btn.isActive && btn.isVisible && btn.showInFooter"
 						:id="`bottom-${btn.id}`"
 						:label="btn.text"
-						:color="btn.color"
 						:variant="btn.variant"
 						:disabled="btn.disabled"
 						:icon-pos="btn.iconPos"
@@ -412,12 +403,12 @@
 					</q-button>
 				</template>
 			</div>
-		</q-row>
+		</q-row-container>
 	</teleport>
 </template>
 
 <script>
-	/* eslint-disable @typescript-eslint/no-unused-vars */
+	/* eslint-disable no-unused-vars */
 	import { computed, defineAsyncComponent, readonly } from 'vue'
 	import { useRoute } from 'vue-router'
 
@@ -437,7 +428,7 @@
 	import qApi from '@/api/genio/quidgestFunctions.js'
 	import qFunctions from '@/api/genio/projectFunctions.js'
 	import qProjArrays from '@/api/genio/projectArrays.js'
-	/* eslint-enable @typescript-eslint/no-unused-vars */
+	/* eslint-enable no-unused-vars */
 
 	import FormViewModel from './QFormIngroupsViewModel.js'
 
@@ -514,8 +505,7 @@
 					primaryKey: 'ValCodinpgr',
 					designation: computed(() => this.Resources.INPUT_GROUP17182),
 					identifier: '', // Unique identifier received by route (when it's nested).
-					mode: '',
-					availableAgents: [],
+					mode: ''
 				},
 
 				formButtons: {
@@ -623,11 +613,7 @@
 						showInFooter: true,
 						isActive: true,
 						isVisible: computed(() => vm.authData.isAllowed && vm.isEditable),
-						action: vm.saveForm,
-						badge: {
-							isVisible: computed(() => vm.model?.isDirty === true),
-							color: 'highlight'
-						}
+						action: vm.saveForm
 					},
 					confirmBtn: {
 						id: 'confirm-btn',
@@ -769,6 +755,7 @@
 					INGROUPSPSEUDBUTTNGRO: new fieldControlClass.ButtonControl({
 						id: 'INGROUPSPSEUDBUTTNGRO',
 						name: 'BUTTNGRO',
+						size: 'xxlarge',
 						hasLabel: false,
 						label: computed(() => this.Resources.VIEW62547),
 						placeholder: '',
@@ -781,7 +768,7 @@
 						},
 						// eslint-disable-next-line
 						action: (event) => {
-							const btnAction = () => {
+							let btnAction = () => {
 								// Button to open the form "INGROUPS" in "VIS" mode.
 								const formId = vm.model.ValCodinpgr.value
 								if (vm.isEmpty(formId))
@@ -813,6 +800,7 @@
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'INGROUPSPSEUDINPUTGR2',
 						maxLength: 50,
+						labelId: 'label_INGROUPSINPGRNAME____',
 						controlLimits: [
 						],
 					}, this),
@@ -827,6 +815,7 @@
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'INGROUPSPSEUDINPUTGR2',
 						maxLength: 50,
+						labelId: 'label_INGROUPSINPGRLASTNAME',
 						controlLimits: [
 						],
 					}, this),
@@ -841,6 +830,7 @@
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'INGROUPSPSEUDINPUTGR4',
 						maxLength: 3,
+						labelId: 'label_INGROUPSINPGRPREFIX__',
 						arrayName: 'phonepre',
 						helpShortItem: 'None',
 						helpDetailedItem: 'None',
@@ -868,7 +858,6 @@
 						label: computed(() => this.Resources.SINGLE_INPUTS14159),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						borderless: false,
 						isCollapsible: false,
 						anchored: false,
 						directChildren: ['INGROUPSPSEUDINPUTGR1'],
@@ -882,7 +871,6 @@
 						label: computed(() => this.Resources.MULTIPLE_INPUTS39000),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						borderless: false,
 						isCollapsible: false,
 						anchored: false,
 						directChildren: ['INGROUPSPSEUDINPUTGR2', 'INGROUPSPSEUDINPUTGR5'],
@@ -910,7 +898,6 @@
 						label: computed(() => this.Resources.BUTON_ADDON17405),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						borderless: false,
 						isCollapsible: false,
 						anchored: false,
 						directChildren: ['INGROUPSPSEUDINPUTGR3'],
@@ -953,7 +940,6 @@
 						label: computed(() => this.Resources.CONTACT_DATA02225),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						borderless: false,
 						isCollapsible: false,
 						anchored: false,
 						directChildren: ['INGROUPSPSEUDINPUTGR4'],
@@ -985,6 +971,7 @@
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'INGROUPSPSEUDINPUTGR4',
 						maxLength: 8,
+						labelId: 'label_INGROUPSINPGRADRESS__',
 						arrayName: 'AddressT',
 						helpShortItem: 'None',
 						helpDetailedItem: 'None',
@@ -1002,6 +989,7 @@
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'INGROUPSPSEUDINPUTGR5',
 						maxLength: 50,
+						labelId: 'label_INGROUPSINPGREMAIL___',
 						controlLimits: [
 						],
 					}, this),
@@ -1016,6 +1004,7 @@
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'INGROUPSPSEUDINPUTGR5',
 						maxLength: 50,
+						labelId: 'label_INGROUPSINPGRWEB_____',
 						controlLimits: [
 						],
 					}, this),
@@ -1030,6 +1019,7 @@
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'INGROUPSPSEUDINPUTGR6',
 						maxLength: 2,
+						labelId: 'label_INGROUPSINPGRBANKCOMP',
 						arrayName: 'bankComp',
 						helpShortItem: 'None',
 						helpDetailedItem: 'None',
@@ -1047,6 +1037,7 @@
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'INGROUPSPSEUDINPUTGR6',
 						maxLength: 34,
+						labelId: 'label_INGROUPSINPGRIBAN____',
 						controlLimits: [
 						],
 					}, this),
@@ -1061,6 +1052,7 @@
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'INGROUPSPSEUDINPUTGR1',
 						maxLength: 50,
+						labelId: 'label_INGROUPSINPGRTEXTGRO_',
 						controlLimits: [
 						],
 					}, this),
@@ -1075,6 +1067,7 @@
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'INGROUPSPSEUDINPUTGR6',
 						maxLength: 24,
+						labelId: 'label_INGROUPSINPGRBANKACCO',
 						controlLimits: [
 						],
 					}, this),
@@ -1089,12 +1082,14 @@
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'INGROUPSPSEUDINPUTGR4',
 						maxLength: 50,
+						labelId: 'label_INGROUPSINPGRDIRECTIO',
 						controlLimits: [
 						],
 					}, this),
 					INGROUPSPSEUDSAVEBTT_: new fieldControlClass.ButtonControl({
 						id: 'INGROUPSPSEUDSAVEBTT_',
 						name: 'SAVEBTT',
+						size: 'mini',
 						hasLabel: false,
 						label: computed(() => this.Resources.VIEW62547),
 						placeholder: '',
@@ -1102,7 +1097,7 @@
 						container: 'INGROUPSPSEUDINPUTGR6',
 						// eslint-disable-next-line
 						action: (event) => {
-							const btnAction = () => {
+							let btnAction = () => {
 								// Button to open the form "INGROUPS" in "VIS" mode.
 								const formId = vm.model.ValCodinpgr.value
 								if (vm.isEmpty(formId))
@@ -1118,7 +1113,7 @@
 
 								vm.navigateToForm('INGROUPS', vm.formModes.show, null, params)
 							}
-							const options = {
+							let options = {
 								form: 'INGROUPS',
 								callback: btnAction
 							}
@@ -1127,7 +1122,7 @@
 						controlLimits: [
 						],
 						showWhen: {
-							// eslint-disable-next-line @typescript-eslint/no-unused-vars
+							// eslint-disable-next-line no-unused-vars
 							fnFormula(params)
 							{
 								// Formula: emptyC([INPGR->IBAN])==0
@@ -1140,6 +1135,7 @@
 					INGROUPSPSEUDSENDBTT_: new fieldControlClass.ButtonControl({
 						id: 'INGROUPSPSEUDSENDBTT_',
 						name: 'SENDBTT',
+						size: 'mini',
 						hasLabel: false,
 						label: computed(() => this.Resources.VIEW62547),
 						placeholder: '',
@@ -1147,7 +1143,7 @@
 						container: 'INGROUPSPSEUDINPUTGR6',
 						// eslint-disable-next-line
 						action: (event) => {
-							const btnAction = () => {
+							let btnAction = () => {
 								// Button to open the form "INGROUPS" in "INS" mode.
 								const params = {
 									mode: vm.formModes.new,
@@ -1158,7 +1154,7 @@
 
 								vm.navigateToForm('INGROUPS', vm.formModes.new, null, params)
 							}
-							const options = {
+							let options = {
 								form: 'INGROUPS',
 								callback: btnAction
 							}
@@ -1188,7 +1184,6 @@
 						label: computed(() => this.Resources.BANK_DATA61943),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						borderless: false,
 						isCollapsible: false,
 						anchored: false,
 						directChildren: ['INGROUPSPSEUDINPUTGR6'],
@@ -1319,23 +1314,17 @@
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 		},
 
-		beforeUnmount()
-		{
-/* eslint-disable indent, vue/html-indent, vue/script-indent */
-// USE /[MANUAL GQT COMPONENT_BEFORE_UNMOUNT INGROUPS]/
-// eslint-disable-next-line
-/* eslint-enable indent, vue/html-indent, vue/script-indent */
-		},
-
 		methods: {
 			/**
 			 * Called before form init.
 			 */
 			async beforeLoad()
 			{
+				let loadForm = true
+
 				// Execute the "Before init" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.beforeInit)
-				for (const trigger of triggers)
+				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
 				this.emitEvent('before-load-form')
@@ -1345,7 +1334,7 @@
 // eslint-disable-next-line
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 
-				return true
+				return loadForm
 			},
 
 			/**
@@ -1355,7 +1344,7 @@
 			{
 				// Execute the "After init" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.afterInit)
-				for (const trigger of triggers)
+				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
 				this.emitEvent('after-load-form')
@@ -1375,33 +1364,19 @@
 
 				// Execute the "Before apply" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.beforeApply)
-				for (const trigger of triggers)
+				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
-				const ticketsPromise = this.model.updateFilesTickets(true)
-				this.addBusy(ticketsPromise, this.Resources[hardcodedTexts.processing])
-				const canSetDocums = await ticketsPromise
+				const canSetDocums = await this.model.updateFilesTickets(true)
 
 				if (canSetDocums)
 				{
-					let results
-					const changesPromise = this.model.setDocumentChanges()
-					this.addBusy(changesPromise, this.Resources[hardcodedTexts.processing])
-					applyForm = await changesPromise
+					applyForm = await this.model.setDocumentChanges()
 
 					if (applyForm)
 					{
-						const insertsPromise = this.model.saveDocuments()
-						this.addBusy(insertsPromise, this.Resources[hardcodedTexts.processing])
-						results = await insertsPromise
+						const results = await this.model.saveDocuments()
 						applyForm = results.every((e) => e === true)
-					}
-
-					if (!changesPromise || (results && !results.every((e) => e === true)))
-					{
-						this.validationErrors = {
-							Erro: this.Resources.OCORREU_UM_ERRO_AO_T51884
-						}
 					}
 				}
 
@@ -1422,7 +1397,7 @@
 			{
 				// Execute the "After apply" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.afterApply)
-				for (const trigger of triggers)
+				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
 				this.emitEvent('after-apply-form')
@@ -1442,33 +1417,19 @@
 
 				// Execute the "Before save" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.beforeSave)
-				for (const trigger of triggers)
+				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
-				const ticketsPromise = this.model.updateFilesTickets()
-				this.addBusy(ticketsPromise, this.Resources[hardcodedTexts.processing])
-				const canSetDocums = await ticketsPromise
+				const canSetDocums = await this.model.updateFilesTickets()
 
 				if (canSetDocums)
 				{
-					let results
-					const changesPromise = this.model.setDocumentChanges()
-					this.addBusy(changesPromise, this.Resources[hardcodedTexts.processing])
-					saveForm = await changesPromise
+					saveForm = await this.model.setDocumentChanges()
 
 					if (saveForm)
 					{
-						const insertsPromise = this.model.saveDocuments()
-						this.addBusy(insertsPromise, this.Resources[hardcodedTexts.processing])
-						results = await insertsPromise
+						const results = await this.model.saveDocuments()
 						saveForm = results.every((e) => e === true)
-					}
-
-					if (!changesPromise || (results && !results.every((e) => e === true)))
-					{
-						this.validationErrors = {
-							Erro: this.Resources.OCORREU_UM_ERRO_AO_T51884
-						}
 					}
 				}
 
@@ -1487,9 +1448,11 @@
 			 */
 			async afterSave()
 			{
+				let redirectPage = true // Set to 'false' to cancel page redirect.
+
 				// Execute the "After save" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.afterSave)
-				for (const trigger of triggers)
+				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
 				this.emitEvent('after-save-form')
@@ -1499,7 +1462,7 @@
 // eslint-disable-next-line
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 
-				return true
+				return redirectPage
 			},
 
 			/**
@@ -1507,6 +1470,8 @@
 			 */
 			async beforeDel()
 			{
+				let deleteForm = true // Set to 'false' to cancel form delete.
+
 				this.emitEvent('before-delete-form')
 
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
@@ -1514,7 +1479,7 @@
 // eslint-disable-next-line
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 
-				return true
+				return deleteForm
 			},
 
 			/**
@@ -1522,6 +1487,8 @@
 			 */
 			async afterDel()
 			{
+				let redirectPage = true // Set to 'false' to cancel page redirect.
+
 				this.emitEvent('after-delete-form')
 
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
@@ -1529,7 +1496,7 @@
 // eslint-disable-next-line
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 
-				return true
+				return redirectPage
 			},
 
 			/**
@@ -1537,9 +1504,11 @@
 			 */
 			async beforeExit()
 			{
+				let leaveForm = true // Set to 'false' to cancel page redirect.
+
 				// Execute the "Before exit" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.beforeExit)
-				for (const trigger of triggers)
+				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
 				this.emitEvent('before-exit-form')
@@ -1549,7 +1518,7 @@
 // eslint-disable-next-line
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 
-				return true
+				return leaveForm
 			},
 
 			/**
@@ -1559,7 +1528,7 @@
 			{
 				// Execute the "After exit" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.afterExit)
-				for (const trigger of triggers)
+				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
 				this.emitEvent('after-exit-form')

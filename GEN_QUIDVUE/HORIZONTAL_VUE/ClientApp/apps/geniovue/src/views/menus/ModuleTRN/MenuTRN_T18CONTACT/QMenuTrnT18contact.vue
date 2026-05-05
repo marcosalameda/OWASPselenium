@@ -3,23 +3,20 @@
 		v-if="menuModalIsReady"
 		:to="`#${uiContainersId.body}`"
 		:disabled="!menuInfo.isPopup">
-		<div
+		<form
 			class="form-horizontal"
 			@submit.prevent>
 			<q-row-container>
 				<q-table
 					v-bind="controls.menu"
 					v-on="controls.menu.handlers">
-					<template #header>
-						<q-table-config
-							:table-ctrl="controls.menu"
-							v-on="controls.menu.handlers">
-						</q-table-config>
-					</template>
-					<!-- USE /[MANUAL GQT CUSTOM_TABLE TRN_Menu_T18CONTACT]/ -->
 				</q-table>
+
+				<q-table-extra-extension
+					:list-ctrl="controls.menu"
+					v-on="controls.menu.handlers" />
 			</q-row-container>
-		</div>
+		</form>
 	</teleport>
 
 	<teleport
@@ -51,7 +48,7 @@
 </template>
 
 <script>
-	/* eslint-disable @typescript-eslint/no-unused-vars */
+	/* eslint-disable no-unused-vars */
 	import asyncProcM from '@quidgest/clientapp/composables/async'
 	import qEnums from '@quidgest/clientapp/constants/enums'
 	import netAPI from '@quidgest/clientapp/network'
@@ -71,7 +68,7 @@
 	import qApi from '@/api/genio/quidgestFunctions.js'
 	import qFunctions from '@/api/genio/projectFunctions.js'
 	import qProjArrays from '@/api/genio/projectArrays.js'
-	/* eslint-enable @typescript-eslint/no-unused-vars */
+	/* eslint-enable no-unused-vars */
 
 	import MenuViewModel from './QMenuTRN_T18CONTACTViewModel.js'
 
@@ -155,7 +152,6 @@
 								label: computed(() => this.Resources.NAME31974),
 								dataLength: 50,
 								scrollData: 30,
-								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 2,
@@ -165,7 +161,6 @@
 								label: computed(() => this.Resources.EMAIL25170),
 								dataLength: 50,
 								scrollData: 30,
-								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 3,
@@ -175,7 +170,6 @@
 								label: computed(() => this.Resources.TELEPHONE28697),
 								dataLength: 50,
 								scrollData: 30,
-								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 4,
@@ -184,7 +178,6 @@
 								field: 'DESCRIPT',
 								label: computed(() => this.Resources.DESCRIPTION07383),
 								scrollData: 30,
-								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.DateColumn({
 								order: 5,
@@ -194,7 +187,6 @@
 								label: computed(() => this.Resources.DATE18475),
 								scrollData: 8,
 								dateTimeType: 'date',
-								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 6,
@@ -204,7 +196,6 @@
 								label: computed(() => this.Resources.TITLE21885),
 								dataLength: 50,
 								scrollData: 30,
-								export: 1,
 								pkColumn: 'ValCodprope',
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 						],
@@ -221,8 +212,10 @@
 							permissions: {
 							},
 							searchBarConfig: {
-								visibility: true
+								visibility: true,
+								searchOnPressEnter: true
 							},
+							filtersVisible: true,
 							allowColumnFilters: true,
 							allowColumnSort: true,
 							crudActions: [
@@ -296,7 +289,9 @@
 									id: 'insert',
 									name: 'insert',
 									title: computed(() => this.Resources.INSERIR43365),
-									icon: { icon: 'add' },
+									icon: {
+										icon: 'add'
+									},
 									isInReadOnly: true,
 									params: {
 										action: vm.openFormAction,
@@ -319,7 +314,6 @@
 							rowClickAction: {
 								id: 'RCA_TRN_1I211',
 								name: 'form-CONTAC03',
-								isVisible: true,
 								params: {
 									isRoute: true,
 									limits: [
@@ -345,11 +339,10 @@
 								sortOrder: 'asc'
 							}
 						},
-						globalEvents: ['changed-PROCN', 'changed-PROPE'],
+						globalEvents: ['changed-PROPE', 'changed-PROCN'],
 						uuid: '96a6c4cf-408f-4e64-bd93-a0675f994a73',
 						allSelectedRows: 'false',
 						headerLevel: 1,
-						isActiveControl: computed(() => this.isActiveMenu)
 					}, this),
 				}
 			}
@@ -373,14 +366,6 @@
 		{
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
 // USE /[MANUAL GQT FORM_CODEJS TRN_MENU_T18CONTACT]/
-// eslint-disable-next-line
-/* eslint-enable indent, vue/html-indent, vue/script-indent */
-		},
-
-		beforeUnmount()
-		{
-/* eslint-disable indent, vue/html-indent, vue/script-indent */
-// USE /[MANUAL GQT COMPONENT_BEFORE_UNMOUNT TRN_MENU_T18CONTACT]/
 // eslint-disable-next-line
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 		},

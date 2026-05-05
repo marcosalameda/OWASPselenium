@@ -3,23 +3,20 @@
 		v-if="menuModalIsReady"
 		:to="`#${uiContainersId.body}`"
 		:disabled="!menuInfo.isPopup">
-		<div
+		<form
 			class="form-horizontal"
 			@submit.prevent>
 			<q-row-container>
 				<q-table
 					v-bind="controls.menu"
 					v-on="controls.menu.handlers">
-					<template #header>
-						<q-table-config
-							:table-ctrl="controls.menu"
-							v-on="controls.menu.handlers">
-						</q-table-config>
-					</template>
-					<!-- USE /[MANUAL GQT CUSTOM_TABLE IMO_Menu_LISTA_REGIAO]/ -->
 				</q-table>
+
+				<q-table-extra-extension
+					:list-ctrl="controls.menu"
+					v-on="controls.menu.handlers" />
 			</q-row-container>
-		</div>
+		</form>
 	</teleport>
 
 	<teleport
@@ -51,7 +48,7 @@
 </template>
 
 <script>
-	/* eslint-disable @typescript-eslint/no-unused-vars */
+	/* eslint-disable no-unused-vars */
 	import asyncProcM from '@quidgest/clientapp/composables/async'
 	import qEnums from '@quidgest/clientapp/constants/enums'
 	import netAPI from '@quidgest/clientapp/network'
@@ -71,7 +68,7 @@
 	import qApi from '@/api/genio/quidgestFunctions.js'
 	import qFunctions from '@/api/genio/projectFunctions.js'
 	import qProjArrays from '@/api/genio/projectArrays.js'
-	/* eslint-enable @typescript-eslint/no-unused-vars */
+	/* eslint-enable no-unused-vars */
 
 	import MenuViewModel from './QMenuIMO_LISTA_REGIAOViewModel.js'
 
@@ -155,7 +152,6 @@
 								label: computed(() => this.Resources.LOGIN48703),
 								dataLength: 100,
 								scrollData: 20,
-								export: 1,
 								pkColumn: 'ValCodpsw',
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
@@ -166,7 +162,6 @@
 								label: computed(() => this.Resources.REGION12723),
 								dataLength: 50,
 								scrollData: 30,
-								export: 1,
 								pkColumn: 'ValCodregia',
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 						],
@@ -191,8 +186,10 @@
 								canInsert: false
 							},
 							searchBarConfig: {
-								visibility: true
+								visibility: true,
+								searchOnPressEnter: true
 							},
+							filtersVisible: true,
 							allowColumnFilters: true,
 							allowColumnSort: true,
 							generalCustomActions: [
@@ -222,11 +219,10 @@
 								sortOrder: 'asc'
 							}
 						},
-						globalEvents: ['changed-PSW', 'changed-REGIO', 'changed-PWREG'],
+						globalEvents: ['changed-PSW', 'changed-PWREG', 'changed-REGIO'],
 						uuid: '8b11f295-fa69-4195-a32e-829fc2eab416',
 						allSelectedRows: 'false',
 						headerLevel: 1,
-						isActiveControl: computed(() => this.isActiveMenu)
 					}, this),
 				}
 			}
@@ -237,6 +233,8 @@
 			// called before the route that renders this component is confirmed.
 			// does NOT have access to `this` component instance,
 			// because it has not been created yet when this guard is called!
+
+			to.params.isPopup = 'true'
 
 			next((vm) => vm.updateMenuNavigation(to))
 		},
@@ -250,14 +248,6 @@
 		{
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
 // USE /[MANUAL GQT FORM_CODEJS IMO_MENU_LISTA_REGIAO]/
-// eslint-disable-next-line
-/* eslint-enable indent, vue/html-indent, vue/script-indent */
-		},
-
-		beforeUnmount()
-		{
-/* eslint-disable indent, vue/html-indent, vue/script-indent */
-// USE /[MANUAL GQT COMPONENT_BEFORE_UNMOUNT IMO_MENU_LISTA_REGIAO]/
 // eslint-disable-next-line
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 		},

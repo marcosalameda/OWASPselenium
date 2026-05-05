@@ -10,13 +10,13 @@ public class CamdocsForm : Subform
 	/// <summary>
 	/// Logo
 	/// </summary>
-	public BaseInputControl FldsLogo => new BaseInputControl(driver, ContainerLocator, "container-CAMDOCS_FLDS_LOGO____" + IdSuffix, "#CAMDOCS_FLDS_LOGO____" + IdSuffix);
+	public BaseInputControl FldsLogo => new BaseInputControl(driver, ContainerLocator, "container-CAMDOCS_FLDS_LOGO____", "#CAMDOCS_FLDS_LOGO____");
 
 	/// <summary>
 	/// Attachments
 	/// </summary>
-	public DocumentControl FldsAttach => new DocumentControl(driver, ContainerLocator, "CAMDOCS_FLDS_ATTACH__-container" + IdSuffix);
+	public DocumentControl FldsAttach => new DocumentControl(driver, ContainerLocator, "CAMDOCS_FLDS_ATTACH__");
 
-	public CamdocsForm(IWebDriver driver, FORM_MODE mode, By? containerLocator = null, bool usePkInId = false)
-		: base(driver, mode, "CAMDOCS", "LISTACAM", containerLocator: containerLocator, usePkInId: usePkInId) { }
+	public CamdocsForm(IWebDriver driver, FORM_MODE mode, By? containerLocator = null)
+		: base(driver, mode, "CAMDOCS", "LISTACAM", containerLocator: containerLocator) { }
 }

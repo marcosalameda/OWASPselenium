@@ -9,13 +9,12 @@
 			<div
 				v-if="showFormHeader"
 				class="c-action-bar">
-				<component
+				<h1
 					v-if="formControl.uiComponents.header && formInfo.designation"
-					:is="topHeadingTag"
 					:id="formTitleId"
 					class="form-header">
 					{{ formInfo.designation }}
-				</component>
+				</h1>
 
 				<div class="c-action-bar__menu">
 					<template
@@ -39,13 +38,9 @@
 									:label="btn.label"
 									:disabled="btn.disabled"
 									@click="btn.action">
-									<template v-if="btn.icon">
-										<q-badge-indicator
-											:enabled="btn.badge?.isVisible ?? false"
-											:color="btn.badge?.color">
-											<q-icon v-bind="btn.icon" />
-										</q-badge-indicator>
-									</template>
+									<q-icon
+										v-if="btn.icon"
+										v-bind="btn.icon" />
 								</q-toggle-group-item>
 							</template>
 						</q-toggle-group>
@@ -57,7 +52,7 @@
 				v-if="$app.layout.FormAnchorsPosition === 'form-header' && visibleGroups.length > 0"
 				:anchors="anchorGroups"
 				:controls="visibleControls"
-				@focus-control="focusControl" />
+				@focus-control="(...args) => focusControl(...args)" />
 		</div>
 	</teleport>
 
@@ -78,7 +73,6 @@
 						v-if="btn.isActive && btn.isVisible && btn.showInHeading"
 						:id="`heading-${btn.id}`"
 						:label="btn.text"
-						:color="btn.color"
 						:variant="btn.variant"
 						:disabled="btn.disabled"
 						:icon-pos="btn.iconPos"
@@ -92,21 +86,18 @@
 			</q-button-group>
 		</div>
 
-		<q-container
-			fluid
+		<div
+			class="form-flow"
 			data-key="ASSPA"
-			:data-identifier="primaryKeyValue"
-			:data-loading="!formInitialDataLoaded || !isActiveForm">
+			:data-loading="!formInitialDataLoaded">
 			<template v-if="formControl.initialized && showFormBody">
-				<q-row v-if="controls.ASSPA___ASSETNAME____.isVisible">
-					<q-col
-						v-if="controls.ASSPA___ASSETNAME____.isVisible"
-						cols="auto">
+				<q-row-container v-show="controls.ASSPA___ASSETNAME____.isVisible">
+					<q-control-wrapper
+						v-show="controls.ASSPA___ASSETNAME____.isVisible"
+						class="${Vue.GetControlWrapperClass($controlsColumn)}">
 						<base-input-structure
-							v-if="controls.ASSPA___ASSETNAME____.isVisible"
 							class="i-text"
-							v-bind="controls.ASSPA___ASSETNAME____.wrapperProps"
-							:id="getControlId(controls.ASSPA___ASSETNAME____)"
+							v-bind="controls.ASSPA___ASSETNAME____"
 							v-on="controls.ASSPA___ASSETNAME____.handlers"
 							:loading="controls.ASSPA___ASSETNAME____.props.loading"
 							:reporting-mode-on="reportingModeCAV"
@@ -114,24 +105,21 @@
 							<q-lookup
 								v-if="controls.ASSPA___ASSETNAME____.isVisible"
 								v-bind="controls.ASSPA___ASSETNAME____.props"
-								:id="getControlId(controls.ASSPA___ASSETNAME____)"
 								v-on="controls.ASSPA___ASSETNAME____.handlers" />
 							<q-see-more-asspa-assetname
 								v-if="controls.ASSPA___ASSETNAME____.seeMoreIsVisible"
 								v-bind="controls.ASSPA___ASSETNAME____.seeMoreParams"
 								v-on="controls.ASSPA___ASSETNAME____.handlers" />
 						</base-input-structure>
-					</q-col>
-				</q-row>
-				<q-row v-if="controls.ASSPA___ASSPADATATYPE.isVisible || controls.ASSPA___ASSPADECPLACE.isVisible || controls.ASSPA___PARAMPARAMETE.isVisible">
-					<q-col
-						v-if="controls.ASSPA___ASSPADATATYPE.isVisible"
-						cols="auto">
+					</q-control-wrapper>
+				</q-row-container>
+				<q-row-container v-show="controls.ASSPA___ASSPADATATYPE.isVisible || controls.ASSPA___ASSPADECPLACE.isVisible || controls.ASSPA___PARAMPARAMETE.isVisible">
+					<q-control-wrapper
+						v-show="controls.ASSPA___ASSPADATATYPE.isVisible"
+						class="${Vue.GetControlWrapperClass($controlsColumn)}">
 						<base-input-structure
-							v-if="controls.ASSPA___ASSPADATATYPE.isVisible"
 							class="i-text"
-							v-bind="controls.ASSPA___ASSPADATATYPE.wrapperProps"
-							:id="getControlId(controls.ASSPA___ASSPADATATYPE)"
+							v-bind="controls.ASSPA___ASSPADATATYPE"
 							v-on="controls.ASSPA___ASSPADATATYPE.handlers"
 							:loading="controls.ASSPA___ASSPADATATYPE.props.loading"
 							:reporting-mode-on="reportingModeCAV"
@@ -139,18 +127,15 @@
 							<q-select
 								v-if="controls.ASSPA___ASSPADATATYPE.isVisible"
 								v-bind="controls.ASSPA___ASSPADATATYPE.props"
-								:id="getControlId(controls.ASSPA___ASSPADATATYPE)"
 								@update:model-value="model.ValDatatype.fnUpdateValue" />
 						</base-input-structure>
-					</q-col>
-					<q-col
-						v-if="controls.ASSPA___ASSPADECPLACE.isVisible"
-						cols="auto">
+					</q-control-wrapper>
+					<q-control-wrapper
+						v-show="controls.ASSPA___ASSPADECPLACE.isVisible"
+						class="${Vue.GetControlWrapperClass($controlsColumn)}">
 						<base-input-structure
-							v-if="controls.ASSPA___ASSPADECPLACE.isVisible"
 							class="i-text"
-							v-bind="controls.ASSPA___ASSPADECPLACE.wrapperProps"
-							:id="getControlId(controls.ASSPA___ASSPADECPLACE)"
+							v-bind="controls.ASSPA___ASSPADECPLACE"
 							v-on="controls.ASSPA___ASSPADECPLACE.handlers"
 							:loading="controls.ASSPA___ASSPADECPLACE.props.loading"
 							:reporting-mode-on="reportingModeCAV"
@@ -158,18 +143,15 @@
 							<q-numeric-input
 								v-if="controls.ASSPA___ASSPADECPLACE.isVisible"
 								v-bind="controls.ASSPA___ASSPADECPLACE.props"
-								:id="getControlId(controls.ASSPA___ASSPADECPLACE)"
 								@update:model-value="model.ValDecimalplaces.fnUpdateValue" />
 						</base-input-structure>
-					</q-col>
-					<q-col
-						v-if="controls.ASSPA___PARAMPARAMETE.isVisible"
-						cols="auto">
+					</q-control-wrapper>
+					<q-control-wrapper
+						v-show="controls.ASSPA___PARAMPARAMETE.isVisible"
+						class="${Vue.GetControlWrapperClass($controlsColumn)}">
 						<base-input-structure
-							v-if="controls.ASSPA___PARAMPARAMETE.isVisible"
 							class="i-text"
-							v-bind="controls.ASSPA___PARAMPARAMETE.wrapperProps"
-							:id="getControlId(controls.ASSPA___PARAMPARAMETE)"
+							v-bind="controls.ASSPA___PARAMPARAMETE"
 							v-on="controls.ASSPA___PARAMPARAMETE.handlers"
 							:loading="controls.ASSPA___PARAMPARAMETE.props.loading"
 							:reporting-mode-on="reportingModeCAV"
@@ -177,45 +159,39 @@
 							<q-lookup
 								v-if="controls.ASSPA___PARAMPARAMETE.isVisible"
 								v-bind="controls.ASSPA___PARAMPARAMETE.props"
-								:id="getControlId(controls.ASSPA___PARAMPARAMETE)"
 								v-on="controls.ASSPA___PARAMPARAMETE.handlers" />
 							<q-see-more-asspa-paramparamete
 								v-if="controls.ASSPA___PARAMPARAMETE.seeMoreIsVisible"
 								v-bind="controls.ASSPA___PARAMPARAMETE.seeMoreParams"
 								v-on="controls.ASSPA___PARAMPARAMETE.handlers" />
 						</base-input-structure>
-					</q-col>
-				</q-row>
-				<q-row v-if="controls.ASSPA___ASSPATEXT____.isVisible">
-					<q-col
-						v-if="controls.ASSPA___ASSPATEXT____.isVisible"
-						cols="auto">
+					</q-control-wrapper>
+				</q-row-container>
+				<q-row-container v-show="controls.ASSPA___ASSPATEXT____.isVisible">
+					<q-control-wrapper
+						v-show="controls.ASSPA___ASSPATEXT____.isVisible"
+						class="${Vue.GetControlWrapperClass($controlsColumn)}">
 						<base-input-structure
-							v-if="controls.ASSPA___ASSPATEXT____.isVisible"
 							class="i-text"
-							v-bind="controls.ASSPA___ASSPATEXT____.wrapperProps"
-							:id="getControlId(controls.ASSPA___ASSPATEXT____)"
+							v-bind="controls.ASSPA___ASSPATEXT____"
 							v-on="controls.ASSPA___ASSPATEXT____.handlers"
 							:loading="controls.ASSPA___ASSPATEXT____.props.loading"
 							:reporting-mode-on="reportingModeCAV"
 							:suggestion-mode-on="suggestionModeOn">
 							<q-text-field
 								v-bind="controls.ASSPA___ASSPATEXT____.props"
-								:id="getControlId(controls.ASSPA___ASSPATEXT____)"
 								@blur="onBlur(controls.ASSPA___ASSPATEXT____, model.ValText.value)"
 								@change="model.ValText.fnUpdateValueOnChange" />
 						</base-input-structure>
-					</q-col>
-				</q-row>
-				<q-row v-if="controls.ASSPA___ASSPAQUANTITY.isVisible">
-					<q-col
-						v-if="controls.ASSPA___ASSPAQUANTITY.isVisible"
-						cols="auto">
+					</q-control-wrapper>
+				</q-row-container>
+				<q-row-container v-show="controls.ASSPA___ASSPAQUANTITY.isVisible">
+					<q-control-wrapper
+						v-show="controls.ASSPA___ASSPAQUANTITY.isVisible"
+						class="${Vue.GetControlWrapperClass($controlsColumn)}">
 						<base-input-structure
-							v-if="controls.ASSPA___ASSPAQUANTITY.isVisible"
 							class="i-text"
-							v-bind="controls.ASSPA___ASSPAQUANTITY.wrapperProps"
-							:id="getControlId(controls.ASSPA___ASSPAQUANTITY)"
+							v-bind="controls.ASSPA___ASSPAQUANTITY"
 							v-on="controls.ASSPA___ASSPAQUANTITY.handlers"
 							:loading="controls.ASSPA___ASSPAQUANTITY.props.loading"
 							:reporting-mode-on="reportingModeCAV"
@@ -223,20 +199,17 @@
 							<q-numeric-input
 								v-if="controls.ASSPA___ASSPAQUANTITY.isVisible"
 								v-bind="controls.ASSPA___ASSPAQUANTITY.props"
-								:id="getControlId(controls.ASSPA___ASSPAQUANTITY)"
 								@update:model-value="model.ValQuantity.fnUpdateValue" />
 						</base-input-structure>
-					</q-col>
-				</q-row>
-				<q-row v-if="controls.ASSPA___ASSPADATE____.isVisible">
-					<q-col
-						v-if="controls.ASSPA___ASSPADATE____.isVisible"
-						cols="auto">
+					</q-control-wrapper>
+				</q-row-container>
+				<q-row-container v-show="controls.ASSPA___ASSPADATE____.isVisible">
+					<q-control-wrapper
+						v-show="controls.ASSPA___ASSPADATE____.isVisible"
+						class="${Vue.GetControlWrapperClass($controlsColumn)}">
 						<base-input-structure
-							v-if="controls.ASSPA___ASSPADATE____.isVisible"
 							class="i-text"
-							v-bind="controls.ASSPA___ASSPADATE____.wrapperProps"
-							:id="getControlId(controls.ASSPA___ASSPADATE____)"
+							v-bind="controls.ASSPA___ASSPADATE____"
 							v-on="controls.ASSPA___ASSPADATE____.handlers"
 							:loading="controls.ASSPA___ASSPADATE____.props.loading"
 							:reporting-mode-on="reportingModeCAV"
@@ -244,45 +217,41 @@
 							<q-date-time-picker
 								v-if="controls.ASSPA___ASSPADATE____.isVisible"
 								v-bind="controls.ASSPA___ASSPADATE____.props"
-								:id="getControlId(controls.ASSPA___ASSPADATE____)"
 								:model-value="model.ValDate.value"
 								@reset-icon-click="model.ValDate.fnUpdateValue(model.ValDate.originalValue ?? new Date())"
 								@update:model-value="model.ValDate.fnUpdateValue($event ?? '')" />
 						</base-input-structure>
-					</q-col>
-				</q-row>
-				<q-row v-if="controls.ASSPA___ASSPATOSHOW__.isVisible">
-					<q-col
-						v-if="controls.ASSPA___ASSPATOSHOW__.isVisible"
-						cols="auto">
+					</q-control-wrapper>
+				</q-row-container>
+				<q-row-container v-show="controls.ASSPA___ASSPATOSHOW__.isVisible">
+					<q-control-wrapper
+						v-show="controls.ASSPA___ASSPATOSHOW__.isVisible"
+						class="${Vue.GetControlWrapperClass($controlsColumn)}">
 						<base-input-structure
-							v-if="controls.ASSPA___ASSPATOSHOW__.isVisible"
 							class="i-text"
-							v-bind="controls.ASSPA___ASSPATOSHOW__.wrapperProps"
-							:id="getControlId(controls.ASSPA___ASSPATOSHOW__)"
+							v-bind="controls.ASSPA___ASSPATOSHOW__"
 							v-on="controls.ASSPA___ASSPATOSHOW__.handlers"
 							:loading="controls.ASSPA___ASSPATOSHOW__.props.loading"
 							:reporting-mode-on="reportingModeCAV"
 							:suggestion-mode-on="suggestionModeOn">
 							<q-text-field
 								v-bind="controls.ASSPA___ASSPATOSHOW__.props"
-								:id="getControlId(controls.ASSPA___ASSPATOSHOW__)"
 								@blur="onBlur(controls.ASSPA___ASSPATOSHOW__, model.ValToshow.value)"
 								@change="model.ValToshow.fnUpdateValueOnChange" />
 						</base-input-structure>
-					</q-col>
-				</q-row>
+					</q-control-wrapper>
+				</q-row-container>
 			</template>
-		</q-container>
+		</div>
 	</teleport>
 
-	<q-divider v-if="!isPopup && showFormFooter" />
+	<hr v-if="!isPopup && showFormFooter" />
 
 	<teleport
 		v-if="formModalIsReady && showFormFooter"
 		:to="`#${uiContainersId.footer}`"
 		:disabled="!isPopup || isNested">
-		<q-row v-if="showFormFooter">
+		<q-row-container v-if="showFormFooter">
 			<div id="footer-action-btns">
 				<template
 					v-for="btn in formButtons"
@@ -291,7 +260,6 @@
 						v-if="btn.isActive && btn.isVisible && btn.showInFooter"
 						:id="`bottom-${btn.id}`"
 						:label="btn.text"
-						:color="btn.color"
 						:variant="btn.variant"
 						:disabled="btn.disabled"
 						:icon-pos="btn.iconPos"
@@ -303,12 +271,12 @@
 					</q-button>
 				</template>
 			</div>
-		</q-row>
+		</q-row-container>
 	</teleport>
 </template>
 
 <script>
-	/* eslint-disable @typescript-eslint/no-unused-vars */
+	/* eslint-disable no-unused-vars */
 	import { computed, defineAsyncComponent, readonly } from 'vue'
 	import { useRoute } from 'vue-router'
 
@@ -328,7 +296,7 @@
 	import qApi from '@/api/genio/quidgestFunctions.js'
 	import qFunctions from '@/api/genio/projectFunctions.js'
 	import qProjArrays from '@/api/genio/projectArrays.js'
-	/* eslint-enable @typescript-eslint/no-unused-vars */
+	/* eslint-enable no-unused-vars */
 
 	import FormViewModel from './QFormAsspaViewModel.js'
 
@@ -407,8 +375,7 @@
 					primaryKey: 'ValCodasspa',
 					designation: computed(() => this.Resources.ASSET_PARAMETER22072),
 					identifier: '', // Unique identifier received by route (when it's nested).
-					mode: '',
-					availableAgents: [],
+					mode: ''
 				},
 
 				formButtons: {
@@ -516,11 +483,7 @@
 						showInFooter: true,
 						isActive: true,
 						isVisible: computed(() => vm.authData.isAllowed && vm.isEditable),
-						action: vm.saveForm,
-						badge: {
-							isVisible: computed(() => vm.model?.isDirty === true),
-							color: 'highlight'
-						}
+						action: vm.saveForm
 					},
 					confirmBtn: {
 						id: 'confirm-btn',
@@ -658,6 +621,7 @@
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						maxLength: 1,
+						labelId: 'label_ASSPA___ASSPADATATYPE',
 						mustBeFilled: true,
 						arrayName: 'DataType',
 						helpShortItem: 'None',
@@ -717,10 +681,11 @@
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						maxLength: 50,
+						labelId: 'label_ASSPA___ASSPATEXT____',
 						controlLimits: [
 						],
 						showWhen: {
-							// eslint-disable-next-line @typescript-eslint/no-unused-vars
+							// eslint-disable-next-line no-unused-vars
 							fnFormula(params)
 							{
 								// Formula: [ASSPA->DATATYPE]=="T"
@@ -744,7 +709,7 @@
 						controlLimits: [
 						],
 						showWhen: {
-							// eslint-disable-next-line @typescript-eslint/no-unused-vars
+							// eslint-disable-next-line no-unused-vars
 							fnFormula(params)
 							{
 								// Formula: [ASSPA->DATATYPE]=="N"
@@ -763,11 +728,11 @@
 						label: computed(() => this.Resources.DATE18475),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						dateTimeType: 'date',
+						format: 'date',
 						controlLimits: [
 						],
 						showWhen: {
-							// eslint-disable-next-line @typescript-eslint/no-unused-vars
+							// eslint-disable-next-line no-unused-vars
 							fnFormula(params)
 							{
 								// Formula: [ASSPA->DATATYPE]=="D"
@@ -788,6 +753,7 @@
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						isFormulaBlocked: true,
 						maxLength: 50,
+						labelId: 'label_ASSPA___ASSPATOSHOW__',
 						controlLimits: [
 						],
 					}, this),
@@ -890,23 +856,17 @@
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 		},
 
-		beforeUnmount()
-		{
-/* eslint-disable indent, vue/html-indent, vue/script-indent */
-// USE /[MANUAL GQT COMPONENT_BEFORE_UNMOUNT ASSPA]/
-// eslint-disable-next-line
-/* eslint-enable indent, vue/html-indent, vue/script-indent */
-		},
-
 		methods: {
 			/**
 			 * Called before form init.
 			 */
 			async beforeLoad()
 			{
+				let loadForm = true
+
 				// Execute the "Before init" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.beforeInit)
-				for (const trigger of triggers)
+				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
 				this.emitEvent('before-load-form')
@@ -916,7 +876,7 @@
 // eslint-disable-next-line
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 
-				return true
+				return loadForm
 			},
 
 			/**
@@ -926,7 +886,7 @@
 			{
 				// Execute the "After init" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.afterInit)
-				for (const trigger of triggers)
+				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
 				this.emitEvent('after-load-form')
@@ -946,33 +906,19 @@
 
 				// Execute the "Before apply" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.beforeApply)
-				for (const trigger of triggers)
+				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
-				const ticketsPromise = this.model.updateFilesTickets(true)
-				this.addBusy(ticketsPromise, this.Resources[hardcodedTexts.processing])
-				const canSetDocums = await ticketsPromise
+				const canSetDocums = await this.model.updateFilesTickets(true)
 
 				if (canSetDocums)
 				{
-					let results
-					const changesPromise = this.model.setDocumentChanges()
-					this.addBusy(changesPromise, this.Resources[hardcodedTexts.processing])
-					applyForm = await changesPromise
+					applyForm = await this.model.setDocumentChanges()
 
 					if (applyForm)
 					{
-						const insertsPromise = this.model.saveDocuments()
-						this.addBusy(insertsPromise, this.Resources[hardcodedTexts.processing])
-						results = await insertsPromise
+						const results = await this.model.saveDocuments()
 						applyForm = results.every((e) => e === true)
-					}
-
-					if (!changesPromise || (results && !results.every((e) => e === true)))
-					{
-						this.validationErrors = {
-							Erro: this.Resources.OCORREU_UM_ERRO_AO_T51884
-						}
 					}
 				}
 
@@ -993,7 +939,7 @@
 			{
 				// Execute the "After apply" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.afterApply)
-				for (const trigger of triggers)
+				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
 				this.emitEvent('after-apply-form')
@@ -1013,33 +959,19 @@
 
 				// Execute the "Before save" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.beforeSave)
-				for (const trigger of triggers)
+				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
-				const ticketsPromise = this.model.updateFilesTickets()
-				this.addBusy(ticketsPromise, this.Resources[hardcodedTexts.processing])
-				const canSetDocums = await ticketsPromise
+				const canSetDocums = await this.model.updateFilesTickets()
 
 				if (canSetDocums)
 				{
-					let results
-					const changesPromise = this.model.setDocumentChanges()
-					this.addBusy(changesPromise, this.Resources[hardcodedTexts.processing])
-					saveForm = await changesPromise
+					saveForm = await this.model.setDocumentChanges()
 
 					if (saveForm)
 					{
-						const insertsPromise = this.model.saveDocuments()
-						this.addBusy(insertsPromise, this.Resources[hardcodedTexts.processing])
-						results = await insertsPromise
+						const results = await this.model.saveDocuments()
 						saveForm = results.every((e) => e === true)
-					}
-
-					if (!changesPromise || (results && !results.every((e) => e === true)))
-					{
-						this.validationErrors = {
-							Erro: this.Resources.OCORREU_UM_ERRO_AO_T51884
-						}
 					}
 				}
 
@@ -1058,9 +990,11 @@
 			 */
 			async afterSave()
 			{
+				let redirectPage = true // Set to 'false' to cancel page redirect.
+
 				// Execute the "After save" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.afterSave)
-				for (const trigger of triggers)
+				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
 				this.emitEvent('after-save-form')
@@ -1070,7 +1004,7 @@
 // eslint-disable-next-line
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 
-				return true
+				return redirectPage
 			},
 
 			/**
@@ -1078,6 +1012,8 @@
 			 */
 			async beforeDel()
 			{
+				let deleteForm = true // Set to 'false' to cancel form delete.
+
 				this.emitEvent('before-delete-form')
 
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
@@ -1085,7 +1021,7 @@
 // eslint-disable-next-line
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 
-				return true
+				return deleteForm
 			},
 
 			/**
@@ -1093,6 +1029,8 @@
 			 */
 			async afterDel()
 			{
+				let redirectPage = true // Set to 'false' to cancel page redirect.
+
 				this.emitEvent('after-delete-form')
 
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
@@ -1100,7 +1038,7 @@
 // eslint-disable-next-line
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 
-				return true
+				return redirectPage
 			},
 
 			/**
@@ -1108,9 +1046,11 @@
 			 */
 			async beforeExit()
 			{
+				let leaveForm = true // Set to 'false' to cancel page redirect.
+
 				// Execute the "Before exit" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.beforeExit)
-				for (const trigger of triggers)
+				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
 				this.emitEvent('before-exit-form')
@@ -1120,7 +1060,7 @@
 // eslint-disable-next-line
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 
-				return true
+				return leaveForm
 			},
 
 			/**
@@ -1130,7 +1070,7 @@
 			{
 				// Execute the "After exit" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.afterExit)
-				for (const trigger of triggers)
+				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
 				this.emitEvent('after-exit-form')

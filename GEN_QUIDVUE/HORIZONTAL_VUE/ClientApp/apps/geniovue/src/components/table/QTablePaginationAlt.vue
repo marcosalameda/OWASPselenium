@@ -42,30 +42,39 @@
 			<!-- END: Page navigation buttons -->
 		</q-button-group>
 	</nav>
-
 	<!-- BEGIN: Number of rows per page -->
-	<template v-if="showPerPageMenu && hasMultiplePages">
+	<div
+		v-if="showPerPageMenu && hasMultiplePages"
+		class="rows-per-page-menu">
 		<span class="i-text__label">{{ texts.rowsPerPage + ':' }}</span>
-		<q-select
-			:id="`${tableId}-rowspp-menu`"
-			:aria-label="texts.rowsPerPage + ':'"
+		<q-dropdown-menu
+			:id="tableId + '-rowspp-menu'"
+			:texts="{ title: perPageLabel, label: perPageLabel }"
+			:options="perPageOptionsObj"
+			class="pagination-dropdown"
+			:button-classes="['dropdown-toggle']"
+			:button-options="{ borderless: true }"
+			:single-option-button="false"
 			:disabled="disabled"
-			:items="perPageOptionsObj"
-			:model-value="perPage"
-			:texts="texts"
-			size="mini"
-			@update:model-value="perPageHandler" />
-	</template>
+			@selected="perPageHandler($event)">
+		</q-dropdown-menu>
+	</div>
 	<!-- END: Number of rows per page -->
 </template>
 
 <script>
+	import { defineAsyncComponent } from 'vue'
+
 	import listFunctions from '@/mixins/listFunctions.js'
 
 	export default {
 		name: 'QTablePaginationAlt',
 
 		emits: ['update:page', 'update:perPage'],
+
+		components: {
+			QDropdownMenu: defineAsyncComponent(() => import('@/components/QDropdownMenu.vue'))
+		},
 
 		props: {
 			/**
@@ -159,6 +168,10 @@
 		},
 
 		computed: {
+			isEmpty() {
+				return this.total === 0
+			},
+
 			hasMultiplePages() {
 				return this.hasMorePages || this.page > 1
 			},
@@ -186,17 +199,17 @@
 			 * @param index {Number}
 			 */
 			pageHandler(index) {
-				if (!this.disabled && index >= 1) {
+				if (!this.disabled && index >= 1 /* && index <= this.totalPages*/) {
 					this.$emit('update:page', index)
 				}
 			},
 
 			/**
 			 * Emit event to update number of rows per page (built-in method)
-			 * @param {number} option
+			 * @param option {Object}
 			 */
 			perPageHandler(option) {
-				if (!this.disabled && typeof option === 'number')
+				if (!this.disabled)
 					this.$emit('update:perPage', option)
 			},
 
@@ -222,6 +235,15 @@
 			beginButtonAction() {
 				if(this.beginButtonActive)
 					this.pageHandler(1)
+			},
+
+			/**
+			 * Determine if string represents positive integer?
+			 * @param str {String}
+			 * @returns Boolean?
+			 */
+			isPositiveInteger(str) {
+				return /^\+?(0|[1-9]\d*)$/.test(str)
 			}
 		}
 	}

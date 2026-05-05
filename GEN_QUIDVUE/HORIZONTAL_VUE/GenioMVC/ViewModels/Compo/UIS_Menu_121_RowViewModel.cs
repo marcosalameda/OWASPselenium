@@ -57,12 +57,6 @@ public class UIS_Menu_121_RowViewModel : Models.Compo
 				Area = "COMPO",
 				Field = "VUEMVC",
 			},
-			new ListColumn()
-			{
-				Order = 5,
-				Area = "COMPO",
-				Field = "RELEASE",
-			},
 		];
 	}
 

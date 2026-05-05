@@ -10,115 +10,140 @@ public class EquipmForm : Form
 	/// <summary>
 	/// Asset identification
 	/// </summary>
-	public CollapsibleZoneControl PseudNovogr01 => new CollapsibleZoneControl(driver, ContainerLocator, "#EQUIPM__PSEUDNOVOGR01" + IdSuffix + "-container");
+	public CollapsibleZoneControl PseudNovogr01 => new CollapsibleZoneControl(driver, ContainerLocator, "#EQUIPM__PSEUDNOVOGR01-container");
 
 	/// <summary>
 	/// Identification name
 	/// </summary>
-	public BaseInputControl AssetName => new BaseInputControl(driver, ContainerLocator, "container-EQUIPM__ASSETNAME____" + IdSuffix, "#EQUIPM__ASSETNAME____" + IdSuffix);
+	public BaseInputControl AssetName => new BaseInputControl(driver, ContainerLocator, "container-EQUIPM__ASSETNAME____", "#EQUIPM__ASSETNAME____");
 
 	/// <summary>
 	/// Asset type
 	/// </summary>
-	public EnumControl AssetAssettyp => new EnumControl(driver, ContainerLocator, "container-EQUIPM__ASSETASSETTYP" + IdSuffix);
+	public EnumControl AssetAssettyp => new EnumControl(driver, ContainerLocator, "container-EQUIPM__ASSETASSETTYP");
 
 	/// <summary>
 	/// Asset number
 	/// </summary>
-	public BaseInputControl AssetAssetnum => new BaseInputControl(driver, ContainerLocator, "container-EQUIPM__ASSETASSETNUM" + IdSuffix, "#EQUIPM__ASSETASSETNUM" + IdSuffix);
+	public BaseInputControl AssetAssetnum => new BaseInputControl(driver, ContainerLocator, "container-EQUIPM__ASSETASSETNUM", "#EQUIPM__ASSETASSETNUM");
 
 	/// <summary>
 	/// Identifier type
 	/// </summary>
-	public EnumControl AssetIdenttyp => new EnumControl(driver, ContainerLocator, "container-EQUIPM__ASSETIDENTTYP" + IdSuffix);
+	public EnumControl AssetIdenttyp => new EnumControl(driver, ContainerLocator, "container-EQUIPM__ASSETIDENTTYP");
 
 	/// <summary>
 	/// GRAI – Global Returnable Asset Identifier
 	/// </summary>
-	public BaseInputControl AssetGrai => new BaseInputControl(driver, ContainerLocator, "container-EQUIPM__ASSETGRAI____" + IdSuffix, "#EQUIPM__ASSETGRAI____" + IdSuffix);
+	public BaseInputControl AssetGrai => new BaseInputControl(driver, ContainerLocator, "container-EQUIPM__ASSETGRAI____", "#EQUIPM__ASSETGRAI____");
 
 	/// <summary>
 	/// GIAI – Global Individual Asset Identifier
 	/// </summary>
-	public BaseInputControl AssetGiai => new BaseInputControl(driver, ContainerLocator, "container-EQUIPM__ASSETGIAI____" + IdSuffix, "#EQUIPM__ASSETGIAI____" + IdSuffix);
+	public BaseInputControl AssetGiai => new BaseInputControl(driver, ContainerLocator, "container-EQUIPM__ASSETGIAI____", "#EQUIPM__ASSETGIAI____");
 
 	/// <summary>
 	/// Manufacturer
 	/// </summary>
-	public LookupControl ManufName => new LookupControl(driver, ContainerLocator, "container-EQUIPM__MANUFNAME____" + IdSuffix);
-	public SeeMorePage ManufNameSeeMorePage => new SeeMorePage(driver, "EQUIPM", "EQUIPM__MANUFNAME____" + IdSuffix);
-
-	/// <summary>
-	/// Photo
-	/// </summary>
-	public TabControl PseudEquip01 => new TabControl(driver, ContainerLocator, "[data-testid='tab-container-EQUIPM__PSEUDEQUIP01_']");
-
-	/// <summary>
-	/// Attachments
-	/// </summary>
-	public TabControl PseudEquip02 => new TabControl(driver, ContainerLocator, "[data-testid='tab-container-EQUIPM__PSEUDEQUIP02_']");
-
-	/// <summary>
-	/// Documents
-	/// </summary>
-	public TabControl PseudEquip03 => new TabControl(driver, ContainerLocator, "[data-testid='tab-container-EQUIPM__PSEUDEQUIP03_']");
-
-	/// <summary>
-	/// Parameters
-	/// </summary>
-	public TabControl PseudEquip04 => new TabControl(driver, ContainerLocator, "[data-testid='tab-container-EQUIPM__PSEUDEQUIP04_']");
+	public LookupControl ManufName => new LookupControl(driver, ContainerLocator, "container-EQUIPM__MANUFNAME____");
+	public SeeMorePage ManufNameSeeMorePage => new SeeMorePage(driver, "EQUIPM", "EQUIPM__MANUFNAME____");
 
 	/// <summary>
 	/// Kind of equipment
 	/// </summary>
-	public LookupControl KindeDesignat => new LookupControl(driver, ContainerLocator, "container-EQUIPM__KINDEDESIGNAT" + IdSuffix);
-	public SeeMorePage KindeDesignatSeeMorePage => new SeeMorePage(driver, "EQUIPM", "EQUIPM__KINDEDESIGNAT" + IdSuffix);
+	public LookupControl KindeDesignat => new LookupControl(driver, ContainerLocator, "container-EQUIPM__KINDEDESIGNAT");
+	public SeeMorePage KindeDesignatSeeMorePage => new SeeMorePage(driver, "EQUIPM", "EQUIPM__KINDEDESIGNAT");
 
 	/// <summary>
 	/// Photo
 	/// </summary>
-	public BaseInputControl Equip01AssetPhoto => new BaseInputControl(driver, ContainerLocator, "container-EQUIP01_ASSETPHOTO___" + IdSuffix, "#EQUIP01_ASSETPHOTO___" + IdSuffix);
-
-	/// <summary>
-	/// 
-	/// </summary>
-	public CollapsibleZoneControl Equip02PseudNovogr01 => new CollapsibleZoneControl(driver, ContainerLocator, "#EQUIP02_PSEUDNOVOGR01" + IdSuffix + "-container");
+	public TabControl PseudEquip01 => new TabControl(driver, ContainerLocator, "#tab-container-EQUIPM__PSEUDEQUIP01_");
 
 	/// <summary>
 	/// Attachments
 	/// </summary>
-	public ListControl Equip02PseudAttachme => new ListControl(driver, ContainerLocator, "#EQUIP02_PSEUDATTACHME" + IdSuffix);
-
-	/// <summary>
-	/// 
-	/// </summary>
-	public CollapsibleZoneControl Equip03PseudNovogr01 => new CollapsibleZoneControl(driver, ContainerLocator, "#EQUIP03_PSEUDNOVOGR01" + IdSuffix + "-container");
+	public TabControl PseudEquip02 => new TabControl(driver, ContainerLocator, "#tab-container-EQUIPM__PSEUDEQUIP02_");
 
 	/// <summary>
 	/// Documents
 	/// </summary>
-	public ListControl Equip03PseudDocument => new ListControl(driver, ContainerLocator, "#EQUIP03_PSEUDDOCUMENT" + IdSuffix);
-
-	/// <summary>
-	/// 
-	/// </summary>
-	public CollapsibleZoneControl Equip04PseudNovogr01 => new CollapsibleZoneControl(driver, ContainerLocator, "#EQUIP04_PSEUDNOVOGR01" + IdSuffix + "-container");
-
-	/// <summary>
-	/// Parameters load
-	/// </summary>
-	public ButtonControl Equip04PseudParamloa => new ButtonControl(driver, ContainerLocator, "#EQUIP04_PSEUDPARAMLOA" + IdSuffix);
-
-	/// <summary>
-	/// Manuals load
-	/// </summary>
-	public ButtonControl Equip04PseudManuals => new ButtonControl(driver, ContainerLocator, "#EQUIP04_PSEUDMANUALS_" + IdSuffix);
+	public TabControl PseudEquip03 => new TabControl(driver, ContainerLocator, "#tab-container-EQUIPM__PSEUDEQUIP03_");
 
 	/// <summary>
 	/// Parameters
 	/// </summary>
-	public ListControl Equip04PseudParamete => new ListControl(driver, ContainerLocator, "#EQUIP04_PSEUDPARAMETE" + IdSuffix);
+	public TabControl PseudEquip04 => new TabControl(driver, ContainerLocator, "#tab-container-EQUIPM__PSEUDEQUIP04_");
 
-	public EquipmForm(IWebDriver driver, FORM_MODE mode, By? containerLocator = null, bool usePkInId = false)
-		: base(driver, mode, "EQUIPM", containerLocator: containerLocator, usePkInId: usePkInId) { }
+	/// <summary>
+	/// Description
+	/// </summary>
+	public BaseInputControl AssetDescript => new BaseInputControl(driver, ContainerLocator, "container-EQUIPM__ASSETDESCRIPT", "#EQUIPM__ASSETDESCRIPT");
+
+	/// <summary>
+	/// Detailed description
+	/// </summary>
+	public IWebElement AssetLongdesc => throw new NotImplementedException();
+
+	/// <summary>
+	/// Category
+	/// </summary>
+	public EnumControl AssetCategory => new EnumControl(driver, ContainerLocator, "container-EQUIPM__ASSETCATEGORY");
+
+	/// <summary>
+	/// Background color for category
+	/// </summary>
+	public BaseInputControl AssetBg_color => new BaseInputControl(driver, ContainerLocator, "container-EQUIPM__ASSETBG_COLOR", "#EQUIPM__ASSETBG_COLOR");
+
+	/// <summary>
+	/// Asset tags
+	/// </summary>
+	public EquipmPseudA_tagsGrid PseudA_tags => new EquipmPseudA_tagsGrid(driver, ContainerLocator, "#EQUIPM__PSEUDA_TAGS__");
+
+	/// <summary>
+	/// Photo
+	/// </summary>
+	public BaseInputControl Equip01AssetPhoto => new BaseInputControl(driver, ContainerLocator, "container-EQUIP01_ASSETPHOTO___", "#EQUIP01_ASSETPHOTO___");
+
+	/// <summary>
+	/// 
+	/// </summary>
+	public CollapsibleZoneControl Equip02PseudNovogr01 => new CollapsibleZoneControl(driver, ContainerLocator, "#EQUIP02_PSEUDNOVOGR01-container");
+
+	/// <summary>
+	/// Attachments
+	/// </summary>
+	public ListControl Equip02PseudAttachme => new ListControl(driver, ContainerLocator, "#EQUIP02_PSEUDATTACHME");
+
+	/// <summary>
+	/// 
+	/// </summary>
+	public CollapsibleZoneControl Equip03PseudNovogr01 => new CollapsibleZoneControl(driver, ContainerLocator, "#EQUIP03_PSEUDNOVOGR01-container");
+
+	/// <summary>
+	/// Documents
+	/// </summary>
+	public ListControl Equip03PseudDocument => new ListControl(driver, ContainerLocator, "#EQUIP03_PSEUDDOCUMENT");
+
+	/// <summary>
+	/// 
+	/// </summary>
+	public CollapsibleZoneControl Equip04PseudNovogr01 => new CollapsibleZoneControl(driver, ContainerLocator, "#EQUIP04_PSEUDNOVOGR01-container");
+
+	/// <summary>
+	/// Parameters load
+	/// </summary>
+	public ButtonControl Equip04PseudParamloa => new ButtonControl(driver, ContainerLocator, "#EQUIP04_PSEUDPARAMLOA");
+
+	/// <summary>
+	/// Manuals load
+	/// </summary>
+	public ButtonControl Equip04PseudManuals => new ButtonControl(driver, ContainerLocator, "#EQUIP04_PSEUDMANUALS_");
+
+	/// <summary>
+	/// Parameters
+	/// </summary>
+	public ListControl Equip04PseudParamete => new ListControl(driver, ContainerLocator, "#EQUIP04_PSEUDPARAMETE");
+
+	public EquipmForm(IWebDriver driver, FORM_MODE mode, By? containerLocator = null)
+		: base(driver, mode, "EQUIPM", containerLocator: containerLocator) { }
 }

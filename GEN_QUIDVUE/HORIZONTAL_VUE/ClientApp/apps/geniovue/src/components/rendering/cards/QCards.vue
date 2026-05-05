@@ -1,123 +1,118 @@
 ﻿<template>
-	<q-container
-		:id="props.id"
-		fluid
+	<div
+		:id="id"
+		class="container-fluid"
 		data-testid="cards"
 		role="rowgroup">
-		<!-- Layout Component: Grid or Carousel -->
 		<component
-			v-if="shouldRenderContent"
-			:is="LayoutComponent"
-			:grid-mode="props.gridMode"
-			:container-alignment="props.containerAlignment">
-			<!-- Loading State -->
-			<template v-if="props.loading">
-				<q-col
-					v-for="skeleton in 3"
-					:key="skeleton"
-					v-bind="colSize">
-					<q-card-view
-						loading
-						v-bind="baseCardProps">
-						<template #title></template>
-						<template #subtitle></template>
-						<template #text></template>
-						<template #image></template>
-					</q-card-view>
-				</q-col>
-			</template>
-			<template v-else>
-				<!-- Insert Card -->
-				<q-col
-					v-if="shouldShowInsertCard"
-					v-bind="colSize">
-					<q-insert-card
-						:variant="props.customInsertCardStyle"
-						:table-name="props.listConfig.tableNamePlural"
-						:src="`${props.listConfig.resourcesPath}insert_card.png`"
-						:texts="props.texts"
-						:subtype="props.subtype"
-						:size="props.size"
-						:content-alignment="props.contentAlignment"
-						:hover-scale-amount="props.hoverScaleAmount?.toString().slice(-1)"
-						@click="rowAction(insertAction!)" />
-				</q-col>
-				<!-- Cards -->
-				<q-col
-					v-for="card in cards"
-					:key="card.id"
-					v-bind="colSize">
-					<q-card-view
-						v-bind="card.props"
-						@click="onCardClick(card)">
-						<template #title>
+			v-if="hasContent"
+			:is="`q-card-${displayMode}`"
+			:card-config="cardConfig"
+			:loading="$props.loading"
+			:container-alignment="styleVariables.containerAlignment?.value">
+			<div
+				v-if="hasCustomInsertCard"
+				:class="columnClasses">
+				<q-insert-card
+					:config="cardConfig"
+					:variant="insertCardStyle"
+					:insert-action="insertAction"
+					:table-name="listConfig.tableNamePlural"
+					:resources-path="listConfig.resourcesPath"
+					:texts="texts"
+					@row-action="rowAction($event)" />
+			</div>
+
+			<div
+				v-for="card in cards"
+				:key="card.id"
+				:class="columnClasses">
+				<q-card-view
+					v-bind="card"
+					@click.stop="onCardClick(card)">
+					<template #title>
+						<q-render-data
+							:component="card.mappedValue.title?.source?.component"
+							:value="card.mappedValue.title?.value"
+							:background-color="card.mappedValue.title?.bgColor"
+							:options="card.mappedValue.title?.source?.componentOptions || card.mappedValue.title?.source"
+							:resources-path="listConfig.resourcesPath" />
+					</template>
+
+					<template
+						v-if="card.mappedValue.subtitle"
+						#subtitle>
+						<q-render-data
+							:component="card.mappedValue.subtitle?.source?.component"
+							:value="card.mappedValue.subtitle?.value"
+							:background-color="card.mappedValue.subtitle?.bgColor"
+							:options="card.mappedValue.subtitle?.source?.componentOptions || card.mappedValue.subtitle?.source"
+							:resources-path="listConfig.resourcesPath" />
+					</template>
+
+					<template #[`content.append`]>
+						<p
+							v-for="text in card.mappedValue.text"
+							:key="text"
+							class="q-card-view__text"
+							:data-field="`${text.source?.area}.${text.source?.field}`"
+							role="cell">
+							<span
+								v-if="showColumnTitles"
+								class="label">
+								{{ text.source?.label }}:
+							</span>
 							<q-render-data
-								:component="card.mappedValue.title?.source?.component"
-								:value="card.mappedValue.title?.value"
-								:background-color="card.mappedValue.title?.bgColor"
-								:options="card.mappedValue.title?.source?.componentOptions"
+								:component="text.source?.component"
+								:value="text.value"
+								:background-color="text?.bgColor"
+								:options="text.source?.componentOptions || text.source"
 								:resources-path="listConfig.resourcesPath" />
-						</template>
+						</p>
+					</template>
 
-						<template
-							v-if="card.mappedValue.subtitle"
-							#subtitle>
-							<q-render-data
-								:component="card.mappedValue.subtitle?.source?.component"
-								:value="card.mappedValue.subtitle?.value"
-								:background-color="card.mappedValue.subtitle?.bgColor"
-								:options="card.mappedValue.subtitle?.source?.componentOptions"
-								:resources-path="listConfig.resourcesPath" />
-						</template>
+					<template
+						v-if="card.mappedValue.image?.previewData"
+						#image>
+						<img
+							role="cell"
+							loading="lazy"
+							decoding="async"
+							:alt="texts.cardImage"
+							class="q-card-view__img"
+							:key="card.domVersionKey"
+							:src="card.mappedValue.image.previewData" />
+					</template>
 
-						<template #[`content.append`]>
-							<p
-								v-for="text in card.mappedValue.text"
-								:key="text.value"
-								class="q-card-view__text"
-								:data-field="`${text.source?.area}.${text.source?.field}`"
-								role="cell">
-								<span
-									v-if="props.showColumnTitles"
-									class="label">
-									{{ text.source?.label }}:
-								</span>
-								<q-render-data
-									:component="text.source?.component"
-									:value="text.value"
-									:background-color="text?.bgColor"
-									:options="text.source?.componentOptions || text.source"
-									:resources-path="listConfig.resourcesPath" />
-							</p>
-						</template>
-
-						<template
-							v-if="hasRowActions"
-							#[actionsPlacement]>
-							<q-row
-								role="cell"
-								:gutter="0"
-								:justify="props.actionsAlignment">
-								<q-action-list
-									dropdown-size="small"
-									placement="bottom-start"
-									variant="outlined"
-									:groups="rowActionGroups"
-									:items="getRowActions(card)"
-									:readonly="readonly"
-									:title="texts.selectOptions"
-									@click="rowOptionSelect($event, card)" />
-							</q-row>
-						</template>
-					</q-card-view>
-				</q-col>
-			</template>
+					<template
+						v-if="hasRowActions"
+						#[actionsPlacement]>
+						<div
+							role="cell"
+							:class="[actionsAlignment, 'text-center', 'row-actions']">
+							<q-table-record-actions-menu
+								:texts="texts"
+								:btn-permission="card.mappedValue.btnPermission"
+								:action-visibility="card.mappedValue.actionVisibility"
+								:crud-actions="listConfig.crudActions"
+								:custom-actions="listConfig.customActions"
+								:dropdown-direction="actionsMenuDirection"
+								:dropdown-alignment="actionsMenuAlignment"
+								:show-row-action-icon="listConfig.showRowActionIcon"
+								:show-general-action-icon="listConfig.showGeneralActionIcon"
+								:show-row-action-text="showRowActionText"
+								:show-general-action-text="listConfig.showGeneralActionText"
+								:readonly="readonly"
+								:display="cardActionsStyle"
+								@row-action="rowAction($event, card)" />
+						</div>
+					</template>
+				</q-card-view>
+			</div>
 		</component>
-		<!-- Empty State -->
-		<q-row
+		<div
 			v-else
-			role="cell"
-			:justify="props.containerAlignment">
+			:class="emptyContainerClasses">
 			<div class="q-cards-empty-container">
 				<img
 					v-if="listConfig.resourcesPath"
@@ -125,236 +120,301 @@
 					:alt="texts.noRecordsText" />
 				<h5>{{ texts.emptyText }}</h5>
 			</div>
-		</q-row>
-	</q-container>
+		</div>
+	</div>
 </template>
 
-<script setup lang="ts">
-	// Constants
-	import { DEFAULT_TEXTS } from './constants'
+<script>
+	import { defineAsyncComponent } from 'vue'
 
-	// Components
-	import QRenderData from '@/components/rendering/QRenderData.vue'
-	import { QActionList } from '@quidgest/clientapp/components'
-	import { QCol, QContainer, QRow } from '@quidgest/ui/components'
-	import QCardView from './QCardView.vue'
-	import QInsertCard from './QInsertCard.vue'
+	import { validateTexts } from '@quidgest/clientapp/utils/genericFunctions'
 
-	// Types
-	import type { QColProps } from '@quidgest/ui/esm/components/QGrid/types.js'
-	import type { Card, QCardsProps } from './types'
+	import QCardView from '@/components/containers/QCard.vue'
 
-	// Utils
-	import { computed, defineAsyncComponent, watch } from 'vue'
-	import { btnHasPermission } from '@quidgest/clientapp/utils/genericFunctions'
-
-	const props = withDefaults(defineProps<QCardsProps>(), {
-		cards: () => [],
-		actionsAlignment: 'start',
-		actionsPlacement: 'footer',
-		actionsStyle: 'dropdown',
-		customFollowupTarget: 'self',
-		displayMode: 'grid',
-		gridMode: 'fixed',
-		containerAlignment: 'start',
-		hoverScaleAmount: '1.00',
-		listConfig: () => ({}),
-		texts: () => DEFAULT_TEXTS
-	})
-
-	const emit = defineEmits<{
-		/** Emitted when a card becomes visible. */
-		(e: 'update:visible', id: string): void
-		/** Emitted when a row action is triggered. */
-		(e: 'row-action', action: object): void
-	}>()
-
-	/** Lazily loaded components. */
-	const QCardsGridLayout = defineAsyncComponent(() => import('./QCardsGridLayout.vue'))
-	const QCardsCarouselLayout = defineAsyncComponent(() => import('./QCardsCarouselLayout.vue'))
-
-	/** Selected layout component based on display mode. */
-	const LayoutComponent = computed(() =>
-		props.displayMode === 'carousel' ? QCardsCarouselLayout : QCardsGridLayout
-	)
-
-	/** Common props passed to all cards. */
-	const baseCardProps = computed(() => ({
-		subtype: props.subtype,
-		size: props.size,
-		contentAlignment: props.contentAlignment,
-		imageShape: props.imageShape,
-		hoverScaleAmount: props.hoverScaleAmount?.toString().slice(-1)
-	}))
-
-	/** Normalized cards to be rendered. */
-	const cards = computed<Card[]>(() =>
-		props.cards.map((val) => ({
-			id: val.rowKey,
-			props: {
-				imgSrc: val.image?.previewData ?? val.image?.value,
-				colorPlaceholder: val.image?.dominantColor,
-				...baseCardProps.value
-			},
-			mappedValue: val
-		}))
-	)
-
-	/** Insert action configuration, if available. */
-	const insertAction = computed(() =>
-		props.listConfig.generalActions?.find(
-			(act) =>
-				typeof act === 'object' &&
-				act !== null &&
-				'id' in act &&
-				(act as { id: string }).id === 'insert'
-		)
-	)
-
-	/** Column size depending on display and grid modes. */
-	const colSize = computed<QColProps>(() => {
-		if (props.displayMode === 'carousel') {
-			return { cols: 12 }
-		}
-
-		// Fixed grid
-
-		const isSmall = props.size === 'small'
-		const isHorizontal = props.subtype === 'card-horizontal'
-
-		if (props.gridMode === 'fixed') {
-			return { cols: 'auto' }
-		}
-
-		// Flexible grid (columns)
-
-		if (isHorizontal) {
-			return {
-				xl: 3,
-				lg: 4,
-				md: 6,
-				cols: 12
-			}
-		}
-
-		return {
-			xxl: isSmall ? 1 : 2,
-			xl: isSmall ? 2 : 3,
-			lg: isSmall ? 3 : 4,
-			md: isSmall ? 4 : 6,
-			sm: isSmall ? 6 : 12,
-			cols: isSmall ? 6 : 12
-		}
-	})
-
-	/** Whether to show the "insert" card. */
-	const shouldShowInsertCard = computed(() => !!insertAction.value && props.customInsertCard)
-
-	/** Whether row actions exist for this list. */
-	const hasRowActions = computed(
-		() =>
-			(props.listConfig.crudActions?.length ?? 0) > 0 ||
-			(props.listConfig.customActions?.length ?? 0) > 0
-	)
-
-	/** Whether to render content (skeleton, insert card, or cards). */
-	const shouldRenderContent = computed(
-		() => props.loading || shouldShowInsertCard.value || cards.value.length > 0
-	)
-
-	/** The list of action groups. */
-	const rowActionGroups = computed(
-		() => {
-			const display = props.actionsStyle
-			return [
-				{ id: 'custom', display },
-				{ id: 'crud', display }
-			]
-		}
-	)
-
-	/**
-	 * Gets the actions of the specified card.
-	 *
-	 * @param card - The card from which to get the actions.
-	 */
-	function getRowActions(card: Card): object[] {
-		return [
-			...(props.listConfig.customActions ?? []).map((act) => ({
-				...act,
-				key: act.id,
-				label: act.title,
-				group: 'custom',
-				isVisible: card.mappedValue.actionVisibility?.[act.id] ?? act.isVisible,
-				disabled: card.mappedValue.actionDisability?.[act.id] ?? act.disabled
-			})),
-			...(props.listConfig.crudActions ?? []).map((act) => ({
-				...act,
-				key: act.id,
-				label: act.title,
-				group: 'crud',
-				disabled: !btnHasPermission(card.mappedValue.btnPermission, act.id)
-			}))
-		]
+	// The texts needed by the component.
+	const DEFAULT_TEXTS = {
+		noRecordsText: 'No records',
+		emptyText: 'No data to show',
+		createText: 'Create',
+		insertText: 'Insert',
+		cardImage: 'Card image'
 	}
 
-	/**
-	 * Handles click on a card.
-	 * Opens a follow-up link if defined, or triggers the row click action.
-	 *
-	 * @param card - The card that was clicked.
-	 */
-	function onCardClick(card: Card): void {
-		if (card.mappedValue.customFollowup !== undefined) {
-			const url = card.mappedValue.customFollowup.value
-			if (url) {
-				const customFollowupTarget =
-					card.mappedValue.customFollowupTarget?.value || props.customFollowupTarget
-				window.open(url, `_${customFollowupTarget}`)
-			}
-		} else if (
-			props.listConfig.rowClickAction &&
-			Object.keys(props.listConfig.rowClickAction).length > 0
-		) {
-			rowAction(props.listConfig.rowClickAction, card)
-		}
-	}
+	export default {
+		name: 'QCards',
 
-	/**
-	 * Emits a row action event for the given action and card.
-	 *
-	 * @param action - The action to perform.
-	 * @param card - The optional card triggering the action.
-	 */
-	function rowAction(action: object, card?: Card): void {
-		emit('row-action', { ...action, rowKey: card?.id })
-	}
+		emits: ['update:visible', 'row-action'],
 
-	/**
-	 * Emits a row action event for the given key and card.
-	 *
-	 * @param key - The identifier of the triggered action.
-	 * @param card - The card triggering the action.
-	 */
-	function rowOptionSelect(key: string, card: Card): void {
-		const action = getRowActions(card).find((e) => e.key === key)
-		rowAction(action!, card)
-	}
-
-	/**
-	 * Watch for card changes to detect visibility updates.
-	 * Emits `update:visible` when a card image source changes.
-	 */
-	watch(
-		cards,
-		(newVal, oldVal) => {
-			newVal.forEach((card) => {
-				const oldCard = oldVal?.find((s) => s.id === card.id)
-				if (!oldCard || oldCard.props.imgSrc !== card.props.imgSrc) {
-					emit('update:visible', card.id)
-				}
-			})
+		components: {
+			QCardView,
+			QTableRecordActionsMenu: defineAsyncComponent(() => import('@/components/table/QTableRecordActionsMenu.vue')),
+			QInsertCard: defineAsyncComponent(() => import('./QInsertCard.vue')),
+			QCardGrid: defineAsyncComponent(() => import('./QCardGrid.vue')),
+			QCardCarousel: defineAsyncComponent(() => import('./QCardCarousel.vue'))
 		},
-		{ deep: true, immediate: true }
-	)
+
+		inheritAttrs: false,
+
+		props: {
+			/**
+			 * The unique identifier for the container.
+			 */
+			id: String,
+
+			/**
+			 * The card type (must match it's vue component's name).
+			 */
+			subtype: String,
+
+			/**
+			 * The data from which we will display the cards.
+			 */
+			mappedValues: {
+				type: Array,
+				default: () => []
+			},
+
+			/**
+			 * The defined style variables.
+			 */
+			styleVariables: {
+				type: Object,
+				default: () => ({})
+			},
+
+			/**
+			 * The configuration of the list.
+			 */
+			listConfig: {
+				type: Object,
+				default: () => ({})
+			},
+
+			/**
+			 * The necessary strings to be used inside the component.
+			 */
+			texts: {
+				type: Object,
+				validator: (value) => validateTexts(DEFAULT_TEXTS, value),
+				default: () => DEFAULT_TEXTS
+			},
+
+			/**
+			 * Whether or not the 'read-only' mode is active.
+			 */
+			readonly: {
+				type: Boolean,
+				default: false
+			},
+
+			/**
+			 * Whether or not content is loading.
+			 */
+			loading: {
+				type: Boolean,
+				default: false
+			}
+		},
+
+		expose: [],
+
+		computed: {
+			cardConfig()
+			{
+				const size = this.styleVariables.size?.value,
+					contentAlignment = this.styleVariables.contentAlignment?.value,
+					imageShape = this.styleVariables.imageShape?.value,
+					hoverScaleAmount = this.styleVariables.hoverScaleAmount?.value
+						?.toString()
+						.slice(-1)
+
+				return {
+					subtype: this.subtype,
+					size: size,
+					contentAlignment: contentAlignment,
+					imageShape: imageShape,
+					hoverScaleAmount: hoverScaleAmount
+				}
+			},
+
+			cards()
+			{
+				const _cards = []
+
+				this.mappedValues.forEach((val) => {
+					_cards.push({
+						id: val.rowKey,
+						image: val.image?.previewData ?? val.image?.value,
+						colorPlaceholder: val.image?.dominantColor,
+						mappedValue: val,
+						...this.cardConfig
+					})
+				})
+
+				return _cards
+			},
+
+			actionsAlignment()
+			{
+				// actionsAlignment: 'left' | 'right', defaults to 'left'
+				const _float = this.styleVariables.actionsAlignment?.value ?? 'left'
+				return `float-${_float}`
+			},
+
+			actionsPlacement()
+			{
+				// actionsAlignment: 'footer' | 'header', defaults to 'footer'
+				return this.styleVariables.actionsPlacement?.value ?? 'footer'
+			},
+
+			actionsMenuDirection()
+			{
+				return this.actionsPlacement === 'header' ? 'dropdown' : 'dropup'
+			},
+
+			actionsMenuAlignment()
+			{
+				return this.actionsAlignment === 'float-right' ? 'right' : 'left'
+			},
+
+			cardActionsStyle()
+			{
+				const actionsStyle = this.styleVariables.actionsStyle?.value ?? 'dropdown'
+
+				return actionsStyle === 'dropdown'
+					? 'dropdown'
+					: actionsStyle === 'mixed'
+						? 'mixed'
+						: 'inlineAll'
+			},
+
+			containerAlignment()
+			{
+				return this.styleVariables.containerAlignment?.value ?? 'left'
+			},
+
+			columnClasses()
+			{
+				return this.displayMode === 'carousel'
+					? 'col'
+					: ['col-auto', 'd-flex', 'align-items-stretch']
+			},
+
+			displayMode()
+			{
+				return this.styleVariables.displayMode?.value ?? 'grid'
+			},
+
+			emptyContainerClasses()
+			{
+				const classes = ['d-flex']
+
+				if (this.containerAlignment === 'center')
+					classes.push('flex-column')
+
+				return classes
+			},
+
+			hasContent()
+			{
+				// There is content to display if
+				// - it's loading: will show card skeleton loaders
+				// - has custom insertion card: will always displayed even if empty
+				// - has actual cards to display
+				return this.loading || this.hasCustomInsertCard || this.cards.length > 0
+			},
+
+			hasCustomInsertCard()
+			{
+				if (!this.insertAction)
+					return false
+
+				return this.styleVariables.customInsertCard?.value ?? false
+			},
+
+			hasRowActions()
+			{
+				return (
+					(this.listConfig.crudActions && this.listConfig.crudActions.length > 0) ||
+					(this.listConfig.customActions && this.listConfig.customActions.length > 0)
+				)
+			},
+
+			insertCardStyle()
+			{
+				// actionsAlignment: 'image' | 'primary' | 'secondary', defaults to 'secondary'
+				return this.styleVariables.customInsertCardStyle?.value ?? 'secondary'
+			},
+
+			insertAction()
+			{
+				return this.listConfig.generalActions?.find((act) => act.id === 'insert')
+			},
+
+			showColumnTitles()
+			{
+				return this.styleVariables.showColumnTitles?.value ?? false
+			},
+
+			showRowActionText()
+			{
+				return this.cardActionsStyle === 'dropdown' || this.cardActionsStyle === 'mixed'
+			}
+		},
+
+		methods: {
+			onCardClick(card)
+			{
+				if (card.mappedValue.customFollowup !== undefined)
+				{
+					const url = card.mappedValue.customFollowup.value
+
+					if (url)
+					{
+						const customFollowupTarget =
+							card.mappedValue.customFollowupTarget?.value ||
+							this.styleVariables.customFollowupDefaultTarget?.value
+
+						window.open(url, `_${customFollowupTarget}`)
+					}
+				}
+				else if (
+					this.listConfig.rowClickAction &&
+					Object.keys(this.listConfig.rowClickAction).length > 0
+				)
+				{
+					// Execute the default row action.
+					this.rowAction(this.listConfig.rowClickAction, card)
+				}
+			},
+
+			/**
+			 * Emit a row action
+			 * @param {object} action
+			 * @param {object} card
+			 */
+			rowAction(action, card)
+			{
+				this.$emit('row-action', { ...action, rowKey: card?.id })
+			}
+		},
+
+		watch: {
+			cards: {
+				handler(newVal, oldVal)
+				{
+					// TODO: use lazy: request card image just before it scrolls into view
+					newVal.forEach((card) => {
+						const oldCard = oldVal?.find((s) => s.id === card.id)
+
+						if (!oldCard || (oldCard.image !== card.image))
+							this.$emit('update:visible', card.id)
+					})
+				},
+
+				deep: true,
+				immediate: true
+			}
+		}
+	}
 </script>

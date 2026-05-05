@@ -13,7 +13,6 @@ RUN pnpm install
 
 COPY ClientApp/src ./src
 COPY ClientApp/public ./public
-COPY ClientApp/plugins ./plugins
 COPY ClientApp/tsconfig.json ./
 COPY ClientApp/vite.config.ts ./
 COPY ClientApp/svgstore.config.ts ./

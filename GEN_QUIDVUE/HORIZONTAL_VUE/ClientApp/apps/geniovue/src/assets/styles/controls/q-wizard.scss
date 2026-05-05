@@ -199,18 +199,11 @@ div.q-form-wizard-container {
 		height: 40px;
 	}
 
-	.q-wizard__content-title {
-		h1,
-		h2,
-		h3,
-		h4,
-		h5,
-		h6 {
-			font-size: 1.25rem;
-			font-weight: 700;
-			letter-spacing: 0.02rem;
-			margin-bottom: 0;
-		}
+	.q-wizard__content-title h3 {
+		font-size: 1.25rem;
+		font-weight: 700;
+		letter-spacing: 0.02rem;
+		margin-bottom: 0;
 	}
 
 	.q-wizard__content-title .q-wizard__step-number {
@@ -644,21 +637,21 @@ div.q-form-wizard-container {
 				margin-top: -1rem;
 			}
 
-			.form-horizontal.wizard-form {
+			form.form-horizontal.wizard-form {
 				margin-left: 7px;
 				margin-right: 7px;
 				margin-top: -1.5rem !important;
 			}
 
-			.form-horizontal.wizard-form .mb-4 {
+			form.form-horizontal.wizard-form .mb-4 {
 				margin-bottom: 0.5rem !important;
 			}
 
-			.form-horizontal.wizard-form div.col-12 {
+			form.form-horizontal.wizard-form div.col-12 {
 				padding: 0 5px !important;
 			}
 
-			.form-horizontal.wizard-form div.c-groupbox {
+			form.form-horizontal.wizard-form div.c-groupbox {
 				padding: 0.5rem !important;
 				margin-bottom: 0.25rem !important;
 			}
@@ -1443,21 +1436,21 @@ div.q-form-wizard-container {
 				margin-top: -1rem;
 			}
 
-			.form-horizontal.wizard-form {
+			form.form-horizontal.wizard-form {
 				margin-left: 7px;
 				margin-right: 7px;
 				margin-top: -1.5rem !important;
 			}
 
-			.form-horizontal.wizard-form .mb-4 {
+			form.form-horizontal.wizard-form .mb-4 {
 				margin-bottom: 0.5rem !important;
 			}
 
-			.form-horizontal.wizard-form div.col-12 {
+			form.form-horizontal.wizard-form div.col-12 {
 				padding: 0 5px !important;
 			}
 
-			.form-horizontal.wizard-form div.c-groupbox {
+			form.form-horizontal.wizard-form div.c-groupbox {
 				padding: 0.5rem !important;
 				margin-bottom: 0.25rem !important;
 			}
@@ -1603,7 +1596,7 @@ div.q-form-wizard-container {
 			font-size: 1.5rem;
 			line-height: 1.5rem;
 			font-weight: 700;
-			text-transform: $headings-text-transform;
+			text-transform: uppercase;
 			white-space: nowrap;
 			padding-bottom: 1.5rem;
 		}

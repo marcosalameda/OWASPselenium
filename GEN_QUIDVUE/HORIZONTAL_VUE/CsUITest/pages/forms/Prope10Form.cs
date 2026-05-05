@@ -10,27 +10,27 @@ public class Prope10Form : Form
 	/// <summary>
 	/// Informações principais
 	/// </summary>
-	public CollapsibleZoneControl PseudMaininf => new CollapsibleZoneControl(driver, ContainerLocator, "#PROPE10_PSEUDMAININF_" + IdSuffix + "-container");
+	public CollapsibleZoneControl PseudMaininf => new CollapsibleZoneControl(driver, ContainerLocator, "#PROPE10_PSEUDMAININF_-container");
 
 	/// <summary>
 	/// Foto principal
 	/// </summary>
-	public BaseInputControl PropePhoto => new BaseInputControl(driver, ContainerLocator, "container-PROPE10_PROPEPHOTO___" + IdSuffix, "#PROPE10_PROPEPHOTO___" + IdSuffix);
+	public BaseInputControl PropePhoto => new BaseInputControl(driver, ContainerLocator, "container-PROPE10_PROPEPHOTO___", "#PROPE10_PROPEPHOTO___");
 
 	/// <summary>
 	/// Title
 	/// </summary>
-	public BaseInputControl PropeTitle => new BaseInputControl(driver, ContainerLocator, "container-PROPE10_PROPETITLE___" + IdSuffix, "#PROPE10_PROPETITLE___" + IdSuffix);
+	public BaseInputControl PropeTitle => new BaseInputControl(driver, ContainerLocator, "container-PROPE10_PROPETITLE___", "#PROPE10_PROPETITLE___");
 
 	/// <summary>
 	/// Price
 	/// </summary>
-	public BaseInputControl PropePrice => new BaseInputControl(driver, ContainerLocator, "container-PROPE10_PROPEPRICE___" + IdSuffix, "#PROPE10_PROPEPRICE___" + IdSuffix);
+	public BaseInputControl PropePrice => new BaseInputControl(driver, ContainerLocator, "container-PROPE10_PROPEPRICE___", "#PROPE10_PROPEPRICE___");
 
 	/// <summary>
 	/// Description
 	/// </summary>
-	public BaseInputControl PropeDescript => new BaseInputControl(driver, ContainerLocator, "container-PROPE10_PROPEDESCRIPT" + IdSuffix, "#PROPE10_PROPEDESCRIPT" + IdSuffix);
+	public BaseInputControl PropeDescript => new BaseInputControl(driver, ContainerLocator, "container-PROPE10_PROPEDESCRIPT", "#PROPE10_PROPEDESCRIPT");
 
 	/// <summary>
 	/// 
@@ -40,13 +40,13 @@ public class Prope10Form : Form
 	/// <summary>
 	/// Localização
 	/// </summary>
-	public CollapsibleZoneControl PseudLocaliza => new CollapsibleZoneControl(driver, ContainerLocator, "#PROPE10_PSEUDLOCALIZA" + IdSuffix + "-container");
+	public CollapsibleZoneControl PseudLocaliza => new CollapsibleZoneControl(driver, ContainerLocator, "#PROPE10_PSEUDLOCALIZA-container");
 
 	/// <summary>
 	/// Cidade
 	/// </summary>
-	public LookupControl CityCity => new LookupControl(driver, ContainerLocator, "container-PROPE10_CITY_CITY____" + IdSuffix);
-	public SeeMorePage CityCitySeeMorePage => new SeeMorePage(driver, "PROPE10", "PROPE10_CITY_CITY____" + IdSuffix);
+	public LookupControl CityCity => new LookupControl(driver, ContainerLocator, "container-PROPE10_CITY_CITY____");
+	public SeeMorePage CityCitySeeMorePage => new SeeMorePage(driver, "PROPE10", "PROPE10_CITY_CITY____");
 
 	/// <summary>
 	/// Country
@@ -56,43 +56,43 @@ public class Prope10Form : Form
 	/// <summary>
 	/// Detalhes
 	/// </summary>
-	public CollapsibleZoneControl PseudDetails => new CollapsibleZoneControl(driver, ContainerLocator, "#PROPE10_PSEUDDETAILS_" + IdSuffix + "-container");
+	public CollapsibleZoneControl PseudDetails => new CollapsibleZoneControl(driver, ContainerLocator, "#PROPE10_PSEUDDETAILS_-container");
 
 	/// <summary>
 	/// Tipo de edifício
 	/// </summary>
-	public EnumControl PropeBuildtyp => new EnumControl(driver, ContainerLocator, "container-PROPE10_PROPEBUILDTYP" + IdSuffix);
+	public EnumControl PropeBuildtyp => new EnumControl(driver, ContainerLocator, "container-PROPE10_PROPEBUILDTYP");
 
 	/// <summary>
 	/// Typology
 	/// </summary>
-	public RadiobuttonControl PropeTypology => new RadiobuttonControl(driver, ContainerLocator, "container-PROPE10_PROPETYPOLOGY" + IdSuffix);
+	public RadiobuttonControl PropeTypology => new RadiobuttonControl(driver, ContainerLocator, "container-PROPE10_PROPETYPOLOGY");
 
 	/// <summary>
 	/// Tamanho (m2)
 	/// </summary>
-	public BaseInputControl PropeSize => new BaseInputControl(driver, ContainerLocator, "container-PROPE10_PROPESIZE____" + IdSuffix, "#PROPE10_PROPESIZE____" + IdSuffix);
+	public BaseInputControl PropeSize => new BaseInputControl(driver, ContainerLocator, "container-PROPE10_PROPESIZE____", "#PROPE10_PROPESIZE____");
 
 	/// <summary>
 	/// Numero de Casa de banhos
 	/// </summary>
-	public BaseInputControl PropeBathrms => new BaseInputControl(driver, ContainerLocator, "container-PROPE10_PROPEBATHRMS_" + IdSuffix, "#PROPE10_PROPEBATHRMS_" + IdSuffix);
+	public BaseInputControl PropeBathrms => new BaseInputControl(driver, ContainerLocator, "container-PROPE10_PROPEBATHRMS_", "#PROPE10_PROPEBATHRMS_");
 
 	/// <summary>
 	/// Ano construído
 	/// </summary>
-	public BaseInputControl PropeYear => new BaseInputControl(driver, ContainerLocator, "container-PROPE10_PROPEYEAR____" + IdSuffix, "#PROPE10_PROPEYEAR____" + IdSuffix);
+	public BaseInputControl PropeYear => new BaseInputControl(driver, ContainerLocator, "container-PROPE10_PROPEYEAR____", "#PROPE10_PROPEYEAR____");
 
 	/// <summary>
 	/// Informação do agente
 	/// </summary>
-	public CollapsibleZoneControl PseudAgentinf => new CollapsibleZoneControl(driver, ContainerLocator, "#PROPE10_PSEUDAGENTINF" + IdSuffix + "-container");
+	public CollapsibleZoneControl PseudAgentinf => new CollapsibleZoneControl(driver, ContainerLocator, "#PROPE10_PSEUDAGENTINF-container");
 
 	/// <summary>
 	/// Name
 	/// </summary>
-	public LookupControl AgentName => new LookupControl(driver, ContainerLocator, "container-PROPE10_AGENTNAME____" + IdSuffix);
-	public SeeMorePage AgentNameSeeMorePage => new SeeMorePage(driver, "PROPE10", "PROPE10_AGENTNAME____" + IdSuffix);
+	public LookupControl AgentName => new LookupControl(driver, ContainerLocator, "container-PROPE10_AGENTNAME____");
+	public SeeMorePage AgentNameSeeMorePage => new SeeMorePage(driver, "PROPE10", "PROPE10_AGENTNAME____");
 
 	/// <summary>
 	/// Email
@@ -107,8 +107,8 @@ public class Prope10Form : Form
 	/// <summary>
 	/// Contacts
 	/// </summary>
-	public ListControl PseudPropcont => new ListControl(driver, ContainerLocator, "#PROPE10_PSEUDPROPCONT" + IdSuffix);
+	public ListControl PseudPropcont => new ListControl(driver, ContainerLocator, "#PROPE10_PSEUDPROPCONT");
 
-	public Prope10Form(IWebDriver driver, FORM_MODE mode, By? containerLocator = null, bool usePkInId = false)
-		: base(driver, mode, "PROPE10", containerLocator: containerLocator, usePkInId: usePkInId) { }
+	public Prope10Form(IWebDriver driver, FORM_MODE mode, By? containerLocator = null)
+		: base(driver, mode, "PROPE10", containerLocator: containerLocator) { }
 }

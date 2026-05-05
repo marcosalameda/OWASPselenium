@@ -7,24 +7,24 @@ import CarouselResources from './resources/carouselResources.js'
  * Carousel control
  * @extends CustomControl
  */
-export default class CarouselControl extends CustomControl {
+export default class CarouselControl extends CustomControl
+{
 	/**
 	 * Creates an instance of CarouselControl.
 	 * @param {object} controlContext - The context of the control.
 	 * @param {number} controlOrder - The order of the control.
 	 */
-	constructor(controlContext, controlOrder) {
+	constructor(controlContext, controlOrder)
+	{
 		super(controlContext, controlOrder)
 
-		this.currentSlide = 0
 		this.texts = new CarouselResources(controlContext.vueContext.$getResource)
 		this.usesFullSizeImg = true
 
 		// Carousel-specific handlers
 		this.handlers = {
-			'update:current-slide': (newIndex) => this.handleCurrentSlideUpdate(newIndex),
-			'slide:before-change': (rowKey) => this.handleSlideBeforeChange(rowKey),
-			'slide:click': (rowKey) => this.handleSlideClick(rowKey)
+			'update:visible': (id) => this.onUpdateVisible(id),
+			'click:slide': (id) => this.onSlideClick(id)
 		}
 	}
 
@@ -33,7 +33,8 @@ export default class CarouselControl extends CustomControl {
 	 * @param {object} viewMode - The current view mode of the carousel.
 	 * @returns {object} - An object containing carousel properties.
 	 */
-	getProps(viewMode) {
+	getProps(viewMode)
+	{
 		const slides = computed(() => {
 			return (viewMode.mappedValues ?? []).map((mappedValue) => ({
 				id: mappedValue.rowKey,
@@ -44,13 +45,8 @@ export default class CarouselControl extends CustomControl {
 			}))
 		})
 
-		// Immediately fetch image of the current slide
-		const currentSlideRowKey = slides.value[this.currentSlide]?.id
-		if (currentSlideRowKey) this.fetchImage(currentSlideRowKey, 'slideImage')
-
 		return {
 			id: viewMode.containerId,
-			currentSlide: this.currentSlide,
 			slides: slides,
 			showIndicators: viewMode.styleVariables.showIndicators.value,
 			showControls: viewMode.styleVariables.showControls.value,
@@ -59,44 +55,34 @@ export default class CarouselControl extends CustomControl {
 			autoCyclePause: viewMode.styleVariables.autoCyclePause.value,
 			ride: viewMode.styleVariables.ride.value,
 			wrap: viewMode.styleVariables.wrap.value,
-			loading: !this.controlContext.loaded,
-			texts: this.texts
+			loading: !this.controlContext.loaded
 		}
 	}
 
 	/**
-	 * Handles the `update:current-slide` event.
-	 * Updates the current slide index.
-	 * @param {number} newIndex - The index of the new current slide.
+	 * Handles the model value update event.
+	 * @param {string} rowKey - The key of the current slide.
 	 */
-	handleCurrentSlideUpdate(newIndex) {
-		this.currentSlide = newIndex
-	}
-
-	/**
-	 * Handles the `slide:before-change` event.
-	 * Ensures the upcoming slide's image is preloaded.
-	 * @param {string} rowKey - The key of the slide that will become visible.
-	 */
-	handleSlideBeforeChange(rowKey) {
+	onUpdateVisible(rowKey)
+	{
 		this.fetchImage(rowKey, 'slideImage')
 	}
 
 	/**
-	 * Handles the `slide:click` event.
-	 * Executes the configured row click action, if any.
+	 * Handles the slide click event.
 	 * @param {string} rowKey - The key of the clicked slide.
 	 */
-	handleSlideClick(rowKey) {
+	onSlideClick(rowKey)
+	{
 		const action = this.controlContext.config.rowClickAction
 
-		if (!action) return
+		if (!action)
+			return
 
-		const viewMode = this.controlContext.viewModes[this.controlOrder - 1]
-		const handler = viewMode.handlers.rowAction
+		const viewMode = this.controlContext.viewModes[this.controlOrder - 1],
+			handler = viewMode.handlers.rowAction
 
-		if (typeof handler === 'function') {
+		if (typeof handler === 'function')
 			handler({ id: action.id, rowKey })
-		}
 	}
 }

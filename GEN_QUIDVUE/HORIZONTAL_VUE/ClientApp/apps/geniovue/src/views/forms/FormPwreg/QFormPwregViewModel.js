@@ -1,4 +1,4 @@
-﻿/* eslint-disable @typescript-eslint/no-unused-vars */
+﻿/* eslint-disable no-unused-vars */
 import { computed, reactive, watch } from 'vue'
 import _merge from 'lodash-es/merge'
 
@@ -11,7 +11,7 @@ import netAPI from '@quidgest/clientapp/network'
 import qApi from '@/api/genio/quidgestFunctions.js'
 import qFunctions from '@/api/genio/projectFunctions.js'
 import qProjArrays from '@/api/genio/projectArrays.js'
-/* eslint-enable @typescript-eslint/no-unused-vars */
+/* eslint-enable no-unused-vars */
 
 /**
  * Represents a ViewModel class.
@@ -25,11 +25,11 @@ export default class ViewModel extends FormViewModelBase
 	 * @param {object} options - The options for the ViewModel
 	 * @param {object} values - A ViewModel instance to copy values from
 	 */
-	// eslint-disable-next-line @typescript-eslint/no-unused-vars
+	// eslint-disable-next-line no-unused-vars
 	constructor(vueContext, options, values)
 	{
 		super(vueContext, options)
-		// eslint-disable-next-line @typescript-eslint/no-unused-vars
+		// eslint-disable-next-line no-unused-vars
 		const vm = this.vueContext
 
 		// The view model metadata
@@ -37,9 +37,8 @@ export default class ViewModel extends FormViewModelBase
 			name: 'PWREG',
 			area: 'PWREG',
 			actions: {
-				recalculateFormulas: 'RecalculateFormulas_Pwreg',
-				updateFilesTickets: 'UpdateFilesTicketsPwreg',
-				setFile: 'SetFilePwreg'
+				recalculateFormulas: 'RecalculateFormulas_PWREG',
+				updateFilesTickets: 'UpdateFilesTicketsPWREG'
 			}
 		})
 
@@ -51,7 +50,7 @@ export default class ViewModel extends FormViewModelBase
 			field: 'CODPWREG',
 			description: '',
 		}).cloneFrom(values?.ValCodpwreg))
-		this.stopWatchers.push(watch(() => this.ValCodpwreg.value, (newValue, oldValue) => this.onUpdate('pwreg.codpwreg', this.ValCodpwreg, newValue, oldValue)))
+		watch(() => this.ValCodpwreg.value, (newValue, oldValue) => this.onUpdate('pwreg.codpwreg', this.ValCodpwreg, newValue, oldValue))
 
 		/** The used foreign keys. */
 		this.ValCodpsw = reactive(new modelFieldType.ForeignKey({
@@ -62,7 +61,7 @@ export default class ViewModel extends FormViewModelBase
 			relatedArea: 'PSW',
 			description: '',
 		}).cloneFrom(values?.ValCodpsw))
-		this.stopWatchers.push(watch(() => this.ValCodpsw.value, (newValue, oldValue) => this.onUpdate('pwreg.codpsw', this.ValCodpsw, newValue, oldValue)))
+		watch(() => this.ValCodpsw.value, (newValue, oldValue) => this.onUpdate('pwreg.codpsw', this.ValCodpsw, newValue, oldValue))
 
 		this.ValCodregia = reactive(new modelFieldType.ForeignKey({
 			id: 'ValCodregia',
@@ -72,7 +71,7 @@ export default class ViewModel extends FormViewModelBase
 			relatedArea: 'REGIO',
 			description: '',
 		}).cloneFrom(values?.ValCodregia))
-		this.stopWatchers.push(watch(() => this.ValCodregia.value, (newValue, oldValue) => this.onUpdate('pwreg.codregia', this.ValCodregia, newValue, oldValue)))
+		watch(() => this.ValCodregia.value, (newValue, oldValue) => this.onUpdate('pwreg.codregia', this.ValCodregia, newValue, oldValue))
 
 		/** The remaining form fields. */
 		this.TablePswNome = reactive(new modelFieldType.String({
@@ -83,9 +82,8 @@ export default class ViewModel extends FormViewModelBase
 			field: 'NOME',
 			maxLength: 100,
 			description: computed(() => this.Resources.NAME31974),
-			ignoreFldSubmit: true,
 		}).cloneFrom(values?.TablePswNome))
-		this.stopWatchers.push(watch(() => this.TablePswNome.value, (newValue, oldValue) => this.onUpdate('psw.nome', this.TablePswNome, newValue, oldValue)))
+		watch(() => this.TablePswNome.value, (newValue, oldValue) => this.onUpdate('psw.nome', this.TablePswNome, newValue, oldValue))
 
 		this.TableRegioRegiao = reactive(new modelFieldType.String({
 			type: 'Lookup',
@@ -95,9 +93,8 @@ export default class ViewModel extends FormViewModelBase
 			field: 'REGIAO',
 			maxLength: 50,
 			description: computed(() => this.Resources.REGION12723),
-			ignoreFldSubmit: true,
 		}).cloneFrom(values?.TableRegioRegiao))
-		this.stopWatchers.push(watch(() => this.TableRegioRegiao.value, (newValue, oldValue) => this.onUpdate('regio.regiao', this.TableRegioRegiao, newValue, oldValue)))
+		watch(() => this.TableRegioRegiao.value, (newValue, oldValue) => this.onUpdate('regio.regiao', this.TableRegioRegiao, newValue, oldValue))
 	}
 
 	/**

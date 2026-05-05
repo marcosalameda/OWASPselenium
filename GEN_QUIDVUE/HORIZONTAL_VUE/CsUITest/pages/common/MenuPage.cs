@@ -12,9 +12,9 @@ namespace quidgest.uitests.pages.common
 
         protected IWebElement page => driver.FindElement(By.ClassName(this.id));
 
-        public ListControl List => new ListControl(driver, By.Id("form-container"), "div .q-table-list");
+        public ListControl List => new ListControl(driver, By.Id("form-container"), "form .q-table-list");
 
-        public CardsControl Cards => new CardsControl(driver, By.Id("form-container"), "div .q-table-list");
+        public CardsControl Cards => new CardsControl(driver, By.Id("form-container"), "form .q-table-list");
 
         public KanbanControl Kanban => new KanbanControl(driver, By.Id("form-container"), ".q-kanban");
 

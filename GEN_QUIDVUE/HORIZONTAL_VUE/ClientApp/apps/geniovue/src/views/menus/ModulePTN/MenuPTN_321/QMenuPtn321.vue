@@ -3,23 +3,20 @@
 		v-if="menuModalIsReady"
 		:to="`#${uiContainersId.body}`"
 		:disabled="!menuInfo.isPopup">
-		<div
+		<form
 			class="form-horizontal"
 			@submit.prevent>
 			<q-row-container>
 				<q-table
 					v-bind="controls.menu"
 					v-on="controls.menu.handlers">
-					<template #header>
-						<q-table-config
-							:table-ctrl="controls.menu"
-							v-on="controls.menu.handlers">
-						</q-table-config>
-					</template>
-					<!-- USE /[MANUAL GQT CUSTOM_TABLE PTN_Menu_321]/ -->
 				</q-table>
+
+				<q-table-extra-extension
+					:list-ctrl="controls.menu"
+					v-on="controls.menu.handlers" />
 			</q-row-container>
-		</div>
+		</form>
 	</teleport>
 
 	<teleport
@@ -51,7 +48,7 @@
 </template>
 
 <script>
-	/* eslint-disable @typescript-eslint/no-unused-vars */
+	/* eslint-disable no-unused-vars */
 	import asyncProcM from '@quidgest/clientapp/composables/async'
 	import qEnums from '@quidgest/clientapp/constants/enums'
 	import netAPI from '@quidgest/clientapp/network'
@@ -71,7 +68,7 @@
 	import qApi from '@/api/genio/quidgestFunctions.js'
 	import qFunctions from '@/api/genio/projectFunctions.js'
 	import qProjArrays from '@/api/genio/projectArrays.js'
-	/* eslint-enable @typescript-eslint/no-unused-vars */
+	/* eslint-enable no-unused-vars */
 
 	import MenuViewModel from './QMenuPTN_321ViewModel.js'
 
@@ -156,7 +153,6 @@
 								scrollData: 2,
 								maxDigits: 2,
 								decimalPlaces: 0,
-								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 2,
@@ -166,7 +162,6 @@
 								label: computed(() => this.Resources.AIRLINE_NAME55130),
 								dataLength: 50,
 								scrollData: 30,
-								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 						],
 						config: {
@@ -190,8 +185,10 @@
 								canInsert: false
 							},
 							searchBarConfig: {
-								visibility: true
+								visibility: true,
+								searchOnPressEnter: true
 							},
+							filtersVisible: true,
 							allowColumnFilters: true,
 							allowColumnSort: true,
 							generalCustomActions: [
@@ -217,7 +214,6 @@
 						uuid: 'bbf3d181-a4e9-436f-a35f-4d48f9b24aae',
 						allSelectedRows: 'false',
 						headerLevel: 1,
-						isActiveControl: computed(() => this.isActiveMenu)
 					}, this),
 				}
 			}
@@ -241,14 +237,6 @@
 		{
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
 // USE /[MANUAL GQT FORM_CODEJS PTN_MENU_321]/
-// eslint-disable-next-line
-/* eslint-enable indent, vue/html-indent, vue/script-indent */
-		},
-
-		beforeUnmount()
-		{
-/* eslint-disable indent, vue/html-indent, vue/script-indent */
-// USE /[MANUAL GQT COMPONENT_BEFORE_UNMOUNT PTN_MENU_321]/
 // eslint-disable-next-line
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 		},

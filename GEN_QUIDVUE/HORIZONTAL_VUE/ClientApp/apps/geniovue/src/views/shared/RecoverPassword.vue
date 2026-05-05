@@ -9,7 +9,7 @@
 						<img
 							:src="`${$app.resourcesPath}f-login__brand.png?v=${$app.genio.buildVersion}`"
 							alt="" />
-						<h1>{{ texts.appName }}</h1>
+						<p>{{ texts.appName }}</p>
 					</div>
 					<div
 						id="recover-password-container"
@@ -269,7 +269,7 @@
 			 * Resets the CAPTCHA by fetching a new image URL and clearing the user's input field.
 			 */
 			resetCaptcha() {
-				const apiURL = this.netAPI.apiActionURL('Account', 'GetCaptcha'), uId = uuidv4()
+				let apiURL = this.netAPI.apiActionURL('Account', 'GetCaptcha'), uId = uuidv4()
 
 				this.captchaImageUrl = `${apiURL}?captchaId=${this.captchaId}&t=${uId}`; // Usa a constante
 

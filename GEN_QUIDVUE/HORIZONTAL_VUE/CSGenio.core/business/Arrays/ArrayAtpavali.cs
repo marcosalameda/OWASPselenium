@@ -58,6 +58,7 @@ namespace CSGenio.business
 				{ E_T_1, new ArrayElement() { ResourceId = "DIRIGENTES_E_FUNCION02178", HelpId = "", Group = "" } },
 				{ E_D_2, new ArrayElement() { ResourceId = "DIRIGENTES24546", HelpId = "", Group = "" } },
 				{ E_F_3, new ArrayElement() { ResourceId = "FUNCIONARIOS50597", HelpId = "", Group = "" } },
+				{ E_O_4, new ArrayElement() { ResourceId = "UNIDADE_ORGANICA59623", HelpId = "", Group = "" } },
 			};
 		}
 

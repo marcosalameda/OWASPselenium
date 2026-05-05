@@ -55,7 +55,7 @@
 		mixins: [
 			LayoutHandlers
 		],
-
+		
 		emits: ['menu-action'],
 
 		props: {
@@ -101,7 +101,7 @@
 			 */
 			searchResultClasses()
 			{
-				let classes = ['nav', 'nav-pills', 'nav-sidebar', 'flex-column', 'n-sidebar__nav']
+				var classes = ['nav', 'nav-pills', 'nav-sidebar', 'flex-column', 'n-sidebar__nav']
 
 				if (typeof this.classes === 'string')
 					classes.push(this.classes)

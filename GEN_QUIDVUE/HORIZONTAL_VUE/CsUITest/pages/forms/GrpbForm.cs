@@ -10,13 +10,13 @@ public class GrpbForm : Form
 	/// <summary>
 	/// Name
 	/// </summary>
-	public BaseInputControl GrpbName => new BaseInputControl(driver, ContainerLocator, "container-GRPB____GRPB_NAME____" + IdSuffix, "#GRPB____GRPB_NAME____" + IdSuffix);
+	public BaseInputControl GrpbName => new BaseInputControl(driver, ContainerLocator, "container-GRPB____GRPB_NAME____", "#GRPB____GRPB_NAME____");
 
 	/// <summary>
 	/// 
 	/// </summary>
-	public GrpbPseudTblbGrid PseudTblb => new GrpbPseudTblbGrid(driver, ContainerLocator, "#GRPB____PSEUDTBLB____" + IdSuffix);
+	public GrpbPseudTblbGrid PseudTblb => new GrpbPseudTblbGrid(driver, ContainerLocator, "#GRPB____PSEUDTBLB____");
 
-	public GrpbForm(IWebDriver driver, FORM_MODE mode, By? containerLocator = null, bool usePkInId = false)
-		: base(driver, mode, "GRPB", containerLocator: containerLocator, usePkInId: usePkInId) { }
+	public GrpbForm(IWebDriver driver, FORM_MODE mode, By? containerLocator = null)
+		: base(driver, mode, "GRPB", containerLocator: containerLocator) { }
 }

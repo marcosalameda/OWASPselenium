@@ -1,4 +1,4 @@
-﻿/* eslint-disable @typescript-eslint/no-unused-vars */
+﻿/* eslint-disable no-unused-vars */
 import { computed, reactive, watch } from 'vue'
 import _merge from 'lodash-es/merge'
 
@@ -11,7 +11,7 @@ import netAPI from '@quidgest/clientapp/network'
 import qApi from '@/api/genio/quidgestFunctions.js'
 import qFunctions from '@/api/genio/projectFunctions.js'
 import qProjArrays from '@/api/genio/projectArrays.js'
-/* eslint-enable @typescript-eslint/no-unused-vars */
+/* eslint-enable no-unused-vars */
 
 /**
  * Represents a ViewModel class.
@@ -25,11 +25,11 @@ export default class ViewModel extends FormViewModelBase
 	 * @param {object} options - The options for the ViewModel
 	 * @param {object} values - A ViewModel instance to copy values from
 	 */
-	// eslint-disable-next-line @typescript-eslint/no-unused-vars
+	// eslint-disable-next-line no-unused-vars
 	constructor(vueContext, options, values)
 	{
 		super(vueContext, options)
-		// eslint-disable-next-line @typescript-eslint/no-unused-vars
+		// eslint-disable-next-line no-unused-vars
 		const vm = this.vueContext
 
 		// The view model metadata
@@ -37,9 +37,8 @@ export default class ViewModel extends FormViewModelBase
 			name: 'FACTY',
 			area: 'FACTY',
 			actions: {
-				recalculateFormulas: 'RecalculateFormulas_Facty',
-				updateFilesTickets: 'UpdateFilesTicketsFacty',
-				setFile: 'SetFileFacty'
+				recalculateFormulas: 'RecalculateFormulas_FACTY',
+				updateFilesTickets: 'UpdateFilesTicketsFACTY'
 			}
 		})
 
@@ -51,7 +50,7 @@ export default class ViewModel extends FormViewModelBase
 			field: 'CODFACTY',
 			description: '',
 		}).cloneFrom(values?.ValCodfacty))
-		this.stopWatchers.push(watch(() => this.ValCodfacty.value, (newValue, oldValue) => this.onUpdate('facty.codfacty', this.ValCodfacty, newValue, oldValue)))
+		watch(() => this.ValCodfacty.value, (newValue, oldValue) => this.onUpdate('facty.codfacty', this.ValCodfacty, newValue, oldValue))
 
 		/** The remaining form fields. */
 		this.ValType = reactive(new modelFieldType.String({
@@ -62,7 +61,7 @@ export default class ViewModel extends FormViewModelBase
 			maxLength: 25,
 			description: computed(() => this.Resources.FACILITY_TYPE44577),
 		}).cloneFrom(values?.ValType))
-		this.stopWatchers.push(watch(() => this.ValType.value, (newValue, oldValue) => this.onUpdate('facty.type', this.ValType, newValue, oldValue)))
+		watch(() => this.ValType.value, (newValue, oldValue) => this.onUpdate('facty.type', this.ValType, newValue, oldValue))
 
 		this.ValLayrname = reactive(new modelFieldType.String({
 			id: 'ValLayrname',
@@ -72,7 +71,7 @@ export default class ViewModel extends FormViewModelBase
 			maxLength: 50,
 			description: computed(() => this.Resources.LAYER_NAME49545),
 		}).cloneFrom(values?.ValLayrname))
-		this.stopWatchers.push(watch(() => this.ValLayrname.value, (newValue, oldValue) => this.onUpdate('facty.layrname', this.ValLayrname, newValue, oldValue)))
+		watch(() => this.ValLayrname.value, (newValue, oldValue) => this.onUpdate('facty.layrname', this.ValLayrname, newValue, oldValue))
 
 		this.ValIconurl = reactive(new modelFieldType.String({
 			id: 'ValIconurl',
@@ -82,7 +81,7 @@ export default class ViewModel extends FormViewModelBase
 			maxLength: 50,
 			description: computed(() => this.Resources.ICON_URL07016),
 		}).cloneFrom(values?.ValIconurl))
-		this.stopWatchers.push(watch(() => this.ValIconurl.value, (newValue, oldValue) => this.onUpdate('facty.iconurl', this.ValIconurl, newValue, oldValue)))
+		watch(() => this.ValIconurl.value, (newValue, oldValue) => this.onUpdate('facty.iconurl', this.ValIconurl, newValue, oldValue))
 
 		this.ValShadowur = reactive(new modelFieldType.String({
 			id: 'ValShadowur',
@@ -92,7 +91,7 @@ export default class ViewModel extends FormViewModelBase
 			maxLength: 50,
 			description: computed(() => this.Resources.SHADOW_URL57805),
 		}).cloneFrom(values?.ValShadowur))
-		this.stopWatchers.push(watch(() => this.ValShadowur.value, (newValue, oldValue) => this.onUpdate('facty.shadowur', this.ValShadowur, newValue, oldValue)))
+		watch(() => this.ValShadowur.value, (newValue, oldValue) => this.onUpdate('facty.shadowur', this.ValShadowur, newValue, oldValue))
 
 		this.ValIconancx = reactive(new modelFieldType.Number({
 			id: 'ValIconancx',
@@ -103,7 +102,7 @@ export default class ViewModel extends FormViewModelBase
 			decimalDigits: 0,
 			description: computed(() => this.Resources.ICON_ANCHOR__X_AXIS_18664),
 		}).cloneFrom(values?.ValIconancx))
-		this.stopWatchers.push(watch(() => this.ValIconancx.value, (newValue, oldValue) => this.onUpdate('facty.iconancx', this.ValIconancx, newValue, oldValue)))
+		watch(() => this.ValIconancx.value, (newValue, oldValue) => this.onUpdate('facty.iconancx', this.ValIconancx, newValue, oldValue))
 
 		this.ValIconancy = reactive(new modelFieldType.Number({
 			id: 'ValIconancy',
@@ -114,7 +113,7 @@ export default class ViewModel extends FormViewModelBase
 			decimalDigits: 0,
 			description: computed(() => this.Resources.ICON_ANCHOR__Y_AXIS_63725),
 		}).cloneFrom(values?.ValIconancy))
-		this.stopWatchers.push(watch(() => this.ValIconancy.value, (newValue, oldValue) => this.onUpdate('facty.iconancy', this.ValIconancy, newValue, oldValue)))
+		watch(() => this.ValIconancy.value, (newValue, oldValue) => this.onUpdate('facty.iconancy', this.ValIconancy, newValue, oldValue))
 
 		this.ValIconheig = reactive(new modelFieldType.Number({
 			id: 'ValIconheig',
@@ -125,7 +124,7 @@ export default class ViewModel extends FormViewModelBase
 			decimalDigits: 0,
 			description: computed(() => this.Resources.ICON_HEIGHT61896),
 		}).cloneFrom(values?.ValIconheig))
-		this.stopWatchers.push(watch(() => this.ValIconheig.value, (newValue, oldValue) => this.onUpdate('facty.iconheig', this.ValIconheig, newValue, oldValue)))
+		watch(() => this.ValIconheig.value, (newValue, oldValue) => this.onUpdate('facty.iconheig', this.ValIconheig, newValue, oldValue))
 
 		this.ValIconwid = reactive(new modelFieldType.Number({
 			id: 'ValIconwid',
@@ -136,7 +135,7 @@ export default class ViewModel extends FormViewModelBase
 			decimalDigits: 0,
 			description: computed(() => this.Resources.ICON_WIDTH02295),
 		}).cloneFrom(values?.ValIconwid))
-		this.stopWatchers.push(watch(() => this.ValIconwid.value, (newValue, oldValue) => this.onUpdate('facty.iconwid', this.ValIconwid, newValue, oldValue)))
+		watch(() => this.ValIconwid.value, (newValue, oldValue) => this.onUpdate('facty.iconwid', this.ValIconwid, newValue, oldValue))
 
 		this.ValPopupanx = reactive(new modelFieldType.Number({
 			id: 'ValPopupanx',
@@ -147,7 +146,7 @@ export default class ViewModel extends FormViewModelBase
 			decimalDigits: 0,
 			description: computed(() => this.Resources.POPUP_ANCHOR__X_AXIS15060),
 		}).cloneFrom(values?.ValPopupanx))
-		this.stopWatchers.push(watch(() => this.ValPopupanx.value, (newValue, oldValue) => this.onUpdate('facty.popupanx', this.ValPopupanx, newValue, oldValue)))
+		watch(() => this.ValPopupanx.value, (newValue, oldValue) => this.onUpdate('facty.popupanx', this.ValPopupanx, newValue, oldValue))
 
 		this.ValPopupany = reactive(new modelFieldType.Number({
 			id: 'ValPopupany',
@@ -158,7 +157,7 @@ export default class ViewModel extends FormViewModelBase
 			decimalDigits: 0,
 			description: computed(() => this.Resources.POPUP_ANCHOR__Y_AXIS64670),
 		}).cloneFrom(values?.ValPopupany))
-		this.stopWatchers.push(watch(() => this.ValPopupany.value, (newValue, oldValue) => this.onUpdate('facty.popupany', this.ValPopupany, newValue, oldValue)))
+		watch(() => this.ValPopupany.value, (newValue, oldValue) => this.onUpdate('facty.popupany', this.ValPopupany, newValue, oldValue))
 
 		this.ValShadowax = reactive(new modelFieldType.Number({
 			id: 'ValShadowax',
@@ -169,7 +168,7 @@ export default class ViewModel extends FormViewModelBase
 			decimalDigits: 0,
 			description: computed(() => this.Resources.SHADOW_ANCHOR__X_AXI31230),
 		}).cloneFrom(values?.ValShadowax))
-		this.stopWatchers.push(watch(() => this.ValShadowax.value, (newValue, oldValue) => this.onUpdate('facty.shadowax', this.ValShadowax, newValue, oldValue)))
+		watch(() => this.ValShadowax.value, (newValue, oldValue) => this.onUpdate('facty.shadowax', this.ValShadowax, newValue, oldValue))
 
 		this.ValShadoway = reactive(new modelFieldType.Number({
 			id: 'ValShadoway',
@@ -180,7 +179,7 @@ export default class ViewModel extends FormViewModelBase
 			decimalDigits: 0,
 			description: computed(() => this.Resources.SHADOW_ANCHOR__Y_AXI51495),
 		}).cloneFrom(values?.ValShadoway))
-		this.stopWatchers.push(watch(() => this.ValShadoway.value, (newValue, oldValue) => this.onUpdate('facty.shadoway', this.ValShadoway, newValue, oldValue)))
+		watch(() => this.ValShadoway.value, (newValue, oldValue) => this.onUpdate('facty.shadoway', this.ValShadoway, newValue, oldValue))
 
 		this.ValShadowhe = reactive(new modelFieldType.Number({
 			id: 'ValShadowhe',
@@ -191,7 +190,7 @@ export default class ViewModel extends FormViewModelBase
 			decimalDigits: 0,
 			description: computed(() => this.Resources.SHADOW_HEIGHT64343),
 		}).cloneFrom(values?.ValShadowhe))
-		this.stopWatchers.push(watch(() => this.ValShadowhe.value, (newValue, oldValue) => this.onUpdate('facty.shadowhe', this.ValShadowhe, newValue, oldValue)))
+		watch(() => this.ValShadowhe.value, (newValue, oldValue) => this.onUpdate('facty.shadowhe', this.ValShadowhe, newValue, oldValue))
 
 		this.ValShadowwi = reactive(new modelFieldType.Number({
 			id: 'ValShadowwi',
@@ -202,7 +201,7 @@ export default class ViewModel extends FormViewModelBase
 			decimalDigits: 0,
 			description: computed(() => this.Resources.SHADOW_WIDTH01769),
 		}).cloneFrom(values?.ValShadowwi))
-		this.stopWatchers.push(watch(() => this.ValShadowwi.value, (newValue, oldValue) => this.onUpdate('facty.shadowwi', this.ValShadowwi, newValue, oldValue)))
+		watch(() => this.ValShadowwi.value, (newValue, oldValue) => this.onUpdate('facty.shadowwi', this.ValShadowwi, newValue, oldValue))
 	}
 
 	/**

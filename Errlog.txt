@@ -1,232 +1,686 @@
-﻿GQT em 20/04/2026 15:37:13
-03:37:13.762 info: Beginning generation: Vertical layout - Vue - ASP.Net MVC API
-03:37:13.775 info: Reading relational model...
-03:37:15.075 info: Validations for ASP.NET MVC...
-03:37:15.076 info: Creating output directories for ASP.NET MVC...
-03:37:15.120 info: Copying configurations...
-03:37:15.123 info: Generating resources...
-03:37:15.253 info: Generating helper classes...
-03:37:15.274 info: Generating generic controllers...
-03:37:15.303 info: Generating generic models...
-03:37:15.311 info: Generating table models...
-03:37:15.386 info: Generating generic view models...
-03:37:15.412 info: Generating forms view models...
-03:37:16.786 info: Generating editable table list view models...
-03:37:16.788 info: Generating list view models...
-03:37:17.415 info: Copying Api configurations...
-03:37:17.419 info: Generating forms controllers...
-03:37:18.322 info: Deleting unnecessary generation files
-03:37:18.335 info: Writing pending files took 11 ms
-03:37:18.336 info: Finished generation
-03:37:18.336 info: Took 4 seconds
-03:37:18.338 info: Beginning generation: Vertical layout - Vue - C# Server
-03:37:18.358 info: Validating formulas...
-03:37:18.600 info: Reading relational model...
-03:37:18.605 info: Creating output directories...
-03:37:18.607 info: Generating tables...
-03:37:19.240 info: Generating ephs and access levels...
-03:37:19.250 info: Generating functions and manual code...
-03:37:19.302 info: Generating server side interface support code...
-03:37:19.303 info: Reading necessary forms...
-03:37:20.131 info: Copying Files...
-03:37:20.141 info: Creating AI agents
-03:37:20.144 info: Creating McpTools
-03:37:20.457 info: Deleting unnecessary generation files
-03:37:20.462 info: Writing pending files took 4 ms
-03:37:20.462 info: Finished generation
-03:37:20.463 info: Took 2 seconds
-03:37:20.464 info: Beginning generation: Vertical layout - Vue - CSharp UI Test
-03:37:20.478 info: Reading relational model...
-03:37:20.516 info: Creating output directories...
-03:37:20.517 info: Copying files...
-03:37:20.528 info: Generating Dashboards...
-03:37:20.531 info: Generating Form pages...
-03:37:20.629 info: Creating tests from Manual routines...
-03:37:20.630 info: Deleting unnecessary generation files
-03:37:20.633 info: Writing pending files took 2 ms
-03:37:20.634 info: Finished generation
-03:37:20.634 info: Took 170 ms
-03:37:20.636 info: Beginning generation: Vertical layout - Vue - Vue.js Client
-03:37:20.660 info: Reading relational model...
-03:37:20.705 info: Creating output directories...
-03:37:20.707 info: Copying packages...
-03:37:20.718 info: Copying static files...
-03:37:20.720 info: Generating files...
-03:37:20.733 info: Generating public files...
-03:37:20.752 info: Generating assets files...
-03:37:20.827 info: Generating api files...
-03:37:20.853 info: Generating plugins files...
-03:37:20.855 info: Generating mixins and utils files...
-03:37:20.887 info: Generating router files...
-03:37:20.922 info: Generating store files...
-03:37:20.924 info: Generating components files...
-03:37:20.942 info: Generating models files...
-03:37:20.947 info: Generating views files...
-03:37:20.952 info: Generating forms files...
-03:37:23.726 info: Generating virtual forms files...
-03:37:23.738 info: Generating menus files...
-03:37:24.321 info: Generating external apps...
-03:37:24.323 info: Generating Charts...
-03:37:24.323 info: Generating tests files...
-03:37:24.329 info: Copying FlatIntranet layout...
-03:37:24.333 info: Generating translations...
-03:37:24.621 info: Deleting unnecessary generation files
-03:37:24.719 info: Writing pending files took 96 ms
-03:37:24.719 info: Finished generation
-03:37:24.719 info: Took 4 seconds
-03:37:24.723 info: Beginning generation: Horizontal Layout - Vue - ASP.Net MVC API
-03:37:24.734 info: Reading relational model...
-03:37:24.764 info: Validations for ASP.NET MVC...
-03:37:24.764 info: Creating output directories for ASP.NET MVC...
-03:37:24.779 info: Copying configurations...
-03:37:24.781 info: Generating resources...
-03:37:24.877 info: Generating helper classes...
-03:37:24.900 info: Generating generic controllers...
-03:37:24.921 info: Generating generic models...
-03:37:24.929 info: Generating table models...
-03:37:25.001 info: Generating generic view models...
-03:37:25.020 info: Generating forms view models...
-03:37:26.203 info: Generating editable table list view models...
-03:37:26.205 info: Generating list view models...
-03:37:26.810 info: Copying Api configurations...
-03:37:26.814 info: Generating forms controllers...
-03:37:27.658 info: Deleting unnecessary generation files
-03:37:27.668 info: Writing pending files took 9 ms
-03:37:27.668 info: Finished generation
-03:37:27.669 info: Took 2 seconds
-03:37:27.670 info: Beginning generation: Horizontal Layout - Vue - C# Server
-03:37:27.684 info: Validating formulas...
-03:37:27.929 info: Reading relational model...
-03:37:27.934 info: Creating output directories...
-03:37:27.935 info: Generating tables...
-03:37:28.587 info: Generating ephs and access levels...
-03:37:28.598 info: Generating functions and manual code...
-03:37:28.655 info: Generating server side interface support code...
-03:37:28.655 info: Reading necessary forms...
-03:37:28.681 info: Copying Files...
-03:37:28.694 info: Creating AI agents
-03:37:28.695 info: Creating McpTools
-03:37:28.961 info: Deleting unnecessary generation files
-03:37:29.004 info: Writing pending files took 42 ms
-03:37:29.004 info: Finished generation
-03:37:29.004 info: Took 1334 ms
-03:37:29.007 info: Beginning generation: Horizontal Layout - Vue - CSharp UI Test
-03:37:29.020 info: Reading relational model...
-03:37:29.056 info: Creating output directories...
-03:37:29.057 info: Copying files...
-03:37:29.069 info: Generating Dashboards...
-03:37:29.071 info: Generating Form pages...
-03:37:29.174 info: Creating tests from Manual routines...
-03:37:29.175 info: Deleting unnecessary generation files
-03:37:29.178 info: Writing pending files took 2 ms
-03:37:29.179 info: Finished generation
-03:37:29.179 info: Took 173 ms
-03:37:29.182 info: Beginning generation: Horizontal Layout - Vue - Vue.js Client
-03:37:29.209 info: Reading relational model...
-03:37:29.260 info: Creating output directories...
-03:37:29.261 info: Copying packages...
-03:37:29.270 info: Copying static files...
-03:37:29.271 info: Generating files...
-03:37:29.284 info: Generating public files...
-03:37:29.301 info: Generating assets files...
-03:37:29.373 info: Generating api files...
-03:37:29.397 info: Generating plugins files...
-03:37:29.399 info: Generating mixins and utils files...
-03:37:29.430 info: Generating router files...
-03:37:29.465 info: Generating store files...
-03:37:29.466 info: Generating components files...
-03:37:29.483 info: Generating models files...
-03:37:29.488 info: Generating views files...
-03:37:29.493 info: Generating forms files...
-03:37:31.808 info: Generating virtual forms files...
-03:37:31.819 info: Generating menus files...
-03:37:32.391 info: Generating external apps...
-03:37:32.392 info: Generating Charts...
-03:37:32.393 info: Generating tests files...
-03:37:32.397 info: Copying HorzMenu_WithHeader layout...
-03:37:32.404 info: Generating translations...
-03:37:32.713 info: Deleting unnecessary generation files
-03:37:32.990 info: Writing pending files took 276 ms
-03:37:32.991 info: Finished generation
-03:37:32.991 info: Took 3 seconds
-03:37:32.993 info: Beginning generation: WebAdmin - Administration CS
-03:37:33.007 info: Creating output directories for Administration CS...
-03:37:33.007 info: Generating resources folder...
-03:37:33.135 info: Generating C# classes...
-03:37:33.146 info: Reading relational model...
-03:37:33.184 info: Generating client app
-03:37:33.360 info: Creating unit tests
-03:37:33.361 info: Creating integration tests
-03:37:33.363 info: Telemetry
-03:37:33.364 info: Deleting unnecessary generation files
-03:37:33.390 info: Writing pending files took 25 ms
-03:37:33.390 info: Finished generation
-03:37:33.391 info: Took 398 ms
-03:37:33.393 info: Beginning generation: WebAdmin - C# Server
-03:37:33.408 info: Validating formulas...
-03:37:33.641 info: Reading relational model...
-03:37:33.646 info: Creating output directories...
-03:37:33.648 info: Generating tables...
-03:37:34.309 info: Generating ephs and access levels...
-03:37:34.321 info: Generating functions and manual code...
-03:37:34.370 info: Generating server side interface support code...
-03:37:34.371 info: Reading necessary forms...
-03:37:34.394 info: Copying Files...
-03:37:34.403 info: Creating AI agents
-03:37:34.404 info: Creating McpTools
-03:37:34.663 info: Deleting unnecessary generation files
-03:37:34.710 info: Writing pending files took 47 ms
-03:37:34.711 info: Finished generation
-03:37:34.711 info: Took 1319 ms
-03:37:34.712 info: Beginning generation: WebAdmin - Reindex Scripts
-03:37:34.716 info: Generating Microsoft sql reindex scripts...
-03:37:34.720 info: Creating Output Directory...
-03:37:34.720 info: Reading relational model...
-03:37:34.733 info: Generating: 'Database Verification'
-03:37:34.733 info: Generating: 'Schema Verification'
-03:37:34.734 info: Generating: 'Auxiliary Functions'
-03:37:34.736 info: Generating: 'Table Rebuild'
-03:37:34.741 info: Generating: 'Functions Update'
-03:37:34.773 info: Generating: 'Table Validation'
-03:37:34.834 info: Generating: 'Column Removal'
-03:37:34.843 info: Generating: 'Schema Maintenance'
-03:37:34.844 info: Generating: 'Fixed Tables'
-03:37:34.855 info: Generating: 'Index Validation'
-03:37:34.867 info: Generating: 'Update Stored Procedures and Initial Functions'
-03:37:34.869 info: Generating: 'Update Stored Procedures and Manual Functions'
-03:37:34.876 info: Generating: 'Update Stored Procedures and Final Functions'
-03:37:34.881 info: Generating: 'Grant Access of Stored Procedures e Functions'
-03:37:34.882 info: Generating: 'Version Verification'
-03:37:34.883 info: Generating: 'Update States'
-03:37:34.884 info: Generating: 'Clean up notes'
-03:37:34.885 info: Generating: 'Internal Codes Rebuild'
-03:37:34.887 info: Generating: 'Temporary Tables Elimination'
-03:37:34.888 info: Generating: 'Transaction Log Compression'
-03:37:34.888 info: Generating: 'Propagation of Replicas'
-03:37:34.899 info: Generating: 'Clear Fields to Formulas'
-03:37:34.901 info: Generating: 'Formulas Calculation'
-03:37:34.963 info: Generating Formulas Calculations: Last Value Relations
-03:37:34.966 info: Generating Formulas Calculations: Table Consultation
-03:37:34.975 info: Generating Formulas Calculations: Internal Formulas
-03:37:34.987 info: Generating Formulas Calculations: External Formulas
-03:37:35.000 info: Generating Formulas Calculations: Lits Aggregate Formulas
-03:37:35.002 info: Generating Formulas Calculations: Daily Update Formulas
-03:37:35.014 info: Generating: Index Rebuild
-03:37:35.015 info: Generating: 'Controlled Records'
-03:37:35.058 info: Generating: 'FK Creation'
-03:37:35.063 info: Generating: 'FK Elimination'
-03:37:35.063 info: Generating: 'Upgrade Client'
-03:37:35.064 info: Generating: 'Formula Groups'
-03:37:35.067 info: Generating: 'Fulltext Search'
-03:37:35.072 info: Generating: 'History database schema'
-03:37:35.075 info: Generating: 'Database Seeding'
-03:37:35.076 info: Generating: 'FrameworkChangeRoutines.sql'
-03:37:35.077 info: Generating: 'order2Exec.dat'
-03:37:35.078 info: Generating: 'order2Exec.xml'
-03:37:35.088 info: Generating: 'ChangeYear.sql'
-03:37:35.102 info: Generating: 'SetInvalidFK2Null.sql'
-03:37:35.108 info: Generating: 'DBSessionState.sql'
-03:37:35.117 info: Deleting unnecessary generation files
-03:37:35.121 info: Writing pending files took 3 ms
-03:37:35.122 info: Finished generation
-03:37:35.122 info: Took 410 ms
+﻿GQT em 05/05/2026 16:45:59
+04:45:59.718 info: Reading relational model...
+04:45:59.918 info: Reading menus...
+04:46:00.874 info: Calculating indexes [Tables]...
+04:46:00.888 info: Calculating indexes [Eph]...
+04:46:00.899 info: Calculating indexes [Menus]...
+04:46:00.905 info: Calculating indexes [Forms]...
+04:46:10.214 warning: The MO field [FLDS->DESCRIP] coming from DB lookup FEECAFLDSDESCRIP should not be used in index INX_FLDS_DESCRIP_
+04:46:11.733 info: Calculating indexes [Manwins]...
+04:46:11.735 info: Calculating indexes [Altwins]...
+04:46:11.736 info: Calculating unique indexes...
+04:46:11.738 info: Reading indexes from table...
+04:46:11.870 info: Beginning generation: Horizontal Layout - Vue - ASP.Net MVC API
+04:46:11.943 info: Reading relational model...
+04:46:12.594 info: Validations for ASP.NET MVC...
+04:46:12.610 info: Creating output directories for ASP.NET MVC...
+04:46:13.472 info: Copying configurations...
+04:46:13.495 info: Generating resources...
+04:46:13.646 info: Generating helper classes...
+04:46:13.697 info: Generating generic controllers...
+04:46:13.790 info: Generating generic models...
+04:46:13.810 info: Generating table models...
+04:46:13.975 info: Generating generic view models...
+04:46:14.090 info: Generating forms view models...
+04:46:16.069 info: Generating editable table list view models...
+04:46:16.072 info: Generating list view models...
+04:46:16.630 info: Copying Api configurations...
+04:46:16.658 info: Generating forms controllers...
+04:46:17.475 info: Deleting unnecessary generation files
+04:46:17.481 info: Writing pending files took 5 ms
+04:46:17.481 info: Finished generation
+04:46:17.482 info: Took 5 seconds
+04:46:17.483 info: Templates/ASPNET-MVCTemplates/MvcApi/GenioMVC.sln.vm : 3ms
+04:46:17.483 info: Templates/ASPNET-MVCTemplates/MvcApi/GenioMVC/GenioMVC.csproj.vm : 0ms
+04:46:17.483 info: Templates/ASPNET-MVCTemplates/GenioMVC/Resources/Resources.resx.vm : 54ms
+04:46:17.484 info: Templates/ASPNET-MVCTemplates/GenioMVC/Resources/Resources.suffix.Designer.cs.vm : 0ms
+04:46:17.484 info: Templates/ASPNET-MVCTemplates/GenioMVC/Resources/EmailTemplates/InvalidEmailTemplate.suffix.html.vm : 0ms
+04:46:17.484 info: Templates/ASPNET-MVCTemplates/GenioMVC/Resources/EmailTemplates/PasswordChangeEmail.suffix.html.vm : 0ms
+04:46:17.485 info: Templates/ASPNET-MVCTemplates/GenioMVC/Resources/Resources.Designer.cs.vm : 11ms
+04:46:17.485 info: Templates/ASPNET-MVCTemplates/GenioMVC/Content/Elasticsearch/Elasticsearch_Mappings.json.vm : 25ms
+04:46:17.485 info: Resources/queries.xml.vm : 33ms
+04:46:17.486 info: Templates/ASPNET-MVCTemplates/GenioMVC/Helpers/Attributes/Validations.cs.vm : 0ms
+04:46:17.486 info: Templates/ASPNET-MVCTemplates/GenioMVC/Helpers/Culture/CultureManager.cs.vm : 0ms
+04:46:17.486 info: Templates/ASPNET-MVCTemplates/GenioMVC/Helpers/Mailer.cs.vm : 25ms
+04:46:17.486 info: Templates/ASPNET-MVCTemplates/GenioMVC/Helpers/CustomHelpers.cs.vm : 0ms
+04:46:17.487 info: Templates/ASPNET-MVCTemplates/MvcApi/GenioMVC/Helpers/Menus/Menus.cs.vm : 7ms
+04:46:17.487 info: Templates/ASPNET-MVCTemplates/MvcApi/GenioMVC/Controllers/ArraysController.cs.vm : 30ms
+04:46:17.487 info: Templates/ASPNET-MVCTemplates/MvcApi/GenioMVC/Controllers/AlertsController.cs.vm : 0ms
+04:46:17.488 info: Templates/ASPNET-MVCTemplates/MvcApi/GenioMVC/Controllers/AccountController.cs.vm : 4ms
+04:46:17.488 info: Templates/ASPNET-MVCTemplates/MvcApi/GenioMVC/Controllers/AuditViewerController.cs.vm : 0ms
+04:46:17.488 info: Templates/ASPNET-MVCTemplates/MvcApi/GenioMVC/Controllers/ControllerBase.cs.vm : 0ms
+04:46:17.488 info: Templates/ASPNET-MVCTemplates/MvcApi/GenioMVC/Controllers/HomeController.cs.vm : 20ms
+04:46:17.489 info: Templates/ASPNET-MVCTemplates/MvcApi/GenioMVC/Controllers/SuggestionController.cs.vm : 0ms
+04:46:17.489 info: Templates/ASPNET-MVCTemplates/MvcApi/GenioMVC/Controllers/Dashboard/DashboardController.cs.vm : 2ms
+04:46:17.489 info: Templates/ASPNET-MVCTemplates/MvcApi/GenioMVC/Models/Audit/AuditModel.cs.vm : 2ms
+04:46:17.490 info: Templates/ASPNET-MVCTemplates/GenioMVC/Models/Audit/JQueryDataTableParamModel.cs.vm : 0ms
+04:46:17.490 info: Templates/ASPNET-MVCTemplates/MvcApi/GenioMVC/Models/Authentication/AccountModels.cs.vm : 0ms
+04:46:17.490 info: Templates/ASPNET-MVCTemplates/GenioMVC/Models/Authentication/UserCache.cs.vm : 0ms
+04:46:17.491 info: Templates/ASPNET-MVCTemplates/MvcApi/GenioMVC/Models/Table.cs.vm : 128ms
+04:46:17.491 info: Templates/ASPNET-MVCTemplates/GenioMVC/ViewModels/Bookmarks_ViewModel.cs.vm : 0ms
+04:46:17.491 info: Templates/ASPNET-MVCTemplates/MvcApi/GenioMVC/ViewModels/Alerts_ViewModel.cs.vm : 4ms
+04:46:17.492 info: Templates/ASPNET-MVCTemplates/MvcApi/GenioMVC/ViewModels/Home_ViewModel.cs.vm : 0ms
+04:46:17.492 info: Templates/ASPNET-MVCTemplates/MvcApi/GenioMVC/ViewModels/HomePage_ViewModel.cs.vm : 2ms
+04:46:17.492 info: Templates/ASPNET-MVCTemplates/MvcApi/GenioMVC/ViewModels/ViewModelBase.cs.vm : 0ms
+04:46:17.492 info: Templates/ASPNET-MVCTemplates/MvcApi/GenioMVC/ViewModels/UserAdmin/Defaultpsw_ViewModel.cs.vm : 0ms
+04:46:17.493 info: Templates/ASPNET-MVCTemplates/MvcApi/GenioMVC/ViewModels/SuggestionViewModel.cs.vm : 0ms
+04:46:17.493 info: Templates/ASPNET-MVCTemplates/MvcApi/GenioMVC/ViewModels/TemplateDashboardViewModel.cs.vm : 71ms
+04:46:17.493 info: Templates/ASPNET-MVCTemplates/MvcApi/GenioMVC/ViewModels/TemplateViewModel.cs.vm : 1206ms
+04:46:17.494 info: Templates/ASPNET-MVCTemplates/MvcApi/GenioMVC/ViewModels/TemplateDBEditRowViewModel.cs.vm : 110ms
+04:46:17.494 info: Templates/ASPNET-MVCTemplates/MvcApi/GenioMVC/ViewModels/TemplateDBEditViewModel.cs.vm : 970ms
+04:46:17.494 info: Templates/ASPNET-MVCTemplates/MvcApi/GenioMVC/ViewModels/TemplateTimelineViewModel.cs.vm : 5ms
+04:46:17.494 info: Templates/ASPNET-MVCTemplates/MvcApi/GenioMVC/ViewModels/TemplateTreeListViewModel.cs.vm : 0ms
+04:46:17.495 info: Templates/ASPNET-MVCTemplates/MvcApi/GenioMVC/ViewModels/TemplateEmptyFormViewModel.cs.vm : 2ms
+04:46:17.495 info: Templates/ASPNET-MVCTemplates/MvcApi/GenioMVC/ViewModels/TemplatePropertyListViewModel.cs.vm : 0ms
+04:46:17.495 info: Templates/ASPNET-MVCTemplates/MvcApi/GenioMVC/ViewModels/TemplateDBEditViewModel_Limits.cs.vm : 2ms
+04:46:17.496 info: Templates/ASPNET-MVCTemplates/MvcApi/GenioMVC/ViewModels/TemplateDBEditViewModel_AC.cs.vm : 0ms
+04:46:17.496 info: Templates/ASPNET-MVCTemplates/MvcApi/Root/Program.cs.vm : 0ms
+04:46:17.496 info: Templates/ASPNET-MVCTemplates/MvcApi/start.bat.vm : 0ms
+04:46:17.497 info: Templates/ASPNET-MVCTemplates/MvcApi/docker-compose.yml.vm : 1ms
+04:46:17.497 info: Templates/ASPNET-MVCTemplates/MvcApi/docker_db_maintenance.sh.vm : 0ms
+04:46:17.497 info: Templates/ASPNET-MVCTemplates/MvcApi/setupiis.ps1.vm : 0ms
+04:46:17.497 info: Templates/ASPNET-MVCTemplates/MvcApi/GenioMVC/Web.config.vm : 0ms
+04:46:17.498 info: Templates/ASPNET-MVCTemplates/MvcApi/GenioMVC/ViewModels/Shared/Kanban/KanbanViewModel.cs.vm : 3ms
+04:46:17.498 info: Templates/ASPNET-MVCTemplates/MvcApi/GenioMVC/Controllers/ConfigController.cs.vm : 0ms
+04:46:17.498 info: Templates/ASPNET-MVCTemplates/MvcApi/GenioMVC/Controllers/Controller.cs.vm : 395ms
+04:46:17.498 info: Templates/ASPNET-MVCTemplates/MvcApi/GenioMVC/Controllers/ControllerMenu.cs.vm : 98ms
+04:46:17.499 info: Templates/ASPNET-MVCTemplates/MvcApi/GenioMVC/Controllers/ControllerForm.cs.vm : 171ms
+04:46:17.499 info: Templates/ASPNET-MVCTemplates/MvcApi/GenioMVC/Controllers/ControllerFormWizard.cs.vm : 9ms
+04:46:17.509 info: Beginning generation: Horizontal Layout - Vue - C# Server
+04:46:17.520 info: Validating formulas...
+04:46:17.796 info: Reading relational model...
+04:46:17.803 info: Creating output directories...
+04:46:17.817 info: Generating tables...
+04:46:29.207 info: Generating ephs and access levels...
+04:46:29.233 info: Generating functions and manual code...
+04:46:29.573 info: Generating server side interface support code...
+04:46:29.575 info: Reading necessary forms...
+04:46:30.220 info: Copying Files...
+04:46:30.244 info: Creating AI agents
+04:46:30.652 info: Deleting unnecessary generation files
+04:46:30.655 info: Writing pending files took 2 ms
+04:46:30.655 info: Finished generation
+04:46:30.655 info: Took 13 seconds
+04:46:30.656 info: Templates/CsTemplates/CSGenio.core/business/Area.cs.vm : 2ms
+04:46:30.656 info: Templates/CsTemplates/CSGenio.core/business/DbArea.cs.vm : 0ms
+04:46:30.656 info: Templates/CsTemplates/CSArea.cs.vm : 11259ms
+04:46:30.657 info: Templates/CsTemplates/CSGenio.core/model/CShardcoded.cs.vm : 1ms
+04:46:30.657 info: Templates/CsTemplates/TemplateArray.vm : 13ms
+04:46:30.657 info: Templates/MetaZip/info.xml.vm : 0ms
+04:46:30.658 info: Templates/CsTemplates/CSGenio.core/business/CSeph.cs.vm : 4ms
+04:46:30.658 info: Templates/CsTemplates/Trigger.cs.vm : 4ms
+04:46:30.658 info: Templates/CsTemplates/CSGenio.core/business/EPH.cs.vm : 0ms
+04:46:30.658 info: Templates/CsTemplates/CSGenio.framework/NivelAcesso.cs.vm : 0ms
+04:46:30.659 info: Templates/CsTemplates/CSGenio.framework/Role.cs.vm : 1ms
+04:46:30.659 info: Templates/CsTemplates/CSGenio.core/config/Configuracao.cs.vm : 28ms
+04:46:30.659 info: Templates/CsTemplates/CSGenio.core/config/ExtraProperties.cs.vm : 0ms
+04:46:30.659 info: Templates/CsTemplates/FuncoesGlobais.cs.vm : 5ms
+04:46:30.660 info: Templates/CsTemplates/FuncoesManuais.cs.vm : 7ms
+04:46:30.660 info: Templates/CsTemplates/FunctionInformation.cs.vm : 0ms
+04:46:30.660 info: Templates/CsTemplates/Classes.cs.vm : 0ms
+04:46:30.660 info: Templates/CsTemplates/CustomDynamicArray.cs.vm : 0ms
+04:46:30.661 info: Templates/CsTemplates/SchedulerFunctions.cs.vm : 0ms
+04:46:30.661 info: Templates/CsTemplates/MessageQueueProcessor.cs.vm : 0ms
+04:46:30.661 info: Templates/CsTemplates/CSGenio.core/persistence/SuportePersistente.cs.vm : 61ms
+04:46:30.661 info: Templates/CsTemplates/CSGenio.core/persistence/OverrideQuery.cs.vm : 138ms
+04:46:30.662 info: Templates/CsTemplates/OverrideQueryDefinition.cs.vm : 48ms
+04:46:30.662 info: Templates/CsTemplates/PersistentSupportExtra.cs.vm : 0ms
+04:46:30.662 info: Templates/CsTemplates/async/SchedulerJob.cs.vm : 0ms
+04:46:30.662 info: Templates/CsTemplates/Profile.cs.vm : 0ms
+04:46:30.663 info: Templates/CsTemplates/RequestFlashBSC.cs.vm : 10ms
+04:46:30.663 info: Templates/CsTemplates/RequestFlashWFActivity.cs.vm : 0ms
+04:46:30.663 info: Templates/CsTemplates/RequestFlashWFGateway.cs.vm : 0ms
+04:46:30.663 info: Templates/CsTemplates/RequestFlashWFEvent.cs.vm : 0ms
+04:46:30.664 info: Templates/CsTemplates/RequestFlashWFRela.cs.vm : 0ms
+04:46:30.664 info: Templates/CsTemplates/RequestFlashWorkflow.cs.vm : 4ms
+04:46:30.664 info: Templates/CsTemplates/RequestFlashPicagem.cs.vm : 0ms
+04:46:30.665 info: Templates/CsTemplates/RequestFlashGtime.cs.vm : 0ms
+04:46:30.665 info: Templates/CsTemplates/CSGenio.core/framework/Elasticsearch.cs.vm : 4ms
+04:46:30.665 info: Templates/CsTemplates/CSGenio.core/framework/ElasticsearchService.cs.vm : 0ms
+04:46:30.665 info: Templates/CsTemplates/CSGenio.core/business/ElasticsearchDoc.cs.vm : 0ms
+04:46:30.666 info: Templates/CsTemplates/CSGenio.core/business/ElasticsearchQueries.cs.vm : 0ms
+04:46:30.666 info: Templates/CsTemplates/CSGenio.core/business/ElasticsearchResult.cs.vm : 0ms
+04:46:30.666 info: Templates/CsTemplates/ElasticsearchQueriesExtra.cs.vm : 1ms
+04:46:30.666 info: Templates/CsTemplates/CSGenio.core/business/ArraysCrystalReports.cs.vm : 0ms
+04:46:30.667 info: Templates/CsTemplates/GenioServer_core.csproj.vm : 0ms
+04:46:30.667 info: Templates/CsTemplates/CSGenio.core/persistence/Campo.cs.vm : 0ms
+04:46:30.667 info: Templates/CsTemplates/CSGenio.core/config/ConfigXMLMigration.cs.vm : 0ms
+04:46:30.667 info: Templates/CsTemplates/CSGenio.framework/ClientApplication.cs.vm : 0ms
+04:46:30.668 info: Templates/CsTemplates/CSGenio.core/persistence/MessageQueue.cs.vm : 0ms
+04:46:30.668 info: Templates/CsTemplates/CSGenio.core/framework/ProgressReport.cs.vm : 0ms
+04:46:30.668 info: Templates/CsTemplates/ModelAiAgent.cs.vm : 6ms
+04:46:30.668 info: Templates/CsTemplates/CSGenio.framework/CSGenio.framework.csproj.vm : 0ms
+04:46:30.669 info: Templates/CsTemplates/CSGenio.core/CSGenio.core.csproj.vm : 0ms
+04:46:30.669 info: Templates/CsTemplates/ReindexFunctions.cs.vm : 35ms
+04:46:30.669 info: Templates/CsTemplates/CSGenio.core/business/ArgumentoUltimoValor.cs.vm : 0ms
+04:46:30.670 info: Templates/CsTemplates/CSGenio.core/business/FormulaDbContext.cs.vm : 0ms
+04:46:30.670 info: Templates/CsTemplates/CSGenio.core/business/Formula.cs.vm : 0ms
+04:46:30.670 info: Templates/CsTemplates/CSGenio.core/business/FormulaReplica.cs.vm : 0ms
+04:46:30.670 info: Templates/CsTemplates/CSGenio.core/business/FormulaConsultaTabela.cs.vm : 0ms
+04:46:30.671 info: Templates/CsTemplates/CSGenio.core/business/FormulaOperacaoInterna.cs.vm : 0ms
+04:46:30.671 info: Templates/CsTemplates/CSGenio.core/business/FormulaCondicao.cs.vm : 0ms
+04:46:30.671 info: Templates/CsTemplates/CSGenio.core/business/Listagem.cs.vm : 0ms
+04:46:30.671 info: Templates/CsTemplates/CSGenio.core/business/ValorDefault.cs.vm : 0ms
+04:46:30.672 info: Templates/CsTemplates/CSGenio.core/business/ManualQuerys.cs.vm : 26ms
+04:46:30.672 info: Templates/CsTemplates/CSGenio.core/business/Notifications.cs.vm : 2ms
+04:46:30.672 info: Templates/CsTemplates/ExtControl.cs.vm : 0ms
+04:46:30.672 info: Templates/CsTemplates/ExtAppControl.cs.vm : 0ms
+04:46:30.673 info: Templates/CsTemplates/CSGenio.core/persistence/QueryUtils.cs.vm : 0ms
+04:46:30.673 info: Templates/CsTemplates/CSGenio.core/persistence/SuportePersistenteSQLite.cs.vm : 0ms
+04:46:30.673 info: Templates/CsTemplates/CSGenio.core/persistence/SuportePersistenteSQLServer.cs.vm : 0ms
+04:46:30.674 info: Templates/CsTemplates/CSGenio.core/persistence/SuportePersistenteSQLServerCompat.cs.vm : 0ms
+04:46:30.674 info: Templates/CsTemplates/CSGenio.core/persistence/SuportePersistenteOracle.cs.vm : 0ms
+04:46:30.674 info: Templates/CsTemplates/CSGenio.core/persistence/SuportePersistenteOracle19.cs.vm : 0ms
+04:46:30.674 info: Templates/CsTemplates/CSGenio.core/persistence/SuportePersistenteMySql.cs.vm : 0ms
+04:46:30.675 info: Templates/CsTemplates/CSGenio.core/persistence/PersistenceFactoryExtension.cs.vm : 0ms
+04:46:30.675 info: Templates/CsTemplates/CSGenio.core/persistence/ConversaoBd.cs.vm : 0ms
+04:46:30.675 info: Templates/CsTemplates/WebTest/WebTest.csproj.vm : 0ms
+04:46:30.675 info: Templates/CsTemplates/WebTest/TestNegocio.cs.vm : 0ms
+04:46:30.676 info: Templates/CsTemplates/WebTest/TestClass.cs.vm : 0ms
+04:46:30.676 info: Templates/CsTemplates/CSGenio.core/resources/UserMsg.cs.vm : 4ms
+04:46:30.676 info: Templates/CsTemplates/CSGenio.core/resources/Traducoes.cs.vm : 0ms
+04:46:30.676 info: Templates/CsTemplates/CSGenio.core/resources/Translations.xml.vm : 104ms
+04:46:30.677 info: Templates/CsTemplates/CSGenio.core/resources/UserMessages.xml.vm : 3ms
+04:46:30.677 info: Templates/CsTemplates/CSGenio.core/resources/ControlQuery/APPLLISTDELEGA.xml.vm : 0ms
+04:46:30.677 info: Templates/CsTemplates/CSGenio.core/resources/ControlQuery/IBL_DELEGA___PSW__.xml.vm : 0ms
+04:46:30.677 info: Templates/CsTemplates/CSGenio.core/resources/ControlQuery/LED_DELEGA___PSW__.xml.vm : 0ms
+04:46:30.678 info: Templates/CsTemplates/CSGenio.core/resources/ControlQuery/LED_DELEGA___PSWUP.xml.vm : 0ms
+04:46:30.678 info: Templates/CsTemplates/CSGenio.core/resources/ControlQuery/APPDELEGALOGIN.xml.vm : 0ms
+04:46:30.678 info: Templates/CsTemplates/CSGenio.core/resources/ControlQuery/APPAUTHORIZATIONLIST.xml.vm : 0ms
+04:46:30.678 info: Templates/CsTemplates/CSGenio.core/framework/Exportacoes/QueryToExcel.cs.vm : 0ms
+04:46:30.679 info: Templates/CsTemplates/CSGenio.core/framework/Exportacoes/Exportacoes.cs.vm : 0ms
+04:46:30.679 info: Templates/CsTemplates/CSGenio.core/security/CustomProviders.cs.vm : 0ms
+04:46:30.679 info: Templates/CsTemplates/CSGenio.core/security/GlobalAppSessions.cs.vm : 0ms
+04:46:30.679 info: Templates/CsTemplates/CSGenio.core/security/UserFactory.cs.vm : 2ms
+04:46:30.680 info: Templates/CsTemplates/CSGenio.core/security/PasswordFactory.cs.vm : 0ms
+04:46:30.680 info: Templates/CsTemplates/CSGenio.core/security/IUserBusinessManager.cs.vm : 0ms
+04:46:30.680 info: Templates/CsTemplates/UserBusinessService.cs.vm : 0ms
+04:46:30.680 info: Templates/CsTemplates/CSGenio.messaging/MessageMetadataFactory.cs.vm : 44ms
+04:46:30.681 info: Templates/CsTemplates/CSGenio.messaging/MessageProcessor.cs.vm : 0ms
+04:46:30.681 info: Templates/CsTemplates/CSGenio.messaging/AckProcessor.cs.vm : 0ms
+04:46:30.681 info: CSArea_InicializaCampos : 10902ms
+04:46:30.681 info: CSArea_InicializaRelacoes : 18ms
+04:46:30.682 info: CSArea_InicializaCaminhos : 5ms
+04:46:30.682 info: CSArea_InicializaFormulas : 58ms
+04:46:30.682 info: CSArea_InicializaAreaInfo : 80ms
+04:46:30.683 info: Beginning generation: Horizontal Layout - Vue - CSharp UI Test
+04:46:30.704 info: Reading relational model...
+04:46:30.773 info: Creating output directories...
+04:46:30.774 info: Copying files...
+04:46:30.795 info: Generating Dashboards...
+04:46:30.797 info: Generating Form pages...
+04:46:30.876 info: Creating tests from Manual routines...
+04:46:30.888 info: Deleting unnecessary generation files
+04:46:30.945 info: Writing pending files took 56 ms
+04:46:30.945 info: Finished generation
+04:46:30.946 info: Took 263 ms
+04:46:30.946 info: Templates/CsWebDriverTemplates/vue/pages/common/AppPage.cs.vm : 4ms
+04:46:30.946 info: Templates/CsWebDriverTemplates/vue/pages/dashboard/Dashboard.cs.vm : 0ms
+04:46:30.947 info: Templates/CsWebDriverTemplates/vue/pages/forms/Form.cs.vm : 56ms
+04:46:30.947 info: Templates/CsWebDriverTemplates/vue/pages/grids/Grid.cs.vm : 1ms
+04:46:30.947 info: Templates/CsWebDriverTemplates/vue/pages/property-lists/PropertyList.cs.vm : 0ms
+04:46:30.947 info: Templates/CsWebDriverTemplates/core/Module.cs.vm : 0ms
+04:46:30.948 info: Templates/CsWebDriverTemplates/tests/Test.cs.vm : 8ms
+04:46:30.957 info: Beginning generation: Horizontal Layout - Vue - Vue.js Client
+04:46:30.974 info: Reading relational model...
+04:46:31.071 info: Creating output directories...
+04:46:31.073 info: Copying packages...
+04:46:31.092 info: Copying static files...
+04:46:31.096 info: Generating files...
+04:46:31.121 info: Generating public files...
+04:46:31.178 info: Generating assets files...
+04:46:32.743 info: Generating api files...
+04:46:32.767 info: Generating plugins files...
+04:46:32.771 info: Generating mixins and utils files...
+04:46:32.812 info: Generating router files...
+04:46:32.850 info: Generating store files...
+04:46:32.854 info: Generating components files...
+04:46:32.896 info: Generating models files...
+04:46:32.904 info: Generating views files...
+04:46:32.916 info: Generating forms files...
+04:46:33.530 warning: Ignoring empty group NEWGRP01 in form CARD1
+04:46:33.541 error: Field ACTIONSPLACE on form CARD1 has no control!
+04:46:33.542 error: Field ACTONSALIGN on form CARD1 has no control!
+04:46:33.542 error: Field ACTIONSSTYLE on form CARD1 has no control!
+04:46:34.991 warning: Field type not supported! Field: [PESS1->GENDER], Form: LENDEXPL, Type: FormFilter, Help: FG
+04:46:34.992 warning: Field type not supported! Field: [EQUIP->FREQUENC], Form: LENDEXPL, Type: FormFilter, Help: FG
+04:46:34.992 warning: Field type not supported! Field: [EQUIP->BOUGHT], Form: LENDEXPL, Type: FormFilter, Help: FG
+04:46:34.993 warning: Field type not supported! Field: [LENDI->RETURNED], Form: LENDEXPL, Type: FormFilter, Help: FG
+04:46:34.994 warning: There is no Vue control associated with the form control type: 'FG', Form: LENDEXPL, Field: GENDER. (Mapping form control type to vue control type)
+04:46:34.994 warning: There is no Vue control associated with the form control type: 'FG', Form: LENDEXPL, Field: FREQUENC. (Mapping form control type to vue control type)
+04:46:34.995 warning: There is no Vue control associated with the form control type: 'FG', Form: LENDEXPL, Field: BOUGHT. (Mapping form control type to vue control type)
+04:46:34.995 warning: There is no Vue control associated with the form control type: 'FG', Form: LENDEXPL, Field: RETURNED. (Mapping form control type to vue control type)
+04:46:35.355 warning: The text "A chamar o agente de IA" doesn't exist
+04:46:48.013 info: Generating virtual forms files...
+04:46:48.027 info: Generating menus files...
+04:46:48.620 info: Generating external apps...
+04:46:48.622 info: Generating Charts...
+04:46:48.622 info: Generating tests files...
+04:46:48.642 info: Copying HorzMenu_WithHeader layout...
+04:46:48.659 info: Generating translations...
+04:46:48.711 warning: The text "A chamar o agente de IA" doesn't exist
+04:46:48.832 warning: The text "A chamar o agente de IA" doesn't exist
+04:46:53.665 info: Deleting unnecessary generation files
+04:46:53.700 info: Writing pending files took 35 ms
+04:46:53.701 info: Finished generation
+04:46:53.701 info: Took 22 seconds
+04:46:53.701 info: Templates/VueJsTemplates/ClientApp.esproj.vm : 0ms
+04:46:53.702 info: Templates/VueJsTemplates/apps/geniovue/package.json.vm : 10ms
+04:46:53.702 info: Templates/VueJsTemplates/apps/geniovue/src/systemInfo.ts.vm : 4ms
+04:46:53.702 info: Templates/VueJsTemplates/apps/geniovue/src/hardcodedTexts.js.vm : 0ms
+04:46:53.702 info: Templates/VueJsTemplates/apps/geniovue/index.html.vm : 0ms
+04:46:53.703 info: Templates/VueJsTemplates/apps/geniovue/src/assets/config/Layoutconfig.json.vm : 2ms
+04:46:53.703 info: Templates/VueJsTemplates/apps/geniovue/src/assets/styles/customstyles.scss.vm : 14ms
+04:46:53.703 info: Templates/VueJsTemplates/apps/geniovue/src/assets/styles/customtheme-variables.scss.vm : 1ms
+04:46:53.703 info: Templates/VueJsTemplates/apps/geniovue/src/assets/styles/fonticons.scss.vm : 0ms
+04:46:53.704 info: Templates/VueJsTemplates/apps/geniovue/src/assets/styles/quidgest-ui.scss.vm : 1ms
+04:46:53.704 info: Templates/VueJsTemplates/apps/geniovue/src/assets/styles/wizard/WizardStyle.scss.vm : 5ms
+04:46:53.704 info: Templates/Shared/quidgest.clientFunctions.js.vm : 1ms
+04:46:53.704 info: Templates/VueJsTemplates/apps/geniovue/src/api/genio/quidgestFunctions.js.vm : 2ms
+04:46:53.705 info: Templates/VueJsTemplates/apps/geniovue/src/api/genio/projectFunctions.js.vm : 1ms
+04:46:53.705 info: Templates/VueJsTemplates/apps/geniovue/src/api/genio/projectGlobalFunctions.js.vm : 0ms
+04:46:53.705 info: Templates/VueJsTemplates/apps/geniovue/src/api/genio/menuRoutines.js.vm : 0ms
+04:46:53.706 info: Templates/VueJsTemplates/apps/geniovue/src/api/genio/projectArrays.js.vm : 9ms
+04:46:53.706 info: Templates/VueJsTemplates/apps/geniovue/src/api/genio/cavArrays.js.vm : 0ms
+04:46:53.706 info: Templates/VueJsTemplates/apps/geniovue/src/plugins/quidgest-ui.js.vm : 0ms
+04:46:53.706 info: Templates/VueJsTemplates/apps/geniovue/src/mixins/controlsResources.js.vm : 5ms
+04:46:53.707 info: Templates/VueJsTemplates/apps/geniovue/src/router/main.js.vm : 14ms
+04:46:53.707 info: Templates/VueJsTemplates/apps/geniovue/src/router/user.js.vm : 0ms
+04:46:53.707 info: Templates/VueJsTemplates/apps/geniovue/src/router/forms.js.vm : 6ms
+04:46:53.708 info: Templates/VueJsTemplates/apps/geniovue/src/router/menus.js.vm : 10ms
+04:46:53.708 info: Templates/VueJsTemplates/apps/geniovue/src/stores/globalTablesData.js.vm : 0ms
+04:46:53.708 info: Templates/VueJsTemplates/apps/geniovue/src/stores/customData.js.vm : 0ms
+04:46:53.708 info: Templates/VueJsTemplates/apps/geniovue/src/components/index.js.vm : 2ms
+04:46:53.709 info: Templates/VueJsTemplates/apps/geniovue/src/components/formComponents.js.vm : 1ms
+04:46:53.709 info: Templates/VueJsTemplates/apps/geniovue/src/components/gridTableListFormComponents.js.vm : 0ms
+04:46:53.709 info: Templates/VueJsTemplates/apps/geniovue/src/models/globModel.js.vm : 6ms
+04:46:53.710 info: Templates/VueJsTemplates/apps/geniovue/src/views/shared/Home.vue.vm : 0ms
+04:46:53.710 info: Templates/VueJsTemplates/apps/geniovue/src/views/shared/Footer.vue.vm : 0ms
+04:46:53.710 info: Templates/VueJsTemplates/apps/geniovue/src/views/forms/formViewModel.js.vm : 221ms
+04:46:53.711 info: Templates/VueJsTemplates/apps/geniovue/src/views/forms/form.vue.vm : 14735ms
+04:46:53.711 info: Templates/VueJsTemplates/apps/geniovue/src/views/forms/controls/dbSeeMore.vue.vm : 162ms
+04:46:53.711 info: Templates/VueJsTemplates/apps/geniovue/src/views/forms/gridTableListForm.vm : 10ms
+04:46:53.711 info: Templates/VueJsTemplates/apps/geniovue/src/views/menus/menuViewModel.js.vm : 12ms
+04:46:53.712 info: Templates/VueJsTemplates/apps/geniovue/src/views/menus/menu.vue.vm : 464ms
+04:46:53.712 info: Templates/VueJsTemplates/apps/geniovue/src/views/menus/limitSelectionMenu.vue.vm : 1ms
+04:46:53.712 info: Templates/VueJsTemplates/apps/geniovue/src/views/menus/viewModels/menuKA.js.vm : 3ms
+04:46:53.712 info: Templates/VueJsTemplates/apps/geniovue/src/views/menus/menuKA.vue.vm : 8ms
+04:46:53.713 info: Templates/VueJsTemplates/apps/geniovue/src/views/menus/menuDE_DF.vue.vm : 22ms
+04:46:53.713 info: Templates/VueJsTemplates/apps/geniovue/src/views/menus/menuAC.vue.vm : 0ms
+04:46:53.713 info: Templates/VueJsTemplates/apps/geniovue/src/views/menus/menuL.vue.vm : 0ms
+04:46:53.713 info: Templates/VueJsTemplates/apps/geniovue/src/views/menus/menuDS.vue.vm : 1ms
+04:46:53.714 info: Templates/VueJsTemplates/apps/geniovue/src/integratedApps.js.vm : 0ms
+04:46:53.714 info: Templates/VueJsTemplates/apps/geniovue/src/layouts/Generic/custom-layout-variables.scss.vm : 0ms
+04:46:53.714 info: Templates/VueJsTemplates/apps/geniovue/src/layouts/HorzMenu_WithHeader/views/Layout.vue.vm : 0ms
+04:46:53.714 info: Templates/VueJsTemplates/apps/geniovue/src/layouts/HorzMenu_WithHeader/views/MenuSubItems.vue.vm : 0ms
+04:46:53.715 info: Templates/VueJsTemplates/apps/geniovue/src/layouts/HorzMenu_WithHeader/views/Menu.vue.vm : 0ms
+04:46:53.715 info: Templates/VueJsTemplates/apps/geniovue/src/layouts/HorzMenu_WithHeader/views/mobile/MenuSubItems.vue.vm : 0ms
+04:46:53.715 info: Templates/VueJsTemplates/apps/geniovue/src/translations/resources.json.vm : 18ms
+04:46:53.715 info: Templates/VueJsTemplates/apps/geniovue/src/translations/resources.ui.json.vm : 81ms
+04:46:53.716 info: Templates/VueJsTemplates/apps/geniovue/src/translations/resources.cav.vm : 7ms
+04:46:53.716 info: Templates/CustomControls/VueJs/customControlImport.js.vm : 1ms
+04:46:53.716 info: Templates/CustomControls/VueJs/custom-control-styles.scss.vm : 1ms
+04:46:53.716 info: Templates/CustomControls/VueJs/Calendar/resources.js.vm : 0ms
+04:46:53.716 info: Templates/CustomControls/VueJs/Cards/resources.js.vm : 0ms
+04:46:53.717 info: Templates/CustomControls/VueJs/Carousel/resources.js.vm : 0ms
+04:46:53.717 info: Templates/CustomControls/VueJs/Map/resources.js.vm : 0ms
+04:46:53.717 info: Templates/CustomControls/VueJs/Rating/resources.js.vm : 0ms
+04:46:53.838 info: Beginning generation: WebAdmin - Administration CS
+04:46:53.849 info: Creating output directories for Administration CS...
+04:46:53.849 info: Generating resources folder...
+04:46:53.911 info: Generating C# classes...
+04:46:54.341 info: Reading relational model...
+04:46:54.580 info: Generating client app
+04:46:54.982 info: Creating unit tests
+04:46:54.984 info: Creating integration tests
+04:46:54.989 info: Telemetry
+04:46:54.990 info: Deleting unnecessary generation files
+04:46:55.011 info: Writing pending files took 20 ms
+04:46:55.011 info: Finished generation
+04:46:55.011 info: Took 1174 ms
+04:46:55.012 info: Templates/CSWebAdministration/Administration/Resources/Resources.Designer.cs.vm : 11ms
+04:46:55.012 info: Templates/CSWebAdministration/Administration/Resources/Resources.resx.vm : 14ms
+04:46:55.012 info: Templates/CSWebAdministration/Administration/Resources/Resources.suffix.resx.vm : 25ms
+04:46:55.012 info: Templates/CSWebAdministration/Administration/Resources/Resources.suffix.Designer.cs.vm : 0ms
+04:46:55.013 info: Templates/CSWebAdministration/Administration/AuxClass/HardCodedLists.cs.vm : 0ms
+04:46:55.013 info: Templates/CSWebAdministration/Administration/AuxClass/AuxFunctions.cs.vm : 0ms
+04:46:55.013 info: Templates/CSWebAdministration/Administration/WebAPI.cs.vm : 0ms
+04:46:55.014 info: Templates/CSWebAdministration/Administration/UserManagement.cs.vm : 408ms
+04:46:55.014 info: Templates/CSWebAdministration/Administration/AuxClass/Culture/CultureManager.cs.vm : 0ms
+04:46:55.014 info: Templates/CSWebAdministration/Administration/Controllers/ControllerBase.cs.vm : 0ms
+04:46:55.015 info: Templates/CSWebAdministration/Administration/Controllers/ConfigController.cs.vm : 1ms
+04:46:55.015 info: Templates/CSWebAdministration/Administration/Controllers/ConfigMigrationController.cs.vm : 0ms
+04:46:55.015 info: Templates/CSWebAdministration/Administration/Controllers/DbAdminController.cs.vm : 156ms
+04:46:55.015 info: Templates/CSWebAdministration/Administration/Controllers/UsersController.cs.vm : 15ms
+04:46:55.016 info: Templates/CSWebAdministration/Administration/Controllers/RoleController.cs.vm : 0ms
+04:46:55.016 info: Templates/CSWebAdministration/Administration/Controllers/ManageUsersController.cs.vm : 0ms
+04:46:55.016 info: Templates/CSWebAdministration/Administration/Controllers/DashboardController.cs.vm : 0ms
+04:46:55.016 info: Templates/CSWebAdministration/Administration/Controllers/ErrorLogController.cs.vm : 0ms
+04:46:55.017 info: Templates/CSWebAdministration/Administration/Controllers/AuditViewerController.cs.vm : 0ms
+04:46:55.017 info: Templates/CSWebAdministration/Administration/Controllers/MessageQueueController.cs.vm : 0ms
+04:46:55.017 info: Templates/CSWebAdministration/Administration/Controllers/ManageReportsController.cs.vm : 0ms
+04:46:55.018 info: Templates/CSWebAdministration/Administration/Controllers/ManageNotifController.cs.vm : 0ms
+04:46:55.018 info: Templates/CSWebAdministration/Administration/Controllers/MaintenanceAPIController.cs.vm : 0ms
+04:46:55.018 info: Templates/CSWebAdministration/Administration/Controllers/NotificationsController.cs.vm : 0ms
+04:46:55.018 info: Templates/CSWebAdministration/Administration/Controllers/EmailController.cs.vm : 0ms
+04:46:55.019 info: Templates/CSWebAdministration/Administration/Controllers/MainController.cs.vm : 0ms
+04:46:55.019 info: Templates/CSWebAdministration/Administration/Controllers/RestAdminController.cs.vm : 0ms
+04:46:55.019 info: Templates/CSWebAdministration/Administration/Controllers/DataSystemsController.cs.vm : 0ms
+04:46:55.019 info: Templates/CSWebAdministration/Administration/Models/ModelBase.cs.vm : 0ms
+04:46:55.020 info: Templates/CSWebAdministration/Administration/Models/ConfigModel.cs.vm : 0ms
+04:46:55.020 info: Templates/CSWebAdministration/Administration/Models/ConfigMigrationModel.cs.vm : 0ms
+04:46:55.020 info: Templates/CSWebAdministration/Administration/Models/DbAdminModel.cs.vm : 0ms
+04:46:55.020 info: Templates/CSWebAdministration/Administration/Models/UsersModel.cs.vm : 0ms
+04:46:55.021 info: Templates/CSWebAdministration/Administration/Models/JQueryDataTableParamModel.cs.vm : 0ms
+04:46:55.021 info: Templates/CSWebAdministration/Administration/Models/ManageUsersModel.cs.vm : 0ms
+04:46:55.021 info: Templates/CSWebAdministration/Administration/Models/AuditModel.cs.vm : 0ms
+04:46:55.021 info: Templates/CSWebAdministration/Administration/Models/ManageReportsModel.cs.vm : 0ms
+04:46:55.022 info: Templates/CSWebAdministration/Administration/Models/EmailPropertiesModel.cs.vm : 0ms
+04:46:55.022 info: Templates/CSWebAdministration/Administration/Models/EmailSignatureModel.cs.vm : 0ms
+04:46:55.022 info: Templates/CSWebAdministration/Administration/Models/NotificationMessageModel.cs.vm : 0ms
+04:46:55.022 info: Templates/CSWebAdministration/Administration/Models/NotificationModel.cs.vm : 0ms
+04:46:55.023 info: Templates/CSWebAdministration/Administration/Models/ModuleRoleModel.cs.vm : 0ms
+04:46:55.023 info: Templates/CSWebAdministration/Administration/Models/IAdminService.cs.vm : 0ms
+04:46:55.023 info: Templates/CSWebAdministration/Administration/Models/QApiCallAck.cs.vm : 0ms
+04:46:55.024 info: Templates/CSWebAdministration/Administration/Models/IUserManagementService.cs.vm : 0ms
+04:46:55.024 info: Templates/CSWebAdministration/ClientApp/src/global.js.vm : 0ms
+04:46:55.024 info: Templates/CSWebAdministration/ClientApp/src/App.vue.vm : 1ms
+04:46:55.024 info: Templates/CSWebAdministration/ClientApp/src/router.js.vm : 0ms
+04:46:55.025 info: Templates/CSWebAdministration/ClientApp/src/mixins/mainMixin.js.vm : 0ms
+04:46:55.025 info: Templates/CSWebAdministration/ClientApp/src/plugins/i18n.js.vm : 0ms
+04:46:55.025 info: Templates/CSWebAdministration/Administration/Resources/resources.json.vm : 45ms
+04:46:55.026 info: Templates/CSWebAdministration/ClientApp/src/resources/hardcodedTexts.ts.vm : 0ms
+04:46:55.026 info: Templates/CSWebAdministration/ClientApp/src/resources/viewResources.ts.vm : 2ms
+04:46:55.026 info: Templates/CSWebAdministration/ClientApp/src/utils/mainUtils.js.vm : 0ms
+04:46:55.027 info: Templates/CSWebAdministration/ClientApp/src/utils/PathFinder.js.vm : 0ms
+04:46:55.027 info: Templates/CSWebAdministration/ClientApp/src/views/App_configuration.vue.vm : 0ms
+04:46:55.027 info: Templates/CSWebAdministration/ClientApp/src/views/Config_migration.vue.vm : 0ms
+04:46:55.027 info: Templates/CSWebAdministration/ClientApp/src/views/Dashboard.vue.vm : 58ms
+04:46:55.028 info: Templates/CSWebAdministration/ClientApp/src/views/Email.vue.vm : 0ms
+04:46:55.028 info: Templates/CSWebAdministration/ClientApp/src/views/Maintenance.vue.vm : 0ms
+04:46:55.028 info: Templates/CSWebAdministration/ClientApp/src/views/NoConfigSystem.vue.vm : 0ms
+04:46:55.028 info: Templates/CSWebAdministration/ClientApp/src/views/Notifications.vue.vm : 0ms
+04:46:55.029 info: Templates/CSWebAdministration/ClientApp/src/views/Report_management.vue.vm : 0ms
+04:46:55.029 info: Templates/CSWebAdministration/ClientApp/src/views/System_reports.vue.vm : 0ms
+04:46:55.029 info: Templates/CSWebAdministration/ClientApp/src/views/System_setup.vue.vm : 0ms
+04:46:55.030 info: Templates/CSWebAdministration/ClientApp/src/views/Users/User_management.vue.vm : 0ms
+04:46:55.030 info: Templates/CSWebAdministration/ClientApp/src/views/Users/AllUsers.vue.vm : 0ms
+04:46:55.030 info: Templates/CSWebAdministration/ClientApp/src/views/Users/Users.vue.vm : 0ms
+04:46:55.030 info: Templates/CSWebAdministration/ClientApp/src/views/Users/RoleList.vue.vm : 0ms
+04:46:55.031 info: Templates/CSWebAdministration/ClientApp/src/views/Users/RoleView.vue.vm : 0ms
+04:46:55.031 info: Templates/CSWebAdministration/ClientApp/src/views/Users/RoleAssign.vue.vm : 0ms
+04:46:55.031 info: Templates/CSWebAdministration/ClientApp/src/views/Users/UserRoles.vue.vm : 0ms
+04:46:55.032 info: Templates/CSWebAdministration/ClientApp/src/views/Maintenance/Backup.vue.vm : 0ms
+04:46:55.032 info: Templates/CSWebAdministration/ClientApp/src/views/Maintenance/ChangeYear.vue.vm : 0ms
+04:46:55.032 info: Templates/CSWebAdministration/ClientApp/src/views/Maintenance/DataQuality.vue.vm : 0ms
+04:46:55.033 info: Templates/CSWebAdministration/ClientApp/src/views/Maintenance/DbIndexes.vue.vm : 0ms
+04:46:55.033 info: Templates/CSWebAdministration/ClientApp/src/views/Maintenance/MigrateFiles.vue.vm : 0ms
+04:46:55.033 info: Templates/CSWebAdministration/ClientApp/src/views/Maintenance/InconsistentRelations.vue.vm : 0ms
+04:46:55.033 info: Templates/CSWebAdministration/ClientApp/src/views/Maintenance/Index.vue.vm : 0ms
+04:46:55.034 info: Templates/CSWebAdministration/ClientApp/src/views/Maintenance/Indexes.vue.vm : 0ms
+04:46:55.034 info: Templates/CSWebAdministration/ClientApp/src/views/Maintenance/Security.vue.vm : 0ms
+04:46:55.034 info: Templates/CSWebAdministration/ClientApp/src/views/Maintenance/ScheduleMaintenance.vue.vm : 0ms
+04:46:55.035 info: Templates/CSWebAdministration/ClientApp/src/views/Maintenance/MaintenanceHistory.vue.vm : 0ms
+04:46:55.035 info: Templates/CSWebAdministration/ClientApp/src/views/Maintenance/LogDetails.vue.vm : 0ms
+04:46:55.035 info: Templates/CSWebAdministration/ClientApp/src/views/Notifications/ManageNotif.vue.vm : 0ms
+04:46:55.036 info: Templates/CSWebAdministration/ClientApp/src/views/Notifications/ManageMessage.vue.vm : 0ms
+04:46:55.036 info: Templates/CSWebAdministration/ClientApp/src/views/Notifications/MessagesConfig.vue.vm : 0ms
+04:46:55.036 info: Templates/CSWebAdministration/ClientApp/src/views/Notifications/More.vue.vm : 0ms
+04:46:55.037 info: Templates/CSWebAdministration/ClientApp/src/views/Notifications/Notifs.vue.vm : 0ms
+04:46:55.037 info: Templates/CSWebAdministration/ClientApp/src/views/Notifications/NotifsBD.vue.vm : 0ms
+04:46:55.037 info: Templates/CSWebAdministration/ClientApp/src/views/Notifications/Pmail.vue.vm : 0ms
+04:46:55.038 info: Templates/CSWebAdministration/ClientApp/src/views/Notifications/Signatures.vue.vm : 0ms
+04:46:55.038 info: Templates/CSWebAdministration/ClientApp/src/views/Notifications/ManageProperties.vue.vm : 0ms
+04:46:55.038 info: Templates/CSWebAdministration/ClientApp/src/views/Notifications/ManageSignature.vue.vm : 0ms
+04:46:55.038 info: Templates/CSWebAdministration/ClientApp/src/views/System_setup/Database.vue.vm : 0ms
+04:46:55.039 info: Templates/CSWebAdministration/ClientApp/src/views/System_setup/Display.vue.vm : 0ms
+04:46:55.039 info: Templates/CSWebAdministration/ClientApp/src/views/System_setup/System.vue.vm : 0ms
+04:46:55.039 info: Templates/CSWebAdministration/ClientApp/src/views/System_setup/Scheduler.vue.vm : 0ms
+04:46:55.039 info: Templates/CSWebAdministration/ClientApp/src/views/System_setup/Audit.vue.vm : 0ms
+04:46:55.040 info: Templates/CSWebAdministration/ClientApp/src/views/System_setup/Extra.vue.vm : 0ms
+04:46:55.040 info: Templates/CSWebAdministration/ClientApp/src/views/System_setup/ExternalServices.vue.vm : 0ms
+04:46:55.040 info: Templates/CSWebAdministration/ClientApp/src/views/System_setup/Elasticsearch.vue.vm : 0ms
+04:46:55.041 info: Templates/CSWebAdministration/ClientApp/src/views/System_setup/Reports.vue.vm : 0ms
+04:46:55.041 info: Templates/CSWebAdministration/ClientApp/src/views/System_setup/Integration.vue.vm : 0ms
+04:46:55.041 info: Templates/CSWebAdministration/ClientApp/src/views/System_setup/Message.vue.vm : 0ms
+04:46:55.041 info: Templates/CSWebAdministration/ClientApp/src/views/System_setup/DataSystems.vue.vm : 0ms
+04:46:55.042 info: Templates/CSWebAdministration/ClientApp/src/views/System_setup/Queue.vue.vm : 0ms
+04:46:55.042 info: Templates/CSWebAdministration/ClientApp/src/views/App_configuration/Security.vue.vm : 0ms
+04:46:55.042 info: Templates/CSWebAdministration/ClientApp/src/views/App_configuration/Paths.vue.vm : 0ms
+04:46:55.042 info: Templates/CSWebAdministration/ClientApp/src/views/Message_queue.vue.vm : 0ms
+04:46:55.043 info: Templates/CSWebAdministration/ClientApp/src/views/Message_queue/Dashboard.vue.vm : 0ms
+04:46:55.043 info: Templates/CSWebAdministration/ClientApp/src/views/Message_queue/Queues.vue.vm : 0ms
+04:46:55.043 info: Templates/CSWebAdministration/ClientApp/src/views/Message_queue/ExportQueue.vue.vm : 0ms
+04:46:55.043 info: Templates/CSWebAdministration/ClientApp/src/views/Message_queue/Messages.vue.vm : 0ms
+04:46:55.044 info: Templates/CSWebAdministration/ClientApp/src/views/Message_queue/History.vue.vm : 0ms
+04:46:55.044 info: Templates/CSWebAdministration/ClientApp/src/views/Message_queue/Statistics.vue.vm : 0ms
+04:46:55.044 info: Templates/CSWebAdministration/ClientApp/src/views/Message_queue/Status.vue.vm : 0ms
+04:46:55.045 info: Templates/CSWebAdministration/ClientApp/src/views/Audit_viewer.vue.vm : 0ms
+04:46:55.045 info: Templates/CSWebAdministration/ClientApp/src/views/SlotReport.vue.vm : 0ms
+04:46:55.045 info: Templates/CSWebAdministration/Administration/Administration.csproj.vm : 0ms
+04:46:55.045 info: Templates/CSWebAdministration/Administration/Program.cs.vm : 0ms
+04:46:55.046 info: Templates/CSWebAdministration/Administration/Scheduler/ScheduleTaskFactory.cs.vm : 47ms
+04:46:55.046 info: Templates/CSWebAdministration/WebAdmin.sln.vm : 65ms
+04:46:55.046 info: Templates/CSWebAdministration/DbAdmin/SysConfiguration.cs.vm : 0ms
+04:46:55.046 info: Templates/CSWebAdministration/DbAdmin/DbAdmin.csproj.vm : 0ms
+04:46:55.047 info: Templates/CSWebAdministration/AdminCLI/configuracoes.redirect.xml.vm : 0ms
+04:46:55.047 info: Templates/CSWebAdministration/AdminCLI/AdminCLI.csproj.vm : 0ms
+04:46:55.047 info: Templates/CSWebAdministration/DbAdmin.IntegrationTest/DbAdmin.IntegrationTest.csproj.vm : 0ms
+04:46:55.156 info: Beginning generation: WebAdmin - C# Server
+04:46:55.167 info: Validating formulas...
+04:46:55.482 info: Reading relational model...
+04:46:55.488 info: Creating output directories...
+04:46:55.501 info: Generating tables...
+04:46:56.845 info: Generating ephs and access levels...
+04:46:56.857 info: Generating functions and manual code...
+04:46:57.138 info: Generating server side interface support code...
+04:46:57.140 info: Reading necessary forms...
+04:46:57.254 info: Copying Files...
+04:46:57.266 info: Creating AI agents
+04:46:57.530 info: Deleting unnecessary generation files
+04:46:57.641 info: Writing pending files took 110 ms
+04:46:57.641 info: Finished generation
+04:46:57.641 info: Took 2 seconds
+04:46:57.642 info: Templates/CsTemplates/CSGenio.core/business/Area.cs.vm : 1ms
+04:46:57.642 info: Templates/CsTemplates/CSGenio.core/business/DbArea.cs.vm : 0ms
+04:46:57.642 info: Templates/CsTemplates/CSArea.cs.vm : 1229ms
+04:46:57.642 info: Templates/CsTemplates/CSGenio.core/model/CShardcoded.cs.vm : 1ms
+04:46:57.643 info: Templates/CsTemplates/TemplateArray.vm : 11ms
+04:46:57.643 info: Templates/MetaZip/info.xml.vm : 0ms
+04:46:57.643 info: Templates/CsTemplates/CSGenio.core/business/CSeph.cs.vm : 0ms
+04:46:57.644 info: Templates/CsTemplates/Trigger.cs.vm : 2ms
+04:46:57.644 info: Templates/CsTemplates/CSGenio.core/business/EPH.cs.vm : 0ms
+04:46:57.644 info: Templates/CsTemplates/CSGenio.framework/NivelAcesso.cs.vm : 0ms
+04:46:57.645 info: Templates/CsTemplates/CSGenio.framework/Role.cs.vm : 0ms
+04:46:57.645 info: Templates/CsTemplates/CSGenio.core/config/Configuracao.cs.vm : 20ms
+04:46:57.645 info: Templates/CsTemplates/CSGenio.core/config/ExtraProperties.cs.vm : 0ms
+04:46:57.645 info: Templates/CsTemplates/FuncoesGlobais.cs.vm : 1ms
+04:46:57.646 info: Templates/CsTemplates/FuncoesManuais.cs.vm : 2ms
+04:46:57.646 info: Templates/CsTemplates/FunctionInformation.cs.vm : 0ms
+04:46:57.646 info: Templates/CsTemplates/Classes.cs.vm : 0ms
+04:46:57.647 info: Templates/CsTemplates/CustomDynamicArray.cs.vm : 0ms
+04:46:57.647 info: Templates/CsTemplates/SchedulerFunctions.cs.vm : 0ms
+04:46:57.647 info: Templates/CsTemplates/MessageQueueProcessor.cs.vm : 0ms
+04:46:57.647 info: Templates/CsTemplates/CSGenio.core/persistence/SuportePersistente.cs.vm : 34ms
+04:46:57.647 info: Templates/CsTemplates/CSGenio.core/persistence/OverrideQuery.cs.vm : 61ms
+04:46:57.648 info: Templates/CsTemplates/OverrideQueryDefinition.cs.vm : 120ms
+04:46:57.648 info: Templates/CsTemplates/PersistentSupportExtra.cs.vm : 0ms
+04:46:57.648 info: Templates/CsTemplates/async/SchedulerJob.cs.vm : 0ms
+04:46:57.649 info: Templates/CsTemplates/Profile.cs.vm : 0ms
+04:46:57.649 info: Templates/CsTemplates/RequestFlashBSC.cs.vm : 7ms
+04:46:57.649 info: Templates/CsTemplates/RequestFlashWFActivity.cs.vm : 0ms
+04:46:57.650 info: Templates/CsTemplates/RequestFlashWFGateway.cs.vm : 0ms
+04:46:57.650 info: Templates/CsTemplates/RequestFlashWFEvent.cs.vm : 0ms
+04:46:57.650 info: Templates/CsTemplates/RequestFlashWFRela.cs.vm : 0ms
+04:46:57.651 info: Templates/CsTemplates/RequestFlashWorkflow.cs.vm : 2ms
+04:46:57.651 info: Templates/CsTemplates/RequestFlashPicagem.cs.vm : 0ms
+04:46:57.651 info: Templates/CsTemplates/RequestFlashGtime.cs.vm : 0ms
+04:46:57.651 info: Templates/CsTemplates/CSGenio.core/framework/Elasticsearch.cs.vm : 0ms
+04:46:57.652 info: Templates/CsTemplates/CSGenio.core/framework/ElasticsearchService.cs.vm : 0ms
+04:46:57.652 info: Templates/CsTemplates/CSGenio.core/business/ElasticsearchDoc.cs.vm : 0ms
+04:46:57.652 info: Templates/CsTemplates/CSGenio.core/business/ElasticsearchQueries.cs.vm : 0ms
+04:46:57.653 info: Templates/CsTemplates/CSGenio.core/business/ElasticsearchResult.cs.vm : 0ms
+04:46:57.653 info: Templates/CsTemplates/ElasticsearchQueriesExtra.cs.vm : 1ms
+04:46:57.653 info: Templates/CsTemplates/CSGenio.core/business/ArraysCrystalReports.cs.vm : 0ms
+04:46:57.653 info: Templates/CsTemplates/GenioServer_core.csproj.vm : 0ms
+04:46:57.654 info: Templates/CsTemplates/CSGenio.core/persistence/Campo.cs.vm : 0ms
+04:46:57.654 info: Templates/CsTemplates/CSGenio.core/config/ConfigXMLMigration.cs.vm : 0ms
+04:46:57.654 info: Templates/CsTemplates/CSGenio.framework/ClientApplication.cs.vm : 0ms
+04:46:57.654 info: Templates/CsTemplates/CSGenio.core/persistence/MessageQueue.cs.vm : 0ms
+04:46:57.655 info: Templates/CsTemplates/CSGenio.core/framework/ProgressReport.cs.vm : 0ms
+04:46:57.655 info: Templates/CsTemplates/ModelAiAgent.cs.vm : 1ms
+04:46:57.655 info: Templates/CsTemplates/CSGenio.framework/CSGenio.framework.csproj.vm : 0ms
+04:46:57.656 info: Templates/CsTemplates/CSGenio.core/CSGenio.core.csproj.vm : 0ms
+04:46:57.656 info: Templates/CsTemplates/ReindexFunctions.cs.vm : 26ms
+04:46:57.656 info: Templates/CsTemplates/CSGenio.core/business/ArgumentoUltimoValor.cs.vm : 0ms
+04:46:57.656 info: Templates/CsTemplates/CSGenio.core/business/FormulaDbContext.cs.vm : 0ms
+04:46:57.657 info: Templates/CsTemplates/CSGenio.core/business/Formula.cs.vm : 0ms
+04:46:57.657 info: Templates/CsTemplates/CSGenio.core/business/FormulaReplica.cs.vm : 0ms
+04:46:57.657 info: Templates/CsTemplates/CSGenio.core/business/FormulaConsultaTabela.cs.vm : 0ms
+04:46:57.657 info: Templates/CsTemplates/CSGenio.core/business/FormulaOperacaoInterna.cs.vm : 0ms
+04:46:57.658 info: Templates/CsTemplates/CSGenio.core/business/FormulaCondicao.cs.vm : 0ms
+04:46:57.658 info: Templates/CsTemplates/CSGenio.core/business/Listagem.cs.vm : 0ms
+04:46:57.658 info: Templates/CsTemplates/CSGenio.core/business/ValorDefault.cs.vm : 0ms
+04:46:57.659 info: Templates/CsTemplates/CSGenio.core/business/ManualQuerys.cs.vm : 39ms
+04:46:57.659 info: Templates/CsTemplates/CSGenio.core/business/Notifications.cs.vm : 1ms
+04:46:57.659 info: Templates/CsTemplates/ExtControl.cs.vm : 0ms
+04:46:57.659 info: Templates/CsTemplates/ExtAppControl.cs.vm : 0ms
+04:46:57.660 info: Templates/CsTemplates/CSGenio.core/persistence/QueryUtils.cs.vm : 0ms
+04:46:57.660 info: Templates/CsTemplates/CSGenio.core/persistence/SuportePersistenteSQLite.cs.vm : 0ms
+04:46:57.660 info: Templates/CsTemplates/CSGenio.core/persistence/SuportePersistenteSQLServer.cs.vm : 0ms
+04:46:57.661 info: Templates/CsTemplates/CSGenio.core/persistence/SuportePersistenteSQLServerCompat.cs.vm : 0ms
+04:46:57.661 info: Templates/CsTemplates/CSGenio.core/persistence/SuportePersistenteOracle.cs.vm : 0ms
+04:46:57.661 info: Templates/CsTemplates/CSGenio.core/persistence/SuportePersistenteOracle19.cs.vm : 0ms
+04:46:57.661 info: Templates/CsTemplates/CSGenio.core/persistence/SuportePersistenteMySql.cs.vm : 0ms
+04:46:57.662 info: Templates/CsTemplates/CSGenio.core/persistence/PersistenceFactoryExtension.cs.vm : 0ms
+04:46:57.662 info: Templates/CsTemplates/CSGenio.core/persistence/ConversaoBd.cs.vm : 0ms
+04:46:57.662 info: Templates/CsTemplates/WebTest/WebTest.csproj.vm : 0ms
+04:46:57.663 info: Templates/CsTemplates/WebTest/TestNegocio.cs.vm : 0ms
+04:46:57.663 info: Templates/CsTemplates/WebTest/TestClass.cs.vm : 0ms
+04:46:57.663 info: Templates/CsTemplates/CSGenio.core/resources/UserMsg.cs.vm : 4ms
+04:46:57.663 info: Templates/CsTemplates/CSGenio.core/resources/Traducoes.cs.vm : 0ms
+04:46:57.664 info: Templates/CsTemplates/CSGenio.core/resources/Translations.xml.vm : 105ms
+04:46:57.664 info: Templates/CsTemplates/CSGenio.core/resources/UserMessages.xml.vm : 3ms
+04:46:57.664 info: Templates/CsTemplates/CSGenio.core/resources/ControlQuery/APPLLISTDELEGA.xml.vm : 0ms
+04:46:57.665 info: Templates/CsTemplates/CSGenio.core/resources/ControlQuery/IBL_DELEGA___PSW__.xml.vm : 0ms
+04:46:57.665 info: Templates/CsTemplates/CSGenio.core/resources/ControlQuery/LED_DELEGA___PSW__.xml.vm : 0ms
+04:46:57.665 info: Templates/CsTemplates/CSGenio.core/resources/ControlQuery/LED_DELEGA___PSWUP.xml.vm : 0ms
+04:46:57.665 info: Templates/CsTemplates/CSGenio.core/resources/ControlQuery/APPDELEGALOGIN.xml.vm : 0ms
+04:46:57.666 info: Templates/CsTemplates/CSGenio.core/resources/ControlQuery/APPAUTHORIZATIONLIST.xml.vm : 0ms
+04:46:57.666 info: Templates/CsTemplates/CSGenio.core/framework/Exportacoes/QueryToExcel.cs.vm : 0ms
+04:46:57.666 info: Templates/CsTemplates/CSGenio.core/framework/Exportacoes/Exportacoes.cs.vm : 0ms
+04:46:57.667 info: Templates/CsTemplates/CSGenio.core/security/CustomProviders.cs.vm : 0ms
+04:46:57.667 info: Templates/CsTemplates/CSGenio.core/security/GlobalAppSessions.cs.vm : 0ms
+04:46:57.667 info: Templates/CsTemplates/CSGenio.core/security/UserFactory.cs.vm : 0ms
+04:46:57.668 info: Templates/CsTemplates/CSGenio.core/security/PasswordFactory.cs.vm : 0ms
+04:46:57.668 info: Templates/CsTemplates/CSGenio.core/security/IUserBusinessManager.cs.vm : 0ms
+04:46:57.668 info: Templates/CsTemplates/UserBusinessService.cs.vm : 0ms
+04:46:57.668 info: Templates/CsTemplates/CSGenio.messaging/MessageMetadataFactory.cs.vm : 1ms
+04:46:57.669 info: Templates/CsTemplates/CSGenio.messaging/MessageProcessor.cs.vm : 0ms
+04:46:57.669 info: Templates/CsTemplates/CSGenio.messaging/AckProcessor.cs.vm : 0ms
+04:46:57.669 info: CSArea_InicializaCampos : 448ms
+04:46:57.669 info: CSArea_InicializaRelacoes : 14ms
+04:46:57.670 info: CSArea_InicializaCaminhos : 3ms
+04:46:57.670 info: CSArea_InicializaFormulas : 35ms
+04:46:57.670 info: CSArea_InicializaAreaInfo : 172ms
+04:46:57.681 info: Beginning generation: WebAdmin - Reindex Scripts
+04:46:57.684 info: Generating Microsoft sql reindex scripts...
+04:46:57.689 info: Creating Output Directory...
+04:46:57.690 info: Reading relational model...
+04:46:57.744 info: Generating: 'Database Verification'
+04:46:57.746 info: Generating: 'Schema Verification'
+04:46:57.748 info: Generating: 'Auxiliary Functions'
+04:46:57.752 info: Generating: 'Table Rebuild'
+04:46:57.757 info: Generating: 'Functions Update'
+04:46:57.853 info: Generating: 'Table Validation'
+04:46:57.902 info: Generating: 'Column Removal'
+04:46:57.908 info: Generating: 'Schema Maintenance'
+04:46:57.910 info: Generating: 'Fixed Tables'
+04:46:57.921 info: Generating: 'Index Validation'
+04:46:57.934 info: Generating: 'Update Stored Procedures and Initial Functions'
+04:46:57.946 info: Generating: 'Update Stored Procedures and Manual Functions'
+04:46:58.066 info: Generating: 'Update Stored Procedures and Final Functions'
+04:46:58.072 info: Generating: 'Grant Access of Stored Procedures e Functions'
+04:46:58.075 info: Generating: 'Version Verification'
+04:46:58.077 info: Generating: 'Update States'
+04:46:58.079 info: Generating: 'Internal Codes Rebuild'
+04:46:58.083 info: Generating: 'Temporary Tables Elimination'
+04:46:58.084 info: Generating: 'Transaction Log Compression'
+04:46:58.085 info: Generating: 'Propagation of Replicas'
+04:46:58.104 info: Generating: 'Clear Fields to Formulas'
+04:46:58.107 info: Generating: 'Formulas Calculation'
+04:46:58.166 info: Generating Formulas Calculations: Last Value Relations
+04:46:58.168 info: Generating Formulas Calculations: Table Consultation
+04:46:58.174 info: Generating Formulas Calculations: Internal Formulas
+04:46:58.188 info: Generating Formulas Calculations: External Formulas
+04:46:58.194 info: Generating Formulas Calculations: Lits Aggregate Formulas
+04:46:58.198 info: Generating Formulas Calculations: Daily Update Formulas
+04:46:58.207 info: Generating: Index Rebuild
+04:46:58.208 info: Generating: 'Controlled Records'
+04:46:58.246 info: Generating: 'FK Creation'
+04:46:58.251 info: Generating: 'FK Elimination'
+04:46:58.253 info: Generating: 'Upgrade Client'
+04:46:58.290 info: Generating: 'Fulltext Search'
+04:46:58.295 info: Generating: 'GroupConcat Installation'
+04:46:58.295 info: Generating: 'Log Triggers'
+04:46:58.299 info: Generating: 'Log Views'
+04:46:58.300 info: Generating: 'Log Database Verification'
+04:46:58.301 info: Generating: 'Log Database Schema Verification'
+04:46:58.305 info: Generating: 'Database Seeding'
+04:46:58.307 info: Generating: 'FrameworkChangeRoutines.sql'
+04:46:58.308 info: Generating: 'order2Exec.dat'
+04:46:58.310 info: Generating: 'order2Exec.xml'
+04:46:58.351 info: Generating: 'ChangeYear.sql'
+04:46:58.362 info: Generating: 'SetInvalidFK2Null.sql'
+04:46:58.367 info: Generating: 'DBSessionState.sql'
+04:46:58.375 info: Deleting unnecessary generation files
+04:46:58.377 info: Writing pending files took 1 ms
+04:46:58.377 info: Finished generation
+04:46:58.377 info: Took 697 ms
+04:46:58.378 info: Templates/MetaZip/infoHrd.xml.vm : 0ms
+04:46:58.378 info: Templates/ReindexTemplates/SQLReindexTemplates/CreateDatabase.txt.vm : 0ms
+04:46:58.378 info: Templates/ReindexTemplates/SQLReindexTemplates/chkSchema.txt.vm : 0ms
+04:46:58.379 info: Templates/ReindexTemplates/SQLReindexTemplates/FuncoesAuxCheckTable.txt.vm : 0ms
+04:46:58.379 info: Templates/ReindexTemplates/SQLReindexTemplates/TblRebuild.txt.vm : 3ms
+04:46:58.379 info: Templates/ReindexTemplates/SQLReindexTemplates/UpdateFunctions.txt.vm : 94ms
+04:46:58.380 info: Templates/ReindexTemplates/SQLReindexTemplates/CheckTable.txt.vm : 41ms
+04:46:58.380 info: Templates/ReindexTemplates/SQLReindexTemplates/RemoverColunas.txt.vm : 4ms
+04:46:58.380 info: Templates/ReindexTemplates/SQLReindexTemplates/UpdateCfg.txt.vm : 0ms
+04:46:58.381 info: Templates/ReindexTemplates/SQLReindexTemplates/tblHardcode.txt.vm : 0ms
+04:46:58.381 info: Templates/ReindexTemplates/SQLReindexTemplates/AddIndex.txt.vm : 8ms
+04:46:58.381 info: Templates/ReindexTemplates/SQLReindexTemplates/ActStoredProcINI.txt.vm : 9ms
+04:46:58.381 info: Templates/ReindexTemplates/SQLReindexTemplates/ActStoredProcMAN.txt.vm : 117ms
+04:46:58.382 info: Templates/ReindexTemplates/SQLReindexTemplates/ActStoredProcFIM.txt.vm : 3ms
+04:46:58.382 info: Templates/ReindexTemplates/SQLReindexTemplates/GrantAccessStoredProcedures.txt.vm : 0ms
+04:46:58.382 info: Templates/ReindexTemplates/SQLReindexTemplates/VerificacaoVersao.txt.vm : 0ms
+04:46:58.383 info: Templates/ReindexTemplates/SQLReindexTemplates/ActualizacaoEstados.txt.vm : 0ms
+04:46:58.383 info: Templates/ReindexTemplates/SQLReindexTemplates/ReconstrucaoCodInt.txt.vm : 0ms
+04:46:58.384 info: Templates/ReindexTemplates/SQLReindexTemplates/EliminacaoBDTemp.txt.vm : 0ms
+04:46:58.384 info: Templates/ReindexTemplates/SQLReindexTemplates/CompactacaoTransLog.txt.vm : 0ms
+04:46:58.384 info: Templates/ReindexTemplates/SQLReindexTemplates/Replicas.txt.vm : 17ms
+04:46:58.384 info: Templates/ReindexTemplates/SQLReindexTemplates/LimparVlCalculados.txt.vm : 1ms
+04:46:58.385 info: Templates/ReindexTemplates/SQLReindexTemplates/GerarFormulas.txt.vm : 57ms
+04:46:58.385 info: Templates/ReindexTemplates/SQLReindexTemplates/UltimoValor.txt.vm : 1ms
+04:46:58.385 info: Templates/ReindexTemplates/SQLReindexTemplates/ConsTbl.txt.vm : 3ms
+04:46:58.386 info: Templates/ReindexTemplates/SQLReindexTemplates/FormInt.txt.vm : 12ms
+04:46:58.386 info: Templates/ReindexTemplates/SQLReindexTemplates/FormExt.txt.vm : 4ms
+04:46:58.386 info: Templates/ReindexTemplates/SQLReindexTemplates/ConcatenaLinhas.txt.vm : 1ms
+04:46:58.386 info: Templates/ReindexTemplates/SQLReindexTemplates/FormDailyUpdate.txt.vm : 7ms
+04:46:58.387 info: Templates/ReindexTemplates/SQLReindexTemplates/IDXRebuild.txt.vm : 0ms
+04:46:58.387 info: Templates/ReindexTemplates/SQLReindexTemplates/ControlledRecords.txt.vm : 0ms
+04:46:58.387 info: Templates/ReindexTemplates/SQLReindexTemplates/RecalcTabelas.txt.vm : 33ms
+04:46:58.388 info: Templates/ReindexTemplates/SQLReindexTemplates/CreateFK.txt.vm : 3ms
+04:46:58.388 info: Templates/ReindexTemplates/SQLReindexTemplates/DropFK.txt.vm : 0ms
+04:46:58.388 info: Templates/ReindexTemplates/SQLReindexTemplates/UpgradeClient.txt.vm : 35ms
+04:46:58.389 info: Templates/ReindexTemplates/SQLReindexTemplates/FulltextSearch.txt.vm : 2ms
+04:46:58.389 info: Templates/ReindexTemplates/LogTriggerTemplates/CreateTriggers.sql.vm : 0ms
+04:46:58.389 info: Templates/ReindexTemplates/LogTriggerTemplates/CreateViews.sql.vm : 0ms
+04:46:58.389 info: Templates/ReindexTemplates/LogTriggerTemplates/CheckTableLog.sql.vm : 0ms
+04:46:58.390 info: Templates/ReindexTemplates/LogTriggerTemplates/DeleteTriggers.sql.vm : 0ms
+04:46:58.390 info: Templates/ReindexTemplates/SQLReindexTemplates/DatabaseSeed.sql.vm : 0ms
+04:46:58.390 info: Templates/ReindexTemplates/SQLReindexTemplates/FrameworkChangeRoutines.txt.vm : 0ms
+04:46:58.391 info: Templates/ReindexTemplates/SQLReindexTemplates/order2Exec.dat.vm : 0ms
+04:46:58.391 info: Templates/ReindexTemplates/SQLReindexTemplates/order2Exec.xml.vm : 39ms
+04:46:58.391 info: Templates/ReindexTemplates/SQLReindexTemplates/ChangeYear.vm : 7ms
+04:46:58.392 info: Templates/ReindexTemplates/SQLReindexTemplates/SetInvalidFK2Null.txt.vm : 3ms
+04:46:58.392 info: Templates/ReindexTemplates/SQLReindexTemplates/DBSessionState.sql.vm : 0ms

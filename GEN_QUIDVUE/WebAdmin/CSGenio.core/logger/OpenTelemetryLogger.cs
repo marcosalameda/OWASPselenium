@@ -1,6 +1,13 @@
-﻿using Microsoft.Extensions.Logging;
+using CSGenio.framework;
+using DocumentFormat.OpenXml.InkML;
+using GenioServer.security;
+using Microsoft.Extensions.Logging;
+using PeterO.Numbers;
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Linq;
+using System.Threading;
 using System.Reflection;
 
 namespace CSGenio.core.di
@@ -10,18 +17,19 @@ namespace CSGenio.core.di
     /// </summary>
     public class OpenTelemetryImpl : ILogImpl
     {
-        private readonly ILogger _logger;
+        private readonly ILogger<OpenTelemetryImpl> _logger;
 
         /// <summary>
         /// EventTracking flag to enable or disable event tracking feature for debugging purposes
         /// </summary>
         public bool EventTracking { get; set; } = false;
 
-        public OpenTelemetryImpl(ILoggerFactory loggerFactory)
+        public OpenTelemetryImpl(Microsoft.Extensions.Logging.ILoggerFactory loggerFactory)
         {
             if (loggerFactory == null)
-                throw new ArgumentNullException(nameof(loggerFactory));
-            _logger = loggerFactory.CreateLogger("Genio.Server");
+                throw new FrameworkException("Invalid Logger Factory", "Log4NetLogger.Log4NetImpl", "Invalid Logger Factory");
+
+            _logger = loggerFactory.CreateLogger<OpenTelemetryImpl>();
         }
 
         /// <summary>
@@ -95,14 +103,21 @@ namespace CSGenio.core.di
         /// </remarks>
         public IDisposable SetContext(object context)
         {
-            if (context is string) return _logger.BeginScope(new { other = context.ToString() });
-            if (context is Dictionary<string, object>) return _logger.BeginScope((Dictionary<string, object>)context);
+            try
+            {
+                if (context is string) return _logger.BeginScope(new { other = context.ToString() });
+                if (context is Dictionary<string, object>) return _logger.BeginScope((Dictionary<string, object>)context);
 
-            Dictionary<string, object> parsedContext = new Dictionary<string, object>();
-            foreach (PropertyInfo prop in context.GetType().GetProperties())
-                parsedContext[prop.Name] = prop.GetValue(context, null);
+                Dictionary<string, object> parsedContext = new Dictionary<string, object>();
+                foreach (PropertyInfo prop in context.GetType().GetProperties())
+                    parsedContext[prop.Name] = prop.GetValue(context, null);
 
-            return _logger.BeginScope(parsedContext);
+                return _logger.BeginScope(parsedContext);
+            }
+            catch (Exception)
+            {
+                throw new FrameworkException("Unsupported context format", "OpenTelemetryLogger.SetContext", "Unsupported context format");
+            }
         }
 
         /// <summary>

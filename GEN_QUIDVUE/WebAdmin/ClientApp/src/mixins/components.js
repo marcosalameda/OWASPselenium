@@ -36,9 +36,9 @@ import {
 	QLabel,
 	QLineLoader,
 	QOverlay,
-	QPopover,
 	QRadioButton,
 	QRadioGroup,
+	QPopover,
 	QSelect,
 	QSpinnerLoader,
 	QTextArea,
@@ -93,9 +93,9 @@ export default function ComponentsInit(app) {
 	app.component('QLabel', QLabel)
 	app.component('QLineLoader', QLineLoader)
 	app.component('QOverlay', QOverlay)
-	app.component('QPopover', QPopover)
 	app.component('QRadioButton', QRadioButton)
 	app.component('QRadioGroup', QRadioGroup)
+	app.component('QPopover', QPopover)
 	app.component('QSelect', QSelect)
 	app.component('QSpinnerLoader', QSpinnerLoader)
 	app.component('QTextArea', QTextArea)

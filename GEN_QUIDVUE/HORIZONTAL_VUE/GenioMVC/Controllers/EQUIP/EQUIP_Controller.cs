@@ -200,6 +200,22 @@ namespace GenioMVC.Controllers
 							result = model.TableRoom1Roomnr;
 						}
 						break;
+					case "WID_IEQUTPEQUTIPOEQUI":	// Field (DB)
+						{
+							var model = new Wid_iequ_ViewModel(UserContext.Current) { editable = false };
+							model.MapFromModel(row);
+							model.Load_Wid_iequtpequtipoequi(qs);
+							result = model.TableTpequTipoequi;
+						}
+						break;
+					case "WID_IEQUWAREHWAREHDES":	// Field (DB)
+						{
+							var model = new Wid_iequ_ViewModel(UserContext.Current) { editable = false };
+							model.MapFromModel(row);
+							model.Load_Wid_iequwarehwarehdes(qs);
+							result = model.TableWarehWarehdes;
+						}
+						break;
 					default:
 						break;
 				}
@@ -210,7 +226,7 @@ namespace GenioMVC.Controllers
 			}
 
 			if (result != null)
-				return JsonOK(result);
+				return JsonOK(new { List = result.List, TotalRows = result.Pagination.TotalRows, Selected = result.Selected, Value = result.Value });
 			return JsonERROR("Not found any valid result");
 		}
 
@@ -277,6 +293,12 @@ namespace GenioMVC.Controllers
 						break;
 					case "GROUPBX_ROOM1ROOMNR__":	// Field (F1)
 						values = new Groupbx_ViewModel(UserContext.Current).GetDependant_GroupbxTableRoom1Roomnr(Selected);
+						break;
+					case "WID_IEQUTPEQUTIPOEQUI":	// Field (DB)
+						values = new Wid_iequ_ViewModel(UserContext.Current).GetDependant_Wid_iequTableTpequTipoequi(Selected);
+						break;
+					case "WID_IEQUWAREHWAREHDES":	// Field (DB)
+						values = new Wid_iequ_ViewModel(UserContext.Current).GetDependant_Wid_iequTableWarehWarehdes(Selected);
 						break;
 					default: break;
 				}
@@ -432,6 +454,22 @@ namespace GenioMVC.Controllers
 			);
 		}
 
+
+
+		/// <summary>
+		/// Recalculate formulas of the "Wid_iequ" form. (++, CT, SR, CL and U1)
+		/// </summary>
+		/// <param name="formData">Current form data</param>
+		/// <returns></returns>
+		[HttpPost]
+		public JsonResult RecalculateFormulas_Wid_iequ([FromBody]Wid_iequ_ViewModel formData)
+		{
+			return GenericRecalculateFormulas(formData, "equip",
+				(primaryKey) => Models.Equip.Find(primaryKey, UserContext.Current, "FWID_IEQU"),
+				(model) => formData.MapToModel(model as Models.Equip)
+			);
+		}
+
 		/// <summary>
 		/// Get "See more..." tree structure
 		/// </summary>
@@ -541,6 +579,16 @@ namespace GenioMVC.Controllers
 		public ActionResult GetFile([FromBody] RequestDocumGetModel requestModel)
 		{
 			return base.GetFile(requestModel.Ticket, requestModel.ViewType);
+		}
+
+		/// <summary>
+		/// Stores a new document in the Docums table
+		/// </summary>
+		/// <param name="requestModel">The request model with the document and ticket</param>
+		/// <returns>A JSON response with the result of the operation</returns>
+		public ActionResult SetFile([FromForm] RequestDocumsCreateModel requestModel)
+		{
+			return base.SetFile(requestModel.Ticket, requestModel.Mode, requestModel.Version);
 		}
 
 		/// <summary>

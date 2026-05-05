@@ -18,11 +18,10 @@
 						</template>
 					</q-text-field>
 					<numeric-input
-						:model-value="portValue"
+						v-model="model.Port"
 						size="xlarge"
 						:label="hardcodedTexts.port"
-						:isReadOnly="isTestingConnection"
-						@update:model-value="updateSystemPort">
+						:isReadOnly="isTestingConnection">
 					</numeric-input>
 					<q-select
 						v-model="model.ServerType"
@@ -107,6 +106,27 @@
 						size="xlarge"
 						@click="TestServerConection"
 						:loading="showLoader" />
+					<hr />
+					<h5>
+						{{ 'GQP ' +  resources.sharedTablesLabel }}
+					</h5>
+					<q-text-field
+						v-model="model.GQP_Schema"
+						:label="resources.databaseName"
+						required
+						size="xlarge"
+						:readonly="isTestingConnection">
+						<template #extras>
+							<q-icon icon="information-outline" />
+							{{ resources.databaseNameInfo }}
+						</template>
+					</q-text-field>
+					<q-checkbox
+						v-model="model.GQP_ConnEncrypt"
+						:label="resources.encryptConnectionLabel" />
+					<q-checkbox
+						v-model="model.GQP_ConnWithDomainUser"
+						:label="resources.domainUserLabel" />
 				</q-row-container>
 			</q-card>
 		</row>
@@ -258,18 +278,12 @@ export default {
 				changesSavedSuccess: this.Resources[texts.changesSavedSuccess],
 			}
 		},
-
-		portValue() {
-			return parseInt(this.model.Port) || ''
-		}
 	},
 
 	methods: {
-		updateSystemPort(newVal) {
-			this.model.Port = newVal.toString()
-		},
-
 		saveConfigDatabase() {
+			//let hasConfig = vm.model.HasConfig;
+			this.model.Port = this.model.Port.toString()
 			QUtils.log("SaveConfigDatabase - Request", QUtils.apiActionURL('Config', 'SaveConfigDatabase'));
 			QUtils.postData('Config', 'SaveConfigDatabase', this.model, null, (data) => {
 				QUtils.log("SaveConfigDatabase - Response", data);
@@ -321,12 +335,11 @@ export default {
 				this.isTestingConnection = false;
 			})
 		},
-	},
-
-	beforeUnmount() {
-		if (this.globalClickHandler) {
-			document.removeEventListener('click', this.globalClickHandler, true);
-		}
+		beforeUnmount() {
+			if (this.globalClickHandler) {
+				document.removeEventListener('click', this.globalClickHandler, true);
+			}
+		},
 	}
 };
 </script>

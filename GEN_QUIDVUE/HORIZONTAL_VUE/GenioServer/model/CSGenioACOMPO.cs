@@ -1,5 +1,5 @@
 ﻿
- 
+
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -48,7 +48,7 @@ namespace CSGenio.business
 			Qfield.FieldDescription = "";
 			Qfield.FieldSize =  36;
 			Qfield.MQueue = false;
-			Qfield.CavDesignation = "";
+			Qfield.VisivelCav = CavVisibilityType.Nunca;
 
 			Qfield.Dupmsg = "";
 			info.RegisterFieldDB(Qfield);
@@ -58,25 +58,20 @@ namespace CSGenio.business
 			Qfield.FieldDescription = "Components Class";
 			Qfield.FieldSize =  36;
 			Qfield.MQueue = false;
-			Qfield.CavDesignation = "COMPONENTS_CLASS59339";
+			Qfield.VisivelCav = CavVisibilityType.Nunca;
 
 			Qfield.Dupmsg = "";
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
 			Qfield = new Field(info.Alias, "release", FieldType.TEXT);
-			Qfield.FieldDescription = "Release version";
-			Qfield.FieldSize =  6;
+			Qfield.FieldDescription = "Genio version";
+			Qfield.FieldSize =  50;
 			Qfield.MQueue = false;
 			Qfield.CavDesignation = "RELEASE_VERSION03981";
 
 			Qfield.Dupmsg = "";
-			Qfield.FillingRule = (rule) =>
-			{
-				string mask = "000.00";
-				string validation = "000.00";
-				return Validation.validateMP(rule, mask, validation);
-			};
+			Qfield.DefaultValue = new DefaultValue("0");
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
@@ -95,7 +90,7 @@ namespace CSGenio.business
 			Qfield.FieldDescription = "Preview";
 			Qfield.FieldSize =  3;
 			Qfield.MQueue = false;
-			Qfield.CavDesignation = "PREVIEW45357";
+			Qfield.VisivelCav = CavVisibilityType.Nunca;
 
 			Qfield.Dupmsg = "";
 			info.RegisterFieldDB(Qfield);
@@ -212,6 +207,27 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
+			Qfield = new Field(info.Alias, "weblink", FieldType.TEXT);
+			Qfield.FieldDescription = "Link";
+			Qfield.FieldSize =  100;
+			Qfield.MQueue = false;
+			Qfield.CavDesignation = "LINK27521";
+
+			Qfield.Dupmsg = "";
+			info.RegisterFieldDB(Qfield);
+
+			//- - - - - - - - - - - - - - - - - - -
+			Qfield = new Field(info.Alias, "releaselogic", FieldType.LOGIC);
+			Qfield.FieldDescription = "Release version";
+			Qfield.FieldSize =  1;
+			Qfield.MQueue = false;
+			Qfield.CavDesignation = "RELEASE_VERSION03981";
+
+			Qfield.Dupmsg = "";
+			Qfield.DefaultValue = new DefaultValue(1);
+			info.RegisterFieldDB(Qfield);
+
+			//- - - - - - - - - - - - - - - - - - -
 			Qfield = new Field(info.Alias, "zzstate", FieldType.INTEGER);
 			Qfield.FieldDescription = "Estado da ficha";
 			info.RegisterFieldDB(Qfield);
@@ -258,6 +274,10 @@ namespace CSGenio.business
 
 			info.InternalOperationFields = new string[] {
 			 "compicon"
+			};
+
+			info.DefaultValues = new string[] {
+			 "release","releaselogic"
 			};
 
 
@@ -389,11 +409,11 @@ namespace CSGenio.business
 			set { insertNameValueField(FldCodcompc, value); }
 		}
 
-		/// <summary>Field : "Release version" Tipo: "C" Formula:  ""</summary>
+		/// <summary>Field : "Genio version" Tipo: "C" Formula:  ""</summary>
 		public static FieldRef FldRelease { get { return m_fldRelease; } }
 		private static FieldRef m_fldRelease = new FieldRef("compo", "release");
 
-		/// <summary>Field : "Release version" Tipo: "C" Formula:  ""</summary>
+		/// <summary>Field : "Genio version" Tipo: "C" Formula:  ""</summary>
 		public string ValRelease
 		{
 			get { return (string)returnValueField(FldRelease); }
@@ -532,6 +552,28 @@ namespace CSGenio.business
 			set { insertNameValueField(FldCompicon, value); }
 		}
 
+		/// <summary>Field : "Link" Tipo: "C" Formula:  ""</summary>
+		public static FieldRef FldWeblink { get { return m_fldWeblink; } }
+		private static FieldRef m_fldWeblink = new FieldRef("compo", "weblink");
+
+		/// <summary>Field : "Link" Tipo: "C" Formula:  ""</summary>
+		public string ValWeblink
+		{
+			get { return (string)returnValueField(FldWeblink); }
+			set { insertNameValueField(FldWeblink, value); }
+		}
+
+		/// <summary>Field : "Release version" Tipo: "L" Formula:  ""</summary>
+		public static FieldRef FldReleaselogic { get { return m_fldReleaselogic; } }
+		private static FieldRef m_fldReleaselogic = new FieldRef("compo", "releaselogic");
+
+		/// <summary>Field : "Release version" Tipo: "L" Formula:  ""</summary>
+		public int ValReleaselogic
+		{
+			get { return (int)returnValueField(FldReleaselogic); }
+			set { insertNameValueField(FldReleaselogic, value); }
+		}
+
 		/// <summary>Field : "ZZSTATE" Type: "INT" Formula:  ""</summary>
 		public static FieldRef FldZzstate { get { return m_fldZzstate; } }
 		private static FieldRef m_fldZzstate = new FieldRef("compo", "zzstate");
@@ -552,17 +594,16 @@ namespace CSGenio.business
         /// <param name="key">The value of the primary key</param>
         /// <param name="user">The context of the user</param>
         /// <param name="fields">The fields to be filled in the area</param>
-		/// <param name="forUpdate">True if you are preparing to update this record, false otherwise</param>
         /// <returns>An area with the fields requests of the record read or null if the key does not exist</returns>
         /// <remarks>Persistence operations should not be used on a partially positioned register</remarks>
-        public static CSGenioAcompo search(PersistentSupport sp, string key, User user, string[] fields = null, bool forUpdate = false)
+        public static CSGenioAcompo search(PersistentSupport sp, string key, User user, string[] fields = null)
         {
 			if (string.IsNullOrEmpty(key))
 				return null;
 
 		    CSGenioAcompo area = new CSGenioAcompo(user, user.CurrentModule);
 
-            if (sp.getRecord(area, key, fields, forUpdate))
+            if (sp.getRecord(area, key, fields))
                 return area;
 			return null;
         }
@@ -622,14 +663,14 @@ namespace CSGenio.business
 
 
 
-
-
+ 
 
 
 		// USE /[MANUAL GQT TABAUX COMPO]/
 
      
-                
+
+                  
 
 	}
 }

@@ -63,14 +63,9 @@ namespace GenioMVC.Models
 	public class ProfileModel : ChangePasswordModel
 	{
 		/// <summary>
-		/// Authentication models that need redirection to external url
+		/// Authentication models that need authentication
 		/// </summary>
 		public List<AuthRedirectMethodModel> AuthRedirectMethods { get; set; } = [];
-
-		/// <summary>
-		/// Current 2FA method associated with this user
-		/// </summary>
-		public string Current2FA { get; set; }
 
 		public string ValCodpsw { get; set; }
 
@@ -141,10 +136,6 @@ namespace GenioMVC.Models
 		/// </summary>
 		public string Description { get; set; }
 		/// <summary>
-		/// Type of credential interface requested by this provider
-		/// </summary>
-		public string CredentialType { get; set; }
-		/// <summary>
 		/// The external uri to redirect the user during login with this provider
 		/// </summary>
 		public string Redirect { get; set; }
@@ -171,11 +162,6 @@ namespace GenioMVC.Models
 	public class LogOnModel : BasicUserModel
 	{
 		/// <summary>
-		/// Provider we are using to authenticate with
-		/// </summary>
-		public string ProviderId { get; set; }
-
-		/// <summary>
 		/// Authentication models that need authentication
 		/// </summary>
 		public List<AuthRedirectMethodModel> AuthRedirectMethods { get; set; } = [];
@@ -190,9 +176,17 @@ namespace GenioMVC.Models
 		}
 
 		/// <summary>
-		/// Authentication mode
+		/// Determines whether username and password authentication is enabled.
 		/// </summary>
-		public AuthenticationMode AuthMode { get; set; }
+		/// <remarks>
+		/// This property returns true if either QuidgestIdentityProvider or LdapIdentityProvider is present in the list of identity providers.
+		/// This is used to determine if username and password authentication is enabled, assuming that either QuidgestIdentityProvider
+		/// or LdapIdentityProvider supports this method of authentication.
+		/// </remarks>
+		public bool HasUsernameAuth
+		{
+			get { return SecurityFactory.HasUsernameAuth(); }
+		}
 
 		public override CrudViewModelValidationResult Validate(UserContext userContext)
 		{

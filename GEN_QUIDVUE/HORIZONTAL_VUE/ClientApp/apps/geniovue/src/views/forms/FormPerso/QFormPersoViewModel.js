@@ -1,4 +1,4 @@
-﻿/* eslint-disable @typescript-eslint/no-unused-vars */
+﻿/* eslint-disable no-unused-vars */
 import { computed, reactive, watch } from 'vue'
 import _merge from 'lodash-es/merge'
 
@@ -11,7 +11,7 @@ import netAPI from '@quidgest/clientapp/network'
 import qApi from '@/api/genio/quidgestFunctions.js'
 import qFunctions from '@/api/genio/projectFunctions.js'
 import qProjArrays from '@/api/genio/projectArrays.js'
-/* eslint-enable @typescript-eslint/no-unused-vars */
+/* eslint-enable no-unused-vars */
 
 /**
  * Represents a ViewModel class.
@@ -25,11 +25,11 @@ export default class ViewModel extends FormViewModelBase
 	 * @param {object} options - The options for the ViewModel
 	 * @param {object} values - A ViewModel instance to copy values from
 	 */
-	// eslint-disable-next-line @typescript-eslint/no-unused-vars
+	// eslint-disable-next-line no-unused-vars
 	constructor(vueContext, options, values)
 	{
 		super(vueContext, options)
-		// eslint-disable-next-line @typescript-eslint/no-unused-vars
+		// eslint-disable-next-line no-unused-vars
 		const vm = this.vueContext
 
 		// The view model metadata
@@ -37,9 +37,8 @@ export default class ViewModel extends FormViewModelBase
 			name: 'PERSO',
 			area: 'PERSO',
 			actions: {
-				recalculateFormulas: 'RecalculateFormulas_Perso',
-				updateFilesTickets: 'UpdateFilesTicketsPerso',
-				setFile: 'SetFilePerso'
+				recalculateFormulas: 'RecalculateFormulas_PERSO',
+				updateFilesTickets: 'UpdateFilesTicketsPERSO'
 			}
 		})
 
@@ -51,7 +50,7 @@ export default class ViewModel extends FormViewModelBase
 			field: 'CODPERSO',
 			description: '',
 		}).cloneFrom(values?.ValCodperso))
-		this.stopWatchers.push(watch(() => this.ValCodperso.value, (newValue, oldValue) => this.onUpdate('perso.codperso', this.ValCodperso, newValue, oldValue)))
+		watch(() => this.ValCodperso.value, (newValue, oldValue) => this.onUpdate('perso.codperso', this.ValCodperso, newValue, oldValue))
 
 		/** The remaining form fields. */
 		this.ValPhoto = reactive(new modelFieldType.Image({
@@ -61,7 +60,7 @@ export default class ViewModel extends FormViewModelBase
 			field: 'PHOTO',
 			description: computed(() => this.Resources.PHOTO51874),
 		}).cloneFrom(values?.ValPhoto))
-		this.stopWatchers.push(watch(() => this.ValPhoto.value, (newValue, oldValue) => this.onUpdate('perso.photo', this.ValPhoto, newValue, oldValue)))
+		watch(() => this.ValPhoto.value, (newValue, oldValue) => this.onUpdate('perso.photo', this.ValPhoto, newValue, oldValue))
 
 		this.ValName = reactive(new modelFieldType.String({
 			id: 'ValName',
@@ -71,7 +70,7 @@ export default class ViewModel extends FormViewModelBase
 			maxLength: 85,
 			description: computed(() => this.Resources.PERSON_NAME40980),
 		}).cloneFrom(values?.ValName))
-		this.stopWatchers.push(watch(() => this.ValName.value, (newValue, oldValue) => this.onUpdate('perso.name', this.ValName, newValue, oldValue)))
+		watch(() => this.ValName.value, (newValue, oldValue) => this.onUpdate('perso.name', this.ValName, newValue, oldValue))
 
 		this.ValIdentifi = reactive(new modelFieldType.String({
 			id: 'ValIdentifi',
@@ -81,7 +80,7 @@ export default class ViewModel extends FormViewModelBase
 			maxLength: 10,
 			description: computed(() => this.Resources.IDENTIFICATION_NUMBE11999),
 		}).cloneFrom(values?.ValIdentifi))
-		this.stopWatchers.push(watch(() => this.ValIdentifi.value, (newValue, oldValue) => this.onUpdate('perso.identifi', this.ValIdentifi, newValue, oldValue)))
+		watch(() => this.ValIdentifi.value, (newValue, oldValue) => this.onUpdate('perso.identifi', this.ValIdentifi, newValue, oldValue))
 
 		this.ValGender = reactive(new modelFieldType.String({
 			id: 'ValGender',
@@ -89,10 +88,10 @@ export default class ViewModel extends FormViewModelBase
 			area: 'PERSO',
 			field: 'GENDER',
 			maxLength: 1,
-			arrayOptions: computed(() => new qProjArrays.QArrayGender(vm.$getResource).elements),
+			arrayOptions: computed(() => qProjArrays.QArrayGender.setResources(vm.$getResource).elements),
 			description: computed(() => this.Resources.GENDER44172),
 		}).cloneFrom(values?.ValGender))
-		this.stopWatchers.push(watch(() => this.ValGender.value, (newValue, oldValue) => this.onUpdate('perso.gender', this.ValGender, newValue, oldValue)))
+		watch(() => this.ValGender.value, (newValue, oldValue) => this.onUpdate('perso.gender', this.ValGender, newValue, oldValue))
 
 		this.ValEmail = reactive(new modelFieldType.String({
 			id: 'ValEmail',
@@ -102,7 +101,7 @@ export default class ViewModel extends FormViewModelBase
 			maxLength: 254,
 			description: computed(() => this.Resources.E_MAIL42251),
 		}).cloneFrom(values?.ValEmail))
-		this.stopWatchers.push(watch(() => this.ValEmail.value, (newValue, oldValue) => this.onUpdate('perso.email', this.ValEmail, newValue, oldValue)))
+		watch(() => this.ValEmail.value, (newValue, oldValue) => this.onUpdate('perso.email', this.ValEmail, newValue, oldValue))
 
 		this.ValDob = reactive(new modelFieldType.Date({
 			id: 'ValDob',
@@ -111,7 +110,7 @@ export default class ViewModel extends FormViewModelBase
 			field: 'DOB',
 			description: computed(() => this.Resources.DATE_OF_BIRTH63058),
 		}).cloneFrom(values?.ValDob))
-		this.stopWatchers.push(watch(() => this.ValDob.value, (newValue, oldValue) => this.onUpdate('perso.dob', this.ValDob, newValue, oldValue)))
+		watch(() => this.ValDob.value, (newValue, oldValue) => this.onUpdate('perso.dob', this.ValDob, newValue, oldValue))
 
 		this.ValTob = reactive(new modelFieldType.Time({
 			id: 'ValTob',
@@ -120,7 +119,7 @@ export default class ViewModel extends FormViewModelBase
 			field: 'TOB',
 			description: computed(() => this.Resources.TIME_OF_BIRTH04797),
 		}).cloneFrom(values?.ValTob))
-		this.stopWatchers.push(watch(() => this.ValTob.value, (newValue, oldValue) => this.onUpdate('perso.tob', this.ValTob, newValue, oldValue)))
+		watch(() => this.ValTob.value, (newValue, oldValue) => this.onUpdate('perso.tob', this.ValTob, newValue, oldValue))
 
 		this.ValYear = reactive(new modelFieldType.Number({
 			id: 'ValYear',
@@ -131,7 +130,7 @@ export default class ViewModel extends FormViewModelBase
 			decimalDigits: 0,
 			description: computed(() => this.Resources.YEAR61794),
 		}).cloneFrom(values?.ValYear))
-		this.stopWatchers.push(watch(() => this.ValYear.value, (newValue, oldValue) => this.onUpdate('perso.year', this.ValYear, newValue, oldValue)))
+		watch(() => this.ValYear.value, (newValue, oldValue) => this.onUpdate('perso.year', this.ValYear, newValue, oldValue))
 
 		this.ValMonth = reactive(new modelFieldType.Number({
 			id: 'ValMonth',
@@ -140,10 +139,10 @@ export default class ViewModel extends FormViewModelBase
 			field: 'MONTH',
 			maxDigits: 2,
 			decimalDigits: 0,
-			arrayOptions: computed(() => new qProjArrays.QArrayMonths(vm.$getResource).elements),
+			arrayOptions: computed(() => qProjArrays.QArrayMonths.setResources(vm.$getResource).elements),
 			description: computed(() => this.Resources.MONTH46035),
 		}).cloneFrom(values?.ValMonth))
-		this.stopWatchers.push(watch(() => this.ValMonth.value, (newValue, oldValue) => this.onUpdate('perso.month', this.ValMonth, newValue, oldValue)))
+		watch(() => this.ValMonth.value, (newValue, oldValue) => this.onUpdate('perso.month', this.ValMonth, newValue, oldValue))
 
 		this.ValCreatusr = reactive(new modelFieldType.String({
 			id: 'ValCreatusr',
@@ -154,7 +153,7 @@ export default class ViewModel extends FormViewModelBase
 			isFixed: true,
 			description: computed(() => this.Resources.CREATED_BY12292),
 		}).cloneFrom(values?.ValCreatusr))
-		this.stopWatchers.push(watch(() => this.ValCreatusr.value, (newValue, oldValue) => this.onUpdate('perso.creatusr', this.ValCreatusr, newValue, oldValue)))
+		watch(() => this.ValCreatusr.value, (newValue, oldValue) => this.onUpdate('perso.creatusr', this.ValCreatusr, newValue, oldValue))
 
 		this.ValCreatdat = reactive(new modelFieldType.Date({
 			id: 'ValCreatdat',
@@ -164,7 +163,7 @@ export default class ViewModel extends FormViewModelBase
 			isFixed: true,
 			description: computed(() => this.Resources.CREATED_ON00051),
 		}).cloneFrom(values?.ValCreatdat))
-		this.stopWatchers.push(watch(() => this.ValCreatdat.value, (newValue, oldValue) => this.onUpdate('perso.creatdat', this.ValCreatdat, newValue, oldValue)))
+		watch(() => this.ValCreatdat.value, (newValue, oldValue) => this.onUpdate('perso.creatdat', this.ValCreatdat, newValue, oldValue))
 
 		this.ValModifusr = reactive(new modelFieldType.String({
 			id: 'ValModifusr',
@@ -175,7 +174,7 @@ export default class ViewModel extends FormViewModelBase
 			isFixed: true,
 			description: computed(() => this.Resources.MODIFIED_BY02094),
 		}).cloneFrom(values?.ValModifusr))
-		this.stopWatchers.push(watch(() => this.ValModifusr.value, (newValue, oldValue) => this.onUpdate('perso.modifusr', this.ValModifusr, newValue, oldValue)))
+		watch(() => this.ValModifusr.value, (newValue, oldValue) => this.onUpdate('perso.modifusr', this.ValModifusr, newValue, oldValue))
 
 		this.ValModifdat = reactive(new modelFieldType.Date({
 			id: 'ValModifdat',
@@ -185,7 +184,7 @@ export default class ViewModel extends FormViewModelBase
 			isFixed: true,
 			description: computed(() => this.Resources.MODIFIED_ON31953),
 		}).cloneFrom(values?.ValModifdat))
-		this.stopWatchers.push(watch(() => this.ValModifdat.value, (newValue, oldValue) => this.onUpdate('perso.modifdat', this.ValModifdat, newValue, oldValue)))
+		watch(() => this.ValModifdat.value, (newValue, oldValue) => this.onUpdate('perso.modifdat', this.ValModifdat, newValue, oldValue))
 	}
 
 	/**

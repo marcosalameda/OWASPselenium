@@ -1,4 +1,4 @@
-﻿/* eslint-disable @typescript-eslint/no-unused-vars */
+﻿/* eslint-disable no-unused-vars */
 import { computed, reactive, watch } from 'vue'
 import _merge from 'lodash-es/merge'
 
@@ -11,7 +11,7 @@ import netAPI from '@quidgest/clientapp/network'
 import qApi from '@/api/genio/quidgestFunctions.js'
 import qFunctions from '@/api/genio/projectFunctions.js'
 import qProjArrays from '@/api/genio/projectArrays.js'
-/* eslint-enable @typescript-eslint/no-unused-vars */
+/* eslint-enable no-unused-vars */
 
 /**
  * Represents a ViewModel class.
@@ -25,11 +25,11 @@ export default class ViewModel extends FormViewModelBase
 	 * @param {object} options - The options for the ViewModel
 	 * @param {object} values - A ViewModel instance to copy values from
 	 */
-	// eslint-disable-next-line @typescript-eslint/no-unused-vars
+	// eslint-disable-next-line no-unused-vars
 	constructor(vueContext, options, values)
 	{
 		super(vueContext, options)
-		// eslint-disable-next-line @typescript-eslint/no-unused-vars
+		// eslint-disable-next-line no-unused-vars
 		const vm = this.vueContext
 
 		// The view model metadata
@@ -37,9 +37,8 @@ export default class ViewModel extends FormViewModelBase
 			name: 'RORDI',
 			area: 'RORDI',
 			actions: {
-				recalculateFormulas: 'RecalculateFormulas_Rordi',
-				updateFilesTickets: 'UpdateFilesTicketsRordi',
-				setFile: 'SetFileRordi'
+				recalculateFormulas: 'RecalculateFormulas_RORDI',
+				updateFilesTickets: 'UpdateFilesTicketsRORDI'
 			}
 		})
 
@@ -51,7 +50,7 @@ export default class ViewModel extends FormViewModelBase
 			field: 'CODRORDI',
 			description: '',
 		}).cloneFrom(values?.ValCodrordi))
-		this.stopWatchers.push(watch(() => this.ValCodrordi.value, (newValue, oldValue) => this.onUpdate('rordi.codrordi', this.ValCodrordi, newValue, oldValue)))
+		watch(() => this.ValCodrordi.value, (newValue, oldValue) => this.onUpdate('rordi.codrordi', this.ValCodrordi, newValue, oldValue))
 
 		/** The remaining form fields. */
 		this.ValOrder = reactive(new modelFieldType.Number({
@@ -63,7 +62,7 @@ export default class ViewModel extends FormViewModelBase
 			decimalDigits: 0,
 			description: computed(() => this.Resources.ORDER39632),
 		}).cloneFrom(values?.ValOrder))
-		this.stopWatchers.push(watch(() => this.ValOrder.value, (newValue, oldValue) => this.onUpdate('rordi.order', this.ValOrder, newValue, oldValue)))
+		watch(() => this.ValOrder.value, (newValue, oldValue) => this.onUpdate('rordi.order', this.ValOrder, newValue, oldValue))
 
 		this.ValTitle = reactive(new modelFieldType.String({
 			id: 'ValTitle',
@@ -73,7 +72,7 @@ export default class ViewModel extends FormViewModelBase
 			maxLength: 50,
 			description: computed(() => this.Resources.TITLE21885),
 		}).cloneFrom(values?.ValTitle))
-		this.stopWatchers.push(watch(() => this.ValTitle.value, (newValue, oldValue) => this.onUpdate('rordi.title', this.ValTitle, newValue, oldValue)))
+		watch(() => this.ValTitle.value, (newValue, oldValue) => this.onUpdate('rordi.title', this.ValTitle, newValue, oldValue))
 	}
 
 	/**

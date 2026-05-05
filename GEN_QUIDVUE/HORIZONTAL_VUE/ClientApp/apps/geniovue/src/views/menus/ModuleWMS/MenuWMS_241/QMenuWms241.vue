@@ -10,12 +10,10 @@
 				<q-table
 					v-bind="controls.menu"
 					v-on="controls.menu.handlers">
-					<!-- USE /[MANUAL GQT CUSTOM_TABLE WMS_Menu_241]/ -->
 				</q-table>
 
 				<q-table-extra-extension
 					:list-ctrl="controls.menu"
-					:filter-operators="controls.menu.filterOperators"
 					v-on="controls.menu.handlers" />
 			</q-row-container>
 		</form>
@@ -50,7 +48,7 @@
 </template>
 
 <script>
-	/* eslint-disable @typescript-eslint/no-unused-vars */
+	/* eslint-disable no-unused-vars */
 	import asyncProcM from '@quidgest/clientapp/composables/async'
 	import qEnums from '@quidgest/clientapp/constants/enums'
 	import netAPI from '@quidgest/clientapp/network'
@@ -70,7 +68,7 @@
 	import qApi from '@/api/genio/quidgestFunctions.js'
 	import qFunctions from '@/api/genio/projectFunctions.js'
 	import qProjArrays from '@/api/genio/projectArrays.js'
-	/* eslint-enable @typescript-eslint/no-unused-vars */
+	/* eslint-enable no-unused-vars */
 
 	import MenuViewModel from './QMenuWMS_241ViewModel.js'
 
@@ -134,7 +132,7 @@
 				model: new MenuViewModel(this),
 
 				controls: {
-					menu: new controlClass.TableListControl({
+					menu: new controlClass.TableSpecialRenderingControl({
 						fnHydrateViewModel: (data) => vm.model.hydrate(data),
 						id: 'WMS_Menu_241',
 						controller: 'DISPA',
@@ -154,7 +152,6 @@
 								label: computed(() => this.Resources.DISPATCH_DATE54413),
 								scrollData: 16,
 								dateTimeType: 'dateTime',
-								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.NumericColumn({
 								order: 2,
@@ -165,7 +162,6 @@
 								scrollData: 10,
 								maxDigits: 10,
 								decimalPlaces: 0,
-								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 3,
@@ -175,7 +171,6 @@
 								label: computed(() => this.Resources.CUSTOMER51658),
 								dataLength: 85,
 								scrollData: 30,
-								export: 1,
 								pkColumn: 'ValCodentit',
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 						],
@@ -192,7 +187,8 @@
 							permissions: {
 							},
 							searchBarConfig: {
-								visibility: true
+								visibility: true,
+								searchOnPressEnter: true
 							},
 							filtersVisible: true,
 							allowColumnFilters: true,
@@ -293,7 +289,6 @@
 							rowClickAction: {
 								id: 'RCA_WMS_2411',
 								name: 'form-DISPA',
-								isVisible: true,
 								params: {
 									isRoute: true,
 									limits: [
@@ -319,11 +314,25 @@
 								sortOrder: 'asc'
 							}
 						},
-						globalEvents: ['changed-DISPA', 'changed-ENTIT', 'changed-DISST', 'changed-PERSO'],
+						globalEvents: ['changed-ENTIT', 'changed-DISST', 'changed-PERSO', 'changed-DISPA'],
 						uuid: '9a0b0214-06bf-4759-baaf-3939c00d8f73',
 						allSelectedRows: 'false',
+						viewModes: [
+							{
+								id: 'LIST',
+								type: 'list',
+								subtype: '',
+								label: computed(() => this.Resources.LISTA13474),
+								order: 1,
+								mappingVariables: readonly({
+								}),
+								styleVariables: {
+								},
+								groups: {
+								}
+							},
+						],
 						headerLevel: 1,
-						isActiveControl: computed(() => this.isActiveMenu)
 					}, this),
 				}
 			}
@@ -347,14 +356,6 @@
 		{
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
 // USE /[MANUAL GQT FORM_CODEJS WMS_MENU_241]/
-// eslint-disable-next-line
-/* eslint-enable indent, vue/html-indent, vue/script-indent */
-		},
-
-		beforeUnmount()
-		{
-/* eslint-disable indent, vue/html-indent, vue/script-indent */
-// USE /[MANUAL GQT COMPONENT_BEFORE_UNMOUNT WMS_MENU_241]/
 // eslint-disable-next-line
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 		},

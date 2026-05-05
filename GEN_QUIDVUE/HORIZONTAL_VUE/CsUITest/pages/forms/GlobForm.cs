@@ -15,13 +15,13 @@ public class GlobForm : Form
 	/// <summary>
 	/// External API address
 	/// </summary>
-	public BaseInputControl GlobApiurl => new BaseInputControl(driver, ContainerLocator, "container-GLOB____GLOB_APIURL__" + IdSuffix, "#GLOB____GLOB_APIURL__" + IdSuffix);
+	public BaseInputControl GlobApiurl => new BaseInputControl(driver, ContainerLocator, "container-GLOB____GLOB_APIURL__", "#GLOB____GLOB_APIURL__");
 
 	/// <summary>
 	/// Legend
 	/// </summary>
-	public BaseInputControl GlobLegend => new BaseInputControl(driver, ContainerLocator, "container-GLOB____GLOB_LEGEND__" + IdSuffix, "#GLOB____GLOB_LEGEND__" + IdSuffix);
+	public BaseInputControl GlobLegend => new BaseInputControl(driver, ContainerLocator, "container-GLOB____GLOB_LEGEND__", "#GLOB____GLOB_LEGEND__");
 
-	public GlobForm(IWebDriver driver, FORM_MODE mode, By? containerLocator = null, bool usePkInId = false)
-		: base(driver, mode, "GLOB", containerLocator: containerLocator, usePkInId: usePkInId) { }
+	public GlobForm(IWebDriver driver, FORM_MODE mode, By? containerLocator = null)
+		: base(driver, mode, "GLOB", containerLocator: containerLocator) { }
 }

@@ -119,6 +119,31 @@ namespace GenioMVC.Models
 			set { _manuf = value; }
 		}
 
+		[DisplayName("Description")]
+		/// <summary>Field : "Description" Tipo: "MO" Formula:  ""</summary>
+		[ShouldSerialize("Asset.ValDescription")]
+		[DataType(DataType.MultilineText)]
+		public string ValDescription { get { return klass.ValDescription; } set { klass.ValDescription = value; } }
+
+		[DisplayName("Detailed description")]
+		/// <summary>Field : "Detailed description" Tipo: "MO" Formula:  ""</summary>
+		[ShouldSerialize("Asset.ValLongdesc")]
+		[DataType(DataType.MultilineText)]
+		public string ValLongdesc { get { return klass.ValLongdesc; } set { klass.ValLongdesc = value; } }
+
+		[DisplayName("Category")]
+		/// <summary>Field : "Category" Tipo: "AC" Formula:  ""</summary>
+		[ShouldSerialize("Asset.ValCategory")]
+		[DataArray("Assetcategory", GenioMVC.Helpers.ArrayType.Character)]
+		public string ValCategory { get { return klass.ValCategory; } set { klass.ValCategory = value; } }
+		[JsonIgnore]
+		public SelectList ArrayValcategory { get { return new SelectList(CSGenio.business.ArrayAssetcategory.GetDictionary(), "Key", "Value", ValCategory); } set { ValCategory = value.SelectedValue as string; } }
+
+		[DisplayName("Background color for category")]
+		/// <summary>Field : "Background color for category" Tipo: "C" Formula:  ""</summary>
+		[ShouldSerialize("Asset.ValBg_color")]
+		public string ValBg_color { get { return klass.ValBg_color; } set { klass.ValBg_color = value; } }
+
 		[DisplayName("ZZSTATE")]
 		[ShouldSerialize("Asset.ValZzstate")]
 		/// <summary>Field: "ZZSTATE", Type: "INT", Formula: ""</summary>

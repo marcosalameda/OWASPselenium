@@ -250,17 +250,13 @@
 		},
 
 		beforeUnmount() {
-			this.destroyAceEditor()
-			this.destroyAceDiff()
+			this.aceEditor?.destroy()
 		},
 
 		methods: {
 			initEditor() {
 				// If the HTML hasn't been rendered yet, do nothing
 				if (!this.$refs.editor) return
-
-				// Remove previous
-				this.destroyAceDiff()
 
 				// Assign editor variable
 				this.aceEditor = ace.edit(this.$refs.editor)
@@ -400,9 +396,6 @@
 				differEditors.right.setShowPrintMargin(false);
 				differEditors.left.setShowPrintMargin(false);
 
-				// Remove previous
-				this.destroyAceDiff()
-
 				// Instantiate differ and store a ref to its current value
 				this.aceEditorDiffer = differ
 				this.aceEditorDifferValue = this.getEditedDifferValue()
@@ -453,19 +446,6 @@
 
 			updateModelValue() {
 				this.$emit('update:modelValue', (this.differActive ? this.getEditedDifferValue() : this.getSessionValue()))
-			},
-
-
-			destroyAceEditor()
-			{
-				this.aceEditor?.destroy()
-				this.aceEditor = null
-			},
-
-			destroyAceDiff()
-			{
-				this.aceEditorDiffer?.destroy()
-				this.aceEditorDiffer = null
 			}
 		},
 
@@ -509,13 +489,6 @@
 			showDiff(show) {
 				this.aceEditorDifferValue = this.getEditedDifferValue()
 				this.aceEditorDifferHeight = show ? this.aceEditorRenderer.getContainerElement().style.height : this.aceEditorDifferHeight
-
-				if(this.differActive) {
-					this.destroyAceDiff()
-				} else {
-					this.destroyAceEditor()
-				}
-
 				this.differActive = show
 
 				if (show)

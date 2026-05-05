@@ -10,55 +10,55 @@ public class GroupbxForm : Form
 	/// <summary>
 	/// Whole Line Off
 	/// </summary>
-	public CollapsibleZoneControl PseudNovogr01 => new CollapsibleZoneControl(driver, ContainerLocator, "#GROUPBX_PSEUDNOVOGR01" + IdSuffix + "-container");
+	public CollapsibleZoneControl PseudNovogr01 => new CollapsibleZoneControl(driver, ContainerLocator, "#GROUPBX_PSEUDNOVOGR01-container");
 
 	/// <summary>
 	/// Sequential No.:
 	/// </summary>
-	public BaseInputControl EquipSequennr => new BaseInputControl(driver, ContainerLocator, "container-GROUPBX_EQUIPSEQUENNR" + IdSuffix, "#GROUPBX_EQUIPSEQUENNR" + IdSuffix);
+	public BaseInputControl EquipSequennr => new BaseInputControl(driver, ContainerLocator, "container-GROUPBX_EQUIPSEQUENNR", "#GROUPBX_EQUIPSEQUENNR");
 
 	/// <summary>
 	/// Registration No.
 	/// </summary>
-	public BaseInputControl EquipRegistnr => new BaseInputControl(driver, ContainerLocator, "container-GROUPBX_EQUIPREGISTNR" + IdSuffix, "#GROUPBX_EQUIPREGISTNR" + IdSuffix);
+	public BaseInputControl EquipRegistnr => new BaseInputControl(driver, ContainerLocator, "container-GROUPBX_EQUIPREGISTNR", "#GROUPBX_EQUIPREGISTNR");
 
 	/// <summary>
 	/// Type of equipment
 	/// </summary>
-	public LookupControl TpequTipoequi => new LookupControl(driver, ContainerLocator, "container-GROUPBX_TPEQUTIPOEQUI" + IdSuffix);
-	public SeeMorePage TpequTipoequiSeeMorePage => new SeeMorePage(driver, "GROUPBX", "GROUPBX_TPEQUTIPOEQUI" + IdSuffix);
+	public LookupControl TpequTipoequi => new LookupControl(driver, ContainerLocator, "container-GROUPBX_TPEQUTIPOEQUI");
+	public SeeMorePage TpequTipoequiSeeMorePage => new SeeMorePage(driver, "GROUPBX", "GROUPBX_TPEQUTIPOEQUI");
 
 	/// <summary>
 	/// Manufacturer's website:
 	/// </summary>
-	public BaseInputControl EquipSitefabr => new BaseInputControl(driver, ContainerLocator, "container-GROUPBX_EQUIPSITEFABR" + IdSuffix, "#GROUPBX_EQUIPSITEFABR" + IdSuffix);
+	public BaseInputControl EquipSitefabr => new BaseInputControl(driver, ContainerLocator, "container-GROUPBX_EQUIPSITEFABR", "#GROUPBX_EQUIPSITEFABR");
 
 	/// <summary>
 	/// Warehouse
 	/// </summary>
-	public LookupControl WarehWarehdes => new LookupControl(driver, ContainerLocator, "container-GROUPBX_WAREHWAREHDES" + IdSuffix);
-	public SeeMorePage WarehWarehdesSeeMorePage => new SeeMorePage(driver, "GROUPBX", "GROUPBX_WAREHWAREHDES" + IdSuffix);
+	public LookupControl WarehWarehdes => new LookupControl(driver, ContainerLocator, "container-GROUPBX_WAREHWAREHDES");
+	public SeeMorePage WarehWarehdesSeeMorePage => new SeeMorePage(driver, "GROUPBX", "GROUPBX_WAREHWAREHDES");
 
 	/// <summary>
 	/// Item:
 	/// </summary>
-	public LookupControl ItemItemdes => new LookupControl(driver, ContainerLocator, "container-GROUPBX_ITEM_ITEMDES_" + IdSuffix);
-	public SeeMorePage ItemItemdesSeeMorePage => new SeeMorePage(driver, "GROUPBX", "GROUPBX_ITEM_ITEMDES_" + IdSuffix);
+	public LookupControl ItemItemdes => new LookupControl(driver, ContainerLocator, "container-GROUPBX_ITEM_ITEMDES_");
+	public SeeMorePage ItemItemdesSeeMorePage => new SeeMorePage(driver, "GROUPBX", "GROUPBX_ITEM_ITEMDES_");
 
 	/// <summary>
 	/// Whole Line On
 	/// </summary>
-	public CollapsibleZoneControl PseudNovogr02 => new CollapsibleZoneControl(driver, ContainerLocator, "#GROUPBX_PSEUDNOVOGR02" + IdSuffix + "-container");
+	public CollapsibleZoneControl PseudNovogr02 => new CollapsibleZoneControl(driver, ContainerLocator, "#GROUPBX_PSEUDNOVOGR02-container");
 
 	/// <summary>
 	/// Decomission:
 	/// </summary>
-	public DateInputControl EquipDtdeco => new DateInputControl(driver, ContainerLocator, "#GROUPBX_EQUIPDTDECO__" + IdSuffix);
+	public DateInputControl EquipDtdeco => new DateInputControl(driver, ContainerLocator, "#GROUPBX_EQUIPDTDECO__", "dd/MM/yyyy HH:mm");
 
 	/// <summary>
 	/// Room No.
 	/// </summary>
-	public BaseInputControl Room1Roomnr => new BaseInputControl(driver, ContainerLocator, "container-GROUPBX_ROOM1ROOMNR__" + IdSuffix, "#GROUPBX_ROOM1ROOMNR__" + IdSuffix);
+	public BaseInputControl Room1Roomnr => new BaseInputControl(driver, ContainerLocator, "container-GROUPBX_ROOM1ROOMNR__", "#GROUPBX_ROOM1ROOMNR__");
 
 	/// <summary>
 	/// Room Designation
@@ -68,43 +68,43 @@ public class GroupbxForm : Form
 	/// <summary>
 	/// Designation:
 	/// </summary>
-	public BaseInputControl EquipDesignat => new BaseInputControl(driver, ContainerLocator, "container-GROUPBX_EQUIPDESIGNAT" + IdSuffix, "#GROUPBX_EQUIPDESIGNAT" + IdSuffix);
+	public BaseInputControl EquipDesignat => new BaseInputControl(driver, ContainerLocator, "container-GROUPBX_EQUIPDESIGNAT", "#GROUPBX_EQUIPDESIGNAT");
 
 	/// <summary>
 	/// Acquisition:
 	/// </summary>
-	public DateInputControl EquipDtaquisi => new DateInputControl(driver, ContainerLocator, "#GROUPBX_EQUIPDTAQUISI" + IdSuffix);
+	public DateInputControl EquipDtaquisi => new DateInputControl(driver, ContainerLocator, "#GROUPBX_EQUIPDTAQUISI");
 
 	/// <summary>
 	/// Total Value:
 	/// </summary>
-	public BaseInputControl EquipValortot => new BaseInputControl(driver, ContainerLocator, "container-GROUPBX_EQUIPVALORTOT" + IdSuffix, "#GROUPBX_EQUIPVALORTOT" + IdSuffix);
+	public BaseInputControl EquipValortot => new BaseInputControl(driver, ContainerLocator, "container-GROUPBX_EQUIPVALORTOT", "#GROUPBX_EQUIPVALORTOT");
 
 	/// <summary>
 	/// Loan Frequency
 	/// </summary>
-	public EnumControl EquipFrequenc => new EnumControl(driver, ContainerLocator, "container-GROUPBX_EQUIPFREQUENC" + IdSuffix);
+	public EnumControl EquipFrequenc => new EnumControl(driver, ContainerLocator, "container-GROUPBX_EQUIPFREQUENC");
 
 	/// <summary>
 	/// Reference
 	/// </summary>
-	public DateInputControl EquipDtrefere => new DateInputControl(driver, ContainerLocator, "#GROUPBX_EQUIPDTREFERE" + IdSuffix, "dd/MM/yyyy HH:mm");
+	public DateInputControl EquipDtrefere => new DateInputControl(driver, ContainerLocator, "#GROUPBX_EQUIPDTREFERE", "dd/MM/yyyy HH:mm");
 
 	/// <summary>
 	/// First
 	/// </summary>
-	public BaseInputControl EquipFirst => new BaseInputControl(driver, ContainerLocator, "container-GROUPBX_EQUIPFIRST___" + IdSuffix, "#GROUPBX_EQUIPFIRST___" + IdSuffix);
+	public BaseInputControl EquipFirst => new BaseInputControl(driver, ContainerLocator, "container-GROUPBX_EQUIPFIRST___", "#GROUPBX_EQUIPFIRST___");
 
 	/// <summary>
 	/// Before
 	/// </summary>
-	public BaseInputControl EquipBefore => new BaseInputControl(driver, ContainerLocator, "container-GROUPBX_EQUIPBEFORE__" + IdSuffix, "#GROUPBX_EQUIPBEFORE__" + IdSuffix);
+	public BaseInputControl EquipBefore => new BaseInputControl(driver, ContainerLocator, "container-GROUPBX_EQUIPBEFORE__", "#GROUPBX_EQUIPBEFORE__");
 
 	/// <summary>
 	/// Bought
 	/// </summary>
-	public CheckboxInputControl EquipBought => new CheckboxInputControl(driver, ContainerLocator, "#container-GROUPBX_EQUIPBOUGHT__" + IdSuffix);
+	public CheckboxInputControl EquipBought => new CheckboxInputControl(driver, ContainerLocator, "#container-GROUPBX_EQUIPBOUGHT__");
 
-	public GroupbxForm(IWebDriver driver, FORM_MODE mode, By? containerLocator = null, bool usePkInId = false)
-		: base(driver, mode, "GROUPBX", containerLocator: containerLocator, usePkInId: usePkInId) { }
+	public GroupbxForm(IWebDriver driver, FORM_MODE mode, By? containerLocator = null)
+		: base(driver, mode, "GROUPBX", containerLocator: containerLocator) { }
 }

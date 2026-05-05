@@ -119,7 +119,7 @@
 </template>
 
 <script>
-	// The texts needed by the component.
+// The texts needed by the component.
 	const DEFAULT_TEXTS = {
 		saveText: 'Save',
 		viewText: 'View',

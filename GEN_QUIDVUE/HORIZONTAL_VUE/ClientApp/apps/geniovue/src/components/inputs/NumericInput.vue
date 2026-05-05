@@ -17,7 +17,7 @@
 			:readonly="readonly"
 			:disabled="disabled"
 			:required="isRequired"
-			:aria-labelledby="$attrs.ariaLabel ? null : labelId"
+			:aria-labelledby="labelId"
 			:size="inputSize"
 			:placeholder="inputPlaceholder"
 			@keydown="onKeydown"
@@ -50,6 +50,11 @@
 			 * Unique identifier for the control.
 			 */
 			id: String,
+
+			/**
+			 * The testing identifier
+			 */
+			dataTestid: String,
 
 			/**
 			 * For accessibility (aria-labelledby)
@@ -156,6 +161,7 @@
 		data()
 		{
 			return {
+				controlId: this.id || `q-numeric-${this._.uid}`,
 				styleClass: [
 					'q-numeric-input',
 					...this.classes
@@ -187,17 +193,12 @@
 		},
 
 		computed: {
-			controlId()
-			{
-				return this.id || `q-numeric-${this._.uid}`
-			},
-
 			inputPlaceholder()
 			{
 				// Add '1' to the beginning so the formatting function does not remove the 0s
 				// since they would be leading 0s
-				const placeholderWholeNumber = '1' + '0'.repeat(this.maxIntegers)
-				const placeholderFractionNumber = '0'.repeat(this.maxDecimals)
+				let placeholderWholeNumber = '1' + '0'.repeat(this.maxIntegers)
+				let placeholderFractionNumber = '0'.repeat(this.maxDecimals)
 
 				// Add whole number
 				let placeholderNumber = placeholderWholeNumber
@@ -207,10 +208,10 @@
 					placeholderNumber += this.decimalPoint + placeholderFractionNumber
 
 				// Format number
-				const placeholderFormattedNumber = this.getFormattedInputValue(placeholderNumber, this.decimalPoint, this.thousandsSeparator, this.decimalPoint, this.thousandsSeparator)
+				let placeholderFormattedNumber = this.getFormattedInputValue(placeholderNumber, this.decimalPoint, this.thousandsSeparator, this.decimalPoint, this.thousandsSeparator)
 
 				// Remove the unneeded '1' and leading thousands separator so the formatted number has all 0s
-				const startChar = placeholderFormattedNumber.charAt(1) === this.thousandsSeparator ? 2 : 1
+				let startChar = placeholderFormattedNumber.charAt(1) === this.thousandsSeparator ? 2 : 1
 
 				return placeholderFormattedNumber.slice(startChar)
 			},
@@ -268,7 +269,7 @@
 			 */
 			getCursorPosition()
 			{
-				const inputElem = this.getInputElement()
+				let inputElem = this.getInputElement()
 				return inputElem?.selectionDirection === 'backward' ? inputElem?.selectionStart : inputElem?.selectionEnd
 			},
 
@@ -295,16 +296,16 @@
 				if (!val) return ''
 
 				// Get minus sign
-				const hasSign = val.charAt(0) === '-'
+				let hasSign = val.charAt(0) === '-'
 
 				if (hasSign && val.length === 1)
 					return '0'
 
 				// Get index where whole number starts
-				const wholeNumberIndex = hasSign ? 1 : 0
+				let wholeNumberIndex = hasSign ? 1 : 0
 
 				// Get index of decimal point
-				const decimalPointIndex = val.indexOf(decimalPoint)
+				let decimalPointIndex = val.indexOf(decimalPoint)
 
 				//BEGIN: Get whole and fractional parts of the number
 				let wholeNumberUnformatted = ''
@@ -322,7 +323,7 @@
 				let idxWholeNumberUnf = 0
 				while (idxWholeNumberUnf < wholeNumberUnformatted?.length)
 				{
-					const currentChar = wholeNumberUnformatted[idxWholeNumberUnf]
+					let currentChar = wholeNumberUnformatted[idxWholeNumberUnf]
 
 					// If digit greater than 0
 					if (this.isNumericChar(currentChar) && currentChar !== '0')
@@ -334,7 +335,7 @@
 				// Don't copy thousand separators (at this point they might be in the wrong places)
 				while (idxWholeNumberUnf < wholeNumberUnformatted?.length)
 				{
-					const currentChar = wholeNumberUnformatted[idxWholeNumberUnf]
+					let currentChar = wholeNumberUnformatted[idxWholeNumberUnf]
 
 					// If digit
 					if (this.isNumericChar(currentChar))
@@ -362,7 +363,7 @@
 					formattedValue += wholeNumber[idx]
 
 					// Add thousands separators
-					const wholeNumberPlaceIndex = wholeNumber.length - (idx + 1)
+					let wholeNumberPlaceIndex = wholeNumber.length - (idx + 1)
 					if (wholeNumberPlaceIndex % 3 === 0 && wholeNumberPlaceIndex > 0 && outputThousandsSeparator)
 						formattedValue += outputThousandsSeparator
 				}
@@ -514,7 +515,7 @@
 					input = ''
 
 				// Get the value with the input added
-				const newValue = this.getValueWithInput(currentValue, input, selectStart, selectEnd)
+				let newValue = this.getValueWithInput(currentValue, input, selectStart, selectEnd)
 
 				// Validate the value with the input added
 				return this.validateValue(newValue)
@@ -531,11 +532,11 @@
 					input = ''
 
 				// Get current control value
-				const currentValue = this.getInputElement().value
+				let currentValue = this.getInputElement().value
 
 				// Get selection range
-				const selectStart = this.getInputElement()?.selectionStart
-				const selectEnd = this.getInputElement()?.selectionEnd
+				let selectStart = this.getInputElement()?.selectionStart
+				let selectEnd = this.getInputElement()?.selectionEnd
 
 				// Validate the value with the input added
 				return this.validateValueWithInput(currentValue, input, selectStart, selectEnd)
@@ -639,7 +640,7 @@
 				let selectStart = this.getInputElement()?.selectionStart
 				let selectEnd = this.getInputElement()?.selectionEnd
 
-				const currentValue = this.getInputElement().value
+				let currentValue = this.getInputElement().value
 
 				let isValid = false
 
@@ -688,7 +689,7 @@
 				// Initialize internal properties before input
 				this.initForInput()
 
-				const isValid = this.validateControlValueWithInput('')
+				let isValid = this.validateControlValueWithInput('')
 
 				// If resulting value is invalid, prevent operation
 				if (!isValid)
@@ -704,9 +705,9 @@
 				// Initialize internal properties before input
 				this.initForInput()
 
-				const input = event.clipboardData.getData('Text')
+				let input = event.clipboardData.getData('Text')
 
-				const isValid = this.validateControlValueWithInput(input)
+				let isValid = this.validateControlValueWithInput(input)
 
 				// If resulting value is invalid, prevent operation
 				if (!isValid)
@@ -736,7 +737,7 @@
 					input = this.overrideInputKey
 
 				// Validate text being input
-				const isValid = this.validateControlValueWithInput(input)
+				let isValid = this.validateControlValueWithInput(input)
 
 				// If text being input is invalid, prevent operation
 				if (!isValid)
@@ -791,7 +792,7 @@
 				let cursorPosition = this.getCursorPosition()
 
 				// Get formatted value
-				const formattedValue = this.getFormattedInputValue(this.getInputElement().value, this.decimalPoint, this.thousandsSeparator, this.decimalPoint, this.thousandsSeparator)
+				let formattedValue = this.getFormattedInputValue(this.getInputElement().value, this.decimalPoint, this.thousandsSeparator, this.decimalPoint, this.thousandsSeparator)
 
 				// Get new cursor position, accounting for difference in formatting
 				cursorPosition = this.getFormattedValueOffset(this.getInputElement().value, formattedValue, cursorPosition)

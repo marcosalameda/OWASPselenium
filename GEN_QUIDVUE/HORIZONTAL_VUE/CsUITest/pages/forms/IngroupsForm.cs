@@ -15,7 +15,7 @@ public class IngroupsForm : Form
 	/// <summary>
 	/// VAT Number
 	/// </summary>
-	public BaseInputControl InpgrNumbgro => new BaseInputControl(driver, ContainerLocator, "container-INGROUPSINPGRNUMBGRO_" + IdSuffix, "#INGROUPSINPGRNUMBGRO_" + IdSuffix);
+	public BaseInputControl InpgrNumbgro => new BaseInputControl(driver, ContainerLocator, "container-INGROUPSINPGRNUMBGRO_", "#INGROUPSINPGRNUMBGRO_");
 
 	/// <summary>
 	/// Profile
@@ -25,22 +25,22 @@ public class IngroupsForm : Form
 	/// <summary>
 	/// View
 	/// </summary>
-	public ButtonControl PseudButtngro => new ButtonControl(driver, ContainerLocator, "#INGROUPSPSEUDBUTTNGRO" + IdSuffix);
+	public ButtonControl PseudButtngro => new ButtonControl(driver, ContainerLocator, "#INGROUPSPSEUDBUTTNGRO");
 
 	/// <summary>
 	/// First name
 	/// </summary>
-	public BaseInputControl InpgrName => new BaseInputControl(driver, ContainerLocator, "container-INGROUPSINPGRNAME____" + IdSuffix, "#INGROUPSINPGRNAME____" + IdSuffix);
+	public BaseInputControl InpgrName => new BaseInputControl(driver, ContainerLocator, "container-INGROUPSINPGRNAME____", "#INGROUPSINPGRNAME____");
 
 	/// <summary>
 	/// Last name
 	/// </summary>
-	public BaseInputControl InpgrLastname => new BaseInputControl(driver, ContainerLocator, "container-INGROUPSINPGRLASTNAME" + IdSuffix, "#INGROUPSINPGRLASTNAME" + IdSuffix);
+	public BaseInputControl InpgrLastname => new BaseInputControl(driver, ContainerLocator, "container-INGROUPSINPGRLASTNAME", "#INGROUPSINPGRLASTNAME");
 
 	/// <summary>
 	/// Prefix
 	/// </summary>
-	public EnumControl InpgrPrefix => new EnumControl(driver, ContainerLocator, "container-INGROUPSINPGRPREFIX__" + IdSuffix);
+	public EnumControl InpgrPrefix => new EnumControl(driver, ContainerLocator, "container-INGROUPSINPGRPREFIX__");
 
 	/// <summary>
 	/// Text with input
@@ -50,12 +50,12 @@ public class IngroupsForm : Form
 	/// <summary>
 	/// Single Inputs
 	/// </summary>
-	public CollapsibleZoneControl PseudGroup1 => new CollapsibleZoneControl(driver, ContainerLocator, "#INGROUPSPSEUDGROUP1__" + IdSuffix + "-container");
+	public CollapsibleZoneControl PseudGroup1 => new CollapsibleZoneControl(driver, ContainerLocator, "#INGROUPSPSEUDGROUP1__-container");
 
 	/// <summary>
 	/// Multiple Inputs
 	/// </summary>
-	public CollapsibleZoneControl PseudGroup2 => new CollapsibleZoneControl(driver, ContainerLocator, "#INGROUPSPSEUDGROUP2__" + IdSuffix + "-container");
+	public CollapsibleZoneControl PseudGroup2 => new CollapsibleZoneControl(driver, ContainerLocator, "#INGROUPSPSEUDGROUP2__-container");
 
 	/// <summary>
 	/// User
@@ -65,7 +65,7 @@ public class IngroupsForm : Form
 	/// <summary>
 	/// Buton addon
 	/// </summary>
-	public CollapsibleZoneControl PseudGroup3 => new CollapsibleZoneControl(driver, ContainerLocator, "#INGROUPSPSEUDGROUP3__" + IdSuffix + "-container");
+	public CollapsibleZoneControl PseudGroup3 => new CollapsibleZoneControl(driver, ContainerLocator, "#INGROUPSPSEUDGROUP3__-container");
 
 	/// <summary>
 	/// Tax data
@@ -75,12 +75,12 @@ public class IngroupsForm : Form
 	/// <summary>
 	/// Phone number
 	/// </summary>
-	public BaseInputControl InpgrPhone => new BaseInputControl(driver, ContainerLocator, "container-INGROUPSINPGRPHONE___" + IdSuffix, "#INGROUPSINPGRPHONE___" + IdSuffix);
+	public BaseInputControl InpgrPhone => new BaseInputControl(driver, ContainerLocator, "container-INGROUPSINPGRPHONE___", "#INGROUPSINPGRPHONE___");
 
 	/// <summary>
 	/// Contact Data
 	/// </summary>
-	public CollapsibleZoneControl PseudGroup4 => new CollapsibleZoneControl(driver, ContainerLocator, "#INGROUPSPSEUDGROUP4__" + IdSuffix + "-container");
+	public CollapsibleZoneControl PseudGroup4 => new CollapsibleZoneControl(driver, ContainerLocator, "#INGROUPSPSEUDGROUP4__-container");
 
 	/// <summary>
 	/// Phone number
@@ -90,52 +90,52 @@ public class IngroupsForm : Form
 	/// <summary>
 	/// Address type
 	/// </summary>
-	public EnumControl InpgrAdress => new EnumControl(driver, ContainerLocator, "container-INGROUPSINPGRADRESS__" + IdSuffix);
+	public EnumControl InpgrAdress => new EnumControl(driver, ContainerLocator, "container-INGROUPSINPGRADRESS__");
 
 	/// <summary>
 	/// E-mail
 	/// </summary>
-	public BaseInputControl InpgrEmail => new BaseInputControl(driver, ContainerLocator, "container-INGROUPSINPGREMAIL___" + IdSuffix, "#INGROUPSINPGREMAIL___" + IdSuffix);
+	public BaseInputControl InpgrEmail => new BaseInputControl(driver, ContainerLocator, "container-INGROUPSINPGREMAIL___", "#INGROUPSINPGREMAIL___");
 
 	/// <summary>
 	/// Web
 	/// </summary>
-	public BaseInputControl InpgrWeb => new BaseInputControl(driver, ContainerLocator, "container-INGROUPSINPGRWEB_____" + IdSuffix, "#INGROUPSINPGRWEB_____" + IdSuffix);
+	public BaseInputControl InpgrWeb => new BaseInputControl(driver, ContainerLocator, "container-INGROUPSINPGRWEB_____", "#INGROUPSINPGRWEB_____");
 
 	/// <summary>
 	/// Entity
 	/// </summary>
-	public EnumControl InpgrBankcomp => new EnumControl(driver, ContainerLocator, "container-INGROUPSINPGRBANKCOMP" + IdSuffix);
+	public EnumControl InpgrBankcomp => new EnumControl(driver, ContainerLocator, "container-INGROUPSINPGRBANKCOMP");
 
 	/// <summary>
 	/// IBAN
 	/// </summary>
-	public BaseInputControl InpgrIban => new BaseInputControl(driver, ContainerLocator, "container-INGROUPSINPGRIBAN____" + IdSuffix, "#INGROUPSINPGRIBAN____" + IdSuffix);
+	public BaseInputControl InpgrIban => new BaseInputControl(driver, ContainerLocator, "container-INGROUPSINPGRIBAN____", "#INGROUPSINPGRIBAN____");
 
 	/// <summary>
 	/// Text Field
 	/// </summary>
-	public BaseInputControl InpgrTextgro => new BaseInputControl(driver, ContainerLocator, "container-INGROUPSINPGRTEXTGRO_" + IdSuffix, "#INGROUPSINPGRTEXTGRO_" + IdSuffix);
+	public BaseInputControl InpgrTextgro => new BaseInputControl(driver, ContainerLocator, "container-INGROUPSINPGRTEXTGRO_", "#INGROUPSINPGRTEXTGRO_");
 
 	/// <summary>
 	/// Banking Account Number
 	/// </summary>
-	public BaseInputControl InpgrBankacco => new BaseInputControl(driver, ContainerLocator, "container-INGROUPSINPGRBANKACCO" + IdSuffix, "#INGROUPSINPGRBANKACCO" + IdSuffix);
+	public BaseInputControl InpgrBankacco => new BaseInputControl(driver, ContainerLocator, "container-INGROUPSINPGRBANKACCO", "#INGROUPSINPGRBANKACCO");
 
 	/// <summary>
 	/// Adress
 	/// </summary>
-	public BaseInputControl InpgrDirectio => new BaseInputControl(driver, ContainerLocator, "container-INGROUPSINPGRDIRECTIO" + IdSuffix, "#INGROUPSINPGRDIRECTIO" + IdSuffix);
+	public BaseInputControl InpgrDirectio => new BaseInputControl(driver, ContainerLocator, "container-INGROUPSINPGRDIRECTIO", "#INGROUPSINPGRDIRECTIO");
 
 	/// <summary>
 	/// View
 	/// </summary>
-	public ButtonControl PseudSavebtt => new ButtonControl(driver, ContainerLocator, "#INGROUPSPSEUDSAVEBTT_" + IdSuffix);
+	public ButtonControl PseudSavebtt => new ButtonControl(driver, ContainerLocator, "#INGROUPSPSEUDSAVEBTT_");
 
 	/// <summary>
 	/// View
 	/// </summary>
-	public ButtonControl PseudSendbtt => new ButtonControl(driver, ContainerLocator, "#INGROUPSPSEUDSENDBTT_" + IdSuffix);
+	public ButtonControl PseudSendbtt => new ButtonControl(driver, ContainerLocator, "#INGROUPSPSEUDSENDBTT_");
 
 	/// <summary>
 	/// Bank Account
@@ -145,13 +145,13 @@ public class IngroupsForm : Form
 	/// <summary>
 	/// Bank Data
 	/// </summary>
-	public CollapsibleZoneControl PseudGroup6 => new CollapsibleZoneControl(driver, ContainerLocator, "#INGROUPSPSEUDGROUP6__" + IdSuffix + "-container");
+	public CollapsibleZoneControl PseudGroup6 => new CollapsibleZoneControl(driver, ContainerLocator, "#INGROUPSPSEUDGROUP6__-container");
 
 	/// <summary>
 	/// Email and web
 	/// </summary>
 	public IWebElement PseudInputgr5 => throw new NotImplementedException();
 
-	public IngroupsForm(IWebDriver driver, FORM_MODE mode, By? containerLocator = null, bool usePkInId = false)
-		: base(driver, mode, "INGROUPS", containerLocator: containerLocator, usePkInId: usePkInId) { }
+	public IngroupsForm(IWebDriver driver, FORM_MODE mode, By? containerLocator = null)
+		: base(driver, mode, "INGROUPS", containerLocator: containerLocator) { }
 }

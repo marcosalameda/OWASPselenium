@@ -9,7 +9,6 @@ using System.Data;
 using System.Data.Entity;
 using System.Linq;
 using System.Reflection;
-using System.Dynamic;
 
 using CSGenio.business;
 using CSGenio.core.persistence;
@@ -56,11 +55,11 @@ namespace GenioMVC.Controllers
 // USE /[MANUAL GQT CONTROLLER_SHOW EQUIPM__PSEUDA_TAGS__]/
 
 		[HttpPost]
-		public ActionResult Equipm__pseuda_tags___Show_GET([FromBody] RequestIdModel requestModel)
+		public ActionResult Equipm__pseuda_tags___Show_GET([FromBody]RequestIdModel requestModel)
 		{
-			string id = requestModel.Id;
-			Equipm__pseuda_tags___ViewModel model = new(UserContext.Current);
-			EventSink eventSink = new()
+			var id = requestModel.Id;
+			var model = new Equipm__pseuda_tags___ViewModel(UserContext.Current);
+			var eventSink = new EventSink()
 			{
 				MethodName = "Equipm__pseuda_tags___Show_GET",
 				AreaName = "atags",
@@ -76,7 +75,13 @@ namespace GenioMVC.Controllers
 				}
 			};
 
-			return GenericHandleGetFormShow(eventSink, model, id);
+			using (CSGenio.core.di.GenioDI.MetricsOtlp.RecordTime("page_load_time", new System.Diagnostics.TagList([
+				new("PageId", "EQUIPM__PSEUDA_TAGS__.SHOW"),
+				new("PageType", "form")
+			]), "ms", "Time to load the page."))
+			{
+				return GenericHandleGetFormShow(eventSink, model, id);
+			}
 		}
 
 		#endregion
@@ -85,14 +90,14 @@ namespace GenioMVC.Controllers
 
 // USE /[MANUAL GQT CONTROLLER_NEW_GET EQUIPM__PSEUDA_TAGS__]/
 		[HttpPost]
-		public ActionResult Equipm__pseuda_tags___New_GET([FromBody] RequestNewGetModel requestModel)
+		public ActionResult Equipm__pseuda_tags___New_GET([FromBody]RequestNewGetModel requestModel)
 		{
-			string id = requestModel.Id;
-			bool isNewLocation = requestModel.IsNewLocation;
+			var id = requestModel.Id;
+			var isNewLocation = requestModel.IsNewLocation;
 			var prefillValues = requestModel.PrefillValues;
 
-			Equipm__pseuda_tags___ViewModel model = new(UserContext.Current);
-			EventSink eventSink = new()
+			var model = new Equipm__pseuda_tags___ViewModel(UserContext.Current);
+			var eventSink = new EventSink()
 			{
 				MethodName = "Equipm__pseuda_tags___New_GET",
 				AreaName = "atags",
@@ -112,7 +117,13 @@ namespace GenioMVC.Controllers
 				}
 			};
 
-			return GenericHandleGetFormNew(eventSink, model, id, isNewLocation, prefillValues);
+			using (CSGenio.core.di.GenioDI.MetricsOtlp.RecordTime("page_load_time", new System.Diagnostics.TagList([
+				new("PageId", "EQUIPM__PSEUDA_TAGS__.SHOW"),
+				new("PageType", "form")
+			]), "ms", "Time to load the page."))
+			{
+				return GenericHandleGetFormNew(eventSink, model, id, isNewLocation, prefillValues);
+			}
 		}
 
 		//
@@ -121,7 +132,7 @@ namespace GenioMVC.Controllers
 		[HttpPost]
 		public ActionResult Equipm__pseuda_tags___New([FromBody]Equipm__pseuda_tags___ViewModel model, [FromQuery]bool redirect = true)
 		{
-			EventSink eventSink = new()
+			var eventSink = new EventSink()
 			{
 				MethodName = "Equipm__pseuda_tags___New",
 				ViewName = "Equipm__pseuda_tags__",
@@ -146,7 +157,13 @@ namespace GenioMVC.Controllers
 				}
 			};
 
-			return GenericHandlePostFormNew(eventSink, model);
+			using (CSGenio.core.di.GenioDI.MetricsOtlp.RecordTime("page_load_time", new System.Diagnostics.TagList([
+				new("PageId", "EQUIPM__PSEUDA_TAGS__.NEW"),
+				new("PageType", "form")
+			]), "ms", "Time to load the page."))
+			{
+				return GenericHandlePostFormNew(eventSink, model);
+			}
 		}
 
 		#endregion
@@ -155,11 +172,11 @@ namespace GenioMVC.Controllers
 
 // USE /[MANUAL GQT CONTROLLER_EDIT_GET EQUIPM__PSEUDA_TAGS__]/
 		[HttpPost]
-		public ActionResult Equipm__pseuda_tags___Edit_GET([FromBody] RequestIdModel requestModel)
+		public ActionResult Equipm__pseuda_tags___Edit_GET([FromBody]RequestIdModel requestModel)
 		{
-			string id = requestModel.Id;
-			Equipm__pseuda_tags___ViewModel model = new(UserContext.Current);
-			EventSink eventSink = new()
+			var id = requestModel.Id;
+			var model = new Equipm__pseuda_tags___ViewModel(UserContext.Current);
+			var eventSink = new EventSink()
 			{
 				MethodName = "Equipm__pseuda_tags___Edit_GET",
 				AreaName = "atags",
@@ -176,7 +193,13 @@ namespace GenioMVC.Controllers
 				}
 			};
 
-			return GenericHandleGetFormEdit(eventSink, model, id);
+			using (CSGenio.core.di.GenioDI.MetricsOtlp.RecordTime("page_load_time", new System.Diagnostics.TagList([
+				new("PageId", "EQUIPM__PSEUDA_TAGS__.SHOW"),
+				new("PageType", "form")
+			]), "ms", "Time to load the page."))
+			{
+				return GenericHandleGetFormEdit(eventSink, model, id);
+			}
 		}
 
 		//
@@ -185,7 +208,7 @@ namespace GenioMVC.Controllers
 		[HttpPost]
 		public ActionResult Equipm__pseuda_tags___Edit([FromBody]Equipm__pseuda_tags___ViewModel model, [FromQuery]bool redirect)
 		{
-			EventSink eventSink = new()
+			var eventSink = new EventSink()
 			{
 				MethodName = "Equipm__pseuda_tags___Edit",
 				ViewName = "Equipm__pseuda_tags__",
@@ -210,7 +233,13 @@ namespace GenioMVC.Controllers
 				}
 			};
 
-			return GenericHandlePostFormEdit(eventSink, model);
+			using (CSGenio.core.di.GenioDI.MetricsOtlp.RecordTime("page_load_time", new System.Diagnostics.TagList([
+				new("PageId", "EQUIPM__PSEUDA_TAGS__.EDIT"),
+				new("PageType", "form")
+			]), "ms", "Time to load the page."))
+			{
+				return GenericHandlePostFormEdit(eventSink, model);
+			}
 		}
 
 		#endregion
@@ -219,11 +248,11 @@ namespace GenioMVC.Controllers
 
 // USE /[MANUAL GQT CONTROLLER_DELETE_GET EQUIPM__PSEUDA_TAGS__]/
 		[HttpPost]
-		public ActionResult Equipm__pseuda_tags___Delete_GET([FromBody] RequestIdModel requestModel)
+		public ActionResult Equipm__pseuda_tags___Delete_GET([FromBody]RequestIdModel requestModel)
 		{
-			string id = requestModel.Id;
-			Equipm__pseuda_tags___ViewModel model = new(UserContext.Current);
-			EventSink eventSink = new()
+			var id = requestModel.Id;
+			var model = new Equipm__pseuda_tags___ViewModel(UserContext.Current);
+			var eventSink = new EventSink()
 			{
 				MethodName = "Equipm__pseuda_tags___Delete_GET",
 				AreaName = "atags",
@@ -240,20 +269,26 @@ namespace GenioMVC.Controllers
 				}
 			};
 
-			return GenericHandleGetFormDelete(eventSink, model, id);
+			using (CSGenio.core.di.GenioDI.MetricsOtlp.RecordTime("page_load_time", new System.Diagnostics.TagList([
+				new("PageId", "EQUIPM__PSEUDA_TAGS__.SHOW"),
+				new("PageType", "form")
+			]), "ms", "Time to load the page."))
+			{
+				return GenericHandleGetFormDelete(eventSink, model, id);
+			}
 		}
 
 		//
 		// POST: /Atags/Equipm__pseuda_tags___Delete
 // USE /[MANUAL GQT CONTROLLER_DELETE_POST EQUIPM__PSEUDA_TAGS__]/
 		[HttpPost]
-		public ActionResult Equipm__pseuda_tags___Delete([FromBody] RequestIdModel requestModel)
+		public ActionResult Equipm__pseuda_tags___Delete([FromBody]RequestIdModel requestModel)
 		{
-			string id = requestModel.Id;
-			Equipm__pseuda_tags___ViewModel model = new(UserContext.Current, id);
+			var id = requestModel.Id;
+			var model = new Equipm__pseuda_tags___ViewModel (UserContext.Current, id);
 			model.MapFromModel();
 
-			EventSink eventSink = new()
+			var eventSink = new EventSink()
 			{
 				MethodName = "Equipm__pseuda_tags___Delete",
 				ViewName = "Equipm__pseuda_tags__",
@@ -269,7 +304,13 @@ namespace GenioMVC.Controllers
 				}
 			};
 
-			return GenericHandlePostFormDelete(eventSink, model);
+			using (CSGenio.core.di.GenioDI.MetricsOtlp.RecordTime("page_load_time", new System.Diagnostics.TagList([
+				new("PageId", "EQUIPM__PSEUDA_TAGS__.DELETE"),
+				new("PageType", "form")
+			]), "ms", "Time to load the page."))
+			{
+				return GenericHandlePostFormDelete(eventSink, model);
+			}
 		}
 
 		public ActionResult Equipm__pseuda_tags___Delete_Redirect()
@@ -285,13 +326,13 @@ namespace GenioMVC.Controllers
 // USE /[MANUAL GQT CONTROLLER_DUPLICATE_GET EQUIPM__PSEUDA_TAGS__]/
 
 		[HttpPost]
-		public ActionResult Equipm__pseuda_tags___Duplicate_GET([FromBody] RequestNewGetModel requestModel)
+		public ActionResult Equipm__pseuda_tags___Duplicate_GET([FromBody]RequestNewGetModel requestModel)
 		{
-			string id = requestModel.Id;
-			bool isNewLocation = requestModel.IsNewLocation;
+			var id = requestModel.Id;
+			var isNewLocation = requestModel.IsNewLocation;
 
-			Equipm__pseuda_tags___ViewModel model = new(UserContext.Current);
-			EventSink eventSink = new()
+			var model = new Equipm__pseuda_tags___ViewModel(UserContext.Current);
+			var eventSink = new EventSink()
 			{
 				MethodName = "Equipm__pseuda_tags___Duplicate_GET",
 				AreaName = "atags",
@@ -307,7 +348,13 @@ namespace GenioMVC.Controllers
 				}
 			};
 
-			return GenericHandleGetFormDuplicate(eventSink, model, id, isNewLocation);
+			using (CSGenio.core.di.GenioDI.MetricsOtlp.RecordTime("page_load_time", new System.Diagnostics.TagList([
+				new("PageId", "EQUIPM__PSEUDA_TAGS__.SHOW"),
+				new("PageType", "form")
+			]), "ms", "Time to load the page."))
+			{
+				return GenericHandleGetFormDuplicate(eventSink, model, id, isNewLocation);
+			}
 		}
 
 		//
@@ -316,7 +363,7 @@ namespace GenioMVC.Controllers
 		[HttpPost]
 		public ActionResult Equipm__pseuda_tags___Duplicate([FromBody]Equipm__pseuda_tags___ViewModel model, [FromQuery]bool redirect = true)
 		{
-			EventSink eventSink = new()
+			var eventSink = new EventSink()
 			{
 				MethodName = "Equipm__pseuda_tags___Duplicate",
 				ViewName = "Equipm__pseuda_tags__",
@@ -341,7 +388,13 @@ namespace GenioMVC.Controllers
 				}
 			};
 
-			return GenericHandlePostFormDuplicate(eventSink, model);
+			using (CSGenio.core.di.GenioDI.MetricsOtlp.RecordTime("page_load_time", new System.Diagnostics.TagList([
+				new("PageId", "EQUIPM__PSEUDA_TAGS__.DUPLICATE"),
+				new("PageType", "form")
+			]), "ms", "Time to load the page."))
+			{
+				return GenericHandlePostFormDuplicate(eventSink, model);
+			}
 		}
 
 		#endregion
@@ -358,7 +411,7 @@ namespace GenioMVC.Controllers
 				PersistentSupport sp = UserContext.Current.PersistentSupport;
 				try
 				{
-					GenioMVC.Models.Atags model = new(UserContext.Current);
+					var model = new GenioMVC.Models.Atags(UserContext.Current);
 					model.klass.QPrimaryKey = Navigation.GetStrValue("atags");
 
 // USE /[MANUAL GQT BEFORE_CANCEL EQUIPM__PSEUDA_TAGS__]/

@@ -2,13 +2,12 @@
 	<tr
 		v-for="row in emptyRows"
 		:key="row.id">
-		<template
-			v-for="column in columns"
-			:key="'td-' + getColumnName(column) + row.id">
+		<template v-for="column in columns">
 			<td
 				v-if="canShowColumn(column)"
+				:key="'td-' + getColumnName(column) + row.id"
 				:class="cellClasses(column)">
-				<div class="q-skeleton__cell-loading" />
+				<div class="q-skeleton__cell-loading"></div>
 			</td>
 		</template>
 	</tr>
@@ -50,7 +49,7 @@
 		computed: {
 			emptyRows()
 			{
-				return _times(this.nRows, () => ({ id: uuidv4() }))
+				return _times(this.nRows, () => { return { id: uuidv4() } })
 			}
 		},
 
@@ -60,6 +59,7 @@
 				return column?.name?.replace(/\./g,'_') || 'unknown'
 			},
 
+			// CSS classes for cell
 			/**
 			 * Get CSS classes for column
 			 * @param column {Object}
@@ -67,10 +67,10 @@
 			 */
 			cellClasses(column)
 			{
-				const classes = ['q-skeleton__cell']
+				let classes = ['q-skeleton__cell']
 
 				// BEGIN: Text alignment class
-				const alignments = ['text-justify', 'text-right', 'text-left', 'text-center']
+				let alignments = ['text-justify', 'text-right', 'text-left', 'text-center']
 
 				// Undefined data type, use rowTextAlignment
 				if (_has(column, 'rowTextAlignment') && _includes(alignments, column.rowTextAlignment))

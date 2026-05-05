@@ -1,10 +1,10 @@
-﻿using CSGenio;
+﻿using System;
+using System.Security.Principal;
 using CSGenio.business;
-using CSGenio.framework;
 using CSGenio.persistence;
 using Quidgest.Persistence.GenericQuery;
-using System;
 using System.Collections.Generic;
+using CSGenio.framework;
 using System.ComponentModel;
 
 namespace GenioServer.security
@@ -17,49 +17,43 @@ namespace GenioServer.security
     [DisplayName("Application Database identity")]
     public class QuidgestIdentityProvider : BaseIdentityProvider
     {
-        /// <summary>
-        /// Optionally set a aux database to fetch the password from
-        /// </summary>
-        [SecurityProviderOption(optional:true)]
-        [Description("Optionally set a aux database to fetch the password from")]
-        public string AuxDb { get; set; }
-
-
-        /// <inheritdoc/>
-        public QuidgestIdentityProvider(IdentityProviderCfgEl config) : base(config)
-        {
-        }
-
         /// <inheritdoc/>
         public override bool HasUsernameAuth() => true;
 
         /// <inheritdoc/>
-        public override GenioIdentity Authenticate(Credential credential)
+        public override IIdentity Authenticate(Credential credential)
         {
-            var anos = new List<string>(Configuration.Years);
+            IList<string> anos = new List<string>(Configuration.Years);
             if (Configuration.Years.Count == 0)
             {
                 anos.Add(Configuration.DefaultYear);
             }
-
-            GenioIdentity id = null;
+            Type classname = credential.GetType();
+            IIdentity id = null;
 
             foreach (string Qyear in anos)
             {
-                PersistentSupport sp = string.IsNullOrEmpty(AuxDb) 
-                    ? PersistentSupport.getPersistentSupport(Qyear)
-                    : PersistentSupport.getPersistentSupportAux(AuxDb);
-
+                PersistentSupport sp = PersistentSupport.getPersistentSupport(Qyear);
                 sp.openConnection();
 
-                if(credential is UserPassCredential upCredential)
-                    id = Authenticate(upCredential, sp);
-                else if (credential is CertificateCredential certCredential)
-                    id = Authenticate(certCredential, sp);
-                else if (credential is DomainCredential domCredential)
-                    id = Authenticate(domCredential, sp);
-                else
-                    throw new FrameworkException("The type " + credential.GetType().FullName + " is not supported for QuidgestIdentityProvider authentication.", "QuidgestIdentityProvider", "Credential type not supported");
+                bool known = false;
+                if (classname == typeof(UserPassCredential))
+                {
+                    id = Authenticate(credential as UserPassCredential, sp);
+                    known = true;
+                }
+                if (classname == typeof(CertificateCredential))
+                {
+                    id = Authenticate(credential as CertificateCredential, sp);
+                    known = true;
+                }
+                if (classname == typeof(DomainCredential))
+                {
+                    id = Authenticate(credential as DomainCredential, sp);
+                    known = true;
+                }
+                if (!known)
+                    throw new FrameworkException("The type " + credential.GetType().FullName + " is not supported for QuidgestIdentityProvider authentication.", "Authenticate", "Credential type not supported");
 
                 sp.closeConnection();
 
@@ -70,7 +64,7 @@ namespace GenioServer.security
             return id;
         }
 
-        private GenioIdentity Authenticate(UserPassCredential credential, PersistentSupport sp)
+        private IIdentity Authenticate(UserPassCredential credential, PersistentSupport sp)
         {
             SelectQuery select = new SelectQuery()
                 .Select("psw", "password")
@@ -101,11 +95,11 @@ namespace GenioServer.security
             {
                 if (maxAttempts != 0)
                 {
-                    UpdateQuery updok = new UpdateQuery()
+                    UpdateQuery upd = new UpdateQuery()
                     .Update(Area.AreaPSW)
                     .Set(CSGenioApsw.FldAttempts, 0)
                     .Where(CriteriaSet.And().Equal("psw", "nome", credential.Username));
-                    sp.Execute(updok);
+                    sp.Execute(upd);
                 }
 				
 				//Date expiration Validation
@@ -125,11 +119,11 @@ namespace GenioServer.security
 
                         if (statusChange)
                         {
-                            UpdateQuery updok = new UpdateQuery()
+                            UpdateQuery upd = new UpdateQuery()
                             .Update(Area.AreaPSW)
                             .Set(CSGenioApsw.FldStatus, 1)
                             .Where(CriteriaSet.And().Equal("psw", "nome", credential.Username));
-                            sp.Execute(updok);
+                            sp.Execute(upd);
                         }
                     }
                     catch (FormatException)
@@ -138,29 +132,31 @@ namespace GenioServer.security
                     }
                 }
 				
-                return new GenioIdentity
-                {
-                    Name = credential.Username,
-                    IsAuthenticated = true,
-                    AuthenticationType = this.GetType().Name,
-                    IdProperty = GenioIdentityType.InternalId
-                };
+                return new GenericIdentity(credential.Username);
             }
 
-            //we failed authentication, so increment the attempts field
-            UpdateQuery upd = new UpdateQuery()
-                .Update(Area.AreaPSW)
-                .Set(CSGenioApsw.FldAttempts, attempts + 1)
-                .Where(CriteriaSet.And().Equal("psw", "nome", credential.Username));
-            //if we reached the max attempts, set the status to 2 (deactivated)
-            if (maxAttempts != 0 && attempts + 1 == maxAttempts)
-                upd = upd.Set(CSGenioApsw.FldStatus, 2);
-            sp.Execute(upd);
 
+            if (maxAttempts!= 0 && attempts + 1 == maxAttempts)
+            {
+                UpdateQuery upd = new UpdateQuery()
+                    .Update(Area.AreaPSW)
+                    .Set(CSGenioApsw.FldAttempts, attempts + 1)
+                    .Set(CSGenioApsw.FldStatus, 2)
+                    .Where(CriteriaSet.And().Equal("psw", "nome", credential.Username));
+                sp.Execute(upd);
+            }
+            else
+            {
+                UpdateQuery upd = new UpdateQuery()
+                    .Update(Area.AreaPSW)
+                    .Set(CSGenioApsw.FldAttempts, attempts + 1)
+                    .Where(CriteriaSet.And().Equal("psw", "nome", credential.Username));
+                sp.Execute(upd);
+            }
             return null;
         }
 
-        private GenioIdentity Authenticate(CertificateCredential credential, PersistentSupport sp)
+        private IIdentity Authenticate(CertificateCredential credential, PersistentSupport sp)
         {
             SelectQuery select = new SelectQuery()
                 .Select("psw", "nome")
@@ -170,16 +166,10 @@ namespace GenioServer.security
             if (name == null)
                 return null;
 
-            return new GenioIdentity
-            {
-                Name = name,
-                IsAuthenticated = true,
-                AuthenticationType = this.GetType().Name,
-                IdProperty = GenioIdentityType.InternalId
-            };
+            return new GenericIdentity(name);
         }
 
-        private GenioIdentity Authenticate(DomainCredential credential, PersistentSupport sp)
+        private IIdentity Authenticate(DomainCredential credential, PersistentSupport sp)
         {
             SelectQuery select = new SelectQuery()
                 .Select("psw", "nome")
@@ -189,23 +179,7 @@ namespace GenioServer.security
             if (name == null)
                 return null;
 
-            return new GenioIdentity
-            {
-                Name = name,
-                IsAuthenticated = true,
-                AuthenticationType = this.GetType().Name,
-                IdProperty = GenioIdentityType.InternalId
-            };
-        }
-
-        public override CredentialSecret NewCredentialCreate(string username, string originalChallenge, string assertion)
-        {
-            PasswordSecret credentialSecret = new PasswordSecret();
-            credentialSecret.Username = username;
-            credentialSecret.OldPass = originalChallenge;
-            credentialSecret.NewPass = assertion;
-            credentialSecret.ConfirmPass = assertion;
-            return credentialSecret;
+            return new GenericIdentity(name);
         }
     }
 }

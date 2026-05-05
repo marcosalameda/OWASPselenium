@@ -1,174 +1,208 @@
 ﻿<template>
-	<q-grid-table-row
-		:id="primaryKeyValue"
-		:initial-state="initialState"
-		:is-deleted-state="isDeletedState"
-		:mode="mode"
-		:nested-model="nestedModel"
-		:permissions="permissions"
-		:texts="texts"
-		@mark-for-deletion="emitEvent('mark-for-deletion')"
-		@undo-deletion="emitEvent('undo-deletion')"
-		@toggle-errors="emitEvent('toggle-errors')">
-		<q-grid-table-column
-			v-if="canShowColumn('TBLB', 'TEXT')"
-			class=""
-			v-bind="controls.GRPB____PSEUDTBLB______TBLB__TEXT.gridColumnProps"
-			:id="getControlId(controls.GRPB____PSEUDTBLB______TBLB__TEXT)">
-			<q-text-field
-				v-bind="controls.GRPB____PSEUDTBLB______TBLB__TEXT.props"
-				:id="getControlId(controls.GRPB____PSEUDTBLB______TBLB__TEXT)"
-				@blur="onBlur(controls.GRPB____PSEUDTBLB______TBLB__TEXT, model.ValText.value)"
-				@change="model.ValText.fnUpdateValueOnChange" />
-		</q-grid-table-column>
-		<q-grid-table-column
-			v-if="canShowColumn('TBLB', 'TEXTML')"
-			class=""
-			v-bind="controls.GRPB____PSEUDTBLB______TBLB__TEXTML.gridColumnProps"
-			:id="getControlId(controls.GRPB____PSEUDTBLB______TBLB__TEXTML)">
-			<q-text-area
-				v-if="controls.GRPB____PSEUDTBLB______TBLB__TEXTML.isVisible"
-				v-bind="controls.GRPB____PSEUDTBLB______TBLB__TEXTML.props"
-				:id="getControlId(controls.GRPB____PSEUDTBLB______TBLB__TEXTML)"
-				v-on="controls.GRPB____PSEUDTBLB______TBLB__TEXTML.handlers" />
-		</q-grid-table-column>
-		<q-grid-table-column
-			v-if="canShowColumn('TBLB', 'NUMINT')"
-			class=""
-			v-bind="controls.GRPB____PSEUDTBLB______TBLB__NUMINT.gridColumnProps"
-			:id="getControlId(controls.GRPB____PSEUDTBLB______TBLB__NUMINT)">
-			<q-numeric-input
-				v-if="controls.GRPB____PSEUDTBLB______TBLB__NUMINT.isVisible"
-				v-bind="controls.GRPB____PSEUDTBLB______TBLB__NUMINT.props"
-				:id="getControlId(controls.GRPB____PSEUDTBLB______TBLB__NUMINT)"
-				@update:model-value="model.ValNumint.fnUpdateValue" />
-		</q-grid-table-column>
-		<q-grid-table-column
-			v-if="canShowColumn('TBLB', 'NUMDEC')"
-			class=""
-			v-bind="controls.GRPB____PSEUDTBLB______TBLB__NUMDEC.gridColumnProps"
-			:id="getControlId(controls.GRPB____PSEUDTBLB______TBLB__NUMDEC)">
-			<q-numeric-input
-				v-if="controls.GRPB____PSEUDTBLB______TBLB__NUMDEC.isVisible"
-				v-bind="controls.GRPB____PSEUDTBLB______TBLB__NUMDEC.props"
-				:id="getControlId(controls.GRPB____PSEUDTBLB______TBLB__NUMDEC)"
-				@update:model-value="model.ValNumdec.fnUpdateValue" />
-		</q-grid-table-column>
-		<q-grid-table-column
-			v-if="canShowColumn('TBLB', 'CURINT')"
-			class=""
-			v-bind="controls.GRPB____PSEUDTBLB______TBLB__CURINT.gridColumnProps"
-			:id="getControlId(controls.GRPB____PSEUDTBLB______TBLB__CURINT)">
-			<q-numeric-input
-				v-if="controls.GRPB____PSEUDTBLB______TBLB__CURINT.isVisible"
-				v-bind="controls.GRPB____PSEUDTBLB______TBLB__CURINT.props"
-				:id="getControlId(controls.GRPB____PSEUDTBLB______TBLB__CURINT)"
-				@update:model-value="model.ValCurint.fnUpdateValue" />
-		</q-grid-table-column>
-		<q-grid-table-column
-			v-if="canShowColumn('TBLB', 'CURDEC')"
-			class=""
-			v-bind="controls.GRPB____PSEUDTBLB______TBLB__CURDEC.gridColumnProps"
-			:id="getControlId(controls.GRPB____PSEUDTBLB______TBLB__CURDEC)">
-			<q-numeric-input
-				v-if="controls.GRPB____PSEUDTBLB______TBLB__CURDEC.isVisible"
-				v-bind="controls.GRPB____PSEUDTBLB______TBLB__CURDEC.props"
-				:id="getControlId(controls.GRPB____PSEUDTBLB______TBLB__CURDEC)"
-				@update:model-value="model.ValCurdec.fnUpdateValue" />
-		</q-grid-table-column>
-		<q-grid-table-column
-			v-if="canShowColumn('TBLB', 'BOOL')"
-			class=""
-			v-bind="controls.GRPB____PSEUDTBLB______TBLB__BOOL.gridColumnProps"
-			:id="getControlId(controls.GRPB____PSEUDTBLB______TBLB__BOOL)">
-			<template #label>
-				<q-checkbox
-					v-if="controls.GRPB____PSEUDTBLB______TBLB__BOOL.isVisible"
-					v-bind="controls.GRPB____PSEUDTBLB______TBLB__BOOL.props"
-					:id="getControlId(controls.GRPB____PSEUDTBLB______TBLB__BOOL)"
-					v-on="controls.GRPB____PSEUDTBLB______TBLB__BOOL.handlers" />
-			</template>
-		</q-grid-table-column>
-		<q-grid-table-column
-			v-if="canShowColumn('TBLB', 'DATE')"
-			class=""
-			v-bind="controls.GRPB____PSEUDTBLB______TBLB__DATE.gridColumnProps"
-			:id="getControlId(controls.GRPB____PSEUDTBLB______TBLB__DATE)">
-			<q-date-time-picker
-				v-if="controls.GRPB____PSEUDTBLB______TBLB__DATE.isVisible"
-				v-bind="controls.GRPB____PSEUDTBLB______TBLB__DATE.props"
-				:id="getControlId(controls.GRPB____PSEUDTBLB______TBLB__DATE)"
-				:model-value="model.ValDate.value"
-				@reset-icon-click="model.ValDate.fnUpdateValue(model.ValDate.originalValue ?? new Date())"
-				@update:model-value="model.ValDate.fnUpdateValue($event ?? '')" />
-		</q-grid-table-column>
-		<q-grid-table-column
-			v-if="canShowColumn('TBLB', 'DATETM')"
-			class=""
-			v-bind="controls.GRPB____PSEUDTBLB______TBLB__DATETM.gridColumnProps"
-			:id="getControlId(controls.GRPB____PSEUDTBLB______TBLB__DATETM)">
-			<q-date-time-picker
-				v-if="controls.GRPB____PSEUDTBLB______TBLB__DATETM.isVisible"
-				v-bind="controls.GRPB____PSEUDTBLB______TBLB__DATETM.props"
-				:id="getControlId(controls.GRPB____PSEUDTBLB______TBLB__DATETM)"
-				:model-value="model.ValDatetm.value"
-				@reset-icon-click="model.ValDatetm.fnUpdateValue(model.ValDatetm.originalValue ?? new Date())"
-				@update:model-value="model.ValDatetm.fnUpdateValue($event ?? '')" />
-		</q-grid-table-column>
-		<q-grid-table-column
-			v-if="canShowColumn('TBLB', 'DATETS')"
-			class=""
-			v-bind="controls.GRPB____PSEUDTBLB______TBLB__DATETS.gridColumnProps"
-			:id="getControlId(controls.GRPB____PSEUDTBLB______TBLB__DATETS)">
-			<q-date-time-picker
-				v-if="controls.GRPB____PSEUDTBLB______TBLB__DATETS.isVisible"
-				v-bind="controls.GRPB____PSEUDTBLB______TBLB__DATETS.props"
-				:id="getControlId(controls.GRPB____PSEUDTBLB______TBLB__DATETS)"
-				:model-value="model.ValDatets.value"
-				@reset-icon-click="model.ValDatets.fnUpdateValue(model.ValDatets.originalValue ?? new Date())"
-				@update:model-value="model.ValDatets.fnUpdateValue($event ?? '')" />
-		</q-grid-table-column>
-		<q-grid-table-column
-			v-if="canShowColumn('TBLB', 'TIMEHM')"
-			class=""
-			v-bind="controls.GRPB____PSEUDTBLB______TBLB__TIMEHM.gridColumnProps"
-			:id="getControlId(controls.GRPB____PSEUDTBLB______TBLB__TIMEHM)">
-			<q-date-time-picker
-				v-if="controls.GRPB____PSEUDTBLB______TBLB__TIMEHM.isVisible"
-				v-bind="controls.GRPB____PSEUDTBLB______TBLB__TIMEHM.props"
-				:id="getControlId(controls.GRPB____PSEUDTBLB______TBLB__TIMEHM)"
-				:model-value="model.ValTimehm.value"
-				@reset-icon-click="model.ValTimehm.fnUpdateValue(model.ValTimehm.originalValue ?? new Date())"
-				@update:model-value="model.ValTimehm.fnUpdateValue($event ?? '')" />
-		</q-grid-table-column>
-		<q-grid-table-column
-			v-if="canShowColumn('TBLB', 'ENUMT')"
-			class=""
-			v-bind="controls.GRPB____PSEUDTBLB______TBLB__ENUMT.gridColumnProps"
-			:id="getControlId(controls.GRPB____PSEUDTBLB______TBLB__ENUMT)">
-			<q-select
-				v-if="controls.GRPB____PSEUDTBLB______TBLB__ENUMT.isVisible"
-				v-bind="controls.GRPB____PSEUDTBLB______TBLB__ENUMT.props"
-				:id="getControlId(controls.GRPB____PSEUDTBLB______TBLB__ENUMT)"
-				@update:model-value="model.ValEnumt.fnUpdateValue" />
-		</q-grid-table-column>
-		<q-grid-table-column
-			v-if="canShowColumn('TBLB', 'ENUMN')"
-			class=""
-			v-bind="controls.GRPB____PSEUDTBLB______TBLB__ENUMN.gridColumnProps"
-			:id="getControlId(controls.GRPB____PSEUDTBLB______TBLB__ENUMN)">
-			<q-select
-				v-if="controls.GRPB____PSEUDTBLB______TBLB__ENUMN.isVisible"
-				v-bind="controls.GRPB____PSEUDTBLB______TBLB__ENUMN.props"
-				:id="getControlId(controls.GRPB____PSEUDTBLB______TBLB__ENUMN)"
-				@update:model-value="model.ValEnumn.fnUpdateValue" />
-		</q-grid-table-column>
-	</q-grid-table-row>
+	<tr
+		:data-key="id"
+		:class="rowClass">
+		<td class="grid-table-row__state">
+			<div class="grid-table-row__state-icon">
+				<q-icon
+					v-if="rowStateIcon"
+					:icon="rowStateIcon" />
+
+				<q-button
+					v-if="hasMessages"
+					variant="text"
+					@click="toggleErrors">
+					<q-icon :icon="expandIcon" />
+				</q-button>
+			</div>
+
+			<div v-if="hasMessages">
+				<q-badge :color="badgeColor">
+					{{ numMessages }}
+				</q-badge>
+				<span class="grid-table-row__messages">
+					{{ texts.messages }}
+				</span>
+			</div>
+		</td>
+
+		<td class="grid-table-row__action">
+			<div class="grid-table-row__action-btn">
+				<q-button
+					v-if="showDeleteBtn"
+					variant="text"
+					:title="texts.delete"
+					data-testid="delete"
+					@click="markForDeletion">
+					<q-icon icon="delete" />
+				</q-button>
+
+				<q-button
+					v-if="showRemoveBtn"
+					variant="text"
+					:title="texts.remove"
+					data-testid="delete"
+					@click="markForDeletion">
+					<q-icon icon="remove-sign" />
+				</q-button>
+
+				<q-button
+					v-if="showUndoBtn"
+					variant="text"
+					:title="texts.restore"
+					data-testid="undo"
+					@click="undoMarkForDeletion">
+					<q-icon icon="undo" />
+				</q-button>
+			</div>
+		</td>
+
+		<td v-if="canShowColumn('TBLB', 'TEXT')">
+			<grid-base-input-structure
+				class=""
+				v-bind="controls.GRPB____PSEUDTBLB______TBLB__TEXT.wrapperProps">
+				<q-text-field
+					v-bind="controls.GRPB____PSEUDTBLB______TBLB__TEXT.props"
+					@blur="onBlur(controls.GRPB____PSEUDTBLB______TBLB__TEXT, model.ValText.value)"
+					@change="model.ValText.fnUpdateValueOnChange" />
+			</grid-base-input-structure>
+		</td>
+		<td v-if="canShowColumn('TBLB', 'TEXTML')">
+			<grid-base-input-structure
+				class=""
+				v-bind="controls.GRPB____PSEUDTBLB______TBLB__TEXTML.wrapperProps">
+				<q-text-area
+					v-if="controls.GRPB____PSEUDTBLB______TBLB__TEXTML.isVisible"
+					v-bind="controls.GRPB____PSEUDTBLB______TBLB__TEXTML.props"
+					v-on="controls.GRPB____PSEUDTBLB______TBLB__TEXTML.handlers" />
+			</grid-base-input-structure>
+		</td>
+		<td v-if="canShowColumn('TBLB', 'NUMINT')">
+			<grid-base-input-structure
+				class=""
+				v-bind="controls.GRPB____PSEUDTBLB______TBLB__NUMINT.wrapperProps">
+				<q-numeric-input
+					v-if="controls.GRPB____PSEUDTBLB______TBLB__NUMINT.isVisible"
+					v-bind="controls.GRPB____PSEUDTBLB______TBLB__NUMINT.props"
+					@update:model-value="model.ValNumint.fnUpdateValue" />
+			</grid-base-input-structure>
+		</td>
+		<td v-if="canShowColumn('TBLB', 'NUMDEC')">
+			<grid-base-input-structure
+				class=""
+				v-bind="controls.GRPB____PSEUDTBLB______TBLB__NUMDEC.wrapperProps">
+				<q-numeric-input
+					v-if="controls.GRPB____PSEUDTBLB______TBLB__NUMDEC.isVisible"
+					v-bind="controls.GRPB____PSEUDTBLB______TBLB__NUMDEC.props"
+					@update:model-value="model.ValNumdec.fnUpdateValue" />
+			</grid-base-input-structure>
+		</td>
+		<td v-if="canShowColumn('TBLB', 'CURINT')">
+			<grid-base-input-structure
+				class=""
+				v-bind="controls.GRPB____PSEUDTBLB______TBLB__CURINT.wrapperProps">
+				<q-numeric-input
+					v-if="controls.GRPB____PSEUDTBLB______TBLB__CURINT.isVisible"
+					v-bind="controls.GRPB____PSEUDTBLB______TBLB__CURINT.props"
+					@update:model-value="model.ValCurint.fnUpdateValue" />
+			</grid-base-input-structure>
+		</td>
+		<td v-if="canShowColumn('TBLB', 'CURDEC')">
+			<grid-base-input-structure
+				class=""
+				v-bind="controls.GRPB____PSEUDTBLB______TBLB__CURDEC.wrapperProps">
+				<q-numeric-input
+					v-if="controls.GRPB____PSEUDTBLB______TBLB__CURDEC.isVisible"
+					v-bind="controls.GRPB____PSEUDTBLB______TBLB__CURDEC.props"
+					@update:model-value="model.ValCurdec.fnUpdateValue" />
+			</grid-base-input-structure>
+		</td>
+		<td v-if="canShowColumn('TBLB', 'BOOL')">
+			<grid-base-input-structure
+				class=""
+				v-bind="controls.GRPB____PSEUDTBLB______TBLB__BOOL.wrapperProps">
+				<template #label>
+					<q-checkbox-input
+						v-if="controls.GRPB____PSEUDTBLB______TBLB__BOOL.isVisible"
+						v-bind="controls.GRPB____PSEUDTBLB______TBLB__BOOL.props"
+						v-on="controls.GRPB____PSEUDTBLB______TBLB__BOOL.handlers" />
+				</template>
+			</grid-base-input-structure>
+		</td>
+		<td v-if="canShowColumn('TBLB', 'DATE')">
+			<grid-base-input-structure
+				class=""
+				v-bind="controls.GRPB____PSEUDTBLB______TBLB__DATE.wrapperProps">
+				<q-date-time-picker
+					v-if="controls.GRPB____PSEUDTBLB______TBLB__DATE.isVisible"
+					v-bind="controls.GRPB____PSEUDTBLB______TBLB__DATE.props"
+					:model-value="model.ValDate.value"
+					@reset-icon-click="model.ValDate.fnUpdateValue(model.ValDate.originalValue ?? new Date())"
+					@update:model-value="model.ValDate.fnUpdateValue($event ?? '')" />
+			</grid-base-input-structure>
+		</td>
+		<td v-if="canShowColumn('TBLB', 'DATETM')">
+			<grid-base-input-structure
+				class=""
+				v-bind="controls.GRPB____PSEUDTBLB______TBLB__DATETM.wrapperProps">
+				<q-date-time-picker
+					v-if="controls.GRPB____PSEUDTBLB______TBLB__DATETM.isVisible"
+					v-bind="controls.GRPB____PSEUDTBLB______TBLB__DATETM.props"
+					:model-value="model.ValDatetm.value"
+					@reset-icon-click="model.ValDatetm.fnUpdateValue(model.ValDatetm.originalValue ?? new Date())"
+					@update:model-value="model.ValDatetm.fnUpdateValue($event ?? '')" />
+			</grid-base-input-structure>
+		</td>
+		<td v-if="canShowColumn('TBLB', 'DATETS')">
+			<grid-base-input-structure
+				class=""
+				v-bind="controls.GRPB____PSEUDTBLB______TBLB__DATETS.wrapperProps">
+				<q-date-time-picker
+					v-if="controls.GRPB____PSEUDTBLB______TBLB__DATETS.isVisible"
+					v-bind="controls.GRPB____PSEUDTBLB______TBLB__DATETS.props"
+					:model-value="model.ValDatets.value"
+					@reset-icon-click="model.ValDatets.fnUpdateValue(model.ValDatets.originalValue ?? new Date())"
+					@update:model-value="model.ValDatets.fnUpdateValue($event ?? '')" />
+			</grid-base-input-structure>
+		</td>
+		<td v-if="canShowColumn('TBLB', 'TIMEHM')">
+			<grid-base-input-structure
+				class=""
+				v-bind="controls.GRPB____PSEUDTBLB______TBLB__TIMEHM.wrapperProps">
+				<q-date-time-picker
+					v-if="controls.GRPB____PSEUDTBLB______TBLB__TIMEHM.isVisible"
+					v-bind="controls.GRPB____PSEUDTBLB______TBLB__TIMEHM.props"
+					:model-value="model.ValTimehm.value"
+					@reset-icon-click="model.ValTimehm.fnUpdateValue(model.ValTimehm.originalValue ?? new Date())"
+					@update:model-value="model.ValTimehm.fnUpdateValue($event ?? '')" />
+			</grid-base-input-structure>
+		</td>
+		<td v-if="canShowColumn('TBLB', 'ENUMT')">
+			<grid-base-input-structure
+				class=""
+				v-bind="controls.GRPB____PSEUDTBLB______TBLB__ENUMT.wrapperProps">
+				<q-select
+					v-if="controls.GRPB____PSEUDTBLB______TBLB__ENUMT.isVisible"
+					v-bind="controls.GRPB____PSEUDTBLB______TBLB__ENUMT.props"
+					@update:model-value="model.ValEnumt.fnUpdateValue" />
+			</grid-base-input-structure>
+		</td>
+		<td v-if="canShowColumn('TBLB', 'ENUMN')">
+			<grid-base-input-structure
+				class=""
+				v-bind="controls.GRPB____PSEUDTBLB______TBLB__ENUMN.wrapperProps">
+				<q-select
+					v-if="controls.GRPB____PSEUDTBLB______TBLB__ENUMN.isVisible"
+					v-bind="controls.GRPB____PSEUDTBLB______TBLB__ENUMN.props"
+					@update:model-value="model.ValEnumn.fnUpdateValue" />
+			</grid-base-input-structure>
+		</td>
+	</tr>
 </template>
 
 <script>
-	/* eslint-disable @typescript-eslint/no-unused-vars */
-	import { computed, defineAsyncComponent, readonly } from 'vue'
+	/* eslint-disable no-unused-vars */
+	import { computed, defineAsyncComponent } from 'vue'
 
 	import GridFormHandlers from '@/mixins/gridFormHandlers.js'
 	import formFunctions from '@/mixins/formFunctions.js'
@@ -183,10 +217,9 @@
 	import qFunctions from '@/api/genio/projectFunctions.js'
 	import qProjArrays from '@/api/genio/projectArrays.js'
 	import asyncProcM from '@quidgest/clientapp/composables/async'
-	/* eslint-enable @typescript-eslint/no-unused-vars */
 
-	import QGridTableColumn from '@/components/inputs/GridBaseInputStructure.vue'
-	import QGridTableRow from '@/components/table/QGridTableRow.vue'
+	import GridBaseInputStructure from '@/components/inputs/GridBaseInputStructure.vue'
+	/* eslint-enable no-unused-vars */
 
 	const requiredTextResources = ['QGridFormGrpbPseudtblb', 'hardcoded', 'messages']
 
@@ -199,13 +232,16 @@
 		name: 'QGridFormGrpbPseudtblb',
 
 		components: {
-			QGridTableColumn,
-			QGridTableRow
+			GridBaseInputStructure
 		},
 
-		mixins: [GridFormHandlers],
+		mixins: [
+			GridFormHandlers
+		],
 
-		expose: ['navigationId'],
+		expose: [
+			'navigationId'
+		],
 
 		data()
 		{
@@ -226,8 +262,7 @@
 					primaryKey: 'ValCodtblb',
 					designation: '',
 					identifier: '', // Unique identifier received by route (when it's nested).
-					mode: '',
-					isMultiple: true
+					mode: ''
 				},
 
 				model: this.nestedModel
@@ -248,6 +283,7 @@
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						maxLength: 50,
+						labelId: 'label_GRPB____PSEUDTBLB______TBLB__TEXT',
 						mustBeFilled: true,
 						controlLimits: [
 						],
@@ -343,7 +379,7 @@
 						label: computed(() => this.Resources.DATE18475),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						dateTimeType: 'date',
+						format: 'date',
 						controlLimits: [
 						],
 					}, this),
@@ -356,7 +392,7 @@
 						label: computed(() => this.Resources.DATETIME__MINUTES_59352),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						dateTimeType: 'dateTime',
+						format: 'dateTime',
 						controlLimits: [
 						],
 					}, this),
@@ -369,7 +405,7 @@
 						label: computed(() => this.Resources.DATETIME__SECONDS_49861),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						dateTimeType: 'dateTimeSeconds',
+						format: 'dateTimeSeconds',
 						controlLimits: [
 						],
 					}, this),
@@ -382,7 +418,7 @@
 						label: computed(() => this.Resources.TIME__HOURS_MINUTES_01660),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						dateTimeType: 'time',
+						format: 'time',
 						controlLimits: [
 						],
 					}, this),
@@ -396,6 +432,7 @@
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						maxLength: 1,
+						labelId: 'label_GRPB____PSEUDTBLB______TBLB__ENUMT',
 						arrayName: 'typet',
 						helpShortItem: 'None',
 						helpDetailedItem: 'None',
@@ -474,23 +511,17 @@
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 		},
 
-		beforeUnmount()
-		{
-/* eslint-disable indent, vue/html-indent, vue/script-indent */
-// USE /[MANUAL GQT COMPONENT_BEFORE_UNMOUNT GRPB____PSEUDTBLB____]/
-// eslint-disable-next-line
-/* eslint-enable indent, vue/html-indent, vue/script-indent */
-		},
-
 		methods: {
 			/**
 			 * Called before form init.
 			 */
 			async beforeLoad()
 			{
+				let loadForm = true
+
 				// Execute the "Before init" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.beforeInit)
-				for (const trigger of triggers)
+				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
 				this.emitEvent('before-load-form')
@@ -500,7 +531,7 @@
 // eslint-disable-next-line
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 
-				return true
+				return loadForm
 			},
 
 			/**
@@ -510,7 +541,7 @@
 			{
 				// Execute the "After init" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.afterInit)
-				for (const trigger of triggers)
+				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
 				this.emitEvent('after-load-form')
@@ -530,33 +561,19 @@
 
 				// Execute the "Before apply" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.beforeApply)
-				for (const trigger of triggers)
+				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
-				const ticketsPromise = this.model.updateFilesTickets(true)
-				this.addBusy(ticketsPromise, this.Resources[hardcodedTexts.processing])
-				const canSetDocums = await ticketsPromise
+				const canSetDocums = await this.model.updateFilesTickets(true)
 
 				if (canSetDocums)
 				{
-					let results
-					const changesPromise = this.model.setDocumentChanges()
-					this.addBusy(changesPromise, this.Resources[hardcodedTexts.processing])
-					applyForm = await changesPromise
+					applyForm = await this.model.setDocumentChanges()
 
 					if (applyForm)
 					{
-						const insertsPromise = this.model.saveDocuments()
-						this.addBusy(insertsPromise, this.Resources[hardcodedTexts.processing])
-						results = await insertsPromise
+						const results = await this.model.saveDocuments()
 						applyForm = results.every((e) => e === true)
-					}
-
-					if (!changesPromise || (results && !results.every((e) => e === true)))
-					{
-						this.validationErrors = {
-							Erro: this.Resources.OCORREU_UM_ERRO_AO_T51884
-						}
 					}
 				}
 
@@ -577,7 +594,7 @@
 			{
 				// Execute the "After apply" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.afterApply)
-				for (const trigger of triggers)
+				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
 				this.emitEvent('after-apply-form')
@@ -597,33 +614,19 @@
 
 				// Execute the "Before save" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.beforeSave)
-				for (const trigger of triggers)
+				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
-				const ticketsPromise = this.model.updateFilesTickets()
-				this.addBusy(ticketsPromise, this.Resources[hardcodedTexts.processing])
-				const canSetDocums = await ticketsPromise
+				const canSetDocums = await this.model.updateFilesTickets()
 
 				if (canSetDocums)
 				{
-					let results
-					const changesPromise = this.model.setDocumentChanges()
-					this.addBusy(changesPromise, this.Resources[hardcodedTexts.processing])
-					saveForm = await changesPromise
+					saveForm = await this.model.setDocumentChanges()
 
 					if (saveForm)
 					{
-						const insertsPromise = this.model.saveDocuments()
-						this.addBusy(insertsPromise, this.Resources[hardcodedTexts.processing])
-						results = await insertsPromise
+						const results = await this.model.saveDocuments()
 						saveForm = results.every((e) => e === true)
-					}
-
-					if (!changesPromise || (results && !results.every((e) => e === true)))
-					{
-						this.validationErrors = {
-							Erro: this.Resources.OCORREU_UM_ERRO_AO_T51884
-						}
 					}
 				}
 
@@ -642,9 +645,11 @@
 			 */
 			async afterSave()
 			{
+				let redirectPage = true // Set to 'false' to cancel page redirect.
+
 				// Execute the "After save" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.afterSave)
-				for (const trigger of triggers)
+				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
 				this.emitEvent('after-save-form')
@@ -654,7 +659,7 @@
 // eslint-disable-next-line
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 
-				return true
+				return redirectPage
 			},
 
 			/**
@@ -662,6 +667,8 @@
 			 */
 			async beforeDel()
 			{
+				let deleteForm = true // Set to 'false' to cancel form delete.
+
 				this.emitEvent('before-delete-form')
 
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
@@ -669,7 +676,7 @@
 // eslint-disable-next-line
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 
-				return true
+				return deleteForm
 			},
 
 			/**
@@ -677,6 +684,8 @@
 			 */
 			async afterDel()
 			{
+				let redirectPage = true // Set to 'false' to cancel page redirect.
+
 				this.emitEvent('after-delete-form')
 
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
@@ -684,7 +693,7 @@
 // eslint-disable-next-line
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 
-				return true
+				return redirectPage
 			},
 
 			/**
@@ -692,9 +701,11 @@
 			 */
 			async beforeExit()
 			{
+				let leaveForm = true // Set to 'false' to cancel page redirect.
+
 				// Execute the "Before exit" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.beforeExit)
-				for (const trigger of triggers)
+				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
 				this.emitEvent('before-exit-form')
@@ -704,7 +715,7 @@
 // eslint-disable-next-line
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 
-				return true
+				return leaveForm
 			},
 
 			/**
@@ -714,7 +725,7 @@
 			{
 				// Execute the "After exit" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.afterExit)
-				for (const trigger of triggers)
+				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
 				this.emitEvent('after-exit-form')

@@ -10,40 +10,40 @@ public class LnhpdForm : Form
 	/// <summary>
 	/// Order no:
 	/// </summary>
-	public LookupControl PedidNrpedido => new LookupControl(driver, ContainerLocator, "container-LNHPD___PEDIDNRPEDIDO" + IdSuffix);
-	public SeeMorePage PedidNrpedidoSeeMorePage => new SeeMorePage(driver, "LNHPD", "LNHPD___PEDIDNRPEDIDO" + IdSuffix);
+	public LookupControl PedidNrpedido => new LookupControl(driver, ContainerLocator, "container-LNHPD___PEDIDNRPEDIDO");
+	public SeeMorePage PedidNrpedidoSeeMorePage => new SeeMorePage(driver, "LNHPD", "LNHPD___PEDIDNRPEDIDO");
 
 	/// <summary>
 	/// Line
 	/// </summary>
-	public BaseInputControl LnhpdLine => new BaseInputControl(driver, ContainerLocator, "container-LNHPD___LNHPDLINE____" + IdSuffix, "#LNHPD___LNHPDLINE____" + IdSuffix);
+	public BaseInputControl LnhpdLine => new BaseInputControl(driver, ContainerLocator, "container-LNHPD___LNHPDLINE____", "#LNHPD___LNHPDLINE____");
 
 	/// <summary>
 	/// Type of equipment
 	/// </summary>
-	public LookupControl TpequTipoequi => new LookupControl(driver, ContainerLocator, "container-LNHPD___TPEQUTIPOEQUI" + IdSuffix);
-	public SeeMorePage TpequTipoequiSeeMorePage => new SeeMorePage(driver, "LNHPD", "LNHPD___TPEQUTIPOEQUI" + IdSuffix);
+	public LookupControl TpequTipoequi => new LookupControl(driver, ContainerLocator, "container-LNHPD___TPEQUTIPOEQUI");
+	public SeeMorePage TpequTipoequiSeeMorePage => new SeeMorePage(driver, "LNHPD", "LNHPD___TPEQUTIPOEQUI");
 
 	/// <summary>
 	/// Breaks down
 	/// </summary>
-	public ButtonControl PseudDesconju => new ButtonControl(driver, ContainerLocator, "#LNHPD___PSEUDDESCONJU" + IdSuffix);
+	public ButtonControl PseudDesconju => new ButtonControl(driver, ContainerLocator, "#LNHPD___PSEUDDESCONJU");
 
 	/// <summary>
 	/// Quantity
 	/// </summary>
-	public BaseInputControl LnhpdQuantida => new BaseInputControl(driver, ContainerLocator, "container-LNHPD___LNHPDQUANTIDA" + IdSuffix, "#LNHPD___LNHPDQUANTIDA" + IdSuffix);
+	public BaseInputControl LnhpdQuantida => new BaseInputControl(driver, ContainerLocator, "container-LNHPD___LNHPDQUANTIDA", "#LNHPD___LNHPDQUANTIDA");
 
 	/// <summary>
 	/// Amount
 	/// </summary>
-	public BaseInputControl LnhpdQuantdec => new BaseInputControl(driver, ContainerLocator, "container-LNHPD___LNHPDQUANTDEC" + IdSuffix, "#LNHPD___LNHPDQUANTDEC" + IdSuffix);
+	public BaseInputControl LnhpdQuantdec => new BaseInputControl(driver, ContainerLocator, "container-LNHPD___LNHPDQUANTDEC", "#LNHPD___LNHPDQUANTDEC");
 
 	/// <summary>
 	/// Breakdown:
 	/// </summary>
-	public ListControl PseudDesagreg => new ListControl(driver, ContainerLocator, "#LNHPD___PSEUDDESAGREG" + IdSuffix);
+	public ListControl PseudDesagreg => new ListControl(driver, ContainerLocator, "#LNHPD___PSEUDDESAGREG");
 
-	public LnhpdForm(IWebDriver driver, FORM_MODE mode, By? containerLocator = null, bool usePkInId = false)
-		: base(driver, mode, "LNHPD", containerLocator: containerLocator, usePkInId: usePkInId) { }
+	public LnhpdForm(IWebDriver driver, FORM_MODE mode, By? containerLocator = null)
+		: base(driver, mode, "LNHPD", containerLocator: containerLocator) { }
 }

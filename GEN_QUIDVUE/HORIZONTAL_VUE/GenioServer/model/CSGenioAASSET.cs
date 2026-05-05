@@ -1,5 +1,5 @@
 ﻿
- 
+
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -68,6 +68,7 @@ namespace CSGenio.business
 			Qfield.FieldSize =  10;
 			Qfield.MQueue = false;
 			Qfield.IntegerDigits = 10;
+			Qfield.CriaLog = true;
 			Qfield.CavDesignation = "ASSET_NUMBER52372";
 
             Qfield.NotNull = true;
@@ -109,16 +110,6 @@ namespace CSGenio.business
 			Qfield.CavDesignation = "GRAI___GLOBAL_RETURN06821";
 
 			Qfield.Dupmsg = "";
-			argumentsListByArea = new List<ByAreaArguments>();
-			argumentsListByArea.Add(new ByAreaArguments(new string[] {"identtyp"}, new int[] {0}, "asset", "codasset"));
-			Qfield.FillWhen = new ConditionFormula(argumentsListByArea, 1, delegate(object[] args, User user, string module, PersistentSupport sp) {
-				return ((string)args[0])=="R";
-			});
-			argumentsListByArea = new List<ByAreaArguments>();
-			argumentsListByArea.Add(new ByAreaArguments(new string[] {"identtyp"}, new int[] {0}, "asset", "codasset"));
-			Qfield.ShowWhen = new ConditionFormula(argumentsListByArea, 1, delegate(object[] args, User user, string module, PersistentSupport sp) {
-				return ((string)args[0])=="R";
-			});
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
@@ -129,16 +120,6 @@ namespace CSGenio.business
 			Qfield.CavDesignation = "GIAI___GLOBAL_INDIVI63214";
 
 			Qfield.Dupmsg = "";
-			argumentsListByArea = new List<ByAreaArguments>();
-			argumentsListByArea.Add(new ByAreaArguments(new string[] {"identtyp"}, new int[] {0}, "asset", "codasset"));
-			Qfield.FillWhen = new ConditionFormula(argumentsListByArea, 1, delegate(object[] args, User user, string module, PersistentSupport sp) {
-				return ((string)args[0])=="I";
-			});
-			argumentsListByArea = new List<ByAreaArguments>();
-			argumentsListByArea.Add(new ByAreaArguments(new string[] {"identtyp"}, new int[] {0}, "asset", "codasset"));
-			Qfield.ShowWhen = new ConditionFormula(argumentsListByArea, 1, delegate(object[] args, User user, string module, PersistentSupport sp) {
-				return ((string)args[0])=="I";
-			});
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
@@ -173,6 +154,50 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
+			Qfield = new Field(info.Alias, "description", FieldType.MEMO);
+			Qfield.FieldDescription = "Description";
+			Qfield.FieldSize =  250;
+			Qfield.MQueue = false;
+			Qfield.Decimals = 5;
+			Qfield.CavDesignation = "DESCRIPTION07383";
+
+			Qfield.Dupmsg = "";
+			info.RegisterFieldDB(Qfield);
+
+			//- - - - - - - - - - - - - - - - - - -
+			Qfield = new Field(info.Alias, "longdesc", FieldType.MEMO);
+			Qfield.FieldDescription = "Detailed description";
+			Qfield.FieldSize =  250;
+			Qfield.MQueue = false;
+			Qfield.Decimals = 10;
+			Qfield.CavDesignation = "DETAILED_DESCRIPTION36560";
+
+			Qfield.Dupmsg = "";
+			info.RegisterFieldDB(Qfield);
+
+			//- - - - - - - - - - - - - - - - - - -
+			Qfield = new Field(info.Alias, "category", FieldType.ARRAY_TEXT);
+			Qfield.FieldDescription = "Category";
+			Qfield.FieldSize =  5;
+			Qfield.MQueue = false;
+			Qfield.CavDesignation = "CATEGORY18978";
+
+			Qfield.Dupmsg = "";
+            Qfield.ArrayName = "dbo.GetValArrayCassetcategory";
+            Qfield.ArrayClassName = "Assetcategory";
+			info.RegisterFieldDB(Qfield);
+
+			//- - - - - - - - - - - - - - - - - - -
+			Qfield = new Field(info.Alias, "bg_color", FieldType.TEXT);
+			Qfield.FieldDescription = "Background color for category";
+			Qfield.FieldSize =  50;
+			Qfield.MQueue = false;
+			Qfield.CavDesignation = "BACKGROUND_COLOR_FOR59228";
+
+			Qfield.Dupmsg = "";
+			info.RegisterFieldDB(Qfield);
+
+			//- - - - - - - - - - - - - - - - - - -
 			Qfield = new Field(info.Alias, "zzstate", FieldType.INTEGER);
 			Qfield.FieldDescription = "Estado da ficha";
 			info.RegisterFieldDB(Qfield);
@@ -186,10 +211,11 @@ namespace CSGenio.business
 		{
 			// Daughters Relations
 			//------------------------------
-			info.ChildTable = new ChildRelation[3];
-			info.ChildTable[0]= new ChildRelation("assma", new String[] {"codasset"}, DeleteProc.NA);
-			info.ChildTable[1]= new ChildRelation("asspa", new String[] {"codasset"}, DeleteProc.NA);
-			info.ChildTable[2]= new ChildRelation("attac", new String[] {"codasset"}, DeleteProc.NA);
+			info.ChildTable = new ChildRelation[4];
+			info.ChildTable[0]= new ChildRelation("atags", new String[] {"codasset"}, DeleteProc.NA);
+			info.ChildTable[1]= new ChildRelation("assma", new String[] {"codasset"}, DeleteProc.NA);
+			info.ChildTable[2]= new ChildRelation("asspa", new String[] {"codasset"}, DeleteProc.NA);
+			info.ChildTable[3]= new ChildRelation("attac", new String[] {"codasset"}, DeleteProc.NA);
 
 			// Mother Relations
 			//------------------------------
@@ -440,6 +466,50 @@ namespace CSGenio.business
 			set { insertNameValueField(FldCodmanuf, value); }
 		}
 
+		/// <summary>Field : "Description" Tipo: "MO" Formula:  ""</summary>
+		public static FieldRef FldDescription { get { return m_fldDescription; } }
+		private static FieldRef m_fldDescription = new FieldRef("asset", "description");
+
+		/// <summary>Field : "Description" Tipo: "MO" Formula:  ""</summary>
+		public string ValDescription
+		{
+			get { return (string)returnValueField(FldDescription); }
+			set { insertNameValueField(FldDescription, value); }
+		}
+
+		/// <summary>Field : "Detailed description" Tipo: "MO" Formula:  ""</summary>
+		public static FieldRef FldLongdesc { get { return m_fldLongdesc; } }
+		private static FieldRef m_fldLongdesc = new FieldRef("asset", "longdesc");
+
+		/// <summary>Field : "Detailed description" Tipo: "MO" Formula:  ""</summary>
+		public string ValLongdesc
+		{
+			get { return (string)returnValueField(FldLongdesc); }
+			set { insertNameValueField(FldLongdesc, value); }
+		}
+
+		/// <summary>Field : "Category" Tipo: "AC" Formula:  ""</summary>
+		public static FieldRef FldCategory { get { return m_fldCategory; } }
+		private static FieldRef m_fldCategory = new FieldRef("asset", "category");
+
+		/// <summary>Field : "Category" Tipo: "AC" Formula:  ""</summary>
+		public string ValCategory
+		{
+			get { return (string)returnValueField(FldCategory); }
+			set { insertNameValueField(FldCategory, value); }
+		}
+
+		/// <summary>Field : "Background color for category" Tipo: "C" Formula:  ""</summary>
+		public static FieldRef FldBg_color { get { return m_fldBg_color; } }
+		private static FieldRef m_fldBg_color = new FieldRef("asset", "bg_color");
+
+		/// <summary>Field : "Background color for category" Tipo: "C" Formula:  ""</summary>
+		public string ValBg_color
+		{
+			get { return (string)returnValueField(FldBg_color); }
+			set { insertNameValueField(FldBg_color, value); }
+		}
+
 		/// <summary>Field : "ZZSTATE" Type: "INT" Formula:  ""</summary>
 		public static FieldRef FldZzstate { get { return m_fldZzstate; } }
 		private static FieldRef m_fldZzstate = new FieldRef("asset", "zzstate");
@@ -460,17 +530,16 @@ namespace CSGenio.business
         /// <param name="key">The value of the primary key</param>
         /// <param name="user">The context of the user</param>
         /// <param name="fields">The fields to be filled in the area</param>
-		/// <param name="forUpdate">True if you are preparing to update this record, false otherwise</param>
         /// <returns>An area with the fields requests of the record read or null if the key does not exist</returns>
         /// <remarks>Persistence operations should not be used on a partially positioned register</remarks>
-        public static CSGenioAasset search(PersistentSupport sp, string key, User user, string[] fields = null, bool forUpdate = false)
+        public static CSGenioAasset search(PersistentSupport sp, string key, User user, string[] fields = null)
         {
 			if (string.IsNullOrEmpty(key))
 				return null;
 
 		    CSGenioAasset area = new CSGenioAasset(user, user.CurrentModule);
 
-            if (sp.getRecord(area, key, fields, forUpdate))
+            if (sp.getRecord(area, key, fields))
                 return area;
 			return null;
         }
@@ -530,8 +599,7 @@ namespace CSGenio.business
 
 
 
-
-
+ 
 
 
 		// USE /[MANUAL GQT TABAUX ASSET]/
@@ -614,7 +682,8 @@ namespace CSGenio.business
 			return StatusMessage.OK();
 		}
      
-           
+
+               
 
 	}
 }

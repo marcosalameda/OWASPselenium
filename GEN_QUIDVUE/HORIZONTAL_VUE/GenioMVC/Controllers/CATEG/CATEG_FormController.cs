@@ -9,7 +9,6 @@ using System.Data;
 using System.Data.Entity;
 using System.Linq;
 using System.Reflection;
-using System.Dynamic;
 
 using CSGenio.business;
 using CSGenio.core.persistence;
@@ -56,11 +55,11 @@ namespace GenioMVC.Controllers
 // USE /[MANUAL GQT CONTROLLER_SHOW CATEG]/
 
 		[HttpPost]
-		public ActionResult Categ_Show_GET([FromBody] RequestIdModel requestModel)
+		public ActionResult Categ_Show_GET([FromBody]RequestIdModel requestModel)
 		{
-			string id = requestModel.Id;
-			Categ_ViewModel model = new(UserContext.Current);
-			EventSink eventSink = new()
+			var id = requestModel.Id;
+			var model = new Categ_ViewModel(UserContext.Current);
+			var eventSink = new EventSink()
 			{
 				MethodName = "Categ_Show_GET",
 				AreaName = "categ",
@@ -76,7 +75,13 @@ namespace GenioMVC.Controllers
 				}
 			};
 
-			return GenericHandleGetFormShow(eventSink, model, id);
+			using (CSGenio.core.di.GenioDI.MetricsOtlp.RecordTime("page_load_time", new System.Diagnostics.TagList([
+				new("PageId", "CATEG.SHOW"),
+				new("PageType", "form")
+			]), "ms", "Time to load the page."))
+			{
+				return GenericHandleGetFormShow(eventSink, model, id);
+			}
 		}
 
 		#endregion
@@ -85,14 +90,14 @@ namespace GenioMVC.Controllers
 
 // USE /[MANUAL GQT CONTROLLER_NEW_GET CATEG]/
 		[HttpPost]
-		public ActionResult Categ_New_GET([FromBody] RequestNewGetModel requestModel)
+		public ActionResult Categ_New_GET([FromBody]RequestNewGetModel requestModel)
 		{
-			string id = requestModel.Id;
-			bool isNewLocation = requestModel.IsNewLocation;
+			var id = requestModel.Id;
+			var isNewLocation = requestModel.IsNewLocation;
 			var prefillValues = requestModel.PrefillValues;
 
-			Categ_ViewModel model = new(UserContext.Current);
-			EventSink eventSink = new()
+			var model = new Categ_ViewModel(UserContext.Current);
+			var eventSink = new EventSink()
 			{
 				MethodName = "Categ_New_GET",
 				AreaName = "categ",
@@ -112,7 +117,13 @@ namespace GenioMVC.Controllers
 				}
 			};
 
-			return GenericHandleGetFormNew(eventSink, model, id, isNewLocation, prefillValues);
+			using (CSGenio.core.di.GenioDI.MetricsOtlp.RecordTime("page_load_time", new System.Diagnostics.TagList([
+				new("PageId", "CATEG.SHOW"),
+				new("PageType", "form")
+			]), "ms", "Time to load the page."))
+			{
+				return GenericHandleGetFormNew(eventSink, model, id, isNewLocation, prefillValues);
+			}
 		}
 
 		//
@@ -121,7 +132,7 @@ namespace GenioMVC.Controllers
 		[HttpPost]
 		public ActionResult Categ_New([FromBody]Categ_ViewModel model, [FromQuery]bool redirect = true)
 		{
-			EventSink eventSink = new()
+			var eventSink = new EventSink()
 			{
 				MethodName = "Categ_New",
 				ViewName = "Categ",
@@ -146,7 +157,13 @@ namespace GenioMVC.Controllers
 				}
 			};
 
-			return GenericHandlePostFormNew(eventSink, model);
+			using (CSGenio.core.di.GenioDI.MetricsOtlp.RecordTime("page_load_time", new System.Diagnostics.TagList([
+				new("PageId", "CATEG.NEW"),
+				new("PageType", "form")
+			]), "ms", "Time to load the page."))
+			{
+				return GenericHandlePostFormNew(eventSink, model);
+			}
 		}
 
 		#endregion
@@ -155,11 +172,11 @@ namespace GenioMVC.Controllers
 
 // USE /[MANUAL GQT CONTROLLER_EDIT_GET CATEG]/
 		[HttpPost]
-		public ActionResult Categ_Edit_GET([FromBody] RequestIdModel requestModel)
+		public ActionResult Categ_Edit_GET([FromBody]RequestIdModel requestModel)
 		{
-			string id = requestModel.Id;
-			Categ_ViewModel model = new(UserContext.Current);
-			EventSink eventSink = new()
+			var id = requestModel.Id;
+			var model = new Categ_ViewModel(UserContext.Current);
+			var eventSink = new EventSink()
 			{
 				MethodName = "Categ_Edit_GET",
 				AreaName = "categ",
@@ -176,7 +193,13 @@ namespace GenioMVC.Controllers
 				}
 			};
 
-			return GenericHandleGetFormEdit(eventSink, model, id);
+			using (CSGenio.core.di.GenioDI.MetricsOtlp.RecordTime("page_load_time", new System.Diagnostics.TagList([
+				new("PageId", "CATEG.SHOW"),
+				new("PageType", "form")
+			]), "ms", "Time to load the page."))
+			{
+				return GenericHandleGetFormEdit(eventSink, model, id);
+			}
 		}
 
 		//
@@ -185,7 +208,7 @@ namespace GenioMVC.Controllers
 		[HttpPost]
 		public ActionResult Categ_Edit([FromBody]Categ_ViewModel model, [FromQuery]bool redirect)
 		{
-			EventSink eventSink = new()
+			var eventSink = new EventSink()
 			{
 				MethodName = "Categ_Edit",
 				ViewName = "Categ",
@@ -210,7 +233,13 @@ namespace GenioMVC.Controllers
 				}
 			};
 
-			return GenericHandlePostFormEdit(eventSink, model);
+			using (CSGenio.core.di.GenioDI.MetricsOtlp.RecordTime("page_load_time", new System.Diagnostics.TagList([
+				new("PageId", "CATEG.EDIT"),
+				new("PageType", "form")
+			]), "ms", "Time to load the page."))
+			{
+				return GenericHandlePostFormEdit(eventSink, model);
+			}
 		}
 
 		#endregion
@@ -219,11 +248,11 @@ namespace GenioMVC.Controllers
 
 // USE /[MANUAL GQT CONTROLLER_DELETE_GET CATEG]/
 		[HttpPost]
-		public ActionResult Categ_Delete_GET([FromBody] RequestIdModel requestModel)
+		public ActionResult Categ_Delete_GET([FromBody]RequestIdModel requestModel)
 		{
-			string id = requestModel.Id;
-			Categ_ViewModel model = new(UserContext.Current);
-			EventSink eventSink = new()
+			var id = requestModel.Id;
+			var model = new Categ_ViewModel(UserContext.Current);
+			var eventSink = new EventSink()
 			{
 				MethodName = "Categ_Delete_GET",
 				AreaName = "categ",
@@ -240,20 +269,26 @@ namespace GenioMVC.Controllers
 				}
 			};
 
-			return GenericHandleGetFormDelete(eventSink, model, id);
+			using (CSGenio.core.di.GenioDI.MetricsOtlp.RecordTime("page_load_time", new System.Diagnostics.TagList([
+				new("PageId", "CATEG.SHOW"),
+				new("PageType", "form")
+			]), "ms", "Time to load the page."))
+			{
+				return GenericHandleGetFormDelete(eventSink, model, id);
+			}
 		}
 
 		//
 		// POST: /Categ/Categ_Delete
 // USE /[MANUAL GQT CONTROLLER_DELETE_POST CATEG]/
 		[HttpPost]
-		public ActionResult Categ_Delete([FromBody] RequestIdModel requestModel)
+		public ActionResult Categ_Delete([FromBody]RequestIdModel requestModel)
 		{
-			string id = requestModel.Id;
-			Categ_ViewModel model = new(UserContext.Current, id);
+			var id = requestModel.Id;
+			var model = new Categ_ViewModel (UserContext.Current, id);
 			model.MapFromModel();
 
-			EventSink eventSink = new()
+			var eventSink = new EventSink()
 			{
 				MethodName = "Categ_Delete",
 				ViewName = "Categ",
@@ -269,7 +304,13 @@ namespace GenioMVC.Controllers
 				}
 			};
 
-			return GenericHandlePostFormDelete(eventSink, model);
+			using (CSGenio.core.di.GenioDI.MetricsOtlp.RecordTime("page_load_time", new System.Diagnostics.TagList([
+				new("PageId", "CATEG.DELETE"),
+				new("PageType", "form")
+			]), "ms", "Time to load the page."))
+			{
+				return GenericHandlePostFormDelete(eventSink, model);
+			}
 		}
 
 		public ActionResult Categ_Delete_Redirect()
@@ -285,13 +326,13 @@ namespace GenioMVC.Controllers
 // USE /[MANUAL GQT CONTROLLER_DUPLICATE_GET CATEG]/
 
 		[HttpPost]
-		public ActionResult Categ_Duplicate_GET([FromBody] RequestNewGetModel requestModel)
+		public ActionResult Categ_Duplicate_GET([FromBody]RequestNewGetModel requestModel)
 		{
-			string id = requestModel.Id;
-			bool isNewLocation = requestModel.IsNewLocation;
+			var id = requestModel.Id;
+			var isNewLocation = requestModel.IsNewLocation;
 
-			Categ_ViewModel model = new(UserContext.Current);
-			EventSink eventSink = new()
+			var model = new Categ_ViewModel(UserContext.Current);
+			var eventSink = new EventSink()
 			{
 				MethodName = "Categ_Duplicate_GET",
 				AreaName = "categ",
@@ -307,7 +348,13 @@ namespace GenioMVC.Controllers
 				}
 			};
 
-			return GenericHandleGetFormDuplicate(eventSink, model, id, isNewLocation);
+			using (CSGenio.core.di.GenioDI.MetricsOtlp.RecordTime("page_load_time", new System.Diagnostics.TagList([
+				new("PageId", "CATEG.SHOW"),
+				new("PageType", "form")
+			]), "ms", "Time to load the page."))
+			{
+				return GenericHandleGetFormDuplicate(eventSink, model, id, isNewLocation);
+			}
 		}
 
 		//
@@ -316,7 +363,7 @@ namespace GenioMVC.Controllers
 		[HttpPost]
 		public ActionResult Categ_Duplicate([FromBody]Categ_ViewModel model, [FromQuery]bool redirect = true)
 		{
-			EventSink eventSink = new()
+			var eventSink = new EventSink()
 			{
 				MethodName = "Categ_Duplicate",
 				ViewName = "Categ",
@@ -341,7 +388,13 @@ namespace GenioMVC.Controllers
 				}
 			};
 
-			return GenericHandlePostFormDuplicate(eventSink, model);
+			using (CSGenio.core.di.GenioDI.MetricsOtlp.RecordTime("page_load_time", new System.Diagnostics.TagList([
+				new("PageId", "CATEG.DUPLICATE"),
+				new("PageType", "form")
+			]), "ms", "Time to load the page."))
+			{
+				return GenericHandlePostFormDuplicate(eventSink, model);
+			}
 		}
 
 		#endregion
@@ -358,15 +411,8 @@ namespace GenioMVC.Controllers
 				PersistentSupport sp = UserContext.Current.PersistentSupport;
 				try
 				{
-					var recordKey = Navigation.GetStrValue("categ");
-					var model = GenioMVC.Models.Categ.Find(recordKey, UserContext.Current);
-					if (model.ValZzstate == 0)
-					{
-						Navigation.ClearValue("categ");
-						string errorMessage = Resources.Resources.ESTE_REGISTO_JA_FOI_02595;
-						Log.Error($"${errorMessage} ID: ${recordKey}");
-						return JsonOK(new { Success = true, currentNavigationLevel = Navigation.CurrentLevel.Level, Warning = errorMessage });
-					}
+					var model = new GenioMVC.Models.Categ(UserContext.Current);
+					model.klass.QPrimaryKey = Navigation.GetStrValue("categ");
 
 // USE /[MANUAL GQT BEFORE_CANCEL CATEG]/
 

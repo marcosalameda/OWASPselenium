@@ -10,8 +10,8 @@ namespace CSGenio.framework
 	public abstract class EPH
 	{
 		protected string moduleName; // Name of the module defined in child classes
-		private readonly static Dictionary<string, EPH> todosEphs;
-        private readonly static Dictionary<string, EPHCondition> allConditions;
+		protected static string[] niveis; // Defined levels for each module that are subjected to PHEs
+		private static Hashtable todosEphs = new Hashtable(); // Hashtable with all PHEs
 
 		/// <summary>
 		/// Class constructor
@@ -19,15 +19,11 @@ namespace CSGenio.framework
 		/// </summary>
 		static EPH()
 		{
-            allConditions = new(){
-            };
-
-            todosEphs = new() {
-			    {"WMS", new WMSEPH("WMS")},
-			    {"IMO", new IMOEPH("IMO")},
-			    {"REG", new REGEPH("REG")},
-			    {"GQT", new GQTEPH("GQT")},
-            };
+			todosEphs = new Hashtable();
+			todosEphs.Add("WMS", new WMSEPH("WMS"));
+			todosEphs.Add("IMO", new IMOEPH("IMO"));
+			todosEphs.Add("REG", new REGEPH("REG"));
+			todosEphs.Add("GQT", new GQTEPH("GQT"));
 		}
 
 		/// <summary>
@@ -36,14 +32,16 @@ namespace CSGenio.framework
 		public string ModuleName
 		{
 			get { return moduleName; }
+			set { moduleName = value; }
 		}
 
 		/// <summary>
 		/// The names of the levels subjected to a PHE
 		/// </summary>
-		public abstract string[] Levels
+		public string[] Levels
 		{
-			get;
+			get { return niveis; }
+			set { niveis = value; }
 		}
 
         /// <summary>
@@ -51,17 +49,20 @@ namespace CSGenio.framework
         /// </summary>
         public static EPHCondition GetEphConditionById(string id)
         {
-            if (allConditions.TryGetValue(id, out var result))
-                return result;
-            return null;
+            switch (id)
+            {
+                default:
+                    return null;
+            }
         }
 
 		/// <summary>
 		/// The PHEs per module, it's set in the child classes
 		/// </summary>
-		public abstract Dictionary<string, List<EPHCondition>> EphsPerModule
+		public abstract Hashtable EphsPerModule
 		{
 			get;
+			set;
 		}
 
 		/// <summary>
@@ -73,9 +74,7 @@ namespace CSGenio.framework
 		{
 			if (todosEphs == null)
 				return null;
-            if(todosEphs.TryGetValue(moduleName, out var result))
-                return result;
-            return null;
+			return (EPH)todosEphs[moduleName];
 		}
 
         /* JMT and TR 2009 09 27
@@ -207,6 +206,7 @@ namespace CSGenio.framework
         public abstract Dictionary<string, List<string>> MenusNotSubjectEPH
         {
             get;
+            set;
         }
 
 		/// <summary>
@@ -225,21 +225,30 @@ namespace CSGenio.framework
         /// <param name="roles">A list of roles</param>
         /// <param name="formID">The id of the form</param>
         /// <returns>A list with the PHE names that correspond to the specified parameters</returns>
-        public static List<EPHCondition> GetEPHForms(string module, List<Role> roles, string formID)
+        public static List<string> getEPHName(string module, List<Role> roles, string formID)
         {
-            List<EPHCondition> ephName = [];
+            List<string> ephName = new List<string>();
 
             // Gets the PHE for the module
             EPH eph = EPH.getEPH(module);
-            if (eph is null)
-                return ephName;
 
-            foreach (Role role in roles)
-                if (eph.EphsPerModule.TryGetValue(role.ToString(), out var condicoesEPH))
-                    foreach (EPHCondition condition in condicoesEPH)
-                        // Checks if the ids match and the list does't contain the id
-                        if (condition.IntialForm == formID && !ephName.Exists(x => x.EPHName == condition.EPHName))
-                            ephName.Add(condition);
+            if (eph != null)
+            {
+                foreach (Role role in roles)
+                {
+                    EPHCondition[] condicoesEPH = (EPHCondition[])eph.EphsPerModule[role.ToString()];
+
+                    if (condicoesEPH != null)
+                    {
+                        foreach (EPHCondition condition in condicoesEPH)
+                        {
+                            // Checks if the ids match and the list does't contain the id
+                            if (condition.IntialForm == formID && !ephName.Contains(condition.EPHName))
+                                ephName.Add(condition.EPHName);
+                        }
+                    }
+                }
+            }
 
             return ephName;
         }
@@ -252,17 +261,27 @@ namespace CSGenio.framework
         public static List<string> GetEphCurrentForm(User user)
         {
             string modulo = user.CurrentModule;
+
             List<string> forms = new List<string>();
 
             EPH eph = EPH.getEPH(modulo);
-            if (eph is null)
-                return forms;
 
-            foreach (Role role in user.GetModuleRoles(user.CurrentModule))
-                if(eph.EphsPerModule.TryGetValue(role.ToString(), out var condicoesEPH))
-                    foreach (EPHCondition cond in condicoesEPH)
-                        if (!string.IsNullOrEmpty(cond.IntialForm) && !string.IsNullOrWhiteSpace(cond.IntialForm) && !forms.Contains(cond.IntialForm))
-                            forms.Add(cond.IntialForm);
+            if (eph != null)
+            {
+                foreach (Role role in user.GetModuleRoles(user.CurrentModule))
+                {
+                    EPHCondition[] condicoesEPH = (EPHCondition[])eph.EphsPerModule[role.ToString()];
+
+                    if (condicoesEPH != null)
+                    {
+                        foreach (EPHCondition cond in condicoesEPH)
+                        {
+                            if (!string.IsNullOrEmpty(cond.IntialForm) && !string.IsNullOrWhiteSpace(cond.IntialForm) && !forms.Contains(cond.IntialForm))
+                                forms.Add(cond.IntialForm);
+                        }
+                    }
+                }
+            }
 
             return forms;
         }

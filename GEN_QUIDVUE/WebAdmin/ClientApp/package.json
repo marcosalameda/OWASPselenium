@@ -4,16 +4,16 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "pre-dev": "node --import tsx build/pre-dev.ts",
-    "dev": "pnpm run pre-dev && set NODE_OPTIONS=--max_old_space_size=10240 && vite",
+    "dev": "vite",
     "build": "set NODE_OPTIONS=--max_old_space_size=10240 && vite build --out-dir dist --mode production",
-    "build:dev": "pnpm run pre-dev && set NODE_OPTIONS=--max_old_space_size=8192 && vite build --out-dir dist --mode development",
+    "build:dev": "set NODE_OPTIONS=--max_old_space_size=8192 && vite build --out-dir dist --mode development",
     "format": "prettier . --check",
     "format:fix": "prettier . --write",
     "lint": "eslint --ext .js,.vue src",
     "lint:fix": "eslint --ext .js,.vue src --fix",
-    "serve": "set NODE_OPTIONS=--max_old_space_size=10240 && vite serve",
-    "preview": "set NODE_OPTIONS=--max_old_space_size=10240 && vite preview"
+    "vite:run": "set NODE_OPTIONS=--max_old_space_size=10240 && vite",
+    "vite:serve": "set NODE_OPTIONS=--max_old_space_size=10240 && vite serve",
+    "vite:preview": "set NODE_OPTIONS=--max_old_space_size=10240 && vite preview"
   },
   "dependencies": {
     "@quidgest/ui": "0.15.9",
@@ -49,7 +49,6 @@
     "prettier": "^3.2.5",
     "sass": "^1.77.6",
     "svgstore": "3.0.1",
-    "tsx": "^4.20.3",
     "typescript": "^5.8.2",
     "vite": "^5.1.4"
   }

@@ -10,25 +10,25 @@ public class Regia_onForm : Form
 	/// <summary>
 	/// País:
 	/// </summary>
-	public LookupControl CntryCountry => new LookupControl(driver, ContainerLocator, "container-REGIA_ONCNTRYCOUNTRY_" + IdSuffix);
-	public SeeMorePage CntryCountrySeeMorePage => new SeeMorePage(driver, "REGIA_ON", "REGIA_ONCNTRYCOUNTRY_" + IdSuffix);
+	public LookupControl CntryCountry => new LookupControl(driver, ContainerLocator, "container-REGIA_ONCNTRYCOUNTRY_");
+	public SeeMorePage CntryCountrySeeMorePage => new SeeMorePage(driver, "REGIA_ON", "REGIA_ONCNTRYCOUNTRY_");
 
 	/// <summary>
 	/// Região:
 	/// </summary>
-	public BaseInputControl RegioRegiao => new BaseInputControl(driver, ContainerLocator, "container-REGIA_ONREGIOREGIAO__" + IdSuffix, "#REGIA_ONREGIOREGIAO__" + IdSuffix);
+	public BaseInputControl RegioRegiao => new BaseInputControl(driver, ContainerLocator, "container-REGIA_ONREGIOREGIAO__", "#REGIA_ONREGIOREGIAO__");
 
 	/// <summary>
 	/// País pessoa
 	/// </summary>
-	public LookupControl Pais1Country => new LookupControl(driver, ContainerLocator, "container-REGIA_ONPAIS1COUNTRY_" + IdSuffix);
-	public SeeMorePage Pais1CountrySeeMorePage => new SeeMorePage(driver, "REGIA_ON", "REGIA_ONPAIS1COUNTRY_" + IdSuffix);
+	public LookupControl Pais1Country => new LookupControl(driver, ContainerLocator, "container-REGIA_ONPAIS1COUNTRY_");
+	public SeeMorePage Pais1CountrySeeMorePage => new SeeMorePage(driver, "REGIA_ON", "REGIA_ONPAIS1COUNTRY_");
 
 	/// <summary>
 	/// Imóveis
 	/// </summary>
-	public ListControl PseudImoveisl => new ListControl(driver, ContainerLocator, "#REGIA_ONPSEUDIMOVEISL" + IdSuffix);
+	public ListControl PseudImoveisl => new ListControl(driver, ContainerLocator, "#REGIA_ONPSEUDIMOVEISL");
 
-	public Regia_onForm(IWebDriver driver, FORM_MODE mode, By? containerLocator = null, bool usePkInId = false)
-		: base(driver, mode, "REGIA_ON", containerLocator: containerLocator, usePkInId: usePkInId) { }
+	public Regia_onForm(IWebDriver driver, FORM_MODE mode, By? containerLocator = null)
+		: base(driver, mode, "REGIA_ON", containerLocator: containerLocator) { }
 }

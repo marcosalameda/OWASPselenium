@@ -37,7 +37,7 @@
 						v-if="showRemoveButton"
 						borderless
 						:title="texts.removeButtonText"
-						@click="onDeleteWidget">
+						@click="$emit('delete-widget', widget.uuid)">
 						<q-icon icon="delete" />
 					</q-button>
 
@@ -168,7 +168,7 @@
 			 */
 			params()
 			{
-				const props = {
+				let props = {
 					id: this.widget.uuid,
 					'gs-id': this.widget.uuid,
 					'gs-w': this.widget.Width,
@@ -379,11 +379,6 @@
 				else {
 					this.domVersionKey++
 				}
-			},
-
-			onDeleteWidget()
-			{
-				this.$emit('delete-widget', this.widget.uuid)
 			}
 		},
 

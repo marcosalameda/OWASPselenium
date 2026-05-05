@@ -86,7 +86,11 @@ namespace CSGenio.business
 		/// <returns></returns>
 		string GetGroups(Role role)
 		{
-			return string.Join("|", role.AvailableModules);
+			List<string> groups = new List<string>();
+            foreach (var moduleRole in GenioServer.security.UserFactory.MODULE_ROLES.Where(p=> p.Item2.Equals(role)))
+				groups.Add(moduleRole.Item1);
+
+			return string.Join("|", groups);
 		}
 	}
 
@@ -179,7 +183,7 @@ namespace CSGenio.business
 		{
 			Dictionary<string, ArrayElement> result = new Dictionary<string, ArrayElement>();
 
-			foreach (var moduleRole in Role.MODULE_ROLES)
+			foreach (var moduleRole in GenioServer.security.UserFactory.MODULE_ROLES)
 			{
 				string module = moduleRole.Item1;
 				Role role = moduleRole.Item2;

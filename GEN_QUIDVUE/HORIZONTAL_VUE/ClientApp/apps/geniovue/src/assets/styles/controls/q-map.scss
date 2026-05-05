@@ -99,27 +99,6 @@
 				background-image: url('#{$svgs-path}/download.svg');
 				background-size: 85%;
 			}
-			
-			.leaflet-map-center {
-			  background-image: url('#{$svgs-path}/go-to.svg');
-			  background-size: 85%;
-			}
-		}
-		.leaflet-legend {
-		  background: white;
-		  padding: 10px;
-		  border-radius: 5px;
-		  box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
-		  font-size: 14px;
-		  line-height: 18px;
-		}
-
-		.leaflet-legend i {
-		  width: 18px;
-		  height: 18px;
-		  display: inline-block;
-		  margin-right: 8px;
-		  vertical-align: middle;
 		}
 	}
 

@@ -40,23 +40,11 @@ export default {
 			return ""
 		},
 
-		hasInfoBanner() {
-			if(!this.helpControl) return false
-			return this.helpControl.shortHelp.type === 'Info-banner' || this.helpControl.detailedHelp?.type === 'Info-banner'
-		},
-
 		anchorId() {
 			if (this.hasLabel) {
 				return `#${this.labelId}`;
 			}
 			return this.controlId ? `#${this.controlId}` : "";
-		},
-
-		isMarkdown() {			
-			if (this.helpControl?.detailedHelp?.markdown === true)
-				return true
-			else
-				return false
 		}
 	}
 }

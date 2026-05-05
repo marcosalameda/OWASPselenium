@@ -1,28 +1,33 @@
 ﻿<template>
-	<base-input-structure
+	<component
+		:is="options?.component ? options.component : 'base-input-structure'"
 		:id="`${tableName}_${rowIndex}_${columnName}`"
 		d-flex-inline
 		:class="containerClasses"
-		:label-attrs="{ class: 'i-text__label' }">
+		:label-attrs="{ class: 'i-text__label' }"
+		:model-field-ref="modelField"
+		:error-display-type="options?.errorDisplayType">
 		<q-text-area
 			:id="`${tableName}_${rowIndex}_${columnName}`"
 			:rows="1"
 			:cols="10"
 			:size="size"
-			:class="classes"
+			:classes="classes"
 			:disabled="options.disabled"
 			:readonly="options.readonly"
 			:model-value="value"
 			@update:model-value="$emit('update', $event)" />
-	</base-input-structure>
+	</component>
 </template>
 
 <script>
 	import _isEmpty from 'lodash-es/isEmpty'
 
 	import { inputSize } from '@quidgest/clientapp/constants/enums'
+	import { String } from '@quidgest/clientapp/models/fields'
 
 	import BaseInputStructure from '@/components/inputs/BaseInputStructure.vue'
+	import GridBaseInputStructure from '@/components/inputs/GridBaseInputStructure.vue'
 
 	export default {
 		name: 'QEditTextMultiline',
@@ -30,7 +35,8 @@
 		emits: ['update', 'loaded'],
 
 		components: {
-			BaseInputStructure
+			BaseInputStructure,
+			GridBaseInputStructure
 		},
 
 		props: {
@@ -96,14 +102,39 @@
 			containerClasses: {
 				type: Array,
 				default: () => []
+			},
+
+			/**
+			 * Array of error messages related to the textarea's value.
+			 */
+			errorMessages: {
+				type: Array,
+				default: () => []
 			}
 		},
 
 		expose: [],
 
+		data()
+		{
+			return {
+				modelField: new String()
+			}
+		},
+
 		mounted()
 		{
 			this.$emit('loaded')
+		},
+
+		watch: {
+			errorMessages: {
+				handler(newValue)
+				{
+					this.modelField.serverErrorMessages = newValue
+				},
+				deep: true
+			}
 		}
 	}
 </script>

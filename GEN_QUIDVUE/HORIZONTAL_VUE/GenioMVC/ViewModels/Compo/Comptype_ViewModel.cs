@@ -1,19 +1,20 @@
-﻿using CSGenio.business;
-using CSGenio.framework;
-using CSGenio.persistence;
-using GenioMVC.Helpers;
-using GenioMVC.Models.Exception;
-using GenioMVC.Models.Navigation;
+﻿using JsonIgnoreAttribute = System.Text.Json.Serialization.JsonIgnoreAttribute;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Quidgest.Persistence;
-using Quidgest.Persistence.GenericQuery;
 using System.Collections;
 using System.Collections.Concurrent;
 using System.Collections.Specialized;
 using System.ComponentModel.DataAnnotations;
 using System.Data;
 using System.Globalization;
-using System.Text.Json.Serialization;
+
+using CSGenio.business;
+using CSGenio.framework;
+using CSGenio.persistence;
+using GenioMVC.Helpers;
+using GenioMVC.Models.Exception;
+using GenioMVC.Models.Navigation;
+using Quidgest.Persistence;
+using Quidgest.Persistence.GenericQuery;
 
 namespace GenioMVC.ViewModels.Compo
 {
@@ -45,11 +46,6 @@ namespace GenioMVC.ViewModels.Compo
 		[ValidateSetAccess]
 		public decimal ValCompicon { get; set; }
 		/// <summary>
-		/// Title: "" | Type: "PSEUD"
-		/// </summary>
-		[JsonIgnore]
-		public SelectList List_ValCompicon { get; set; }
-		/// <summary>
 		/// Title: "Component description" | Type: "MO"
 		/// </summary>
 		public string ValCompdesc { get; set; }
@@ -77,7 +73,7 @@ namespace GenioMVC.ViewModels.Compo
 		/// <summary>
 		/// Title: "Preview" | Type: "IJ"
 		/// </summary>
-		[ImageThumbnailJsonConverter(450, 400)]
+		[ImageThumbnailJsonConverter(600, 400)]
 		public GenioMVC.Models.ImageModel ValPreview { get; set; }
 		/// <summary>
 		/// Title: "When to use" | Type: "MO"
@@ -91,8 +87,14 @@ namespace GenioMVC.ViewModels.Compo
 		/// Title: "Accessibilty Compliance & Best Practices" | Type: "MO"
 		/// </summary>
 		public string ValAccessib { get; set; }
-
-
+		/// <summary>
+		/// Title: "Show Release Field" | Type: "L"
+		/// </summary>
+		public bool ValReleaselogic { get; set; }
+		/// <summary>
+		/// Title: "Storybook Link" | Type: "C"
+		/// </summary>
+		public string ValWeblink { get; set; }
 
 		#region Navigations
 		#endregion
@@ -111,6 +113,15 @@ namespace GenioMVC.ViewModels.Compo
 
 		#region Fields for formulas
 
+		// Field for formula
+		/// <summary>Used only for lazy loading of the CompcValCompclas field</summary>
+		[JsonIgnore]
+		[ValidateSetAccess]
+		public Func<string> funcCompcValCompclas { get; set; }
+		private string _auxCompcValCompclas { get; set; }
+		/// <summary>Field: "Components Class" Tipo: "C"</summary>
+		[ValidateSetAccess]
+		public string CompcValCompclas { get { return funcCompcValCompclas != null ? funcCompcValCompclas() : _auxCompcValCompclas; } private set { funcCompcValCompclas = () => value; } }
 
 		#endregion
 
@@ -236,6 +247,9 @@ namespace GenioMVC.ViewModels.Compo
 				ValWuse = ViewModelConversion.ToString(m.ValWuse);
 				ValWnuse = ViewModelConversion.ToString(m.ValWnuse);
 				ValAccessib = ViewModelConversion.ToString(m.ValAccessib);
+				ValReleaselogic = ViewModelConversion.ToLogic(m.ValReleaselogic);
+				ValWeblink = ViewModelConversion.ToString(m.ValWeblink);
+				funcCompcValCompclas = () => ViewModelConversion.ToString(m.Compc.ValCompclas);
 				ValCodcompo = ViewModelConversion.ToString(m.ValCodcompo);
 			}
 			catch (Exception)
@@ -274,6 +288,8 @@ namespace GenioMVC.ViewModels.Compo
 				m.ValWuse = ViewModelConversion.ToString(ValWuse);
 				m.ValWnuse = ViewModelConversion.ToString(ValWnuse);
 				m.ValAccessib = ViewModelConversion.ToString(ValAccessib);
+				m.ValReleaselogic = ViewModelConversion.ToLogic(ValReleaselogic);
+				m.ValWeblink = ViewModelConversion.ToString(ValWeblink);
 				m.ValCodcompo = ViewModelConversion.ToString(ValCodcompo);
 
 				/*
@@ -341,6 +357,12 @@ namespace GenioMVC.ViewModels.Compo
 					case "compo.accessib":
 						this.ValAccessib = ViewModelConversion.ToString(_value);
 						break;
+					case "compo.releaselogic":
+						this.ValReleaselogic = ViewModelConversion.ToLogic(_value);
+						break;
+					case "compo.weblink":
+						this.ValWeblink = ViewModelConversion.ToString(_value);
+						break;
 					case "compo.codcompo":
 						this.ValCodcompo = ViewModelConversion.ToString(_value);
 						break;
@@ -399,17 +421,6 @@ namespace GenioMVC.ViewModels.Compo
 				// Conexão deve estar aberta de fora. Podem haver formulas que utilizam funções "manuais".
 				// TODO: It needs to be analyzed whether we should disable the security of field filling here. If there is any case where the field with the block condition can only be calculated after the double calculation of the formulas.
 				MapToModel(Model);
-
-				// If it's inserting or duplicating, needs to fill the default values.
-				if (Navigation.CurrentLevel.FormMode == FormMode.New || Navigation.CurrentLevel.FormMode == FormMode.Duplicate)
-				{
-					FunctionType funcType = Navigation.CurrentLevel.FormMode == FormMode.New
-						? FunctionType.INS
-						: FunctionType.DUP;
-
-					Model.baseklass.fillValuesDefault(m_userContext.PersistentSupport, funcType);
-				}
-
 				// Preencher operações internas
 				Model.klass.fillInternalOperations(m_userContext.PersistentSupport, oldvalues);
 				MapFromModel(Model);
@@ -468,7 +479,8 @@ namespace GenioMVC.ViewModels.Compo
 
 			validator.StringLength("ValComptype", Resources.Resources.COMPONENT_TYPE41163, ValComptype, 50);
 			validator.StringLength("ValCdatatyp", Resources.Resources.DATA_TYPE47159, ValCdatatyp, 50);
-			validator.StringLength("ValRelease", Resources.Resources.RELEASE62976, ValRelease, 6);
+			validator.StringLength("ValRelease", Resources.Resources.RELEASE62976, ValRelease, 50);
+			validator.StringLength("ValWeblink", Resources.Resources.STORYBOOK_LINK23554, ValWeblink, 100);
 
 
 			return validator.GetResult();
@@ -542,7 +554,7 @@ namespace GenioMVC.ViewModels.Compo
 
 			if (comptab_compccompclasDoLoad)
 			{
-				List<ColumnSort> sorts = [];
+				List<ColumnSort> sorts = new List<ColumnSort>();
 				ColumnSort requestedSort = GetRequestSort(TableCompcCompclas, "sTableCompcCompclas", "dTableCompcCompclas", qs, "compc");
 				if (requestedSort != null)
 					sorts.Add(requestedSort);
@@ -592,7 +604,7 @@ namespace GenioMVC.ViewModels.Compo
 
 				TableCompcCompclas.SetPagination(page, numberItems, listing.HasMore, listing.GetTotal, listing.TotalRecords);
 				TableCompcCompclas.Query = query;
-				TableCompcCompclas.Elements = listing.RowsForViewModel((r) => new GenioMVC.Models.Compc(m_userContext, r, true, _fieldsToSerialize_COMPTAB_COMPCCOMPCLAS));
+				TableCompcCompclas.Elements = listing.RowsForViewModel<GenioMVC.Models.Compc>((r) => new GenioMVC.Models.Compc(m_userContext, r, true, _fieldsToSerialize_COMPTAB_COMPCCOMPCLAS));
 
 				//created by [ MH ] at [ 14.04.2016 ] - Foi alterada a forma de retornar a key do novo registo inserido / editado no form de apoio do DBEdit.
 				//last update by [ MH ] at [ 10.05.2016 ] - Validação se key encontra-se no level atual, as chaves dos niveis anteriores devem ser ignorados.
@@ -712,9 +724,11 @@ namespace GenioMVC.ViewModels.Compo
 				"compo.wuse" => ViewModelConversion.ToString(modelValue),
 				"compo.wnuse" => ViewModelConversion.ToString(modelValue),
 				"compo.accessib" => ViewModelConversion.ToString(modelValue),
+				"compo.releaselogic" => ViewModelConversion.ToLogic(modelValue),
+				"compo.weblink" => ViewModelConversion.ToString(modelValue),
+				"compc.compclas" => ViewModelConversion.ToString(modelValue),
 				"compo.codcompo" => ViewModelConversion.ToString(modelValue),
 				"compc.codcompc" => ViewModelConversion.ToString(modelValue),
-				"compc.compclas" => ViewModelConversion.ToString(modelValue),
 				_ => modelValue
 			};
 		}

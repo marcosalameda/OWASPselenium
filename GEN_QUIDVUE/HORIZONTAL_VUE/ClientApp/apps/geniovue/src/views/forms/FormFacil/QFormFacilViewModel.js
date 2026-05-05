@@ -1,4 +1,4 @@
-﻿/* eslint-disable @typescript-eslint/no-unused-vars */
+﻿/* eslint-disable no-unused-vars */
 import { computed, reactive, watch } from 'vue'
 import _merge from 'lodash-es/merge'
 
@@ -11,7 +11,7 @@ import netAPI from '@quidgest/clientapp/network'
 import qApi from '@/api/genio/quidgestFunctions.js'
 import qFunctions from '@/api/genio/projectFunctions.js'
 import qProjArrays from '@/api/genio/projectArrays.js'
-/* eslint-enable @typescript-eslint/no-unused-vars */
+/* eslint-enable no-unused-vars */
 
 /**
  * Represents a ViewModel class.
@@ -25,11 +25,11 @@ export default class ViewModel extends FormViewModelBase
 	 * @param {object} options - The options for the ViewModel
 	 * @param {object} values - A ViewModel instance to copy values from
 	 */
-	// eslint-disable-next-line @typescript-eslint/no-unused-vars
+	// eslint-disable-next-line no-unused-vars
 	constructor(vueContext, options, values)
 	{
 		super(vueContext, options)
-		// eslint-disable-next-line @typescript-eslint/no-unused-vars
+		// eslint-disable-next-line no-unused-vars
 		const vm = this.vueContext
 
 		// The view model metadata
@@ -37,9 +37,8 @@ export default class ViewModel extends FormViewModelBase
 			name: 'FACIL',
 			area: 'FACIL',
 			actions: {
-				recalculateFormulas: 'RecalculateFormulas_Facil',
-				updateFilesTickets: 'UpdateFilesTicketsFacil',
-				setFile: 'SetFileFacil'
+				recalculateFormulas: 'RecalculateFormulas_FACIL',
+				updateFilesTickets: 'UpdateFilesTicketsFACIL'
 			}
 		})
 
@@ -51,7 +50,19 @@ export default class ViewModel extends FormViewModelBase
 			field: 'CODFACIL',
 			description: '',
 		}).cloneFrom(values?.ValCodfacil))
-		this.stopWatchers.push(watch(() => this.ValCodfacil.value, (newValue, oldValue) => this.onUpdate('facil.codfacil', this.ValCodfacil, newValue, oldValue)))
+		watch(() => this.ValCodfacil.value, (newValue, oldValue) => this.onUpdate('facil.codfacil', this.ValCodfacil, newValue, oldValue))
+
+		/** The hidden foreign keys. */
+		this.ValCodcntry = reactive(new modelFieldType.ForeignKey({
+			id: 'ValCodcntry',
+			originId: 'ValCodcntry',
+			area: 'FACIL',
+			field: 'CODCNTRY',
+			relatedArea: 'CNTRY',
+			isFixed: true,
+			description: computed(() => this.Resources.___COUNTRY10061),
+		}).cloneFrom(values?.ValCodcntry))
+		watch(() => this.ValCodcntry.value, (newValue, oldValue) => this.onUpdate('facil.codcntry', this.ValCodcntry, newValue, oldValue))
 
 		/** The used foreign keys. */
 		this.ValCodentit = reactive(new modelFieldType.ForeignKey({
@@ -62,7 +73,7 @@ export default class ViewModel extends FormViewModelBase
 			relatedArea: 'ENTIT',
 			description: '',
 		}).cloneFrom(values?.ValCodentit))
-		this.stopWatchers.push(watch(() => this.ValCodentit.value, (newValue, oldValue) => this.onUpdate('facil.codentit', this.ValCodentit, newValue, oldValue)))
+		watch(() => this.ValCodentit.value, (newValue, oldValue) => this.onUpdate('facil.codentit', this.ValCodentit, newValue, oldValue))
 
 		this.ValCodfacty = reactive(new modelFieldType.ForeignKey({
 			id: 'ValCodfacty',
@@ -73,7 +84,7 @@ export default class ViewModel extends FormViewModelBase
 			valueFormula: {
 				stopRecalcCondition() { return false },
 				execCondition() { return qApi.emptyG(this.ValCodfacty.value) },
-				// eslint-disable-next-line @typescript-eslint/no-unused-vars
+				// eslint-disable-next-line no-unused-vars
 				fnFormula(params)
 				{
 					// Formula: [GLOB->CODFACTY]
@@ -85,7 +96,7 @@ export default class ViewModel extends FormViewModelBase
 			},
 			description: computed(() => this.Resources.__FACILITY_TYPE27254),
 		}).cloneFrom(values?.ValCodfacty))
-		this.stopWatchers.push(watch(() => this.ValCodfacty.value, (newValue, oldValue) => this.onUpdate('facil.codfacty', this.ValCodfacty, newValue, oldValue)))
+		watch(() => this.ValCodfacty.value, (newValue, oldValue) => this.onUpdate('facil.codfacty', this.ValCodfacty, newValue, oldValue))
 
 		/** The remaining form fields. */
 		this.TableEntitName = reactive(new modelFieldType.String({
@@ -96,9 +107,8 @@ export default class ViewModel extends FormViewModelBase
 			field: 'NAME',
 			maxLength: 85,
 			description: computed(() => this.Resources.LEGAL_NAME42902),
-			ignoreFldSubmit: true,
 		}).cloneFrom(values?.TableEntitName))
-		this.stopWatchers.push(watch(() => this.TableEntitName.value, (newValue, oldValue) => this.onUpdate('entit.name', this.TableEntitName, newValue, oldValue)))
+		watch(() => this.TableEntitName.value, (newValue, oldValue) => this.onUpdate('entit.name', this.TableEntitName, newValue, oldValue))
 
 		this.ValIncorpor = reactive(new modelFieldType.Date({
 			id: 'ValIncorpor',
@@ -107,7 +117,7 @@ export default class ViewModel extends FormViewModelBase
 			field: 'INCORPOR',
 			description: computed(() => this.Resources.INCORPORATION10135),
 		}).cloneFrom(values?.ValIncorpor))
-		this.stopWatchers.push(watch(() => this.ValIncorpor.value, (newValue, oldValue) => this.onUpdate('facil.incorpor', this.ValIncorpor, newValue, oldValue)))
+		watch(() => this.ValIncorpor.value, (newValue, oldValue) => this.onUpdate('facil.incorpor', this.ValIncorpor, newValue, oldValue))
 
 		this.ValName = reactive(new modelFieldType.String({
 			id: 'ValName',
@@ -117,7 +127,7 @@ export default class ViewModel extends FormViewModelBase
 			maxLength: 85,
 			description: computed(() => this.Resources.FACILITY_NAME19514),
 		}).cloneFrom(values?.ValName))
-		this.stopWatchers.push(watch(() => this.ValName.value, (newValue, oldValue) => this.onUpdate('facil.name', this.ValName, newValue, oldValue)))
+		watch(() => this.ValName.value, (newValue, oldValue) => this.onUpdate('facil.name', this.ValName, newValue, oldValue))
 
 		this.ValFaciltyp = reactive(new modelFieldType.String({
 			id: 'ValFaciltyp',
@@ -125,10 +135,10 @@ export default class ViewModel extends FormViewModelBase
 			area: 'FACIL',
 			field: 'FACILTYP',
 			maxLength: 1,
-			arrayOptions: computed(() => new qProjArrays.QArrayFaciltyp(vm.$getResource).elements),
+			arrayOptions: computed(() => qProjArrays.QArrayFaciltyp.setResources(vm.$getResource).elements),
 			description: computed(() => this.Resources.FACILITY_TYPE44577),
 		}).cloneFrom(values?.ValFaciltyp))
-		this.stopWatchers.push(watch(() => this.ValFaciltyp.value, (newValue, oldValue) => this.onUpdate('facil.faciltyp', this.ValFaciltyp, newValue, oldValue)))
+		watch(() => this.ValFaciltyp.value, (newValue, oldValue) => this.onUpdate('facil.faciltyp', this.ValFaciltyp, newValue, oldValue))
 
 		this.TableFactyType = reactive(new modelFieldType.String({
 			type: 'Lookup',
@@ -138,9 +148,8 @@ export default class ViewModel extends FormViewModelBase
 			field: 'TYPE',
 			maxLength: 25,
 			description: computed(() => this.Resources.FACILITY_TYPE44577),
-			ignoreFldSubmit: true,
 		}).cloneFrom(values?.TableFactyType))
-		this.stopWatchers.push(watch(() => this.TableFactyType.value, (newValue, oldValue) => this.onUpdate('facty.type', this.TableFactyType, newValue, oldValue)))
+		watch(() => this.TableFactyType.value, (newValue, oldValue) => this.onUpdate('facty.type', this.TableFactyType, newValue, oldValue))
 
 		this.ValAddress = reactive(new modelFieldType.MultiLineString({
 			id: 'ValAddress',
@@ -149,7 +158,7 @@ export default class ViewModel extends FormViewModelBase
 			field: 'ADDRESS',
 			description: computed(() => this.Resources.ADDRESS04342),
 		}).cloneFrom(values?.ValAddress))
-		this.stopWatchers.push(watch(() => this.ValAddress.value, (newValue, oldValue) => this.onUpdate('facil.address', this.ValAddress, newValue, oldValue)))
+		watch(() => this.ValAddress.value, (newValue, oldValue) => this.onUpdate('facil.address', this.ValAddress, newValue, oldValue))
 
 		this.ValImage = reactive(new modelFieldType.Image({
 			id: 'ValImage',
@@ -158,7 +167,7 @@ export default class ViewModel extends FormViewModelBase
 			field: 'IMAGE',
 			description: computed(() => this.Resources.IMAGE65174),
 		}).cloneFrom(values?.ValImage))
-		this.stopWatchers.push(watch(() => this.ValImage.value, (newValue, oldValue) => this.onUpdate('facil.image', this.ValImage, newValue, oldValue)))
+		watch(() => this.ValImage.value, (newValue, oldValue) => this.onUpdate('facil.image', this.ValImage, newValue, oldValue))
 
 		this.ValGpsinput = reactive(new modelFieldType.String({
 			id: 'ValGpsinput',
@@ -166,10 +175,10 @@ export default class ViewModel extends FormViewModelBase
 			area: 'FACIL',
 			field: 'GPSINPUT',
 			maxLength: 1,
-			arrayOptions: computed(() => new qProjArrays.QArrayGpsinput(vm.$getResource).elements),
+			arrayOptions: computed(() => qProjArrays.QArrayGpsinput.setResources(vm.$getResource).elements),
 			description: computed(() => this.Resources.GPS_INPUT13625),
 		}).cloneFrom(values?.ValGpsinput))
-		this.stopWatchers.push(watch(() => this.ValGpsinput.value, (newValue, oldValue) => this.onUpdate('facil.gpsinput', this.ValGpsinput, newValue, oldValue)))
+		watch(() => this.ValGpsinput.value, (newValue, oldValue) => this.onUpdate('facil.gpsinput', this.ValGpsinput, newValue, oldValue))
 
 		this.ValLatitude = reactive(new modelFieldType.Number({
 			id: 'ValLatitude',
@@ -180,7 +189,7 @@ export default class ViewModel extends FormViewModelBase
 			decimalDigits: 6,
 			description: computed(() => this.Resources.LATITUDE11291),
 		}).cloneFrom(values?.ValLatitude))
-		this.stopWatchers.push(watch(() => this.ValLatitude.value, (newValue, oldValue) => this.onUpdate('facil.latitude', this.ValLatitude, newValue, oldValue)))
+		watch(() => this.ValLatitude.value, (newValue, oldValue) => this.onUpdate('facil.latitude', this.ValLatitude, newValue, oldValue))
 
 		this.ValLongitud = reactive(new modelFieldType.Number({
 			id: 'ValLongitud',
@@ -191,7 +200,7 @@ export default class ViewModel extends FormViewModelBase
 			decimalDigits: 6,
 			description: computed(() => this.Resources.LONGITUDE01015),
 		}).cloneFrom(values?.ValLongitud))
-		this.stopWatchers.push(watch(() => this.ValLongitud.value, (newValue, oldValue) => this.onUpdate('facil.longitud', this.ValLongitud, newValue, oldValue)))
+		watch(() => this.ValLongitud.value, (newValue, oldValue) => this.onUpdate('facil.longitud', this.ValLongitud, newValue, oldValue))
 
 		this.ValGeocoori = reactive(new modelFieldType.Coordinate({
 			id: 'ValGeocoori',
@@ -200,7 +209,7 @@ export default class ViewModel extends FormViewModelBase
 			field: 'GEOCOORI',
 			description: computed(() => this.Resources.GEOGRAPHICAL_COORDIN45869),
 		}).cloneFrom(values?.ValGeocoori))
-		this.stopWatchers.push(watch(() => this.ValGeocoori.value, (newValue, oldValue) => this.onUpdate('facil.geocoori', this.ValGeocoori, newValue, oldValue)))
+		watch(() => this.ValGeocoori.value, (newValue, oldValue) => this.onUpdate('facil.geocoori', this.ValGeocoori, newValue, oldValue))
 	}
 
 	/**

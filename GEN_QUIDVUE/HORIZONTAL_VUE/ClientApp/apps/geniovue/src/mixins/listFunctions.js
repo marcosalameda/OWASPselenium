@@ -15,7 +15,6 @@ import searchFilterData from '@/api/genio/searchFilterData.js'
 import { documentViewTypeMode, formModes, tableViewManagementModes } from '@quidgest/clientapp/constants/enums'
 import genericFunctions from '@quidgest/clientapp/utils/genericFunctions'
 import { geographicDisplay, geographicShapeDisplay } from '@quidgest/clientapp/utils/geography'
-import { deepUnwrap } from '@quidgest/clientapp/utils/deepUnwrap'
 
 import { useGlobalTablesDataStore } from '@/stores/globalTablesData.js'
 import { useGenericDataStore } from '@quidgest/clientapp/stores'
@@ -34,33 +33,33 @@ export function hydrateTableData(listControl, viewModel)
 	const globalTablesData = useGlobalTablesDataStore()
 	globalTablesData.loadFromViewModel(viewModel)
 
-	const newListRows = []
+	let newListRows = []
 
 	// Default search column
-	const defaultSearchColumn = getDefaultSearchColumn(listControl.columns, listControl.config.defaultSearchColumnName)
+	let defaultSearchColumn = getDefaultSearchColumn(listControl.columns, listControl.config.defaultSearchColumnName)
 	if (defaultSearchColumn)
 		listControl.config.defaultSearchColumnNameOriginal = defaultSearchColumn.name
 
 	if (listControl.config.viewManagement === tableViewManagementModes.persistOne ||
 		listControl.config.viewManagement === tableViewManagementModes.persistMany ||
-		!_isEmpty(viewModel.currentTableConfig))
+		!_isEmpty(viewModel.CurrentTableConfig))
 	{
 		// Process table configuration (saved view or current configuration)
-		if (!_isEmpty(viewModel.currentTableConfig))
-			applyTableConfiguration(listControl, viewModel.currentTableConfig, viewModel.filtersModel)
+		if (!_isEmpty(viewModel.CurrentTableConfig))
+			applyTableConfiguration(listControl, viewModel.CurrentTableConfig)
 
 		// List of users views (configurations)
-		if (!_isEmpty(viewModel.tableConfigNames))
-			listControl.config.tableConfigNames = viewModel.tableConfigNames
+		if (!_isEmpty(viewModel.UserTableConfigNames))
+			listControl.config.userTableConfigNames = viewModel.UserTableConfigNames
 		else
-			listControl.config.tableConfigNames = []
+			listControl.config.userTableConfigNames = []
 
 		// Set default table view configuration name
-		if (!_isEmpty(viewModel.defaultTableConfigName))
-			listControl.config.defaultTableConfigName = viewModel.defaultTableConfigName
+		if (!_isEmpty(viewModel.UserTableConfigNameDefault))
+			listControl.config.userTableConfigNameDefault = viewModel.UserTableConfigNameDefault
 	}
 
-	if (typeof viewModel.table !== 'undefined')
+	if (typeof viewModel.Table !== 'undefined')
 	{
 		// Row component properties
 		if (listControl.rowComponent === 'q-form-container' && listControl.formName !== '')
@@ -70,7 +69,7 @@ export function hydrateTableData(listControl, viewModel)
 		}
 
 		// Rows data
-		_forEach(viewModel.table.elements, (rowData, idx) => {
+		_forEach(viewModel.Table.Elements, (rowData, idx) => {
 			newListRows.push(reactive(hydrateTableRow(listControl, rowData, idx)))
 
 			// Multiform properties
@@ -87,19 +86,37 @@ export function hydrateTableData(listControl, viewModel)
 
 		listControl.rows = shallowReactive(newListRows)
 
+		// Get distinct values
+		if (viewModel.Table.Distincts !== undefined)
+		{
+			let distinctValues = {}
+
+			for (let column of listControl.columns ?? [])
+			{
+				if (viewModel.Table.Distincts[column.name])
+				{
+					column.distinctValues = {}
+					distinctValues = viewModel.Table.Distincts[column.name]
+
+					for (let dvIdx in distinctValues)
+						column.distinctValues[distinctValues[dvIdx].value] = distinctValues[dvIdx].value
+				}
+			}
+		}
+
 		// Pagination
-		const p = viewModel.table.pagination
-		if (p.hasTotal)
-			listControl.totalRows = p.totalRows
+		let p = viewModel.Table.Pagination
+		if (p.HasTotal)
+			listControl.totalRows = p.TotalRows
 		else
 			listControl.totalRows = listControl.rows.length
 
-		listControl.hasMorePages = p.hasMore
-		listControl.page = p.pageNumber
-		listControl.config.page = p.pageNumber
+		listControl.hasMorePages = p.HasMore
+		listControl.page = p.PageNumber
+		listControl.config.page = p.PageNumber
 
 		// Totalizers
-		listControl.columnTotalizers = viewModel.table.totalizers
+		listControl.columnTotalizers = viewModel.Table.Totalizers
 	}
 
 	// If table is a checklist
@@ -116,9 +133,6 @@ export function hydrateTableData(listControl, viewModel)
 		// New values
 		if (listControl.modelFieldOptionsRef)
 		{
-			// Set number of rows which is stored differently in checklists than in normal tables
-			listControl.totalRows = viewModel[listControl.modelFieldOptions].length
-
 			listControl.modelFieldOptionsRef.hydrate(viewModel[listControl.modelFieldOptions])
 
 			_forEach(listControl.modelFieldOptionsRef.value, (rowData, rowIndex) => {
@@ -147,80 +161,144 @@ export function hydrateTableData(listControl, viewModel)
 
 /**
  * Get table configuration from table data
- * @param {object} listControl The list control object
+ * @param {object} listConf The list configuration
  */
-export function getTableConfiguration(listControl)
+export function getTableConfiguration(listConf)
 {
 	const config = {}
 
-	if (!_isEmpty(listControl.config.userTableConfigName))
-		config.name = listControl.config.userTableConfigName
+	// BEGIN: Name
+	if (!_isEmpty(listConf.config.userTableConfigName))
+		config.name = listConf.config.userTableConfigName
+	// END: Name
 
 	// BEGIN: Column order and visibility
-	const columns = []
-
-	for (const column of listControl.columns ?? [])
+	if (!_isEmpty(listConf.columnsCustom))
 	{
-		columns.push({
-			name: column.name,
-			order: column.order,
-			visibility: column.isVisible ? 1 : 0,
-			exportability: column.export,
-			sortOrder: column.sortOrder,
-			sortAsc: column.sortAsc
-		})
-	}
+		const columnOrder = []
+		let column = {}
 
-	config.columnConfiguration = columns.toSorted((a, b) => a.order - b.order)
+		for (let idx in listConf.columnsCustom)
+		{
+			column = listConf.columnsCustom[idx]
+			columnOrder.push({
+				name: column.name,
+				order: column.order,
+				visibility: column.isVisible ? 1 : 0,
+				exportability: column.export ? 1 : 0
+			})
+		}
+
+		config.columnConfiguration = columnOrder
+	}
 	// END: Column order and visibility
 
-	config.filters = cloneDeep(deepUnwrap(listControl.filters))
-
-	// BEGIN: Group filters
-	for (const filter of listControl.groupFilters)
+	// BEGIN: Advanced filters
+	if (!_isEmpty(listConf.advancedFilters))
 	{
-		config.filters.push({
-			type: 'GROUP',
-			key: filter.id,
-			value: Array.isArray(filter.selected) ? filter.selected.join('') : filter.selected
-		})
+		const advancedFilters = cloneDeep(listConf.advancedFilters)
+		filtersToServerFormat(advancedFilters, listConf.columns)
+		config.advancedFilters = advancedFilters
 	}
-	// END: Group filters
+	// END: Advanced filters
+
+	// BEGIN: Column filters
+	if (!_isEmpty(listConf.columnFilters))
+	{
+		const columnFilters = cloneDeep(listConf.columnFilters)
+		filtersToServerFormat(columnFilters, listConf.columns)
+		config.columnFilters = columnFilters
+	}
+	// END: Column filters
+
+	// BEGIN: Search bar filters
+	if (!_isEmpty(listConf.searchBarFilters))
+	{
+		const searchBarFilters = cloneDeep(listConf.searchBarFilters)
+		filtersToServerFormat(searchBarFilters, listConf.columns)
+		config.searchBarFilters = searchBarFilters
+	}
+	// END: Search bar filters
+
+	// BEGIN: Static filters
+	if (!_isEmpty(listConf.groupFilters))
+	{
+		// Create hashtable of filters by id and value
+		const groupFilterValues = {}
+		for (let idx in listConf.groupFilters)
+		{
+			const groupFilter = listConf.groupFilters[idx]
+			groupFilterValues[groupFilter.id] = groupFilter.value?.toString()
+		}
+		// Store in configuration
+		config.staticFilters = groupFilterValues
+	}
+	// END: Static filters
 
 	// BEGIN: Active Filters
-	if (listControl.activeFilters)
+	if (listConf.activeFilters !== undefined && listConf.activeFilters.options !== undefined)
 	{
-		const selected = listControl.activeFilters.selected
-		config.filters.push({
-			type: 'ACTIVE',
-			date: (listControl.activeFilters.date.value ?? new Date()).toISOString(),
-			current: selected.includes('current'),
-			previous: selected.includes('previous'),
-			upcoming: selected.includes('upcoming')
-		})
+		const activeFilter = {}
+
+		// Get checked options
+		for (let activeKey in listConf.activeFilters.options)
+			activeFilter[activeKey] = listConf.activeFilters.options[activeKey].selected
+
+		// Get date
+		if (listConf.activeFilters.dateValue !== undefined && listConf.activeFilters.dateValue !== null
+			&& listConf.activeFilters.dateValue.value !== undefined && listConf.activeFilters.dateValue.value !== null)
+		{
+			// If date value is a date object convert to an ISO string
+			if (typeof listConf.activeFilters.dateValue.value.toISOString === 'function')
+				activeFilter.date = listConf.activeFilters.dateValue.value.toISOString()
+			// If date value is already a string
+			else
+				activeFilter.date = listConf.activeFilters.dateValue.value
+		}
+
+		config.activeFilter = activeFilter
 	}
 	// END: Active Filters
 
-	// The global filter values
-	config.globalFilters = listControl.relatedFilterValues
+	// BEGIN: Default search column
+	if (listConf.config.defaultSearchColumnName)
+		config.defaultSearchColumn = listConf.config.defaultSearchColumnName
+	// END: Default search column
 
-	// List of IDs that correspond to the selected rows
-	config.selectedRows = getSelectedRows(listControl)
+	// BEGIN: Initial sort
+	if (listConf.columnSorting.columnName && listConf.columnSorting.sortOrder)
+		config.columnOrderBy = listConf.columnSorting
+	// END: Initial sort
 
-	if (listControl.config.defaultSearchColumnName)
-		config.defaultSearchColumn = listControl.config.defaultSearchColumnName
+	// BEGIN: Column sizes
+	if (!_isEmpty(listConf.config.columnSizes))
+		config.columnSizes = listConf.config.columnSizes
+	// END: Column sizes
 
-	if (listControl.config.hasTextWrap !== undefined && listControl.config.hasTextWrap !== null)
-		config.lineBreak = listControl.config.hasTextWrap
+	// BEGIN: Line break
+	if (listConf.config.hasTextWrap !== undefined && listConf.config.hasTextWrap !== null)
+		config.lineBreak = listConf.config.hasTextWrap
+	// END: Line break
 
-	if (listControl.config.perPage !== undefined && listControl.config.perPage !== null)
-		config.rowsPerPage = listControl.config.perPage
+	// BEGIN: Rows per page
+	if (listConf.config.perPage !== undefined && listConf.config.perPage !== null)
+		config.rowsPerPage = listConf.config.perPage
+	// END: Rows per page
 
-	if (listControl.config.page !== undefined && listControl.config.page !== null)
-		config.page = listControl.config.page
+	// BEGIN: Page
+	if (listConf.config.page !== undefined && listConf.config.page !== null)
+		config.page = listConf.config.page
+	// END: Page
 
-	if (!_isEmpty(listControl.activeViewModeId))
-		config.activeViewMode = listControl.activeViewModeId
+	// BEGIN: Search
+	if (!_isEmpty(listConf.searchValue))
+		config.query = listConf.searchValue
+	// END: Search
+
+	// BEGIN: Selected view mode
+	if (!_isEmpty(listConf.activeViewModeId))
+		config.activeViewMode = listConf.activeViewModeId
+	// END: Selected view mode
 
 	return config
 }
@@ -229,9 +307,8 @@ export function getTableConfiguration(listControl)
  * Apply view configuration to table
  * @param {object} listControl The list control object
  * @param {object} viewCfg The view configuration object
- * @param {object} filtersModel The global filters view model
  */
-export function applyTableConfiguration(listControl, viewCfg, filtersModel)
+export function applyTableConfiguration(listControl, viewCfg)
 {
 	// Configuration name
 	listControl.config.userTableConfigName = viewCfg.name ?? ''
@@ -263,11 +340,9 @@ export function applyTableConfiguration(listControl, viewCfg, filtersModel)
 			{
 				// Get column configuration data and apply it
 				const customColumn = viewCfg.columnConfiguration[idx]
-				currentColumn.name = customColumn.name
-				currentColumn.order = customColumn.order
-				currentColumn.isVisible = !!customColumn.visibility
-				currentColumn.sortOrder = customColumn.sortOrder
-				currentColumn.sortAsc = customColumn.sortAsc
+				currentColumn.formField = customColumn.name
+				currentColumn.position = customColumn.order
+				currentColumn.isVisible = customColumn.visibility
 
 				// Add column at the corresponding index in the array (one less than the order value)
 				columnsOrdered[idx] = currentColumn
@@ -280,120 +355,163 @@ export function applyTableConfiguration(listControl, viewCfg, filtersModel)
 		// Set columns to columns configured by user and then add any columns that do not have the order set
 		// Remove any empty elements
 		listControl.columnsCustom = columnsOrdered.filter((col) => col !== undefined && col !== null).concat(columnsUnordered)
+		listControl.config.hasCustomColumns = true
 	}
 	else
 		listControl.columnsCustom = []
 
-	const filters = deepUnwrap(viewCfg.filters)
-
-	if (Array.isArray(filters))
+	// Advanced filters
+	if (!_isEmpty(viewCfg.advancedFilters))
 	{
-		const columnFilters = filters.filter((e) => e.type === 'COLUMN')
-		const groupFilters = filters.filter((e) => e.type === 'GROUP')
-		const activeFilter = filters.find((e) => e.type === 'ACTIVE')
+		const advancedFilters = cloneDeep(viewCfg.advancedFilters)
+		filtersToClientFormat(advancedFilters, listControl.columns)
+		listControl.advancedFilters = advancedFilters
+	}
+	else
+		listControl.advancedFilters = []
 
-		// Column filters
-		listControl.filters = cloneDeep(columnFilters)
+	// Column filters
+	if (!_isEmpty(viewCfg.columnFilters))
+	{
+		const columnFilters = cloneDeep(viewCfg.columnFilters)
+		filtersToClientFormat(columnFilters, listControl.columns)
+		listControl.columnFilters = columnFilters
+	}
+	else
+		listControl.columnFilters = {}
 
-		// Group filters
-		for (const filter of listControl.groupFilters)
+	// Search bar filters
+	listControl.searchBarFilters = viewCfg.searchBarFilters ?? {}
+
+	// Static filters
+	for (let idx in listControl.groupFilters)
+	{
+		// Get reference to filter
+		const groupFilter = listControl.groupFilters[idx]
+		// Get filter value from saved configuration if it exists or use the default value
+		let groupFilterValue = groupFilter.defaultValue
+		if (viewCfg?.staticFilters)
 		{
-			const storedFilter = groupFilters.find((e) => e.key === filter.id)
-
-			if (storedFilter)
-			{
-				filter.selected = filter.isMultiple
-					? [...storedFilter.value]
-					: storedFilter.value
-			}
-			else
-				filter.selected = cloneDeep(filter.default)
+			const viewCfgFilterValue = viewCfg?.staticFilters[groupFilter.id]
+			if (viewCfgFilterValue !== undefined && viewCfgFilterValue !== null)
+				groupFilterValue = viewCfgFilterValue
 		}
 
-		// Active filter
-		if (activeFilter)
+		// Set filter value to copy of this value
+		listControl.groupFilters[idx].value = groupFilterValue?.slice?.() ?? ''
+		// Set selected property for each filter option
+		for (let idx in groupFilter.filters)
 		{
-			const selected = []
-			if (activeFilter.current)
-				selected.push('current')
-			if (activeFilter.previous)
-				selected.push('previous')
-			if (activeFilter.upcoming)
-				selected.push('upcoming')
-			listControl.activeFilters.selected = selected
-
-			// Set date
-			listControl.activeFilters.date.value = new Date(activeFilter.date)
+			const filter = groupFilter.filters[idx]
+			filter.selected = groupFilter.value.indexOf(filter.key) > -1
 		}
 	}
 
-	// Global filters
-	if (!_isEmpty(filtersModel) && !_isEmpty(listControl.filtersModel))
+	// Active filter
+	if (!_isEmpty(viewCfg.activeFilter))
 	{
-		listControl.filtersModel.clearValues()
-		listControl.filtersModel.hydrate(filtersModel)
-		listControl.filtersModel.version++
+		// Set checkbox options
+		for (let key in listControl.activeFilters?.options)
+			listControl.activeFilters.options[key].selected = viewCfg.activeFilter[key]
+
+		// Set date
+		listControl.activeFilters.dateValue.value = viewCfg.activeFilter.date
 	}
 
 	// Default search column
 	listControl.config.defaultSearchColumnName = viewCfg.defaultSearchColumn ?? listControl.config.defaultSearchColumnNameOriginal
 
 	// Initial sort
-	if (!listControl.columns.some((c) => c.sortOrder > 0))
-		resetTableSorting(listControl)
+	if (viewCfg?.columnOrderBy?.columnName && viewCfg?.columnOrderBy?.sortOrder)
+		listControl.columnSorting = {
+			columnName: viewCfg.columnOrderBy.columnName,
+			sortOrder: viewCfg.columnOrderBy.sortOrder
+		}
+	else
+		listControl.columnSorting = listControl.config.defaultColumnSorting
+
+	// Column sizes
+	listControl.config.columnSizes = viewCfg.columnSizes
 
 	// Line break
-	listControl.config.hasTextWrap = viewCfg.lineBreak
+	listControl.config.hasTextWrap = viewCfg.lineBreak ?? false
 
 	// Rows per page
 	listControl.config.perPageSelected = viewCfg.rowsPerPage ?? listControl.config.perPageDefault
+
+	// Search
+	listControl.searchValue = viewCfg.query ?? ''
 
 	// View mode
 	listControl.activeViewModeId = viewCfg.activeViewMode ?? listControl.activeViewModeId
 }
 
 /**
- * Resets the sorting of the specified list.
- * @param {object} listControl The list control object
+ * convert table configuration to format for saving in the database
+ * @param {object} tableConfig The table configuration
  */
-export function resetTableSorting(listControl)
+export function convertTableConfigurationToDB(tableConfig)
 {
-	const defaultSorting = listControl.config.defaultColumnSorting
-	const sortColumn = listControl.columns.find((c) => c.name === defaultSorting.columnName)
+	let tableConfigSave = cloneDeep(tableConfig)
 
-	if (sortColumn)
-	{
-		sortColumn.sortOrder = 1
-		sortColumn.sortAsc = defaultSorting.sortOrder === 'asc'
-	}
+	// BEGIN: Remove properties that don't get saved
+
+	// Name
+	tableConfigSave.name = undefined
+
+	// Page
+	tableConfigSave.page = undefined
+
+	// Query
+	tableConfigSave.query = undefined
+
+	// SearchBar Filters
+	tableConfigSave.searchBarFilters = undefined
+
+	// END: Remove properties that don't get saved
+
+	// Serialize
+	return JSON.stringify(tableConfigSave)
 }
 
-class TableRow
+/**
+ * Update table configuration options.
+ * @param {object} configOptions Configuration options
+ * @param {object} viewManagement View management type/mode
+ * @param {object} confirmChanges Whether there are unsaved changes to confirm
+ * @param {object} readonly Whether in readonly mode
+ */
+export function updateConfigOptions(configOptions, viewManagement, confirmChanges, readonly)
 {
-	constructor(rownum, fields, pkField, btnPermission)
+	let viewSaveChanges = _find(configOptions, ['id', 'viewSaveChanges'])
+
+	if (viewManagement === tableViewManagementModes.persistMany)
 	{
-		this.Rownum = rownum
-		this.Fields = fields
-		this.pkField = pkField
-		this.btnPermission = btnPermission
-
-		// Reason for not being a normal getter: see in 'rowWithoutChildren'
-		Object.defineProperty(this, 'rowKey', {
-			get() { return !_isEmpty(this.pkField) ? this.Fields[this.pkField] : this.Rownum },
-			enumerable: true,
-			configurable: true
-		})
-
-		this.actionVisibility = {}
-		this.actionDisability = {}
+		if (viewSaveChanges)
+		{
+			if (confirmChanges)
+				viewSaveChanges.active = true
+			else
+				viewSaveChanges.active = false
+		}
+	}
+	else
+	{
+		if (viewSaveChanges)
+			viewSaveChanges.active = false
 	}
 
-	destroy()
+	// Account for readonly mode
+	if (toValue(readonly))
 	{
-		this.btnPermission = null
-		this.actionVisibility = null
-		this.actionDisability = null
-		this.Fields = null
+		// Deactivate options that are not available in readonly mode
+		for (let idx in configOptions)
+		{
+			const option = configOptions[idx]
+
+			if (option.inReadonly === false)
+				option.active = false
+		}
 	}
 }
 
@@ -407,7 +525,7 @@ class TableRow
 export function hydrateTableRow(listControl, rowData, rowIndex)
 {
 	// Deserialize serialized fields
-	for (const idx in listControl.columns)
+	for (let idx in listControl.columns)
 	{
 		const column = listControl.columns[idx]
 		if (column.isSerialized)
@@ -429,22 +547,18 @@ export function hydrateTableRow(listControl, rowData, rowIndex)
 	// Delete this property, so it won't be duplicated in every row.
 	delete rowData?.btnPermission
 
-	const pkColumn = toValue(listControl.config.pkColumn)
-	const row = reactive(
-		new TableRow(
-			rowIndex,
-			rowData,
-			pkColumn,
-			btnPermission
-		)
-	)
+	const row = reactive({
+		Rownum: rowIndex,
+		Fields: rowData,
+		pkField: listControl.config.pkColumn,
+		actionVisibility: {},
+		get rowKey() { return !_isEmpty(listControl.config.pkColumn) ? this.Fields[this.pkField] : this.Rownum },
+		btnPermission
+	})
 
-	// Custom actions visible / disabled status
+	// Custom actions visibility
 	_forEach(listControl.config.customActions, (action) => {
-		if (typeof action.checkIsVisible === 'function')
-			row.actionVisibility[action.id] = action.checkIsVisible(row)
-		if (typeof action.checkIsDisabled === 'function')
-			row.actionDisability[action.id] = action.checkIsDisabled(row)
+		row.actionVisibility[action.id] = action.checkIsVisible?.(row) ?? action.isVisible
 	})
 
 	// The fields of the other tables have a different field identifier. TODO: Use the _get on the Table component
@@ -460,7 +574,7 @@ export function hydrateTableRow(listControl, rowData, rowIndex)
  */
 export function hydrateTimelineData(timelineControl, viewModel)
 {
-	const rows = viewModel?.table?.elements
+	const rows = viewModel?.Menu?.Elements
 	if (!rows)
 		return
 
@@ -475,15 +589,15 @@ export function hydrateTimelineData(timelineControl, viewModel)
  */
 export function getColumnHierarchy(columns)
 {
-	const columnHierarchy = []
-	const columnGroups = {}
-	const extraColumns = []
+	let columnHierarchy = []
+	let columnGroups = {}
+	let extraColumns = []
 	let columnLevel = 0
 
 	// Group columns by table
-	for (const key in columns)
+	for (let key in columns)
 	{
-		const column = columns[key]
+		let column = columns[key]
 
 		// Add columns that are not data columns to separate object instead
 		if (_isEmpty(column.name) || _isEmpty(column.area) || _isEmpty(column.field))
@@ -507,23 +621,23 @@ export function getColumnHierarchy(columns)
 	}
 
 	// Add column groups by level to hierarchy
-	for (const key in columnGroups)
+	for (let key in columnGroups)
 	{
-		const columnGroup = columnGroups[key]
+		let columnGroup = columnGroups[key]
 
 		// Add column group with extra columns at the beginning
 		columnHierarchy[columnGroup.level] = extraColumns.concat(columnGroup.columns)
 	}
 
 	// Add tree action property to first data column of each group
-	for (const key in columnHierarchy)
+	for (let key in columnHierarchy)
 	{
-		const columnGroup = columnHierarchy[key]
+		let columnGroup = columnHierarchy[key]
 
 		// Add tree action property to first data column
-		for (const key in columnGroup)
+		for (let key in columnGroup)
 		{
-			const column = columnGroup[key]
+			let column = columnGroup[key]
 
 			if (isVisibleColumn(column) && !_isEmpty(column.name) && !_isEmpty(column.area) && !_isEmpty(column.field))
 			{
@@ -538,18 +652,16 @@ export function getColumnHierarchy(columns)
 
 /**
  * Get records per page options formatted for menu
- * @param {array} perPageOptionsArray
+ * @param perPageOptionsArray {number}
  */
 export function getPerPageOptions(perPageOptionsArray)
 {
-	const perPageOptions = []
+	let perPageOptions = []
 
-	for (const option of perPageOptionsArray)
+	for (let idx in perPageOptionsArray)
 	{
-		perPageOptions.push({
-			key: option,
-			value: option.toString()
-		})
+		const perPageOption = perPageOptionsArray[idx]
+		perPageOptions.push({ id: perPageOption, text: perPageOption.toString() })
 	}
 
 	return perPageOptions
@@ -686,25 +798,6 @@ class TreeRow
 		}))
 		this.hasChildren = !_isEmpty(this._originalChildren)
 	}
-
-	destroy()
-	{
-		for (const childRowIdx in this._parsedChildren) {
-			if (this._parsedChildren[childRowIdx] instanceof TreeRow) {
-				this._parsedChildren[childRowIdx].destroy()
-			}
-		}
-
-		this._fnRowModel = null
-		if (this._originalChildren instanceof Array)
-			this._originalChildren.length = 0
-		this._originalChildren = null
-		if (this._parsedChildren instanceof Array)
-			this._parsedChildren.length = 0
-		this._parsedChildren = null
-		this._fields = null
-		this.Fields = null
-	}
 }
 
 /**
@@ -728,7 +821,7 @@ export function hydrateTreeTableData(listControl, viewModel, rowKeyToScroll)
 	listControl.rows = reactive(_map(viewModel.Tree, (row) => new TreeRow(row, listControl.config.treeListDefinitions?.rowModel, null, { rowKeyToScroll: rowKeyToScroll, rownum: rownum++ })))
 }
 
-class CalendarEvent
+class fullCalendarEvent
 {
 	constructor()
 	{
@@ -744,7 +837,7 @@ class CalendarEvent
 	}
 }
 
-class CalendarResource
+class fullCalendarResource
 {
 	constructor()
 	{
@@ -757,7 +850,7 @@ class CalendarResource
 	}
 }
 
-class CalendarResourceChild
+class fullCalendarResourceChild
 {
 	constructor()
 	{
@@ -767,19 +860,20 @@ class CalendarResourceChild
 }
 
 /**
- * Hydrates the Calendar data.
+ * Hydrates the Full Calendar data.
  * @param {object} listControl The list control object
  * @param {object} viewModel The list view model (C#)
  */
-export function hydrateCalendarData(listControl, viewModel)
+export function hydrateFullCalendarData(listControl, viewModel)
 {
-	const events = [], resources = []
+	let events = [], resources = []
 
-	_forEach(viewModel.table.elements, (row) => {
-		const event = new CalendarEvent(),
-			resource = new CalendarResource(),
-			resourceChild = new CalendarResourceChild()
-		let dates = 0,
+	_forEach(viewModel.Table.Elements, (row) => {
+		let event = new fullCalendarEvent(),
+			resource = new fullCalendarResource(),
+			resourceChild = new fullCalendarResourceChild(),
+			hasChildren = false,
+			dates = 0,
 			texts = 0,
 			bools = 0
 
@@ -788,7 +882,7 @@ export function hydrateCalendarData(listControl, viewModel)
 		_forEach(listControl.columns, (column) => {
 			if (isVisibleColumn(column))
 			{
-				const columnValue = _get(row, column.name)
+				let columnValue = _get(row, column.name)
 				switch (column.dataType)
 				{
 					case 'Text':
@@ -864,13 +958,14 @@ export function hydrateCalendarData(listControl, viewModel)
 
 		events.push(event)
 
-		const resIndex = _findIndex(resources, { id: resource.id })
+		let resIndex = _findIndex(resources, { id: resource.id })
 		if (resIndex === -1)
 		{
-			resource.children.push(resourceChild)
+			if (hasChildren)
+				resource.children.push(resourceChild)
 			resources.push(resource)
 		}
-		else if (_findIndex(resources[resIndex].children, resourceChild) === -1)
+		else if (hasChildren && _findIndex(resources[resIndex].children, resourceChild) === -1)
 			resources[resIndex].children.push(resourceChild)
 	})
 
@@ -921,7 +1016,7 @@ export function getDefaultSearchColumn(columns, defaultSearchColumnName)
 	const searchableColumns = getSearchableColumns(columns)
 	if (searchableColumns.length === 0) return null
 
-	return searchableColumns.find((column) => column.name === defaultSearchColumnName) || searchableColumns[0]
+	return searchableColumns.find(column => column.name === defaultSearchColumnName) || searchableColumns[0]
 }
 
 /**
@@ -1000,8 +1095,8 @@ export function getRowByKeyPath(rows, dataInfo)
  */
 export function getRowKeyPath(rows, row)
 {
-	const rowKeyPath = [row?.rowKey]
-	const allRows = getRowsFlatArray(rows, 'children')
+	let rowKeyPath = [row?.rowKey]
+	let allRows = getRowsFlatArray(rows, 'children')
 	let currentRow = row
 
 	while (currentRow?.ParentRowKey && parseInt(currentRow.level) > 0)
@@ -1034,14 +1129,14 @@ export function getRowByMultiIndex(rows, multiIndex)
 	{
 		// Get index path as an array of integers from multi-index
 		indexPath = multiIndex?.split('_')
-		for (const idx in indexPath)
+		for (let idx in indexPath)
 			indexPath[idx] = parseInt(indexPath[idx])
 	}
 
 	let currentRow = null
 	let currentRows = rows
 	// Iterate rows at current level to find the index at the current level
-	for (const idx in indexPath)
+	for (let idx in indexPath)
 	{
 		// Get row at this level
 		currentRow = currentRows[indexPath[idx]]
@@ -1065,7 +1160,7 @@ export function getRowsFromKeyHash(rows, rowKeys)
 	const rtnRows = []
 	let row = {}
 
-	for (const idx in rows)
+	for (let idx in rows)
 	{
 		row = rows[idx]
 		if (rowKeys[row.rowKey] !== undefined)
@@ -1086,7 +1181,7 @@ export function getParentMultiIndex(multiIndex)
 	if (multiIndex === undefined || multiIndex === null)
 		return
 
-	const multiIndexArray = multiIndex.split('_')
+	let multiIndexArray = multiIndex.split('_')
 
 	// Remove last level index
 	multiIndexArray.pop()
@@ -1104,7 +1199,7 @@ export function getParentMultiIndex(multiIndex)
 export function setRowIndexProperty(listConf, index, propertyName, propertyValue)
 {
 	// Get row
-	const row = getRowByMultiIndex(listConf.rows, index)
+	let row = getRowByMultiIndex(listConf.rows, index)
 
 	// If row does not exist
 	if (!row)
@@ -1160,6 +1255,28 @@ export function setCellValue(row, column, value)
 }
 
 /**
+ * Set the value of a cell.
+ * @param table {Object}
+ * @param row {Object}
+ * @param column {Object}
+ * @param value {Object}
+ */
+export function setTableCellValue(table, row, column, value)
+{
+	// Current index of this row
+	var curIdx = table.rows.findIndex(getRownumIndex, row.Rownum)
+	// Check bounds
+	if (curIdx < 0 || curIdx >= table.rows.length)
+		return
+
+	// Get this row in table
+	var thisRow = table.rows[curIdx]
+
+	// Set cell value
+	_set(thisRow.Fields, column.name, value)
+}
+
+/**
  * Full column name
  * @param {object} column
  */
@@ -1210,40 +1327,84 @@ export function getTableColumnFromName(table, columnName)
 }
 
 /**
- * Recalculate values for all cells in a column to be in order.
- * @param rows {Array}
- * @param changedRow {Object}
- * @param orderColumn {Object}
+ * Get column sort ('asc', 'desc', null)
+ * @param column {Object} Column
+ * @param sorting {Object} Sort information
+ * @param fullText {Boolean} Whether to return the full word for the sort direction
+ * @returns {String, null}
  */
-export function reCalcCellOrder(rows, changedRow, orderColumn)
+export function getTableColumnSort(column, sorting, fullText = false)
 {
-	const newRows = deepUnwrap(rows)
-	const curIdx = newRows.findIndex((r) => r.rowKey === changedRow.rowKey)
-	const newChangedRow = newRows[curIdx]
+	if (!column || !sorting || column.name !== sorting.columnName)
+		return null
 
+	// If returning the full word
+	if (fullText)
+		return sorting.sortOrder === 'asc' ? 'ascending' : 'descending'
+
+	// Return column sort value (stored as an abbreviation 'asc' or 'desc')
+	return sorting.sortOrder
+}
+
+/**
+ * Recalculate values for all cell in a column to be in order.
+ * @param currentValue {Object}
+ * @returns boolean
+ */
+export function getRownumIndex(currentValue)
+{
+	return (parseInt(currentValue.Rownum) === parseInt(this))
+}
+
+/**
+ * Recalculate values for all cell in a column to be in order.
+ * @param table {Object}
+ * @param row {Object}
+ * @param column {Object}
+ */
+export function reCalcCellOrder(table, row, column)
+{
+	// Current index of this row
+	var curIdx = table.rows.findIndex((r) => r.rowKey === row.rowKey)
 	// Check bounds
-	if (curIdx < 0 || curIdx >= newRows.length)
+	if (curIdx < 0 || curIdx >= table.rows.length)
 		return
 
 	// New index of this row
-	let newIdx = getCellValue(newChangedRow, orderColumn) - 1
+	var newIdx = getCellValue(row, column) - 1
 	// Check bounds
 	if (newIdx < 0)
 		newIdx = 0
-	else if (newIdx >= newRows.length)
-		newIdx = newRows.length - 1
+	else if (newIdx >= table.rows.length)
+		newIdx = table.rows.length - 1
 
 	// Remove row from current location
-	newRows.splice(curIdx, 1)
+	table.rows.splice(curIdx, 1)
 	// Add row at new location
-	newRows.splice(newIdx, 0, newChangedRow)
+	table.rows.splice(newIdx, 0, row)
 
 	// Iterate rows and assign new values to the "order" column
-	let idx = 1
-	for (const row of newRows)
-		setCellValue(row, orderColumn, idx++)
+	var thisIdx = 1
+	for (let idx in table.rows)
+		setCellValue(table.rows[idx], column, thisIdx++)
 
-	return newRows
+	// Update key properties to update component keys to reload controls so they display the new values
+	for (let idx in table.rows)
+		table.rows[idx].key++
+}
+
+/**
+ * Call function defined to run when cell value changes.
+ * @param table {Object}
+ * @param row {Object}
+ * @param column {Object}
+ * @param options {Object}
+ */
+export function cellOnChange(table, row, column, options)
+{
+	if (column.dataOnChange === undefined)
+		return
+	column.dataOnChange(table, row, column, options)
 }
 
 /* BEGIN: Formatting field data to display */
@@ -1273,7 +1434,7 @@ export function numericDisplayCell(row, column, options)
 {
 	const value = getCellValue(row, column)
 	const fnGetDisplayValue = (val) => {
-		return genericFunctions.numericDisplay(val, column.numberFormat?.decimalSeparator, column.numberFormat?.groupSeparator, column.numberFormat?.negativeFormat, { minimumFractionDigits: column.decimalPlaces, maximumFractionDigits: column.decimalPlaces }, options)
+		return genericFunctions.numericDisplay(val, column.numberFormat?.decimalSeparator, column.numberFormat?.groupSeparator, { minimumFractionDigits: column.decimalPlaces, maximumFractionDigits: column.decimalPlaces }, options)
 	}
 	return genericFunctions.formatValueToDisplay(value, fnGetDisplayValue)
 }
@@ -1292,7 +1453,7 @@ export function currencyDisplayCell(row, column, options)
 		return numericDisplayCell(row, column, options)
 
 	const fnGetDisplayValue = (val) => {
-		return genericFunctions.currencyDisplay(val, column.numberFormat?.decimalSeparator, column.numberFormat?.groupSeparator, column.numberFormat?.negativeFormat, column.decimalPlaces, column.currency, options.lcid, 'narrowSymbol', options)
+		return genericFunctions.currencyDisplay(val, column.numberFormat?.decimalSeparator, column.numberFormat?.groupSeparator, column.decimalPlaces, column.currency, options.lcid, 'narrowSymbol', options)
 	}
 	return genericFunctions.formatValueToDisplay(value, fnGetDisplayValue)
 }
@@ -1307,7 +1468,7 @@ export function currencyDisplayCell(row, column, options)
 export function dateDisplayCell(row, column, options)
 {
 	const formats = column.dateFormats ?? {}
-	const dateTimeStr = getCellValue(row, column)
+	let dateTimeStr = getCellValue(row, column)
 
 	const fnGetDisplayValue = (val) => {
 		let dateTimeFormat
@@ -1402,7 +1563,7 @@ export function geographicDisplayCell(row, column)
 {
 	const value = getCellValue(row, column)
 	const fnGetDisplayValue = (val) => {
-		return geographicDisplay(val, column.numberFormat.decimalSeparator, column.numberFormat.groupSeparator, column.numberFormat.negativeFormat)
+		return geographicDisplay(val, column.numberFormat.decimalSeparator, column.numberFormat.groupSeparator)
 	}
 	return genericFunctions.formatValueToDisplay(value, fnGetDisplayValue)
 }
@@ -1491,7 +1652,7 @@ export function getCellValueDisplay(table, row, column, options)
  */
 export function textSearchCell(row, column, options)
 {
-	const value = getCellValue(row, column)
+	var value = getCellValue(row, column)
 	return genericFunctions.textDisplay(value, options)
 }
 
@@ -1504,7 +1665,7 @@ export function textSearchCell(row, column, options)
  */
 export function numericSearchCell(row, column, options)
 {
-	const value = getCellValue(row, column)
+	var value = getCellValue(row, column)
 	return genericFunctions.numericDisplay(value, options.numberFormat.decimalSeparator, options.numberFormat.groupSeparator, { minimumFractionDigits: column.decimalPlaces, maximumFractionDigits: column.decimalPlaces }, options)
 }
 
@@ -1517,7 +1678,7 @@ export function numericSearchCell(row, column, options)
  */
 export function currencySearchCell(row, column, options)
 {
-	const value = getCellValue(row, column)
+	var value = getCellValue(row, column)
 	return genericFunctions.numericDisplay(value, options.numberFormat.decimalSeparator, options.numberFormat.groupSeparator, { minimumFractionDigits: column.decimalPlaces, maximumFractionDigits: column.decimalPlaces }, options)
 }
 
@@ -1542,7 +1703,7 @@ export function dateSearchCell(row, column, options)
  */
 export function booleanSearchCell(row, column, options)
 {
-	const value = getCellValue(row, column)
+	var value = getCellValue(row, column)
 	return genericFunctions.booleanDisplay(value, options)
 }
 
@@ -1582,7 +1743,7 @@ export function imageSearch(value)
  */
 export function imageSearchCell(row, column, options)
 {
-	const value = getCellValue(row, column)
+	var value = getCellValue(row, column)
 	return imageSearch(value, options)
 }
 
@@ -1611,7 +1772,7 @@ export function documentSearch(value)
  */
 export function documentSearchCell(row, column, options)
 {
-	const value = getCellValue(row, column)
+	var value = getCellValue(row, column)
 	return documentSearch(value, options)
 }
 
@@ -1638,7 +1799,7 @@ export function geographicSearch(value, decimalSep, groupSep)
  */
 export function geographicSearchCell(row, column)
 {
-	const value = getCellValue(row, column)
+	var value = getCellValue(row, column)
 	return geographicSearch(value, column.numberFormat.decimalSeparator, column.numberFormat.groupSeparator)
 }
 
@@ -1713,7 +1874,9 @@ export function isVisibleColumn(column)
  */
 export function getSearchableColumns(columns)
 {
-	return columns?.filter(isSearchableColumn) ?? []
+	if (!columns)
+		return []
+	return columns.filter(isSearchableColumn)
 }
 
 /**
@@ -1723,152 +1886,96 @@ export function getSearchableColumns(columns)
  */
 export function getSortableColumns(columns)
 {
-	return columns?.filter(isSortableColumn) ?? []
+	if (!columns)
+		return []
+	return columns.filter(isSortableColumn)
 }
 
 /* BEGIN: Filter functions */
 
 /**
- * Checks if the specified column has a filter, even if inactive.
- * @param {Array} filters The table filters
- * @param {Object} column The table column
- * @returns True if the column is filtered, false otherwise.
- */
-export function columnIsFiltered(filters, column)
-{
-	return filters.some((f) => f.field === `${column.area}.${column.field}` || columnIsFiltered(f.subFilters, column))
-}
-
-/**
- * Checks if any of the filtered columns are hidden.
- * @param {Array} columns The table columns
- * @param {Array} columnRows The rows with the table columns data
- * @param {Array} filters The table filters
- * @returns A list with the hidden filtered columns.
- */
-export function getHiddenFilterColumns(columns, columnRows, filters)
-{
-	const hiddenFilterCols = []
-
-	for (const rowColumn of columnRows)
-	{
-		const column = columns.find((c) => rowColumn.value === c.name)
-		const columnWasVisible = isVisibleColumn(column) ? 1 : 0
-
-		if (rowColumn.Fields.visibility !== columnWasVisible && columnIsFiltered(filters, column))
-			hiddenFilterCols.push(column)
-	}
-
-	return hiddenFilterCols
-}
-
-/**
- * Removes the first condition from the specified filter.
- * @param {Object} filter The filter
- * @returns The filter without the first condition.
- */
-export function removeFirstFilterCondition(filter)
-{
-	if (filter.subFilters.length === 0)
-		return null
-
-	// The first sub filter is now the main filter
-	const newFilter = filter.subFilters[0]
-	newFilter.useOr = filter.useOr
-	newFilter.subFilters = filter.subFilters.slice(1)
-	return newFilter
-}
-
-/**
  * Create search filter
  * @param {string} name : Name of search filter
  * @param {boolean} active : State of search filter (active or inactive)
+ * @param {SearchFilterCondition[]} conditions : Array of conditions
+ */
+export function searchFilter(name, active, conditions)
+{
+	if (_isEmpty(conditions))
+		conditions = []
+
+	return {
+		name: name,
+		active: active,
+		conditions: conditions
+	}
+}
+
+/**
+ * Create search filter condition
+ * @param {string} name : Name of condition
+ * @param {bool} active : Active/inactive state
  * @param {string} field : Full name of field (TABLE.COLUMN)
  * @param {string} operator : Operator code (as in operators object)
  * @param {string[]} values : Array of values
  */
-export function searchFilter(name, active, field, operator, values = [])
+export function searchFilterCondition(name, active, field, operator, values)
 {
+	if (_isEmpty(values))
+		values = []
+
 	return {
-		type: 'COLUMN',
 		name: name,
 		active: active,
 		field: field,
 		operator: operator,
-		values: values,
-		subFilters: []
+		values: values
 	}
 }
 
 /**
- * Gets a list of the conditions applied to the specified filter
- * @param {Object} filterOperators
- * @param {Object} filter
- * @param {Array} searchableColumns
- * @param {string} allFieldsText
- * @returns {Array} A list of conditions
+ * Add condition to search filter at end of condition array
+ * @param {object} searchFilter : Search filter
+ * @param {SearchFilterCondition} condition : Conditions
  */
-function getFilterConditions(filterOperators, filter, searchableColumns, allFieldsText)
+export function searchFilterAppendCondition(searchFilter, condition)
 {
-	// Filter name defined
-	if (filter.name.length > 0)
-		return [filter.name]
+	searchFilter.conditions.push(condition)
+}
 
-	const column = getColumnFromTableColumnName(searchableColumns, filter.field)
-	// If there's no column defined, it's going to search all columns
-	if (!column)
-	{
-		const operator = filterOperators.text.CON
-		return [`${allFieldsText} ${operator.title} "${filter.values[0]}"`]
-	}
+/**
+ * Add condition to search filter
+ * @param {object} searchFilter : Search filter
+ * @param {number} index : Index
+ * @param {SearchFilterCondition} condition : Conditions
+ */
+export function searchFilterAddCondition(searchFilter, index, condition)
+{
+	if (index <= searchFilter.conditions.length)
+		searchFilter.conditions.splice(index, 0, condition)
+}
 
-	const operators = filterOperators[column.searchFieldType],
-		operator = operators[filter.operator],
-		conditionNames = []
+/**
+ * Set condition in search filter
+ * @param {object} searchFilter : Search filter
+ * @param {number} index : Index
+ * @param {SearchFilterCondition} condition : Conditions
+ */
+export function searchFilterSetCondition(searchFilter, index, condition)
+{
+	if (index <= searchFilter.conditions.length)
+		searchFilter.conditions.splice(index, 1, condition)
+}
 
-	conditionNames.push(`${column.label} ${operator.title}`)
-
-	if (operator.valueCount > 0)
-	{
-		// Format values
-		let conditionValues = []
-		// Format dates
-		if (column.searchFieldType === 'date')
-		{
-			const genericDataStore = useGenericDataStore()
-			const dateFormat = genericDataStore.dateFormat[column.dateTimeType]
-
-			for (const value of filter.values)
-				conditionValues.push(genericFunctions.dateDisplay(value, dateFormat, column.dateTimeType, false))
-		}
-		else if (column.searchFieldType === 'enum')
-		{
-			// If using array of values in first value (IN operation)
-			const values = Array.isArray(filter.values[0])
-				? filter.values[0]
-				: filter.values
-			conditionValues = deepUnwrap(values.map((value) => column.array?.find((e) => e.key === value)?.value))
-		}
-		else if (column.searchFieldType === 'num')
-		{
-			const groupSeparator = column.numberFormat.groupSeparator
-			const decimalSeparator = column.numberFormat.decimalSeparator
-
-			for (const value of filter.values)
-				conditionValues.push(genericFunctions.numericDisplay(value, decimalSeparator, groupSeparator))
-		}
-		// No formatting needed
-		else
-			conditionValues = filter.values
-
-		conditionNames[0] += ` "${conditionValues.join('", "')}"`
-	}
-
-	// If there are sub filters, add their conditions to the list as well.
-	for (const subFilter of filter.subFilters)
-		conditionNames.push(...getFilterConditions(filterOperators, subFilter, searchableColumns))
-
-	return conditionNames
+/**
+ * Remove condition in search filter
+ * @param {object} searchFilter : Search filter
+ * @param {number} index : Index
+ */
+export function searchFilterRemoveCondition(searchFilter, index)
+{
+	if (index <= searchFilter.conditions.length)
+		searchFilter.conditions.splice(index, 1)
 }
 
 /**
@@ -1876,13 +1983,92 @@ function getFilterConditions(filterOperators, filter, searchableColumns, allFiel
  * @param {Object} filterOperators
  * @param {Object} filter
  * @param {Array} searchableColumns
- * @param {string} separator
- * @param {string} allFieldsText
- * @returns {string}
+ * @param {string resource ID} orText
+ * @returns {String}
  */
-export function getFilterName(filterOperators, filter, searchableColumns, separator, allFieldsText)
+export function getFilterName(filterOperators, filter, searchableColumns, orText)
 {
-	return getFilterConditions(filterOperators, filter, searchableColumns, allFieldsText).join(` ${separator} `)
+	// Filter name defined
+	if (filter.name.length > 0)
+		return filter.name
+
+	// Filter name not defined
+	let conditionNames = [],
+		condition = {},
+		column = {},
+		operator = {}
+
+	for (let conditionIdx in filter.conditions)
+	{
+		condition = filter.conditions[conditionIdx]
+		column = getFilterColumnFromName(filter, conditionIdx, searchableColumns)
+
+		// Skip invalid conditions
+		if (column === undefined || column === null)
+			continue
+
+		operator = _get(filterOperators, `${column.searchFieldType}.${condition.operator}`, { Title: 'Unknown', ValueCount: 0 })
+		conditionNames[conditionIdx] = `${column.label} ${operator.Title}`
+
+		if (operator.ValueCount > 0)
+		{
+			// Format values
+			let conditionValues = []
+			// Format dates
+			if (column.searchFieldType === 'date')
+			{
+				const genericDataStore = useGenericDataStore()
+				const dateFormat = genericDataStore.dateFormat[column.dateTimeType]
+
+				for (let idx in condition.values)
+					conditionValues[idx] = genericFunctions.dateDisplay(condition.values[idx], dateFormat, column.dateTimeType, false)
+			}
+			else if (column.searchFieldType === 'enum')
+			{
+				// Fix for enums searched with search bar (would show up as 'X is ""' without this)
+				if (condition.values.length === 1 && typeof condition.values[0] === 'string')
+					conditionValues = condition.values.map((value) => value)
+				else
+					conditionValues = condition.values.map((value) => value?.value)
+			}
+			// No formatting needed
+			else
+				conditionValues = condition.values
+
+			// If using array of values in first value (IN operation)
+			if (Array.isArray(condition.values[0]))
+				conditionNames[conditionIdx] += ` "${condition.values[0].join('", "')}"`
+			// Normal case
+			else
+				conditionNames[conditionIdx] += ` "${conditionValues.join('", "')}"`
+		}
+	}
+
+	return conditionNames.join(` ${orText} `)
+}
+
+/**
+ * Get column of condition by index
+ * @param {Object} filter
+ * @param {number} conditionIdx : index
+ * @param {Array} searchableColumns
+ * @returns {Object}
+ */
+export function getFilterColumnFromName(filter, conditionIdx, searchableColumns)
+{
+	if (filter.conditions.length < 1)
+		return null
+	return getColumnFromTableColumnName(searchableColumns, filter.conditions[conditionIdx].field)
+}
+
+/**
+ * Isolates the columns with totalizers enabled from the list configuration.
+ * @param {Object} listConf : The list configuration.
+ * @returns {Array} The array of columns with the totalizer enabled (array of identifiers of type 'table.field').
+ */
+export function getColumnTotalizers(listConf)
+{
+	return listConf.columns?.filter(col => col.totalizer).map(col => genericFunctions.formatColumnIdentifier(col.area, col.field))
 }
 
 /**
@@ -1892,9 +2078,9 @@ export function getFilterName(filterOperators, filter, searchableColumns, separa
  */
 export function getSelectedRows(listConf)
 {
-	return listConf.config?.showRowsSelectedTotalizer && listConf.allSelectedRows === 'false'
-		? Object.keys(listConf.rowsSelected)
-		: []
+	if (listConf.config?.showRowsSelectedTotalizer && listConf.allSelectedRows === 'false')
+		return Object.keys(listConf.rowsSelected)
+	return []
 }
 
 /**
@@ -1918,7 +2104,6 @@ export function getColumnTotalValueDisplay(column, value)
 				value,
 				column.numberFormat.decimalSeparator,
 				column.numberFormat.groupSeparator,
-				column.numberFormat.negativeFormat,
 				column.decimalPlaces,
 				column.currency,
 				'en-US', // Hardcoded to show the currency symbol previous to the value
@@ -1943,170 +2128,342 @@ export function getColumnTotalValueDisplay(column, value)
 }
 
 /**
+ * Check if a filter condition is valid
+ * @param {Object} filter
+ * @param {number} conditionIdx : index
+ * @param {number} searchableColumns
+ * @returns {Boolean}
+ */
+export function isValidFilterCondition(filter, conditionIdx, searchableColumns)
+{
+	let condition = filter.conditions[conditionIdx]
+
+	// Check if the field used in the column is searchable / visible
+	return searchableColumns.some((col) => col.area.toUpperCase() + '.' + col.field.toUpperCase() === condition.field.toUpperCase())
+}
+
+/**
+ * Check if a filter is valid
+ * @param {Object} filter
+ * @param {number} searchableColumns
+ * @returns {Boolean}
+ */
+export function isValidFilter(filter, searchableColumns)
+{
+	// Check if any of the conditions are valid
+	for (let idx = 0; idx < filter?.conditions?.length; idx++)
+	{
+		if (isValidFilterCondition(filter, idx, searchableColumns))
+			return true
+	}
+
+	return false
+}
+
+/**
+ * Get the corresponding index of this condition in an array that only has valid conditions
+ * @param {Object} filter
+ * @param {number} conditionIdx : index
+ * @param {number} searchableColumns
+ * @returns {Boolean}
+ */
+export function getValidFilterConditionRelativeIndex(filter, conditionIdx, searchableColumns)
+{
+	let validConditionIndex = -1
+	let currentConditionIsValid = false
+
+	// Check the conditions up to this index
+	for (let idx = 0; idx <= conditionIdx; idx++)
+	{
+		currentConditionIsValid = isValidFilterCondition(filter, idx, searchableColumns)
+		if (currentConditionIsValid)
+			validConditionIndex++
+	}
+
+	if (!currentConditionIsValid)
+		return -1
+
+	return validConditionIndex
+}
+
+/**
+ * Get the number of valid conditions in this filter
+ * @param {Object} filter
+ * @param {number} searchableColumns
+ * @returns {Boolean}
+ */
+export function getValidFilterConditionCount(filter, searchableColumns)
+{
+	if (isNaN(filter?.conditions?.length))
+		return 0
+
+	let validConditionCount = 0
+
+	// Check the conditions up to this index
+	for (let idx = 0; idx < filter.conditions.length; idx++)
+	{
+		if (isValidFilterCondition(filter, idx, searchableColumns))
+			validConditionCount++
+	}
+
+	return validConditionCount
+}
+
+/**
  * Get operators for condition by index
  * @param {Object} filterOperators
  * @param {Object} filter
+ * @param {number} conditionIdx : index
  * @returns {Object}
  */
-export function getFilterOperators(filterOperators, filter, searchableColumns)
+export function getFilterOperators(filterOperators, filter, conditionIdx, searchableColumns)
 {
-	return filterOperators[getColumnFromTableColumnName(searchableColumns, filter.field)?.searchFieldType]
+	if (filter.conditions.length < 1)
+		return []
+	return filterOperators[getFilterColumnFromName(filter, conditionIdx, searchableColumns)?.searchFieldType]
 }
 
 /**
  * Get number of values for condition by index
  * @param {Object} filterOperators
  * @param {Object} filter
+ * @param {number} conditionIdx : index
  * @param {Array} searchableColumns
  * @returns {Object}
  */
-export function getFilterValueCount(filterOperators, filter, searchableColumns)
+export function getFilterValueCount(filterOperators, filter, conditionIdx, searchableColumns)
 {
 	if (_isEmpty(filter))
 		return 0
-	if (filter.operator.length < 1)
+	if (filter.conditions === undefined || filter.conditions === null)
 		return 0
-
-	const operators = getFilterOperators(filterOperators, filter, searchableColumns)
-	return operators?.[filter.operator]?.valueCount ?? 0
+	if (filter.conditions.length < 1)
+		return 0
+	if (filter.conditions[conditionIdx].operator.length < 1)
+		return 0
+	if (getFilterOperators(filterOperators, filter, conditionIdx, searchableColumns) === undefined
+		|| getFilterOperators(filterOperators, filter, conditionIdx, searchableColumns)[filter.conditions[conditionIdx].operator] === undefined)
+		return 0
+	return getFilterOperators(filterOperators, filter, conditionIdx, searchableColumns)[filter.conditions[conditionIdx].operator].ValueCount
 }
 
 /**
  * Get input component for condition by index
  * @param {Object} filterOperators
  * @param {Object} filter
- * @param {array} searchableColumns
+ * @param {number} conditionIdx : index
  * @returns {string}
  */
-export function getFilterInputComponent(filterOperators, filter, searchableColumns)
+export function getFilterInputComponent(filterOperators, filter, conditionIdx, searchableColumns)
 {
-	const column = getColumnFromTableColumnName(searchableColumns, filter.field)
-	const operator = getFilterOperators(filterOperators, filter, searchableColumns)[filter.operator]
-
-	return operator.inputComponent !== undefined
-		? operator.inputComponent
-		: searchFilterData.inputComponents[column.searchFieldType]
+	var column = getFilterColumnFromName(filter, conditionIdx, searchableColumns)
+	var operator = getFilterOperators(filterOperators, filter, conditionIdx, searchableColumns)[filter.conditions[conditionIdx].operator]
+	if (column.distinctValues !== undefined && column.distinctValues !== null)
+	{
+		if (Object.keys(column.distinctValues).length > 0)
+			return 'q-edit-enumeration'
+	}
+	else if (operator.inputComponent !== undefined)
+		return operator.inputComponent
+	return searchFilterData.inputComponents[column.searchFieldType]
 }
 
 /**
  * Get placeholder for condition input by index
  * @param {Object} filterOperators
  * @param {Object} filter
- * @param {array} searchableColumns
+ * @param {number} conditionIdx : index
  * @returns {string}
  */
-export function getFilterPlaceholder(filterOperators, filter, searchableColumns)
+export function getFilterPlaceholder(filterOperators, filter, conditionIdx, searchableColumns)
 {
-	const operator = getFilterOperators(filterOperators, filter, searchableColumns)[filter.operator]
+	var operator = getFilterOperators(filterOperators, filter, conditionIdx, searchableColumns)[filter.conditions[conditionIdx].operator]
 	if (operator === undefined || operator === null)
 		return ''
-	return operator.placeholder
+	return operator.Placeholder
 }
 
 /**
  * Select default operator for condition by index
  * @param {Object} filterOperators
  * @param {Object} filter
- * @param {array} searchableColumns
+ * @param {number} conditionIdx : index
  */
-export function setFilterDefaultOperator(filterOperators, filter, searchableColumns)
+export function setFilterDefaultOperator(filterOperators, filter, conditionIdx, searchableColumns)
 {
-	const column = getColumnFromTableColumnName(searchableColumns, filter.field)
+	const column = getFilterColumnFromName(filter, conditionIdx, searchableColumns)
 	if (_isEmpty(column))
 		return
 
-	filter.operator = searchFilterData.searchBarOperator(column.searchFieldType, '')
-	setFilterDefaultValues(filterOperators, filter, searchableColumns)
+	filter.conditions[conditionIdx].operator = searchFilterData.searchBarOperator(column.searchFieldType, '')
+	setFilterDefaultValues(filterOperators, filter, conditionIdx, searchableColumns)
 }
 
 /**
  * Set default values for condition by index
  * @param {Object} filterOperators
  * @param {Object} filter
- * @param {array} searchableColumns
+ * @param {number} conditionIdx : index
  */
-export function setFilterDefaultValues(filterOperators, filter, searchableColumns)
+export function setFilterDefaultValues(filterOperators, filter, conditionIdx, searchableColumns)
 {
-	const operators = getFilterOperators(filterOperators, filter, searchableColumns)
+	const operators = getFilterOperators(filterOperators, filter, conditionIdx, searchableColumns)
 	if (_isEmpty(operators) || operators.length < 1)
 		return
 
-	const operator = operators[filter.operator]
-	const valueCount = getFilterValueCount(filterOperators, filter, searchableColumns)
+	const operator = operators[filter.conditions[conditionIdx].operator]
+	const valueCount = getFilterValueCount(filterOperators, filter, conditionIdx, searchableColumns)
 
-	filter.values = []
-	for (let i = 0; i < valueCount; i++)
+	filter.conditions[conditionIdx].values = []
+	for (let valueIdx = 0; valueIdx < valueCount; valueIdx++)
 	{
-		if (typeof operator.defaultValue === 'undefined')
-		{
-			const column = getColumnFromTableColumnName(searchableColumns, filter.field)
-			filter.values[i] = searchFilterData.defaultValue(column)
-		}
+		if (operator.defaultValue !== undefined)
+			filter.conditions[conditionIdx].values[valueIdx] = cloneDeep(operator.defaultValue)
 		else
-			filter.values[i] = deepUnwrap(operator.defaultValue)
+		{
+			const column = getColumnFromTableColumnName(searchableColumns, filter.conditions[conditionIdx].field)
+			filter.conditions[conditionIdx].values[valueIdx] = searchFilterData.defaultValue(column)
+		}
 	}
 }
 
 /**
  * Set value of condition by index
  * @param {object} filter
+ * @param {number} conditionIdx : index
  * @param {number} valueIdx : index
  * @param {object} value : value
  */
-export function setFilterConditionValue(filter, valueIdx, value)
+export function setFilterConditionValue(filter, conditionIdx, valueIdx, value)
 {
-	filter.values[valueIdx] = value
+	filter.conditions[conditionIdx].values[valueIdx] = value
+}
+
+/**
+ * Transform filters into format for server-side
+ * @param {object} filterCollection : Search filter array / hashtable
+ * @param {array} searchableColumns : columns
+ */
+export function filtersToServerFormat(filterCollection, searchableColumns)
+{
+	// Iterate filter collection
+	for (const fcIdx in filterCollection)
+	{
+		const filter = filterCollection[fcIdx]
+
+		// Iterate filter conditions
+		for (let conIdx in filter.conditions)
+		{
+			const filterCondition = filter.conditions[conIdx]
+			const column = getFilterColumnFromName(filter, conIdx, searchableColumns)
+
+			// If condition's first value is an array, replace condition's Values array with first value array
+			if (column?.searchFieldType === 'enum')
+			{
+				if (filterCondition.operator === 'IN' && Array.isArray(filterCondition.values[0]))
+					filterCondition.values = filterCondition.values[0]
+				else
+				{
+					// Fix for enums searched with search bar (would show up as 'X is ""' without this)
+					if (filterCondition.values.length === 1 && typeof filterCondition.values[0] === 'string')
+						filterCondition.values = filterCondition.values.map((value) => value)
+					else
+						filterCondition.values = filterCondition.values.map((value) => value?.value)
+				}
+			}
+
+			// Make all values strings
+			filterCondition.values = filterCondition.values.map((value) => value?.toString())
+		}
+	}
+}
+
+/**
+ * Transform filters into format for client-side
+ * @param {object} filterCollection : Search filter array / hashtable
+ * @param {array} searchableColumns : columns
+ */
+export function filtersToClientFormat(filterCollection, searchableColumns)
+{
+	// Iterate filter collection
+	for (let fcIdx in filterCollection)
+	{
+		const filter = filterCollection[fcIdx]
+
+		// Iterate filter conditions
+		for (let conIdx in filter.conditions)
+		{
+			const filterCondition = filter.conditions[conIdx]
+			const column = getFilterColumnFromName(filter, conIdx, searchableColumns)
+
+			// If condition's operator is IN, replace first value with the condition's Values array
+			if (column?.searchFieldType === 'enum')
+			{
+				if (filterCondition.operator === 'IN' && !Array.isArray(filterCondition.values[0]))
+					filterCondition.values = [filterCondition.values]
+				else
+				{
+					for (let valIdx in filterCondition.values)
+					{
+						const value = filterCondition.values[valIdx]
+						const enumValue = _find(column.array, (elem) => unref(elem.value) === value)
+
+						if (enumValue !== undefined && enumValue !== null)
+							filterCondition.values[valIdx] = enumValue
+					}
+				}
+			}
+		}
+	}
 }
 
 /**
  * Validate filter and return errors
- * @param {object} filter - Search filter
- * @param {object} columns - Table columns
- * @param {number} valueCount - The expected value count
+ * @param {object} filter : Search filter
+ * @param {object} columns : Table columns
  * @returns {array} states
  */
-export function filterValidate(filter, columns, valueCount)
+export function filterValidate(filter, columns)
 {
-	const column = columns.find((col) => `${col.area}.${col.field}` === filter.field),
-		conditionStates = [],
+	let conditionStates = [],
+		valueStates = [],
+		conditionState = '',
+		valueState = ''
+
+	for (let idx in filter.conditions)
+	{
+		let condition = filter.conditions[idx]
+		let column = columns.find((col) => `${col.area}.${col.field}` === condition.field)
+		conditionState = 'VALID'
 		valueStates = []
 
-	if (!column)
-		return conditionStates
-
-	let conditionState = filter.operator.length > 0 ? 'VALID' : 'INVALID'
-
-	for (const value of filter.values)
-	{
-		const strValue = value?.toString() ?? ''
-		let valueState = 'VALID'
-
-		if (_isEmpty(strValue) ||
-			// Enumerated fields with no checkbox selected
-			(filter.operator === 'IN' && filter.values[0]?.length === 0))
+		for (let valueIdx in condition.values)
 		{
-			valueState = 'INVALID'
-			conditionState = 'INVALID'
+			let value = condition.values[valueIdx]
+			let strValue = value?.toString() ?? ''
+			valueState = 'VALID'
+
+			if (_isEmpty(strValue) ||
+				/* Enumerated fields with no checkbox selected */
+				(condition.operator === 'IN' && condition.values[0]?.length === 0))
+			{
+				valueState = 'EMPTY'
+				conditionState = 'INVALID'
+			}
+
+			valueStates.push(valueState)
 		}
 
-		valueStates.push(valueState)
+		conditionStates.push({
+			Table: column.area,
+			Field: column.field,
+			Name: column.name,
+			Label: column.label,
+			Type: column.dataType,
+			State: conditionState,
+			ValueStates: valueStates
+		})
 	}
-
-	if (valueStates.length < valueCount)
-	{
-		valueStates.push('INVALID')
-		conditionState = 'INVALID'
-	}
-
-	conditionStates.push({
-		table: column.area,
-		field: column.field,
-		name: column.name,
-		label: column.label,
-		type: column.dataType,
-		state: conditionState,
-		valueStates
-	})
 
 	return conditionStates
 }
@@ -2122,8 +2479,11 @@ export function getSearchableColumnOptions(columns)
 {
 	const options = []
 
-	for (const column of columns)
-		options.push({ key: columnFullName(column), value: column.label })
+	for (const idx in columns)
+	{
+		const column = columns[idx]
+		options.push({key: columnFullName(column), value: column.label})
+	}
 
 	return options
 }
@@ -2131,19 +2491,20 @@ export function getSearchableColumnOptions(columns)
 /**
  * Get filter operators as options for dropdown
  * @param filter {Object}
+ * @param conditionIdx {Array}
  * @param operators {Number}
  * @param columns {Array}
  * @returns Array
  */
-export function getFilterOperatorOptions(filter, operators, columns)
+export function getFilterOperatorOptions(filter, conditionIdx, operators, columns)
 {
 	const options = []
-	const columnOperators = getFilterOperators(operators, filter, columns)
+	const columnOperators = getFilterOperators(operators, filter, conditionIdx, columns)
 
-	for (const id in columnOperators)
+	for (const idx in columnOperators)
 	{
-		const operator = columnOperators[id]
-		options.push({ key: operator.key, value: unref(operator.title), icon: operator.icon })
+		const operator = columnOperators[idx]
+		options.push({key: operator.key, value: unref(operator.Title), icon: operator.icon})
 	}
 
 	return options
@@ -2256,7 +2617,7 @@ export function hasDataAction(column)
  */
 export function rowWithoutChildren(row)
 {
-	const newRow = { ...row }
+	var newRow = { ...row }
 	delete newRow.children
 	return cloneDeep(newRow)
 }
@@ -2284,13 +2645,13 @@ export function initTableEvents(listControl)
 
 		// Reload the list when it becomes visible.
 		listControl.showWhenConditions.addOnShowListener(() => {
-			if (!listControl.dataRequested)
+			if (!listControl.isLoaded)
 				listControl.reload()
 		})
 
 		// Updates the array with dirty rows to validate before leaving the form.
 		listControl.vueContext.internalEvents.on('is-table-control-dirty', ({ id, isDirty }) => {
-			listControl.onRowDirty(id, isDirty)
+			listControl.vueContext.onRowDirty(listControl, id, isDirty)
 		})
 
 		// Deselects selected row(s) when closing and extended support form.
@@ -2354,7 +2715,7 @@ export function actionIsAllowed(action, rowPermissions, tablePermissions, isRead
 	if (action === undefined || action === null)
 		return false
 
-	// Check if action has permission
+	// Check is action has permission
 	// If the action is row-specific, use the row permissions or, if not, use the table permissions
 	const hasPermission = rowPermissions
 		? genericFunctions.btnHasPermission(rowPermissions, action.id)
@@ -2384,6 +2745,26 @@ export function getTableColumnControlIdPrefix(tableControlId, columnName)
 }
 
 /**
+ * Get the ID of a table column dropdown
+ * @param tableControlId {String} Table control ID (Not the table name in the DB)
+ * @param columnName {String} Column name
+ */
+export function getTableColumnDropdownId(tableControlId, columnName)
+{
+	return getTableColumnControlIdPrefix(tableControlId, columnName) + '_column_drop'
+}
+
+/**
+ * Get the ID of a table column dropdown toggle button
+ * @param tableControlId {String} Table control ID (Not the table name in the DB)
+ * @param columnName {String} Column name
+ */
+export function getTableColumnDropdownToggleId(tableControlId, columnName)
+{
+	return getTableColumnDropdownId(tableControlId, columnName) + '_toggle'
+}
+
+/**
  * Get the ID of a table column sort ascending button
  * @param tableControlId {String} Table control ID (Not the table name in the DB)
  * @param columnName {String} Column name
@@ -2404,13 +2785,33 @@ export function getTableColumnDropdownSortDescId(tableControlId, columnName)
 }
 
 /**
- * Get the ID of a table column filter button
+ * Get the ID of a table column dropdown save button
  * @param tableControlId {String} Table control ID (Not the table name in the DB)
  * @param columnName {String} Column name
  */
-export function getTableColumnFilterId(tableControlId, columnName)
+export function getTableColumnDropdownSaveId(tableControlId, columnName)
 {
-	return getTableColumnControlIdPrefix(tableControlId, columnName) + '_column_filter'
+	return getTableColumnControlIdPrefix(tableControlId, columnName) + '_column_filter_save'
+}
+
+/**
+ * Get the ID of a table column dropdown remove button
+ * @param tableControlId {String} Table control ID (Not the table name in the DB)
+ * @param columnName {String} Column name
+ */
+export function getTableColumnDropdownRemoveId(tableControlId, columnName)
+{
+	return getTableColumnControlIdPrefix(tableControlId, columnName) + '_column_filter_remove'
+}
+
+/**
+ * Get the ID of a table column dropdown push-to-advanced-filters button
+ * @param tableControlId {String} Table control ID (Not the table name in the DB)
+ * @param columnName {String} Column name
+ */
+export function getTableColumnDropdownToAdvancedId(tableControlId, columnName)
+{
+	return getTableColumnControlIdPrefix(tableControlId, columnName) + '_column_filter_to_adv'
 }
 
 /**
@@ -2426,10 +2827,11 @@ export default {
 	hydrateTableData,
 	getTableConfiguration,
 	applyTableConfiguration,
-	resetTableSorting,
+	convertTableConfigurationToDB,
+	updateConfigOptions,
 	hydrateTreeTableData,
 	hydrateTimelineData,
-	hydrateCalendarData,
+	hydrateFullCalendarData,
 	getRowsFlatArray,
 	searchTreeRow,
 	getDefaultSearchColumn,
@@ -2445,11 +2847,14 @@ export default {
 	getTableCellValue,
 	getCellNameValue,
 	setCellValue,
+	setTableCellValue,
 	columnFullName,
 	getColumnFromTableAndColumnNames,
 	getColumnFromTableColumnName,
 	getTableColumnFromName,
+	getTableColumnSort,
 	reCalcCellOrder,
+	cellOnChange,
 	textDisplayCell,
 	numericDisplayCell,
 	currencyDisplayCell,
@@ -2482,13 +2887,21 @@ export default {
 	isVisibleColumn,
 	getSearchableColumns,
 	getSortableColumns,
-	columnIsFiltered,
-	getHiddenFilterColumns,
-	removeFirstFilterCondition,
 	searchFilter,
+	searchFilterCondition,
+	searchFilterAppendCondition,
+	searchFilterAddCondition,
+	searchFilterSetCondition,
+	searchFilterRemoveCondition,
 	getFilterName,
+	getFilterColumnFromName,
+	getColumnTotalizers,
 	getSelectedRows,
 	getColumnTotalValueDisplay,
+	isValidFilterCondition,
+	isValidFilter,
+	getValidFilterConditionRelativeIndex,
+	getValidFilterConditionCount,
 	getFilterOperators,
 	getFilterValueCount,
 	getFilterInputComponent,
@@ -2496,6 +2909,8 @@ export default {
 	setFilterDefaultOperator,
 	setFilterDefaultValues,
 	setFilterConditionValue,
+	filtersToServerFormat,
+	filtersToClientFormat,
 	filterValidate,
 	getSearchableColumnOptions,
 	getFilterOperatorOptions,
@@ -2517,8 +2932,12 @@ export default {
 	tableHasPermission,
 	actionIsAllowed,
 	getTableColumnControlIdPrefix,
+	getTableColumnDropdownId,
+	getTableColumnDropdownToggleId,
 	getTableColumnDropdownSortAscId,
 	getTableColumnDropdownSortDescId,
-	getTableColumnFilterId,
+	getTableColumnDropdownSaveId,
+	getTableColumnDropdownRemoveId,
+	getTableColumnDropdownToAdvancedId,
 	getTableSelectorDropdownToggleId
 }

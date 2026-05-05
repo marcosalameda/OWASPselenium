@@ -3,23 +3,20 @@
 		v-if="menuModalIsReady"
 		:to="`#${uiContainersId.body}`"
 		:disabled="!menuInfo.isPopup">
-		<div
+		<form
 			class="form-horizontal"
 			@submit.prevent>
 			<q-row-container>
 				<q-table
 					v-bind="controls.menu"
 					v-on="controls.menu.handlers">
-					<template #header>
-						<q-table-config
-							:table-ctrl="controls.menu"
-							v-on="controls.menu.handlers">
-						</q-table-config>
-					</template>
-					<!-- USE /[MANUAL GQT CUSTOM_TABLE WMS_Menu_111]/ -->
 				</q-table>
+
+				<q-table-extra-extension
+					:list-ctrl="controls.menu"
+					v-on="controls.menu.handlers" />
 			</q-row-container>
-		</div>
+		</form>
 	</teleport>
 
 	<teleport
@@ -51,7 +48,7 @@
 </template>
 
 <script>
-	/* eslint-disable @typescript-eslint/no-unused-vars */
+	/* eslint-disable no-unused-vars */
 	import asyncProcM from '@quidgest/clientapp/composables/async'
 	import qEnums from '@quidgest/clientapp/constants/enums'
 	import netAPI from '@quidgest/clientapp/network'
@@ -71,7 +68,7 @@
 	import qApi from '@/api/genio/quidgestFunctions.js'
 	import qFunctions from '@/api/genio/projectFunctions.js'
 	import qProjArrays from '@/api/genio/projectArrays.js'
-	/* eslint-enable @typescript-eslint/no-unused-vars */
+	/* eslint-enable no-unused-vars */
 
 	import MenuViewModel from './QMenuWMS_111ViewModel.js'
 
@@ -156,7 +153,6 @@
 								scrollData: 10,
 								maxDigits: 10,
 								decimalPlaces: 0,
-								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.DateColumn({
 								order: 2,
@@ -166,7 +162,6 @@
 								label: computed(() => this.Resources.RECEIPT_DATE00996),
 								scrollData: 16,
 								dateTimeType: 'dateTime',
-								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 3,
@@ -176,7 +171,6 @@
 								label: computed(() => this.Resources.LEGAL_NAME42902),
 								dataLength: 85,
 								scrollData: 30,
-								export: 1,
 								pkColumn: 'ValCodentit',
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.DateColumn({
@@ -187,7 +181,6 @@
 								label: computed(() => this.Resources.RECEIPT_VERIFICATION62328),
 								scrollData: 16,
 								dateTimeType: 'dateTime',
-								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.BooleanColumn({
 								order: 5,
@@ -196,7 +189,6 @@
 								field: 'CHECKED',
 								label: computed(() => this.Resources.CHECKED31708),
 								scrollData: 1,
-								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.BooleanColumn({
 								order: 6,
@@ -205,7 +197,6 @@
 								field: 'TOCHECK',
 								label: computed(() => this.Resources.TO_CHECK57511),
 								scrollData: 1,
-								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.DateColumn({
 								order: 7,
@@ -215,7 +206,6 @@
 								label: computed(() => this.Resources.STORAGE_DATE59954),
 								scrollData: 16,
 								dateTimeType: 'dateTime',
-								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 						],
 						config: {
@@ -231,8 +221,10 @@
 							permissions: {
 							},
 							searchBarConfig: {
-								visibility: true
+								visibility: true,
+								searchOnPressEnter: true
 							},
+							filtersVisible: true,
 							allowColumnFilters: true,
 							allowColumnSort: true,
 							crudActions: [
@@ -306,7 +298,9 @@
 									id: 'insert',
 									name: 'insert',
 									title: computed(() => this.Resources.INSERIR43365),
-									icon: { icon: 'add' },
+									icon: {
+										icon: 'add'
+									},
 									isInReadOnly: true,
 									params: {
 										action: vm.openFormAction,
@@ -329,7 +323,6 @@
 							rowClickAction: {
 								id: 'RCA_WMS_1111',
 								name: 'form-RECEI',
-								isVisible: true,
 								params: {
 									isRoute: true,
 									limits: [
@@ -359,7 +352,6 @@
 						uuid: '6bb55b0e-5337-4429-b2f8-3175958c9c5b',
 						allSelectedRows: 'false',
 						headerLevel: 1,
-						isActiveControl: computed(() => this.isActiveMenu)
 					}, this),
 				}
 			}
@@ -383,14 +375,6 @@
 		{
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
 // USE /[MANUAL GQT FORM_CODEJS WMS_MENU_111]/
-// eslint-disable-next-line
-/* eslint-enable indent, vue/html-indent, vue/script-indent */
-		},
-
-		beforeUnmount()
-		{
-/* eslint-disable indent, vue/html-indent, vue/script-indent */
-// USE /[MANUAL GQT COMPONENT_BEFORE_UNMOUNT WMS_MENU_111]/
 // eslint-disable-next-line
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 		},

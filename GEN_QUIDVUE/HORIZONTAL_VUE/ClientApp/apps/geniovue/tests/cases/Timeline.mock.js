@@ -4,7 +4,6 @@
 		return {
 			yearlyTimeline: {
 				// Timeline Item-1 (Row-1)
-				tipoTimeline: 'S',
 				timeLineData: {
 					rows: [
 						{
@@ -212,7 +211,6 @@
 			// Timeline-2 (Monthly)
 			monthlyTimeline: {
 				// Timeline Item-1 (Row-1)
-				tipoTimeline: 'S',
 				timeLineData: {
 					rows: [
 						{
@@ -433,7 +431,6 @@
 			//  Timeline-3 (Daily)
 			dailyTimeline: {
 				// Timeline Item-1 (Row-1)
-				tipoTimeline: 'S',
 				timeLineData: {
 					rows: [
 						{
@@ -661,7 +658,6 @@
 			//  Timeline-4 (Weekly)
 			weeklyTimeline: {
 				// Timeline Item-1 (Row-1)
-				tipoTimeline: 'S',
 				timeLineData: {
 					rows: [
 						{
@@ -889,12 +885,12 @@
 	},
 	simpleUsageMethods: {
 		runAction(eventName, emittedAction) {
-			let str = eventName + ':\n [' + JSON.stringify(emittedAction)
+			var str = eventName + ':\n [' + JSON.stringify(emittedAction)
 			str += ']'
 			alert(str)
 		},
 		displayEmit(emittedAction) {
-			const str = JSON.stringify(emittedAction)
+			var str = JSON.stringify(emittedAction)
 			alert(str)
 		},
 		formAction(emittedAction) {

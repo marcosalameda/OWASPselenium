@@ -9,13 +9,12 @@
 			<div
 				v-if="showFormHeader"
 				class="c-action-bar">
-				<component
+				<h1
 					v-if="formControl.uiComponents.header && formInfo.designation"
-					:is="topHeadingTag"
 					:id="formTitleId"
 					class="form-header">
 					{{ formInfo.designation }}
-				</component>
+				</h1>
 
 				<div class="c-action-bar__menu">
 					<template
@@ -39,13 +38,9 @@
 									:label="btn.label"
 									:disabled="btn.disabled"
 									@click="btn.action">
-									<template v-if="btn.icon">
-										<q-badge-indicator
-											:enabled="btn.badge?.isVisible ?? false"
-											:color="btn.badge?.color">
-											<q-icon v-bind="btn.icon" />
-										</q-badge-indicator>
-									</template>
+									<q-icon
+										v-if="btn.icon"
+										v-bind="btn.icon" />
 								</q-toggle-group-item>
 							</template>
 						</q-toggle-group>
@@ -57,7 +52,7 @@
 				v-if="$app.layout.FormAnchorsPosition === 'form-header' && visibleGroups.length > 0"
 				:anchors="anchorGroups"
 				:controls="visibleControls"
-				@focus-control="focusControl" />
+				@focus-control="(...args) => focusControl(...args)" />
 		</div>
 	</teleport>
 
@@ -78,7 +73,6 @@
 						v-if="btn.isActive && btn.isVisible && btn.showInHeading"
 						:id="`heading-${btn.id}`"
 						:label="btn.text"
-						:color="btn.color"
 						:variant="btn.variant"
 						:disabled="btn.disabled"
 						:icon-pos="btn.iconPos"
@@ -92,21 +86,18 @@
 			</q-button-group>
 		</div>
 
-		<q-container
-			fluid
+		<div
+			class="form-flow"
 			data-key="LEAFLETT"
-			:data-identifier="primaryKeyValue"
-			:data-loading="!formInitialDataLoaded || !isActiveForm">
+			:data-loading="!formInitialDataLoaded">
 			<template v-if="formControl.initialized && showFormBody">
-				<q-row v-if="controls.LEAFLETTEQUIPREGISTNR.isVisible || controls.LEAFLETTTPEQUTIPOEQUI.isVisible">
-					<q-col
-						v-if="controls.LEAFLETTEQUIPREGISTNR.isVisible"
-						cols="auto">
+				<q-row-container v-show="controls.LEAFLETTEQUIPREGISTNR.isVisible || controls.LEAFLETTTPEQUTIPOEQUI.isVisible">
+					<q-control-wrapper
+						v-show="controls.LEAFLETTEQUIPREGISTNR.isVisible"
+						class="${Vue.GetControlWrapperClass($controlsColumn)}">
 						<base-input-structure
-							v-if="controls.LEAFLETTEQUIPREGISTNR.isVisible"
 							class="i-text"
-							v-bind="controls.LEAFLETTEQUIPREGISTNR.wrapperProps"
-							:id="getControlId(controls.LEAFLETTEQUIPREGISTNR)"
+							v-bind="controls.LEAFLETTEQUIPREGISTNR"
 							v-on="controls.LEAFLETTEQUIPREGISTNR.handlers"
 							:loading="controls.LEAFLETTEQUIPREGISTNR.props.loading"
 							:reporting-mode-on="reportingModeCAV"
@@ -114,43 +105,37 @@
 							<q-lookup
 								v-if="controls.LEAFLETTEQUIPREGISTNR.isVisible"
 								v-bind="controls.LEAFLETTEQUIPREGISTNR.props"
-								:id="getControlId(controls.LEAFLETTEQUIPREGISTNR)"
 								v-on="controls.LEAFLETTEQUIPREGISTNR.handlers" />
 							<q-see-more-leaflettequipregistnr
 								v-if="controls.LEAFLETTEQUIPREGISTNR.seeMoreIsVisible"
 								v-bind="controls.LEAFLETTEQUIPREGISTNR.seeMoreParams"
 								v-on="controls.LEAFLETTEQUIPREGISTNR.handlers" />
 						</base-input-structure>
-					</q-col>
-					<q-col
-						v-if="controls.LEAFLETTTPEQUTIPOEQUI.isVisible"
-						cols="auto">
+					</q-control-wrapper>
+					<q-control-wrapper
+						v-show="controls.LEAFLETTTPEQUTIPOEQUI.isVisible"
+						class="${Vue.GetControlWrapperClass($controlsColumn)}">
 						<base-input-structure
-							v-if="controls.LEAFLETTTPEQUTIPOEQUI.isVisible"
 							class="i-text"
-							v-bind="controls.LEAFLETTTPEQUTIPOEQUI.wrapperProps"
-							:id="getControlId(controls.LEAFLETTTPEQUTIPOEQUI)"
+							v-bind="controls.LEAFLETTTPEQUTIPOEQUI"
 							v-on="controls.LEAFLETTTPEQUTIPOEQUI.handlers"
 							:loading="controls.LEAFLETTTPEQUTIPOEQUI.props.loading"
 							:reporting-mode-on="reportingModeCAV"
 							:suggestion-mode-on="suggestionModeOn">
 							<q-text-field
 								v-bind="controls.LEAFLETTTPEQUTIPOEQUI.props"
-								:id="getControlId(controls.LEAFLETTTPEQUTIPOEQUI)"
 								@blur="onBlur(controls.LEAFLETTTPEQUTIPOEQUI, model.TpequValTipoequi.value)"
 								@change="model.TpequValTipoequi.fnUpdateValueOnChange" />
 						</base-input-structure>
-					</q-col>
-				</q-row>
-				<q-row v-if="controls.LEAFLETTINSTADESCRIPT.isVisible || controls.LEAFLETTINSTADESIGNAT.isVisible || controls.LEAFLETTINSTADTINIAGE.isVisible || controls.LEAFLETTINSTADTFIMAGE.isVisible || controls.LEAFLETTINSTAALLDAY__.isVisible || controls.LEAFLETTINSTASINCE___.isVisible || controls.LEAFLETTINSTAUNTIL___.isVisible || controls.LEAFLETTINSTAHOURS___.isVisible || controls.LEAFLETTINSTAPRECOHOR.isVisible || controls.LEAFLETTINSTAVALUE___.isVisible || controls.LEAFLETTINSTACOORDGEO.isVisible">
-					<q-col
-						v-if="controls.LEAFLETTINSTADESCRIPT.isVisible"
-						cols="auto">
+					</q-control-wrapper>
+				</q-row-container>
+				<q-row-container v-show="controls.LEAFLETTINSTADESCRIPT.isVisible || controls.LEAFLETTINSTADESIGNAT.isVisible || controls.LEAFLETTINSTADTINIAGE.isVisible || controls.LEAFLETTINSTADTFIMAGE.isVisible || controls.LEAFLETTINSTAALLDAY__.isVisible || controls.LEAFLETTINSTASINCE___.isVisible || controls.LEAFLETTINSTAUNTIL___.isVisible || controls.LEAFLETTINSTAHOURS___.isVisible || controls.LEAFLETTINSTAPRECOHOR.isVisible || controls.LEAFLETTINSTAVALUE___.isVisible || controls.LEAFLETTINSTACOORDGEO.isVisible">
+					<q-control-wrapper
+						v-show="controls.LEAFLETTINSTADESCRIPT.isVisible"
+						class="${Vue.GetControlWrapperClass($controlsColumn)}">
 						<base-input-structure
-							v-if="controls.LEAFLETTINSTADESCRIPT.isVisible"
 							class="i-textarea"
-							v-bind="controls.LEAFLETTINSTADESCRIPT.wrapperProps"
-							:id="getControlId(controls.LEAFLETTINSTADESCRIPT)"
+							v-bind="controls.LEAFLETTINSTADESCRIPT"
 							v-on="controls.LEAFLETTINSTADESCRIPT.handlers"
 							:loading="controls.LEAFLETTINSTADESCRIPT.props.loading"
 							:reporting-mode-on="reportingModeCAV"
@@ -158,37 +143,31 @@
 							<q-text-area
 								v-if="controls.LEAFLETTINSTADESCRIPT.isVisible"
 								v-bind="controls.LEAFLETTINSTADESCRIPT.props"
-								:id="getControlId(controls.LEAFLETTINSTADESCRIPT)"
 								v-on="controls.LEAFLETTINSTADESCRIPT.handlers" />
 						</base-input-structure>
-					</q-col>
-					<q-col
-						v-if="controls.LEAFLETTINSTADESIGNAT.isVisible"
-						cols="auto">
+					</q-control-wrapper>
+					<q-control-wrapper
+						v-show="controls.LEAFLETTINSTADESIGNAT.isVisible"
+						class="${Vue.GetControlWrapperClass($controlsColumn)}">
 						<base-input-structure
-							v-if="controls.LEAFLETTINSTADESIGNAT.isVisible"
 							class="i-text"
-							v-bind="controls.LEAFLETTINSTADESIGNAT.wrapperProps"
-							:id="getControlId(controls.LEAFLETTINSTADESIGNAT)"
+							v-bind="controls.LEAFLETTINSTADESIGNAT"
 							v-on="controls.LEAFLETTINSTADESIGNAT.handlers"
 							:loading="controls.LEAFLETTINSTADESIGNAT.props.loading"
 							:reporting-mode-on="reportingModeCAV"
 							:suggestion-mode-on="suggestionModeOn">
 							<q-text-field
 								v-bind="controls.LEAFLETTINSTADESIGNAT.props"
-								:id="getControlId(controls.LEAFLETTINSTADESIGNAT)"
 								@blur="onBlur(controls.LEAFLETTINSTADESIGNAT, model.ValDesignat.value)"
 								@change="model.ValDesignat.fnUpdateValueOnChange" />
 						</base-input-structure>
-					</q-col>
-					<q-col
-						v-if="controls.LEAFLETTINSTADTINIAGE.isVisible"
-						cols="auto">
+					</q-control-wrapper>
+					<q-control-wrapper
+						v-show="controls.LEAFLETTINSTADTINIAGE.isVisible"
+						class="${Vue.GetControlWrapperClass($controlsColumn)}">
 						<base-input-structure
-							v-if="controls.LEAFLETTINSTADTINIAGE.isVisible"
 							class="i-text"
-							v-bind="controls.LEAFLETTINSTADTINIAGE.wrapperProps"
-							:id="getControlId(controls.LEAFLETTINSTADTINIAGE)"
+							v-bind="controls.LEAFLETTINSTADTINIAGE"
 							v-on="controls.LEAFLETTINSTADTINIAGE.handlers"
 							:loading="controls.LEAFLETTINSTADTINIAGE.props.loading"
 							:reporting-mode-on="reportingModeCAV"
@@ -196,20 +175,17 @@
 							<q-date-time-picker
 								v-if="controls.LEAFLETTINSTADTINIAGE.isVisible"
 								v-bind="controls.LEAFLETTINSTADTINIAGE.props"
-								:id="getControlId(controls.LEAFLETTINSTADTINIAGE)"
 								:model-value="model.ValDtiniage.value"
 								@reset-icon-click="model.ValDtiniage.fnUpdateValue(model.ValDtiniage.originalValue ?? new Date())"
 								@update:model-value="model.ValDtiniage.fnUpdateValue($event ?? '')" />
 						</base-input-structure>
-					</q-col>
-					<q-col
-						v-if="controls.LEAFLETTINSTADTFIMAGE.isVisible"
-						cols="auto">
+					</q-control-wrapper>
+					<q-control-wrapper
+						v-show="controls.LEAFLETTINSTADTFIMAGE.isVisible"
+						class="${Vue.GetControlWrapperClass($controlsColumn)}">
 						<base-input-structure
-							v-if="controls.LEAFLETTINSTADTFIMAGE.isVisible"
 							class="i-text"
-							v-bind="controls.LEAFLETTINSTADTFIMAGE.wrapperProps"
-							:id="getControlId(controls.LEAFLETTINSTADTFIMAGE)"
+							v-bind="controls.LEAFLETTINSTADTFIMAGE"
 							v-on="controls.LEAFLETTINSTADTFIMAGE.handlers"
 							:loading="controls.LEAFLETTINSTADTFIMAGE.props.loading"
 							:reporting-mode-on="reportingModeCAV"
@@ -217,41 +193,35 @@
 							<q-date-time-picker
 								v-if="controls.LEAFLETTINSTADTFIMAGE.isVisible"
 								v-bind="controls.LEAFLETTINSTADTFIMAGE.props"
-								:id="getControlId(controls.LEAFLETTINSTADTFIMAGE)"
 								:model-value="model.ValDtfimage.value"
 								@reset-icon-click="model.ValDtfimage.fnUpdateValue(model.ValDtfimage.originalValue ?? new Date())"
 								@update:model-value="model.ValDtfimage.fnUpdateValue($event ?? '')" />
 						</base-input-structure>
-					</q-col>
-					<q-col
-						v-if="controls.LEAFLETTINSTAALLDAY__.isVisible"
-						cols="auto">
+					</q-control-wrapper>
+					<q-control-wrapper
+						v-show="controls.LEAFLETTINSTAALLDAY__.isVisible"
+						class="${Vue.GetControlWrapperClass($controlsColumn)}">
 						<base-input-structure
-							v-if="controls.LEAFLETTINSTAALLDAY__.isVisible"
-							class="i-text"
-							v-bind="controls.LEAFLETTINSTAALLDAY__.wrapperProps"
-							:id="getControlId(controls.LEAFLETTINSTAALLDAY__)"
+							class="i-checkbox"
+							v-bind="controls.LEAFLETTINSTAALLDAY__"
 							v-on="controls.LEAFLETTINSTAALLDAY__.handlers"
 							:loading="controls.LEAFLETTINSTAALLDAY__.props.loading"
 							:reporting-mode-on="reportingModeCAV"
 							:suggestion-mode-on="suggestionModeOn">
 							<template #label>
-								<q-checkbox
+								<q-checkbox-input
 									v-if="controls.LEAFLETTINSTAALLDAY__.isVisible"
 									v-bind="controls.LEAFLETTINSTAALLDAY__.props"
-									:id="getControlId(controls.LEAFLETTINSTAALLDAY__)"
 									v-on="controls.LEAFLETTINSTAALLDAY__.handlers" />
 							</template>
 						</base-input-structure>
-					</q-col>
-					<q-col
-						v-if="controls.LEAFLETTINSTASINCE___.isVisible"
-						cols="auto">
+					</q-control-wrapper>
+					<q-control-wrapper
+						v-show="controls.LEAFLETTINSTASINCE___.isVisible"
+						class="${Vue.GetControlWrapperClass($controlsColumn)}">
 						<base-input-structure
-							v-if="controls.LEAFLETTINSTASINCE___.isVisible"
 							class="i-text"
-							v-bind="controls.LEAFLETTINSTASINCE___.wrapperProps"
-							:id="getControlId(controls.LEAFLETTINSTASINCE___)"
+							v-bind="controls.LEAFLETTINSTASINCE___"
 							v-on="controls.LEAFLETTINSTASINCE___.handlers"
 							:loading="controls.LEAFLETTINSTASINCE___.props.loading"
 							:reporting-mode-on="reportingModeCAV"
@@ -259,20 +229,17 @@
 							<q-date-time-picker
 								v-if="controls.LEAFLETTINSTASINCE___.isVisible"
 								v-bind="controls.LEAFLETTINSTASINCE___.props"
-								:id="getControlId(controls.LEAFLETTINSTASINCE___)"
 								:model-value="model.ValSince.value"
 								@reset-icon-click="model.ValSince.fnUpdateValue(model.ValSince.originalValue ?? new Date())"
 								@update:model-value="model.ValSince.fnUpdateValue($event ?? '')" />
 						</base-input-structure>
-					</q-col>
-					<q-col
-						v-if="controls.LEAFLETTINSTAUNTIL___.isVisible"
-						cols="auto">
+					</q-control-wrapper>
+					<q-control-wrapper
+						v-show="controls.LEAFLETTINSTAUNTIL___.isVisible"
+						class="${Vue.GetControlWrapperClass($controlsColumn)}">
 						<base-input-structure
-							v-if="controls.LEAFLETTINSTAUNTIL___.isVisible"
 							class="i-text"
-							v-bind="controls.LEAFLETTINSTAUNTIL___.wrapperProps"
-							:id="getControlId(controls.LEAFLETTINSTAUNTIL___)"
+							v-bind="controls.LEAFLETTINSTAUNTIL___"
 							v-on="controls.LEAFLETTINSTAUNTIL___.handlers"
 							:loading="controls.LEAFLETTINSTAUNTIL___.props.loading"
 							:reporting-mode-on="reportingModeCAV"
@@ -280,20 +247,17 @@
 							<q-date-time-picker
 								v-if="controls.LEAFLETTINSTAUNTIL___.isVisible"
 								v-bind="controls.LEAFLETTINSTAUNTIL___.props"
-								:id="getControlId(controls.LEAFLETTINSTAUNTIL___)"
 								:model-value="model.ValUntil.value"
 								@reset-icon-click="model.ValUntil.fnUpdateValue(model.ValUntil.originalValue ?? new Date())"
 								@update:model-value="model.ValUntil.fnUpdateValue($event ?? '')" />
 						</base-input-structure>
-					</q-col>
-					<q-col
-						v-if="controls.LEAFLETTINSTAHOURS___.isVisible"
-						cols="auto">
+					</q-control-wrapper>
+					<q-control-wrapper
+						v-show="controls.LEAFLETTINSTAHOURS___.isVisible"
+						class="${Vue.GetControlWrapperClass($controlsColumn)}">
 						<base-input-structure
-							v-if="controls.LEAFLETTINSTAHOURS___.isVisible"
 							class="i-text"
-							v-bind="controls.LEAFLETTINSTAHOURS___.wrapperProps"
-							:id="getControlId(controls.LEAFLETTINSTAHOURS___)"
+							v-bind="controls.LEAFLETTINSTAHOURS___"
 							v-on="controls.LEAFLETTINSTAHOURS___.handlers"
 							:loading="controls.LEAFLETTINSTAHOURS___.props.loading"
 							:reporting-mode-on="reportingModeCAV"
@@ -301,18 +265,15 @@
 							<q-numeric-input
 								v-if="controls.LEAFLETTINSTAHOURS___.isVisible"
 								v-bind="controls.LEAFLETTINSTAHOURS___.props"
-								:id="getControlId(controls.LEAFLETTINSTAHOURS___)"
 								@update:model-value="model.ValHours.fnUpdateValue" />
 						</base-input-structure>
-					</q-col>
-					<q-col
-						v-if="controls.LEAFLETTINSTAPRECOHOR.isVisible"
-						cols="auto">
+					</q-control-wrapper>
+					<q-control-wrapper
+						v-show="controls.LEAFLETTINSTAPRECOHOR.isVisible"
+						class="${Vue.GetControlWrapperClass($controlsColumn)}">
 						<base-input-structure
-							v-if="controls.LEAFLETTINSTAPRECOHOR.isVisible"
 							class="i-text"
-							v-bind="controls.LEAFLETTINSTAPRECOHOR.wrapperProps"
-							:id="getControlId(controls.LEAFLETTINSTAPRECOHOR)"
+							v-bind="controls.LEAFLETTINSTAPRECOHOR"
 							v-on="controls.LEAFLETTINSTAPRECOHOR.handlers"
 							:loading="controls.LEAFLETTINSTAPRECOHOR.props.loading"
 							:reporting-mode-on="reportingModeCAV"
@@ -320,18 +281,15 @@
 							<q-numeric-input
 								v-if="controls.LEAFLETTINSTAPRECOHOR.isVisible"
 								v-bind="controls.LEAFLETTINSTAPRECOHOR.props"
-								:id="getControlId(controls.LEAFLETTINSTAPRECOHOR)"
 								@update:model-value="model.ValPrecohor.fnUpdateValue" />
 						</base-input-structure>
-					</q-col>
-					<q-col
-						v-if="controls.LEAFLETTINSTAVALUE___.isVisible"
-						cols="auto">
+					</q-control-wrapper>
+					<q-control-wrapper
+						v-show="controls.LEAFLETTINSTAVALUE___.isVisible"
+						class="${Vue.GetControlWrapperClass($controlsColumn)}">
 						<base-input-structure
-							v-if="controls.LEAFLETTINSTAVALUE___.isVisible"
 							class="i-text"
-							v-bind="controls.LEAFLETTINSTAVALUE___.wrapperProps"
-							:id="getControlId(controls.LEAFLETTINSTAVALUE___)"
+							v-bind="controls.LEAFLETTINSTAVALUE___"
 							v-on="controls.LEAFLETTINSTAVALUE___.handlers"
 							:loading="controls.LEAFLETTINSTAVALUE___.props.loading"
 							:reporting-mode-on="reportingModeCAV"
@@ -339,41 +297,37 @@
 							<q-numeric-input
 								v-if="controls.LEAFLETTINSTAVALUE___.isVisible"
 								v-bind="controls.LEAFLETTINSTAVALUE___.props"
-								:id="getControlId(controls.LEAFLETTINSTAVALUE___)"
 								@update:model-value="model.ValValue.fnUpdateValue" />
 						</base-input-structure>
-					</q-col>
-					<q-col
-						v-if="controls.LEAFLETTINSTACOORDGEO.isVisible"
-						cols="auto">
+					</q-control-wrapper>
+					<q-control-wrapper
+						v-show="controls.LEAFLETTINSTACOORDGEO.isVisible"
+						class="${Vue.GetControlWrapperClass($controlsColumn)}">
 						<base-input-structure
-							v-if="controls.LEAFLETTINSTACOORDGEO.isVisible"
 							class="i-text"
-							v-bind="controls.LEAFLETTINSTACOORDGEO.wrapperProps"
-							:id="getControlId(controls.LEAFLETTINSTACOORDGEO)"
+							v-bind="controls.LEAFLETTINSTACOORDGEO"
 							v-on="controls.LEAFLETTINSTACOORDGEO.handlers"
 							:loading="controls.LEAFLETTINSTACOORDGEO.props.loading"
 							:reporting-mode-on="reportingModeCAV"
 							:suggestion-mode-on="suggestionModeOn">
 							<q-text-field
 								v-bind="controls.LEAFLETTINSTACOORDGEO.props"
-								:id="getControlId(controls.LEAFLETTINSTACOORDGEO)"
 								@blur="onBlur(controls.LEAFLETTINSTACOORDGEO, model.ValCoordgeo.value)"
 								@change="model.ValCoordgeo.fnUpdateValueOnChange" />
 						</base-input-structure>
-					</q-col>
-				</q-row>
+					</q-control-wrapper>
+				</q-row-container>
 			</template>
-		</q-container>
+		</div>
 	</teleport>
 
-	<q-divider v-if="!isPopup && showFormFooter" />
+	<hr v-if="!isPopup && showFormFooter" />
 
 	<teleport
 		v-if="formModalIsReady && showFormFooter"
 		:to="`#${uiContainersId.footer}`"
 		:disabled="!isPopup || isNested">
-		<q-row v-if="showFormFooter">
+		<q-row-container v-if="showFormFooter">
 			<div id="footer-action-btns">
 				<template
 					v-for="btn in formButtons"
@@ -382,7 +336,6 @@
 						v-if="btn.isActive && btn.isVisible && btn.showInFooter"
 						:id="`bottom-${btn.id}`"
 						:label="btn.text"
-						:color="btn.color"
 						:variant="btn.variant"
 						:disabled="btn.disabled"
 						:icon-pos="btn.iconPos"
@@ -394,12 +347,12 @@
 					</q-button>
 				</template>
 			</div>
-		</q-row>
+		</q-row-container>
 	</teleport>
 </template>
 
 <script>
-	/* eslint-disable @typescript-eslint/no-unused-vars */
+	/* eslint-disable no-unused-vars */
 	import { computed, defineAsyncComponent, readonly } from 'vue'
 	import { useRoute } from 'vue-router'
 
@@ -419,7 +372,7 @@
 	import qApi from '@/api/genio/quidgestFunctions.js'
 	import qFunctions from '@/api/genio/projectFunctions.js'
 	import qProjArrays from '@/api/genio/projectArrays.js'
-	/* eslint-enable @typescript-eslint/no-unused-vars */
+	/* eslint-enable no-unused-vars */
 
 	import FormViewModel from './QFormLeaflettViewModel.js'
 
@@ -497,8 +450,7 @@
 					primaryKey: 'ValCodinsta',
 					designation: computed(() => this.Resources.INSTALLATION12952),
 					identifier: '', // Unique identifier received by route (when it's nested).
-					mode: '',
-					availableAgents: [],
+					mode: ''
 				},
 
 				formButtons: {
@@ -606,11 +558,7 @@
 						showInFooter: true,
 						isActive: true,
 						isVisible: computed(() => vm.authData.isAllowed && vm.isEditable),
-						action: vm.saveForm,
-						badge: {
-							isVisible: computed(() => vm.model?.isDirty === true),
-							color: 'highlight'
-						}
+						action: vm.saveForm
 					},
 					confirmBtn: {
 						id: 'confirm-btn',
@@ -739,12 +687,6 @@
 							set 'tpequ.tipoequi'(value) { vm.model.TpequValTipoequi.updateValue(value) },
 						}),
 						controlLimits: [
-							{
-								identifier: ['tpequ', 'insta.codtpequ'],
-								dependencyEvents: ['fieldChange:insta.codtpequ'],
-								dependencyField: 'INSTA.CODTPEQU',
-								fnValueSelector: (model) => model.ValCodtpequ.value
-							},
 						],
 					}, this),
 					LEAFLETTTPEQUTIPOEQUI: new fieldControlClass.StringControl({
@@ -759,6 +701,7 @@
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						maxLength: 50,
+						labelId: 'label_LEAFLETTTPEQUTIPOEQUI',
 						controlLimits: [
 						],
 					}, this),
@@ -786,6 +729,7 @@
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						maxLength: 85,
+						labelId: 'label_LEAFLETTINSTADESIGNAT',
 						controlLimits: [
 						],
 					}, this),
@@ -798,7 +742,7 @@
 						label: computed(() => this.Resources.START00919),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						dateTimeType: 'dateTime',
+						format: 'dateTime',
 						controlLimits: [
 						],
 					}, this),
@@ -811,7 +755,7 @@
 						label: computed(() => this.Resources.END47577),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						dateTimeType: 'dateTime',
+						format: 'dateTime',
 						controlLimits: [
 						],
 					}, this),
@@ -836,7 +780,7 @@
 						label: computed(() => this.Resources.SINCE47259),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						dateTimeType: 'dateTime',
+						format: 'dateTime',
 						controlLimits: [
 						],
 					}, this),
@@ -849,7 +793,7 @@
 						label: computed(() => this.Resources.UNTIL39173),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						dateTimeType: 'dateTime',
+						format: 'dateTime',
 						controlLimits: [
 						],
 					}, this),
@@ -1021,23 +965,17 @@
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 		},
 
-		beforeUnmount()
-		{
-/* eslint-disable indent, vue/html-indent, vue/script-indent */
-// USE /[MANUAL GQT COMPONENT_BEFORE_UNMOUNT LEAFLETT]/
-// eslint-disable-next-line
-/* eslint-enable indent, vue/html-indent, vue/script-indent */
-		},
-
 		methods: {
 			/**
 			 * Called before form init.
 			 */
 			async beforeLoad()
 			{
+				let loadForm = true
+
 				// Execute the "Before init" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.beforeInit)
-				for (const trigger of triggers)
+				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
 				this.emitEvent('before-load-form')
@@ -1047,7 +985,7 @@
 // eslint-disable-next-line
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 
-				return true
+				return loadForm
 			},
 
 			/**
@@ -1057,7 +995,7 @@
 			{
 				// Execute the "After init" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.afterInit)
-				for (const trigger of triggers)
+				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
 				this.emitEvent('after-load-form')
@@ -1077,33 +1015,19 @@
 
 				// Execute the "Before apply" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.beforeApply)
-				for (const trigger of triggers)
+				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
-				const ticketsPromise = this.model.updateFilesTickets(true)
-				this.addBusy(ticketsPromise, this.Resources[hardcodedTexts.processing])
-				const canSetDocums = await ticketsPromise
+				const canSetDocums = await this.model.updateFilesTickets(true)
 
 				if (canSetDocums)
 				{
-					let results
-					const changesPromise = this.model.setDocumentChanges()
-					this.addBusy(changesPromise, this.Resources[hardcodedTexts.processing])
-					applyForm = await changesPromise
+					applyForm = await this.model.setDocumentChanges()
 
 					if (applyForm)
 					{
-						const insertsPromise = this.model.saveDocuments()
-						this.addBusy(insertsPromise, this.Resources[hardcodedTexts.processing])
-						results = await insertsPromise
+						const results = await this.model.saveDocuments()
 						applyForm = results.every((e) => e === true)
-					}
-
-					if (!changesPromise || (results && !results.every((e) => e === true)))
-					{
-						this.validationErrors = {
-							Erro: this.Resources.OCORREU_UM_ERRO_AO_T51884
-						}
 					}
 				}
 
@@ -1124,7 +1048,7 @@
 			{
 				// Execute the "After apply" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.afterApply)
-				for (const trigger of triggers)
+				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
 				this.emitEvent('after-apply-form')
@@ -1144,33 +1068,19 @@
 
 				// Execute the "Before save" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.beforeSave)
-				for (const trigger of triggers)
+				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
-				const ticketsPromise = this.model.updateFilesTickets()
-				this.addBusy(ticketsPromise, this.Resources[hardcodedTexts.processing])
-				const canSetDocums = await ticketsPromise
+				const canSetDocums = await this.model.updateFilesTickets()
 
 				if (canSetDocums)
 				{
-					let results
-					const changesPromise = this.model.setDocumentChanges()
-					this.addBusy(changesPromise, this.Resources[hardcodedTexts.processing])
-					saveForm = await changesPromise
+					saveForm = await this.model.setDocumentChanges()
 
 					if (saveForm)
 					{
-						const insertsPromise = this.model.saveDocuments()
-						this.addBusy(insertsPromise, this.Resources[hardcodedTexts.processing])
-						results = await insertsPromise
+						const results = await this.model.saveDocuments()
 						saveForm = results.every((e) => e === true)
-					}
-
-					if (!changesPromise || (results && !results.every((e) => e === true)))
-					{
-						this.validationErrors = {
-							Erro: this.Resources.OCORREU_UM_ERRO_AO_T51884
-						}
 					}
 				}
 
@@ -1189,9 +1099,11 @@
 			 */
 			async afterSave()
 			{
+				let redirectPage = true // Set to 'false' to cancel page redirect.
+
 				// Execute the "After save" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.afterSave)
-				for (const trigger of triggers)
+				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
 				this.emitEvent('after-save-form')
@@ -1201,7 +1113,7 @@
 // eslint-disable-next-line
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 
-				return true
+				return redirectPage
 			},
 
 			/**
@@ -1209,6 +1121,8 @@
 			 */
 			async beforeDel()
 			{
+				let deleteForm = true // Set to 'false' to cancel form delete.
+
 				this.emitEvent('before-delete-form')
 
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
@@ -1216,7 +1130,7 @@
 // eslint-disable-next-line
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 
-				return true
+				return deleteForm
 			},
 
 			/**
@@ -1224,6 +1138,8 @@
 			 */
 			async afterDel()
 			{
+				let redirectPage = true // Set to 'false' to cancel page redirect.
+
 				this.emitEvent('after-delete-form')
 
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
@@ -1231,7 +1147,7 @@
 // eslint-disable-next-line
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 
-				return true
+				return redirectPage
 			},
 
 			/**
@@ -1239,9 +1155,11 @@
 			 */
 			async beforeExit()
 			{
+				let leaveForm = true // Set to 'false' to cancel page redirect.
+
 				// Execute the "Before exit" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.beforeExit)
-				for (const trigger of triggers)
+				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
 				this.emitEvent('before-exit-form')
@@ -1251,7 +1169,7 @@
 // eslint-disable-next-line
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 
-				return true
+				return leaveForm
 			},
 
 			/**
@@ -1261,7 +1179,7 @@
 			{
 				// Execute the "After exit" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.afterExit)
-				for (const trigger of triggers)
+				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
 				this.emitEvent('after-exit-form')

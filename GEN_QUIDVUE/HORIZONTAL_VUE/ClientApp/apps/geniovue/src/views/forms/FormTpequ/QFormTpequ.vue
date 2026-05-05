@@ -9,13 +9,12 @@
 			<div
 				v-if="showFormHeader"
 				class="c-action-bar">
-				<component
+				<h1
 					v-if="formControl.uiComponents.header && formInfo.designation"
-					:is="topHeadingTag"
 					:id="formTitleId"
 					class="form-header">
 					{{ formInfo.designation }}
-				</component>
+				</h1>
 
 				<div class="c-action-bar__menu">
 					<template
@@ -39,13 +38,9 @@
 									:label="btn.label"
 									:disabled="btn.disabled"
 									@click="btn.action">
-									<template v-if="btn.icon">
-										<q-badge-indicator
-											:enabled="btn.badge?.isVisible ?? false"
-											:color="btn.badge?.color">
-											<q-icon v-bind="btn.icon" />
-										</q-badge-indicator>
-									</template>
+									<q-icon
+										v-if="btn.icon"
+										v-bind="btn.icon" />
 								</q-toggle-group-item>
 							</template>
 						</q-toggle-group>
@@ -57,7 +52,7 @@
 				v-if="$app.layout.FormAnchorsPosition === 'form-header' && visibleGroups.length > 0"
 				:anchors="anchorGroups"
 				:controls="visibleControls"
-				@focus-control="focusControl" />
+				@focus-control="(...args) => focusControl(...args)" />
 		</div>
 	</teleport>
 
@@ -78,7 +73,6 @@
 						v-if="btn.isActive && btn.isVisible && btn.showInHeading"
 						:id="`heading-${btn.id}`"
 						:label="btn.text"
-						:color="btn.color"
 						:variant="btn.variant"
 						:disabled="btn.disabled"
 						:icon-pos="btn.iconPos"
@@ -92,29 +86,29 @@
 			</q-button-group>
 		</div>
 
-		<q-container
-			fluid
+		<div
+			class="form-flow"
 			data-key="TPEQU"
-			:data-identifier="primaryKeyValue"
-			:data-loading="!formInitialDataLoaded || !isActiveForm">
+			:data-loading="!formInitialDataLoaded">
 			<template v-if="formControl.initialized && showFormBody">
-				<q-row v-if="controls.TPEQU___PSEUDNOVOGR01.isVisible">
-					<q-col v-if="controls.TPEQU___PSEUDNOVOGR01.isVisible">
+				<q-row-container
+					v-show="controls.TPEQU___PSEUDNOVOGR01.isVisible"
+					is-large>
+					<q-control-wrapper
+						v-show="controls.TPEQU___PSEUDNOVOGR01.isVisible"
+						class="${Vue.GetControlWrapperClass($controlsColumn)}">
 						<q-group-box-container
-							v-if="controls.TPEQU___PSEUDNOVOGR01.isVisible"
+							id="TPEQU___PSEUDNOVOGR01"
 							v-bind="controls.TPEQU___PSEUDNOVOGR01"
-							:id="getControlId(controls.TPEQU___PSEUDNOVOGR01)"
-							:no-border="controls.TPEQU___PSEUDNOVOGR01.borderless">
+							:is-visible="controls.TPEQU___PSEUDNOVOGR01.isVisible">
 							<!-- Start TPEQU___PSEUDNOVOGR01 -->
-							<q-row v-if="controls.TPEQU___FAMILFAMILY__.isVisible || controls.TPEQU___TPEQUTIPOEQUI.isVisible || controls.TPEQU___TPEQUTPEQUCOD.isVisible || controls.TPEQU___TPEQUNIVEL___.isVisible || controls.TPEQU___TPEQUTPEQUPAI.isVisible">
-								<q-col
-									v-if="controls.TPEQU___FAMILFAMILY__.isVisible"
-									cols="auto">
+							<q-row-container v-show="controls.TPEQU___FAMILFAMILY__.isVisible || controls.TPEQU___TPEQUTIPOEQUI.isVisible || controls.TPEQU___TPEQUTPEQUCOD.isVisible || controls.TPEQU___TPEQUNIVEL___.isVisible || controls.TPEQU___TPEQUTPEQUPAI.isVisible">
+								<q-control-wrapper
+									v-show="controls.TPEQU___FAMILFAMILY__.isVisible"
+									class="${Vue.GetControlWrapperClass($controlsColumn)}">
 									<base-input-structure
-										v-if="controls.TPEQU___FAMILFAMILY__.isVisible"
 										class="i-text"
-										v-bind="controls.TPEQU___FAMILFAMILY__.wrapperProps"
-										:id="getControlId(controls.TPEQU___FAMILFAMILY__)"
+										v-bind="controls.TPEQU___FAMILFAMILY__"
 										v-on="controls.TPEQU___FAMILFAMILY__.handlers"
 										:loading="controls.TPEQU___FAMILFAMILY__.props.loading"
 										:reporting-mode-on="reportingModeCAV"
@@ -122,60 +116,51 @@
 										<q-lookup
 											v-if="controls.TPEQU___FAMILFAMILY__.isVisible"
 											v-bind="controls.TPEQU___FAMILFAMILY__.props"
-											:id="getControlId(controls.TPEQU___FAMILFAMILY__)"
 											v-on="controls.TPEQU___FAMILFAMILY__.handlers" />
 										<q-see-more-tpequ-familfamily
 											v-if="controls.TPEQU___FAMILFAMILY__.seeMoreIsVisible"
 											v-bind="controls.TPEQU___FAMILFAMILY__.seeMoreParams"
 											v-on="controls.TPEQU___FAMILFAMILY__.handlers" />
 									</base-input-structure>
-								</q-col>
-								<q-col
-									v-if="controls.TPEQU___TPEQUTIPOEQUI.isVisible"
-									cols="auto">
+								</q-control-wrapper>
+								<q-control-wrapper
+									v-show="controls.TPEQU___TPEQUTIPOEQUI.isVisible"
+									class="${Vue.GetControlWrapperClass($controlsColumn)}">
 									<base-input-structure
-										v-if="controls.TPEQU___TPEQUTIPOEQUI.isVisible"
 										class="i-text"
-										v-bind="controls.TPEQU___TPEQUTIPOEQUI.wrapperProps"
-										:id="getControlId(controls.TPEQU___TPEQUTIPOEQUI)"
+										v-bind="controls.TPEQU___TPEQUTIPOEQUI"
 										v-on="controls.TPEQU___TPEQUTIPOEQUI.handlers"
 										:loading="controls.TPEQU___TPEQUTIPOEQUI.props.loading"
 										:reporting-mode-on="reportingModeCAV"
 										:suggestion-mode-on="suggestionModeOn">
 										<q-text-field
 											v-bind="controls.TPEQU___TPEQUTIPOEQUI.props"
-											:id="getControlId(controls.TPEQU___TPEQUTIPOEQUI)"
 											@blur="onBlur(controls.TPEQU___TPEQUTIPOEQUI, model.ValTipoequi.value)"
 											@change="model.ValTipoequi.fnUpdateValueOnChange" />
 									</base-input-structure>
-								</q-col>
-								<q-col
-									v-if="controls.TPEQU___TPEQUTPEQUCOD.isVisible"
-									cols="auto">
+								</q-control-wrapper>
+								<q-control-wrapper
+									v-show="controls.TPEQU___TPEQUTPEQUCOD.isVisible"
+									class="${Vue.GetControlWrapperClass($controlsColumn)}">
 									<base-input-structure
-										v-if="controls.TPEQU___TPEQUTPEQUCOD.isVisible"
 										class="i-text"
-										v-bind="controls.TPEQU___TPEQUTPEQUCOD.wrapperProps"
-										:id="getControlId(controls.TPEQU___TPEQUTPEQUCOD)"
+										v-bind="controls.TPEQU___TPEQUTPEQUCOD"
 										v-on="controls.TPEQU___TPEQUTPEQUCOD.handlers"
 										:loading="controls.TPEQU___TPEQUTPEQUCOD.props.loading"
 										:reporting-mode-on="reportingModeCAV"
 										:suggestion-mode-on="suggestionModeOn">
 										<q-text-field
 											v-bind="controls.TPEQU___TPEQUTPEQUCOD.props"
-											:id="getControlId(controls.TPEQU___TPEQUTPEQUCOD)"
 											@blur="onBlur(controls.TPEQU___TPEQUTPEQUCOD, model.ValTpequcod.value)"
 											@change="model.ValTpequcod.fnUpdateValueOnChange" />
 									</base-input-structure>
-								</q-col>
-								<q-col
-									v-if="controls.TPEQU___TPEQUNIVEL___.isVisible"
-									cols="auto">
+								</q-control-wrapper>
+								<q-control-wrapper
+									v-show="controls.TPEQU___TPEQUNIVEL___.isVisible"
+									class="${Vue.GetControlWrapperClass($controlsColumn)}">
 									<base-input-structure
-										v-if="controls.TPEQU___TPEQUNIVEL___.isVisible"
 										class="i-text"
-										v-bind="controls.TPEQU___TPEQUNIVEL___.wrapperProps"
-										:id="getControlId(controls.TPEQU___TPEQUNIVEL___)"
+										v-bind="controls.TPEQU___TPEQUNIVEL___"
 										v-on="controls.TPEQU___TPEQUNIVEL___.handlers"
 										:loading="controls.TPEQU___TPEQUNIVEL___.props.loading"
 										:reporting-mode-on="reportingModeCAV"
@@ -183,39 +168,33 @@
 										<q-numeric-input
 											v-if="controls.TPEQU___TPEQUNIVEL___.isVisible"
 											v-bind="controls.TPEQU___TPEQUNIVEL___.props"
-											:id="getControlId(controls.TPEQU___TPEQUNIVEL___)"
 											@update:model-value="model.ValNivel.fnUpdateValue" />
 									</base-input-structure>
-								</q-col>
-								<q-col
-									v-if="controls.TPEQU___TPEQUTPEQUPAI.isVisible"
-									cols="auto">
+								</q-control-wrapper>
+								<q-control-wrapper
+									v-show="controls.TPEQU___TPEQUTPEQUPAI.isVisible"
+									class="${Vue.GetControlWrapperClass($controlsColumn)}">
 									<base-input-structure
-										v-if="controls.TPEQU___TPEQUTPEQUPAI.isVisible"
 										class="i-text"
-										v-bind="controls.TPEQU___TPEQUTPEQUPAI.wrapperProps"
-										:id="getControlId(controls.TPEQU___TPEQUTPEQUPAI)"
+										v-bind="controls.TPEQU___TPEQUTPEQUPAI"
 										v-on="controls.TPEQU___TPEQUTPEQUPAI.handlers"
 										:loading="controls.TPEQU___TPEQUTPEQUPAI.props.loading"
 										:reporting-mode-on="reportingModeCAV"
 										:suggestion-mode-on="suggestionModeOn">
 										<q-text-field
 											v-bind="controls.TPEQU___TPEQUTPEQUPAI.props"
-											:id="getControlId(controls.TPEQU___TPEQUTPEQUPAI)"
 											@blur="onBlur(controls.TPEQU___TPEQUTPEQUPAI, model.ValTpequpai.value)"
 											@change="model.ValTpequpai.fnUpdateValueOnChange" />
 									</base-input-structure>
-								</q-col>
-							</q-row>
-							<q-row v-if="controls.TPEQU___TPEQUQTDEQUIP.isVisible">
-								<q-col
-									v-if="controls.TPEQU___TPEQUQTDEQUIP.isVisible"
-									cols="auto">
+								</q-control-wrapper>
+							</q-row-container>
+							<q-row-container v-show="controls.TPEQU___TPEQUQTDEQUIP.isVisible">
+								<q-control-wrapper
+									v-show="controls.TPEQU___TPEQUQTDEQUIP.isVisible"
+									class="${Vue.GetControlWrapperClass($controlsColumn)}">
 									<base-input-structure
-										v-if="controls.TPEQU___TPEQUQTDEQUIP.isVisible"
 										class="i-text"
-										v-bind="controls.TPEQU___TPEQUQTDEQUIP.wrapperProps"
-										:id="getControlId(controls.TPEQU___TPEQUQTDEQUIP)"
+										v-bind="controls.TPEQU___TPEQUQTDEQUIP"
 										v-on="controls.TPEQU___TPEQUQTDEQUIP.handlers"
 										:loading="controls.TPEQU___TPEQUQTDEQUIP.props.loading"
 										:reporting-mode-on="reportingModeCAV"
@@ -223,86 +202,77 @@
 										<q-numeric-input
 											v-if="controls.TPEQU___TPEQUQTDEQUIP.isVisible"
 											v-bind="controls.TPEQU___TPEQUQTDEQUIP.props"
-											:id="getControlId(controls.TPEQU___TPEQUQTDEQUIP)"
 											@update:model-value="model.ValQtdequip.fnUpdateValue" />
 									</base-input-structure>
-								</q-col>
-							</q-row>
+								</q-control-wrapper>
+							</q-row-container>
 							<!-- End TPEQU___PSEUDNOVOGR01 -->
 						</q-group-box-container>
-					</q-col>
-				</q-row>
-				<q-row v-if="controls.TPEQU___PSEUDNOVOGR05.isVisible">
-					<q-col v-if="controls.TPEQU___PSEUDNOVOGR05.isVisible">
+					</q-control-wrapper>
+				</q-row-container>
+				<q-row-container
+					v-show="controls.TPEQU___PSEUDNOVOGR05.isVisible"
+					is-large>
+					<q-control-wrapper
+						v-show="controls.TPEQU___PSEUDNOVOGR05.isVisible"
+						class="${Vue.GetControlWrapperClass($controlsColumn)}">
 						<q-accordion
 							v-if="controls.TPEQU___PSEUDNOVOGR05.isVisible"
-							:id="getControlId(controls.TPEQU___PSEUDNOVOGR05)"
-							v-model="controls.TPEQU___PSEUDNOVOGR05.openChild">
+							id="TPEQU___PSEUDNOVOGR05"
+							v-bind="controls.TPEQU___PSEUDNOVOGR05">
 							<!-- Start TPEQU___PSEUDNOVOGR05 -->
-							<q-accordion-item
-								v-if="controls.TPEQU___PSEUDNOVOGR04.isVisible"
-								:id="getControlId(controls.TPEQU___PSEUDNOVOGR04) + '-container'"
-								value="TPEQU___PSEUDNOVOGR04"
-								:title="controls.TPEQU___PSEUDNOVOGR04.label">
+							<q-group-collapsible
+								id="TPEQU___PSEUDNOVOGR04"
+								v-bind="controls.TPEQU___PSEUDNOVOGR04"
+								v-on="controls.TPEQU___PSEUDNOVOGR04.handlers">
 								<!-- Start TPEQU___PSEUDNOVOGR04 -->
-								<q-row v-if="controls.TPEQU___TPEQUKIT_____.isVisible">
-									<q-col
-										v-if="controls.TPEQU___TPEQUKIT_____.isVisible"
-										cols="auto">
+								<q-row-container v-show="controls.TPEQU___TPEQUKIT_____.isVisible">
+									<q-control-wrapper
+										v-show="controls.TPEQU___TPEQUKIT_____.isVisible"
+										class="${Vue.GetControlWrapperClass($controlsColumn)}">
 										<base-input-structure
-											v-if="controls.TPEQU___TPEQUKIT_____.isVisible"
-											class="i-text"
-											v-bind="controls.TPEQU___TPEQUKIT_____.wrapperProps"
-											:id="getControlId(controls.TPEQU___TPEQUKIT_____)"
+											class="i-checkbox"
+											v-bind="controls.TPEQU___TPEQUKIT_____"
 											v-on="controls.TPEQU___TPEQUKIT_____.handlers"
 											:loading="controls.TPEQU___TPEQUKIT_____.props.loading"
 											:reporting-mode-on="reportingModeCAV"
 											:suggestion-mode-on="suggestionModeOn">
 											<template #label>
-												<q-checkbox
+												<q-checkbox-input
 													v-if="controls.TPEQU___TPEQUKIT_____.isVisible"
 													v-bind="controls.TPEQU___TPEQUKIT_____.props"
-													:id="getControlId(controls.TPEQU___TPEQUKIT_____)"
 													v-on="controls.TPEQU___TPEQUKIT_____.handlers" />
 											</template>
 										</base-input-structure>
-									</q-col>
-								</q-row>
-								<q-row v-if="controls.TPEQU___PSEUDCOMPONEN.isVisible">
-									<q-col
-										v-if="controls.TPEQU___PSEUDCOMPONEN.isVisible"
-										cols="auto">
+									</q-control-wrapper>
+								</q-row-container>
+								<q-row-container v-show="controls.TPEQU___PSEUDCOMPONEN.isVisible">
+									<q-control-wrapper
+										v-show="controls.TPEQU___PSEUDCOMPONEN.isVisible"
+										class="${Vue.GetControlWrapperClass($controlsColumn)}">
 										<q-table
-											v-if="controls.TPEQU___PSEUDCOMPONEN.isVisible"
+											v-show="controls.TPEQU___PSEUDCOMPONEN.isVisible"
 											v-bind="controls.TPEQU___PSEUDCOMPONEN"
-											:id="getControlId(controls.TPEQU___PSEUDCOMPONEN)"
-											v-on="controls.TPEQU___PSEUDCOMPONEN.handlers">
-											<template #header>
-												<q-table-config
-													:table-ctrl="controls.TPEQU___PSEUDCOMPONEN"
-													v-on="controls.TPEQU___PSEUDCOMPONEN.handlers" />
-											</template>
-											<!-- USE /[MANUAL GQT CUSTOM_TABLE TPEQU___PSEUDCOMPONEN]/ -->
-										</q-table>
-									</q-col>
-								</q-row>
+											v-on="controls.TPEQU___PSEUDCOMPONEN.handlers" />
+										<q-table-extra-extension
+											:list-ctrl="controls.TPEQU___PSEUDCOMPONEN"
+											v-on="controls.TPEQU___PSEUDCOMPONEN.handlers" />
+									</q-control-wrapper>
+								</q-row-container>
 								<!-- End TPEQU___PSEUDNOVOGR04 -->
-							</q-accordion-item>
-							<q-accordion-item
-								v-if="controls.TPEQU___PSEUDNOVOGR03.isVisible"
-								:id="getControlId(controls.TPEQU___PSEUDNOVOGR03) + '-container'"
-								value="TPEQU___PSEUDNOVOGR03"
-								:title="controls.TPEQU___PSEUDNOVOGR03.label">
+							</q-group-collapsible>
+							<q-group-collapsible
+								id="TPEQU___PSEUDNOVOGR03"
+								v-bind="controls.TPEQU___PSEUDNOVOGR03"
+								v-on="controls.TPEQU___PSEUDNOVOGR03.handlers">
 								<!-- Start TPEQU___PSEUDNOVOGR03 -->
-								<q-row v-if="controls.TPEQU___TPEQUPRECOMAX.isVisible || controls.TPEQU___TPEQUPRECOULT.isVisible || controls.TPEQU___TPEQUSINCE___.isVisible || controls.TPEQU___PSEUDEVOLUCAO.isVisible">
-									<q-col
-										v-if="controls.TPEQU___TPEQUPRECOMAX.isVisible"
-										cols="auto">
+								<q-row-container v-show="controls.TPEQU___TPEQUPRECOMAX.isVisible || controls.TPEQU___TPEQUPRECOULT.isVisible || controls.TPEQU___TPEQUSINCE___.isVisible || controls.TPEQU___PSEUDEVOLUCAO.isVisible">
+									<q-control-wrapper
+										v-show="controls.TPEQU___TPEQUPRECOMAX.isVisible"
+										class="${Vue.GetControlWrapperClass($controlsColumn)}">
 										<base-input-structure
-											v-if="controls.TPEQU___TPEQUPRECOMAX.isVisible"
 											class="i-text"
-											v-bind="controls.TPEQU___TPEQUPRECOMAX.wrapperProps"
-											:id="getControlId(controls.TPEQU___TPEQUPRECOMAX)"
+											v-bind="controls.TPEQU___TPEQUPRECOMAX"
 											v-on="controls.TPEQU___TPEQUPRECOMAX.handlers"
 											:loading="controls.TPEQU___TPEQUPRECOMAX.props.loading"
 											:reporting-mode-on="reportingModeCAV"
@@ -310,18 +280,15 @@
 											<q-numeric-input
 												v-if="controls.TPEQU___TPEQUPRECOMAX.isVisible"
 												v-bind="controls.TPEQU___TPEQUPRECOMAX.props"
-												:id="getControlId(controls.TPEQU___TPEQUPRECOMAX)"
 												@update:model-value="model.ValPrecomax.fnUpdateValue" />
 										</base-input-structure>
-									</q-col>
-									<q-col
-										v-if="controls.TPEQU___TPEQUPRECOULT.isVisible"
-										cols="auto">
+									</q-control-wrapper>
+									<q-control-wrapper
+										v-show="controls.TPEQU___TPEQUPRECOULT.isVisible"
+										class="${Vue.GetControlWrapperClass($controlsColumn)}">
 										<base-input-structure
-											v-if="controls.TPEQU___TPEQUPRECOULT.isVisible"
 											class="i-text"
-											v-bind="controls.TPEQU___TPEQUPRECOULT.wrapperProps"
-											:id="getControlId(controls.TPEQU___TPEQUPRECOULT)"
+											v-bind="controls.TPEQU___TPEQUPRECOULT"
 											v-on="controls.TPEQU___TPEQUPRECOULT.handlers"
 											:loading="controls.TPEQU___TPEQUPRECOULT.props.loading"
 											:reporting-mode-on="reportingModeCAV"
@@ -329,18 +296,15 @@
 											<q-numeric-input
 												v-if="controls.TPEQU___TPEQUPRECOULT.isVisible"
 												v-bind="controls.TPEQU___TPEQUPRECOULT.props"
-												:id="getControlId(controls.TPEQU___TPEQUPRECOULT)"
 												@update:model-value="model.ValPrecoult.fnUpdateValue" />
 										</base-input-structure>
-									</q-col>
-									<q-col
-										v-if="controls.TPEQU___TPEQUSINCE___.isVisible"
-										cols="auto">
+									</q-control-wrapper>
+									<q-control-wrapper
+										v-show="controls.TPEQU___TPEQUSINCE___.isVisible"
+										class="${Vue.GetControlWrapperClass($controlsColumn)}">
 										<base-input-structure
-											v-if="controls.TPEQU___TPEQUSINCE___.isVisible"
 											class="i-text"
-											v-bind="controls.TPEQU___TPEQUSINCE___.wrapperProps"
-											:id="getControlId(controls.TPEQU___TPEQUSINCE___)"
+											v-bind="controls.TPEQU___TPEQUSINCE___"
 											v-on="controls.TPEQU___TPEQUSINCE___.handlers"
 											:loading="controls.TPEQU___TPEQUSINCE___.props.loading"
 											:reporting-mode-on="reportingModeCAV"
@@ -348,159 +312,134 @@
 											<q-date-time-picker
 												v-if="controls.TPEQU___TPEQUSINCE___.isVisible"
 												v-bind="controls.TPEQU___TPEQUSINCE___.props"
-												:id="getControlId(controls.TPEQU___TPEQUSINCE___)"
 												:model-value="model.ValSince.value"
 												@reset-icon-click="model.ValSince.fnUpdateValue(model.ValSince.originalValue ?? new Date())"
 												@update:model-value="model.ValSince.fnUpdateValue($event ?? '')" />
 										</base-input-structure>
-									</q-col>
-									<q-col
-										v-if="controls.TPEQU___PSEUDEVOLUCAO.isVisible"
-										cols="auto">
+									</q-control-wrapper>
+									<q-control-wrapper
+										v-show="controls.TPEQU___PSEUDEVOLUCAO.isVisible"
+										class="${Vue.GetControlWrapperClass($controlsColumn)}">
 										<q-table
-											v-if="controls.TPEQU___PSEUDEVOLUCAO.isVisible"
+											v-show="controls.TPEQU___PSEUDEVOLUCAO.isVisible"
 											v-bind="controls.TPEQU___PSEUDEVOLUCAO"
-											:id="getControlId(controls.TPEQU___PSEUDEVOLUCAO)"
-											v-on="controls.TPEQU___PSEUDEVOLUCAO.handlers">
-											<template #header>
-												<q-table-config
-													:table-ctrl="controls.TPEQU___PSEUDEVOLUCAO"
-													v-on="controls.TPEQU___PSEUDEVOLUCAO.handlers" />
-											</template>
-											<!-- USE /[MANUAL GQT CUSTOM_TABLE TPEQU___PSEUDEVOLUCAO]/ -->
-										</q-table>
-									</q-col>
-								</q-row>
+											v-on="controls.TPEQU___PSEUDEVOLUCAO.handlers" />
+										<q-table-extra-extension
+											:list-ctrl="controls.TPEQU___PSEUDEVOLUCAO"
+											v-on="controls.TPEQU___PSEUDEVOLUCAO.handlers" />
+									</q-control-wrapper>
+								</q-row-container>
 								<!-- End TPEQU___PSEUDNOVOGR03 -->
-							</q-accordion-item>
-							<q-accordion-item
-								v-if="controls.TPEQU___PSEUDNOVOGR02.isVisible"
-								:id="getControlId(controls.TPEQU___PSEUDNOVOGR02) + '-container'"
-								value="TPEQU___PSEUDNOVOGR02"
-								:title="controls.TPEQU___PSEUDNOVOGR02.label">
+							</q-group-collapsible>
+							<q-group-collapsible
+								id="TPEQU___PSEUDNOVOGR02"
+								v-bind="controls.TPEQU___PSEUDNOVOGR02"
+								v-on="controls.TPEQU___PSEUDNOVOGR02.handlers">
 								<!-- Start TPEQU___PSEUDNOVOGR02 -->
-								<q-row v-if="controls.TPEQU___TPEQUBACKCOLO.isVisible || controls.TPEQU___TPEQUCORLETRA.isVisible">
-									<q-col
-										v-if="controls.TPEQU___TPEQUBACKCOLO.isVisible"
-										cols="auto">
+								<q-row-container v-show="controls.TPEQU___TPEQUBACKCOLO.isVisible || controls.TPEQU___TPEQUCORLETRA.isVisible">
+									<q-control-wrapper
+										v-show="controls.TPEQU___TPEQUBACKCOLO.isVisible"
+										class="${Vue.GetControlWrapperClass($controlsColumn)}">
 										<base-input-structure
-											v-if="controls.TPEQU___TPEQUBACKCOLO.isVisible"
 											class="i-text"
-											v-bind="controls.TPEQU___TPEQUBACKCOLO.wrapperProps"
-											:id="getControlId(controls.TPEQU___TPEQUBACKCOLO)"
+											v-bind="controls.TPEQU___TPEQUBACKCOLO"
 											v-on="controls.TPEQU___TPEQUBACKCOLO.handlers"
 											:loading="controls.TPEQU___TPEQUBACKCOLO.props.loading"
 											:reporting-mode-on="reportingModeCAV"
 											:suggestion-mode-on="suggestionModeOn">
 											<q-text-field
 												v-bind="controls.TPEQU___TPEQUBACKCOLO.props"
-												:id="getControlId(controls.TPEQU___TPEQUBACKCOLO)"
 												@blur="onBlur(controls.TPEQU___TPEQUBACKCOLO, model.ValBackcolo.value)"
 												@change="model.ValBackcolo.fnUpdateValueOnChange" />
 										</base-input-structure>
-									</q-col>
-									<q-col
-										v-if="controls.TPEQU___TPEQUCORLETRA.isVisible"
-										cols="auto">
+									</q-control-wrapper>
+									<q-control-wrapper
+										v-show="controls.TPEQU___TPEQUCORLETRA.isVisible"
+										class="${Vue.GetControlWrapperClass($controlsColumn)}">
 										<base-input-structure
-											v-if="controls.TPEQU___TPEQUCORLETRA.isVisible"
 											class="i-text"
-											v-bind="controls.TPEQU___TPEQUCORLETRA.wrapperProps"
-											:id="getControlId(controls.TPEQU___TPEQUCORLETRA)"
+											v-bind="controls.TPEQU___TPEQUCORLETRA"
 											v-on="controls.TPEQU___TPEQUCORLETRA.handlers"
 											:loading="controls.TPEQU___TPEQUCORLETRA.props.loading"
 											:reporting-mode-on="reportingModeCAV"
 											:suggestion-mode-on="suggestionModeOn">
 											<q-text-field
 												v-bind="controls.TPEQU___TPEQUCORLETRA.props"
-												:id="getControlId(controls.TPEQU___TPEQUCORLETRA)"
 												@blur="onBlur(controls.TPEQU___TPEQUCORLETRA, model.ValCorletra.value)"
 												@change="model.ValCorletra.fnUpdateValueOnChange" />
 										</base-input-structure>
-									</q-col>
-								</q-row>
+									</q-control-wrapper>
+								</q-row-container>
 								<!-- End TPEQU___PSEUDNOVOGR02 -->
-							</q-accordion-item>
-							<q-accordion-item
-								v-if="controls.TPEQU___PSEUDNOVOGR06.isVisible"
-								:id="getControlId(controls.TPEQU___PSEUDNOVOGR06) + '-container'"
-								value="TPEQU___PSEUDNOVOGR06"
-								:title="controls.TPEQU___PSEUDNOVOGR06.label">
+							</q-group-collapsible>
+							<q-group-collapsible
+								id="TPEQU___PSEUDNOVOGR06"
+								v-bind="controls.TPEQU___PSEUDNOVOGR06"
+								v-on="controls.TPEQU___PSEUDNOVOGR06.handlers">
 								<!-- Start TPEQU___PSEUDNOVOGR06 -->
-								<q-row v-if="controls.TPEQU___PSEUDINSTALAC.isVisible || controls.TPEQU___PSEUDINSTALA1.isVisible">
-									<q-col
-										v-if="controls.TPEQU___PSEUDINSTALAC.isVisible"
-										cols="auto">
+								<q-row-container v-show="controls.TPEQU___PSEUDINSTALAC.isVisible || controls.TPEQU___PSEUDINSTALA1.isVisible">
+									<q-control-wrapper
+										v-show="controls.TPEQU___PSEUDINSTALAC.isVisible"
+										class="${Vue.GetControlWrapperClass($controlsColumn)}">
 										<q-table
-											v-if="controls.TPEQU___PSEUDINSTALAC.isVisible"
+											v-show="controls.TPEQU___PSEUDINSTALAC.isVisible"
 											v-bind="controls.TPEQU___PSEUDINSTALAC"
-											:id="getControlId(controls.TPEQU___PSEUDINSTALAC)"
-											v-on="controls.TPEQU___PSEUDINSTALAC.handlers">
-											<template #header>
-												<q-table-config
-													:table-ctrl="controls.TPEQU___PSEUDINSTALAC"
-													v-on="controls.TPEQU___PSEUDINSTALAC.handlers" />
-											</template>
-											<!-- USE /[MANUAL GQT CUSTOM_TABLE TPEQU___PSEUDINSTALAC]/ -->
-										</q-table>
-									</q-col>
-									<q-col
-										v-if="controls.TPEQU___PSEUDINSTALA1.isVisible"
-										cols="auto">
+											v-on="controls.TPEQU___PSEUDINSTALAC.handlers" />
+										<q-table-extra-extension
+											:list-ctrl="controls.TPEQU___PSEUDINSTALAC"
+											v-on="controls.TPEQU___PSEUDINSTALAC.handlers" />
+									</q-control-wrapper>
+									<q-control-wrapper
+										v-show="controls.TPEQU___PSEUDINSTALA1.isVisible"
+										class="${Vue.GetControlWrapperClass($controlsColumn)}">
 										<q-table
-											v-if="controls.TPEQU___PSEUDINSTALA1.isVisible"
+											v-show="controls.TPEQU___PSEUDINSTALA1.isVisible"
 											v-bind="controls.TPEQU___PSEUDINSTALA1"
-											:id="getControlId(controls.TPEQU___PSEUDINSTALA1)"
-											v-on="controls.TPEQU___PSEUDINSTALA1.handlers">
-											<template #header>
-												<q-table-config
-													:table-ctrl="controls.TPEQU___PSEUDINSTALA1"
-													v-on="controls.TPEQU___PSEUDINSTALA1.handlers" />
-											</template>
-											<!-- USE /[MANUAL GQT CUSTOM_TABLE TPEQU___PSEUDINSTALA1]/ -->
-										</q-table>
-									</q-col>
-								</q-row>
+											v-on="controls.TPEQU___PSEUDINSTALA1.handlers" />
+										<q-table-extra-extension
+											:list-ctrl="controls.TPEQU___PSEUDINSTALA1"
+											v-on="controls.TPEQU___PSEUDINSTALA1.handlers" />
+									</q-control-wrapper>
+								</q-row-container>
 								<!-- End TPEQU___PSEUDNOVOGR06 -->
-							</q-accordion-item>
+							</q-group-collapsible>
 							<!-- End TPEQU___PSEUDNOVOGR05 -->
 						</q-accordion>
-					</q-col>
-				</q-row>
-				<q-row v-if="controls.TPEQU___PSEUDUNICO___.isVisible">
-					<q-col
-						v-if="controls.TPEQU___PSEUDUNICO___.isVisible"
-						cols="auto">
+					</q-control-wrapper>
+				</q-row-container>
+				<q-row-container v-show="controls.TPEQU___PSEUDUNICO___.isVisible">
+					<q-control-wrapper
+						v-show="controls.TPEQU___PSEUDUNICO___.isVisible"
+						class="${Vue.GetControlWrapperClass($controlsColumn)}">
 						<base-input-structure
-							v-if="controls.TPEQU___PSEUDUNICO___.isVisible"
 							class="i-button"
-							v-bind="controls.TPEQU___PSEUDUNICO___.wrapperProps"
-							:id="getControlId(controls.TPEQU___PSEUDUNICO___)"
+							v-bind="controls.TPEQU___PSEUDUNICO___"
 							v-on="controls.TPEQU___PSEUDUNICO___.handlers"
 							:loading="controls.TPEQU___PSEUDUNICO___.props.loading"
 							:reporting-mode-on="reportingModeCAV"
 							:suggestion-mode-on="suggestionModeOn">
 							<q-button
 								v-if="controls.TPEQU___PSEUDUNICO___.isVisible"
-								v-bind="controls.TPEQU___PSEUDUNICO___.props"
-								:id="getControlId(controls.TPEQU___PSEUDUNICO___)"
+								id="TPEQU___PSEUDUNICO___"
+								:label="controls.TPEQU___PSEUDUNICO___.label"
+								:disabled="controls.TPEQU___PSEUDUNICO___.isBlocked"
 								@click="controls.TPEQU___PSEUDUNICO___.action($event)">
 								<q-icon v-bind="controls.TPEQU___PSEUDUNICO___.icon" />
 							</q-button>
 						</base-input-structure>
-					</q-col>
-				</q-row>
+					</q-control-wrapper>
+				</q-row-container>
 			</template>
-		</q-container>
+		</div>
 	</teleport>
 
-	<q-divider v-if="!isPopup && showFormFooter" />
+	<hr v-if="!isPopup && showFormFooter" />
 
 	<teleport
 		v-if="formModalIsReady && showFormFooter"
 		:to="`#${uiContainersId.footer}`"
 		:disabled="!isPopup || isNested">
-		<q-row v-if="showFormFooter">
+		<q-row-container v-if="showFormFooter">
 			<div id="footer-action-btns">
 				<template
 					v-for="btn in formButtons"
@@ -509,7 +448,6 @@
 						v-if="btn.isActive && btn.isVisible && btn.showInFooter"
 						:id="`bottom-${btn.id}`"
 						:label="btn.text"
-						:color="btn.color"
 						:variant="btn.variant"
 						:disabled="btn.disabled"
 						:icon-pos="btn.iconPos"
@@ -521,12 +459,12 @@
 					</q-button>
 				</template>
 			</div>
-		</q-row>
+		</q-row-container>
 	</teleport>
 </template>
 
 <script>
-	/* eslint-disable @typescript-eslint/no-unused-vars */
+	/* eslint-disable no-unused-vars */
 	import { computed, defineAsyncComponent, readonly } from 'vue'
 	import { useRoute } from 'vue-router'
 
@@ -546,7 +484,7 @@
 	import qApi from '@/api/genio/quidgestFunctions.js'
 	import qFunctions from '@/api/genio/projectFunctions.js'
 	import qProjArrays from '@/api/genio/projectArrays.js'
-	/* eslint-enable @typescript-eslint/no-unused-vars */
+	/* eslint-enable no-unused-vars */
 
 	import FormViewModel from './QFormTpequViewModel.js'
 
@@ -624,8 +562,7 @@
 					primaryKey: 'ValCodtpequ',
 					designation: computed(() => this.Resources.TYPE_OF_EQUIPMENT18080),
 					identifier: '', // Unique identifier received by route (when it's nested).
-					mode: '',
-					availableAgents: [],
+					mode: ''
 				},
 
 				formButtons: {
@@ -749,11 +686,7 @@
 						showInFooter: true,
 						isActive: true,
 						isVisible: computed(() => vm.authData.isAllowed && vm.isEditable),
-						action: vm.saveForm,
-						badge: {
-							isVisible: computed(() => vm.model?.isDirty === true),
-							color: 'highlight'
-						}
+						action: vm.saveForm
 					},
 					confirmBtn: {
 						id: 'confirm-btn',
@@ -860,7 +793,6 @@
 						label: computed(() => this.Resources.IDENTIFICATION40793),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						borderless: false,
 						isCollapsible: false,
 						anchored: false,
 						directChildren: ['TPEQU___FAMILFAMILY__', 'TPEQU___TPEQUTIPOEQUI', 'TPEQU___TPEQUTPEQUCOD', 'TPEQU___TPEQUNIVEL___', 'TPEQU___TPEQUTPEQUPAI', 'TPEQU___TPEQUQTDEQUIP'],
@@ -908,6 +840,7 @@
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'TPEQU___PSEUDNOVOGR01',
 						maxLength: 50,
+						labelId: 'label_TPEQU___TPEQUTIPOEQUI',
 						controlLimits: [
 						],
 					}, this),
@@ -922,6 +855,7 @@
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'TPEQU___PSEUDNOVOGR01',
 						maxLength: 20,
+						labelId: 'label_TPEQU___TPEQUTPEQUCOD',
 						mustBeFilled: true,
 						controlLimits: [
 						],
@@ -962,8 +896,6 @@
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'TPEQU___PSEUDNOVOGR05',
-						isInAccordion: true,
-						borderless: false,
 						isCollapsible: true,
 						anchored: false,
 						directChildren: ['TPEQU___TPEQUKIT_____', 'TPEQU___PSEUDCOMPONEN'],
@@ -1010,6 +942,7 @@
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'TPEQU___PSEUDNOVOGR02',
 						maxLength: 50,
+						labelId: 'label_TPEQU___TPEQUBACKCOLO',
 						controlLimits: [
 						],
 					}, this),
@@ -1024,6 +957,7 @@
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'TPEQU___PSEUDNOVOGR02',
 						maxLength: 50,
+						labelId: 'label_TPEQU___TPEQUCORLETRA',
 						controlLimits: [
 						],
 					}, this),
@@ -1038,6 +972,7 @@
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'TPEQU___PSEUDNOVOGR01',
 						maxLength: 20,
+						labelId: 'label_TPEQU___TPEQUTPEQUPAI',
 						controlLimits: [
 						],
 					}, this),
@@ -1068,19 +1003,18 @@
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'TPEQU___PSEUDNOVOGR03',
 						isFormulaBlocked: true,
-						dateTimeType: 'dateTime',
+						format: 'dateTime',
 						controlLimits: [
 						],
 					}, this),
 					TPEQU___PSEUDCOMPONEN: new fieldControlClass.TableListControl({
 						id: 'TPEQU___PSEUDCOMPONEN',
 						name: 'COMPONEN',
-						size: 'xxlarge',
+						size: '',
 						label: computed(() => this.Resources.COMPONENTES_DO_KIT59823),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'TPEQU___PSEUDNOVOGR04',
-						headerLevel: computed(() => this.baseHeadingLevel + 1),
 						controller: 'TPEQU',
 						action: 'Tpequ_ValComponen',
 						hasDependencies: false,
@@ -1095,7 +1029,6 @@
 								scrollData: 5,
 								maxDigits: 3,
 								decimalPlaces: 1,
-								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 2,
@@ -1105,7 +1038,6 @@
 								label: computed(() => this.Resources.TYPE_OF_EQUIPMENT18080),
 								dataLength: 50,
 								scrollData: 50,
-								export: 1,
 								pkColumn: 'ValCodtpequ',
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.NumericColumn({
@@ -1117,7 +1049,6 @@
 								scrollData: 3,
 								maxDigits: 3,
 								decimalPlaces: 0,
-								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 4,
@@ -1126,7 +1057,6 @@
 								field: 'DESCRIPT',
 								label: computed(() => this.Resources.DESCRIPTION07383),
 								scrollData: 30,
-								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 5,
@@ -1136,7 +1066,6 @@
 								label: computed(() => this.Resources.CODE49225),
 								dataLength: 10,
 								scrollData: 10,
-								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.HyperLinkColumn({
 								order: 6,
@@ -1146,7 +1075,6 @@
 								label: computed(() => this.Resources.SITE06486),
 								dataLength: 250,
 								scrollData: 30,
-								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 						],
 						config: {
@@ -1162,8 +1090,10 @@
 							permissions: {
 							},
 							searchBarConfig: {
-								visibility: false
+								visibility: false,
+								searchOnPressEnter: true
 							},
+							filtersVisible: false,
 							allowColumnFilters: false,
 							allowColumnSort: true,
 							crudActions: [
@@ -1241,7 +1171,9 @@
 									id: 'insert',
 									name: 'insert',
 									title: computed(() => this.Resources.INSERIR43365),
-									icon: { icon: 'add' },
+									icon: {
+										icon: 'add'
+									},
 									isInReadOnly: false,
 									params: {
 										canExecuteAction: vm.applyChanges,
@@ -1310,8 +1242,6 @@
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'TPEQU___PSEUDNOVOGR05',
-						isInAccordion: true,
-						borderless: false,
 						isCollapsible: true,
 						anchored: false,
 						directChildren: ['TPEQU___TPEQUPRECOMAX', 'TPEQU___TPEQUPRECOULT', 'TPEQU___TPEQUSINCE___', 'TPEQU___PSEUDEVOLUCAO'],
@@ -1321,12 +1251,11 @@
 					TPEQU___PSEUDEVOLUCAO: new fieldControlClass.TableListControl({
 						id: 'TPEQU___PSEUDEVOLUCAO',
 						name: 'EVOLUCAO',
-						size: 'large',
+						size: '',
 						label: computed(() => this.Resources.C51806),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'TPEQU___PSEUDNOVOGR03',
-						headerLevel: computed(() => this.baseHeadingLevel + 1),
 						controller: 'TPEQU',
 						action: 'Tpequ_ValEvolucao',
 						hasDependencies: true,
@@ -1340,7 +1269,6 @@
 								label: computed(() => this.Resources.SINCE47259),
 								scrollData: 16,
 								dateTimeType: 'dateTime',
-								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.CurrencyColumn({
 								order: 2,
@@ -1351,7 +1279,6 @@
 								scrollData: 16,
 								maxDigits: 9,
 								decimalPlaces: 2,
-								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 						],
 						config: {
@@ -1367,8 +1294,10 @@
 							permissions: {
 							},
 							searchBarConfig: {
-								visibility: false
+								visibility: false,
+								searchOnPressEnter: true
 							},
+							filtersVisible: false,
 							allowColumnFilters: false,
 							allowColumnSort: true,
 							crudActions: [
@@ -1446,7 +1375,9 @@
 									id: 'insert',
 									name: 'insert',
 									title: computed(() => this.Resources.INSERIR43365),
-									icon: { icon: 'add' },
+									icon: {
+										icon: 'add'
+									},
 									isInReadOnly: false,
 									params: {
 										canExecuteAction: vm.applyChanges,
@@ -1515,8 +1446,6 @@
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'TPEQU___PSEUDNOVOGR05',
-						isInAccordion: true,
-						borderless: false,
 						isCollapsible: true,
 						anchored: false,
 						directChildren: ['TPEQU___TPEQUBACKCOLO', 'TPEQU___TPEQUCORLETRA'],
@@ -1526,18 +1455,19 @@
 					TPEQU___PSEUDUNICO___: new fieldControlClass.ButtonControl({
 						id: 'TPEQU___PSEUDUNICO___',
 						name: 'UNICO',
+						size: 'small',
 						hasLabel: false,
 						label: computed(() => this.Resources.UNIQUE52117),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						icon: {
-							icon: computed(() => `${this.$app.resourcesPath}ok.ico?v=2828`),
+							icon: computed(() => `${this.$app.resourcesPath}ok.ico?v=3637`),
 							type: 'img',
 							role: 'presentation',
 						},
 						// eslint-disable-next-line
 						action: (event) => {
-							const btnAction = () => {
+							let btnAction = () => {
 								if (!vm.isEditable)
 									return Promise.resolve(true)
 
@@ -1561,7 +1491,7 @@
 									undefined,
 									vm.navigationId)
 							}
-							const options = {
+							let options = {
 								form: 'TPEQU',
 								callback: btnAction
 							}
@@ -1578,8 +1508,6 @@
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'TPEQU___PSEUDNOVOGR05',
-						isInAccordion: true,
-						borderless: false,
 						isCollapsible: true,
 						anchored: false,
 						directChildren: ['TPEQU___PSEUDINSTALAC', 'TPEQU___PSEUDINSTALA1'],
@@ -1589,12 +1517,11 @@
 					TPEQU___PSEUDINSTALAC: new fieldControlClass.TableListControl({
 						id: 'TPEQU___PSEUDINSTALAC',
 						name: 'INSTALAC',
-						size: 'xxlarge',
+						size: '',
 						label: computed(() => this.Resources.FACILITIES_23844),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'TPEQU___PSEUDNOVOGR06',
-						headerLevel: computed(() => this.baseHeadingLevel + 1),
 						controller: 'TPEQU',
 						action: 'Tpequ_ValInstalac',
 						hasDependencies: false,
@@ -1608,7 +1535,6 @@
 								label: computed(() => this.Resources.SCHEDULING24801),
 								dataLength: 85,
 								scrollData: 30,
-								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.DateColumn({
 								order: 2,
@@ -1618,7 +1544,6 @@
 								label: computed(() => this.Resources.BEGINNING18124),
 								scrollData: 16,
 								dateTimeType: 'dateTime',
-								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.DateColumn({
 								order: 3,
@@ -1628,7 +1553,6 @@
 								label: computed(() => this.Resources.END47577),
 								scrollData: 16,
 								dateTimeType: 'dateTime',
-								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 4,
@@ -1637,7 +1561,6 @@
 								field: 'DESCRIPT',
 								label: computed(() => this.Resources.DESCRIPTION07383),
 								scrollData: 30,
-								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.BooleanColumn({
 								order: 5,
@@ -1646,7 +1569,6 @@
 								field: 'ALLDAY',
 								label: computed(() => this.Resources.ALL_DAY18496),
 								scrollData: 1,
-								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.DateColumn({
 								order: 6,
@@ -1656,7 +1578,6 @@
 								label: computed(() => this.Resources.SINCE47259),
 								scrollData: 16,
 								dateTimeType: 'dateTime',
-								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.DateColumn({
 								order: 7,
@@ -1666,7 +1587,6 @@
 								label: computed(() => this.Resources.UNTIL39173),
 								scrollData: 16,
 								dateTimeType: 'dateTime',
-								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.NumericColumn({
 								order: 8,
@@ -1677,7 +1597,6 @@
 								scrollData: 10,
 								maxDigits: 7,
 								decimalPlaces: 2,
-								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.CurrencyColumn({
 								order: 9,
@@ -1688,7 +1607,6 @@
 								scrollData: 12,
 								maxDigits: 9,
 								decimalPlaces: 2,
-								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.CurrencyColumn({
 								order: 10,
@@ -1699,7 +1617,6 @@
 								scrollData: 12,
 								maxDigits: 9,
 								decimalPlaces: 2,
-								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.GeographicColumn({
 								order: 11,
@@ -1711,7 +1628,6 @@
 								scrollData: 30,
 								sortable: false,
 								searchable: false,
-								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 						],
 						config: {
@@ -1727,8 +1643,10 @@
 							permissions: {
 							},
 							searchBarConfig: {
-								visibility: false
+								visibility: false,
+								searchOnPressEnter: true
 							},
+							filtersVisible: false,
 							allowColumnFilters: false,
 							allowColumnSort: true,
 							crudActions: [
@@ -1806,7 +1724,9 @@
 									id: 'insert',
 									name: 'insert',
 									title: computed(() => this.Resources.INSERIR43365),
-									icon: { icon: 'add' },
+									icon: {
+										icon: 'add'
+									},
 									isInReadOnly: false,
 									params: {
 										canExecuteAction: vm.applyChanges,
@@ -1855,7 +1775,7 @@
 								sortOrder: 'asc'
 							}
 						},
-						globalEvents: ['changed-INSTA', 'changed-EQUIP', 'changed-TPEQU'],
+						globalEvents: ['changed-TPEQU', 'changed-INSTA', 'changed-EQUIP'],
 						uuid: 'Tpequ_ValInstalac',
 						allSelectedRows: 'false',
 						controlLimits: [
@@ -1870,12 +1790,11 @@
 					TPEQU___PSEUDINSTALA1: new fieldControlClass.TableListControl({
 						id: 'TPEQU___PSEUDINSTALA1',
 						name: 'INSTALA1',
-						size: 'xxlarge',
+						size: '',
 						label: computed(() => this.Resources.MAP_WITH_FACILITIES_33619),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'TPEQU___PSEUDNOVOGR06',
-						headerLevel: computed(() => this.baseHeadingLevel + 1),
 						controller: 'TPEQU',
 						action: 'Tpequ_ValInstala1',
 						hasDependencies: false,
@@ -1889,7 +1808,6 @@
 								label: computed(() => this.Resources.SCHEDULING24801),
 								dataLength: 85,
 								scrollData: 30,
-								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.DateColumn({
 								order: 2,
@@ -1899,7 +1817,6 @@
 								label: computed(() => this.Resources.BEGINNING18124),
 								scrollData: 16,
 								dateTimeType: 'dateTime',
-								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.DateColumn({
 								order: 3,
@@ -1909,7 +1826,6 @@
 								label: computed(() => this.Resources.END47577),
 								scrollData: 16,
 								dateTimeType: 'dateTime',
-								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 4,
@@ -1918,7 +1834,6 @@
 								field: 'DESCRIPT',
 								label: computed(() => this.Resources.DESCRIPTION07383),
 								scrollData: 30,
-								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.BooleanColumn({
 								order: 5,
@@ -1927,7 +1842,6 @@
 								field: 'ALLDAY',
 								label: computed(() => this.Resources.ALL_DAY18496),
 								scrollData: 1,
-								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.DateColumn({
 								order: 6,
@@ -1937,7 +1851,6 @@
 								label: computed(() => this.Resources.SINCE47259),
 								scrollData: 16,
 								dateTimeType: 'dateTime',
-								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.DateColumn({
 								order: 7,
@@ -1947,7 +1860,6 @@
 								label: computed(() => this.Resources.UNTIL39173),
 								scrollData: 16,
 								dateTimeType: 'dateTime',
-								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.NumericColumn({
 								order: 8,
@@ -1958,7 +1870,6 @@
 								scrollData: 10,
 								maxDigits: 7,
 								decimalPlaces: 2,
-								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.CurrencyColumn({
 								order: 9,
@@ -1969,7 +1880,6 @@
 								scrollData: 12,
 								maxDigits: 9,
 								decimalPlaces: 2,
-								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.CurrencyColumn({
 								order: 10,
@@ -1980,7 +1890,6 @@
 								scrollData: 12,
 								maxDigits: 9,
 								decimalPlaces: 2,
-								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.GeographicColumn({
 								order: 11,
@@ -1992,7 +1901,6 @@
 								scrollData: 30,
 								sortable: false,
 								searchable: false,
-								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 						],
 						config: {
@@ -2008,8 +1916,10 @@
 							permissions: {
 							},
 							searchBarConfig: {
-								visibility: false
+								visibility: false,
+								searchOnPressEnter: true
 							},
+							filtersVisible: false,
 							allowColumnFilters: false,
 							allowColumnSort: true,
 							generalCustomActions: [
@@ -2031,7 +1941,7 @@
 								sortOrder: 'asc'
 							}
 						},
-						globalEvents: ['changed-INSTA', 'changed-EQUIP', 'changed-TPEQU'],
+						globalEvents: ['changed-TPEQU', 'changed-INSTA', 'changed-EQUIP'],
 						uuid: 'Tpequ_ValInstala1',
 						allSelectedRows: 'false',
 						controlLimits: [
@@ -2051,7 +1961,7 @@
 						size: 'medium',
 						helpControl: {
 							shortHelp: {
-								type: 'subtext',
+								type: 'Tooltip',
 								text: computed(() => this.Resources.____615950),
 							},
 						},
@@ -2091,6 +2001,38 @@
 				]),
 
 				timelineFields: readonly([
+				]),
+
+				triggers: readonly([
+					{
+						id: 'UPDATE_FORMULAS',
+						event: 'P',
+						periodicity: 50,
+						condition: () => {
+							return netAPI.postData(
+								'Tpequ',
+								'TPEQU_UPDATE_FORMULAS_TriggerCondition',
+								this.model.serverObjModel,
+								undefined,
+								undefined,
+								undefined,
+								this.model.navigationId)
+						},
+						execute: () => {
+							vm.TPEQU_FormTriggers_UPDATE_FORMULAS_1(vm.primaryKeyValue)
+						}
+					},
+					{
+						id: 'FILLTYPEEQUIP',
+						event: 'PG',
+						condition: () => {
+							// Formula: isEmptyC([TPEQU->TIPOEQUI])
+							return (this.model.ValTipoequi.value === '')
+						},
+						execute: () => {
+							vm.TPEQU_FormTriggers_FILLTYPEEQUIP_1(vm.primaryKeyValue)
+						}
+					},
 				]),
 
 				/**
@@ -2176,23 +2118,17 @@
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 		},
 
-		beforeUnmount()
-		{
-/* eslint-disable indent, vue/html-indent, vue/script-indent */
-// USE /[MANUAL GQT COMPONENT_BEFORE_UNMOUNT TPEQU]/
-// eslint-disable-next-line
-/* eslint-enable indent, vue/html-indent, vue/script-indent */
-		},
-
 		methods: {
 			/**
 			 * Called before form init.
 			 */
 			async beforeLoad()
 			{
+				let loadForm = true
+
 				// Execute the "Before init" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.beforeInit)
-				for (const trigger of triggers)
+				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
 				this.emitEvent('before-load-form')
@@ -2202,7 +2138,7 @@
 // eslint-disable-next-line
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 
-				return true
+				return loadForm
 			},
 
 			/**
@@ -2212,7 +2148,7 @@
 			{
 				// Execute the "After init" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.afterInit)
-				for (const trigger of triggers)
+				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
 				this.emitEvent('after-load-form')
@@ -2232,33 +2168,19 @@
 
 				// Execute the "Before apply" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.beforeApply)
-				for (const trigger of triggers)
+				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
-				const ticketsPromise = this.model.updateFilesTickets(true)
-				this.addBusy(ticketsPromise, this.Resources[hardcodedTexts.processing])
-				const canSetDocums = await ticketsPromise
+				const canSetDocums = await this.model.updateFilesTickets(true)
 
 				if (canSetDocums)
 				{
-					let results
-					const changesPromise = this.model.setDocumentChanges()
-					this.addBusy(changesPromise, this.Resources[hardcodedTexts.processing])
-					applyForm = await changesPromise
+					applyForm = await this.model.setDocumentChanges()
 
 					if (applyForm)
 					{
-						const insertsPromise = this.model.saveDocuments()
-						this.addBusy(insertsPromise, this.Resources[hardcodedTexts.processing])
-						results = await insertsPromise
+						const results = await this.model.saveDocuments()
 						applyForm = results.every((e) => e === true)
-					}
-
-					if (!changesPromise || (results && !results.every((e) => e === true)))
-					{
-						this.validationErrors = {
-							Erro: this.Resources.OCORREU_UM_ERRO_AO_T51884
-						}
 					}
 				}
 
@@ -2279,7 +2201,7 @@
 			{
 				// Execute the "After apply" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.afterApply)
-				for (const trigger of triggers)
+				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
 				this.emitEvent('after-apply-form')
@@ -2299,33 +2221,19 @@
 
 				// Execute the "Before save" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.beforeSave)
-				for (const trigger of triggers)
+				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
-				const ticketsPromise = this.model.updateFilesTickets()
-				this.addBusy(ticketsPromise, this.Resources[hardcodedTexts.processing])
-				const canSetDocums = await ticketsPromise
+				const canSetDocums = await this.model.updateFilesTickets()
 
 				if (canSetDocums)
 				{
-					let results
-					const changesPromise = this.model.setDocumentChanges()
-					this.addBusy(changesPromise, this.Resources[hardcodedTexts.processing])
-					saveForm = await changesPromise
+					saveForm = await this.model.setDocumentChanges()
 
 					if (saveForm)
 					{
-						const insertsPromise = this.model.saveDocuments()
-						this.addBusy(insertsPromise, this.Resources[hardcodedTexts.processing])
-						results = await insertsPromise
+						const results = await this.model.saveDocuments()
 						saveForm = results.every((e) => e === true)
-					}
-
-					if (!changesPromise || (results && !results.every((e) => e === true)))
-					{
-						this.validationErrors = {
-							Erro: this.Resources.OCORREU_UM_ERRO_AO_T51884
-						}
 					}
 				}
 
@@ -2344,9 +2252,11 @@
 			 */
 			async afterSave()
 			{
+				let redirectPage = true // Set to 'false' to cancel page redirect.
+
 				// Execute the "After save" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.afterSave)
-				for (const trigger of triggers)
+				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
 				this.emitEvent('after-save-form')
@@ -2356,7 +2266,7 @@
 // eslint-disable-next-line
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 
-				return true
+				return redirectPage
 			},
 
 			/**
@@ -2364,6 +2274,8 @@
 			 */
 			async beforeDel()
 			{
+				let deleteForm = true // Set to 'false' to cancel form delete.
+
 				this.emitEvent('before-delete-form')
 
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
@@ -2371,7 +2283,7 @@
 // eslint-disable-next-line
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 
-				return true
+				return deleteForm
 			},
 
 			/**
@@ -2379,6 +2291,8 @@
 			 */
 			async afterDel()
 			{
+				let redirectPage = true // Set to 'false' to cancel page redirect.
+
 				this.emitEvent('after-delete-form')
 
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
@@ -2386,7 +2300,7 @@
 // eslint-disable-next-line
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 
-				return true
+				return redirectPage
 			},
 
 			/**
@@ -2394,9 +2308,11 @@
 			 */
 			async beforeExit()
 			{
+				let leaveForm = true // Set to 'false' to cancel page redirect.
+
 				// Execute the "Before exit" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.beforeExit)
-				for (const trigger of triggers)
+				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
 				this.emitEvent('before-exit-form')
@@ -2406,7 +2322,7 @@
 // eslint-disable-next-line
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 
-				return true
+				return leaveForm
 			},
 
 			/**
@@ -2416,7 +2332,7 @@
 			{
 				// Execute the "After exit" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.afterExit)
-				for (const trigger of triggers)
+				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
 				this.emitEvent('after-exit-form')
@@ -2476,6 +2392,85 @@
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 
 				this.afterControlUpdate(controlField, fieldValue)
+			},
+
+			/**
+			 * Client-side component of action #1 (RECALC) of trigger UPDATE_FORMULAS.
+			 * @param {string} id The primary key of the record
+			 */
+			// eslint-disable-next-line
+			async TPEQU_FormTriggers_UPDATE_FORMULAS_1(id)
+			{
+				try
+				{
+					const data = await netAPI.postData(
+						'TPEQU',
+						'TPEQU_FormTriggers_UPDATE_FORMULAS_1',
+						this.model.serverObjModel,
+						undefined,
+						undefined,
+						undefined,
+						this.navigationId)
+
+					if (typeof data.success !== 'string' || typeof data.message !== 'string')
+						throw new Error('Invalid data structure.')
+
+					const result = qEnums.messageTypes[data.success]
+
+					if (!this.isEmpty(result))
+					{
+						if (result !== 'error')
+						{
+							const buttons = {
+								confirm: {
+									label: this.Resources.OK15819
+								}
+							}
+
+							genericFunctions.displayMessage(data.message, result, null, buttons)
+						}
+						else
+							genericFunctions.displayMessage(data.message, 'error')
+					}
+					else
+					{
+						this.$eventTracker.addError({
+							origin: 'Trigger UPDATE_FORMULAS',
+							message: 'Routine "TPEQU_FormTriggers" finished execution with an unknown result type: ' + data.success
+						})
+					}
+				}
+				catch (e)
+				{
+					genericFunctions.displayMessage(this.Resources.NAO_FOI_POSSIVEL_CON65121, 'error')
+					this.$eventTracker.addError({
+						origin: 'Trigger UPDATE_FORMULAS (catch)',
+						message: e.toString()
+					})
+				}
+			},
+
+			/**
+			 * Client-side component of action #1 (FLDUPDT) of trigger FILLTYPEEQUIP.
+			 * @param {string} id The primary key of the record
+			 */
+			// eslint-disable-next-line
+			async TPEQU_FormTriggers_FILLTYPEEQUIP_1(id)
+			{
+				// eslint-disable-next-line
+				const vm = this
+
+				const actionFormula = () => {
+					// Formula: "*undefined*"
+					return "*undefined*"
+				}
+
+				// Compute the value using the data available on the client-side.
+				const value = await actionFormula()
+
+				// Update the value on the client-side.
+				if (typeof value !== 'undefined')
+					this.model.ValTipoequi.updateValue(value)
 			},
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
 // USE /[MANUAL GQT FUNCTIONS_JS TPEQU]/

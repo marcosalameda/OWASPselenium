@@ -1,4 +1,4 @@
-﻿/* eslint-disable @typescript-eslint/no-unused-vars */
+﻿/* eslint-disable no-unused-vars */
 import { computed, reactive, watch } from 'vue'
 import _merge from 'lodash-es/merge'
 
@@ -11,7 +11,7 @@ import netAPI from '@quidgest/clientapp/network'
 import qApi from '@/api/genio/quidgestFunctions.js'
 import qFunctions from '@/api/genio/projectFunctions.js'
 import qProjArrays from '@/api/genio/projectArrays.js'
-/* eslint-enable @typescript-eslint/no-unused-vars */
+/* eslint-enable no-unused-vars */
 
 /**
  * Represents a ViewModel class.
@@ -25,11 +25,11 @@ export default class ViewModel extends FormViewModelBase
 	 * @param {object} options - The options for the ViewModel
 	 * @param {object} values - A ViewModel instance to copy values from
 	 */
-	// eslint-disable-next-line @typescript-eslint/no-unused-vars
+	// eslint-disable-next-line no-unused-vars
 	constructor(vueContext, options, values)
 	{
 		super(vueContext, options)
-		// eslint-disable-next-line @typescript-eslint/no-unused-vars
+		// eslint-disable-next-line no-unused-vars
 		const vm = this.vueContext
 
 		// The view model metadata
@@ -37,9 +37,8 @@ export default class ViewModel extends FormViewModelBase
 			name: 'TPEQ1',
 			area: 'TPEQ1',
 			actions: {
-				recalculateFormulas: 'RecalculateFormulas_Tpeq1',
-				updateFilesTickets: 'UpdateFilesTicketsTpeq1',
-				setFile: 'SetFileTpeq1'
+				recalculateFormulas: 'RecalculateFormulas_TPEQ1',
+				updateFilesTickets: 'UpdateFilesTicketsTPEQ1'
 			}
 		})
 
@@ -51,7 +50,7 @@ export default class ViewModel extends FormViewModelBase
 			field: 'CODTPEQU',
 			description: '',
 		}).cloneFrom(values?.ValCodtpequ))
-		this.stopWatchers.push(watch(() => this.ValCodtpequ.value, (newValue, oldValue) => this.onUpdate('tpeq1.codtpequ', this.ValCodtpequ, newValue, oldValue)))
+		watch(() => this.ValCodtpequ.value, (newValue, oldValue) => this.onUpdate('tpeq1.codtpequ', this.ValCodtpequ, newValue, oldValue))
 
 		/** The used foreign keys. */
 		this.ValCodfamil = reactive(new modelFieldType.ForeignKey({
@@ -62,7 +61,7 @@ export default class ViewModel extends FormViewModelBase
 			relatedArea: 'FAMI1',
 			description: '',
 		}).cloneFrom(values?.ValCodfamil))
-		this.stopWatchers.push(watch(() => this.ValCodfamil.value, (newValue, oldValue) => this.onUpdate('tpeq1.codfamil', this.ValCodfamil, newValue, oldValue)))
+		watch(() => this.ValCodfamil.value, (newValue, oldValue) => this.onUpdate('tpeq1.codfamil', this.ValCodfamil, newValue, oldValue))
 
 		/** The remaining form fields. */
 		this.TableFami1Family = reactive(new modelFieldType.String({
@@ -73,9 +72,8 @@ export default class ViewModel extends FormViewModelBase
 			field: 'FAMILY',
 			maxLength: 50,
 			description: computed(() => this.Resources.EQUIPMENT_FAMILY41883),
-			ignoreFldSubmit: true,
 		}).cloneFrom(values?.TableFami1Family))
-		this.stopWatchers.push(watch(() => this.TableFami1Family.value, (newValue, oldValue) => this.onUpdate('fami1.family', this.TableFami1Family, newValue, oldValue)))
+		watch(() => this.TableFami1Family.value, (newValue, oldValue) => this.onUpdate('fami1.family', this.TableFami1Family, newValue, oldValue))
 
 		this.ValTpequcod = reactive(new modelFieldType.String({
 			id: 'ValTpequcod',
@@ -85,7 +83,7 @@ export default class ViewModel extends FormViewModelBase
 			maxLength: 20,
 			description: computed(() => this.Resources.CODE49225),
 		}).cloneFrom(values?.ValTpequcod))
-		this.stopWatchers.push(watch(() => this.ValTpequcod.value, (newValue, oldValue) => this.onUpdate('tpeq1.tpequcod', this.ValTpequcod, newValue, oldValue)))
+		watch(() => this.ValTpequcod.value, (newValue, oldValue) => this.onUpdate('tpeq1.tpequcod', this.ValTpequcod, newValue, oldValue))
 
 		this.ValNivel = reactive(new modelFieldType.Number({
 			id: 'ValNivel',
@@ -96,7 +94,7 @@ export default class ViewModel extends FormViewModelBase
 			decimalDigits: 0,
 			description: computed(() => this.Resources.LEVEL06184),
 		}).cloneFrom(values?.ValNivel))
-		this.stopWatchers.push(watch(() => this.ValNivel.value, (newValue, oldValue) => this.onUpdate('tpeq1.nivel', this.ValNivel, newValue, oldValue)))
+		watch(() => this.ValNivel.value, (newValue, oldValue) => this.onUpdate('tpeq1.nivel', this.ValNivel, newValue, oldValue))
 
 		this.ValTipoequi = reactive(new modelFieldType.String({
 			id: 'ValTipoequi',
@@ -106,7 +104,7 @@ export default class ViewModel extends FormViewModelBase
 			maxLength: 50,
 			description: computed(() => this.Resources.TYPE_OF_EQUIPMENT18080),
 		}).cloneFrom(values?.ValTipoequi))
-		this.stopWatchers.push(watch(() => this.ValTipoequi.value, (newValue, oldValue) => this.onUpdate('tpeq1.tipoequi', this.ValTipoequi, newValue, oldValue)))
+		watch(() => this.ValTipoequi.value, (newValue, oldValue) => this.onUpdate('tpeq1.tipoequi', this.ValTipoequi, newValue, oldValue))
 
 		this.ValTpequpai = reactive(new modelFieldType.String({
 			id: 'ValTpequpai',
@@ -116,7 +114,7 @@ export default class ViewModel extends FormViewModelBase
 			maxLength: 20,
 			description: computed(() => this.Resources.DEPENDENT_ON28321),
 		}).cloneFrom(values?.ValTpequpai))
-		this.stopWatchers.push(watch(() => this.ValTpequpai.value, (newValue, oldValue) => this.onUpdate('tpeq1.tpequpai', this.ValTpequpai, newValue, oldValue)))
+		watch(() => this.ValTpequpai.value, (newValue, oldValue) => this.onUpdate('tpeq1.tpequpai', this.ValTpequpai, newValue, oldValue))
 
 		this.ValBackcolo = reactive(new modelFieldType.String({
 			id: 'ValBackcolo',
@@ -126,7 +124,7 @@ export default class ViewModel extends FormViewModelBase
 			maxLength: 50,
 			description: computed(() => this.Resources.BACKGROUND_COLOR47883),
 		}).cloneFrom(values?.ValBackcolo))
-		this.stopWatchers.push(watch(() => this.ValBackcolo.value, (newValue, oldValue) => this.onUpdate('tpeq1.backcolo', this.ValBackcolo, newValue, oldValue)))
+		watch(() => this.ValBackcolo.value, (newValue, oldValue) => this.onUpdate('tpeq1.backcolo', this.ValBackcolo, newValue, oldValue))
 
 		this.ValCorletra = reactive(new modelFieldType.String({
 			id: 'ValCorletra',
@@ -136,7 +134,7 @@ export default class ViewModel extends FormViewModelBase
 			maxLength: 50,
 			description: computed(() => this.Resources.LETTER_COLOR15736),
 		}).cloneFrom(values?.ValCorletra))
-		this.stopWatchers.push(watch(() => this.ValCorletra.value, (newValue, oldValue) => this.onUpdate('tpeq1.corletra', this.ValCorletra, newValue, oldValue)))
+		watch(() => this.ValCorletra.value, (newValue, oldValue) => this.onUpdate('tpeq1.corletra', this.ValCorletra, newValue, oldValue))
 
 		this.ValPrecomax = reactive(new modelFieldType.Number({
 			id: 'ValPrecomax',
@@ -147,7 +145,7 @@ export default class ViewModel extends FormViewModelBase
 			decimalDigits: 2,
 			description: computed(() => this.Resources.MAXIMUM_PRICE55489),
 		}).cloneFrom(values?.ValPrecomax))
-		this.stopWatchers.push(watch(() => this.ValPrecomax.value, (newValue, oldValue) => this.onUpdate('tpeq1.precomax', this.ValPrecomax, newValue, oldValue)))
+		watch(() => this.ValPrecomax.value, (newValue, oldValue) => this.onUpdate('tpeq1.precomax', this.ValPrecomax, newValue, oldValue))
 
 		this.ValPrecoult = reactive(new modelFieldType.Number({
 			id: 'ValPrecoult',
@@ -158,7 +156,7 @@ export default class ViewModel extends FormViewModelBase
 			decimalDigits: 2,
 			description: computed(() => this.Resources.LAST_PRICE25852),
 		}).cloneFrom(values?.ValPrecoult))
-		this.stopWatchers.push(watch(() => this.ValPrecoult.value, (newValue, oldValue) => this.onUpdate('tpeq1.precoult', this.ValPrecoult, newValue, oldValue)))
+		watch(() => this.ValPrecoult.value, (newValue, oldValue) => this.onUpdate('tpeq1.precoult', this.ValPrecoult, newValue, oldValue))
 
 		this.ValSince = reactive(new modelFieldType.DateTime({
 			id: 'ValSince',
@@ -167,7 +165,7 @@ export default class ViewModel extends FormViewModelBase
 			field: 'SINCE',
 			description: computed(() => this.Resources.IN34902),
 		}).cloneFrom(values?.ValSince))
-		this.stopWatchers.push(watch(() => this.ValSince.value, (newValue, oldValue) => this.onUpdate('tpeq1.since', this.ValSince, newValue, oldValue)))
+		watch(() => this.ValSince.value, (newValue, oldValue) => this.onUpdate('tpeq1.since', this.ValSince, newValue, oldValue))
 
 		this.ValQtdequip = reactive(new modelFieldType.Number({
 			id: 'ValQtdequip',
@@ -178,7 +176,7 @@ export default class ViewModel extends FormViewModelBase
 			decimalDigits: 0,
 			description: computed(() => this.Resources.AMOUNT46885),
 		}).cloneFrom(values?.ValQtdequip))
-		this.stopWatchers.push(watch(() => this.ValQtdequip.value, (newValue, oldValue) => this.onUpdate('tpeq1.qtdequip', this.ValQtdequip, newValue, oldValue)))
+		watch(() => this.ValQtdequip.value, (newValue, oldValue) => this.onUpdate('tpeq1.qtdequip', this.ValQtdequip, newValue, oldValue))
 
 		this.ValKit = reactive(new modelFieldType.Boolean({
 			id: 'ValKit',
@@ -187,7 +185,7 @@ export default class ViewModel extends FormViewModelBase
 			field: 'KIT',
 			description: computed(() => this.Resources.KIT27179),
 		}).cloneFrom(values?.ValKit))
-		this.stopWatchers.push(watch(() => this.ValKit.value, (newValue, oldValue) => this.onUpdate('tpeq1.kit', this.ValKit, newValue, oldValue)))
+		watch(() => this.ValKit.value, (newValue, oldValue) => this.onUpdate('tpeq1.kit', this.ValKit, newValue, oldValue))
 	}
 
 	/**

@@ -49,6 +49,12 @@ namespace Administration.Models
                 Role = "ADMINISTRATOR",
                 Designation = "ADMINISTRATOR54799",
                 Description = "",              
+                Module = "UIS"
+            },
+            new ModuleRoleModel() {
+                Role = "ADMINISTRATOR",
+                Designation = "ADMINISTRATOR54799",
+                Description = "",              
                 Module = "TBS"
             },
             new ModuleRoleModel() {
@@ -178,6 +184,12 @@ namespace Administration.Models
                 Module = "STY"
             },
             new ModuleRoleModel() {
+                Role = "SYSADMIN",
+                Designation = "SYSADMIN53289",
+                Description = "",              
+                Module = "UIS"
+            },
+            new ModuleRoleModel() {
                 Role = "VIEW",
                 Designation = "VIEW37934",
                 Description = "",              
@@ -224,6 +236,12 @@ namespace Administration.Models
                 Designation = "QUERY30986",
                 Description = "",              
                 Module = "GQT"
+            },
+            new ModuleRoleModel() {
+                Role = "1",
+                Designation = "QUERY30986",
+                Description = "",              
+                Module = "UIS"
             },
             new ModuleRoleModel() {
                 Role = "1",
@@ -307,6 +325,12 @@ namespace Administration.Models
                 Role = "99",
                 Designation = "ADMINISTRATOR27313",
                 Description = "",              
+                Module = "UIS"
+            },
+            new ModuleRoleModel() {
+                Role = "99",
+                Designation = "ADMINISTRATOR27313",
+                Description = "",              
                 Module = "GQT"
             },
             new ModuleRoleModel() {
@@ -314,6 +338,12 @@ namespace Administration.Models
                 Designation = "ADMINISTRATOR27313",
                 Description = "",              
                 Module = "WMS"
+            },
+            new ModuleRoleModel() {
+                Role = "99",
+                Designation = "ADMINISTRATOR27313",
+                Description = "",              
+                Module = "XRS"
             },
             new ModuleRoleModel() {
                 Role = "99",

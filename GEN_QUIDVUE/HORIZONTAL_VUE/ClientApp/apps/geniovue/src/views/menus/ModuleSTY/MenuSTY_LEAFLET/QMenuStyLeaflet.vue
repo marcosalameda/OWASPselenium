@@ -3,23 +3,20 @@
 		v-if="menuModalIsReady"
 		:to="`#${uiContainersId.body}`"
 		:disabled="!menuInfo.isPopup">
-		<div
+		<form
 			class="form-horizontal"
 			@submit.prevent>
 			<q-row-container>
 				<q-table
 					v-bind="controls.menu"
 					v-on="controls.menu.handlers">
-					<template #header>
-						<q-table-config
-							:table-ctrl="controls.menu"
-							v-on="controls.menu.handlers">
-						</q-table-config>
-					</template>
-					<!-- USE /[MANUAL GQT CUSTOM_TABLE STY_Menu_LEAFLET]/ -->
 				</q-table>
+
+				<q-table-extra-extension
+					:list-ctrl="controls.menu"
+					v-on="controls.menu.handlers" />
 			</q-row-container>
-		</div>
+		</form>
 	</teleport>
 
 	<teleport
@@ -51,7 +48,7 @@
 </template>
 
 <script>
-	/* eslint-disable @typescript-eslint/no-unused-vars */
+	/* eslint-disable no-unused-vars */
 	import asyncProcM from '@quidgest/clientapp/composables/async'
 	import qEnums from '@quidgest/clientapp/constants/enums'
 	import netAPI from '@quidgest/clientapp/network'
@@ -71,7 +68,7 @@
 	import qApi from '@/api/genio/quidgestFunctions.js'
 	import qFunctions from '@/api/genio/projectFunctions.js'
 	import qProjArrays from '@/api/genio/projectArrays.js'
-	/* eslint-enable @typescript-eslint/no-unused-vars */
+	/* eslint-enable no-unused-vars */
 
 	import MenuViewModel from './QMenuSTY_LEAFLETViewModel.js'
 
@@ -155,7 +152,6 @@
 								label: computed(() => this.Resources.TYPE_OF_EQUIPMENT18080),
 								dataLength: 50,
 								scrollData: 30,
-								export: 1,
 								pkColumn: 'ValCodtpequ',
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
@@ -166,7 +162,6 @@
 								label: computed(() => this.Resources.NO__REGISTER04207),
 								dataLength: 6,
 								scrollData: 6,
-								export: 1,
 								pkColumn: 'ValCodequip',
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
@@ -177,7 +172,6 @@
 								label: computed(() => this.Resources.SCHEDULING24801),
 								dataLength: 85,
 								scrollData: 30,
-								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.DateColumn({
 								order: 4,
@@ -187,7 +181,6 @@
 								label: computed(() => this.Resources.BEGINNING18124),
 								scrollData: 16,
 								dateTimeType: 'dateTime',
-								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.DateColumn({
 								order: 5,
@@ -197,7 +190,6 @@
 								label: computed(() => this.Resources.END47577),
 								scrollData: 16,
 								dateTimeType: 'dateTime',
-								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 6,
@@ -206,7 +198,6 @@
 								field: 'DESCRIPT',
 								label: computed(() => this.Resources.DESCRIPTION07383),
 								scrollData: 30,
-								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.BooleanColumn({
 								order: 7,
@@ -215,7 +206,6 @@
 								field: 'ALLDAY',
 								label: computed(() => this.Resources.ALL_DAY18496),
 								scrollData: 1,
-								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.DateColumn({
 								order: 8,
@@ -225,7 +215,6 @@
 								label: computed(() => this.Resources.SINCE47259),
 								scrollData: 16,
 								dateTimeType: 'dateTime',
-								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.DateColumn({
 								order: 9,
@@ -235,7 +224,6 @@
 								label: computed(() => this.Resources.UNTIL39173),
 								scrollData: 16,
 								dateTimeType: 'dateTime',
-								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.NumericColumn({
 								order: 10,
@@ -246,7 +234,6 @@
 								scrollData: 10,
 								maxDigits: 7,
 								decimalPlaces: 2,
-								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.CurrencyColumn({
 								order: 11,
@@ -257,7 +244,6 @@
 								scrollData: 12,
 								maxDigits: 9,
 								decimalPlaces: 2,
-								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.CurrencyColumn({
 								order: 12,
@@ -268,7 +254,6 @@
 								scrollData: 12,
 								maxDigits: 9,
 								decimalPlaces: 2,
-								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.GeographicColumn({
 								order: 13,
@@ -280,7 +265,6 @@
 								scrollData: 30,
 								sortable: false,
 								searchable: false,
-								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 						],
 						config: {
@@ -297,8 +281,10 @@
 								canInsert: false
 							},
 							searchBarConfig: {
-								visibility: true
+								visibility: true,
+								searchOnPressEnter: true
 							},
+							filtersVisible: true,
 							allowColumnFilters: true,
 							allowColumnSort: true,
 							crudActions: [
@@ -380,7 +366,6 @@
 							rowClickAction: {
 								id: 'RCA_STY_35411',
 								name: 'form-LEAFLETT',
-								isVisible: true,
 								params: {
 									isRoute: true,
 									limits: [
@@ -406,11 +391,10 @@
 								sortOrder: 'asc'
 							}
 						},
-						globalEvents: ['changed-INSTA', 'changed-EQUIP', 'changed-TPEQU'],
+						globalEvents: ['changed-TPEQU', 'changed-INSTA', 'changed-EQUIP'],
 						uuid: '88365620-f672-4648-bd5a-98987baf3816',
 						allSelectedRows: 'false',
 						headerLevel: 1,
-						isActiveControl: computed(() => this.isActiveMenu)
 					}, this),
 				}
 			}
@@ -434,14 +418,6 @@
 		{
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
 // USE /[MANUAL GQT FORM_CODEJS STY_MENU_LEAFLET]/
-// eslint-disable-next-line
-/* eslint-enable indent, vue/html-indent, vue/script-indent */
-		},
-
-		beforeUnmount()
-		{
-/* eslint-disable indent, vue/html-indent, vue/script-indent */
-// USE /[MANUAL GQT COMPONENT_BEFORE_UNMOUNT STY_MENU_LEAFLET]/
 // eslint-disable-next-line
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 		},

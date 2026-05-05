@@ -4,7 +4,6 @@
 		:key="action.id">
 		<q-button
 			v-if="actionIsAvailable(action)"
-			:id="getActionElementId(action.id)"
 			v-bind="$attrs"
 			data-testid="table-action"
 			:data-action-key="action.id"
@@ -14,7 +13,7 @@
 			:title="action.title"
 			:label="showActionText ? action.title : ''"
 			:disabled="action.disabled || !enableActions"
-			@click="emitAction(action, enableActions)">
+			@click="$emit('action-click', action, enableActions)">
 			<q-icon
 				v-if="action.icon && showIcon"
 				v-bind="action.icon" />
@@ -105,14 +104,6 @@
 			separatorClass: {
 				type: String,
 				default: 'dropdown-divider'
-			},
-
-			/**
-			 * The name of the table; used in various operations like reactivity and slot naming.
-			 */
-			tableName: {
-				type: String,
-				default: ''
 			}
 		},
 
@@ -125,29 +116,6 @@
 				if (this.readonly)
 					return action.isInReadOnly
 				return true
-			},
-			
-			/**
-			 * Get the element ID for the action
-			 * @param id {string} The ID of the action
-			 */
-			getActionElementId(id)
-			{
-				if(!this.tableName) return null
-				return this.tableName + '_action_' + id
-			},
-
-			/**
-			 * Emit the action
-			 * @param action {Object} The action object
-			 * @param enableActions {boolean} Whether actions are enabled
-			 */
-			emitAction(action, enableActions)
-			{
-				// Set element to focus after the action if it is a popup form
-				action.returnElement = this.getActionElementId(action.id)
-
-				this.$emit('action-click', action, enableActions)
 			}
 		}
 	}

@@ -8,7 +8,7 @@ namespace GenioServer.business
     {
         public int TotalHits { get; set; }
         public int Took { get; set; } // The 'took' attribute in the response object is the execution time in milliseconds
-        public double TookSeconds { get { return Took / 1000d; } }
+        public double TookSeconds { get { return Took / 1000; } }
         public string Error { get; set; }
         public ICollection<Facet> Facets { get; set; }
         public string SearchText { get; set; } // Searched text written by the user

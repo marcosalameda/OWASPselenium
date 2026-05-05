@@ -10,23 +10,23 @@ public class CfaqsForm : Form
 	/// <summary>
 	/// Icon
 	/// </summary>
-	public BaseInputControl CfaqsIcon => new BaseInputControl(driver, ContainerLocator, "container-CFAQS___CFAQSICON____" + IdSuffix, "#CFAQS___CFAQSICON____" + IdSuffix);
+	public BaseInputControl CfaqsIcon => new BaseInputControl(driver, ContainerLocator, "container-CFAQS___CFAQSICON____", "#CFAQS___CFAQSICON____");
 
 	/// <summary>
 	/// Category
 	/// </summary>
-	public BaseInputControl CfaqsCategory => new BaseInputControl(driver, ContainerLocator, "container-CFAQS___CFAQSCATEGORY" + IdSuffix, "#CFAQS___CFAQSCATEGORY" + IdSuffix);
+	public BaseInputControl CfaqsCategory => new BaseInputControl(driver, ContainerLocator, "container-CFAQS___CFAQSCATEGORY", "#CFAQS___CFAQSCATEGORY");
 
 	/// <summary>
 	/// Description
 	/// </summary>
-	public BaseInputControl CfaqsDescript => new BaseInputControl(driver, ContainerLocator, "container-CFAQS___CFAQSDESCRIPT" + IdSuffix, "#CFAQS___CFAQSDESCRIPT" + IdSuffix);
+	public BaseInputControl CfaqsDescript => new BaseInputControl(driver, ContainerLocator, "container-CFAQS___CFAQSDESCRIPT", "#CFAQS___CFAQSDESCRIPT");
 
 	/// <summary>
 	/// FAQS
 	/// </summary>
-	public ListControl PseudExpfaqs => new ListControl(driver, ContainerLocator, "#CFAQS___PSEUDEXPFAQS_" + IdSuffix);
+	public ListControl PseudExpfaqs => new ListControl(driver, ContainerLocator, "#CFAQS___PSEUDEXPFAQS_");
 
-	public CfaqsForm(IWebDriver driver, FORM_MODE mode, By? containerLocator = null, bool usePkInId = false)
-		: base(driver, mode, "CFAQS", containerLocator: containerLocator, usePkInId: usePkInId) { }
+	public CfaqsForm(IWebDriver driver, FORM_MODE mode, By? containerLocator = null)
+		: base(driver, mode, "CFAQS", containerLocator: containerLocator) { }
 }

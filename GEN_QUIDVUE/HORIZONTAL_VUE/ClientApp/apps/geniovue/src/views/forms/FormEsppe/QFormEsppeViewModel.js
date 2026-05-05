@@ -1,4 +1,4 @@
-﻿/* eslint-disable @typescript-eslint/no-unused-vars */
+﻿/* eslint-disable no-unused-vars */
 import { computed, reactive, watch } from 'vue'
 import _merge from 'lodash-es/merge'
 
@@ -11,7 +11,7 @@ import netAPI from '@quidgest/clientapp/network'
 import qApi from '@/api/genio/quidgestFunctions.js'
 import qFunctions from '@/api/genio/projectFunctions.js'
 import qProjArrays from '@/api/genio/projectArrays.js'
-/* eslint-enable @typescript-eslint/no-unused-vars */
+/* eslint-enable no-unused-vars */
 
 /**
  * Represents a ViewModel class.
@@ -25,11 +25,11 @@ export default class ViewModel extends FormViewModelBase
 	 * @param {object} options - The options for the ViewModel
 	 * @param {object} values - A ViewModel instance to copy values from
 	 */
-	// eslint-disable-next-line @typescript-eslint/no-unused-vars
+	// eslint-disable-next-line no-unused-vars
 	constructor(vueContext, options, values)
 	{
 		super(vueContext, options)
-		// eslint-disable-next-line @typescript-eslint/no-unused-vars
+		// eslint-disable-next-line no-unused-vars
 		const vm = this.vueContext
 
 		// The view model metadata
@@ -37,9 +37,8 @@ export default class ViewModel extends FormViewModelBase
 			name: 'ESPPE',
 			area: 'ESPPE',
 			actions: {
-				recalculateFormulas: 'RecalculateFormulas_Esppe',
-				updateFilesTickets: 'UpdateFilesTicketsEsppe',
-				setFile: 'SetFileEsppe'
+				recalculateFormulas: 'RecalculateFormulas_ESPPE',
+				updateFilesTickets: 'UpdateFilesTicketsESPPE'
 			}
 		})
 
@@ -51,7 +50,7 @@ export default class ViewModel extends FormViewModelBase
 			field: 'CODESPPE',
 			description: '',
 		}).cloneFrom(values?.ValCodesppe))
-		this.stopWatchers.push(watch(() => this.ValCodesppe.value, (newValue, oldValue) => this.onUpdate('esppe.codesppe', this.ValCodesppe, newValue, oldValue)))
+		watch(() => this.ValCodesppe.value, (newValue, oldValue) => this.onUpdate('esppe.codesppe', this.ValCodesppe, newValue, oldValue))
 
 		/** The used foreign keys. */
 		this.ValCodpesso = reactive(new modelFieldType.ForeignKey({
@@ -62,7 +61,7 @@ export default class ViewModel extends FormViewModelBase
 			relatedArea: 'PESSO',
 			description: '',
 		}).cloneFrom(values?.ValCodpesso))
-		this.stopWatchers.push(watch(() => this.ValCodpesso.value, (newValue, oldValue) => this.onUpdate('esppe.codpesso', this.ValCodpesso, newValue, oldValue)))
+		watch(() => this.ValCodpesso.value, (newValue, oldValue) => this.onUpdate('esppe.codpesso', this.ValCodpesso, newValue, oldValue))
 
 		this.ValCodespec = reactive(new modelFieldType.ForeignKey({
 			id: 'ValCodespec',
@@ -72,7 +71,7 @@ export default class ViewModel extends FormViewModelBase
 			relatedArea: 'SPECI',
 			description: '',
 		}).cloneFrom(values?.ValCodespec))
-		this.stopWatchers.push(watch(() => this.ValCodespec.value, (newValue, oldValue) => this.onUpdate('esppe.codespec', this.ValCodespec, newValue, oldValue)))
+		watch(() => this.ValCodespec.value, (newValue, oldValue) => this.onUpdate('esppe.codespec', this.ValCodespec, newValue, oldValue))
 
 		/** The remaining form fields. */
 		this.TablePessoName = reactive(new modelFieldType.String({
@@ -83,9 +82,8 @@ export default class ViewModel extends FormViewModelBase
 			field: 'NAME',
 			maxLength: 85,
 			description: computed(() => this.Resources.NAME31974),
-			ignoreFldSubmit: true,
 		}).cloneFrom(values?.TablePessoName))
-		this.stopWatchers.push(watch(() => this.TablePessoName.value, (newValue, oldValue) => this.onUpdate('pesso.name', this.TablePessoName, newValue, oldValue)))
+		watch(() => this.TablePessoName.value, (newValue, oldValue) => this.onUpdate('pesso.name', this.TablePessoName, newValue, oldValue))
 
 		this.TableSpeciEspecial = reactive(new modelFieldType.String({
 			type: 'Lookup',
@@ -95,9 +93,8 @@ export default class ViewModel extends FormViewModelBase
 			field: 'ESPECIAL',
 			maxLength: 50,
 			description: computed(() => this.Resources.SPECIALTY09304),
-			ignoreFldSubmit: true,
 		}).cloneFrom(values?.TableSpeciEspecial))
-		this.stopWatchers.push(watch(() => this.TableSpeciEspecial.value, (newValue, oldValue) => this.onUpdate('speci.especial', this.TableSpeciEspecial, newValue, oldValue)))
+		watch(() => this.TableSpeciEspecial.value, (newValue, oldValue) => this.onUpdate('speci.especial', this.TableSpeciEspecial, newValue, oldValue))
 	}
 
 	/**

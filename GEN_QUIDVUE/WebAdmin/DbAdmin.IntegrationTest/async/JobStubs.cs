@@ -31,15 +31,6 @@ namespace DbAdmin.IntegrationTest
         }
     }
 
-    [GenioProcessType("INVALID", "Test Async")]
-    [GenioProcessMode(ArrayS_modpro.E_INDIV_1)]
-    public class InvalidAsyncProcess : GenioServerJobAsync
-    {
 
-        public override async Task<string> ExecuteAsync(PersistentSupport sp, User user, Process process)
-        {
-            throw new InvalidOperationException("This is an invalid process");
-        }
-    }
 
 }

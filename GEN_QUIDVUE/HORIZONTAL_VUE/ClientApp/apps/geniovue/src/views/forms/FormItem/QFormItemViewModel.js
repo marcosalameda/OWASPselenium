@@ -1,4 +1,4 @@
-﻿/* eslint-disable @typescript-eslint/no-unused-vars */
+﻿/* eslint-disable no-unused-vars */
 import { computed, reactive, watch } from 'vue'
 import _merge from 'lodash-es/merge'
 
@@ -11,7 +11,7 @@ import netAPI from '@quidgest/clientapp/network'
 import qApi from '@/api/genio/quidgestFunctions.js'
 import qFunctions from '@/api/genio/projectFunctions.js'
 import qProjArrays from '@/api/genio/projectArrays.js'
-/* eslint-enable @typescript-eslint/no-unused-vars */
+/* eslint-enable no-unused-vars */
 
 /**
  * Represents a ViewModel class.
@@ -25,11 +25,11 @@ export default class ViewModel extends FormViewModelBase
 	 * @param {object} options - The options for the ViewModel
 	 * @param {object} values - A ViewModel instance to copy values from
 	 */
-	// eslint-disable-next-line @typescript-eslint/no-unused-vars
+	// eslint-disable-next-line no-unused-vars
 	constructor(vueContext, options, values)
 	{
 		super(vueContext, options)
-		// eslint-disable-next-line @typescript-eslint/no-unused-vars
+		// eslint-disable-next-line no-unused-vars
 		const vm = this.vueContext
 
 		// The view model metadata
@@ -37,9 +37,8 @@ export default class ViewModel extends FormViewModelBase
 			name: 'ITEM',
 			area: 'ITEM',
 			actions: {
-				recalculateFormulas: 'RecalculateFormulas_Item',
-				updateFilesTickets: 'UpdateFilesTicketsItem',
-				setFile: 'SetFileItem'
+				recalculateFormulas: 'RecalculateFormulas_ITEM',
+				updateFilesTickets: 'UpdateFilesTicketsITEM'
 			}
 		})
 
@@ -51,7 +50,7 @@ export default class ViewModel extends FormViewModelBase
 			field: 'CODITEM',
 			description: '',
 		}).cloneFrom(values?.ValCoditem))
-		this.stopWatchers.push(watch(() => this.ValCoditem.value, (newValue, oldValue) => this.onUpdate('item.coditem', this.ValCoditem, newValue, oldValue)))
+		watch(() => this.ValCoditem.value, (newValue, oldValue) => this.onUpdate('item.coditem', this.ValCoditem, newValue, oldValue))
 
 		/** The used foreign keys. */
 		this.ValCodgitem = reactive(new modelFieldType.ForeignKey({
@@ -62,7 +61,7 @@ export default class ViewModel extends FormViewModelBase
 			relatedArea: 'GITEM',
 			description: computed(() => this.Resources._GLOBAL_ARTICLE51116),
 		}).cloneFrom(values?.ValCodgitem))
-		this.stopWatchers.push(watch(() => this.ValCodgitem.value, (newValue, oldValue) => this.onUpdate('item.codgitem', this.ValCodgitem, newValue, oldValue)))
+		watch(() => this.ValCodgitem.value, (newValue, oldValue) => this.onUpdate('item.codgitem', this.ValCodgitem, newValue, oldValue))
 
 		this.ValCodwareh = reactive(new modelFieldType.ForeignKey({
 			id: 'ValCodwareh',
@@ -72,7 +71,7 @@ export default class ViewModel extends FormViewModelBase
 			relatedArea: 'WAREH',
 			description: computed(() => this.Resources._WAREHOUSE19861),
 		}).cloneFrom(values?.ValCodwareh))
-		this.stopWatchers.push(watch(() => this.ValCodwareh.value, (newValue, oldValue) => this.onUpdate('item.codwareh', this.ValCodwareh, newValue, oldValue)))
+		watch(() => this.ValCodwareh.value, (newValue, oldValue) => this.onUpdate('item.codwareh', this.ValCodwareh, newValue, oldValue))
 
 		/** The remaining form fields. */
 		this.TableGitemItemdes = reactive(new modelFieldType.String({
@@ -84,7 +83,7 @@ export default class ViewModel extends FormViewModelBase
 			maxLength: 85,
 			description: computed(() => this.Resources.GLOBAL_ARTICLE63861),
 		}).cloneFrom(values?.TableGitemItemdes))
-		this.stopWatchers.push(watch(() => this.TableGitemItemdes.value, (newValue, oldValue) => this.onUpdate('gitem.itemdes', this.TableGitemItemdes, newValue, oldValue)))
+		watch(() => this.TableGitemItemdes.value, (newValue, oldValue) => this.onUpdate('gitem.itemdes', this.TableGitemItemdes, newValue, oldValue))
 
 		this.TableWarehWarehdes = reactive(new modelFieldType.String({
 			type: 'Lookup',
@@ -95,7 +94,7 @@ export default class ViewModel extends FormViewModelBase
 			maxLength: 85,
 			description: computed(() => this.Resources.WAREHOUSE51864),
 		}).cloneFrom(values?.TableWarehWarehdes))
-		this.stopWatchers.push(watch(() => this.TableWarehWarehdes.value, (newValue, oldValue) => this.onUpdate('wareh.warehdes', this.TableWarehWarehdes, newValue, oldValue)))
+		watch(() => this.TableWarehWarehdes.value, (newValue, oldValue) => this.onUpdate('wareh.warehdes', this.TableWarehWarehdes, newValue, oldValue))
 
 		this.ValItemtype = reactive(new modelFieldType.String({
 			id: 'ValItemtype',
@@ -103,10 +102,10 @@ export default class ViewModel extends FormViewModelBase
 			area: 'ITEM',
 			field: 'ITEMTYPE',
 			maxLength: 1,
-			arrayOptions: computed(() => new qProjArrays.QArrayTipoarti(vm.$getResource).elements),
+			arrayOptions: computed(() => qProjArrays.QArrayTipoarti.setResources(vm.$getResource).elements),
 			description: computed(() => this.Resources.TYPE00312),
 		}).cloneFrom(values?.ValItemtype))
-		this.stopWatchers.push(watch(() => this.ValItemtype.value, (newValue, oldValue) => this.onUpdate('item.itemtype', this.ValItemtype, newValue, oldValue)))
+		watch(() => this.ValItemtype.value, (newValue, oldValue) => this.onUpdate('item.itemtype', this.ValItemtype, newValue, oldValue))
 
 		this.ValItemdes = reactive(new modelFieldType.String({
 			id: 'ValItemdes',
@@ -116,7 +115,7 @@ export default class ViewModel extends FormViewModelBase
 			maxLength: 85,
 			valueFormula: {
 				stopRecalcCondition() { return false },
-				// eslint-disable-next-line @typescript-eslint/no-unused-vars
+				// eslint-disable-next-line no-unused-vars
 				fnFormula(params)
 				{
 					// Formula: [GITEM->ITEMDES]
@@ -128,7 +127,7 @@ export default class ViewModel extends FormViewModelBase
 			},
 			description: computed(() => this.Resources.ARTICLE60065),
 		}).cloneFrom(values?.ValItemdes))
-		this.stopWatchers.push(watch(() => this.ValItemdes.value, (newValue, oldValue) => this.onUpdate('item.itemdes', this.ValItemdes, newValue, oldValue)))
+		watch(() => this.ValItemdes.value, (newValue, oldValue) => this.onUpdate('item.itemdes', this.ValItemdes, newValue, oldValue))
 
 		this.ValItemcod = reactive(new modelFieldType.String({
 			id: 'ValItemcod',
@@ -138,7 +137,7 @@ export default class ViewModel extends FormViewModelBase
 			maxLength: 15,
 			valueFormula: {
 				stopRecalcCondition() { return false },
-				// eslint-disable-next-line @typescript-eslint/no-unused-vars
+				// eslint-disable-next-line no-unused-vars
 				fnFormula(params)
 				{
 					// Formula: [GITEM->ITEMGCOD]
@@ -150,7 +149,7 @@ export default class ViewModel extends FormViewModelBase
 			},
 			description: computed(() => this.Resources.CODE49225),
 		}).cloneFrom(values?.ValItemcod))
-		this.stopWatchers.push(watch(() => this.ValItemcod.value, (newValue, oldValue) => this.onUpdate('item.itemcod', this.ValItemcod, newValue, oldValue)))
+		watch(() => this.ValItemcod.value, (newValue, oldValue) => this.onUpdate('item.itemcod', this.ValItemcod, newValue, oldValue))
 
 		this.ValEntries = reactive(new modelFieldType.Number({
 			id: 'ValEntries',
@@ -162,7 +161,7 @@ export default class ViewModel extends FormViewModelBase
 			isFixed: true,
 			description: computed(() => this.Resources.ENTRIES32319),
 		}).cloneFrom(values?.ValEntries))
-		this.stopWatchers.push(watch(() => this.ValEntries.value, (newValue, oldValue) => this.onUpdate('item.entries', this.ValEntries, newValue, oldValue)))
+		watch(() => this.ValEntries.value, (newValue, oldValue) => this.onUpdate('item.entries', this.ValEntries, newValue, oldValue))
 
 		this.ValExits = reactive(new modelFieldType.Number({
 			id: 'ValExits',
@@ -174,7 +173,7 @@ export default class ViewModel extends FormViewModelBase
 			isFixed: true,
 			description: computed(() => this.Resources.OUTPUTS47833),
 		}).cloneFrom(values?.ValExits))
-		this.stopWatchers.push(watch(() => this.ValExits.value, (newValue, oldValue) => this.onUpdate('item.exits', this.ValExits, newValue, oldValue)))
+		watch(() => this.ValExits.value, (newValue, oldValue) => this.onUpdate('item.exits', this.ValExits, newValue, oldValue))
 
 		this.ValExistenc = reactive(new modelFieldType.Number({
 			id: 'ValExistenc',
@@ -186,7 +185,7 @@ export default class ViewModel extends FormViewModelBase
 			isFixed: true,
 			description: computed(() => this.Resources.STOCKS47349),
 		}).cloneFrom(values?.ValExistenc))
-		this.stopWatchers.push(watch(() => this.ValExistenc.value, (newValue, oldValue) => this.onUpdate('item.existenc', this.ValExistenc, newValue, oldValue)))
+		watch(() => this.ValExistenc.value, (newValue, oldValue) => this.onUpdate('item.existenc', this.ValExistenc, newValue, oldValue))
 
 		this.ValImage = reactive(new modelFieldType.Image({
 			id: 'ValImage',
@@ -195,7 +194,7 @@ export default class ViewModel extends FormViewModelBase
 			field: 'IMAGE',
 			description: computed(() => this.Resources.IMAGE65174),
 		}).cloneFrom(values?.ValImage))
-		this.stopWatchers.push(watch(() => this.ValImage.value, (newValue, oldValue) => this.onUpdate('item.image', this.ValImage, newValue, oldValue)))
+		watch(() => this.ValImage.value, (newValue, oldValue) => this.onUpdate('item.image', this.ValImage, newValue, oldValue))
 
 		this.ValCategory = reactive(new modelFieldType.MultiLineString({
 			id: 'ValCategory',
@@ -205,7 +204,7 @@ export default class ViewModel extends FormViewModelBase
 			isFixed: true,
 			description: computed(() => this.Resources.CATEGORIZATION17554),
 		}).cloneFrom(values?.ValCategory))
-		this.stopWatchers.push(watch(() => this.ValCategory.value, (newValue, oldValue) => this.onUpdate('item.category', this.ValCategory, newValue, oldValue)))
+		watch(() => this.ValCategory.value, (newValue, oldValue) => this.onUpdate('item.category', this.ValCategory, newValue, oldValue))
 
 		this.ValValid = reactive(new modelFieldType.Boolean({
 			id: 'ValValid',
@@ -214,7 +213,7 @@ export default class ViewModel extends FormViewModelBase
 			field: 'VALID',
 			description: computed(() => this.Resources.IN_USE42606),
 		}).cloneFrom(values?.ValValid))
-		this.stopWatchers.push(watch(() => this.ValValid.value, (newValue, oldValue) => this.onUpdate('item.valid', this.ValValid, newValue, oldValue)))
+		watch(() => this.ValValid.value, (newValue, oldValue) => this.onUpdate('item.valid', this.ValValid, newValue, oldValue))
 
 		this.ValDisponib = reactive(new modelFieldType.String({
 			id: 'ValDisponib',
@@ -225,7 +224,7 @@ export default class ViewModel extends FormViewModelBase
 			isFixed: true,
 			valueFormula: {
 				stopRecalcCondition() { return false },
-				// eslint-disable-next-line @typescript-eslint/no-unused-vars
+				// eslint-disable-next-line no-unused-vars
 				fnFormula(params)
 				{
 					// Formula: iif([ITEM->EXISTENC]>0,"A",iif([ITEM->EXISTENC]<=0,"O","D"))
@@ -235,10 +234,10 @@ export default class ViewModel extends FormViewModelBase
 				isServerRecalc: false,
 				isEmpty: qApi.emptyC,
 			},
-			arrayOptions: computed(() => new qProjArrays.QArrayDsiponib(vm.$getResource).elements),
+			arrayOptions: computed(() => qProjArrays.QArrayDsiponib.setResources(vm.$getResource).elements),
 			description: computed(() => this.Resources.AVAILABILITY56489),
 		}).cloneFrom(values?.ValDisponib))
-		this.stopWatchers.push(watch(() => this.ValDisponib.value, (newValue, oldValue) => this.onUpdate('item.disponib', this.ValDisponib, newValue, oldValue)))
+		watch(() => this.ValDisponib.value, (newValue, oldValue) => this.onUpdate('item.disponib', this.ValDisponib, newValue, oldValue))
 
 		this.ValDate = reactive(new modelFieldType.Date({
 			id: 'ValDate',
@@ -247,7 +246,7 @@ export default class ViewModel extends FormViewModelBase
 			field: 'DATE',
 			description: computed(() => this.Resources.DATE18475),
 		}).cloneFrom(values?.ValDate))
-		this.stopWatchers.push(watch(() => this.ValDate.value, (newValue, oldValue) => this.onUpdate('item.date', this.ValDate, newValue, oldValue)))
+		watch(() => this.ValDate.value, (newValue, oldValue) => this.onUpdate('item.date', this.ValDate, newValue, oldValue))
 
 		this.ValTechspec = reactive(new modelFieldType.Document({
 			id: 'ValTechspec',
@@ -259,7 +258,7 @@ export default class ViewModel extends FormViewModelBase
 			currentDocument: computed(() => this.ValTechspecData),
 			description: computed(() => this.Resources.SPECIFICATIONS59226),
 		}).cloneFrom(values?.ValTechspec))
-		this.stopWatchers.push(watch(() => this.ValTechspec.value, (newValue, oldValue) => this.onUpdate('item.techspec', this.ValTechspec, newValue, oldValue)))
+		watch(() => this.ValTechspec.value, (newValue, oldValue) => this.onUpdate('item.techspec', this.ValTechspec, newValue, oldValue))
 
 		this.ValTechspecPropertiesVM = reactive(new modelFieldType.Base({
 			id: 'ValTechspecPropertiesVM',
@@ -272,15 +271,14 @@ export default class ViewModel extends FormViewModelBase
 			area: 'ITEM',
 			field: 'TECHSPECFK'
 		}).cloneFrom(values?.ValTechspecfk))
-		this.stopWatchers.push(watch(() => this.ValTechspecfk.value, (newValue, oldValue) => this.onUpdate('item.techspecfk', this.ValTechspecfk, newValue, oldValue)))
-
+		watch(() => this.ValTechspecfk.value, (newValue, oldValue) => this.onUpdate('item.techspecfk', this.ValTechspecfk, newValue, oldValue))
 		this.ValTechspecData = reactive(new modelFieldType.DocumentData({
 			id: 'ValTechspecData',
 			area: 'ITEM',
 			field: 'TECHSPECDATA',
 			ignoreFldSubmit: true
 		}).cloneFrom(values?.ValTechspecData))
-		this.stopWatchers.push(watch(() => this.ValTechspecData.value, (newValue, oldValue) => this.onUpdate('item.techspecdata', this.ValTechspecData, newValue, oldValue), { deep: true }))
+		watch(() => this.ValTechspecData.value, (newValue, oldValue) => this.onUpdate('item.techspecdata', this.ValTechspecData, newValue, oldValue), { deep: true })
 
 		/** The form fields used only in formulas. */
 		this.GitemValItemgcod = reactive(new modelFieldType.String({
@@ -292,7 +290,7 @@ export default class ViewModel extends FormViewModelBase
 			isFixed: true,
 			description: computed(() => this.Resources.CODE49225),
 		}).cloneFrom(values?.GitemValItemgcod))
-		this.stopWatchers.push(watch(() => this.GitemValItemgcod.value, (newValue, oldValue) => this.onUpdate('gitem.itemgcod', this.GitemValItemgcod, newValue, oldValue)))
+		watch(() => this.GitemValItemgcod.value, (newValue, oldValue) => this.onUpdate('gitem.itemgcod', this.GitemValItemgcod, newValue, oldValue))
 	}
 
 	/**

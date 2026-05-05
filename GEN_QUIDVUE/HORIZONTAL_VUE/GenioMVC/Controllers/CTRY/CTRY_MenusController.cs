@@ -38,25 +38,46 @@ namespace GenioMVC.Controllers
 		// GET: /Ctry/TRN_Menu_T03COUNTRY
 		[ActionName("TRN_Menu_T03COUNTRY")]
 		[HttpPost]
-		public ActionResult TRN_Menu_T03COUNTRY([FromBody] RequestMenuModel requestModel)
+		public ActionResult TRN_Menu_T03COUNTRY([FromBody]RequestMenuModel requestModel)
 		{
 			var queryParams = requestModel.QueryParams;
 
-			TRN_Menu_T03COUNTRY_ViewModel model = new(m_userContext);
+			int perPage = CSGenio.framework.Configuration.NrRegDBedit;
+			string rowsPerPageOptionsString = "";
 
-			CSGenio.core.framework.table.TableConfiguration tableConfig = model.GetTableConfig(
-				requestModel.TableConfiguration,
-				requestModel.UserTableConfigName,
-				requestModel.LoadDefaultView);
+			TRN_Menu_T03COUNTRY_ViewModel model = new TRN_Menu_T03COUNTRY_ViewModel(UserContext.Current);
+
+			// Table configuration load options
+			CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions tableConfigOptions = new CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions();
+
+
+			// Determine which table configuration to use and load it
+			CSGenio.framework.TableConfiguration.TableConfiguration tableConfig = TableUiSettings.Load(
+				UserContext.Current.PersistentSupport,
+				model.Uuid,
+				UserContext.Current.User,
+				tableConfigOptions
+			).DetermineTableConfig(
+				requestModel?.TableConfiguration,
+				requestModel?.UserTableConfigName,
+				(bool)requestModel?.LoadDefaultView,
+				tableConfigOptions
+			);
 
 			// Determine rows per page
-			tableConfig.RowsPerPage = tableConfig.DetermineRowsPerPage(CSGenio.framework.Configuration.NrRegDBedit, "");
+			tableConfig.RowsPerPage = CSGenio.framework.TableConfiguration.TableConfigurationHelpers.DetermineRowsPerPage(tableConfig.RowsPerPage, perPage, rowsPerPageOptionsString);
+
+			// Determine what columns have totalizers
+			tableConfig.TotalizerColumns = requestModel.TotalizerColumns;
+
+			// For tables with multiple selection enabled, determine currently selected rows
+			tableConfig.SelectedRows = requestModel.SelectedRows;
 
 			bool isHomePage = RouteData.Values.ContainsKey("isHomePage") ? (bool)RouteData.Values["isHomePage"] : false;
 			if (isHomePage)
 				Navigation.SetValue("HomePage", "TRN_Menu_T03COUNTRY");
 
-			// If there was a recent operation on this table then force the primary persistence server to be called and ignore the read only feature
+			//If there was a recent operation on this table then force the primary persistence server to be called and ignore the read only feature
 			if (string.IsNullOrEmpty(Navigation.GetStrValue("ForcePrimaryRead_ctry")))
 				UserContext.Current.SetPersistenceReadOnly(true);
 			else
@@ -68,7 +89,7 @@ namespace GenioMVC.Controllers
 			if (result.Status.Equals(CSGenio.framework.Status.E))
 				return PermissionError(result.Message);
 
-			NameValueCollection querystring = [];
+			NameValueCollection querystring = new NameValueCollection();
 			if (queryParams != null && queryParams.Count > 0)
 				querystring.AddRange(queryParams);
 
@@ -86,14 +107,15 @@ namespace GenioMVC.Controllers
 
 // USE /[MANUAL TRN MENU_GET T03COUNTRY]/
 
-			try
-			{
-				model.Load(tableConfig, querystring, Request.IsAjaxRequest());
-			}
-			catch (Exception e)
-			{
-				return JsonERROR(HandleException(e), model);
-			}
+
+            try
+            {
+			    model.Load(tableConfig, querystring, Request.IsAjaxRequest());
+            }
+            catch(Exception e)
+            {
+                return JsonERROR(HandleException(e), model);
+            }
 
 
 			return JsonOK(model);
@@ -103,25 +125,46 @@ namespace GenioMVC.Controllers
 		// GET: /Ctry/TRN_Menu_T12COUNTRY
 		[ActionName("TRN_Menu_T12COUNTRY")]
 		[HttpPost]
-		public ActionResult TRN_Menu_T12COUNTRY([FromBody] RequestMenuModel requestModel)
+		public ActionResult TRN_Menu_T12COUNTRY([FromBody]RequestMenuModel requestModel)
 		{
 			var queryParams = requestModel.QueryParams;
 
-			TRN_Menu_T12COUNTRY_ViewModel model = new(m_userContext);
+			int perPage = CSGenio.framework.Configuration.NrRegDBedit;
+			string rowsPerPageOptionsString = "";
 
-			CSGenio.core.framework.table.TableConfiguration tableConfig = model.GetTableConfig(
-				requestModel.TableConfiguration,
-				requestModel.UserTableConfigName,
-				requestModel.LoadDefaultView);
+			TRN_Menu_T12COUNTRY_ViewModel model = new TRN_Menu_T12COUNTRY_ViewModel(UserContext.Current);
+
+			// Table configuration load options
+			CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions tableConfigOptions = new CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions();
+
+
+			// Determine which table configuration to use and load it
+			CSGenio.framework.TableConfiguration.TableConfiguration tableConfig = TableUiSettings.Load(
+				UserContext.Current.PersistentSupport,
+				model.Uuid,
+				UserContext.Current.User,
+				tableConfigOptions
+			).DetermineTableConfig(
+				requestModel?.TableConfiguration,
+				requestModel?.UserTableConfigName,
+				(bool)requestModel?.LoadDefaultView,
+				tableConfigOptions
+			);
 
 			// Determine rows per page
-			tableConfig.RowsPerPage = tableConfig.DetermineRowsPerPage(CSGenio.framework.Configuration.NrRegDBedit, "");
+			tableConfig.RowsPerPage = CSGenio.framework.TableConfiguration.TableConfigurationHelpers.DetermineRowsPerPage(tableConfig.RowsPerPage, perPage, rowsPerPageOptionsString);
+
+			// Determine what columns have totalizers
+			tableConfig.TotalizerColumns = requestModel.TotalizerColumns;
+
+			// For tables with multiple selection enabled, determine currently selected rows
+			tableConfig.SelectedRows = requestModel.SelectedRows;
 
 			bool isHomePage = RouteData.Values.ContainsKey("isHomePage") ? (bool)RouteData.Values["isHomePage"] : false;
 			if (isHomePage)
 				Navigation.SetValue("HomePage", "TRN_Menu_T12COUNTRY");
 
-			// If there was a recent operation on this table then force the primary persistence server to be called and ignore the read only feature
+			//If there was a recent operation on this table then force the primary persistence server to be called and ignore the read only feature
 			if (string.IsNullOrEmpty(Navigation.GetStrValue("ForcePrimaryRead_ctry")))
 				UserContext.Current.SetPersistenceReadOnly(true);
 			else
@@ -133,7 +176,7 @@ namespace GenioMVC.Controllers
 			if (result.Status.Equals(CSGenio.framework.Status.E))
 				return PermissionError(result.Message);
 
-			NameValueCollection querystring = [];
+			NameValueCollection querystring = new NameValueCollection();
 			if (queryParams != null && queryParams.Count > 0)
 				querystring.AddRange(queryParams);
 
@@ -151,14 +194,15 @@ namespace GenioMVC.Controllers
 
 // USE /[MANUAL TRN MENU_GET T12COUNTRY]/
 
-			try
-			{
-				model.Load(tableConfig, querystring, Request.IsAjaxRequest());
-			}
-			catch (Exception e)
-			{
-				return JsonERROR(HandleException(e), model);
-			}
+
+            try
+            {
+			    model.Load(tableConfig, querystring, Request.IsAjaxRequest());
+            }
+            catch(Exception e)
+            {
+                return JsonERROR(HandleException(e), model);
+            }
 
 
 			return JsonOK(model);
@@ -168,25 +212,46 @@ namespace GenioMVC.Controllers
 		// GET: /Ctry/TRN_Menu_T13COUNTRY
 		[ActionName("TRN_Menu_T13COUNTRY")]
 		[HttpPost]
-		public ActionResult TRN_Menu_T13COUNTRY([FromBody] RequestMenuModel requestModel)
+		public ActionResult TRN_Menu_T13COUNTRY([FromBody]RequestMenuModel requestModel)
 		{
 			var queryParams = requestModel.QueryParams;
 
-			TRN_Menu_T13COUNTRY_ViewModel model = new(m_userContext);
+			int perPage = CSGenio.framework.Configuration.NrRegDBedit;
+			string rowsPerPageOptionsString = "";
 
-			CSGenio.core.framework.table.TableConfiguration tableConfig = model.GetTableConfig(
-				requestModel.TableConfiguration,
-				requestModel.UserTableConfigName,
-				requestModel.LoadDefaultView);
+			TRN_Menu_T13COUNTRY_ViewModel model = new TRN_Menu_T13COUNTRY_ViewModel(UserContext.Current);
+
+			// Table configuration load options
+			CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions tableConfigOptions = new CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions();
+
+
+			// Determine which table configuration to use and load it
+			CSGenio.framework.TableConfiguration.TableConfiguration tableConfig = TableUiSettings.Load(
+				UserContext.Current.PersistentSupport,
+				model.Uuid,
+				UserContext.Current.User,
+				tableConfigOptions
+			).DetermineTableConfig(
+				requestModel?.TableConfiguration,
+				requestModel?.UserTableConfigName,
+				(bool)requestModel?.LoadDefaultView,
+				tableConfigOptions
+			);
 
 			// Determine rows per page
-			tableConfig.RowsPerPage = tableConfig.DetermineRowsPerPage(CSGenio.framework.Configuration.NrRegDBedit, "");
+			tableConfig.RowsPerPage = CSGenio.framework.TableConfiguration.TableConfigurationHelpers.DetermineRowsPerPage(tableConfig.RowsPerPage, perPage, rowsPerPageOptionsString);
+
+			// Determine what columns have totalizers
+			tableConfig.TotalizerColumns = requestModel.TotalizerColumns;
+
+			// For tables with multiple selection enabled, determine currently selected rows
+			tableConfig.SelectedRows = requestModel.SelectedRows;
 
 			bool isHomePage = RouteData.Values.ContainsKey("isHomePage") ? (bool)RouteData.Values["isHomePage"] : false;
 			if (isHomePage)
 				Navigation.SetValue("HomePage", "TRN_Menu_T13COUNTRY");
 
-			// If there was a recent operation on this table then force the primary persistence server to be called and ignore the read only feature
+			//If there was a recent operation on this table then force the primary persistence server to be called and ignore the read only feature
 			if (string.IsNullOrEmpty(Navigation.GetStrValue("ForcePrimaryRead_ctry")))
 				UserContext.Current.SetPersistenceReadOnly(true);
 			else
@@ -198,7 +263,7 @@ namespace GenioMVC.Controllers
 			if (result.Status.Equals(CSGenio.framework.Status.E))
 				return PermissionError(result.Message);
 
-			NameValueCollection querystring = [];
+			NameValueCollection querystring = new NameValueCollection();
 			if (queryParams != null && queryParams.Count > 0)
 				querystring.AddRange(queryParams);
 
@@ -216,14 +281,15 @@ namespace GenioMVC.Controllers
 
 // USE /[MANUAL TRN MENU_GET T13COUNTRY]/
 
-			try
-			{
-				model.Load(tableConfig, querystring, Request.IsAjaxRequest());
-			}
-			catch (Exception e)
-			{
-				return JsonERROR(HandleException(e), model);
-			}
+
+            try
+            {
+			    model.Load(tableConfig, querystring, Request.IsAjaxRequest());
+            }
+            catch(Exception e)
+            {
+                return JsonERROR(HandleException(e), model);
+            }
 
 
 			return JsonOK(model);
@@ -233,25 +299,46 @@ namespace GenioMVC.Controllers
 		// GET: /Ctry/TRN_Menu_T16COUNTRY
 		[ActionName("TRN_Menu_T16COUNTRY")]
 		[HttpPost]
-		public ActionResult TRN_Menu_T16COUNTRY([FromBody] RequestMenuModel requestModel)
+		public ActionResult TRN_Menu_T16COUNTRY([FromBody]RequestMenuModel requestModel)
 		{
 			var queryParams = requestModel.QueryParams;
 
-			TRN_Menu_T16COUNTRY_ViewModel model = new(m_userContext);
+			int perPage = CSGenio.framework.Configuration.NrRegDBedit;
+			string rowsPerPageOptionsString = "";
 
-			CSGenio.core.framework.table.TableConfiguration tableConfig = model.GetTableConfig(
-				requestModel.TableConfiguration,
-				requestModel.UserTableConfigName,
-				requestModel.LoadDefaultView);
+			TRN_Menu_T16COUNTRY_ViewModel model = new TRN_Menu_T16COUNTRY_ViewModel(UserContext.Current);
+
+			// Table configuration load options
+			CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions tableConfigOptions = new CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions();
+
+
+			// Determine which table configuration to use and load it
+			CSGenio.framework.TableConfiguration.TableConfiguration tableConfig = TableUiSettings.Load(
+				UserContext.Current.PersistentSupport,
+				model.Uuid,
+				UserContext.Current.User,
+				tableConfigOptions
+			).DetermineTableConfig(
+				requestModel?.TableConfiguration,
+				requestModel?.UserTableConfigName,
+				(bool)requestModel?.LoadDefaultView,
+				tableConfigOptions
+			);
 
 			// Determine rows per page
-			tableConfig.RowsPerPage = tableConfig.DetermineRowsPerPage(CSGenio.framework.Configuration.NrRegDBedit, "");
+			tableConfig.RowsPerPage = CSGenio.framework.TableConfiguration.TableConfigurationHelpers.DetermineRowsPerPage(tableConfig.RowsPerPage, perPage, rowsPerPageOptionsString);
+
+			// Determine what columns have totalizers
+			tableConfig.TotalizerColumns = requestModel.TotalizerColumns;
+
+			// For tables with multiple selection enabled, determine currently selected rows
+			tableConfig.SelectedRows = requestModel.SelectedRows;
 
 			bool isHomePage = RouteData.Values.ContainsKey("isHomePage") ? (bool)RouteData.Values["isHomePage"] : false;
 			if (isHomePage)
 				Navigation.SetValue("HomePage", "TRN_Menu_T16COUNTRY");
 
-			// If there was a recent operation on this table then force the primary persistence server to be called and ignore the read only feature
+			//If there was a recent operation on this table then force the primary persistence server to be called and ignore the read only feature
 			if (string.IsNullOrEmpty(Navigation.GetStrValue("ForcePrimaryRead_ctry")))
 				UserContext.Current.SetPersistenceReadOnly(true);
 			else
@@ -263,7 +350,7 @@ namespace GenioMVC.Controllers
 			if (result.Status.Equals(CSGenio.framework.Status.E))
 				return PermissionError(result.Message);
 
-			NameValueCollection querystring = [];
+			NameValueCollection querystring = new NameValueCollection();
 			if (queryParams != null && queryParams.Count > 0)
 				querystring.AddRange(queryParams);
 
@@ -281,14 +368,15 @@ namespace GenioMVC.Controllers
 
 // USE /[MANUAL TRN MENU_GET T16COUNTRY]/
 
-			try
-			{
-				model.Load(tableConfig, querystring, Request.IsAjaxRequest());
-			}
-			catch (Exception e)
-			{
-				return JsonERROR(HandleException(e), model);
-			}
+
+            try
+            {
+			    model.Load(tableConfig, querystring, Request.IsAjaxRequest());
+            }
+            catch(Exception e)
+            {
+                return JsonERROR(HandleException(e), model);
+            }
 
 
 			return JsonOK(model);

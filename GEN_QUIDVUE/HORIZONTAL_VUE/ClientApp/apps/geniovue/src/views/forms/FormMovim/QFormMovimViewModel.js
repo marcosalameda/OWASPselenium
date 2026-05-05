@@ -1,4 +1,4 @@
-﻿/* eslint-disable @typescript-eslint/no-unused-vars */
+﻿/* eslint-disable no-unused-vars */
 import { computed, reactive, watch } from 'vue'
 import _merge from 'lodash-es/merge'
 
@@ -11,7 +11,7 @@ import netAPI from '@quidgest/clientapp/network'
 import qApi from '@/api/genio/quidgestFunctions.js'
 import qFunctions from '@/api/genio/projectFunctions.js'
 import qProjArrays from '@/api/genio/projectArrays.js'
-/* eslint-enable @typescript-eslint/no-unused-vars */
+/* eslint-enable no-unused-vars */
 
 /**
  * Represents a ViewModel class.
@@ -25,11 +25,11 @@ export default class ViewModel extends FormViewModelBase
 	 * @param {object} options - The options for the ViewModel
 	 * @param {object} values - A ViewModel instance to copy values from
 	 */
-	// eslint-disable-next-line @typescript-eslint/no-unused-vars
+	// eslint-disable-next-line no-unused-vars
 	constructor(vueContext, options, values)
 	{
 		super(vueContext, options)
-		// eslint-disable-next-line @typescript-eslint/no-unused-vars
+		// eslint-disable-next-line no-unused-vars
 		const vm = this.vueContext
 
 		// The view model metadata
@@ -37,9 +37,8 @@ export default class ViewModel extends FormViewModelBase
 			name: 'MOVIM',
 			area: 'MOVIM',
 			actions: {
-				recalculateFormulas: 'RecalculateFormulas_Movim',
-				updateFilesTickets: 'UpdateFilesTicketsMovim',
-				setFile: 'SetFileMovim'
+				recalculateFormulas: 'RecalculateFormulas_MOVIM',
+				updateFilesTickets: 'UpdateFilesTicketsMOVIM'
 			}
 		})
 
@@ -51,7 +50,7 @@ export default class ViewModel extends FormViewModelBase
 			field: 'CODMOVIM',
 			description: '',
 		}).cloneFrom(values?.ValCodmovim))
-		this.stopWatchers.push(watch(() => this.ValCodmovim.value, (newValue, oldValue) => this.onUpdate('movim.codmovim', this.ValCodmovim, newValue, oldValue)))
+		watch(() => this.ValCodmovim.value, (newValue, oldValue) => this.onUpdate('movim.codmovim', this.ValCodmovim, newValue, oldValue))
 
 		/** The used foreign keys. */
 		this.ValCodequip = reactive(new modelFieldType.ForeignKey({
@@ -62,7 +61,7 @@ export default class ViewModel extends FormViewModelBase
 			relatedArea: 'EQUIP',
 			description: computed(() => this.Resources._EQUIPMENT12605),
 		}).cloneFrom(values?.ValCodequip))
-		this.stopWatchers.push(watch(() => this.ValCodequip.value, (newValue, oldValue) => this.onUpdate('movim.codequip', this.ValCodequip, newValue, oldValue)))
+		watch(() => this.ValCodequip.value, (newValue, oldValue) => this.onUpdate('movim.codequip', this.ValCodequip, newValue, oldValue))
 
 		this.ValCodrooms = reactive(new modelFieldType.ForeignKey({
 			id: 'ValCodrooms',
@@ -72,7 +71,7 @@ export default class ViewModel extends FormViewModelBase
 			relatedArea: 'ROOMS',
 			description: computed(() => this.Resources._ROOM54790),
 		}).cloneFrom(values?.ValCodrooms))
-		this.stopWatchers.push(watch(() => this.ValCodrooms.value, (newValue, oldValue) => this.onUpdate('movim.codrooms', this.ValCodrooms, newValue, oldValue)))
+		watch(() => this.ValCodrooms.value, (newValue, oldValue) => this.onUpdate('movim.codrooms', this.ValCodrooms, newValue, oldValue))
 
 		/** The remaining form fields. */
 		this.ValDhmudanc = reactive(new modelFieldType.DateTime({
@@ -82,7 +81,7 @@ export default class ViewModel extends FormViewModelBase
 			field: 'DHMUDANC',
 			description: computed(() => this.Resources.CHANGE36355),
 		}).cloneFrom(values?.ValDhmudanc))
-		this.stopWatchers.push(watch(() => this.ValDhmudanc.value, (newValue, oldValue) => this.onUpdate('movim.dhmudanc', this.ValDhmudanc, newValue, oldValue)))
+		watch(() => this.ValDhmudanc.value, (newValue, oldValue) => this.onUpdate('movim.dhmudanc', this.ValDhmudanc, newValue, oldValue))
 
 		this.TableEquipRegistnr = reactive(new modelFieldType.String({
 			type: 'Lookup',
@@ -92,9 +91,8 @@ export default class ViewModel extends FormViewModelBase
 			field: 'REGISTNR',
 			maxLength: 6,
 			description: computed(() => this.Resources.NO__REGISTER04207),
-			ignoreFldSubmit: true,
 		}).cloneFrom(values?.TableEquipRegistnr))
-		this.stopWatchers.push(watch(() => this.TableEquipRegistnr.value, (newValue, oldValue) => this.onUpdate('equip.registnr', this.TableEquipRegistnr, newValue, oldValue)))
+		watch(() => this.TableEquipRegistnr.value, (newValue, oldValue) => this.onUpdate('equip.registnr', this.TableEquipRegistnr, newValue, oldValue))
 
 		this.TableRoomsRoomnr = reactive(new modelFieldType.String({
 			type: 'Lookup',
@@ -104,9 +102,8 @@ export default class ViewModel extends FormViewModelBase
 			field: 'ROOMNR',
 			maxLength: 10,
 			description: computed(() => this.Resources.N_R__ROOM43805),
-			ignoreFldSubmit: true,
 		}).cloneFrom(values?.TableRoomsRoomnr))
-		this.stopWatchers.push(watch(() => this.TableRoomsRoomnr.value, (newValue, oldValue) => this.onUpdate('rooms.roomnr', this.TableRoomsRoomnr, newValue, oldValue)))
+		watch(() => this.TableRoomsRoomnr.value, (newValue, oldValue) => this.onUpdate('rooms.roomnr', this.TableRoomsRoomnr, newValue, oldValue))
 
 		this.ValObservat = reactive(new modelFieldType.MultiLineString({
 			id: 'ValObservat',
@@ -115,7 +112,7 @@ export default class ViewModel extends FormViewModelBase
 			field: 'OBSERVAT',
 			description: computed(() => this.Resources.OBSERVATION37880),
 		}).cloneFrom(values?.ValObservat))
-		this.stopWatchers.push(watch(() => this.ValObservat.value, (newValue, oldValue) => this.onUpdate('movim.observat', this.ValObservat, newValue, oldValue)))
+		watch(() => this.ValObservat.value, (newValue, oldValue) => this.onUpdate('movim.observat', this.ValObservat, newValue, oldValue))
 	}
 
 	/**

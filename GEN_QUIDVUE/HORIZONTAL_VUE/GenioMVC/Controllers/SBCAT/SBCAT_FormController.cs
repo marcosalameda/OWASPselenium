@@ -9,7 +9,6 @@ using System.Data;
 using System.Data.Entity;
 using System.Linq;
 using System.Reflection;
-using System.Dynamic;
 
 using CSGenio.business;
 using CSGenio.core.persistence;
@@ -56,11 +55,11 @@ namespace GenioMVC.Controllers
 // USE /[MANUAL GQT CONTROLLER_SHOW SBCAT]/
 
 		[HttpPost]
-		public ActionResult Sbcat_Show_GET([FromBody] RequestIdModel requestModel)
+		public ActionResult Sbcat_Show_GET([FromBody]RequestIdModel requestModel)
 		{
-			string id = requestModel.Id;
-			Sbcat_ViewModel model = new(UserContext.Current);
-			EventSink eventSink = new()
+			var id = requestModel.Id;
+			var model = new Sbcat_ViewModel(UserContext.Current);
+			var eventSink = new EventSink()
 			{
 				MethodName = "Sbcat_Show_GET",
 				AreaName = "sbcat",
@@ -76,7 +75,13 @@ namespace GenioMVC.Controllers
 				}
 			};
 
-			return GenericHandleGetFormShow(eventSink, model, id);
+			using (CSGenio.core.di.GenioDI.MetricsOtlp.RecordTime("page_load_time", new System.Diagnostics.TagList([
+				new("PageId", "SBCAT.SHOW"),
+				new("PageType", "form")
+			]), "ms", "Time to load the page."))
+			{
+				return GenericHandleGetFormShow(eventSink, model, id);
+			}
 		}
 
 		#endregion
@@ -85,14 +90,14 @@ namespace GenioMVC.Controllers
 
 // USE /[MANUAL GQT CONTROLLER_NEW_GET SBCAT]/
 		[HttpPost]
-		public ActionResult Sbcat_New_GET([FromBody] RequestNewGetModel requestModel)
+		public ActionResult Sbcat_New_GET([FromBody]RequestNewGetModel requestModel)
 		{
-			string id = requestModel.Id;
-			bool isNewLocation = requestModel.IsNewLocation;
+			var id = requestModel.Id;
+			var isNewLocation = requestModel.IsNewLocation;
 			var prefillValues = requestModel.PrefillValues;
 
-			Sbcat_ViewModel model = new(UserContext.Current);
-			EventSink eventSink = new()
+			var model = new Sbcat_ViewModel(UserContext.Current);
+			var eventSink = new EventSink()
 			{
 				MethodName = "Sbcat_New_GET",
 				AreaName = "sbcat",
@@ -112,7 +117,13 @@ namespace GenioMVC.Controllers
 				}
 			};
 
-			return GenericHandleGetFormNew(eventSink, model, id, isNewLocation, prefillValues);
+			using (CSGenio.core.di.GenioDI.MetricsOtlp.RecordTime("page_load_time", new System.Diagnostics.TagList([
+				new("PageId", "SBCAT.SHOW"),
+				new("PageType", "form")
+			]), "ms", "Time to load the page."))
+			{
+				return GenericHandleGetFormNew(eventSink, model, id, isNewLocation, prefillValues);
+			}
 		}
 
 		//
@@ -121,7 +132,7 @@ namespace GenioMVC.Controllers
 		[HttpPost]
 		public ActionResult Sbcat_New([FromBody]Sbcat_ViewModel model, [FromQuery]bool redirect = true)
 		{
-			EventSink eventSink = new()
+			var eventSink = new EventSink()
 			{
 				MethodName = "Sbcat_New",
 				ViewName = "Sbcat",
@@ -146,7 +157,13 @@ namespace GenioMVC.Controllers
 				}
 			};
 
-			return GenericHandlePostFormNew(eventSink, model);
+			using (CSGenio.core.di.GenioDI.MetricsOtlp.RecordTime("page_load_time", new System.Diagnostics.TagList([
+				new("PageId", "SBCAT.NEW"),
+				new("PageType", "form")
+			]), "ms", "Time to load the page."))
+			{
+				return GenericHandlePostFormNew(eventSink, model);
+			}
 		}
 
 		#endregion
@@ -155,11 +172,11 @@ namespace GenioMVC.Controllers
 
 // USE /[MANUAL GQT CONTROLLER_EDIT_GET SBCAT]/
 		[HttpPost]
-		public ActionResult Sbcat_Edit_GET([FromBody] RequestIdModel requestModel)
+		public ActionResult Sbcat_Edit_GET([FromBody]RequestIdModel requestModel)
 		{
-			string id = requestModel.Id;
-			Sbcat_ViewModel model = new(UserContext.Current);
-			EventSink eventSink = new()
+			var id = requestModel.Id;
+			var model = new Sbcat_ViewModel(UserContext.Current);
+			var eventSink = new EventSink()
 			{
 				MethodName = "Sbcat_Edit_GET",
 				AreaName = "sbcat",
@@ -176,7 +193,13 @@ namespace GenioMVC.Controllers
 				}
 			};
 
-			return GenericHandleGetFormEdit(eventSink, model, id);
+			using (CSGenio.core.di.GenioDI.MetricsOtlp.RecordTime("page_load_time", new System.Diagnostics.TagList([
+				new("PageId", "SBCAT.SHOW"),
+				new("PageType", "form")
+			]), "ms", "Time to load the page."))
+			{
+				return GenericHandleGetFormEdit(eventSink, model, id);
+			}
 		}
 
 		//
@@ -185,7 +208,7 @@ namespace GenioMVC.Controllers
 		[HttpPost]
 		public ActionResult Sbcat_Edit([FromBody]Sbcat_ViewModel model, [FromQuery]bool redirect)
 		{
-			EventSink eventSink = new()
+			var eventSink = new EventSink()
 			{
 				MethodName = "Sbcat_Edit",
 				ViewName = "Sbcat",
@@ -210,7 +233,13 @@ namespace GenioMVC.Controllers
 				}
 			};
 
-			return GenericHandlePostFormEdit(eventSink, model);
+			using (CSGenio.core.di.GenioDI.MetricsOtlp.RecordTime("page_load_time", new System.Diagnostics.TagList([
+				new("PageId", "SBCAT.EDIT"),
+				new("PageType", "form")
+			]), "ms", "Time to load the page."))
+			{
+				return GenericHandlePostFormEdit(eventSink, model);
+			}
 		}
 
 		#endregion
@@ -219,11 +248,11 @@ namespace GenioMVC.Controllers
 
 // USE /[MANUAL GQT CONTROLLER_DELETE_GET SBCAT]/
 		[HttpPost]
-		public ActionResult Sbcat_Delete_GET([FromBody] RequestIdModel requestModel)
+		public ActionResult Sbcat_Delete_GET([FromBody]RequestIdModel requestModel)
 		{
-			string id = requestModel.Id;
-			Sbcat_ViewModel model = new(UserContext.Current);
-			EventSink eventSink = new()
+			var id = requestModel.Id;
+			var model = new Sbcat_ViewModel(UserContext.Current);
+			var eventSink = new EventSink()
 			{
 				MethodName = "Sbcat_Delete_GET",
 				AreaName = "sbcat",
@@ -240,20 +269,26 @@ namespace GenioMVC.Controllers
 				}
 			};
 
-			return GenericHandleGetFormDelete(eventSink, model, id);
+			using (CSGenio.core.di.GenioDI.MetricsOtlp.RecordTime("page_load_time", new System.Diagnostics.TagList([
+				new("PageId", "SBCAT.SHOW"),
+				new("PageType", "form")
+			]), "ms", "Time to load the page."))
+			{
+				return GenericHandleGetFormDelete(eventSink, model, id);
+			}
 		}
 
 		//
 		// POST: /Sbcat/Sbcat_Delete
 // USE /[MANUAL GQT CONTROLLER_DELETE_POST SBCAT]/
 		[HttpPost]
-		public ActionResult Sbcat_Delete([FromBody] RequestIdModel requestModel)
+		public ActionResult Sbcat_Delete([FromBody]RequestIdModel requestModel)
 		{
-			string id = requestModel.Id;
-			Sbcat_ViewModel model = new(UserContext.Current, id);
+			var id = requestModel.Id;
+			var model = new Sbcat_ViewModel (UserContext.Current, id);
 			model.MapFromModel();
 
-			EventSink eventSink = new()
+			var eventSink = new EventSink()
 			{
 				MethodName = "Sbcat_Delete",
 				ViewName = "Sbcat",
@@ -269,7 +304,13 @@ namespace GenioMVC.Controllers
 				}
 			};
 
-			return GenericHandlePostFormDelete(eventSink, model);
+			using (CSGenio.core.di.GenioDI.MetricsOtlp.RecordTime("page_load_time", new System.Diagnostics.TagList([
+				new("PageId", "SBCAT.DELETE"),
+				new("PageType", "form")
+			]), "ms", "Time to load the page."))
+			{
+				return GenericHandlePostFormDelete(eventSink, model);
+			}
 		}
 
 		public ActionResult Sbcat_Delete_Redirect()
@@ -285,13 +326,13 @@ namespace GenioMVC.Controllers
 // USE /[MANUAL GQT CONTROLLER_DUPLICATE_GET SBCAT]/
 
 		[HttpPost]
-		public ActionResult Sbcat_Duplicate_GET([FromBody] RequestNewGetModel requestModel)
+		public ActionResult Sbcat_Duplicate_GET([FromBody]RequestNewGetModel requestModel)
 		{
-			string id = requestModel.Id;
-			bool isNewLocation = requestModel.IsNewLocation;
+			var id = requestModel.Id;
+			var isNewLocation = requestModel.IsNewLocation;
 
-			Sbcat_ViewModel model = new(UserContext.Current);
-			EventSink eventSink = new()
+			var model = new Sbcat_ViewModel(UserContext.Current);
+			var eventSink = new EventSink()
 			{
 				MethodName = "Sbcat_Duplicate_GET",
 				AreaName = "sbcat",
@@ -307,7 +348,13 @@ namespace GenioMVC.Controllers
 				}
 			};
 
-			return GenericHandleGetFormDuplicate(eventSink, model, id, isNewLocation);
+			using (CSGenio.core.di.GenioDI.MetricsOtlp.RecordTime("page_load_time", new System.Diagnostics.TagList([
+				new("PageId", "SBCAT.SHOW"),
+				new("PageType", "form")
+			]), "ms", "Time to load the page."))
+			{
+				return GenericHandleGetFormDuplicate(eventSink, model, id, isNewLocation);
+			}
 		}
 
 		//
@@ -316,7 +363,7 @@ namespace GenioMVC.Controllers
 		[HttpPost]
 		public ActionResult Sbcat_Duplicate([FromBody]Sbcat_ViewModel model, [FromQuery]bool redirect = true)
 		{
-			EventSink eventSink = new()
+			var eventSink = new EventSink()
 			{
 				MethodName = "Sbcat_Duplicate",
 				ViewName = "Sbcat",
@@ -341,7 +388,13 @@ namespace GenioMVC.Controllers
 				}
 			};
 
-			return GenericHandlePostFormDuplicate(eventSink, model);
+			using (CSGenio.core.di.GenioDI.MetricsOtlp.RecordTime("page_load_time", new System.Diagnostics.TagList([
+				new("PageId", "SBCAT.DUPLICATE"),
+				new("PageType", "form")
+			]), "ms", "Time to load the page."))
+			{
+				return GenericHandlePostFormDuplicate(eventSink, model);
+			}
 		}
 
 		#endregion
@@ -358,15 +411,8 @@ namespace GenioMVC.Controllers
 				PersistentSupport sp = UserContext.Current.PersistentSupport;
 				try
 				{
-					var recordKey = Navigation.GetStrValue("sbcat");
-					var model = GenioMVC.Models.Sbcat.Find(recordKey, UserContext.Current);
-					if (model.ValZzstate == 0)
-					{
-						Navigation.ClearValue("sbcat");
-						string errorMessage = Resources.Resources.ESTE_REGISTO_JA_FOI_02595;
-						Log.Error($"${errorMessage} ID: ${recordKey}");
-						return JsonOK(new { Success = true, currentNavigationLevel = Navigation.CurrentLevel.Level, Warning = errorMessage });
-					}
+					var model = new GenioMVC.Models.Sbcat(UserContext.Current);
+					model.klass.QPrimaryKey = Navigation.GetStrValue("sbcat");
 
 // USE /[MANUAL GQT BEFORE_CANCEL SBCAT]/
 

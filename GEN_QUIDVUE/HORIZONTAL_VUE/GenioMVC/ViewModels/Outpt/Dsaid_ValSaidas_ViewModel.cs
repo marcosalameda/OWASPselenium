@@ -1,13 +1,13 @@
-﻿using SelectList = Microsoft.AspNetCore.Mvc.Rendering.SelectList;
+﻿using JsonIgnoreAttribute = System.Text.Json.Serialization.JsonIgnoreAttribute;
+using JsonPropertyName = System.Text.Json.Serialization.JsonPropertyNameAttribute;
+using SelectList = Microsoft.AspNetCore.Mvc.Rendering.SelectList;
 using System.Collections.Specialized;
 using System.Data;
 using System.Globalization;
 using System.Linq;
-using System.Text.Json.Serialization;
 
 using CSGenio.business;
 using CSGenio.core.di;
-using CSGenio.core.framework.table;
 using CSGenio.framework;
 using GenioMVC.Helpers;
 using GenioMVC.Models.Exception;
@@ -22,18 +22,16 @@ namespace GenioMVC.ViewModels.Outpt
 		/// <summary>
 		/// Gets or sets the object that represents the table and its elements.
 		/// </summary>
-		[JsonPropertyName("table")]
+		[JsonPropertyName("Table")]
 		public TablePartial<Dsaid_ValSaidas_RowViewModel> Menu { get; set; }
 
-		[JsonIgnore]
-		public override TableManagementMode ViewsManagementMode => TableManagementMode.PersistOne;
+		protected override TableViewsManagementMode ViewsManagementMode => TableViewsManagementMode.PersistOne;
 
 		/// <inheritdoc/>
 		[JsonIgnore]
 		public override string TableAlias => "outpu";
 
 		/// <inheritdoc/>
-		[JsonPropertyName("uuid")]
 		public override string Uuid => "Dsaid_ValSaidas";
 
 		/// <inheritdoc/>
@@ -68,7 +66,7 @@ namespace GenioMVC.ViewModels.Outpt
 
 		/// <inheritdoc/>
 		[JsonIgnore]
-		public override CriteriaSet BaseConditions
+		public override CriteriaSet baseConditions
 		{
 			get
 			{
@@ -81,7 +79,7 @@ namespace GenioMVC.ViewModels.Outpt
 
 		/// <inheritdoc/>
 		[JsonIgnore]
-		public override List<Relation> Relations
+		public override List<Relation> relations
 		{
 			get
 			{
@@ -132,29 +130,33 @@ namespace GenioMVC.ViewModels.Outpt
 		}
 
 		/// <inheritdoc/>
-		public override List<Exports.QColumn> GetColumnsToExport()
+		public override List<Exports.QColumn> GetColumnsToExport(bool ajaxRequest = false)
 		{
-			return
-			[
+			var columns = new List<Exports.QColumn>()
+			{
 				new Exports.QColumn(CSGenioAoutpu.FldLine, FieldType.NUMERIC, Resources.Resources.LINE27983, 5, 1, true),
 				new Exports.QColumn(CSGenioAitem.FldItemdes, FieldType.TEXT, Resources.Resources.ARTICLE60065, 50, 0, true),
 				new Exports.QColumn(CSGenioAitem.FldItemcod, FieldType.TEXT, Resources.Resources.CODE49225, 15, 0, true),
 				new Exports.QColumn(CSGenioAoutpu.FldExitqnty, FieldType.NUMERIC, Resources.Resources.QTD_OUTPUT12876, 10, 0, true),
 				new Exports.QColumn(CSGenioAwareh.FldWarehdes, FieldType.TEXT, Resources.Resources.WAREHOUSE51864, 30, 0, true),
-			];
+			};
+
+			columns.RemoveAll(item => item == null);
+			return columns;
 		}
 
 		public void LoadToExport(out ListingMVC<CSGenioAoutpu> listing, out CriteriaSet conditions, out List<Exports.QColumn> columns, NameValueCollection requestValues, bool ajaxRequest = false)
 		{
-			CSGenio.core.framework.table.TableConfiguration tableConfig = new();
+			CSGenio.framework.TableConfiguration.TableConfiguration tableConfig = new CSGenio.framework.TableConfiguration.TableConfiguration();
+
 			LoadToExport(out listing, out conditions, out columns, tableConfig, requestValues, ajaxRequest);
 		}
 
-		public void LoadToExport(out ListingMVC<CSGenioAoutpu> listing, out CriteriaSet conditions, out List<Exports.QColumn> columns, CSGenio.core.framework.table.TableConfiguration tableConfig, NameValueCollection requestValues, bool ajaxRequest = false)
+		public void LoadToExport(out ListingMVC<CSGenioAoutpu> listing, out CriteriaSet conditions, out List<Exports.QColumn> columns, CSGenio.framework.TableConfiguration.TableConfiguration tableConfig, NameValueCollection requestValues, bool ajaxRequest = false)
 		{
 			listing = null;
 			conditions = null;
-			columns = this.GetExportColumns(tableConfig.ColumnConfigurations);
+			columns = this.GetExportColumns(tableConfig.ColumnConfiguration);
 
 			// Store number of records to reset it after loading
 			int rowsPerPage = tableConfig.RowsPerPage;
@@ -169,26 +171,30 @@ namespace GenioMVC.ViewModels.Outpt
 		/// <inheritdoc/>
 		public override CriteriaSet BuildCriteriaSet(NameValueCollection requestValues, out bool tableReload, CriteriaSet crs = null, bool isToExport = false)
 		{
-			CSGenio.core.framework.table.TableConfiguration tableConfig = new();
+			CSGenio.framework.TableConfiguration.TableConfiguration tableConfig = new();
 			return BuildCriteriaSet(tableConfig, requestValues, out tableReload, crs, isToExport);
 		}
 
 		/// <inheritdoc/>
-		public override CriteriaSet BuildCriteriaSet(CSGenio.core.framework.table.TableConfiguration tableConfig, NameValueCollection requestValues, out bool tableReload, CriteriaSet crs = null, bool isToExport = false)
+		public override CriteriaSet BuildCriteriaSet(CSGenio.framework.TableConfiguration.TableConfiguration tableConfig, NameValueCollection requestValues, out bool tableReload, CriteriaSet crs = null, bool isToExport = false)
 		{
 			User u = m_userContext.User;
 			tableReload = true;
 
-			crs ??= CriteriaSet.And();
+			if (crs == null)
+				crs = CriteriaSet.And();
 
 
-			Menu ??= new TablePartial<Dsaid_ValSaidas_RowViewModel>();
+
+			if (Menu == null)
+				Menu = new TablePartial<Dsaid_ValSaidas_RowViewModel>();
 			// Set table name (used in getting searchable column names)
 			Menu.TableName = TableAlias;
 
 			Menu.SetFilters(false, false);
 
-			crs.SubSets.Add(ProcessSearchFilters(Menu, GetSearchColumns(tableConfig.ColumnConfigurations), tableConfig));
+
+			crs.SubSets.Add(ProcessSearchFilters(Menu, GetSearchColumns(tableConfig.ColumnConfiguration), tableConfig));
 
 
 			//Subfilters
@@ -197,13 +203,8 @@ namespace GenioMVC.ViewModels.Outpt
 
 			crs.SubSets.Add(subfilters);
 
-			// Form field filters
-			crs.SubSets.Add(ProcessFieldFilters(tableConfig.GlobalFilters));
-
 			if (this.OutptValCodoutpt != null)
 				crs.Equal(CSGenioAoutpu.FldCodoutpt, this.OutptValCodoutpt);
-			else
-				tableReload = false;
 
 
 			crs.SubSets.Add(GetCustomizedStaticLimits(StaticLimits));
@@ -270,7 +271,7 @@ namespace GenioMVC.ViewModels.Outpt
 		/// <param name="conditions">The conditions.</param>
 		public void Load(int numberListItems, NameValueCollection requestValues, bool ajaxRequest, bool isToExport, ref ListingMVC<CSGenioAoutpu> Qlisting, ref CriteriaSet conditions)
 		{
-			CSGenio.core.framework.table.TableConfiguration tableConfig = new();
+			CSGenio.framework.TableConfiguration.TableConfiguration tableConfig = new CSGenio.framework.TableConfiguration.TableConfiguration();
 
 			tableConfig.RowsPerPage = numberListItems;
 
@@ -285,7 +286,7 @@ namespace GenioMVC.ViewModels.Outpt
 		/// <param name="ajaxRequest">Whether the request was initiated via AJAX.</param>
 		/// <param name="isToExport">Whether the list is being loaded to be exported</param>
 		/// <param name="conditions">The conditions.</param>
-		public void Load(CSGenio.core.framework.table.TableConfiguration tableConfig, NameValueCollection requestValues, bool ajaxRequest, bool isToExport = false, CriteriaSet conditions = null)
+		public void Load(CSGenio.framework.TableConfiguration.TableConfiguration tableConfig, NameValueCollection requestValues, bool ajaxRequest, bool isToExport = false, CriteriaSet conditions = null)
 		{
 			ListingMVC<CSGenioAoutpu> listing = null;
 
@@ -301,142 +302,149 @@ namespace GenioMVC.ViewModels.Outpt
 		/// <param name="isToExport">Whether the list is being loaded to be exported</param>
 		/// <param name="Qlisting">The rows.</param>
 		/// <param name="conditions">The conditions.</param>
-		public void Load(CSGenio.core.framework.table.TableConfiguration tableConfig, NameValueCollection requestValues, bool ajaxRequest, bool isToExport, ref ListingMVC<CSGenioAoutpu> Qlisting, ref CriteriaSet conditions)
+		public void Load(CSGenio.framework.TableConfiguration.TableConfiguration tableConfig, NameValueCollection requestValues, bool ajaxRequest, bool isToExport, ref ListingMVC<CSGenioAoutpu> Qlisting, ref CriteriaSet conditions)
 		{
-			User u = m_userContext.User;
-			Menu = new TablePartial<Dsaid_ValSaidas_RowViewModel>();
-
-			CriteriaSet dsaid___pseudsaidas__Conds = CriteriaSet.And();
-			bool tableReload = true;
-
-			//FOR: MENU LIST SORTING
-			Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
-			allSortOrders.Add("OUTPU.LINE", new OrderedDictionary());
-			allSortOrders["OUTPU.LINE"].Add("OUTPU.LINE", "A");
-
-
-			int numberListItems = tableConfig.RowsPerPage;
-			var pageNumber = ajaxRequest ? tableConfig.Page : 1;
-
-			// Added to avoid 0 or -1 pages when setting number of records to -1 to disable pagination
-			if (pageNumber < 1)
-				pageNumber = 1;
-
-			List<ColumnSort> sorts = GetRequestSorts(this.Menu, tableConfig, "outpu", allSortOrders);
-
-			if (sorts == null || sorts.Count == 0)
+			using (GenioDI.MetricsOtlp.RecordTime("page_load_time", new System.Diagnostics.TagList([
+				new("PageId", "DSAID.SAIDAS"),
+				new("PageType", "component")
+			]), "ms", "Time to load the page."))
 			{
-				sorts = new List<ColumnSort>();
-				sorts.Add(new ColumnSort(new ColumnReference(CSGenioAoutpu.FldLine), SortOrder.Ascending));
+				User u = m_userContext.User;
+				Menu = new TablePartial<Dsaid_ValSaidas_RowViewModel>();
 
-			}
+				CriteriaSet dsaid___pseudsaidas__Conds = CriteriaSet.And();
+				bool tableReload = true;
 
-			FieldRef[] fields = new FieldRef[] { CSGenioAoutpu.FldCodoutpu, CSGenioAoutpu.FldZzstate, CSGenioAoutpu.FldLine, CSGenioAoutpu.FldCoditem, CSGenioAitem.FldCoditem, CSGenioAitem.FldItemdes, CSGenioAitem.FldItemcod, CSGenioAoutpu.FldExitqnty, CSGenioAoutpu.FldCodwareh, CSGenioAwareh.FldCodwareh, CSGenioAwareh.FldWarehdes };
-
-			// List of column names that should display totalized (aggregated) values.
-			List<string> totalizerColumns = [];
-			List<FieldRef> fieldsWithTotalizers = [.. fields.Where(field => totalizerColumns.Contains(field.FullName))];
-
-			FieldRef firstVisibleColumn = null;
-			if (sorts.Count == 0)
-			{
-				firstVisibleColumn = tableConfig?.GetFirstVisibleColumn(TableAlias);
-
-				firstVisibleColumn ??= new FieldRef("outpu", "line");
-			}
-			// Limitations
-			this.TableLimits ??= [];
-			// Comparer to check if limit is already present in TableLimits
-			LimitComparer limitComparer = new();
-
-			//Tooltip for EPHs affecting this viewmodel list
-			{
-				Limit limit = new Limit();
-				limit.TipoLimite = LimitType.EPH;
-				CSGenioAoutpu model_limit_area = new CSGenioAoutpu(m_userContext.User);
-				List<Limit> area_EPH_limits = EPH_Limit_Filler(ref limit, model_limit_area, "IBL_DSAID___PSEUDSAIDAS__");
-				if (area_EPH_limits.Count > 0)
-					this.TableLimits.AddRange(area_EPH_limits);
-			}
+				//FOR: MENU LIST SORTING
+				Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
+				allSortOrders.Add("OUTPU.LINE", new OrderedDictionary());
+				allSortOrders["OUTPU.LINE"].Add("OUTPU.LINE", "A");
 
 
-			if (conditions == null)
-				conditions = CriteriaSet.And();
 
-			conditions.SubSets.Add(dsaid___pseudsaidas__Conds);
-			dsaid___pseudsaidas__Conds = BuildCriteriaSet(tableConfig, requestValues, out bool hasAllRequiredLimits, conditions, isToExport);
-			tableReload &= hasAllRequiredLimits;
+				int numberListItems = tableConfig.RowsPerPage;
+				var pageNumber = ajaxRequest ? tableConfig.Page : 1;
 
-// USE /[MANUAL GQT OVERRQ DSAID_PSEUDSAIDAS]/
-
-			bool distinct = false;
-
-			if (isToExport)
-			{
-				if (!tableReload)
-					return;
-
-				var exportColumns = GetExportColumns(tableConfig.ColumnConfigurations);
-				var exportFieldRefs = exportColumns.Select(eCol => eCol.Field).Where(fldRef => fldRef != null).ToArray();
-
-				Qlisting = Models.ModelBase.BuildListingForExport<CSGenioAoutpu>(m_userContext, false, ref dsaid___pseudsaidas__Conds, exportFieldRefs, (pageNumber - 1) * numberListItems, numberListItems, sorts, "IBL_DSAID___PSEUDSAIDAS__", true, firstVisibleColumn: firstVisibleColumn);
-
-// USE /[MANUAL GQT OVERRQLSTEXP DSAID_PSEUDSAIDAS]/
-
-				return;
-			}
-
-			if (tableReload)
-			{
-// USE /[MANUAL GQT OVERRQLIST DSAID_PSEUDSAIDAS]/
-
-				string QMVC_POS_RECORD = Navigation.GetStrValue("QMVC_POS_RECORD_outpu");
-				Navigation.DestroyEntry("QMVC_POS_RECORD_outpu");
-				CriteriaSet m_PagingPosEPHs = null;
-
-				if (!string.IsNullOrEmpty(QMVC_POS_RECORD))
-				{
-					var m_iCurPag = m_userContext.PersistentSupport.getPagingPos(CSGenioAoutpu.GetInformation(), QMVC_POS_RECORD, sorts, dsaid___pseudsaidas__Conds, m_PagingPosEPHs, firstVisibleColumn: firstVisibleColumn);
-					if (m_iCurPag != -1)
-						pageNumber = ((m_iCurPag - 1) / numberListItems) + 1;
-				}
-
-				ListingMVC<CSGenioAoutpu> listing = Models.ModelBase.Where<CSGenioAoutpu>(m_userContext, distinct, dsaid___pseudsaidas__Conds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "IBL_DSAID___PSEUDSAIDAS__", true, false, QMVC_POS_RECORD, m_PagingPosEPHs, firstVisibleColumn, fieldsWithTotalizers, tableConfig.SelectedRows);
-
-				if (listing.CurrentPage > 0)
-					pageNumber = listing.CurrentPage;
-
-				//Added to avoid 0 or -1 pages when setting number of records to -1 to disable pagination
+				// Added to avoid 0 or -1 pages when setting number of records to -1 to disable pagination
 				if (pageNumber < 1)
 					pageNumber = 1;
 
-				//Set document field values to objects
-				SetDocumentFields(listing);
+				List<ColumnSort> sorts = GetRequestSorts(this.Menu, tableConfig.ColumnOrderBy, "outpu", allSortOrders);
 
-				Menu.Elements = MapDsaid_ValSaidas(listing);
+				if (sorts == null || sorts.Count == 0)
+				{
+					sorts = new List<ColumnSort>();
+				sorts.Add(new ColumnSort(new ColumnReference(CSGenioAoutpu.FldLine), SortOrder.Ascending));
 
-				Menu.Identifier = "IBL_DSAID___PSEUDSAIDAS__";
+				}
 
-				// Last updated by [CJP] at [2015.02.03]
-				// Adds the identifier to each element
-				foreach (var element in Menu.Elements)
-					element.Identifier = "IBL_DSAID___PSEUDSAIDAS__";
+				FieldRef[] fields = new FieldRef[] { CSGenioAoutpu.FldCodoutpu, CSGenioAoutpu.FldZzstate, CSGenioAoutpu.FldLine, CSGenioAoutpu.FldCoditem, CSGenioAitem.FldCoditem, CSGenioAitem.FldItemdes, CSGenioAitem.FldItemcod, CSGenioAoutpu.FldExitqnty, CSGenioAoutpu.FldCodwareh, CSGenioAwareh.FldCodwareh, CSGenioAwareh.FldWarehdes };
 
-				Menu.SetPagination(pageNumber, listing.NumRegs, listing.HasMore, listing.GetTotal, listing.TotalRecords);
 
-				// Set table totalizers
-				if (listing.Totalizers != null && listing.Totalizers.Count > 0)
-					Menu.SetTotalizers(listing.Totalizers);
+				// Totalizers
+				List<FieldRef> fieldsWithTotalizers = fields.Where(field => tableConfig.TotalizerColumns.Contains(field.FullName)).ToList();
+
+				FieldRef firstVisibleColumn = null;
+
+				if (sorts == null)
+				{
+					firstVisibleColumn = tableConfig?.getFirstVisibleColumn(TableAlias);
+
+					firstVisibleColumn ??= new FieldRef("outpu", "line");
+				}
+
+
+				// Limitations
+				this.tableLimits ??= [];
+				// Comparer to check if limit is already present in tableLimits
+				LimitComparer limitComparer = new();
+
+				//Tooltip for EPHs affecting this viewmodel list
+				{
+					Limit limit = new Limit();
+					limit.TipoLimite = LimitType.EPH;
+					CSGenioAoutpu model_limit_area = new CSGenioAoutpu(m_userContext.User);
+					List<Limit> area_EPH_limits = EPH_Limit_Filler(ref limit, model_limit_area, "IBL_DSAID___PSEUDSAIDAS__");
+					if (area_EPH_limits.Count > 0)
+						this.tableLimits.AddRange(area_EPH_limits);
+				}
+
+
+				if (conditions == null)
+					conditions = CriteriaSet.And();
+
+				conditions.SubSets.Add(dsaid___pseudsaidas__Conds);
+				dsaid___pseudsaidas__Conds = BuildCriteriaSet(tableConfig, requestValues, out bool hasAllRequiredLimits, conditions, isToExport);
+				tableReload &= hasAllRequiredLimits;
+
+// USE /[MANUAL GQT OVERRQ DSAID_PSEUDSAIDAS]/
+
+				bool distinct = false;
+
+				if (isToExport)
+				{
+					if (!tableReload)
+						return;
+
+					Qlisting = Models.ModelBase.Where<CSGenioAoutpu>(m_userContext, false, dsaid___pseudsaidas__Conds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "IBL_DSAID___PSEUDSAIDAS__", true, firstVisibleColumn: firstVisibleColumn);
+
+// USE /[MANUAL GQT OVERRQLSTEXP DSAID_PSEUDSAIDAS]/
+
+					return;
+				}
+
+				if (tableReload)
+				{
+// USE /[MANUAL GQT OVERRQLIST DSAID_PSEUDSAIDAS]/
+
+					string QMVC_POS_RECORD = Navigation.GetStrValue("QMVC_POS_RECORD_outpu");
+					Navigation.DestroyEntry("QMVC_POS_RECORD_outpu");
+					CriteriaSet m_PagingPosEPHs = null;
+
+					if (!string.IsNullOrEmpty(QMVC_POS_RECORD))
+					{
+						var m_iCurPag = m_userContext.PersistentSupport.getPagingPos(CSGenioAoutpu.GetInformation(), QMVC_POS_RECORD, sorts, dsaid___pseudsaidas__Conds, m_PagingPosEPHs, firstVisibleColumn: firstVisibleColumn);
+						if (m_iCurPag != -1)
+							pageNumber = ((m_iCurPag - 1) / numberListItems) + 1;
+					}
+
+					ListingMVC<CSGenioAoutpu> listing = Models.ModelBase.Where<CSGenioAoutpu>(m_userContext, distinct, dsaid___pseudsaidas__Conds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "IBL_DSAID___PSEUDSAIDAS__", true, false, QMVC_POS_RECORD, m_PagingPosEPHs, firstVisibleColumn, fieldsWithTotalizers, tableConfig.SelectedRows);
+
+					if (listing.CurrentPage > 0)
+						pageNumber = listing.CurrentPage;
+
+					//Added to avoid 0 or -1 pages when setting number of records to -1 to disable pagination
+					if (pageNumber < 1)
+						pageNumber = 1;
+
+					//Set document field values to objects
+					SetDocumentFields(listing);
+
+					Menu.Elements = MapDsaid_ValSaidas(listing);
+
+					Menu.Identifier = "IBL_DSAID___PSEUDSAIDAS__";
+
+					// Last updated by [CJP] at [2015.02.03]
+					// Adds the identifier to each element
+					foreach (var element in Menu.Elements)
+						element.Identifier = "IBL_DSAID___PSEUDSAIDAS__";
+
+					Menu.SetPagination(pageNumber, listing.NumRegs, listing.HasMore, listing.GetTotal, listing.TotalRecords);
+
+					// Set table totalizers
+					if (listing.Totalizers != null && listing.Totalizers.Count > 0)
+						Menu.SetTotalizers(listing.Totalizers);
+				}
+
+				// Set table limits display property
+				FillTableLimitsDisplayData();
+
+				// Store table configuration so it gets sent to the client-side to be processed
+				CurrentTableConfig = tableConfig;
+
+				// Load the user table configuration names and default name
+				LoadUserTableConfigNameProperties();
 			}
-
-			// Set table limits display property
-			FillTableLimitsDisplayData();
-
-			// Store table configuration so it gets sent to the client-side to be processed
-			CurrentTableConfig = tableConfig;
-
-			// Load the user table configuration names and default name
-			LoadUserTableConfigNameProperties();
 		}
 
 		private List<Dsaid_ValSaidas_RowViewModel> MapDsaid_ValSaidas(ListingMVC<CSGenioAoutpu> Qlisting)
@@ -514,7 +522,7 @@ namespace GenioMVC.ViewModels.Outpt
 			var sp = m_userContext.PersistentSupport;
 			sp.openConnection();
 			var row = CSGenioAoutpu.search(sp, id, u);
-			row.Reorder_Line(sp, int.Parse(position));
+			row.Reorder_Line(sp, int.Parse(position), baseConditions, relations);
 			sp.closeConnection();
 		}
 

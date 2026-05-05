@@ -3,23 +3,20 @@
 		v-if="menuModalIsReady"
 		:to="`#${uiContainersId.body}`"
 		:disabled="!menuInfo.isPopup">
-		<div
+		<form
 			class="form-horizontal"
 			@submit.prevent>
 			<q-row-container>
 				<q-table
 					v-bind="controls.menu"
 					v-on="controls.menu.handlers">
-					<template #header>
-						<q-table-config
-							:table-ctrl="controls.menu"
-							v-on="controls.menu.handlers">
-						</q-table-config>
-					</template>
-					<!-- USE /[MANUAL GQT CUSTOM_TABLE WMS_Menu_721]/ -->
 				</q-table>
+
+				<q-table-extra-extension
+					:list-ctrl="controls.menu"
+					v-on="controls.menu.handlers" />
 			</q-row-container>
-		</div>
+		</form>
 	</teleport>
 
 	<teleport
@@ -51,7 +48,7 @@
 </template>
 
 <script>
-	/* eslint-disable @typescript-eslint/no-unused-vars */
+	/* eslint-disable no-unused-vars */
 	import asyncProcM from '@quidgest/clientapp/composables/async'
 	import qEnums from '@quidgest/clientapp/constants/enums'
 	import netAPI from '@quidgest/clientapp/network'
@@ -71,7 +68,7 @@
 	import qApi from '@/api/genio/quidgestFunctions.js'
 	import qFunctions from '@/api/genio/projectFunctions.js'
 	import qProjArrays from '@/api/genio/projectArrays.js'
-	/* eslint-enable @typescript-eslint/no-unused-vars */
+	/* eslint-enable no-unused-vars */
 
 	import MenuViewModel from './QMenuWMS_721ViewModel.js'
 
@@ -155,8 +152,8 @@
 								label: computed(() => this.Resources.ADDRESS_USE16014),
 								dataLength: 7,
 								scrollData: 7,
-								export: 1,
-								array: computed(() => new qProjArrays.QArrayAddressu(vm.$getResource).elements),
+								array: computed(() => qProjArrays.QArrayAddressu.setResources(vm.$getResource).elements),
+								arrayType: qProjArrays.QArrayAddressu.type,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.ArrayColumn({
 								order: 2,
@@ -166,8 +163,8 @@
 								label: computed(() => this.Resources.ADDRESS_TYPE12455),
 								dataLength: 8,
 								scrollData: 8,
-								export: 1,
-								array: computed(() => new qProjArrays.QArrayAddresst(vm.$getResource).elements),
+								array: computed(() => qProjArrays.QArrayAddresst.setResources(vm.$getResource).elements),
+								arrayType: qProjArrays.QArrayAddresst.type,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 3,
@@ -176,7 +173,6 @@
 								field: 'ADDRESSTEXT',
 								label: computed(() => this.Resources.ENTIRE_ADDRESS64248),
 								scrollData: 30,
-								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 4,
@@ -186,7 +182,6 @@
 								label: computed(() => this.Resources.ADDRESS_CITY41109),
 								dataLength: 50,
 								scrollData: 30,
-								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 5,
@@ -196,7 +191,6 @@
 								label: computed(() => this.Resources.ADDRESS_DISTRICT48524),
 								dataLength: 50,
 								scrollData: 30,
-								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 6,
@@ -206,7 +200,6 @@
 								label: computed(() => this.Resources.ADDRESS_STATE16863),
 								dataLength: 50,
 								scrollData: 30,
-								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 7,
@@ -216,7 +209,6 @@
 								label: computed(() => this.Resources.ADDRESS_POSTAL_CODE41631),
 								dataLength: 50,
 								scrollData: 30,
-								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 8,
@@ -226,7 +218,6 @@
 								label: computed(() => this.Resources.ADDRESS_COUNTRY56159),
 								dataLength: 50,
 								scrollData: 30,
-								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.DateColumn({
 								order: 9,
@@ -236,7 +227,6 @@
 								label: computed(() => this.Resources.PERIOD_START07901),
 								scrollData: 16,
 								dateTimeType: 'dateTime',
-								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.DateColumn({
 								order: 10,
@@ -246,7 +236,6 @@
 								label: computed(() => this.Resources.PERIOD_END31576),
 								scrollData: 16,
 								dateTimeType: 'dateTime',
-								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 						],
 						config: {
@@ -262,8 +251,10 @@
 							permissions: {
 							},
 							searchBarConfig: {
-								visibility: true
+								visibility: true,
+								searchOnPressEnter: true
 							},
+							filtersVisible: true,
 							allowColumnFilters: true,
 							allowColumnSort: true,
 							crudActions: [
@@ -337,7 +328,9 @@
 									id: 'insert',
 									name: 'insert',
 									title: computed(() => this.Resources.INSERIR43365),
-									icon: { icon: 'add' },
+									icon: {
+										icon: 'add'
+									},
 									isInReadOnly: true,
 									params: {
 										action: vm.openFormAction,
@@ -360,7 +353,6 @@
 							rowClickAction: {
 								id: 'RCA_WMS_7211',
 								name: 'form-ADDRE',
-								isVisible: true,
 								params: {
 									isRoute: true,
 									limits: [
@@ -390,7 +382,6 @@
 						uuid: 'effd297d-4589-4a9c-b1c1-d836902892b1',
 						allSelectedRows: 'false',
 						headerLevel: 1,
-						isActiveControl: computed(() => this.isActiveMenu)
 					}, this),
 				}
 			}
@@ -414,14 +405,6 @@
 		{
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
 // USE /[MANUAL GQT FORM_CODEJS WMS_MENU_721]/
-// eslint-disable-next-line
-/* eslint-enable indent, vue/html-indent, vue/script-indent */
-		},
-
-		beforeUnmount()
-		{
-/* eslint-disable indent, vue/html-indent, vue/script-indent */
-// USE /[MANUAL GQT COMPONENT_BEFORE_UNMOUNT WMS_MENU_721]/
 // eslint-disable-next-line
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 		},

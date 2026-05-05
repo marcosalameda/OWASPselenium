@@ -10,12 +10,10 @@
 				<q-table
 					v-bind="controls.menu"
 					v-on="controls.menu.handlers">
-					<!-- USE /[MANUAL GQT CUSTOM_TABLE PTN_Menu_531]/ -->
 				</q-table>
 
 				<q-table-extra-extension
 					:list-ctrl="controls.menu"
-					:filter-operators="controls.menu.filterOperators"
 					v-on="controls.menu.handlers" />
 			</q-row-container>
 		</form>
@@ -50,7 +48,7 @@
 </template>
 
 <script>
-	/* eslint-disable @typescript-eslint/no-unused-vars */
+	/* eslint-disable no-unused-vars */
 	import asyncProcM from '@quidgest/clientapp/composables/async'
 	import qEnums from '@quidgest/clientapp/constants/enums'
 	import netAPI from '@quidgest/clientapp/network'
@@ -70,7 +68,7 @@
 	import qApi from '@/api/genio/quidgestFunctions.js'
 	import qFunctions from '@/api/genio/projectFunctions.js'
 	import qProjArrays from '@/api/genio/projectArrays.js'
-	/* eslint-enable @typescript-eslint/no-unused-vars */
+	/* eslint-enable no-unused-vars */
 
 	import MenuViewModel from './QMenuPTN_531ViewModel.js'
 
@@ -154,7 +152,6 @@
 								label: computed(() => this.Resources.NAME31974),
 								dataLength: 85,
 								scrollData: 30,
-								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.ArrayColumn({
 								order: 2,
@@ -164,8 +161,7 @@
 								label: computed(() => this.Resources.GENUS37471),
 								dataLength: 1,
 								scrollData: 1,
-								export: 1,
-								array: computed(() => new qProjArrays.QArrayGenero(vm.$getResource).elements),
+								array: computed(() => qProjArrays.QArrayGenero.setResources(vm.$getResource).elements),
 								arrayType: qProjArrays.QArrayGenero.type,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.DateColumn({
@@ -176,7 +172,6 @@
 								label: computed(() => this.Resources.BIRTH21799),
 								scrollData: 8,
 								dateTimeType: 'date',
-								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.NumericColumn({
 								order: 4,
@@ -187,7 +182,6 @@
 								scrollData: 5,
 								maxDigits: 5,
 								decimalPlaces: 0,
-								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.NumericColumn({
 								order: 5,
@@ -198,7 +192,6 @@
 								scrollData: 6,
 								maxDigits: 6,
 								decimalPlaces: 0,
-								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 6,
@@ -208,7 +201,6 @@
 								label: computed(() => this.Resources.PHONE56703),
 								dataLength: 20,
 								scrollData: 20,
-								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 7,
@@ -218,7 +210,6 @@
 								label: computed(() => this.Resources.EMAIL25170),
 								dataLength: 254,
 								scrollData: 30,
-								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.ImageColumn({
 								order: 8,
@@ -230,7 +221,6 @@
 								scrollData: 3,
 								sortable: false,
 								searchable: false,
-								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 						],
 						config: {
@@ -251,7 +241,8 @@
 								canInsert: false
 							},
 							searchBarConfig: {
-								visibility: true
+								visibility: true,
+								searchOnPressEnter: true
 							},
 							filtersVisible: true,
 							allowColumnFilters: true,
@@ -267,7 +258,6 @@
 							rowClickAction: {
 								id: 'RCA_PTN_5311',
 								name: 'menu-PTN_5311',
-								isVisible: true,
 								params: {
 									isRoute: true,
 									limits: [
@@ -292,7 +282,6 @@
 						uuid: '286009b7-3b38-48b9-b559-7115ee2c6521',
 						allSelectedRows: 'false',
 						headerLevel: 1,
-						isActiveControl: computed(() => this.isActiveMenu)
 					}, this),
 				}
 			}
@@ -316,14 +305,6 @@
 		{
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
 // USE /[MANUAL GQT FORM_CODEJS PTN_MENU_531]/
-// eslint-disable-next-line
-/* eslint-enable indent, vue/html-indent, vue/script-indent */
-		},
-
-		beforeUnmount()
-		{
-/* eslint-disable indent, vue/html-indent, vue/script-indent */
-// USE /[MANUAL GQT COMPONENT_BEFORE_UNMOUNT PTN_MENU_531]/
 // eslint-disable-next-line
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 		},

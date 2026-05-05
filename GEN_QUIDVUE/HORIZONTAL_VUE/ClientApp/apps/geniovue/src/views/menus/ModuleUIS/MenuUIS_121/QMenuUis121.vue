@@ -10,12 +10,10 @@
 				<q-table
 					v-bind="controls.menu"
 					v-on="controls.menu.handlers">
-					<!-- USE /[MANUAL GQT CUSTOM_TABLE UIS_Menu_121]/ -->
 				</q-table>
 
 				<q-table-extra-extension
 					:list-ctrl="controls.menu"
-					:filter-operators="controls.menu.filterOperators"
 					v-on="controls.menu.handlers" />
 			</q-row-container>
 		</form>
@@ -50,7 +48,7 @@
 </template>
 
 <script>
-	/* eslint-disable @typescript-eslint/no-unused-vars */
+	/* eslint-disable no-unused-vars */
 	import asyncProcM from '@quidgest/clientapp/composables/async'
 	import qEnums from '@quidgest/clientapp/constants/enums'
 	import netAPI from '@quidgest/clientapp/network'
@@ -70,7 +68,7 @@
 	import qApi from '@/api/genio/quidgestFunctions.js'
 	import qFunctions from '@/api/genio/projectFunctions.js'
 	import qProjArrays from '@/api/genio/projectArrays.js'
-	/* eslint-enable @typescript-eslint/no-unused-vars */
+	/* eslint-enable no-unused-vars */
 
 	import MenuViewModel from './QMenuUIS_121ViewModel.js'
 
@@ -154,7 +152,6 @@
 								label: computed(() => this.Resources.COMPONENT_TYPE41163),
 								dataLength: 50,
 								scrollData: 30,
-								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.ArrayColumn({
 								order: 2,
@@ -165,8 +162,7 @@
 								scrollData: 1,
 								maxDigits: 1,
 								decimalPlaces: 0,
-								export: 1,
-								array: computed(() => new qProjArrays.QArrayComponenticons(vm.$getResource).elements),
+								array: computed(() => qProjArrays.QArrayComponenticons.setResources(vm.$getResource).elements),
 								arrayType: qProjArrays.QArrayComponenticons.type,
 								arrayDisplayMode: 'ID',
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
@@ -177,7 +173,6 @@
 								field: 'MVC',
 								label: computed(() => this.Resources.MVC48022),
 								scrollData: 1,
-								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.BooleanColumn({
 								order: 4,
@@ -186,17 +181,6 @@
 								field: 'VUEMVC',
 								label: computed(() => this.Resources.VUE05393),
 								scrollData: 1,
-								export: 1,
-							}, computed(() => vm.model), computed(() => vm.internalEvents)),
-							new listColumnTypes.TextColumn({
-								order: 5,
-								name: 'ValRelease',
-								area: 'COMPO',
-								field: 'RELEASE',
-								label: computed(() => this.Resources.RELEASE_VERSION03981),
-								dataLength: 6,
-								scrollData: 15,
-								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 						],
 						config: {
@@ -218,7 +202,8 @@
 								canInsert: false
 							},
 							searchBarConfig: {
-								visibility: true
+								visibility: true,
+								searchOnPressEnter: true
 							},
 							filtersVisible: true,
 							allowColumnFilters: true,
@@ -234,7 +219,6 @@
 							rowClickAction: {
 								id: 'RCA_UIS_1211',
 								name: 'form-COMPTYPE',
-								isVisible: true,
 								params: {
 									isRoute: true,
 									limits: [
@@ -264,7 +248,6 @@
 						uuid: 'dc86883b-dfd6-4af3-b3b0-45defde38ec9',
 						allSelectedRows: 'false',
 						headerLevel: 1,
-						isActiveControl: computed(() => this.isActiveMenu)
 					}, this),
 				}
 			}
@@ -288,14 +271,6 @@
 		{
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
 // USE /[MANUAL GQT FORM_CODEJS UIS_MENU_121]/
-// eslint-disable-next-line
-/* eslint-enable indent, vue/html-indent, vue/script-indent */
-		},
-
-		beforeUnmount()
-		{
-/* eslint-disable indent, vue/html-indent, vue/script-indent */
-// USE /[MANUAL GQT COMPONENT_BEFORE_UNMOUNT UIS_MENU_121]/
 // eslint-disable-next-line
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 		},

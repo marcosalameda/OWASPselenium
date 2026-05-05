@@ -1,20 +1,20 @@
-﻿using CSGenio.business;
-using CSGenio.framework;
-using CSGenio.persistence;
-using GenioMVC.Helpers;
-using GenioMVC.Models.Exception;
-using GenioMVC.Models.Navigation;
+﻿using JsonIgnoreAttribute = System.Text.Json.Serialization.JsonIgnoreAttribute;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Quidgest.Persistence;
-using Quidgest.Persistence.GenericQuery;
-
 using System.Collections;
 using System.Collections.Concurrent;
 using System.Collections.Specialized;
 using System.ComponentModel.DataAnnotations;
 using System.Data;
 using System.Globalization;
-using System.Text.Json.Serialization;
+
+using CSGenio.business;
+using CSGenio.framework;
+using CSGenio.persistence;
+using GenioMVC.Helpers;
+using GenioMVC.Models.Exception;
+using GenioMVC.Models.Navigation;
+using Quidgest.Persistence;
+using Quidgest.Persistence.GenericQuery;
 
 namespace GenioMVC.ViewModels.Propr
 {
@@ -53,7 +53,6 @@ namespace GenioMVC.ViewModels.Propr
 		public string ValCodtppro { get; set; }
 
 		#endregion
-
 		/// <summary>
 		/// Title: "Photo" | Type: "IJ"
 		/// </summary>
@@ -344,7 +343,12 @@ namespace GenioMVC.ViewModels.Propr
 			}
 		}
 
-		/// <inheritdoc />
+		/// <summary>
+		/// Sets the value of a single property of the view model based on the provided table and field names.
+		/// </summary>
+		/// <param name="fullFieldName">The full field name in the format "table.field".</param>
+		/// <param name="value">The field value.</param>
+		/// <exception cref="ArgumentNullException">Thrown if <paramref name="fullFieldName"/> is null.</exception>
 		public override void SetViewModelValue(string fullFieldName, object value)
 		{
 			try
@@ -467,17 +471,6 @@ namespace GenioMVC.ViewModels.Propr
 				// Conexão deve estar aberta de fora. Podem haver formulas que utilizam funções "manuais".
 				// TODO: It needs to be analyzed whether we should disable the security of field filling here. If there is any case where the field with the block condition can only be calculated after the double calculation of the formulas.
 				MapToModel(Model);
-
-				// If it's inserting or duplicating, needs to fill the default values.
-				if (Navigation.CurrentLevel.FormMode == FormMode.New || Navigation.CurrentLevel.FormMode == FormMode.Duplicate)
-				{
-					FunctionType funcType = Navigation.CurrentLevel.FormMode == FormMode.New
-						? FunctionType.INS
-						: FunctionType.DUP;
-
-					Model.baseklass.fillValuesDefault(m_userContext.PersistentSupport, funcType);
-				}
-
 				// Preencher operações internas
 				Model.klass.fillInternalOperations(m_userContext.PersistentSupport, oldvalues);
 				MapFromModel(Model);
@@ -523,7 +516,6 @@ namespace GenioMVC.ViewModels.Propr
 			Load_Proprallcntrycountry_(qs, lazyLoad);
 			Load_Proprallregioregiao__(qs, lazyLoad);
 			Load_Proprallpessoname____(qs, lazyLoad);
-
 // USE /[MANUAL GQT VIEWMODEL_LOADPARTIAL PROPRALL]/
 		}
 
@@ -597,7 +589,10 @@ namespace GenioMVC.ViewModels.Propr
 				}
 			}
 
-			TableTpproTppropri = new TableDBEdit<Models.Tppro>();
+			TableTpproTppropri = new TableDBEdit<Models.Tppro>
+			{
+				IsLazyLoad = lazyLoad
+			};
 
 			if (lazyLoad)
 			{
@@ -612,7 +607,7 @@ namespace GenioMVC.ViewModels.Propr
 
 			if (propralltpprotppropriDoLoad)
 			{
-				List<ColumnSort> sorts = [];
+				List<ColumnSort> sorts = new List<ColumnSort>();
 				ColumnSort requestedSort = GetRequestSort(TableTpproTppropri, "sTableTpproTppropri", "dTableTpproTppropri", qs, "tppro");
 				if (requestedSort != null)
 					sorts.Add(requestedSort);
@@ -662,7 +657,7 @@ namespace GenioMVC.ViewModels.Propr
 
 				TableTpproTppropri.SetPagination(page, numberItems, listing.HasMore, listing.GetTotal, listing.TotalRecords);
 				TableTpproTppropri.Query = query;
-				TableTpproTppropri.Elements = listing.RowsForViewModel((r) => new GenioMVC.Models.Tppro(m_userContext, r, true, _fieldsToSerialize_PROPRALLTPPROTPPROPRI));
+				TableTpproTppropri.Elements = listing.RowsForViewModel<GenioMVC.Models.Tppro>((r) => new GenioMVC.Models.Tppro(m_userContext, r, true, _fieldsToSerialize_PROPRALLTPPROTPPROPRI));
 
 				//created by [ MH ] at [ 14.04.2016 ] - Foi alterada a forma de retornar a key do novo registo inserido / editado no form de apoio do DBEdit.
 				//last update by [ MH ] at [ 10.05.2016 ] - Validação se key encontra-se no level atual, as chaves dos niveis anteriores devem ser ignorados.
@@ -784,7 +779,10 @@ namespace GenioMVC.ViewModels.Propr
 				}
 			}
 
-			TableCntryCountry = new TableDBEdit<Models.Cntry>();
+			TableCntryCountry = new TableDBEdit<Models.Cntry>
+			{
+				IsLazyLoad = lazyLoad
+			};
 
 			if (lazyLoad)
 			{
@@ -799,7 +797,7 @@ namespace GenioMVC.ViewModels.Propr
 
 			if (proprallcntrycountry_DoLoad)
 			{
-				List<ColumnSort> sorts = [];
+				List<ColumnSort> sorts = new List<ColumnSort>();
 				ColumnSort requestedSort = GetRequestSort(TableCntryCountry, "sTableCntryCountry", "dTableCntryCountry", qs, "cntry");
 				if (requestedSort != null)
 					sorts.Add(requestedSort);
@@ -849,7 +847,7 @@ namespace GenioMVC.ViewModels.Propr
 
 				TableCntryCountry.SetPagination(page, numberItems, listing.HasMore, listing.GetTotal, listing.TotalRecords);
 				TableCntryCountry.Query = query;
-				TableCntryCountry.Elements = listing.RowsForViewModel((r) => new GenioMVC.Models.Cntry(m_userContext, r, true, _fieldsToSerialize_PROPRALLCNTRYCOUNTRY_));
+				TableCntryCountry.Elements = listing.RowsForViewModel<GenioMVC.Models.Cntry>((r) => new GenioMVC.Models.Cntry(m_userContext, r, true, _fieldsToSerialize_PROPRALLCNTRYCOUNTRY_));
 
 				//created by [ MH ] at [ 14.04.2016 ] - Foi alterada a forma de retornar a key do novo registo inserido / editado no form de apoio do DBEdit.
 				//last update by [ MH ] at [ 10.05.2016 ] - Validação se key encontra-se no level atual, as chaves dos niveis anteriores devem ser ignorados.
@@ -975,7 +973,10 @@ namespace GenioMVC.ViewModels.Propr
 			// Area limit
 			proprallregioregiao__DoLoad &= AddCriteriaAreaLimit(proprallregioregiao__Conds, CSGenio.business.CSGenioAcntry.FldCodcntry, "cntry", this.ValCodcntry, true);
 
-			TableRegioRegiao = new TableDBEdit<Models.Regio>();
+			TableRegioRegiao = new TableDBEdit<Models.Regio>
+			{
+				IsLazyLoad = lazyLoad
+			};
 
 			if (lazyLoad)
 			{
@@ -993,7 +994,7 @@ namespace GenioMVC.ViewModels.Propr
 
 			if (proprallregioregiao__DoLoad)
 			{
-				List<ColumnSort> sorts = [];
+				List<ColumnSort> sorts = new List<ColumnSort>();
 				ColumnSort requestedSort = GetRequestSort(TableRegioRegiao, "sTableRegioRegiao", "dTableRegioRegiao", qs, "regio");
 				if (requestedSort != null)
 					sorts.Add(requestedSort);
@@ -1043,7 +1044,7 @@ namespace GenioMVC.ViewModels.Propr
 
 				TableRegioRegiao.SetPagination(page, numberItems, listing.HasMore, listing.GetTotal, listing.TotalRecords);
 				TableRegioRegiao.Query = query;
-				TableRegioRegiao.Elements = listing.RowsForViewModel((r) => new GenioMVC.Models.Regio(m_userContext, r, true, _fieldsToSerialize_PROPRALLREGIOREGIAO__));
+				TableRegioRegiao.Elements = listing.RowsForViewModel<GenioMVC.Models.Regio>((r) => new GenioMVC.Models.Regio(m_userContext, r, true, _fieldsToSerialize_PROPRALLREGIOREGIAO__));
 
 				//created by [ MH ] at [ 14.04.2016 ] - Foi alterada a forma de retornar a key do novo registo inserido / editado no form de apoio do DBEdit.
 				//last update by [ MH ] at [ 10.05.2016 ] - Validação se key encontra-se no level atual, as chaves dos niveis anteriores devem ser ignorados.
@@ -1178,7 +1179,10 @@ namespace GenioMVC.ViewModels.Propr
 			// Area limit
 			proprallpessoname____DoLoad &= AddCriteriaAreaLimit(proprallpessoname____Conds, CSGenio.business.CSGenioAcntry.FldCodcntry, "cntry", this.ValCodcntry, true);
 
-			TablePessoName = new TableDBEdit<Models.Pesso>();
+			TablePessoName = new TableDBEdit<Models.Pesso>
+			{
+				IsLazyLoad = lazyLoad
+			};
 
 			if (lazyLoad)
 			{
@@ -1196,7 +1200,7 @@ namespace GenioMVC.ViewModels.Propr
 
 			if (proprallpessoname____DoLoad)
 			{
-				List<ColumnSort> sorts = [];
+				List<ColumnSort> sorts = new List<ColumnSort>();
 				ColumnSort requestedSort = GetRequestSort(TablePessoName, "sTablePessoName", "dTablePessoName", qs, "pesso");
 				if (requestedSort != null)
 					sorts.Add(requestedSort);
@@ -1246,7 +1250,7 @@ namespace GenioMVC.ViewModels.Propr
 
 				TablePessoName.SetPagination(page, numberItems, listing.HasMore, listing.GetTotal, listing.TotalRecords);
 				TablePessoName.Query = query;
-				TablePessoName.Elements = listing.RowsForViewModel((r) => new GenioMVC.Models.Pesso(m_userContext, r, true, _fieldsToSerialize_PROPRALLPESSONAME____));
+				TablePessoName.Elements = listing.RowsForViewModel<GenioMVC.Models.Pesso>((r) => new GenioMVC.Models.Pesso(m_userContext, r, true, _fieldsToSerialize_PROPRALLPESSONAME____));
 
 				//created by [ MH ] at [ 14.04.2016 ] - Foi alterada a forma de retornar a key do novo registo inserido / editado no form de apoio do DBEdit.
 				//last update by [ MH ] at [ 10.05.2016 ] - Validação se key encontra-se no level atual, as chaves dos niveis anteriores devem ser ignorados.

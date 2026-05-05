@@ -34,23 +34,6 @@
 						</q-button>
 
 						<q-toggle
-							v-if="$app.isNotesAvailable && userIsLoggedIn"
-							id="q-notes-open"
-							:model-value="isActive('notes-tab')"
-							:title="texts.notes"
-							:disabled="disableButtons"
-							@click="toggleSidebarTab('notes-tab')">
-							<q-badge-indicator
-								v-if="notesCount > 0"
-								color="highlight">
-								<q-icon icon="note-text" />
-							</q-badge-indicator>
-							<q-icon
-								v-else
-								icon="note-text" />
-						</q-toggle>
-
-						<q-toggle
 							v-if="$app.isCavAvailable && !suggestionModeOn"
 							:model-value="reportingModeCAV"
 							id="advanced-report-mode-toggle"
@@ -82,16 +65,18 @@
 
 						<q-toggle
 							v-if="$app.appAlerts.length > 0 && !suggestionModeOn"
-							id="alerts-btn"
 							:model-value="isActive('alerts-tab')"
 							:title="texts.alerts"
 							:disabled="disableButtons"
 							@click="toggleSidebarTab('alerts-tab')">
 							<q-badge-indicator
-								:enabled="notifications.length > 0"
+								v-if="notifications.length > 0"
 								color="highlight">
 								<q-icon icon="notifications" />
 							</q-badge-indicator>
+							<q-icon
+								v-else
+								icon="notifications" />
 						</q-toggle>
 
 						<q-toggle
@@ -129,7 +114,7 @@
 							title="ChatBot"
 							class="nav-link"
 							:disabled="disableButtons"
-							@click="toggleChatBot()">
+							@click="toggleSidebarTab('chatbot-tab')">
 							<q-icon-img
 								:icon="`${$app.resourcesPath}chatbot.png?v=${$app.genio.buildVersion}`"
 								alt="ChatBot" />
@@ -169,31 +154,16 @@
 					<div
 						v-if="$app.isChatBotAvailable"
 						v-show="extendedTab === 'chatbot-tab'"
-						id="chatbot-tab"
-						ref="chatbotTab">
+						id="chatbot-tab">
 						<q-chat-bot
 							:username="userData.name"
 							:project-path="$app.applicationName"
 							:date-format="dateFormat.dateTimeSeconds"
-							:agent-data="currentAgent"
-							:available-agents="availableAgents"
-							:api-endpoint="chatbotProxyUrl"
-							@direct-agent-chat="setAgentData"
-							@apply-fields="applyFields" />
-					</div>
-
-					<div
-						v-if="$app.isNotesAvailable && userIsLoggedIn"
-						v-show="extendedTab === 'notes-tab'"
-						id="notes">
-						<q-notes
-							:notes="notes"
-							@fetch-notes="fetchNotes"
-							@delete-note="deleteNote" />
+							:api-endpoint="chatbotProxyUrl" />
 					</div>
 
 					<div v-show="extendedTab === 'widgets-panel'">
-						<div id="widgets-panel" />
+						<div id="widgets-panel"></div>
 					</div>
 				</div>
 			</div>
@@ -202,17 +172,13 @@
 </template>
 
 <script>
-	import { computed, defineAsyncComponent, nextTick } from 'vue'
+	import { computed, defineAsyncComponent } from 'vue'
 	import { mapState, mapActions } from 'pinia'
 
 	import { useGenericDataStore } from '@quidgest/clientapp/stores'
-	import { useAiDataStore } from '@quidgest/clientapp/stores'
-	import { useNotesStore } from '@quidgest/clientapp/stores'
-
 	import hardcodedTexts from '@/hardcodedTexts.js'
 	import LayoutHandlers from '@/mixins/layoutHandlers.js'
 	import AlertHandlers from '@/mixins/alertHandlers.js'
-	import NotesHandlers from '@/mixins/notesHandlers.js'
 
 	export default {
 		name: 'QSidebar',
@@ -226,14 +192,12 @@
 			QAnchorContainerVertical: defineAsyncComponent(() => import('@/components/containers/QAnchorContainerVertical.vue')),
 			FormActionButtons: defineAsyncComponent(() => import('./FormActionButtons.vue')),
 			Alerts: defineAsyncComponent(() => import('./Alerts.vue')),
-			QChatBot: defineAsyncComponent(() => import('@quidgest/chatbot')),
-			QNotes: defineAsyncComponent(() => import('./QNotes.vue'))
+			QChatBot: defineAsyncComponent(() => import('@quidgest/chatbot'))
 		},
 
 		mixins: [
 			AlertHandlers,
-			LayoutHandlers,
-			NotesHandlers
+			LayoutHandlers
 		],
 
 		expose: [],
@@ -259,8 +223,7 @@
 					suggest: computed(() => this.Resources[hardcodedTexts.suggest]),
 					suggestions: computed(() => this.Resources[hardcodedTexts.suggestions]),
 					closeSuggestions: computed(() => this.Resources[hardcodedTexts.closeSuggestions]),
-					formAreas: computed(() => this.Resources[hardcodedTexts.formAreas]),
-					notes: computed(() => this.Resources[hardcodedTexts.notes]),
+					formAreas: computed(() => this.Resources[hardcodedTexts.formAreas])
 				}
 			}
 		},
@@ -284,14 +247,7 @@
 			})
 
 			this.$eventHub.on('open-sidebar-on-tab', (tabId) => {
-				if (this.extendedTab === tabId)
-					return
-
 				this.openSidebar()
-				this.toggleSidebarTab(tabId)
-			})
-
-			this.$eventHub.on('toggle-sidebar-on-tab', (tabId) => {
 				this.toggleSidebarTab(tabId)
 			})
 
@@ -321,7 +277,6 @@
 			this.$eventHub.off('changed-form-buttons')
 			this.$eventHub.off('changed-form-tree')
 			this.$eventHub.off('open-sidebar-on-tab')
-			this.$eventHub.off('toggle-sidebar-on-tab')
 			this.$eventHub.off('user-options-menu-open')
 
 			this.onSidebarWidthChange()
@@ -333,16 +288,6 @@
 				'suggestionModeOn',
 				'notifications',
 				'dateFormat'
-			]),
-
-			...mapState(useAiDataStore, [
-				'chatbotProxyUrl',
-				'currentAgent',
-				'availableAgents'
-			]),
-
-			...mapState(useNotesStore, [
-				'notes'
 			]),
 
 			/**
@@ -414,13 +359,20 @@
 			isSidebarEmpty()
 			{
 				return !this.showFormActions &&
-					!this.$app.isNotesAvailable &&
 					!this.$app.isCavAvailable &&
 					!this.$app.isSuggestionsAvailable &&
 					!this.$app.isChatBotAvailable &&
 					!this.showFormAnchors &&
 					!this.disableButtons &&
 					!this.hasAlerts
+			},
+
+			/**
+			 * Backend proxy endpoint to re-route chabot's requests.
+			 */
+			chatbotProxyUrl()
+			{
+				return 'chatbotapi'
 			},
 
 			/**
@@ -453,54 +405,12 @@
 				'removeNotification'
 			]),
 
-			...mapActions(useAiDataStore, [
-				'setCurrentAgent'
-			]),
-
-			...mapActions(useNotesStore, [
-				'loadNotes'
-			]),
-
 			onSidebarWidthChange()
 			{
 				if (this.userIsLoggedIn && !this.isSidebarEmpty)
 					this.$emit('changed-sidebar-width', this.sidebarWidth)
 				else
 					this.$emit('changed-sidebar-width', 0)
-			},
-
-			async toggleChatBot()
-			{
-				this.toggleSidebarTab('chatbot-tab')
-				this.setCurrentAgent({ id: '' })
-
-				const isOpen = this.extendedTab === 'chatbot-tab'
-
-				// Scroll to bottom of chat, if opening
-				if (isOpen)
-				{
-					// Wait until content has fully opened
-					await nextTick()
-					const chatbotMessages = this.$refs.chatbotTab.querySelector('.q-chatbot__messages-container')
-					if(chatbotMessages)
-						chatbotMessages.scrollTop = chatbotMessages.scrollHeight
-				}
-
-				return isOpen
-			},
-
-			applyFields(fields)
-			{
-				this.$eventHub.emit('apply-agent-fields', fields)
-			},
-
-			setAgentData(agentId, userPrompt)
-			{
-				const agentData = {
-					agentId: agentId,
-					userPrompt: userPrompt
-				}
-				this.$eventHub.emit('set-agent-data', agentData)
 			},
 
 			openSidebar()
@@ -534,9 +444,9 @@
 
 				// Check if any of the sidebar buttons were focused and, if so, decide which one the focus should move to.
 				// Must be done here, after the CSS transition ends so the element that will be focused is visible and focusable.
-				const sidebarOpenButton = this.$refs?.sidebarOpenButton
-				const sidebarCloseButton = this.$refs?.sidebarCloseButton
-				const sidebar = this.$refs?.sidebar
+				let sidebarOpenButton = this.$refs?.sidebarOpenButton
+				let sidebarCloseButton = this.$refs?.sidebarCloseButton
+				let sidebar = this.$refs?.sidebar
 
 				// If the open button was focused
 				if (this.focusedSidebarButtonId === this.sidebarOpenButtonId)

@@ -5,8 +5,7 @@
 			:key="ctrlId">
 			<a
 				v-if="showAnchor(ctrlId)"
-				href="#"
-				role="button"
+				href="javascript:void(0)"
 				:class="getClass(ctrlId)"
 				@click.stop.prevent="anchorClicked(ctrlId)">
 				<q-icon icon="paired" />
@@ -107,7 +106,7 @@
 				// Get the Y coordinate starting after the layout header and form header
 				const scrollYStart = genericFunctions.scrollYStart()
 
-				for (const ctrl of this.anchors)
+				for (let ctrl of this.anchors)
 				{
 					const target = document.getElementById(ctrl)
 

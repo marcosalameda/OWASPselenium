@@ -1,11 +1,21 @@
 ﻿<template>
-	<q-checkbox
+	<base-input-structure
 		v-for="(option, optionIdx) in selectOptions"
 		:key="optionIdx"
-		v-model="selectOptions[optionIdx].selected"
+		:id="option.value"
 		:disabled="disabled"
 		:readonly="readonly"
-		:label="option.value" />
+		:label="option.value"
+		label-position="right"
+		:label-attrs="{ class: 'i-checkbox i-checkbox__label' }">
+		<template #label>
+			<q-checkbox-input
+				:id="option.value"
+				v-model="selectOptions[optionIdx].selected"
+				:disabled="disabled"
+				:readonly="readonly" />
+		</template>
+	</base-input-structure>
 </template>
 
 <script>
@@ -87,7 +97,8 @@
 
 		expose: [],
 
-		data() {
+		data()
+		{
 			return {
 				selectOptions: [],
 
@@ -95,7 +106,8 @@
 			}
 		},
 
-		mounted() {
+		mounted()
+		{
 			// Set selected options
 			// Must be called this way because it will be modified when checking or unchecking options
 			this.selectOptions = this.setSelectedOptions()
@@ -105,13 +117,16 @@
 			/**
 			 * Get array of selected option values.
 			 */
-			selectedOptionsValue() {
+			selectedOptionsValue()
+			{
 				const selectValues = []
 				let selectOption = {}
 
-				for (const idx in this.selectOptions) {
+				for (let idx in this.selectOptions)
+				{
 					selectOption = this.selectOptions[idx]
-					if (selectOption.selected !== false) selectValues.push(selectOption.value)
+					if (selectOption.selected !== false)
+						selectValues.push(selectOption.value)
 				}
 
 				return selectValues
@@ -123,20 +138,21 @@
 			 * Get array of all possible options, each with a property set to whether the option is selected or not.
 			 * @returns {Array} An array of options with their selected state.
 			 */
-			setSelectedOptions() {
+			setSelectedOptions()
+			{
 				// Make copy of all options
 				const selectOptions = cloneDeep(this.options)
 
 				// Set property of each option to it's state, selected or not, based on whether it's value is in the modelValue array
-				for (const idx in selectOptions) {
+				for (let idx in selectOptions)
+				{
 					const selectOption = selectOptions[idx]
 					// Option's value is in the modelValue array
-					if (
-						this.modelValue.findIndex((elem) => elem === unref(selectOption.value)) > -1
-					)
+					if (this.modelValue.findIndex((elem) => elem === unref(selectOption.value)) > -1)
 						selectOption.selected = true
 					// Option's value is in not the modelValue array
-					else selectOption.selected = false
+					else
+						selectOption.selected = false
 				}
 
 				return selectOptions
@@ -145,7 +161,8 @@
 
 		watch: {
 			selectOptions: {
-				handler() {
+				handler()
+				{
 					this.$emit('update:modelValue', this.selectedOptionsValue)
 				},
 				deep: true

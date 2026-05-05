@@ -10,13 +10,13 @@ public class FeecaForm : Form
 	/// <summary>
 	/// Description
 	/// </summary>
-	public LookupControl FldsDescrip => new LookupControl(driver, ContainerLocator, "container-FEECA___FLDS_DESCRIP_" + IdSuffix);
-	public SeeMorePage FldsDescripSeeMorePage => new SeeMorePage(driver, "FEECA", "FEECA___FLDS_DESCRIP_" + IdSuffix);
+	public LookupControl FldsDescrip => new LookupControl(driver, ContainerLocator, "container-FEECA___FLDS_DESCRIP_");
+	public SeeMorePage FldsDescripSeeMorePage => new SeeMorePage(driver, "FEECA", "FEECA___FLDS_DESCRIP_");
 
 	/// <summary>
 	/// Feedback
 	/// </summary>
-	public BaseInputControl FeecaFeedback => new BaseInputControl(driver, ContainerLocator, "container-FEECA___FEECAFEEDBACK" + IdSuffix, "#FEECA___FEECAFEEDBACK" + IdSuffix);
+	public BaseInputControl FeecaFeedback => new BaseInputControl(driver, ContainerLocator, "container-FEECA___FEECAFEEDBACK", "#FEECA___FEECAFEEDBACK");
 
 	/// <summary>
 	/// Attachments
@@ -28,6 +28,6 @@ public class FeecaForm : Form
 	/// </summary>
 	public IWebElement FldsNpassage => throw new NotImplementedException();
 
-	public FeecaForm(IWebDriver driver, FORM_MODE mode, By? containerLocator = null, bool usePkInId = false)
-		: base(driver, mode, "FEECA", containerLocator: containerLocator, usePkInId: usePkInId) { }
+	public FeecaForm(IWebDriver driver, FORM_MODE mode, By? containerLocator = null)
+		: base(driver, mode, "FEECA", containerLocator: containerLocator) { }
 }

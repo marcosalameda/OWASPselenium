@@ -35,28 +35,40 @@ namespace GenioMVC.Controllers
 		// GET: /Disst/WMS_Menu_251
 		[ActionName("WMS_Menu_251")]
 		[HttpPost]
-		public ActionResult WMS_Menu_251([FromBody] RequestMenuModel requestModel)
+		public ActionResult WMS_Menu_251([FromBody]RequestMenuModel requestModel)
 		{
 			var queryParams = requestModel.QueryParams;
 
-			WMS_Menu_251_ViewModel model = new(m_userContext);
+			int perPage = CSGenio.framework.Configuration.NrRegDBedit;
+			string rowsPerPageOptionsString = "";
 
-			CSGenio.core.framework.table.TableConfiguration tableConfig = model.GetTableConfig(
-				requestModel.TableConfiguration,
-				requestModel.UserTableConfigName,
-				requestModel.LoadDefaultView);
+			WMS_Menu_251_ViewModel model = new WMS_Menu_251_ViewModel(UserContext.Current);
+
+			// Table configuration load options
+			CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions tableConfigOptions = new CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions();
+
+
+			// Determine which table configuration to use and load it
+			CSGenio.framework.TableConfiguration.TableConfiguration tableConfig = TableUiSettings.Load(
+				UserContext.Current.PersistentSupport,
+				model.Uuid,
+				UserContext.Current.User,
+				tableConfigOptions
+			).DetermineTableConfig(
+				requestModel?.TableConfiguration,
+				requestModel?.UserTableConfigName,
+				(bool)requestModel?.LoadDefaultView,
+				tableConfigOptions
+			);
 
 			// Determine rows per page
-			tableConfig.RowsPerPage = tableConfig.DetermineRowsPerPage(CSGenio.framework.Configuration.NrRegDBedit, "");
+			tableConfig.RowsPerPage = CSGenio.framework.TableConfiguration.TableConfigurationHelpers.DetermineRowsPerPage(tableConfig.RowsPerPage, perPage, rowsPerPageOptionsString);
 
 			// Determine what columns have totalizers
 			tableConfig.TotalizerColumns = requestModel.TotalizerColumns;
 
 			// For tables with multiple selection enabled, determine currently selected rows
 			tableConfig.SelectedRows = requestModel.SelectedRows;
-
-			// Add form field filters to the table configuration
-			tableConfig.FieldFilters = requestModel.RelatedFilterValues;
 
 			bool isHomePage = RouteData.Values.ContainsKey("isHomePage") ? (bool)RouteData.Values["isHomePage"] : false;
 			if (isHomePage)
@@ -74,7 +86,7 @@ namespace GenioMVC.Controllers
 			if (result.Status.Equals(CSGenio.framework.Status.E))
 				return PermissionError(result.Message);
 
-			NameValueCollection querystring = [];
+			NameValueCollection querystring = new NameValueCollection();
 			if (queryParams != null && queryParams.Count > 0)
 				querystring.AddRange(queryParams);
 
@@ -92,14 +104,15 @@ namespace GenioMVC.Controllers
 
 // USE /[MANUAL WMS MENU_GET 251]/
 
-			try
-			{
-				model.Load(tableConfig, querystring, Request.IsAjaxRequest());
-			}
-			catch (Exception e)
-			{
-				return JsonERROR(HandleException(e), model);
-			}
+
+            try
+            {
+			    model.Load(tableConfig, querystring, Request.IsAjaxRequest());
+            }
+            catch(Exception e)
+            {
+                return JsonERROR(HandleException(e), model);
+            }
 
 
 			return JsonOK(model);

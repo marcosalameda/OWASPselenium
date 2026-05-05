@@ -1,4 +1,4 @@
-﻿/* eslint-disable @typescript-eslint/no-unused-vars */
+﻿/* eslint-disable no-unused-vars */
 import { computed, reactive, watch } from 'vue'
 import _merge from 'lodash-es/merge'
 
@@ -11,7 +11,7 @@ import netAPI from '@quidgest/clientapp/network'
 import qApi from '@/api/genio/quidgestFunctions.js'
 import qFunctions from '@/api/genio/projectFunctions.js'
 import qProjArrays from '@/api/genio/projectArrays.js'
-/* eslint-enable @typescript-eslint/no-unused-vars */
+/* eslint-enable no-unused-vars */
 
 /**
  * Represents a ViewModel class.
@@ -25,11 +25,11 @@ export default class ViewModel extends FormViewModelBase
 	 * @param {object} options - The options for the ViewModel
 	 * @param {object} values - A ViewModel instance to copy values from
 	 */
-	// eslint-disable-next-line @typescript-eslint/no-unused-vars
+	// eslint-disable-next-line no-unused-vars
 	constructor(vueContext, options, values)
 	{
 		super(vueContext, options)
-		// eslint-disable-next-line @typescript-eslint/no-unused-vars
+		// eslint-disable-next-line no-unused-vars
 		const vm = this.vueContext
 
 		// The view model metadata
@@ -37,9 +37,8 @@ export default class ViewModel extends FormViewModelBase
 			name: 'VENDAW06',
 			area: 'SALE',
 			actions: {
-				recalculateFormulas: 'RecalculateFormulas_Vendaw06',
-				updateFilesTickets: 'UpdateFilesTicketsVendaw06',
-				setFile: 'SetFileVendaw06'
+				recalculateFormulas: 'RecalculateFormulas_VENDAW06',
+				updateFilesTickets: 'UpdateFilesTicketsVENDAW06'
 			}
 		})
 
@@ -51,7 +50,7 @@ export default class ViewModel extends FormViewModelBase
 			field: 'CODVENDA',
 			description: '',
 		}).cloneFrom(values?.ValCodvenda))
-		this.stopWatchers.push(watch(() => this.ValCodvenda.value, (newValue, oldValue) => this.onUpdate('sale.codvenda', this.ValCodvenda, newValue, oldValue)))
+		watch(() => this.ValCodvenda.value, (newValue, oldValue) => this.onUpdate('sale.codvenda', this.ValCodvenda, newValue, oldValue))
 
 		/** The hidden foreign keys. */
 		this.ValCodorgan = reactive(new modelFieldType.ForeignKey({
@@ -63,7 +62,7 @@ export default class ViewModel extends FormViewModelBase
 			isFixed: true,
 			description: '',
 		}).cloneFrom(values?.ValCodorgan))
-		this.stopWatchers.push(watch(() => this.ValCodorgan.value, (newValue, oldValue) => this.onUpdate('sale.codorgan', this.ValCodorgan, newValue, oldValue)))
+		watch(() => this.ValCodorgan.value, (newValue, oldValue) => this.onUpdate('sale.codorgan', this.ValCodorgan, newValue, oldValue))
 
 		/** The remaining form fields. */
 		this.ValDtsupera = reactive(new modelFieldType.DateTime({
@@ -73,7 +72,7 @@ export default class ViewModel extends FormViewModelBase
 			field: 'DTSUPERA',
 			description: computed(() => this.Resources.OVERCOME_OBJECTIONS61930),
 		}).cloneFrom(values?.ValDtsupera))
-		this.stopWatchers.push(watch(() => this.ValDtsupera.value, (newValue, oldValue) => this.onUpdate('sale.dtsupera', this.ValDtsupera, newValue, oldValue)))
+		watch(() => this.ValDtsupera.value, (newValue, oldValue) => this.onUpdate('sale.dtsupera', this.ValDtsupera, newValue, oldValue))
 
 		/** The form fields used only in formulas. */
 		this.ValIdentifi = reactive(new modelFieldType.String({
@@ -85,7 +84,7 @@ export default class ViewModel extends FormViewModelBase
 			isFixed: true,
 			description: computed(() => this.Resources.IDENTIFICATION_OF_BU58085),
 		}).cloneFrom(values?.ValIdentifi))
-		this.stopWatchers.push(watch(() => this.ValIdentifi.value, (newValue, oldValue) => this.onUpdate('sale.identifi', this.ValIdentifi, newValue, oldValue)))
+		watch(() => this.ValIdentifi.value, (newValue, oldValue) => this.onUpdate('sale.identifi', this.ValIdentifi, newValue, oldValue))
 	}
 
 	/**

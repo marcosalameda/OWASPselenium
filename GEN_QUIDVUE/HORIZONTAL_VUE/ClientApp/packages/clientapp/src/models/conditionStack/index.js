@@ -1,16 +1,14 @@
-﻿import { markRaw } from 'vue'
-import { QEventEmitter } from '../../plugins/eventBus'
-import { QAsyncProcessMonitor } from '../../composables/async'
+﻿import { QEventEmitter } from '../../plugins/eventBus'
 
 /**
  * Class that represents a source in the stack.
  */
-class ConditionSource {
+class ConditionSource
+{
 	// Private fields.
 	#condition
 	#observers
 	#isMetVal
-	#processMonitor
 
 	/**
 	 * Creates a new condition source.
@@ -18,15 +16,15 @@ class ConditionSource {
 	 * @param {string|array} eventIds An event to listen for, or a list of events
 	 * @param {QEventEmitter} events The event emitter
 	 * @param {boolean} isMetVal The value the condition should evaluate to in order for it to be met
-	 * @param {QAsyncProcessMonitor} processMonitor A monitor of asynchronous processes
 	 */
-	constructor(condition, eventIds, events, isMetVal, processMonitor) {
+	constructor(condition, eventIds, events, isMetVal)
+	{
 		if (!['undefined', 'function'].includes(typeof condition))
-			throw new TypeError('The "condition" must be a function.')
+			throw new Error('The "condition" must be a function.')
 		if (!['undefined', 'string'].includes(typeof eventIds) && !Array.isArray(eventIds))
-			throw new TypeError('The "eventIds" must be either a string or an array of strings.')
+			throw new Error('The "eventIds" must be either a string or an array of strings.')
 		if (typeof eventIds !== 'undefined' && typeof events === 'undefined')
-			throw new TypeError('When defining "eventIds", the "events" must also be defined.')
+			throw new Error('When defining "eventIds", the "events" must also be defined.')
 
 		const eventList = Array.isArray(eventIds) ? eventIds : eventIds ? [eventIds] : []
 		const condFunc = typeof condition === 'function' ? condition : () => isMetVal
@@ -34,11 +32,11 @@ class ConditionSource {
 		this.#condition = condFunc
 		this.#observers = []
 		this.#isMetVal = isMetVal
-		this.#processMonitor = processMonitor
 
 		this.isMet = isMetVal
 
-		if (eventList.length > 0) events.onMany(eventList, () => this.validateCondition())
+		if (eventList.length > 0)
+			events.onMany(eventList, () => this.validateCondition())
 	}
 
 	/**
@@ -47,11 +45,11 @@ class ConditionSource {
 	 * @param {string|array} eventIds An event to listen for, or a list of events
 	 * @param {QEventEmitter} events The event emitter
 	 * @param {boolean} isMetVal The value the condition should evaluate to in order for it to be met
-	 * @param {QAsyncProcessMonitor} processMonitor A monitor of asynchronous processes
 	 * @returns A new condition source.
 	 */
-	static async createSource(condition, eventIds, events, isMetVal, processMonitor) {
-		const source = new ConditionSource(condition, eventIds, events, isMetVal, processMonitor)
+	static async createSource(condition, eventIds, events, isMetVal)
+	{
+		const source = new ConditionSource(condition, eventIds, events, isMetVal)
 		await source.validateCondition()
 		return source
 	}
@@ -59,12 +57,10 @@ class ConditionSource {
 	/**
 	 * Validates the source condition.
 	 */
-	async validateCondition() {
-		const condPromise = this.#condition()
-		this.#processMonitor?.addWL(condPromise)
-
+	async validateCondition()
+	{
 		// Force a conversion to boolean for cases where the condition is returning 1 or 0.
-		const result = (await condPromise) ? true : false
+		const result = await this.#condition() ? true : false
 		this.isMet = result === this.#isMetVal
 		this.notify()
 	}
@@ -73,30 +69,25 @@ class ConditionSource {
 	 * Adds observer function to observers array.
 	 * @param {function} fn The observer function to add
 	 */
-	addObserver(fn) {
+	addObserver(fn)
+	{
 		this.#observers.push(fn)
 	}
 
 	/**
 	 * Notifies all observer functions in observers array.
 	 */
-	notify() {
+	notify()
+	{
 		this.#observers.forEach((fn) => fn())
-	}
-
-	/**
-	 * Destroys this condition source.
-	 */
-	destroy() {
-		this.#observers.length = 0
-		this.#processMonitor = null
 	}
 }
 
 /**
  * Base class for a generic condition stack, should be extended by specific classes.
  */
-class ConditionStack {
+class ConditionStack
+{
 	// The MET event will be triggered when "anyMet" becomes true, and the UNMET when it becomes false.
 	static MET_EVENT = 'conditions-met'
 	static UNMET_EVENT = 'conditions-unmet'
@@ -106,7 +97,8 @@ class ConditionStack {
 	 * @param {QEventEmitter} events The event emitter
 	 * @param {boolean} isMetVal The value a condition should evaluate to in order for it to be met
 	 */
-	constructor(events, isMetVal = true) {
+	constructor(events, isMetVal = true)
+	{
 		Object.defineProperties(this, {
 			metConditions: {
 				value: [],
@@ -115,7 +107,7 @@ class ConditionStack {
 				enumerable: false
 			},
 			sources: {
-				value: markRaw({}),
+				value: {},
 				configurable: true,
 				writable: false,
 				enumerable: false
@@ -127,18 +119,12 @@ class ConditionStack {
 				enumerable: false
 			},
 			internalEvents: {
-				value: markRaw(new QEventEmitter()),
+				value: new QEventEmitter,
 				configurable: true,
 				writable: false,
 				enumerable: false
 			},
 			globalEvents: {
-				value: undefined,
-				configurable: true,
-				writable: true,
-				enumerable: false
-			},
-			processMonitor: {
 				value: undefined,
 				configurable: true,
 				writable: true,
@@ -152,20 +138,23 @@ class ConditionStack {
 			}
 		})
 
-		if (typeof events !== 'undefined') this.setEventEmitter(events)
+		if (typeof events !== 'undefined')
+			this.setEventEmitter(events)
 	}
 
 	/**
 	 * The number os currently active conditions in the stack.
 	 */
-	get size() {
+	get size()
+	{
 		return this.metConditions.length + this.otherStacks.reduce((res, s) => res + s.size, 0)
 	}
 
 	/**
 	 * Whether any of the conditions in the stack are met.
 	 */
-	get anyMet() {
+	get anyMet()
+	{
 		return this.size > 0
 	}
 
@@ -173,25 +162,11 @@ class ConditionStack {
 	 * Sets the global event emitter.
 	 * @param {QEventEmitter} events The event emitter
 	 */
-	setEventEmitter(events) {
+	setEventEmitter(events)
+	{
 		if (!(events instanceof QEventEmitter))
-			throw new TypeError('The "events" argument must be an instance of QEventEmitter.')
+			throw new Error('The "events" argument should be an instance of QEventEmitter.')
 		this.globalEvents = events
-	}
-
-	/**
-	 * Sets the monitor of asynchronous processes.
-	 * @param {QAsyncProcessMonitor} processMonitor A monitor of asynchronous processes
-	 */
-	setProcessMonitor(processMonitor) {
-		if (
-			typeof processMonitor !== 'undefined' &&
-			!(processMonitor instanceof QAsyncProcessMonitor)
-		)
-			throw new TypeError(
-				'The "processMonitor" argument must be an instance of QAsyncProcessMonitor.'
-			)
-		this.processMonitor = processMonitor
 	}
 
 	/**
@@ -199,9 +174,10 @@ class ConditionStack {
 	 * take into account whether that stack also has any met conditions.
 	 * @param {ConditionStack} stack The stack to associate
 	 */
-	associateStack(stack) {
+	associateStack(stack)
+	{
 		if (!(stack instanceof ConditionStack))
-			throw new TypeError('The "stack" argument must be an instance of ConditionStack.')
+			throw new Error('The "stack" argument should be an instance of ConditionStack.')
 
 		// Re-emit the events emitted by the associated stack.
 		stack.addOnMetListener(() => this.emitMetEvent(true))
@@ -215,17 +191,16 @@ class ConditionStack {
 	 * @param {string} sourceId The id of the source
 	 * @returns True if the specified source is currently active, false otherwise.
 	 */
-	contains(sourceId) {
-		return (
-			this.metConditions.includes(sourceId) ||
-			this.otherStacks.some((s) => s.contains(sourceId))
-		)
+	contains(sourceId)
+	{
+		return this.metConditions.includes(sourceId) || this.otherStacks.some((s) => s.contains(sourceId))
 	}
 
 	/**
 	 * Updates the stack with the condition sources currently active.
 	 */
-	updateStack() {
+	updateStack()
+	{
 		const previousLength = this.metConditions.length
 
 		this.metConditions = Object.entries(this.sources)
@@ -233,9 +208,11 @@ class ConditionStack {
 			.map(([key]) => key)
 
 		// A source was added.
-		if (previousLength < this.metConditions.length) this.emitMetEvent(true)
+		if (previousLength < this.metConditions.length)
+			this.emitMetEvent(true)
 		// A source was removed.
-		else if (previousLength > this.metConditions.length) this.emitUnmetEvent()
+		else if (previousLength > this.metConditions.length)
+			this.emitUnmetEvent()
 	}
 
 	/**
@@ -245,25 +222,20 @@ class ConditionStack {
 	 * @param {string|array} eventIds An event to listen for, or a list of events
 	 * @returns True if the source was successfully added, or false if it already existed in the stack.
 	 */
-	async add(sourceId, condition, eventIds) {
+	async add(sourceId, condition, eventIds)
+	{
 		if (typeof sourceId !== 'string' || sourceId.length === 0)
-			throw new TypeError(
-				'An invalid source was specified, the value should be a non-empty string.'
-			)
+			throw new Error('An invalid source was specified, the value should be a non-empty string.')
 
-		if (sourceId in this.sources) return false
+		if (sourceId in this.sources)
+			return false
 
-		const source = await ConditionSource.createSource(
-			condition,
-			eventIds,
-			this.globalEvents,
-			this.isMetVal,
-			this.processMonitor
-		)
+		const source = await ConditionSource.createSource(condition, eventIds, this.globalEvents, this.isMetVal)
 		source.addObserver(() => this.updateStack())
 		this.sources[sourceId] = source
 
-		if (source.isMet) this.updateStack()
+		if (source.isMet)
+			this.updateStack()
 
 		return true
 	}
@@ -273,13 +245,13 @@ class ConditionStack {
 	 * @param {string} sourceId The id of the source
 	 * @returns True if the source was successfully removed, or false if it didn't exist in the stack.
 	 */
-	remove(sourceId) {
+	remove(sourceId)
+	{
 		if (typeof sourceId !== 'string' || sourceId.length === 0)
-			throw new TypeError(
-				'An invalid source was specified, the value should be a non-empty string.'
-			)
+			throw new Error('An invalid source was specified, the value should be a non-empty string.')
 
-		if (!(sourceId in this.sources)) return false
+		if (!(sourceId in this.sources))
+			return false
 
 		delete this.sources[sourceId]
 		this.updateStack()
@@ -291,25 +263,29 @@ class ConditionStack {
 	 * Emits an event signaling that the conditions are met (only if "anyMet" is true).
 	 * @param {boolean} justAdded If true, will only emit the event if a source was just added
 	 */
-	emitMetEvent(justAdded = false) {
-		if (this.size === 1 || (!justAdded && this.anyMet))
+	emitMetEvent(justAdded = false)
+	{
+		if (this.size === 1 || !justAdded && this.anyMet)
 			this.internalEvents.emit(this.constructor.MET_EVENT)
 	}
 
 	/**
 	 * Emits an event signaling that the conditions are unmet (only if "anyMet" is false).
 	 */
-	emitUnmetEvent() {
-		if (!this.anyMet) this.internalEvents.emit(this.constructor.UNMET_EVENT)
+	emitUnmetEvent()
+	{
+		if (!this.anyMet)
+			this.internalEvents.emit(this.constructor.UNMET_EVENT)
 	}
 
 	/**
 	 * Adds the specified listener to be executed whenever "anyMet" becomes true.
 	 * @param {function} listener The listener function to add
 	 */
-	addOnMetListener(listener) {
+	addOnMetListener(listener)
+	{
 		if (typeof listener !== 'function')
-			throw new TypeError('The "listener" argument should be a function.')
+			throw new Error('The "listener" argument should be a function.')
 		this.internalEvents.on(this.constructor.MET_EVENT, listener)
 	}
 
@@ -317,9 +293,10 @@ class ConditionStack {
 	 * Adds the specified listener to be executed whenever "anyMet" becomes false.
 	 * @param {function} listener The listener function to add
 	 */
-	addOnUnmetListener(listener) {
+	addOnUnmetListener(listener)
+	{
 		if (typeof listener !== 'function')
-			throw new TypeError('The "listener" argument should be a function.')
+			throw new Error('The "listener" argument should be a function.')
 		this.internalEvents.on(this.constructor.UNMET_EVENT, listener)
 	}
 
@@ -327,9 +304,10 @@ class ConditionStack {
 	 * Removes the specified listener for the met event.
 	 * @param {function} listener The listener function to remove
 	 */
-	removeOnMetListener(listener) {
+	removeOnMetListener(listener)
+	{
 		if (typeof listener !== 'function')
-			throw new TypeError('The "listener" argument should be a function.')
+			throw new Error('The "listener" argument should be a function.')
 		this.internalEvents.off(this.constructor.MET_EVENT, listener)
 	}
 
@@ -337,53 +315,37 @@ class ConditionStack {
 	 * Removes the specified listener for the unmet event.
 	 * @param {function} listener The listener function to remove
 	 */
-	removeOnUnmetListener(listener) {
+	removeOnUnmetListener(listener)
+	{
 		if (typeof listener !== 'function')
-			throw new TypeError('The "listener" argument should be a function.')
+			throw new Error('The "listener" argument should be a function.')
 		this.internalEvents.off(this.constructor.UNMET_EVENT, listener)
-	}
-
-	/**
-	 * Destroys this condition stack.
-	 */
-	destroy() {
-		this.internalEvents?.removeAllListeners()
-		delete this.internalEvents
-
-		const sourceKeys = Object.keys(this.sources ?? {})
-		sourceKeys.forEach((sourceKey) => {
-			if (typeof this.sources[sourceKey]?.destroy === 'function')
-				this.sources[sourceKey].destroy()
-			this.sources[sourceKey] = null
-			delete this.sources[sourceKey]
-		})
-
-		this.otherStacks.length = 0
-		this.metConditions.length = 0
-		delete this.globalEvents
-		delete this.processMonitor
 	}
 }
 
 /**
  * Class for the "Block when" condition stack.
  */
-export class BlockConditionStack extends ConditionStack {
-	constructor(events) {
+export class BlockConditionStack extends ConditionStack
+{
+	constructor(events)
+	{
 		super(events)
 	}
 
 	/**
 	 * Emits an event signaling that the field is blocked.
 	 */
-	emitBlockEvent() {
+	emitBlockEvent()
+	{
 		this.emitMetEvent()
 	}
 
 	/**
 	 * Emits an event signaling that the field is unblocked.
 	 */
-	emitUnblockEvent() {
+	emitUnblockEvent()
+	{
 		this.emitUnmetEvent()
 	}
 
@@ -391,7 +353,8 @@ export class BlockConditionStack extends ConditionStack {
 	 * Adds the specified listener to be executed when the field becomes blocked.
 	 * @param {function} listener The listener function to add
 	 */
-	addOnBlockListener(listener) {
+	addOnBlockListener(listener)
+	{
 		this.addOnMetListener(listener)
 	}
 
@@ -399,7 +362,8 @@ export class BlockConditionStack extends ConditionStack {
 	 * Adds the specified listener to be executed when the field becomes unblocked.
 	 * @param {function} listener The listener function to add
 	 */
-	addOnUnblockListener(listener) {
+	addOnUnblockListener(listener)
+	{
 		this.addOnUnmetListener(listener)
 	}
 
@@ -407,7 +371,8 @@ export class BlockConditionStack extends ConditionStack {
 	 * Removes the specified listener for when the field becomes blocked.
 	 * @param {function} listener The listener function to remove
 	 */
-	removeOnBlockListener(listener) {
+	removeOnBlockListener(listener)
+	{
 		this.removeOnMetListener(listener)
 	}
 
@@ -415,7 +380,8 @@ export class BlockConditionStack extends ConditionStack {
 	 * Removes the specified listener for when the field becomes unblocked.
 	 * @param {function} listener The listener function to remove
 	 */
-	removeOnUnblockListener(listener) {
+	removeOnUnblockListener(listener)
+	{
 		this.removeOnUnmetListener(listener)
 	}
 }
@@ -423,22 +389,26 @@ export class BlockConditionStack extends ConditionStack {
 /**
  * Class for the "Fill when" condition stack.
  */
-export class ClearConditionStack extends ConditionStack {
-	constructor(events) {
+export class ClearConditionStack extends ConditionStack
+{
+	constructor(events)
+	{
 		super(events, false)
 	}
 
 	/**
 	 * Emits an event signaling that the field is cleared.
 	 */
-	emitClearEvent() {
+	emitClearEvent()
+	{
 		this.emitMetEvent()
 	}
 
 	/**
 	 * Emits an event signaling that the field is fillable.
 	 */
-	emitFillEvent() {
+	emitFillEvent()
+	{
 		this.emitUnmetEvent()
 	}
 
@@ -446,7 +416,8 @@ export class ClearConditionStack extends ConditionStack {
 	 * Adds the specified listener to be executed when the field becomes cleared.
 	 * @param {function} listener The listener function to add
 	 */
-	addOnClearListener(listener) {
+	addOnClearListener(listener)
+	{
 		this.addOnMetListener(listener)
 	}
 
@@ -454,7 +425,8 @@ export class ClearConditionStack extends ConditionStack {
 	 * Adds the specified listener to be executed when the field becomes fillable.
 	 * @param {function} listener The listener function to add
 	 */
-	addOnFillListener(listener) {
+	addOnFillListener(listener)
+	{
 		this.addOnUnmetListener(listener)
 	}
 
@@ -462,7 +434,8 @@ export class ClearConditionStack extends ConditionStack {
 	 * Removes the specified listener for when the field becomes cleared.
 	 * @param {function} listener The listener function to remove
 	 */
-	removeOnClearListener(listener) {
+	removeOnClearListener(listener)
+	{
 		this.removeOnMetListener(listener)
 	}
 
@@ -470,7 +443,8 @@ export class ClearConditionStack extends ConditionStack {
 	 * Removes the specified listener for when the field becomes fillable.
 	 * @param {function} listener The listener function to remove
 	 */
-	removeOnFillListener(listener) {
+	removeOnFillListener(listener)
+	{
 		this.removeOnUnmetListener(listener)
 	}
 }
@@ -478,22 +452,26 @@ export class ClearConditionStack extends ConditionStack {
 /**
  * Class for the "Show when" condition stack.
  */
-export class HideConditionStack extends ConditionStack {
-	constructor(events) {
+export class HideConditionStack extends ConditionStack
+{
+	constructor(events)
+	{
 		super(events, false)
 	}
 
 	/**
 	 * Emits an event signaling that the field is hidden.
 	 */
-	emitHideEvent() {
+	emitHideEvent()
+	{
 		this.emitMetEvent()
 	}
 
 	/**
 	 * Emits an event signaling that the field is visible.
 	 */
-	emitShowEvent() {
+	emitShowEvent()
+	{
 		this.emitUnmetEvent()
 	}
 
@@ -501,7 +479,8 @@ export class HideConditionStack extends ConditionStack {
 	 * Adds the specified listener to be executed when the field becomes hidden.
 	 * @param {function} listener The listener function to add
 	 */
-	addOnHideListener(listener) {
+	addOnHideListener(listener)
+	{
 		this.addOnMetListener(listener)
 	}
 
@@ -509,7 +488,8 @@ export class HideConditionStack extends ConditionStack {
 	 * Adds the specified listener to be executed when the field becomes visible.
 	 * @param {function} listener The listener function to add
 	 */
-	addOnShowListener(listener) {
+	addOnShowListener(listener)
+	{
 		this.addOnUnmetListener(listener)
 	}
 
@@ -517,7 +497,8 @@ export class HideConditionStack extends ConditionStack {
 	 * Removes the specified listener for when the field becomes hidden.
 	 * @param {function} listener The listener function to remove
 	 */
-	removeOnHideListener(listener) {
+	removeOnHideListener(listener)
+	{
 		this.removeOnMetListener(listener)
 	}
 
@@ -525,7 +506,8 @@ export class HideConditionStack extends ConditionStack {
 	 * Removes the specified listener for when the field becomes visible.
 	 * @param {function} listener The listener function to remove
 	 */
-	removeOnShowListener(listener) {
+	removeOnShowListener(listener)
+	{
 		this.removeOnUnmetListener(listener)
 	}
 }
@@ -533,22 +515,26 @@ export class HideConditionStack extends ConditionStack {
 /**
  * Class for the required condition stack.
  */
-export class RequiredConditionStack extends ConditionStack {
-	constructor(events) {
+export class RequiredConditionStack extends ConditionStack
+{
+	constructor(events)
+	{
 		super(events)
 	}
 
 	/**
 	 * Emits an event signaling that the field is required.
 	 */
-	emitRequireEvent() {
+	emitRequireEvent()
+	{
 		this.emitMetEvent()
 	}
 
 	/**
 	 * Emits an event signaling that the field isn't required.
 	 */
-	emitUnrequireEvent() {
+	emitUnrequireEvent()
+	{
 		this.emitUnmetEvent()
 	}
 
@@ -556,7 +542,8 @@ export class RequiredConditionStack extends ConditionStack {
 	 * Adds the specified listener to be executed when the field becomes required.
 	 * @param {function} listener The listener function to add
 	 */
-	addOnRequireListener(listener) {
+	addOnRequireListener(listener)
+	{
 		this.addOnMetListener(listener)
 	}
 
@@ -564,7 +551,8 @@ export class RequiredConditionStack extends ConditionStack {
 	 * Adds the specified listener to be executed when the field becomes unrequired.
 	 * @param {function} listener The listener function to add
 	 */
-	addOnUnrequireListener(listener) {
+	addOnUnrequireListener(listener)
+	{
 		this.addOnUnmetListener(listener)
 	}
 
@@ -572,7 +560,8 @@ export class RequiredConditionStack extends ConditionStack {
 	 * Removes the specified listener for when the field becomes required.
 	 * @param {function} listener The listener function to remove
 	 */
-	removeOnRequireListener(listener) {
+	removeOnRequireListener(listener)
+	{
 		this.removeOnMetListener(listener)
 	}
 
@@ -580,7 +569,8 @@ export class RequiredConditionStack extends ConditionStack {
 	 * Removes the specified listener for when the field becomes unrequired.
 	 * @param {function} listener The listener function to remove
 	 */
-	removeOnUnrequireListener(listener) {
+	removeOnUnrequireListener(listener)
+	{
 		this.removeOnUnmetListener(listener)
 	}
 }

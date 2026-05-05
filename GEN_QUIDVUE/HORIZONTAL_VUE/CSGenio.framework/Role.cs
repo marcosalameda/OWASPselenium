@@ -35,7 +35,6 @@ namespace CSGenio.framework
 		public static readonly Role ROLE_VIEW; //VIEW
 		public static readonly Role ROLE_VIEW_PESSO; //Consulta dados pessoais
 
-        public static readonly Tuple<string, Role>[] MODULE_ROLES;
         public static readonly Dictionary<string, Role> ALL_ROLES = new Dictionary<string, Role>();
 
 		private readonly List<Role> directSubRoles;
@@ -47,7 +46,10 @@ namespace CSGenio.framework
             get;
         }
 
-        public IEnumerable<string> AvailableModules => MODULE_ROLES.Where(x => x.Item2 == this).Select(x => x.Item1);
+        public List<string> AvaiableModules
+        {
+            get; private set;
+        }
 
 		public Role(RoleType type, string title, params Role[] subRoles)
         {
@@ -173,67 +175,6 @@ namespace CSGenio.framework
 
 			foreach(Role role in ALL_ROLES.Values)
 				role.FlattenRole();
-
-			MODULE_ROLES = [
-				new("TBS", Role.UNAUTHORIZED),
-				new("WMS", Role.UNAUTHORIZED),
-				new("IMO", Role.UNAUTHORIZED),
-				new("TRN", Role.UNAUTHORIZED),
-				new("STY", Role.UNAUTHORIZED),
-				new("PTN", Role.UNAUTHORIZED),
-				new("REG", Role.UNAUTHORIZED),
-				new("GQT", Role.UNAUTHORIZED),
-
-				new("STY", Role.ROLE_ADMINISTRATOR),
-				new("GQT", Role.ROLE_ADMINISTRATOR),
-				new("TRN", Role.ROLE_ADMINISTRATOR),
-				new("TBS", Role.ROLE_ADMINISTRATOR),
-				new("PTN", Role.ROLE_ADMINISTRATOR),
-				new("REG", Role.ROLE_ADMINISTRATOR),
-				new("IMO", Role.ROLE_ADMINISTRATOR),
-				new("TRN", Role.ROLE_EDIT),
-				new("STY", Role.ROLE_EDIT),
-				new("GQT", Role.ROLE_EDIT),
-				new("PTN", Role.ROLE_EDIT),
-				new("TRN", Role.ROLE_EDIT_PESSO),
-				new("PTN", Role.ROLE_EDIT_PESSO),
-				new("REG", Role.ROLE_EMPLOYEE),
-				new("TBS", Role.ROLE_MANAGER),
-				new("TRN", Role.ROLE_MANAGER),
-				new("IMO", Role.ROLE_MANAGER),
-				new("PTN", Role.ROLE_MANAGER),
-				new("TBS", Role.ROLE_SYSADMIN),
-				new("PTN", Role.ROLE_SYSADMIN),
-				new("GQT", Role.ROLE_SYSADMIN),
-				new("IMO", Role.ROLE_SYSADMIN),
-				new("TRN", Role.ROLE_SYSADMIN),
-				new("REG", Role.ROLE_SYSADMIN),
-				new("STY", Role.ROLE_SYSADMIN),
-				new("GQT", Role.ROLE_VIEW),
-				new("PTN", Role.ROLE_VIEW_PESSO),
-				new("TRN", Role.ROLE_VIEW_PESSO),
-				new("REG", Role.ROLE_1),
-				new("TRN", Role.ROLE_1),
-				new("TBS", Role.ROLE_1),
-				new("IMO", Role.ROLE_1),
-				new("GQT", Role.ROLE_1),
-				new("PTN", Role.ROLE_1),
-				new("STY", Role.ROLE_1),
-				new("GQT", Role.ROLE_2),
-				new("TRN", Role.ROLE_3),
-				new("TRN", Role.ROLE_4),
-				new("WMS", Role.ROLE_20),
-				new("IMO", Role.ROLE_20),
-				new("GQT", Role.ROLE_20),
-				new("IMO", Role.ADMINISTRATION),
-				new("REG", Role.ADMINISTRATION),
-				new("TRN", Role.ADMINISTRATION),
-				new("PTN", Role.ADMINISTRATION),
-				new("TBS", Role.ADMINISTRATION),
-				new("GQT", Role.ADMINISTRATION),
-				new("WMS", Role.ADMINISTRATION),
-				new("STY", Role.ADMINISTRATION)			];
-
         }
 
 		private void FlattenRole()

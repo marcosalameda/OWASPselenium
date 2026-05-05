@@ -1,4 +1,4 @@
-﻿/* eslint-disable @typescript-eslint/no-unused-vars */
+﻿/* eslint-disable no-unused-vars */
 import { computed, reactive, watch } from 'vue'
 import _merge from 'lodash-es/merge'
 
@@ -11,7 +11,7 @@ import netAPI from '@quidgest/clientapp/network'
 import qApi from '@/api/genio/quidgestFunctions.js'
 import qFunctions from '@/api/genio/projectFunctions.js'
 import qProjArrays from '@/api/genio/projectArrays.js'
-/* eslint-enable @typescript-eslint/no-unused-vars */
+/* eslint-enable no-unused-vars */
 
 /**
  * Represents a ViewModel class.
@@ -25,11 +25,11 @@ export default class ViewModel extends FormViewModelBase
 	 * @param {object} options - The options for the ViewModel
 	 * @param {object} values - A ViewModel instance to copy values from
 	 */
-	// eslint-disable-next-line @typescript-eslint/no-unused-vars
+	// eslint-disable-next-line no-unused-vars
 	constructor(vueContext, options, values)
 	{
 		super(vueContext, options)
-		// eslint-disable-next-line @typescript-eslint/no-unused-vars
+		// eslint-disable-next-line no-unused-vars
 		const vm = this.vueContext
 
 		// The view model metadata
@@ -37,9 +37,8 @@ export default class ViewModel extends FormViewModelBase
 			name: 'EQUIPM__PSEUDA_TAGS__',
 			area: 'ATAGS',
 			actions: {
-				recalculateFormulas: 'RecalculateFormulas_Equipm__pseuda_tags__',
-				updateFilesTickets: 'UpdateFilesTicketsEquipm__pseuda_tags__',
-				setFile: 'SetFileEquipm__pseuda_tags__'
+				recalculateFormulas: 'RecalculateFormulas_EQUIPM__PSEUDA_TAGS__',
+				updateFilesTickets: 'UpdateFilesTicketsEQUIPM__PSEUDA_TAGS__'
 			}
 		})
 
@@ -51,7 +50,7 @@ export default class ViewModel extends FormViewModelBase
 			field: 'CODTAGS',
 			description: '',
 		}).cloneFrom(values?.ValCodtags))
-		this.stopWatchers.push(watch(() => this.ValCodtags.value, (newValue, oldValue) => this.onUpdate('atags.codtags', this.ValCodtags, newValue, oldValue)))
+		watch(() => this.ValCodtags.value, (newValue, oldValue) => this.onUpdate('atags.codtags', this.ValCodtags, newValue, oldValue))
 
 		/** The hidden foreign keys. */
 		this.ValCodasset = reactive(new modelFieldType.ForeignKey({
@@ -63,7 +62,7 @@ export default class ViewModel extends FormViewModelBase
 			isFixed: true,
 			description: '',
 		}).cloneFrom(values?.ValCodasset))
-		this.stopWatchers.push(watch(() => this.ValCodasset.value, (newValue, oldValue) => this.onUpdate('atags.codasset', this.ValCodasset, newValue, oldValue)))
+		watch(() => this.ValCodasset.value, (newValue, oldValue) => this.onUpdate('atags.codasset', this.ValCodasset, newValue, oldValue))
 
 		/** The remaining form fields. */
 		this.ValName = reactive(new modelFieldType.String({
@@ -74,7 +73,7 @@ export default class ViewModel extends FormViewModelBase
 			maxLength: 75,
 			description: computed(() => this.Resources.TAG_NAME52385),
 		}).cloneFrom(values?.ValName))
-		this.stopWatchers.push(watch(() => this.ValName.value, (newValue, oldValue) => this.onUpdate('atags.name', this.ValName, newValue, oldValue)))
+		watch(() => this.ValName.value, (newValue, oldValue) => this.onUpdate('atags.name', this.ValName, newValue, oldValue))
 	}
 
 	/**

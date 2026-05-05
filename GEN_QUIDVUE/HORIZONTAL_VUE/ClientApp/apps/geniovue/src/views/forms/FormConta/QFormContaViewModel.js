@@ -1,4 +1,4 @@
-﻿/* eslint-disable @typescript-eslint/no-unused-vars */
+﻿/* eslint-disable no-unused-vars */
 import { computed, reactive, watch } from 'vue'
 import _merge from 'lodash-es/merge'
 
@@ -11,7 +11,7 @@ import netAPI from '@quidgest/clientapp/network'
 import qApi from '@/api/genio/quidgestFunctions.js'
 import qFunctions from '@/api/genio/projectFunctions.js'
 import qProjArrays from '@/api/genio/projectArrays.js'
-/* eslint-enable @typescript-eslint/no-unused-vars */
+/* eslint-enable no-unused-vars */
 
 /**
  * Represents a ViewModel class.
@@ -25,11 +25,11 @@ export default class ViewModel extends FormViewModelBase
 	 * @param {object} options - The options for the ViewModel
 	 * @param {object} values - A ViewModel instance to copy values from
 	 */
-	// eslint-disable-next-line @typescript-eslint/no-unused-vars
+	// eslint-disable-next-line no-unused-vars
 	constructor(vueContext, options, values)
 	{
 		super(vueContext, options)
-		// eslint-disable-next-line @typescript-eslint/no-unused-vars
+		// eslint-disable-next-line no-unused-vars
 		const vm = this.vueContext
 
 		// The view model metadata
@@ -37,9 +37,8 @@ export default class ViewModel extends FormViewModelBase
 			name: 'CONTA',
 			area: 'CONTA',
 			actions: {
-				recalculateFormulas: 'RecalculateFormulas_Conta',
-				updateFilesTickets: 'UpdateFilesTicketsConta',
-				setFile: 'SetFileConta'
+				recalculateFormulas: 'RecalculateFormulas_CONTA',
+				updateFilesTickets: 'UpdateFilesTicketsCONTA'
 			}
 		})
 
@@ -51,7 +50,7 @@ export default class ViewModel extends FormViewModelBase
 			field: 'CODCONTA',
 			description: '',
 		}).cloneFrom(values?.ValCodconta))
-		this.stopWatchers.push(watch(() => this.ValCodconta.value, (newValue, oldValue) => this.onUpdate('conta.codconta', this.ValCodconta, newValue, oldValue)))
+		watch(() => this.ValCodconta.value, (newValue, oldValue) => this.onUpdate('conta.codconta', this.ValCodconta, newValue, oldValue))
 
 		/** The used foreign keys. */
 		this.ValCodpesso = reactive(new modelFieldType.ForeignKey({
@@ -62,7 +61,7 @@ export default class ViewModel extends FormViewModelBase
 			relatedArea: 'PESSO',
 			description: '',
 		}).cloneFrom(values?.ValCodpesso))
-		this.stopWatchers.push(watch(() => this.ValCodpesso.value, (newValue, oldValue) => this.onUpdate('conta.codpesso', this.ValCodpesso, newValue, oldValue)))
+		watch(() => this.ValCodpesso.value, (newValue, oldValue) => this.onUpdate('conta.codpesso', this.ValCodpesso, newValue, oldValue))
 
 		this.ValCodgenre = reactive(new modelFieldType.ForeignKey({
 			id: 'ValCodgenre',
@@ -72,7 +71,7 @@ export default class ViewModel extends FormViewModelBase
 			relatedArea: 'GENRE',
 			description: '',
 		}).cloneFrom(values?.ValCodgenre))
-		this.stopWatchers.push(watch(() => this.ValCodgenre.value, (newValue, oldValue) => this.onUpdate('conta.codgenre', this.ValCodgenre, newValue, oldValue)))
+		watch(() => this.ValCodgenre.value, (newValue, oldValue) => this.onUpdate('conta.codgenre', this.ValCodgenre, newValue, oldValue))
 
 		this.ValCodtpcon = reactive(new modelFieldType.ForeignKey({
 			id: 'ValCodtpcon',
@@ -82,7 +81,7 @@ export default class ViewModel extends FormViewModelBase
 			relatedArea: 'TPCON',
 			description: computed(() => this.Resources.CONTACT_TYPE65233),
 		}).cloneFrom(values?.ValCodtpcon))
-		this.stopWatchers.push(watch(() => this.ValCodtpcon.value, (newValue, oldValue) => this.onUpdate('conta.codtpcon', this.ValCodtpcon, newValue, oldValue)))
+		watch(() => this.ValCodtpcon.value, (newValue, oldValue) => this.onUpdate('conta.codtpcon', this.ValCodtpcon, newValue, oldValue))
 
 		/** The remaining form fields. */
 		this.TablePessoName = reactive(new modelFieldType.String({
@@ -93,9 +92,8 @@ export default class ViewModel extends FormViewModelBase
 			field: 'NAME',
 			maxLength: 85,
 			description: computed(() => this.Resources.NAME31974),
-			ignoreFldSubmit: true,
 		}).cloneFrom(values?.TablePessoName))
-		this.stopWatchers.push(watch(() => this.TablePessoName.value, (newValue, oldValue) => this.onUpdate('pesso.name', this.TablePessoName, newValue, oldValue)))
+		watch(() => this.TablePessoName.value, (newValue, oldValue) => this.onUpdate('pesso.name', this.TablePessoName, newValue, oldValue))
 
 		this.TableGenreGender = reactive(new modelFieldType.String({
 			type: 'Lookup',
@@ -105,9 +103,8 @@ export default class ViewModel extends FormViewModelBase
 			field: 'GENDER',
 			maxLength: 20,
 			description: computed(() => this.Resources.GENRE63303),
-			ignoreFldSubmit: true,
 		}).cloneFrom(values?.TableGenreGender))
-		this.stopWatchers.push(watch(() => this.TableGenreGender.value, (newValue, oldValue) => this.onUpdate('genre.gender', this.TableGenreGender, newValue, oldValue)))
+		watch(() => this.TableGenreGender.value, (newValue, oldValue) => this.onUpdate('genre.gender', this.TableGenreGender, newValue, oldValue))
 
 		this.TableTpconTipocont = reactive(new modelFieldType.String({
 			type: 'Lookup',
@@ -117,9 +114,8 @@ export default class ViewModel extends FormViewModelBase
 			field: 'TIPOCONT',
 			maxLength: 50,
 			description: computed(() => this.Resources.DESIGNATION35876),
-			ignoreFldSubmit: true,
 		}).cloneFrom(values?.TableTpconTipocont))
-		this.stopWatchers.push(watch(() => this.TableTpconTipocont.value, (newValue, oldValue) => this.onUpdate('tpcon.tipocont', this.TableTpconTipocont, newValue, oldValue)))
+		watch(() => this.TableTpconTipocont.value, (newValue, oldValue) => this.onUpdate('tpcon.tipocont', this.TableTpconTipocont, newValue, oldValue))
 
 		this.ValContacto = reactive(new modelFieldType.String({
 			id: 'ValContacto',
@@ -129,7 +125,7 @@ export default class ViewModel extends FormViewModelBase
 			maxLength: 254,
 			description: computed(() => this.Resources.CONTACT59247),
 		}).cloneFrom(values?.ValContacto))
-		this.stopWatchers.push(watch(() => this.ValContacto.value, (newValue, oldValue) => this.onUpdate('conta.contacto', this.ValContacto, newValue, oldValue)))
+		watch(() => this.ValContacto.value, (newValue, oldValue) => this.onUpdate('conta.contacto', this.ValContacto, newValue, oldValue))
 	}
 
 	/**

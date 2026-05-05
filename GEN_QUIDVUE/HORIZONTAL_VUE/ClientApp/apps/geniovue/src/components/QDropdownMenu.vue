@@ -8,11 +8,9 @@
 		:title="options[0].text"
 		:label="texts.label"
 		@click="$emit('selected', options[0].id)">
-		<slot>
-			<q-icon
-				v-if="icon"
-				:icon="icon" />
-		</slot>
+		<q-icon
+			v-if="icon"
+			:icon="icon" />
 	</q-button>
 	<div
 		v-else
@@ -26,11 +24,10 @@
 			:class="buttonClasses"
 			:title="texts.title"
 			:label="texts.label">
-			<slot>
-				<q-icon
-					v-if="icon"
-					:icon="icon" />
-			</slot>
+			<q-icon
+				v-if="icon"
+				:icon="icon" />
+			<slot></slot>
 		</q-toggle-dropdown>
 
 		<div
@@ -51,7 +48,6 @@
 
 				<q-button
 					:id="option.elementId ? id + '-' + option.elementId : null"
-					:data-action-key="option.elementId"
 					role="menuitem"
 					borderless
 					:disabled="disabled || option.active === false"

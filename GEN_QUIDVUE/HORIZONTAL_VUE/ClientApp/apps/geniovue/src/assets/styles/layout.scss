@@ -30,7 +30,7 @@ bookmarks__container {
 	span.i-change-module-placeholder {
 		color: $navbar-on-bg;
 		font-size: 0.93rem;
-		margin-left: 0.5rem;
+		margin: 0 1rem 0 0.5rem;
 
 		&:hover {
 			color: rgba(255, 255, 255, 0.75);
@@ -1096,7 +1096,7 @@ bookmarks__container {
 		margin-bottom: 0.6rem !important;
 	}
 
-	.q-dialog__body {
+	.c-modal__body {
 		padding: 0.5rem;
 	}
 

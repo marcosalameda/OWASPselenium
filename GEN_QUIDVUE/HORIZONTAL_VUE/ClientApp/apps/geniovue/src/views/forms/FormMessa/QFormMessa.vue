@@ -9,13 +9,12 @@
 			<div
 				v-if="showFormHeader"
 				class="c-action-bar">
-				<component
+				<h1
 					v-if="formControl.uiComponents.header && formInfo.designation"
-					:is="topHeadingTag"
 					:id="formTitleId"
 					class="form-header">
 					{{ formInfo.designation }}
-				</component>
+				</h1>
 
 				<div class="c-action-bar__menu">
 					<template
@@ -39,13 +38,9 @@
 									:label="btn.label"
 									:disabled="btn.disabled"
 									@click="btn.action">
-									<template v-if="btn.icon">
-										<q-badge-indicator
-											:enabled="btn.badge?.isVisible ?? false"
-											:color="btn.badge?.color">
-											<q-icon v-bind="btn.icon" />
-										</q-badge-indicator>
-									</template>
+									<q-icon
+										v-if="btn.icon"
+										v-bind="btn.icon" />
 								</q-toggle-group-item>
 							</template>
 						</q-toggle-group>
@@ -57,7 +52,7 @@
 				v-if="$app.layout.FormAnchorsPosition === 'form-header' && visibleGroups.length > 0"
 				:anchors="anchorGroups"
 				:controls="visibleControls"
-				@focus-control="focusControl" />
+				@focus-control="(...args) => focusControl(...args)" />
 		</div>
 	</teleport>
 
@@ -78,7 +73,6 @@
 						v-if="btn.isActive && btn.isVisible && btn.showInHeading"
 						:id="`heading-${btn.id}`"
 						:label="btn.text"
-						:color="btn.color"
 						:variant="btn.variant"
 						:disabled="btn.disabled"
 						:icon-pos="btn.iconPos"
@@ -92,107 +86,92 @@
 			</q-button-group>
 		</div>
 
-		<q-container
-			fluid
+		<div
+			class="form-flow"
 			data-key="MESSA"
-			:data-identifier="primaryKeyValue"
-			:data-loading="!formInitialDataLoaded || !isActiveForm">
+			:data-loading="!formInitialDataLoaded">
 			<template v-if="formControl.initialized && showFormBody">
-				<q-row v-if="controls.MESSA___MESSAIDNOTIF_.isVisible">
-					<q-col
-						v-if="controls.MESSA___MESSAIDNOTIF_.isVisible"
-						cols="auto">
+				<q-row-container v-show="controls.MESSA___MESSAIDNOTIF_.isVisible">
+					<q-control-wrapper
+						v-show="controls.MESSA___MESSAIDNOTIF_.isVisible"
+						class="${Vue.GetControlWrapperClass($controlsColumn)}">
 						<base-input-structure
-							v-if="controls.MESSA___MESSAIDNOTIF_.isVisible"
 							class="i-text"
-							v-bind="controls.MESSA___MESSAIDNOTIF_.wrapperProps"
-							:id="getControlId(controls.MESSA___MESSAIDNOTIF_)"
+							v-bind="controls.MESSA___MESSAIDNOTIF_"
 							v-on="controls.MESSA___MESSAIDNOTIF_.handlers"
 							:loading="controls.MESSA___MESSAIDNOTIF_.props.loading"
 							:reporting-mode-on="reportingModeCAV"
 							:suggestion-mode-on="suggestionModeOn">
 							<q-text-field
 								v-bind="controls.MESSA___MESSAIDNOTIF_.props"
-								:id="getControlId(controls.MESSA___MESSAIDNOTIF_)"
 								@blur="onBlur(controls.MESSA___MESSAIDNOTIF_, model.ValIdnotif.value)"
 								@change="model.ValIdnotif.fnUpdateValueOnChange" />
 						</base-input-structure>
-					</q-col>
-				</q-row>
-				<q-row v-if="controls.MESSA___MESSAIDMSG___.isVisible">
-					<q-col
-						v-if="controls.MESSA___MESSAIDMSG___.isVisible"
-						cols="auto">
+					</q-control-wrapper>
+				</q-row-container>
+				<q-row-container v-show="controls.MESSA___MESSAIDMSG___.isVisible">
+					<q-control-wrapper
+						v-show="controls.MESSA___MESSAIDMSG___.isVisible"
+						class="${Vue.GetControlWrapperClass($controlsColumn)}">
 						<base-input-structure
-							v-if="controls.MESSA___MESSAIDMSG___.isVisible"
 							class="i-text"
-							v-bind="controls.MESSA___MESSAIDMSG___.wrapperProps"
-							:id="getControlId(controls.MESSA___MESSAIDMSG___)"
+							v-bind="controls.MESSA___MESSAIDMSG___"
 							v-on="controls.MESSA___MESSAIDMSG___.handlers"
 							:loading="controls.MESSA___MESSAIDMSG___.props.loading"
 							:reporting-mode-on="reportingModeCAV"
 							:suggestion-mode-on="suggestionModeOn">
 							<q-text-field
 								v-bind="controls.MESSA___MESSAIDMSG___.props"
-								:id="getControlId(controls.MESSA___MESSAIDMSG___)"
 								@blur="onBlur(controls.MESSA___MESSAIDMSG___, model.ValIdmsg.value)"
 								@change="model.ValIdmsg.fnUpdateValueOnChange" />
 						</base-input-structure>
-					</q-col>
-				</q-row>
-				<q-row v-if="controls.MESSA___MESSAMAILSENT.isVisible">
-					<q-col
-						v-if="controls.MESSA___MESSAMAILSENT.isVisible"
-						cols="auto">
+					</q-control-wrapper>
+				</q-row-container>
+				<q-row-container v-show="controls.MESSA___MESSAMAILSENT.isVisible">
+					<q-control-wrapper
+						v-show="controls.MESSA___MESSAMAILSENT.isVisible"
+						class="${Vue.GetControlWrapperClass($controlsColumn)}">
 						<base-input-structure
-							v-if="controls.MESSA___MESSAMAILSENT.isVisible"
-							class="i-text"
-							v-bind="controls.MESSA___MESSAMAILSENT.wrapperProps"
-							:id="getControlId(controls.MESSA___MESSAMAILSENT)"
+							class="i-checkbox"
+							v-bind="controls.MESSA___MESSAMAILSENT"
 							v-on="controls.MESSA___MESSAMAILSENT.handlers"
 							:loading="controls.MESSA___MESSAMAILSENT.props.loading"
 							:reporting-mode-on="reportingModeCAV"
 							:suggestion-mode-on="suggestionModeOn">
 							<template #label>
-								<q-checkbox
+								<q-checkbox-input
 									v-if="controls.MESSA___MESSAMAILSENT.isVisible"
 									v-bind="controls.MESSA___MESSAMAILSENT.props"
-									:id="getControlId(controls.MESSA___MESSAMAILSENT)"
 									v-on="controls.MESSA___MESSAMAILSENT.handlers" />
 							</template>
 						</base-input-structure>
-					</q-col>
-				</q-row>
-				<q-row v-if="controls.MESSA___MESSAMAILERR_.isVisible">
-					<q-col
-						v-if="controls.MESSA___MESSAMAILERR_.isVisible"
-						cols="auto">
+					</q-control-wrapper>
+				</q-row-container>
+				<q-row-container v-show="controls.MESSA___MESSAMAILERR_.isVisible">
+					<q-control-wrapper
+						v-show="controls.MESSA___MESSAMAILERR_.isVisible"
+						class="${Vue.GetControlWrapperClass($controlsColumn)}">
 						<base-input-structure
-							v-if="controls.MESSA___MESSAMAILERR_.isVisible"
 							class="i-text"
-							v-bind="controls.MESSA___MESSAMAILERR_.wrapperProps"
-							:id="getControlId(controls.MESSA___MESSAMAILERR_)"
+							v-bind="controls.MESSA___MESSAMAILERR_"
 							v-on="controls.MESSA___MESSAMAILERR_.handlers"
 							:loading="controls.MESSA___MESSAMAILERR_.props.loading"
 							:reporting-mode-on="reportingModeCAV"
 							:suggestion-mode-on="suggestionModeOn">
 							<q-text-field
 								v-bind="controls.MESSA___MESSAMAILERR_.props"
-								:id="getControlId(controls.MESSA___MESSAMAILERR_)"
 								@blur="onBlur(controls.MESSA___MESSAMAILERR_, model.ValMailerr.value)"
 								@change="model.ValMailerr.fnUpdateValueOnChange" />
 						</base-input-structure>
-					</q-col>
-				</q-row>
-				<q-row v-if="controls.MESSA___ENTITNAME____.isVisible">
-					<q-col
-						v-if="controls.MESSA___ENTITNAME____.isVisible"
-						cols="auto">
+					</q-control-wrapper>
+				</q-row-container>
+				<q-row-container v-show="controls.MESSA___ENTITNAME____.isVisible">
+					<q-control-wrapper
+						v-show="controls.MESSA___ENTITNAME____.isVisible"
+						class="${Vue.GetControlWrapperClass($controlsColumn)}">
 						<base-input-structure
-							v-if="controls.MESSA___ENTITNAME____.isVisible"
 							class="i-text"
-							v-bind="controls.MESSA___ENTITNAME____.wrapperProps"
-							:id="getControlId(controls.MESSA___ENTITNAME____)"
+							v-bind="controls.MESSA___ENTITNAME____"
 							v-on="controls.MESSA___ENTITNAME____.handlers"
 							:loading="controls.MESSA___ENTITNAME____.props.loading"
 							:reporting-mode-on="reportingModeCAV"
@@ -200,24 +179,21 @@
 							<q-lookup
 								v-if="controls.MESSA___ENTITNAME____.isVisible"
 								v-bind="controls.MESSA___ENTITNAME____.props"
-								:id="getControlId(controls.MESSA___ENTITNAME____)"
 								v-on="controls.MESSA___ENTITNAME____.handlers" />
 							<q-see-more-messa-entitname
 								v-if="controls.MESSA___ENTITNAME____.seeMoreIsVisible"
 								v-bind="controls.MESSA___ENTITNAME____.seeMoreParams"
 								v-on="controls.MESSA___ENTITNAME____.handlers" />
 						</base-input-structure>
-					</q-col>
-				</q-row>
-				<q-row v-if="controls.MESSA___PERSONAME____.isVisible">
-					<q-col
-						v-if="controls.MESSA___PERSONAME____.isVisible"
-						cols="auto">
+					</q-control-wrapper>
+				</q-row-container>
+				<q-row-container v-show="controls.MESSA___PERSONAME____.isVisible">
+					<q-control-wrapper
+						v-show="controls.MESSA___PERSONAME____.isVisible"
+						class="${Vue.GetControlWrapperClass($controlsColumn)}">
 						<base-input-structure
-							v-if="controls.MESSA___PERSONAME____.isVisible"
 							class="i-text"
-							v-bind="controls.MESSA___PERSONAME____.wrapperProps"
-							:id="getControlId(controls.MESSA___PERSONAME____)"
+							v-bind="controls.MESSA___PERSONAME____"
 							v-on="controls.MESSA___PERSONAME____.handlers"
 							:loading="controls.MESSA___PERSONAME____.props.loading"
 							:reporting-mode-on="reportingModeCAV"
@@ -225,24 +201,21 @@
 							<q-lookup
 								v-if="controls.MESSA___PERSONAME____.isVisible"
 								v-bind="controls.MESSA___PERSONAME____.props"
-								:id="getControlId(controls.MESSA___PERSONAME____)"
 								v-on="controls.MESSA___PERSONAME____.handlers" />
 							<q-see-more-messa-personame
 								v-if="controls.MESSA___PERSONAME____.seeMoreIsVisible"
 								v-bind="controls.MESSA___PERSONAME____.seeMoreParams"
 								v-on="controls.MESSA___PERSONAME____.handlers" />
 						</base-input-structure>
-					</q-col>
-				</q-row>
-				<q-row v-if="controls.MESSA___MESSADOCUM_NR.isVisible || controls.MESSA___MESSADESIGNAT.isVisible || controls.MESSA___MESSAEMAIL___.isVisible">
-					<q-col
-						v-if="controls.MESSA___MESSADOCUM_NR.isVisible"
-						cols="auto">
+					</q-control-wrapper>
+				</q-row-container>
+				<q-row-container v-show="controls.MESSA___MESSADOCUM_NR.isVisible || controls.MESSA___MESSADESIGNAT.isVisible || controls.MESSA___MESSAEMAIL___.isVisible">
+					<q-control-wrapper
+						v-show="controls.MESSA___MESSADOCUM_NR.isVisible"
+						class="${Vue.GetControlWrapperClass($controlsColumn)}">
 						<base-input-structure
-							v-if="controls.MESSA___MESSADOCUM_NR.isVisible"
 							class="i-text"
-							v-bind="controls.MESSA___MESSADOCUM_NR.wrapperProps"
-							:id="getControlId(controls.MESSA___MESSADOCUM_NR)"
+							v-bind="controls.MESSA___MESSADOCUM_NR"
 							v-on="controls.MESSA___MESSADOCUM_NR.handlers"
 							:loading="controls.MESSA___MESSADOCUM_NR.props.loading"
 							:reporting-mode-on="reportingModeCAV"
@@ -250,58 +223,49 @@
 							<q-numeric-input
 								v-if="controls.MESSA___MESSADOCUM_NR.isVisible"
 								v-bind="controls.MESSA___MESSADOCUM_NR.props"
-								:id="getControlId(controls.MESSA___MESSADOCUM_NR)"
 								@update:model-value="model.ValDocum_nr.fnUpdateValue" />
 						</base-input-structure>
-					</q-col>
-					<q-col
-						v-if="controls.MESSA___MESSADESIGNAT.isVisible"
-						cols="auto">
+					</q-control-wrapper>
+					<q-control-wrapper
+						v-show="controls.MESSA___MESSADESIGNAT.isVisible"
+						class="${Vue.GetControlWrapperClass($controlsColumn)}">
 						<base-input-structure
-							v-if="controls.MESSA___MESSADESIGNAT.isVisible"
 							class="i-text"
-							v-bind="controls.MESSA___MESSADESIGNAT.wrapperProps"
-							:id="getControlId(controls.MESSA___MESSADESIGNAT)"
+							v-bind="controls.MESSA___MESSADESIGNAT"
 							v-on="controls.MESSA___MESSADESIGNAT.handlers"
 							:loading="controls.MESSA___MESSADESIGNAT.props.loading"
 							:reporting-mode-on="reportingModeCAV"
 							:suggestion-mode-on="suggestionModeOn">
 							<q-text-field
 								v-bind="controls.MESSA___MESSADESIGNAT.props"
-								:id="getControlId(controls.MESSA___MESSADESIGNAT)"
 								@blur="onBlur(controls.MESSA___MESSADESIGNAT, model.ValDesignat.value)"
 								@change="model.ValDesignat.fnUpdateValueOnChange" />
 						</base-input-structure>
-					</q-col>
-					<q-col
-						v-if="controls.MESSA___MESSAEMAIL___.isVisible"
-						cols="auto">
+					</q-control-wrapper>
+					<q-control-wrapper
+						v-show="controls.MESSA___MESSAEMAIL___.isVisible"
+						class="${Vue.GetControlWrapperClass($controlsColumn)}">
 						<base-input-structure
-							v-if="controls.MESSA___MESSAEMAIL___.isVisible"
 							class="i-text"
-							v-bind="controls.MESSA___MESSAEMAIL___.wrapperProps"
-							:id="getControlId(controls.MESSA___MESSAEMAIL___)"
+							v-bind="controls.MESSA___MESSAEMAIL___"
 							v-on="controls.MESSA___MESSAEMAIL___.handlers"
 							:loading="controls.MESSA___MESSAEMAIL___.props.loading"
 							:reporting-mode-on="reportingModeCAV"
 							:suggestion-mode-on="suggestionModeOn">
 							<q-text-field
 								v-bind="controls.MESSA___MESSAEMAIL___.props"
-								:id="getControlId(controls.MESSA___MESSAEMAIL___)"
 								@blur="onBlur(controls.MESSA___MESSAEMAIL___, model.ValEmail.value)"
 								@change="model.ValEmail.fnUpdateValueOnChange" />
 						</base-input-structure>
-					</q-col>
-				</q-row>
-				<q-row v-if="controls.MESSA___MESSAMESSAGE_.isVisible">
-					<q-col
-						v-if="controls.MESSA___MESSAMESSAGE_.isVisible"
-						cols="auto">
+					</q-control-wrapper>
+				</q-row-container>
+				<q-row-container v-show="controls.MESSA___MESSAMESSAGE_.isVisible">
+					<q-control-wrapper
+						v-show="controls.MESSA___MESSAMESSAGE_.isVisible"
+						class="${Vue.GetControlWrapperClass($controlsColumn)}">
 						<base-input-structure
-							v-if="controls.MESSA___MESSAMESSAGE_.isVisible"
 							class="i-textarea"
-							v-bind="controls.MESSA___MESSAMESSAGE_.wrapperProps"
-							:id="getControlId(controls.MESSA___MESSAMESSAGE_)"
+							v-bind="controls.MESSA___MESSAMESSAGE_"
 							v-on="controls.MESSA___MESSAMESSAGE_.handlers"
 							:loading="controls.MESSA___MESSAMESSAGE_.props.loading"
 							:reporting-mode-on="reportingModeCAV"
@@ -309,39 +273,33 @@
 							<q-text-area
 								v-if="controls.MESSA___MESSAMESSAGE_.isVisible"
 								v-bind="controls.MESSA___MESSAMESSAGE_.props"
-								:id="getControlId(controls.MESSA___MESSAMESSAGE_)"
 								v-on="controls.MESSA___MESSAMESSAGE_.handlers" />
 						</base-input-structure>
-					</q-col>
-				</q-row>
-				<q-row v-if="controls.MESSA___MESSACREATOPE.isVisible || controls.MESSA___MESSACREATDAT.isVisible">
-					<q-col
-						v-if="controls.MESSA___MESSACREATOPE.isVisible"
-						cols="auto">
+					</q-control-wrapper>
+				</q-row-container>
+				<q-row-container v-show="controls.MESSA___MESSACREATOPE.isVisible || controls.MESSA___MESSACREATDAT.isVisible">
+					<q-control-wrapper
+						v-show="controls.MESSA___MESSACREATOPE.isVisible"
+						class="${Vue.GetControlWrapperClass($controlsColumn)}">
 						<base-input-structure
-							v-if="controls.MESSA___MESSACREATOPE.isVisible"
 							class="i-text"
-							v-bind="controls.MESSA___MESSACREATOPE.wrapperProps"
-							:id="getControlId(controls.MESSA___MESSACREATOPE)"
+							v-bind="controls.MESSA___MESSACREATOPE"
 							v-on="controls.MESSA___MESSACREATOPE.handlers"
 							:loading="controls.MESSA___MESSACREATOPE.props.loading"
 							:reporting-mode-on="reportingModeCAV"
 							:suggestion-mode-on="suggestionModeOn">
 							<q-text-field
 								v-bind="controls.MESSA___MESSACREATOPE.props"
-								:id="getControlId(controls.MESSA___MESSACREATOPE)"
 								@blur="onBlur(controls.MESSA___MESSACREATOPE, model.ValCreatope.value)"
 								@change="model.ValCreatope.fnUpdateValueOnChange" />
 						</base-input-structure>
-					</q-col>
-					<q-col
-						v-if="controls.MESSA___MESSACREATDAT.isVisible"
-						cols="auto">
+					</q-control-wrapper>
+					<q-control-wrapper
+						v-show="controls.MESSA___MESSACREATDAT.isVisible"
+						class="${Vue.GetControlWrapperClass($controlsColumn)}">
 						<base-input-structure
-							v-if="controls.MESSA___MESSACREATDAT.isVisible"
 							class="i-text"
-							v-bind="controls.MESSA___MESSACREATDAT.wrapperProps"
-							:id="getControlId(controls.MESSA___MESSACREATDAT)"
+							v-bind="controls.MESSA___MESSACREATDAT"
 							v-on="controls.MESSA___MESSACREATDAT.handlers"
 							:loading="controls.MESSA___MESSACREATDAT.props.loading"
 							:reporting-mode-on="reportingModeCAV"
@@ -349,24 +307,23 @@
 							<q-date-time-picker
 								v-if="controls.MESSA___MESSACREATDAT.isVisible"
 								v-bind="controls.MESSA___MESSACREATDAT.props"
-								:id="getControlId(controls.MESSA___MESSACREATDAT)"
 								:model-value="model.ValCreatdat.value"
 								@reset-icon-click="model.ValCreatdat.fnUpdateValue(model.ValCreatdat.originalValue ?? new Date())"
 								@update:model-value="model.ValCreatdat.fnUpdateValue($event ?? '')" />
 						</base-input-structure>
-					</q-col>
-				</q-row>
+					</q-control-wrapper>
+				</q-row-container>
 			</template>
-		</q-container>
+		</div>
 	</teleport>
 
-	<q-divider v-if="!isPopup && showFormFooter" />
+	<hr v-if="!isPopup && showFormFooter" />
 
 	<teleport
 		v-if="formModalIsReady && showFormFooter"
 		:to="`#${uiContainersId.footer}`"
 		:disabled="!isPopup || isNested">
-		<q-row v-if="showFormFooter">
+		<q-row-container v-if="showFormFooter">
 			<div id="footer-action-btns">
 				<template
 					v-for="btn in formButtons"
@@ -375,7 +332,6 @@
 						v-if="btn.isActive && btn.isVisible && btn.showInFooter"
 						:id="`bottom-${btn.id}`"
 						:label="btn.text"
-						:color="btn.color"
 						:variant="btn.variant"
 						:disabled="btn.disabled"
 						:icon-pos="btn.iconPos"
@@ -387,12 +343,12 @@
 					</q-button>
 				</template>
 			</div>
-		</q-row>
+		</q-row-container>
 	</teleport>
 </template>
 
 <script>
-	/* eslint-disable @typescript-eslint/no-unused-vars */
+	/* eslint-disable no-unused-vars */
 	import { computed, defineAsyncComponent, readonly } from 'vue'
 	import { useRoute } from 'vue-router'
 
@@ -412,7 +368,7 @@
 	import qApi from '@/api/genio/quidgestFunctions.js'
 	import qFunctions from '@/api/genio/projectFunctions.js'
 	import qProjArrays from '@/api/genio/projectArrays.js'
-	/* eslint-enable @typescript-eslint/no-unused-vars */
+	/* eslint-enable no-unused-vars */
 
 	import FormViewModel from './QFormMessaViewModel.js'
 
@@ -491,8 +447,7 @@
 					primaryKey: 'ValCodmessa',
 					designation: computed(() => this.Resources.MESSAGE30602),
 					identifier: '', // Unique identifier received by route (when it's nested).
-					mode: '',
-					availableAgents: [],
+					mode: ''
 				},
 
 				formButtons: {
@@ -600,11 +555,7 @@
 						showInFooter: true,
 						isActive: true,
 						isVisible: computed(() => vm.authData.isAllowed && vm.isEditable),
-						action: vm.saveForm,
-						badge: {
-							isVisible: computed(() => vm.model?.isDirty === true),
-							color: 'highlight'
-						}
+						action: vm.saveForm
 					},
 					confirmBtn: {
 						id: 'confirm-btn',
@@ -714,6 +665,7 @@
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						maxLength: 50,
+						labelId: 'label_MESSA___MESSAIDNOTIF_',
 						controlLimits: [
 						],
 					}, this),
@@ -727,6 +679,7 @@
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						maxLength: 50,
+						labelId: 'label_MESSA___MESSAIDMSG___',
 						controlLimits: [
 						],
 					}, this),
@@ -752,6 +705,7 @@
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						maxLength: 300,
+						labelId: 'label_MESSA___MESSAMAILERR_',
 						controlLimits: [
 						],
 					}, this),
@@ -835,6 +789,7 @@
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						maxLength: 50,
+						labelId: 'label_MESSA___MESSADESIGNAT',
 						controlLimits: [
 						],
 					}, this),
@@ -848,6 +803,7 @@
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						maxLength: 254,
+						labelId: 'label_MESSA___MESSAEMAIL___',
 						controlLimits: [
 						],
 					}, this),
@@ -875,6 +831,7 @@
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						maxLength: 128,
+						labelId: 'label_MESSA___MESSACREATOPE',
 						controlLimits: [
 						],
 					}, this),
@@ -887,7 +844,7 @@
 						label: computed(() => this.Resources.CREATED_ON00051),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						dateTimeType: 'date',
+						format: 'date',
 						controlLimits: [
 						],
 					}, this),
@@ -998,23 +955,17 @@
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 		},
 
-		beforeUnmount()
-		{
-/* eslint-disable indent, vue/html-indent, vue/script-indent */
-// USE /[MANUAL GQT COMPONENT_BEFORE_UNMOUNT MESSA]/
-// eslint-disable-next-line
-/* eslint-enable indent, vue/html-indent, vue/script-indent */
-		},
-
 		methods: {
 			/**
 			 * Called before form init.
 			 */
 			async beforeLoad()
 			{
+				let loadForm = true
+
 				// Execute the "Before init" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.beforeInit)
-				for (const trigger of triggers)
+				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
 				this.emitEvent('before-load-form')
@@ -1024,7 +975,7 @@
 // eslint-disable-next-line
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 
-				return true
+				return loadForm
 			},
 
 			/**
@@ -1034,7 +985,7 @@
 			{
 				// Execute the "After init" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.afterInit)
-				for (const trigger of triggers)
+				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
 				this.emitEvent('after-load-form')
@@ -1054,33 +1005,19 @@
 
 				// Execute the "Before apply" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.beforeApply)
-				for (const trigger of triggers)
+				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
-				const ticketsPromise = this.model.updateFilesTickets(true)
-				this.addBusy(ticketsPromise, this.Resources[hardcodedTexts.processing])
-				const canSetDocums = await ticketsPromise
+				const canSetDocums = await this.model.updateFilesTickets(true)
 
 				if (canSetDocums)
 				{
-					let results
-					const changesPromise = this.model.setDocumentChanges()
-					this.addBusy(changesPromise, this.Resources[hardcodedTexts.processing])
-					applyForm = await changesPromise
+					applyForm = await this.model.setDocumentChanges()
 
 					if (applyForm)
 					{
-						const insertsPromise = this.model.saveDocuments()
-						this.addBusy(insertsPromise, this.Resources[hardcodedTexts.processing])
-						results = await insertsPromise
+						const results = await this.model.saveDocuments()
 						applyForm = results.every((e) => e === true)
-					}
-
-					if (!changesPromise || (results && !results.every((e) => e === true)))
-					{
-						this.validationErrors = {
-							Erro: this.Resources.OCORREU_UM_ERRO_AO_T51884
-						}
 					}
 				}
 
@@ -1101,7 +1038,7 @@
 			{
 				// Execute the "After apply" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.afterApply)
-				for (const trigger of triggers)
+				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
 				this.emitEvent('after-apply-form')
@@ -1121,33 +1058,19 @@
 
 				// Execute the "Before save" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.beforeSave)
-				for (const trigger of triggers)
+				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
-				const ticketsPromise = this.model.updateFilesTickets()
-				this.addBusy(ticketsPromise, this.Resources[hardcodedTexts.processing])
-				const canSetDocums = await ticketsPromise
+				const canSetDocums = await this.model.updateFilesTickets()
 
 				if (canSetDocums)
 				{
-					let results
-					const changesPromise = this.model.setDocumentChanges()
-					this.addBusy(changesPromise, this.Resources[hardcodedTexts.processing])
-					saveForm = await changesPromise
+					saveForm = await this.model.setDocumentChanges()
 
 					if (saveForm)
 					{
-						const insertsPromise = this.model.saveDocuments()
-						this.addBusy(insertsPromise, this.Resources[hardcodedTexts.processing])
-						results = await insertsPromise
+						const results = await this.model.saveDocuments()
 						saveForm = results.every((e) => e === true)
-					}
-
-					if (!changesPromise || (results && !results.every((e) => e === true)))
-					{
-						this.validationErrors = {
-							Erro: this.Resources.OCORREU_UM_ERRO_AO_T51884
-						}
 					}
 				}
 
@@ -1166,9 +1089,11 @@
 			 */
 			async afterSave()
 			{
+				let redirectPage = true // Set to 'false' to cancel page redirect.
+
 				// Execute the "After save" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.afterSave)
-				for (const trigger of triggers)
+				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
 				this.emitEvent('after-save-form')
@@ -1178,7 +1103,7 @@
 // eslint-disable-next-line
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 
-				return true
+				return redirectPage
 			},
 
 			/**
@@ -1186,6 +1111,8 @@
 			 */
 			async beforeDel()
 			{
+				let deleteForm = true // Set to 'false' to cancel form delete.
+
 				this.emitEvent('before-delete-form')
 
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
@@ -1193,7 +1120,7 @@
 // eslint-disable-next-line
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 
-				return true
+				return deleteForm
 			},
 
 			/**
@@ -1201,6 +1128,8 @@
 			 */
 			async afterDel()
 			{
+				let redirectPage = true // Set to 'false' to cancel page redirect.
+
 				this.emitEvent('after-delete-form')
 
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
@@ -1208,7 +1137,7 @@
 // eslint-disable-next-line
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 
-				return true
+				return redirectPage
 			},
 
 			/**
@@ -1216,9 +1145,11 @@
 			 */
 			async beforeExit()
 			{
+				let leaveForm = true // Set to 'false' to cancel page redirect.
+
 				// Execute the "Before exit" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.beforeExit)
-				for (const trigger of triggers)
+				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
 				this.emitEvent('before-exit-form')
@@ -1228,7 +1159,7 @@
 // eslint-disable-next-line
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 
-				return true
+				return leaveForm
 			},
 
 			/**
@@ -1238,7 +1169,7 @@
 			{
 				// Execute the "After exit" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.afterExit)
-				for (const trigger of triggers)
+				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
 				this.emitEvent('after-exit-form')

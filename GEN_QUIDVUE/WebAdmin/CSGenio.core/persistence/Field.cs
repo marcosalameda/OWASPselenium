@@ -132,6 +132,11 @@ namespace CSGenio.framework
         /// </summary>
         public string PrefNDup { get; set; }
 		
+		/// <summary>
+        /// Unique suffix (The field that has this field as its unique prefix)
+        /// </summary>
+        public string SufNDup { get; set; }
+
         /// <summary>
         /// Unique message
         /// </summary>
@@ -230,16 +235,6 @@ namespace CSGenio.framework
         /// </summary>
         public bool AlignRightPad { get; set; }
 
-        /// <summary>
-        /// If this field is Ordering field
-        /// </summary>
-        public bool HasOrdering { get; set; }
-
-        public delegate void OnReorderHandler(Area area, persistence.PersistentSupport sp, int oldPossition, Quidgest.Persistence.GenericQuery.CriteriaSet condition);
-        /// <summary>
-        /// Callback invoked after neighbour re-sequencing.
-        /// </summary>
-        public OnReorderHandler OnReorder;
 
         //---------------------------------------------------------------------------------
         // For Advanced Query
@@ -282,7 +277,7 @@ namespace CSGenio.framework
                     if (Qvalue is Boolean)
                         return (bool)Qvalue == false;
                      //When a boolean field has a default value in the table (true or false), Qvalue is an int (1 or 0).
-                    else if (Convert.ToInt32(Qvalue) == 0)
+                    else if ((int)Qvalue == 0)
                         return true;
                     break;
                 case FieldFormatting.CARACTERES:

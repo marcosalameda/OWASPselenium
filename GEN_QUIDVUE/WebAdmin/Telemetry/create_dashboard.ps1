@@ -9,27 +9,19 @@ $adminPassword = "zph2lab"
 $bytes = [System.Text.Encoding]::UTF8.GetBytes("$adminUser`:$adminPassword")
 $base64Auth = [Convert]::ToBase64String($bytes)
  
-# Set headers (basic auth) 
+# Set headers
 $headers = @{
     "Content-Type"  = "application/json"
     "Authorization" = "Basic $base64Auth"
 }
 
-# Set headers (service account)
-#$headers = @{
-#    "Content-Type"  = "application/json"
-#    "Authorization" = "Bearer $adminPassword"
-#}
-
-# Fix url, just to make sure
-$grafanaApiUrl = $grafanaApiUrl.TrimEnd('/')
 
 #-----------------------------------
 # Create datasource
 #-----------------------------------
+$payload = Get-Content -Raw -Path "datasource_prometheus.json"
 
 # Send POST request to Grafana API
-$payload = Get-Content -Raw -Path "datasource_prometheus.json"
 Invoke-RestMethod -Uri "$grafanaApiUrl/api/datasources" `
                   -Method POST `
                   -Headers $headers `
@@ -37,8 +29,9 @@ Invoke-RestMethod -Uri "$grafanaApiUrl/api/datasources" `
                   -UseBasicParsing `
                   -SkipCertificateCheck  # only use this if you're connecting to a self-signed instance
 
-# Send POST request to Grafana API
 $payload = Get-Content -Raw -Path "datasource_loki.json"
+
+# Send POST request to Grafana API
 Invoke-RestMethod -Uri "$grafanaApiUrl/api/datasources" `
                   -Method POST `
                   -Headers $headers `
@@ -50,9 +43,9 @@ Invoke-RestMethod -Uri "$grafanaApiUrl/api/datasources" `
 #-----------------------------------
 # Create dashboard
 #-----------------------------------
+$payload = Get-Content -Raw -Path "dashboard_metrics.json"
 
 # Send POST request to Grafana API
-$payload = Get-Content -Raw -Path "dashboard_metrics.json"
 Invoke-RestMethod -Uri "$grafanaApiUrl/api/dashboards/db" `
                   -Method POST `
                   -Headers $headers `
@@ -60,8 +53,9 @@ Invoke-RestMethod -Uri "$grafanaApiUrl/api/dashboards/db" `
                   -UseBasicParsing `
                   -SkipCertificateCheck  # only use this if you're connecting to a self-signed instance
 				  
-# Send POST request to Grafana API
 $payload = Get-Content -Raw -Path "dashboard_logs.json"
+
+# Send POST request to Grafana API
 Invoke-RestMethod -Uri "$grafanaApiUrl/api/dashboards/db" `
                   -Method POST `
                   -Headers $headers `

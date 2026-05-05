@@ -1,7 +1,6 @@
 ﻿import { computed } from 'vue'
 
 import CustomControl from './baseControl.js'
-import ColorPickerResources from './resources/colorpickerResources.js'
 
 /**
  * Cards control
@@ -11,8 +10,6 @@ export default class ColorPickerControl extends CustomControl
 	constructor(controlContext, controlOrder)
 	{
 		super(controlContext, controlOrder)
-
-		this.texts = new ColorPickerResources(controlContext.vueContext.$getResource)
 	}
 
 	/**
@@ -27,8 +24,7 @@ export default class ColorPickerControl extends CustomControl
 			readonly: computed(() => viewMode.readonly),
 			disabled: computed(() => viewMode.readonly),
 			modelValue: computed(() => viewMode.mappedValues[0].color[0].value),
-			placeholder: viewMode.placeholder,
-			texts: this.texts
+			placeholder: viewMode.placeholder
 		}
 	}
 }

@@ -1,6 +1,5 @@
 ﻿<template>
 	<q-field
-		:id="id"
 		:readonly="readonly"
 		:disabled="disabled"
 		:size="size">
@@ -14,10 +13,11 @@
 
 		<datepicker
 			v-model="model"
+			:id="id"
 			:disabled="disabled"
 			:readonly="readonly"
 			:time-picker="isTimePicker"
-			:format="format"
+			:format="dateTimeFormat"
 			:placeholder="placeholder"
 			:text-input="textInputOptions"
 			:is24="!time12h"
@@ -29,8 +29,7 @@
 			:aria-labels="{ input: $attrs?.ariaLabel }"
 			hide-input-icon
 			clearable
-			auto-apply
-			ref="datePickerPluginEl">
+			auto-apply>
 			<template #clear-icon="{ clear }">
 				<q-button
 					class="q-date-time-picker__clear"
@@ -99,18 +98,11 @@
 			},
 
 			/**
-			 * Format
+			 * format of the control, {D : date}, {T : time}, {DT : dateTime}, {DS : dateTimeSeconds}
 			 */
 			format: {
-				type: String
-			},
-
-			/**
-			 * DateTime type (date, dateTime, dateTimeSeconds, time)
-			 */
-			dateTimeType: {
 				type: String,
-				default: 'date'
+				default: 'date' // Default format
 			},
 
 			/**
@@ -181,22 +173,11 @@
 
 		expose: [],
 
-		beforeUnmount() {
-			// bugfix - memory leak!
-			const el = this.$refs.datePickerPluginEl
-			const onScrollFn = el?.onScroll
-			if (typeof onScrollFn === 'function') {
-				const target = document.getElementById('app')
-				target?.removeEventListener('scroll', onScrollFn)
-			}
-
-		},
-
 		computed: {
 			model: {
 				get()
 				{
-					if (typeof this.modelValue === 'string' && this.dateTimeType === 'time')
+					if (typeof this.modelValue === 'string' && this.format === 'time')
 					{
 						if (this.modelValue === '')
 							return null
@@ -216,18 +197,33 @@
 			},
 
 			enableSeconds() {
-				return this.dateTimeType === 'dateTimeSeconds'
+				return this.format === 'dateTimeSeconds'
 			},
 
 			hasTimePicker() {
-				return this.dateTimeType !== 'date'
+				return this.format !== 'date'
 			},
 			isTimePicker() {
-				return this.dateTimeType === 'time'
+				return this.format === 'time'
+			},
+
+			dateTimeFormat() {
+				switch (this.format) {
+					case 'date':
+						return 'dd/MM/yyyy'
+					case 'dateTime':
+						return 'dd/MM/yyyy HH:mm'
+					case 'dateTimeSeconds':
+						return 'dd/MM/yyyy HH:mm:ss'
+					case 'time':
+						return 'HH:mm'
+					default:
+						return ''
+				}
 			},
 
 			textFormat() {
-				switch (this.dateTimeType) {
+				switch (this.format) {
 					case 'date':
 						return ['dd/MM/yyyy', 'dd-MM-yyyy', 'ddMMyyyy', 'dd.MM.yyyy']
 					case 'dateTime':
@@ -254,7 +250,7 @@
 			},
 
 			inputIcon() {
-				return this.dateTimeType === 'time' ? 'time' : 'date'
+				return this.format === 'time' ? 'time' : 'date'
 			}
 		}
 	}

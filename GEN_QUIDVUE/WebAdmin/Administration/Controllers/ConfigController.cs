@@ -15,7 +15,6 @@ using System.Data;
 using Quidgest.Persistence.GenericQuery;
 using CSGenio.core.messaging;
 using Administration.Models;
-using GenioServer.security;
 
 namespace Administration.Controllers
 {
@@ -102,12 +101,12 @@ namespace Administration.Controllers
                     //decode the username and remove the password before sending to client side
                     model.Messaging.Host.Username = model.Messaging.Host.UsernameDecode();
                     model.Messaging.Host.Password = "";
+                    model.MessagingMetadata = CSGenio.core.di.GenioDI.Messaging.Metadata;
                 }
                 else
                 {
                     model.Messaging = new MessagingXml();
                 }
-                model.MessagingMetadata = CSGenio.messaging.MessageMetadataFactory.GeneratedMetadata();
 
                 //----------------
                 // Scheduler
@@ -148,7 +147,6 @@ namespace Administration.Controllers
 
                 var decimalSeparator = HardCodedLists.DisplayNumberFormatDecimal.Dot;
                 var groupSeparator = HardCodedLists.DisplayNumberFormatGroup.None;
-				var negativeFormat = HardCodedLists.DisplayNumberFormatNegative.Minus;
                 if (conf.NumberFormat != null)
                 {
                     Enum.TryParse(conf.NumberFormat.DecimalSeparator, out decimalSeparator);
@@ -184,21 +182,6 @@ namespace Administration.Controllers
                             break;
                         default:
                             model.GroupSeparator = HardCodedLists.DisplayNumberFormatGroup.None;
-                            break;
-                    }
-
-                    Enum.TryParse(conf.NumberFormat.NegativeFormat, out negativeFormat);
-                    model.NegativeFormat = negativeFormat;
-                    switch (conf.NumberFormat.NegativeFormat)
-                    {
-                        case "-":
-                            model.NegativeFormat = HardCodedLists.DisplayNumberFormatNegative.Minus;
-                            break;
-                        case "()":
-                            model.NegativeFormat = HardCodedLists.DisplayNumberFormatNegative.Parentheses;
-                            break;
-                        default:
-                            model.NegativeFormat = HardCodedLists.DisplayNumberFormatNegative.Minus;
                             break;
                     }
                 }
@@ -244,10 +227,7 @@ namespace Administration.Controllers
                 // Event tracing feature
                 model.EventTracking = conf.EventTracking;
 
-                model.UrlAPIBackend = conf.ChatBotConfig?.APIEndpoint;
-                model.MCPSecurityMode = conf.ChatBotConfig?.MCPSecurityMode ?? MCPSecurityMode.JWT;
-                model.JWTEncryptionKey = conf.ChatBotConfig?.JWTEncryptionKey;
-                model.UrlMCP = conf.ChatBotConfig?.AppMCPEndpoint;
+                model.UrlAPIBackend = conf.ChatBotConfig?.apiURL;
             }
             catch (Exception e)
             {
@@ -302,6 +282,14 @@ namespace Administration.Controllers
                 model.ConnEncrypt = dataSystem.Schemas[0].ConnEncrypt;
                 model.ConnWithDomainUser = dataSystem.Schemas[0].ConnWithDomainUser;
 
+                //Add GQP shared system
+                var GQPSchema = dataSystem.Schemas.Find(s => s.Id == "GQP");
+                if (GQPSchema != null)
+                {
+                    model.GQP_Schema = GQPSchema.Schema;
+                    model.GQP_ConnEncrypt = GQPSchema.ConnEncrypt;
+                    model.GQP_ConnWithDomainUser = GQPSchema.ConnWithDomainUser;
+                }
                 model.HideYears = conf.omiteAnos.ToUpper() == "S";  //<-- Only this one goes to the conf? does that make sense?
                 model.DbUser = Encoding.Unicode.GetString(Convert.FromBase64String(dataSystem.Login ?? string.Empty));
                 
@@ -349,6 +337,7 @@ namespace Administration.Controllers
             model.AuthenticationMode = security.AuthenticationMode;
             model.AllowMultiSessionPerUser = security.AllowMultiSessionPerUser;
             model.AllowAuthenticationRecovery = security.AllowAuthenticationRecovery;
+			model.Activate2FA = security.Activate2FA != GenioServer.security.Auth2FAModes.None; //change this when have multiple 2FA
 			model.Mandatory2FA = security.Mandatory2FA;
             model.ExpirationDateBool = security.ExpirationDateBool;
             model.ExpirationDate = security.ExpirationDate;
@@ -565,6 +554,8 @@ namespace Administration.Controllers
                         sysConfiguration.SaveLogDatabaseConfig(model.Log_DbUser, model.Log_DbPsw, model.Log_Server, model.ServerType.ToString(), 
                             model.Log_Schema, model.Log_Port, model.ConnEncrypt, model.ConnWithDomainUser, year);                    
                     }
+                    //Configure Shared Tables
+                    SaveSharedTables(model, sysConfiguration.ReadDatabaseConfig(year));
                     model.AlertType = "success";
                     model.ResultMsg = Resources.Resources.FICHEIRO_DE_CONFIGUR18806 + " " + Resources.Resources.SERA_REDIRECIONADO_E06592;
                 }
@@ -577,6 +568,41 @@ namespace Administration.Controllers
 			return Index(model.ResultMsg, appId, model.AlertType);
         }
 
+        private void SaveSharedTables(Models.ConfigModel model, DataSystemXml db)
+        {
+            ConfigurationXML conf = configManager.GetExistingConfig();
+            DataXml res = null;
+
+            res = db.Schemas.Find(x => x.Id == "GQP");
+            if(res != null)
+            {
+                res.Schema = model.Schema;
+                res.ConnEncrypt = model.ConnEncrypt;
+                res.ConnWithDomainUser = model.ConnWithDomainUser;
+            }
+            else
+            {
+                db.Schemas.Add(new DataXml
+                {
+                    Id = "GQP",
+                    Schema = model.GQP_Schema,
+                    ConnEncrypt = model.GQP_ConnEncrypt,
+                    ConnWithDomainUser = model.GQP_ConnWithDomainUser
+                });
+            }
+
+            int indexDS = conf.DataSystems.FindIndex(confDS => confDS.Name == db.Name);
+            if (indexDS != -1)
+                conf.DataSystems[indexDS] = db;
+            else
+                conf.DataSystems.Add(db);
+
+            //Save configuration
+            configManager.StoreConfig(conf);
+
+            // Reload configuration
+            CSGenio.framework.Configuration.ReadConfiguration(conf);
+        }
 
         [HttpPost]
         public IActionResult SaveIdentityProvider([FromBody]Models.IdentityProviderCfg model)
@@ -637,21 +663,6 @@ namespace Administration.Controllers
             Models.RoleProviderCfg roleProvider = model.FormMode != "delete" ? new Models.RoleProviderCfg(security.RoleProviders[rownum]) { Rownum = rownum } : null;
 
             return Json(new { success = true, roleProvider });
-        }
-
-        [HttpPost]
-        public IActionResult SetupProviders()
-        {
-            var appId = FromQuery("appId");
-            var conf = configManager.GetExistingConfig();
-            SecurityCfgEl security = conf.GetSecurity(appId);
-            foreach (var provider in security.RoleProviders)
-            {
-                var providerInstance = SecurityFactory.ParseRoleProvider(provider);
-                if(providerInstance.HasUserDirectory)
-                    providerInstance.SetupUserDirectory();
-            }
-            return Json(new { success = true });
         }
 
         [HttpPost]
@@ -968,7 +979,8 @@ namespace Administration.Controllers
                         security.AllowAuthenticationRecovery = model.AllowAuthenticationRecovery;
                         security.AllowMultiSessionPerUser = model.AllowMultiSessionPerUser;
                         security.AuthenticationMode = model.AuthenticationMode;
-                        security.Mandatory2FA = model.Mandatory2FA;
+                        security.Activate2FA = model.Activate2FA ? GenioServer.security.Auth2FAModes.TOTP : GenioServer.security.Auth2FAModes.None;
+                        security.Mandatory2FA = model.Activate2FA && model.Mandatory2FA;
                         security.SessionTimeOut = model.SessionTimeOut;
                     }
                     //this variables will be the same for all modules
@@ -1110,10 +1122,7 @@ namespace Administration.Controllers
                 conf.DateFormat.DateTimeSeconds = model.DateFormat.dateTimeSeconds;
                 conf.DateFormat.Time = model.DateFormat.time;
 
-                conf.ChatBotConfig.APIEndpoint = model.UrlAPIBackend;
-                conf.ChatBotConfig.MCPSecurityMode = model.MCPSecurityMode;
-                conf.ChatBotConfig.JWTEncryptionKeyDecode = model.JWTEncryptionKey;
-                conf.ChatBotConfig.AppMCPEndpoint = model.UrlMCP;
+                conf.ChatBotConfig.apiURL = model.UrlAPIBackend;
 
                 conf.QAEnvironment = Convert.ToInt32(model.QAEnvironment);
 
@@ -1147,23 +1156,10 @@ namespace Administration.Controllers
                         conf.NumberFormat.GroupSeparator = "";
                         break;
                 }
-                switch (model.NegativeFormat.ToString())
-                {
-                    case "Minus":
-                        conf.NumberFormat.NegativeFormat = "-";
-                        break;
-                    case "Parentheses":
-                        conf.NumberFormat.NegativeFormat = "()";
-                        break;
-                    default:
-                        conf.NumberFormat.NegativeFormat = "-";
-                        break;
-                }
                 // check if they have the same value
                 if (model.DecimalSeparator.ToString() == model.GroupSeparator.ToString())
                     throw new BusinessException(Resources.Resources.ALGUNS_CAMPOS_ESTAO_27860, "ConfigController.reindex", Resources.Resources.ALGUNS_CAMPOS_ESTAO_27860);
 
-                conf.FillMissingConfigs();
                 configManager.StoreConfig(conf);
 
 				// Reload Configuration static instance in server with the new Configuracoes.xml data
@@ -1203,10 +1199,6 @@ namespace Administration.Controllers
 
             if (String.IsNullOrEmpty(model.Val)) { return Json(new { emptyVal = true }); }
 
-            var valueContent = model.Val;
-            if (ExtraProperties.IsPasswordType(model.Key))
-                valueContent = Convert.ToBase64String(Encoding.UTF8.GetBytes(model.Val));
-
             if (model.FormMode == "delete")
             {
                 initProp = ExtraProperties.HasDefaultValue(model.Key);
@@ -1215,12 +1207,12 @@ namespace Administration.Controllers
             }
             if (model.FormMode == "edit")
             {
-                conf.maisPropriedades[model.Key] = valueContent;
+                conf.maisPropriedades[model.Key] = model.Val;
             }
             if (model.FormMode == "new")
             {
                 if (conf.maisPropriedades.ContainsKey(model.Key)) { return Json(new { success = false }); }
-                conf.maisPropriedades.Add(model.Key, valueContent);
+                conf.maisPropriedades.Add(model.Key, model.Val);
             }
 
             configManager.StoreConfig(conf);

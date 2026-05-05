@@ -10,8 +10,8 @@ public class LeaflettForm : Form
 	/// <summary>
 	/// Registration No.
 	/// </summary>
-	public LookupControl EquipRegistnr => new LookupControl(driver, ContainerLocator, "container-LEAFLETTEQUIPREGISTNR" + IdSuffix);
-	public SeeMorePage EquipRegistnrSeeMorePage => new SeeMorePage(driver, "LEAFLETT", "LEAFLETTEQUIPREGISTNR" + IdSuffix);
+	public LookupControl EquipRegistnr => new LookupControl(driver, ContainerLocator, "container-LEAFLETTEQUIPREGISTNR");
+	public SeeMorePage EquipRegistnrSeeMorePage => new SeeMorePage(driver, "LEAFLETT", "LEAFLETTEQUIPREGISTNR");
 
 	/// <summary>
 	/// 
@@ -21,58 +21,58 @@ public class LeaflettForm : Form
 	/// <summary>
 	/// Description
 	/// </summary>
-	public BaseInputControl InstaDescript => new BaseInputControl(driver, ContainerLocator, "container-LEAFLETTINSTADESCRIPT" + IdSuffix, "#LEAFLETTINSTADESCRIPT" + IdSuffix);
+	public BaseInputControl InstaDescript => new BaseInputControl(driver, ContainerLocator, "container-LEAFLETTINSTADESCRIPT", "#LEAFLETTINSTADESCRIPT");
 
 	/// <summary>
 	/// Scheduling
 	/// </summary>
-	public BaseInputControl InstaDesignat => new BaseInputControl(driver, ContainerLocator, "container-LEAFLETTINSTADESIGNAT" + IdSuffix, "#LEAFLETTINSTADESIGNAT" + IdSuffix);
+	public BaseInputControl InstaDesignat => new BaseInputControl(driver, ContainerLocator, "container-LEAFLETTINSTADESIGNAT", "#LEAFLETTINSTADESIGNAT");
 
 	/// <summary>
 	/// Start
 	/// </summary>
-	public DateInputControl InstaDtiniage => new DateInputControl(driver, ContainerLocator, "#LEAFLETTINSTADTINIAGE" + IdSuffix, "dd/MM/yyyy HH:mm");
+	public DateInputControl InstaDtiniage => new DateInputControl(driver, ContainerLocator, "#LEAFLETTINSTADTINIAGE", "dd/MM/yyyy HH:mm");
 
 	/// <summary>
 	/// End
 	/// </summary>
-	public DateInputControl InstaDtfimage => new DateInputControl(driver, ContainerLocator, "#LEAFLETTINSTADTFIMAGE" + IdSuffix, "dd/MM/yyyy HH:mm");
+	public DateInputControl InstaDtfimage => new DateInputControl(driver, ContainerLocator, "#LEAFLETTINSTADTFIMAGE", "dd/MM/yyyy HH:mm");
 
 	/// <summary>
 	/// All day
 	/// </summary>
-	public CheckboxInputControl InstaAllday => new CheckboxInputControl(driver, ContainerLocator, "#container-LEAFLETTINSTAALLDAY__" + IdSuffix);
+	public CheckboxInputControl InstaAllday => new CheckboxInputControl(driver, ContainerLocator, "#container-LEAFLETTINSTAALLDAY__");
 
 	/// <summary>
 	/// Since
 	/// </summary>
-	public DateInputControl InstaSince => new DateInputControl(driver, ContainerLocator, "#LEAFLETTINSTASINCE___" + IdSuffix, "dd/MM/yyyy HH:mm");
+	public DateInputControl InstaSince => new DateInputControl(driver, ContainerLocator, "#LEAFLETTINSTASINCE___", "dd/MM/yyyy HH:mm");
 
 	/// <summary>
 	/// Until
 	/// </summary>
-	public DateInputControl InstaUntil => new DateInputControl(driver, ContainerLocator, "#LEAFLETTINSTAUNTIL___" + IdSuffix, "dd/MM/yyyy HH:mm");
+	public DateInputControl InstaUntil => new DateInputControl(driver, ContainerLocator, "#LEAFLETTINSTAUNTIL___", "dd/MM/yyyy HH:mm");
 
 	/// <summary>
 	/// Quantity of hours:
 	/// </summary>
-	public BaseInputControl InstaHours => new BaseInputControl(driver, ContainerLocator, "container-LEAFLETTINSTAHOURS___" + IdSuffix, "#LEAFLETTINSTAHOURS___" + IdSuffix);
+	public BaseInputControl InstaHours => new BaseInputControl(driver, ContainerLocator, "container-LEAFLETTINSTAHOURS___", "#LEAFLETTINSTAHOURS___");
 
 	/// <summary>
 	/// Price per hour:
 	/// </summary>
-	public BaseInputControl InstaPrecohor => new BaseInputControl(driver, ContainerLocator, "container-LEAFLETTINSTAPRECOHOR" + IdSuffix, "#LEAFLETTINSTAPRECOHOR" + IdSuffix);
+	public BaseInputControl InstaPrecohor => new BaseInputControl(driver, ContainerLocator, "container-LEAFLETTINSTAPRECOHOR", "#LEAFLETTINSTAPRECOHOR");
 
 	/// <summary>
 	/// Value
 	/// </summary>
-	public BaseInputControl InstaValue => new BaseInputControl(driver, ContainerLocator, "container-LEAFLETTINSTAVALUE___" + IdSuffix, "#LEAFLETTINSTAVALUE___" + IdSuffix);
+	public BaseInputControl InstaValue => new BaseInputControl(driver, ContainerLocator, "container-LEAFLETTINSTAVALUE___", "#LEAFLETTINSTAVALUE___");
 
 	/// <summary>
 	/// Geographic Coordinates
 	/// </summary>
-	public BaseInputControl InstaCoordgeo => new BaseInputControl(driver, ContainerLocator, "container-LEAFLETTINSTACOORDGEO" + IdSuffix, "#LEAFLETTINSTACOORDGEO" + IdSuffix);
+	public BaseInputControl InstaCoordgeo => new BaseInputControl(driver, ContainerLocator, "container-LEAFLETTINSTACOORDGEO", "#LEAFLETTINSTACOORDGEO");
 
-	public LeaflettForm(IWebDriver driver, FORM_MODE mode, By? containerLocator = null, bool usePkInId = false)
-		: base(driver, mode, "LEAFLETT", containerLocator: containerLocator, usePkInId: usePkInId) { }
+	public LeaflettForm(IWebDriver driver, FORM_MODE mode, By? containerLocator = null)
+		: base(driver, mode, "LEAFLETT", containerLocator: containerLocator) { }
 }

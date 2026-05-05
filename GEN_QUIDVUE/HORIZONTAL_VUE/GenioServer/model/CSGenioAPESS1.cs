@@ -1,5 +1,5 @@
 ﻿
- 
+
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -59,6 +59,7 @@ namespace CSGenio.business
 			Qfield.VisivelCav = CavVisibilityType.Nunca;
 
 			Qfield.Dupmsg = "";
+            Qfield.SufNDup = "idfuncio";
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
@@ -76,7 +77,6 @@ namespace CSGenio.business
 			Qfield.FieldSize =  85;
 			Qfield.CavDesignation = "NAME31974";
 
-            Qfield.NotNull = true;
 			Qfield.Dupmsg = "";
 			info.RegisterFieldDB(Qfield);
 
@@ -117,7 +117,6 @@ namespace CSGenio.business
 			Qfield.IntegerDigits = 6;
 			Qfield.CavDesignation = "OFFICIAL_NO_34819";
 
-            Qfield.NotNull = true;
 			Qfield.Dupmsg = "";
             Qfield.NotDup = true;
             Qfield.PrefNDup = "codempre";
@@ -405,6 +404,20 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
+			Qfield = new Field(info.Alias, "curricul", FieldType.DOCUMENT);
+			Qfield.FieldDescription = "Resume";
+			Qfield.FieldSize =  50;
+			Qfield.MQueue = false;
+			Qfield.CavDesignation = "CURRICULUM51182";
+
+			Qfield.Dupmsg = "";
+			info.RegisterFieldDB(Qfield);
+ 			Qfield = new Field(info.Alias, "curriculfk", FieldType.KEY_GUID);
+			Qfield.FieldSize = 16;
+			Qfield.FieldDescription = "Chave estrangeira para o documento";
+			info.RegisterFieldDB(Qfield);
+
+			//- - - - - - - - - - - - - - - - - - -
 			Qfield = new Field(info.Alias, "zzstate", FieldType.INTEGER);
 			Qfield.FieldDescription = "Estado da ficha";
 			info.RegisterFieldDB(Qfield);
@@ -559,6 +572,10 @@ namespace CSGenio.business
 
             // Documents in DB
             //------------------------------
+			info.DocumsForeignKeys = new List<String> {
+			 "curriculfk"
+			};
+			info.HasVersionManagment = true; //a true por omissão, quando o Qfield no genio tiver criado preencher por esse Qvalue
 
             // Historics
             //------------------------------
@@ -1034,6 +1051,28 @@ namespace CSGenio.business
 			set { insertNameValueField(FldCanexpor, value); }
 		}
 
+		/// <summary>Field : "Curriculum" Tipo: "IB" Formula:  ""</summary>
+		public static FieldRef FldCurricul { get { return m_fldCurricul; } }
+		private static FieldRef m_fldCurricul = new FieldRef("pess1", "curricul");
+
+		/// <summary>Field : "Curriculum" Tipo: "IB" Formula:  ""</summary>
+		public string ValCurricul
+		{
+			get { return (string)returnValueField(FldCurricul); }
+			set { insertNameValueField(FldCurricul, value); }
+		}
+
+		/// <summary>Field : "Curriculum FK" Tipo: "CE" Formula:  ""</summary>
+		public static FieldRef FldCurriculfk { get { return m_fldCurriculfk; } }
+		private static FieldRef m_fldCurriculfk = new FieldRef("pess1", "curriculfk");
+
+		/// <summary>Field : "Curriculum FK" Tipo: "CE" Formula:  ""</summary>
+		public string ValCurriculfk
+		{
+			get { return (string)returnValueField(FldCurriculfk); }
+			set { insertNameValueField(FldCurriculfk, value); }
+		}
+
 		/// <summary>Field : "ZZSTATE" Type: "INT" Formula:  ""</summary>
 		public static FieldRef FldZzstate { get { return m_fldZzstate; } }
 		private static FieldRef m_fldZzstate = new FieldRef("pess1", "zzstate");
@@ -1054,17 +1093,16 @@ namespace CSGenio.business
         /// <param name="key">The value of the primary key</param>
         /// <param name="user">The context of the user</param>
         /// <param name="fields">The fields to be filled in the area</param>
-		/// <param name="forUpdate">True if you are preparing to update this record, false otherwise</param>
         /// <returns>An area with the fields requests of the record read or null if the key does not exist</returns>
         /// <remarks>Persistence operations should not be used on a partially positioned register</remarks>
-        public static CSGenioApess1 search(PersistentSupport sp, string key, User user, string[] fields = null, bool forUpdate = false)
+        public static CSGenioApess1 search(PersistentSupport sp, string key, User user, string[] fields = null)
         {
 			if (string.IsNullOrEmpty(key))
 				return null;
 
 		    CSGenioApess1 area = new CSGenioApess1(user, user.CurrentModule);
 
-            if (sp.getRecord(area, key, fields, forUpdate))
+            if (sp.getRecord(area, key, fields))
                 return area;
 			return null;
         }
@@ -1124,14 +1162,14 @@ namespace CSGenio.business
 
 
 
-
-
+ 
 
 
 		// USE /[MANUAL GQT TABAUX PESS1]/
 
      
-                                       
+
+                                        
 
 	}
 }

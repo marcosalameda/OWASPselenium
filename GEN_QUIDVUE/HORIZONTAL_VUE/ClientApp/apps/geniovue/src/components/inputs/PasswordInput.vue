@@ -23,13 +23,9 @@
 			#append>
 			<q-button
 				:disabled="disabled"
-				:aria-label="showPasswordLabel"
 				@mousedown="showPassword"
 				@mouseup="hidePassword"
-				@mouseleave="hidePassword"
-				@touchstart="showPassword"
-				@touchend="hidePassword"
-				@touchcancel="hidePassword">
+				@mouseleave="hidePassword">
 				<q-icon :icon="eyeIcon" />
 			</q-button>
 		</template>
@@ -111,13 +107,6 @@
 			 * The placeholder text for the input when no value is present.
 			 */
 			placeholder: {
-				type: String,
-				default: ''
-			},
-			/**
-			 * The text for the button to show the password.
-			 */
-			showPasswordLabel: {
 				type: String,
 				default: ''
 			}

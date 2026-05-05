@@ -1,20 +1,20 @@
-﻿using CSGenio.business;
-using CSGenio.framework;
-using CSGenio.persistence;
-using GenioMVC.Helpers;
-using GenioMVC.Models.Exception;
-using GenioMVC.Models.Navigation;
+﻿using JsonIgnoreAttribute = System.Text.Json.Serialization.JsonIgnoreAttribute;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Quidgest.Persistence;
-using Quidgest.Persistence.GenericQuery;
-
 using System.Collections;
 using System.Collections.Concurrent;
 using System.Collections.Specialized;
 using System.ComponentModel.DataAnnotations;
 using System.Data;
 using System.Globalization;
-using System.Text.Json.Serialization;
+
+using CSGenio.business;
+using CSGenio.framework;
+using CSGenio.persistence;
+using GenioMVC.Helpers;
+using GenioMVC.Models.Exception;
+using GenioMVC.Models.Navigation;
+using Quidgest.Persistence;
+using Quidgest.Persistence.GenericQuery;
 
 namespace GenioMVC.ViewModels.Equip
 {
@@ -64,13 +64,12 @@ namespace GenioMVC.ViewModels.Equip
 		public string ValCodwareh { get; set; }
 
 		#endregion
-
 		/// <summary>
 		/// Title: "Photo" | Type: "IJ"
 		/// </summary>
 		[ImageThumbnailJsonConverter(30, 50)]
 		[ValidateSetAccess]
-		public GenioMVC.Models.ImageModel Pess1ValPhotogra
+		public GenioMVC.Models.ImageModel Pess1ValPhotogra 
 		{
 			get
 			{
@@ -92,7 +91,7 @@ namespace GenioMVC.ViewModels.Equip
 		/// Title: "Genre" | Type: "AC"
 		/// </summary>
 		[ValidateSetAccess]
-		public string Pess1ValGender
+		public string Pess1ValGender 
 		{
 			get
 			{
@@ -109,7 +108,7 @@ namespace GenioMVC.ViewModels.Equip
 		/// Title: "Birth" | Type: "D"
 		/// </summary>
 		[ValidateSetAccess]
-		public DateTime? Pess1ValDtnascim
+		public DateTime? Pess1ValDtnascim 
 		{
 			get
 			{
@@ -126,7 +125,7 @@ namespace GenioMVC.ViewModels.Equip
 		/// Title: "Age" | Type: "N"
 		/// </summary>
 		[ValidateSetAccess]
-		public decimal? Pess1ValIdade
+		public decimal? Pess1ValIdade 
 		{
 			get
 			{
@@ -143,7 +142,7 @@ namespace GenioMVC.ViewModels.Equip
 		/// Title: "Official No." | Type: "N"
 		/// </summary>
 		[ValidateSetAccess]
-		public decimal? Pess1ValIdfuncio
+		public decimal? Pess1ValIdfuncio 
 		{
 			get
 			{
@@ -160,7 +159,7 @@ namespace GenioMVC.ViewModels.Equip
 		/// Title: "Phone" | Type: "C"
 		/// </summary>
 		[ValidateSetAccess]
-		public string Pess1ValTelephon
+		public string Pess1ValTelephon 
 		{
 			get
 			{
@@ -177,7 +176,7 @@ namespace GenioMVC.ViewModels.Equip
 		/// Title: "Email 1" | Type: "C"
 		/// </summary>
 		[ValidateSetAccess]
-		public string Pess1ValEmail
+		public string Pess1ValEmail 
 		{
 			get
 			{
@@ -194,7 +193,7 @@ namespace GenioMVC.ViewModels.Equip
 		/// Title: "Email 2" | Type: "C"
 		/// </summary>
 		[ValidateSetAccess]
-		public string Pess1ValEmail2
+		public string Pess1ValEmail2 
 		{
 			get
 			{
@@ -212,7 +211,7 @@ namespace GenioMVC.ViewModels.Equip
 		/// </summary>
 		[ImageThumbnailJsonConverter(30, 50)]
 		[ValidateSetAccess]
-		public GenioMVC.Models.ImageModel CmpnyValLogo
+		public GenioMVC.Models.ImageModel CmpnyValLogo 
 		{
 			get
 			{
@@ -229,7 +228,7 @@ namespace GenioMVC.ViewModels.Equip
 		/// Title: "Designation" | Type: "C"
 		/// </summary>
 		[ValidateSetAccess]
-		public string CmpnyValDesignat
+		public string CmpnyValDesignat 
 		{
 			get
 			{
@@ -246,7 +245,7 @@ namespace GenioMVC.ViewModels.Equip
 		/// Title: "Acronym" | Type: "C"
 		/// </summary>
 		[ValidateSetAccess]
-		public string CmpnyValAcronym
+		public string CmpnyValAcronym 
 		{
 			get
 			{
@@ -263,7 +262,7 @@ namespace GenioMVC.ViewModels.Equip
 		/// Title: "Tax identification" | Type: "C"
 		/// </summary>
 		[ValidateSetAccess]
-		public string CmpnyValNif
+		public string CmpnyValNif 
 		{
 			get
 			{
@@ -280,7 +279,7 @@ namespace GenioMVC.ViewModels.Equip
 		/// Title: "Phone" | Type: "C"
 		/// </summary>
 		[ValidateSetAccess]
-		public string CmpnyValTelephon
+		public string CmpnyValTelephon 
 		{
 			get
 			{
@@ -297,7 +296,7 @@ namespace GenioMVC.ViewModels.Equip
 		/// Title: "Email" | Type: "C"
 		/// </summary>
 		[ValidateSetAccess]
-		public string CmpnyValEmail
+		public string CmpnyValEmail 
 		{
 			get
 			{
@@ -328,7 +327,7 @@ namespace GenioMVC.ViewModels.Equip
 		/// Title: "Code" | Type: "TF"
 		/// </summary>
 		[ValidateSetAccess]
-		public string TpequValTpequcod
+		public string TpequValTpequcod 
 		{
 			get
 			{
@@ -345,7 +344,7 @@ namespace GenioMVC.ViewModels.Equip
 		/// Title: "Maximum price" | Type: "$D"
 		/// </summary>
 		[ValidateSetAccess]
-		public decimal? TpequValPrecomax
+		public decimal? TpequValPrecomax 
 		{
 			get
 			{
@@ -362,7 +361,7 @@ namespace GenioMVC.ViewModels.Equip
 		/// Title: "Dependent on" | Type: "TP"
 		/// </summary>
 		[ValidateSetAccess]
-		public string TpequValTpequpai
+		public string TpequValTpequpai 
 		{
 			get
 			{
@@ -379,7 +378,7 @@ namespace GenioMVC.ViewModels.Equip
 		/// Title: "Level" | Type: "TN"
 		/// </summary>
 		[ValidateSetAccess]
-		public decimal TpequValNivel
+		public decimal TpequValNivel 
 		{
 			get
 			{
@@ -396,7 +395,7 @@ namespace GenioMVC.ViewModels.Equip
 		/// Title: "Background color" | Type: "C"
 		/// </summary>
 		[ValidateSetAccess]
-		public string TpequValBackcolo
+		public string TpequValBackcolo 
 		{
 			get
 			{
@@ -413,7 +412,7 @@ namespace GenioMVC.ViewModels.Equip
 		/// Title: "Letter color" | Type: "C"
 		/// </summary>
 		[ValidateSetAccess]
-		public string TpequValCorletra
+		public string TpequValCorletra 
 		{
 			get
 			{
@@ -708,7 +707,12 @@ namespace GenioMVC.ViewModels.Equip
 			}
 		}
 
-		/// <inheritdoc />
+		/// <summary>
+		/// Sets the value of a single property of the view model based on the provided table and field names.
+		/// </summary>
+		/// <param name="fullFieldName">The full field name in the format "table.field".</param>
+		/// <param name="value">The field value.</param>
+		/// <exception cref="ArgumentNullException">Thrown if <paramref name="fullFieldName"/> is null.</exception>
 		public override void SetViewModelValue(string fullFieldName, object value)
 		{
 			try
@@ -804,17 +808,6 @@ namespace GenioMVC.ViewModels.Equip
 				// Conexão deve estar aberta de fora. Podem haver formulas que utilizam funções "manuais".
 				// TODO: It needs to be analyzed whether we should disable the security of field filling here. If there is any case where the field with the block condition can only be calculated after the double calculation of the formulas.
 				MapToModel(Model);
-
-				// If it's inserting or duplicating, needs to fill the default values.
-				if (Navigation.CurrentLevel.FormMode == FormMode.New || Navigation.CurrentLevel.FormMode == FormMode.Duplicate)
-				{
-					FunctionType funcType = Navigation.CurrentLevel.FormMode == FormMode.New
-						? FunctionType.INS
-						: FunctionType.DUP;
-
-					Model.baseklass.fillValuesDefault(m_userContext.PersistentSupport, funcType);
-				}
-
 				// Preencher operações internas
 				Model.klass.fillInternalOperations(m_userContext.PersistentSupport, oldvalues);
 				MapFromModel(Model);
@@ -858,7 +851,6 @@ namespace GenioMVC.ViewModels.Equip
 
 			Load_Equigroupess1name____(qs, lazyLoad);
 			Load_Equigroutpequtipoequi(qs, lazyLoad);
-
 // USE /[MANUAL GQT VIEWMODEL_LOADPARTIAL EQUIGROU]/
 		}
 
@@ -947,7 +939,10 @@ namespace GenioMVC.ViewModels.Equip
 			// Area limit
 			equigroupess1name____DoLoad &= AddCriteriaAreaLimit(equigroupess1name____Conds, CSGenio.business.CSGenioAcmpny.FldCodempre, "cmpny", this.ValCodempre, true);
 
-			TablePess1Name = new TableDBEdit<Models.Pess1>();
+			TablePess1Name = new TableDBEdit<Models.Pess1>
+			{
+				IsLazyLoad = lazyLoad
+			};
 
 			if (lazyLoad)
 			{
@@ -965,7 +960,7 @@ namespace GenioMVC.ViewModels.Equip
 
 			if (equigroupess1name____DoLoad)
 			{
-				List<ColumnSort> sorts = [];
+				List<ColumnSort> sorts = new List<ColumnSort>();
 				ColumnSort requestedSort = GetRequestSort(TablePess1Name, "sTablePess1Name", "dTablePess1Name", qs, "pess1");
 				if (requestedSort != null)
 					sorts.Add(requestedSort);
@@ -1014,7 +1009,7 @@ namespace GenioMVC.ViewModels.Equip
 
 				TablePess1Name.SetPagination(page, numberItems, listing.HasMore, listing.GetTotal, listing.TotalRecords);
 				TablePess1Name.Query = query;
-				TablePess1Name.Elements = listing.RowsForViewModel((r) => new GenioMVC.Models.Pess1(m_userContext, r, true, _fieldsToSerialize_EQUIGROUPESS1NAME____));
+				TablePess1Name.Elements = listing.RowsForViewModel<GenioMVC.Models.Pess1>((r) => new GenioMVC.Models.Pess1(m_userContext, r, true, _fieldsToSerialize_EQUIGROUPESS1NAME____));
 
 				//created by [ MH ] at [ 14.04.2016 ] - Foi alterada a forma de retornar a key do novo registo inserido / editado no form de apoio do DBEdit.
 				//last update by [ MH ] at [ 10.05.2016 ] - Validação se key encontra-se no level atual, as chaves dos niveis anteriores devem ser ignorados.
@@ -1160,7 +1155,10 @@ namespace GenioMVC.ViewModels.Equip
 				}
 			}
 
-			TableTpequTipoequi = new TableDBEdit<Models.Tpequ>();
+			TableTpequTipoequi = new TableDBEdit<Models.Tpequ>
+			{
+				IsLazyLoad = lazyLoad
+			};
 
 			if (lazyLoad)
 			{
@@ -1175,7 +1173,7 @@ namespace GenioMVC.ViewModels.Equip
 
 			if (equigroutpequtipoequiDoLoad)
 			{
-				List<ColumnSort> sorts = [];
+				List<ColumnSort> sorts = new List<ColumnSort>();
 				ColumnSort requestedSort = GetRequestSort(TableTpequTipoequi, "sTableTpequTipoequi", "dTableTpequTipoequi", qs, "tpequ");
 				if (requestedSort != null)
 					sorts.Add(requestedSort);
@@ -1224,7 +1222,7 @@ namespace GenioMVC.ViewModels.Equip
 
 				TableTpequTipoequi.SetPagination(page, numberItems, listing.HasMore, listing.GetTotal, listing.TotalRecords);
 				TableTpequTipoequi.Query = query;
-				TableTpequTipoequi.Elements = listing.RowsForViewModel((r) => new GenioMVC.Models.Tpequ(m_userContext, r, true, _fieldsToSerialize_EQUIGROUTPEQUTIPOEQUI));
+				TableTpequTipoequi.Elements = listing.RowsForViewModel<GenioMVC.Models.Tpequ>((r) => new GenioMVC.Models.Tpequ(m_userContext, r, true, _fieldsToSerialize_EQUIGROUTPEQUTIPOEQUI));
 
 				//created by [ MH ] at [ 14.04.2016 ] - Foi alterada a forma de retornar a key do novo registo inserido / editado no form de apoio do DBEdit.
 				//last update by [ MH ] at [ 10.05.2016 ] - Validação se key encontra-se no level atual, as chaves dos niveis anteriores devem ser ignorados.

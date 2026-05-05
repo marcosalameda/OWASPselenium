@@ -50,7 +50,6 @@ export class FormControl
 		}
 		this.triggerIntervalIds = []
 		this.initialized = false
-		this.currentController = null
 	}
 
 	async init(initTabs, isEditable, initControls = true)
@@ -238,28 +237,14 @@ export class FormControl
 	 */
 	initListOnDBChangeEvent()
 	{
-		for (const tableName of this.vueContext.tableFields ?? [])
+		for (let tableName of this.vueContext.tableFields ?? [])
 		{
 			const table = this.vueContext.controls[tableName]
 			if (_isEmpty(table))
 				continue
 
 			// We give an id to the list reload method, so the listener can be correctly removed later.
-			/**
-			 * Reloads the data of the specified list.
-			 * @param {array} dirtyFields A list of dirty fields
-			 * @param {string} typeSourceForm The type of source form that originates the change event
-			 * @returns {Promise}
-			 */
-			table.reloadList = (dirtyFields, typeSourceForm) =>
-			{
-				// Pop-up forms, after closing, perform navigation through the route, so it
-				// becomes unnecessary to update the list because the entire form will already be reloaded.
-				if(typeSourceForm === 'popup')
-					return Promise.resolve(true)
-
-				return this.vueContext.reloadList(tableName, dirtyFields)
-			}
+			table.reloadList = (dirtyFields) => this.vueContext.reloadList(tableName, dirtyFields)
 			this.vueContext.internalEvents.onMany(table.internalEvents, table.reloadList)
 			eventBus.onMany(table.globalEvents, table.reloadList)
 		}
@@ -270,12 +255,12 @@ export class FormControl
 	 */
 	removeListOnDBChangeEvent()
 	{
-		for (const tableName of this.vueContext.tableFields ?? [])
+		for (let tableName of this.vueContext.tableFields ?? [])
 		{
 			const table = this.vueContext.controls[tableName]
 			if (!_isEmpty(table))
 			{
-				this.vueContext.internalEvents?.offMany(table.internalEvents, table.reloadList)
+				this.vueContext.internalEvents.offMany(table.internalEvents, table.reloadList)
 				eventBus.offMany(table.globalEvents, table.reloadList)
 			}
 		}
@@ -283,32 +268,19 @@ export class FormControl
 
 	destroy()
 	{
-		// If there's a request pending, cancel it
-		this.currentController?.abort()
-		this.currentController = null
-
 		this.clearBtns()
 
 		this.removeListOnDBChangeEvent()
 
-		if (this.vueContext.model instanceof FormViewModelBase && this.vueContext.formInfo?.type !== 'virtual')
-			this.vueContext.model.destroy()
+		if (this.vueContext.model instanceof FormViewModelBase)
+			this.vueContext.model.unbindEvents()
 
-		const controlsIds = Object.keys(this.vueContext.controls ?? {})
-		controlsIds.forEach((controlId) => {
-			if (typeof this.vueContext.controls[controlId].destroy === 'function')
-				this.vueContext.controls[controlId].destroy()
-			this.vueContext.controls[controlId] = null
-			delete this.vueContext.controls[controlId]
+		_forEach(this.vueContext.controls, (ctrl) => {
+			if (ctrl.destroy)
+				ctrl.destroy()
 		})
 
 		this.destroyTriggers()
-
-		this.vueContext.internalEvents?.removeAllListeners()
-		this.vueContext.internalEvents = null
-		this.vueContext.model = null
-		this.vueContext.controls = null
-		this.vueContext = null
 	}
 
 	destroyTriggers()

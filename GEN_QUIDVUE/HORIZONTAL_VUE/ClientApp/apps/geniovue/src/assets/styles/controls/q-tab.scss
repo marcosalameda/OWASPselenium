@@ -7,8 +7,8 @@
 			// Leave some space so the outline on focus-visible is not covered by other elements
 			// This outline can go beyond the space the element uses
 			margin-top: 0.25rem;
-			border-bottom-left-radius: 0;
-			border-bottom-right-radius: 0;
+      border-bottom-left-radius: 0;
+      border-bottom-right-radius: 0;
 
 			@if $tab-style == "line" {
 				// Remove small gap that somehow comes from the buttons using display: flex;
@@ -51,7 +51,7 @@
 			@extend a;
 			display: block;
 			padding: 0.645rem 1rem;
-			text-decoration: none !important;
+      text-decoration: none !important;
 
 			&:hover {
 				color: $on-background;
@@ -178,10 +178,6 @@
 			color: $black;
 			outline: none;
 
-			&.active {
-				color: $primary;
-			}
-
 			&:hover {
 				border-color: transparent;
 				color: $primary;
@@ -198,5 +194,4 @@
 
 .tab-group-container {
 	max-width: 100%;
-	flex: 1;
 }

@@ -1,4 +1,4 @@
-﻿/* eslint-disable @typescript-eslint/no-unused-vars */
+﻿/* eslint-disable no-unused-vars */
 import { computed, reactive, watch } from 'vue'
 import _merge from 'lodash-es/merge'
 
@@ -11,7 +11,7 @@ import netAPI from '@quidgest/clientapp/network'
 import qApi from '@/api/genio/quidgestFunctions.js'
 import qFunctions from '@/api/genio/projectFunctions.js'
 import qProjArrays from '@/api/genio/projectArrays.js'
-/* eslint-enable @typescript-eslint/no-unused-vars */
+/* eslint-enable no-unused-vars */
 
 /**
  * Represents a ViewModel class.
@@ -25,11 +25,11 @@ export default class ViewModel extends FormViewModelBase
 	 * @param {object} options - The options for the ViewModel
 	 * @param {object} values - A ViewModel instance to copy values from
 	 */
-	// eslint-disable-next-line @typescript-eslint/no-unused-vars
+	// eslint-disable-next-line no-unused-vars
 	constructor(vueContext, options, values)
 	{
 		super(vueContext, options)
-		// eslint-disable-next-line @typescript-eslint/no-unused-vars
+		// eslint-disable-next-line no-unused-vars
 		const vm = this.vueContext
 
 		// The view model metadata
@@ -37,9 +37,8 @@ export default class ViewModel extends FormViewModelBase
 			name: 'NOTIF',
 			area: 'NOTIF',
 			actions: {
-				recalculateFormulas: 'RecalculateFormulas_Notif',
-				updateFilesTickets: 'UpdateFilesTicketsNotif',
-				setFile: 'SetFileNotif'
+				recalculateFormulas: 'RecalculateFormulas_NOTIF',
+				updateFilesTickets: 'UpdateFilesTicketsNOTIF'
 			}
 		})
 
@@ -51,7 +50,7 @@ export default class ViewModel extends FormViewModelBase
 			field: 'CODNOTIF',
 			description: '',
 		}).cloneFrom(values?.ValCodnotif))
-		this.stopWatchers.push(watch(() => this.ValCodnotif.value, (newValue, oldValue) => this.onUpdate('notif.codnotif', this.ValCodnotif, newValue, oldValue)))
+		watch(() => this.ValCodnotif.value, (newValue, oldValue) => this.onUpdate('notif.codnotif', this.ValCodnotif, newValue, oldValue))
 
 		/** The used foreign keys. */
 		this.ValCodpesso = reactive(new modelFieldType.ForeignKey({
@@ -62,7 +61,7 @@ export default class ViewModel extends FormViewModelBase
 			relatedArea: 'PESS2',
 			description: computed(() => this.Resources.RECIPIENT_KEY__COMOD31618),
 		}).cloneFrom(values?.ValCodpesso))
-		this.stopWatchers.push(watch(() => this.ValCodpesso.value, (newValue, oldValue) => this.onUpdate('notif.codpesso', this.ValCodpesso, newValue, oldValue)))
+		watch(() => this.ValCodpesso.value, (newValue, oldValue) => this.onUpdate('notif.codpesso', this.ValCodpesso, newValue, oldValue))
 
 		/** The remaining form fields. */
 		this.ValNrcomoda = reactive(new modelFieldType.Number({
@@ -74,7 +73,7 @@ export default class ViewModel extends FormViewModelBase
 			decimalDigits: 0,
 			description: computed(() => this.Resources.NO__OF_THE_DADATO35934),
 		}).cloneFrom(values?.ValNrcomoda))
-		this.stopWatchers.push(watch(() => this.ValNrcomoda.value, (newValue, oldValue) => this.onUpdate('notif.nrcomoda', this.ValNrcomoda, newValue, oldValue)))
+		watch(() => this.ValNrcomoda.value, (newValue, oldValue) => this.onUpdate('notif.nrcomoda', this.ValNrcomoda, newValue, oldValue))
 
 		this.ValBegin = reactive(new modelFieldType.DateTime({
 			id: 'ValBegin',
@@ -83,7 +82,7 @@ export default class ViewModel extends FormViewModelBase
 			field: 'BEGIN',
 			description: computed(() => this.Resources.BEGINNING18124),
 		}).cloneFrom(values?.ValBegin))
-		this.stopWatchers.push(watch(() => this.ValBegin.value, (newValue, oldValue) => this.onUpdate('notif.begin', this.ValBegin, newValue, oldValue)))
+		watch(() => this.ValBegin.value, (newValue, oldValue) => this.onUpdate('notif.begin', this.ValBegin, newValue, oldValue))
 
 		this.ValEnd = reactive(new modelFieldType.DateTime({
 			id: 'ValEnd',
@@ -92,7 +91,7 @@ export default class ViewModel extends FormViewModelBase
 			field: 'END',
 			description: computed(() => this.Resources.END47577),
 		}).cloneFrom(values?.ValEnd))
-		this.stopWatchers.push(watch(() => this.ValEnd.value, (newValue, oldValue) => this.onUpdate('notif.end', this.ValEnd, newValue, oldValue)))
+		watch(() => this.ValEnd.value, (newValue, oldValue) => this.onUpdate('notif.end', this.ValEnd, newValue, oldValue))
 
 		this.ValEmail = reactive(new modelFieldType.String({
 			id: 'ValEmail',
@@ -102,7 +101,7 @@ export default class ViewModel extends FormViewModelBase
 			maxLength: 100,
 			description: computed(() => this.Resources.RECIPIENT_S_EMAIL43894),
 		}).cloneFrom(values?.ValEmail))
-		this.stopWatchers.push(watch(() => this.ValEmail.value, (newValue, oldValue) => this.onUpdate('notif.email', this.ValEmail, newValue, oldValue)))
+		watch(() => this.ValEmail.value, (newValue, oldValue) => this.onUpdate('notif.email', this.ValEmail, newValue, oldValue))
 
 		this.ValIdnotif = reactive(new modelFieldType.String({
 			id: 'ValIdnotif',
@@ -112,7 +111,7 @@ export default class ViewModel extends FormViewModelBase
 			maxLength: 50,
 			description: computed(() => this.Resources.NOTIFICATION_ID_THAT61751),
 		}).cloneFrom(values?.ValIdnotif))
-		this.stopWatchers.push(watch(() => this.ValIdnotif.value, (newValue, oldValue) => this.onUpdate('notif.idnotif', this.ValIdnotif, newValue, oldValue)))
+		watch(() => this.ValIdnotif.value, (newValue, oldValue) => this.onUpdate('notif.idnotif', this.ValIdnotif, newValue, oldValue))
 
 		this.ValIdmsg = reactive(new modelFieldType.String({
 			id: 'ValIdmsg',
@@ -122,7 +121,7 @@ export default class ViewModel extends FormViewModelBase
 			maxLength: 85,
 			description: computed(() => this.Resources.MESSAGE_ID37133),
 		}).cloneFrom(values?.ValIdmsg))
-		this.stopWatchers.push(watch(() => this.ValIdmsg.value, (newValue, oldValue) => this.onUpdate('notif.idmsg', this.ValIdmsg, newValue, oldValue)))
+		watch(() => this.ValIdmsg.value, (newValue, oldValue) => this.onUpdate('notif.idmsg', this.ValIdmsg, newValue, oldValue))
 
 		this.ValMessage = reactive(new modelFieldType.MultiLineString({
 			id: 'ValMessage',
@@ -131,7 +130,7 @@ export default class ViewModel extends FormViewModelBase
 			field: 'MESSAGE',
 			description: computed(() => this.Resources.TEXT_OF_THE_SENT_MES52307),
 		}).cloneFrom(values?.ValMessage))
-		this.stopWatchers.push(watch(() => this.ValMessage.value, (newValue, oldValue) => this.onUpdate('notif.message', this.ValMessage, newValue, oldValue)))
+		watch(() => this.ValMessage.value, (newValue, oldValue) => this.onUpdate('notif.message', this.ValMessage, newValue, oldValue))
 
 		this.ValMailerr = reactive(new modelFieldType.String({
 			id: 'ValMailerr',
@@ -141,7 +140,7 @@ export default class ViewModel extends FormViewModelBase
 			maxLength: 300,
 			description: computed(() => this.Resources.ERROR_SENDING_EMAIL53846),
 		}).cloneFrom(values?.ValMailerr))
-		this.stopWatchers.push(watch(() => this.ValMailerr.value, (newValue, oldValue) => this.onUpdate('notif.mailerr', this.ValMailerr, newValue, oldValue)))
+		watch(() => this.ValMailerr.value, (newValue, oldValue) => this.onUpdate('notif.mailerr', this.ValMailerr, newValue, oldValue))
 
 		this.ValDesignat = reactive(new modelFieldType.String({
 			id: 'ValDesignat',
@@ -151,7 +150,7 @@ export default class ViewModel extends FormViewModelBase
 			maxLength: 85,
 			description: computed(() => this.Resources.RECIPIENT65165),
 		}).cloneFrom(values?.ValDesignat))
-		this.stopWatchers.push(watch(() => this.ValDesignat.value, (newValue, oldValue) => this.onUpdate('notif.designat', this.ValDesignat, newValue, oldValue)))
+		watch(() => this.ValDesignat.value, (newValue, oldValue) => this.onUpdate('notif.designat', this.ValDesignat, newValue, oldValue))
 
 		this.ValCreatdat = reactive(new modelFieldType.Date({
 			id: 'ValCreatdat',
@@ -161,7 +160,7 @@ export default class ViewModel extends FormViewModelBase
 			isFixed: true,
 			description: computed(() => this.Resources.CREATION__DATE13180),
 		}).cloneFrom(values?.ValCreatdat))
-		this.stopWatchers.push(watch(() => this.ValCreatdat.value, (newValue, oldValue) => this.onUpdate('notif.creatdat', this.ValCreatdat, newValue, oldValue)))
+		watch(() => this.ValCreatdat.value, (newValue, oldValue) => this.onUpdate('notif.creatdat', this.ValCreatdat, newValue, oldValue))
 
 		this.ValCreatope = reactive(new modelFieldType.String({
 			id: 'ValCreatope',
@@ -172,7 +171,7 @@ export default class ViewModel extends FormViewModelBase
 			isFixed: true,
 			description: computed(() => this.Resources.CREATION__OPERATOR50535),
 		}).cloneFrom(values?.ValCreatope))
-		this.stopWatchers.push(watch(() => this.ValCreatope.value, (newValue, oldValue) => this.onUpdate('notif.creatope', this.ValCreatope, newValue, oldValue)))
+		watch(() => this.ValCreatope.value, (newValue, oldValue) => this.onUpdate('notif.creatope', this.ValCreatope, newValue, oldValue))
 
 		this.ValReturned = reactive(new modelFieldType.Boolean({
 			id: 'ValReturned',
@@ -181,7 +180,7 @@ export default class ViewModel extends FormViewModelBase
 			field: 'RETURNED',
 			description: computed(() => this.Resources.RETURNED01606),
 		}).cloneFrom(values?.ValReturned))
-		this.stopWatchers.push(watch(() => this.ValReturned.value, (newValue, oldValue) => this.onUpdate('notif.returned', this.ValReturned, newValue, oldValue)))
+		watch(() => this.ValReturned.value, (newValue, oldValue) => this.onUpdate('notif.returned', this.ValReturned, newValue, oldValue))
 
 		this.ValDtdevolu = reactive(new modelFieldType.Date({
 			id: 'ValDtdevolu',
@@ -190,7 +189,7 @@ export default class ViewModel extends FormViewModelBase
 			field: 'DTDEVOLU',
 			description: computed(() => this.Resources.RETURN32222),
 		}).cloneFrom(values?.ValDtdevolu))
-		this.stopWatchers.push(watch(() => this.ValDtdevolu.value, (newValue, oldValue) => this.onUpdate('notif.dtdevolu', this.ValDtdevolu, newValue, oldValue)))
+		watch(() => this.ValDtdevolu.value, (newValue, oldValue) => this.onUpdate('notif.dtdevolu', this.ValDtdevolu, newValue, oldValue))
 
 		this.TablePess2Name = reactive(new modelFieldType.String({
 			type: 'Lookup',
@@ -200,9 +199,8 @@ export default class ViewModel extends FormViewModelBase
 			field: 'NAME',
 			maxLength: 85,
 			description: computed(() => this.Resources.NAME31974),
-			ignoreFldSubmit: true,
 		}).cloneFrom(values?.TablePess2Name))
-		this.stopWatchers.push(watch(() => this.TablePess2Name.value, (newValue, oldValue) => this.onUpdate('pess2.name', this.TablePess2Name, newValue, oldValue)))
+		watch(() => this.TablePess2Name.value, (newValue, oldValue) => this.onUpdate('pess2.name', this.TablePess2Name, newValue, oldValue))
 	}
 
 	/**

@@ -40,7 +40,6 @@
 				size="fit-content"
 				:items="availableSystems"
 				:groups="availableSystemsGroups"
-				:aria-label="texts.systemYears"
 				@update:model-value="selectSystem">
 				<template #prepend>
 					<q-icon icon="system-choice" />
@@ -97,7 +96,7 @@
 			</div>
 
 			<div
-				v-if="(!mobileLayoutActive && $app.layout.LogonPlacement === 'in_navmenu') || !$app.layout.HeaderEnable"
+				v-if="!mobileLayoutActive && $app.layout.LogonPlacement === 'in_navmenu'"
 				class="navmenu__container">
 				<embedded-menu />
 			</div>
@@ -337,9 +336,9 @@
 			onFocusOut(event)
 			{
 				// Main navbar element
-				const navbar = this.$refs?.navbar
+				let navbar = this.$refs?.navbar
 				// Element that gets focus
-				const focusedElem = event?.relatedTarget
+				let focusedElem = event?.relatedTarget
 				// If focus goes to an element within the navbar, logically the 'focus' is on the navbar
 				if (navbar.contains(focusedElem))
 					return
@@ -348,9 +347,9 @@
 				// If double nav bar, close sub menus
 				if (this.hasDoubleNavbar)
 				{
-					for (const key in this.$refs.menuSubItem)
+					for (let key in this.$refs.menuSubItem)
 					{
-						const curMenuComponent = this.$refs?.menuSubItem[key]
+						let curMenuComponent = this.$refs?.menuSubItem[key]
 						curMenuComponent.closeMenu()
 					}
 				}

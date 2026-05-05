@@ -38,16 +38,9 @@
 									:label="btn.label"
 									:disabled="btn.disabled"
 									@click="btn.action">
-									<template v-if="btn.icon">
-										<q-badge-indicator
-											v-if="btn.badge && btn.badge.isVisible"
-											:color="btn.badge.color">
-											<q-icon v-bind="btn.icon" />
-										</q-badge-indicator>
-										<q-icon
-											v-else
-											v-bind="btn.icon" />
-									</template>
+									<q-icon
+										v-if="btn.icon"
+										v-bind="btn.icon" />
 								</q-toggle-group-item>
 							</template>
 						</q-toggle-group>
@@ -59,7 +52,7 @@
 				v-if="$app.layout.FormAnchorsPosition === 'form-header' && visibleGroups.length > 0"
 				:anchors="anchorGroups"
 				:controls="visibleControls"
-				@focus-control="focusControl" />
+				@focus-control="(...args) => focusControl(...args)" />
 		</div>
 	</teleport>
 
@@ -80,7 +73,6 @@
 						v-if="btn.isActive && btn.isVisible && btn.showInHeading"
 						:id="`heading-${btn.id}`"
 						:label="btn.text"
-						:color="btn.color"
 						:variant="btn.variant"
 						:disabled="btn.disabled"
 						:icon-pos="btn.iconPos"
@@ -94,27 +86,25 @@
 			</q-button-group>
 		</div>
 
-		<q-container
-			fluid
+		<div
+			class="form-flow"
 			data-key="FLDSTBL"
-			:data-loading="!formInitialDataLoaded || !isActiveForm">
+			:data-loading="!formInitialDataLoaded">
 			<template v-if="formControl.initialized && showFormBody">
-				<q-row v-if="controls.FLDSTBL_PSEUDNOVOGR02.isVisible || controls.FLDSTBL_PSEUDNOVOGR06.isVisible || controls.FLDSTBL_PSEUDNOVOGR01.isVisible || controls.FLDSTBL_PSEUDNOVOGR03.isVisible || controls.FLDSTBL_PSEUDNOVOGR04.isVisible || controls.FLDSTBL_PSEUDNOVOGR05.isVisible || controls.FLDSTBL_PSEUDNOVOGR07.isVisible || controls.FLDSTBL_FLDS_CREATDAT.isVisible || controls.FLDSTBL_FLDS_CREATUSE.isVisible || controls.FLDSTBL_FLDS_CREATINS.isVisible || controls.FLDSTBL_FLDS_CREATHOU.isVisible || controls.FLDSTBL_PSEUDFEECA___.isVisible">
-					<q-col
-						v-if="controls.FLDSTBL_PSEUDNOVOGR02.isVisible"
-						cols="auto">
+				<q-row-container v-show="controls.FLDSTBL_PSEUDNOVOGR02.isVisible || controls.FLDSTBL_PSEUDNOVOGR06.isVisible || controls.FLDSTBL_PSEUDNOVOGR01.isVisible || controls.FLDSTBL_PSEUDNOVOGR03.isVisible || controls.FLDSTBL_PSEUDNOVOGR04.isVisible || controls.FLDSTBL_PSEUDNOVOGR05.isVisible || controls.FLDSTBL_PSEUDNOVOGR07.isVisible || controls.FLDSTBL_FLDS_CREATDAT.isVisible || controls.FLDSTBL_FLDS_CREATUSE.isVisible || controls.FLDSTBL_FLDS_CREATINS.isVisible || controls.FLDSTBL_FLDS_CREATHOU.isVisible || controls.FLDSTBL_PSEUDFEECA___.isVisible">
+					<q-control-wrapper
+						v-show="controls.FLDSTBL_PSEUDNOVOGR02.isVisible"
+						class="${Vue.GetControlWrapperClass($controlsColumn)}">
 						<q-group-box-container
-							v-if="controls.FLDSTBL_PSEUDNOVOGR02.isVisible"
 							id="FLDSTBL_PSEUDNOVOGR02"
 							v-bind="controls.FLDSTBL_PSEUDNOVOGR02"
 							:is-visible="controls.FLDSTBL_PSEUDNOVOGR02.isVisible">
 							<!-- Start FLDSTBL_PSEUDNOVOGR02 -->
-							<q-row v-if="controls.FLDSTBL_FLDS_TXTFIELD.isVisible || controls.FLDSTBL_FLDS_DESCRIP_.isVisible">
-								<q-col
-									v-if="controls.FLDSTBL_FLDS_TXTFIELD.isVisible"
-									cols="auto">
+							<q-row-container v-show="controls.FLDSTBL_FLDS_TXTFIELD.isVisible || controls.FLDSTBL_FLDS_DESCRIP_.isVisible">
+								<q-control-wrapper
+									v-show="controls.FLDSTBL_FLDS_TXTFIELD.isVisible"
+									class="${Vue.GetControlWrapperClass($controlsColumn)}">
 									<base-input-structure
-										v-if="controls.FLDSTBL_FLDS_TXTFIELD.isVisible"
 										class="i-text"
 										v-bind="controls.FLDSTBL_FLDS_TXTFIELD"
 										v-on="controls.FLDSTBL_FLDS_TXTFIELD.handlers"
@@ -126,12 +116,11 @@
 											@blur="onBlur(controls.FLDSTBL_FLDS_TXTFIELD, model.ValTxtfield.value)"
 											@change="model.ValTxtfield.fnUpdateValueOnChange" />
 									</base-input-structure>
-								</q-col>
-								<q-col
-									v-if="controls.FLDSTBL_FLDS_DESCRIP_.isVisible"
-									cols="auto">
+								</q-control-wrapper>
+								<q-control-wrapper
+									v-show="controls.FLDSTBL_FLDS_DESCRIP_.isVisible"
+									class="${Vue.GetControlWrapperClass($controlsColumn)}">
 									<base-input-structure
-										v-if="controls.FLDSTBL_FLDS_DESCRIP_.isVisible"
 										class="i-textarea"
 										v-bind="controls.FLDSTBL_FLDS_DESCRIP_"
 										v-on="controls.FLDSTBL_FLDS_DESCRIP_.handlers"
@@ -143,26 +132,24 @@
 											v-bind="controls.FLDSTBL_FLDS_DESCRIP_.props"
 											v-on="controls.FLDSTBL_FLDS_DESCRIP_.handlers" />
 									</base-input-structure>
-								</q-col>
-							</q-row>
+								</q-control-wrapper>
+							</q-row-container>
 							<!-- End FLDSTBL_PSEUDNOVOGR02 -->
 						</q-group-box-container>
-					</q-col>
-					<q-col
-						v-if="controls.FLDSTBL_PSEUDNOVOGR06.isVisible"
-						cols="auto">
+					</q-control-wrapper>
+					<q-control-wrapper
+						v-show="controls.FLDSTBL_PSEUDNOVOGR06.isVisible"
+						class="${Vue.GetControlWrapperClass($controlsColumn)}">
 						<q-group-box-container
-							v-if="controls.FLDSTBL_PSEUDNOVOGR06.isVisible"
 							id="FLDSTBL_PSEUDNOVOGR06"
 							v-bind="controls.FLDSTBL_PSEUDNOVOGR06"
 							:is-visible="controls.FLDSTBL_PSEUDNOVOGR06.isVisible">
 							<!-- Start FLDSTBL_PSEUDNOVOGR06 -->
-							<q-row v-if="controls.FLDSTBL_FLDS_PRIMVIAG.isVisible || controls.FLDSTBL_FLDS_LOGICENU.isVisible || controls.FLDSTBL_FLDS_CLASSNUM.isVisible || controls.FLDSTBL_FLDS_RADIOB__.isVisible || controls.FLDSTBL_PSEUDFIELD002.isVisible || controls.FLDSTBL_PSEUDFIELD003.isVisible || controls.FLDSTBL_PSEUDFIELD001.isVisible">
-								<q-col
-									v-if="controls.FLDSTBL_FLDS_PRIMVIAG.isVisible"
-									cols="auto">
+							<q-row-container v-show="controls.FLDSTBL_FLDS_PRIMVIAG.isVisible || controls.FLDSTBL_FLDS_LOGICENU.isVisible || controls.FLDSTBL_FLDS_CLASSNUM.isVisible || controls.FLDSTBL_FLDS_RADIOB__.isVisible || controls.FLDSTBL_PSEUDFIELD002.isVisible || controls.FLDSTBL_PSEUDFIELD003.isVisible || controls.FLDSTBL_PSEUDFIELD001.isVisible">
+								<q-control-wrapper
+									v-show="controls.FLDSTBL_FLDS_PRIMVIAG.isVisible"
+									class="${Vue.GetControlWrapperClass($controlsColumn)}">
 									<base-input-structure
-										v-if="controls.FLDSTBL_FLDS_PRIMVIAG.isVisible"
 										class="i-checkbox"
 										v-bind="controls.FLDSTBL_FLDS_PRIMVIAG"
 										v-on="controls.FLDSTBL_FLDS_PRIMVIAG.handlers"
@@ -170,35 +157,33 @@
 										:reporting-mode-on="reportingModeCAV"
 										:suggestion-mode-on="suggestionModeOn">
 										<template #label>
-											<q-checkbox
+											<q-checkbox-input
 												v-if="controls.FLDSTBL_FLDS_PRIMVIAG.isVisible"
 												v-bind="controls.FLDSTBL_FLDS_PRIMVIAG.props"
 												v-on="controls.FLDSTBL_FLDS_PRIMVIAG.handlers" />
 										</template>
 									</base-input-structure>
-								</q-col>
-								<q-col
-									v-if="controls.FLDSTBL_FLDS_LOGICENU.isVisible"
-									cols="auto">
+								</q-control-wrapper>
+								<q-control-wrapper
+									v-show="controls.FLDSTBL_FLDS_LOGICENU.isVisible"
+									class="${Vue.GetControlWrapperClass($controlsColumn)}">
 									<base-input-structure
-										v-if="controls.FLDSTBL_FLDS_LOGICENU.isVisible"
 										class="i-text"
 										v-bind="controls.FLDSTBL_FLDS_LOGICENU"
 										v-on="controls.FLDSTBL_FLDS_LOGICENU.handlers"
 										:loading="controls.FLDSTBL_FLDS_LOGICENU.props.loading"
 										:reporting-mode-on="reportingModeCAV"
 										:suggestion-mode-on="suggestionModeOn">
-										<q-switch
+										<q-toggle-input
 											v-if="controls.FLDSTBL_FLDS_LOGICENU.isVisible"
 											v-bind="controls.FLDSTBL_FLDS_LOGICENU.props"
 											v-on="controls.FLDSTBL_FLDS_LOGICENU.handlers" />
 									</base-input-structure>
-								</q-col>
-								<q-col
-									v-if="controls.FLDSTBL_FLDS_CLASSNUM.isVisible"
-									cols="auto">
+								</q-control-wrapper>
+								<q-control-wrapper
+									v-show="controls.FLDSTBL_FLDS_CLASSNUM.isVisible"
+									class="${Vue.GetControlWrapperClass($controlsColumn)}">
 									<base-input-structure
-										v-if="controls.FLDSTBL_FLDS_CLASSNUM.isVisible"
 										class="i-text"
 										v-bind="controls.FLDSTBL_FLDS_CLASSNUM"
 										v-on="controls.FLDSTBL_FLDS_CLASSNUM.handlers"
@@ -210,12 +195,11 @@
 											v-bind="controls.FLDSTBL_FLDS_CLASSNUM.props"
 											@update:model-value="model.ValClassnum.fnUpdateValue" />
 									</base-input-structure>
-								</q-col>
-								<q-col
-									v-if="controls.FLDSTBL_FLDS_RADIOB__.isVisible"
-									cols="auto">
+								</q-control-wrapper>
+								<q-control-wrapper
+									v-show="controls.FLDSTBL_FLDS_RADIOB__.isVisible"
+									class="${Vue.GetControlWrapperClass($controlsColumn)}">
 									<base-input-structure
-										v-if="controls.FLDSTBL_FLDS_RADIOB__.isVisible"
 										class="i-radio-container"
 										v-bind="controls.FLDSTBL_FLDS_RADIOB__"
 										v-on="controls.FLDSTBL_FLDS_RADIOB__.handlers"
@@ -225,21 +209,21 @@
 										:suggestion-mode-on="suggestionModeOn">
 										<q-radio-group
 											v-if="controls.FLDSTBL_FLDS_RADIOB__.isVisible"
-											v-bind="controls.FLDSTBL_FLDS_RADIOB__.props"
-											v-on="controls.FLDSTBL_FLDS_RADIOB__.handlers">
-											<q-radio-button
-												v-for="radio in controls.FLDSTBL_FLDS_RADIOB__.items"
-												:key="radio.key"
-												:label="radio.value"
-												:value="radio.key" />
-										</q-radio-group>
+											id="FLDSTBL_FLDS_RADIOB__"
+											:model-value="model.ValRadiob.value"
+											deselect-radio
+											:label-left-side="controls.FLDSTBL_FLDS_RADIOB__.labelPosition === labelAlignment.left"
+											:number-of-columns="controls.FLDSTBL_FLDS_RADIOB__.columnNumber"
+											:is-required="controls.FLDSTBL_FLDS_RADIOB__.isRequired"
+											:readonly="controls.FLDSTBL_FLDS_RADIOB__.readonly"
+											:options-list="controls.FLDSTBL_FLDS_RADIOB__.items"
+											@update:model-value="model.ValRadiob.fnUpdateValue" />
 									</base-input-structure>
-								</q-col>
-								<q-col
-									v-if="controls.FLDSTBL_PSEUDFIELD002.isVisible"
-									cols="auto">
+								</q-control-wrapper>
+								<q-control-wrapper
+									v-show="controls.FLDSTBL_PSEUDFIELD002.isVisible"
+									class="${Vue.GetControlWrapperClass($controlsColumn)}">
 									<base-input-structure
-										v-if="controls.FLDSTBL_PSEUDFIELD002.isVisible"
 										class="i-static-text"
 										v-bind="controls.FLDSTBL_PSEUDFIELD002"
 										v-on="controls.FLDSTBL_PSEUDFIELD002.handlers"
@@ -252,12 +236,11 @@
 											:size="controls.FLDSTBL_PSEUDFIELD002.size"
 											:text="controls.FLDSTBL_PSEUDFIELD002.label" />
 									</base-input-structure>
-								</q-col>
-								<q-col
-									v-if="controls.FLDSTBL_PSEUDFIELD003.isVisible"
-									cols="auto">
+								</q-control-wrapper>
+								<q-control-wrapper
+									v-show="controls.FLDSTBL_PSEUDFIELD003.isVisible"
+									class="${Vue.GetControlWrapperClass($controlsColumn)}">
 									<base-input-structure
-										v-if="controls.FLDSTBL_PSEUDFIELD003.isVisible"
 										class="q-image"
 										v-bind="controls.FLDSTBL_PSEUDFIELD003"
 										v-on="controls.FLDSTBL_PSEUDFIELD003.handlers"
@@ -269,12 +252,11 @@
 											v-bind="controls.FLDSTBL_PSEUDFIELD003.props"
 											v-on="controls.FLDSTBL_PSEUDFIELD003.handlers" />
 									</base-input-structure>
-								</q-col>
-								<q-col
-									v-if="controls.FLDSTBL_PSEUDFIELD001.isVisible"
-									cols="auto">
+								</q-control-wrapper>
+								<q-control-wrapper
+									v-show="controls.FLDSTBL_PSEUDFIELD001.isVisible"
+									class="${Vue.GetControlWrapperClass($controlsColumn)}">
 									<base-input-structure
-										v-if="controls.FLDSTBL_PSEUDFIELD001.isVisible"
 										class="i-text"
 										v-bind="controls.FLDSTBL_PSEUDFIELD001"
 										v-on="controls.FLDSTBL_PSEUDFIELD001.handlers"
@@ -286,26 +268,24 @@
 											@blur="onBlur(controls.FLDSTBL_PSEUDFIELD001, model.PseudValField001.value)"
 											@change="model.PseudValField001.fnUpdateValueOnChange" />
 									</base-input-structure>
-								</q-col>
-							</q-row>
+								</q-control-wrapper>
+							</q-row-container>
 							<!-- End FLDSTBL_PSEUDNOVOGR06 -->
 						</q-group-box-container>
-					</q-col>
-					<q-col
-						v-if="controls.FLDSTBL_PSEUDNOVOGR01.isVisible"
-						cols="auto">
+					</q-control-wrapper>
+					<q-control-wrapper
+						v-show="controls.FLDSTBL_PSEUDNOVOGR01.isVisible"
+						class="${Vue.GetControlWrapperClass($controlsColumn)}">
 						<q-group-box-container
-							v-if="controls.FLDSTBL_PSEUDNOVOGR01.isVisible"
 							id="FLDSTBL_PSEUDNOVOGR01"
 							v-bind="controls.FLDSTBL_PSEUDNOVOGR01"
 							:is-visible="controls.FLDSTBL_PSEUDNOVOGR01.isVisible">
 							<!-- Start FLDSTBL_PSEUDNOVOGR01 -->
-							<q-row v-if="controls.FLDSTBL_FLDS_YEAR____.isVisible || controls.FLDSTBL_FLDS_TIME____.isVisible || controls.FLDSTBL_FLDS_DATE____.isVisible || controls.FLDSTBL_FLDS_DATETIME.isVisible || controls.FLDSTBL_FLDS_DATESECO.isVisible">
-								<q-col
-									v-if="controls.FLDSTBL_FLDS_YEAR____.isVisible"
-									cols="auto">
+							<q-row-container v-show="controls.FLDSTBL_FLDS_YEAR____.isVisible || controls.FLDSTBL_FLDS_TIME____.isVisible || controls.FLDSTBL_FLDS_DATE____.isVisible || controls.FLDSTBL_FLDS_DATETIME.isVisible || controls.FLDSTBL_FLDS_DATESECO.isVisible">
+								<q-control-wrapper
+									v-show="controls.FLDSTBL_FLDS_YEAR____.isVisible"
+									class="${Vue.GetControlWrapperClass($controlsColumn)}">
 									<base-input-structure
-										v-if="controls.FLDSTBL_FLDS_YEAR____.isVisible"
 										class="i-text"
 										v-bind="controls.FLDSTBL_FLDS_YEAR____"
 										v-on="controls.FLDSTBL_FLDS_YEAR____.handlers"
@@ -317,12 +297,11 @@
 											v-bind="controls.FLDSTBL_FLDS_YEAR____.props"
 											@update:model-value="model.ValYear.fnUpdateValue" />
 									</base-input-structure>
-								</q-col>
-								<q-col
-									v-if="controls.FLDSTBL_FLDS_TIME____.isVisible"
-									cols="auto">
+								</q-control-wrapper>
+								<q-control-wrapper
+									v-show="controls.FLDSTBL_FLDS_TIME____.isVisible"
+									class="${Vue.GetControlWrapperClass($controlsColumn)}">
 									<base-input-structure
-										v-if="controls.FLDSTBL_FLDS_TIME____.isVisible"
 										class="i-text"
 										v-bind="controls.FLDSTBL_FLDS_TIME____"
 										v-on="controls.FLDSTBL_FLDS_TIME____.handlers"
@@ -336,12 +315,11 @@
 											@reset-icon-click="model.ValTime.fnUpdateValue(model.ValTime.originalValue ?? new Date())"
 											@update:model-value="model.ValTime.fnUpdateValue($event ?? '')" />
 									</base-input-structure>
-								</q-col>
-								<q-col
-									v-if="controls.FLDSTBL_FLDS_DATE____.isVisible"
-									cols="auto">
+								</q-control-wrapper>
+								<q-control-wrapper
+									v-show="controls.FLDSTBL_FLDS_DATE____.isVisible"
+									class="${Vue.GetControlWrapperClass($controlsColumn)}">
 									<base-input-structure
-										v-if="controls.FLDSTBL_FLDS_DATE____.isVisible"
 										class="i-text"
 										v-bind="controls.FLDSTBL_FLDS_DATE____"
 										v-on="controls.FLDSTBL_FLDS_DATE____.handlers"
@@ -355,12 +333,11 @@
 											@reset-icon-click="model.ValDate.fnUpdateValue(model.ValDate.originalValue ?? new Date())"
 											@update:model-value="model.ValDate.fnUpdateValue($event ?? '')" />
 									</base-input-structure>
-								</q-col>
-								<q-col
-									v-if="controls.FLDSTBL_FLDS_DATETIME.isVisible"
-									cols="auto">
+								</q-control-wrapper>
+								<q-control-wrapper
+									v-show="controls.FLDSTBL_FLDS_DATETIME.isVisible"
+									class="${Vue.GetControlWrapperClass($controlsColumn)}">
 									<base-input-structure
-										v-if="controls.FLDSTBL_FLDS_DATETIME.isVisible"
 										class="i-text"
 										v-bind="controls.FLDSTBL_FLDS_DATETIME"
 										v-on="controls.FLDSTBL_FLDS_DATETIME.handlers"
@@ -374,12 +351,11 @@
 											@reset-icon-click="model.ValDatetime.fnUpdateValue(model.ValDatetime.originalValue ?? new Date())"
 											@update:model-value="model.ValDatetime.fnUpdateValue($event ?? '')" />
 									</base-input-structure>
-								</q-col>
-								<q-col
-									v-if="controls.FLDSTBL_FLDS_DATESECO.isVisible"
-									cols="auto">
+								</q-control-wrapper>
+								<q-control-wrapper
+									v-show="controls.FLDSTBL_FLDS_DATESECO.isVisible"
+									class="${Vue.GetControlWrapperClass($controlsColumn)}">
 									<base-input-structure
-										v-if="controls.FLDSTBL_FLDS_DATESECO.isVisible"
 										class="i-text"
 										v-bind="controls.FLDSTBL_FLDS_DATESECO"
 										v-on="controls.FLDSTBL_FLDS_DATESECO.handlers"
@@ -393,26 +369,24 @@
 											@reset-icon-click="model.ValDateseco.fnUpdateValue(model.ValDateseco.originalValue ?? new Date())"
 											@update:model-value="model.ValDateseco.fnUpdateValue($event ?? '')" />
 									</base-input-structure>
-								</q-col>
-							</q-row>
+								</q-control-wrapper>
+							</q-row-container>
 							<!-- End FLDSTBL_PSEUDNOVOGR01 -->
 						</q-group-box-container>
-					</q-col>
-					<q-col
-						v-if="controls.FLDSTBL_PSEUDNOVOGR03.isVisible"
-						cols="auto">
+					</q-control-wrapper>
+					<q-control-wrapper
+						v-show="controls.FLDSTBL_PSEUDNOVOGR03.isVisible"
+						class="${Vue.GetControlWrapperClass($controlsColumn)}">
 						<q-group-box-container
-							v-if="controls.FLDSTBL_PSEUDNOVOGR03.isVisible"
 							id="FLDSTBL_PSEUDNOVOGR03"
 							v-bind="controls.FLDSTBL_PSEUDNOVOGR03"
 							:is-visible="controls.FLDSTBL_PSEUDNOVOGR03.isVisible">
 							<!-- Start FLDSTBL_PSEUDNOVOGR03 -->
-							<q-row v-if="controls.FLDSTBL_FLDS_DURATION.isVisible || controls.FLDSTBL_FLDS_NPASSAGE.isVisible || controls.FLDSTBL_FLDS_PRECOBIL.isVisible || controls.FLDSTBL_FLDS_PRICE___.isVisible">
-								<q-col
-									v-if="controls.FLDSTBL_FLDS_DURATION.isVisible"
-									cols="auto">
+							<q-row-container v-show="controls.FLDSTBL_FLDS_DURATION.isVisible || controls.FLDSTBL_FLDS_NPASSAGE.isVisible || controls.FLDSTBL_FLDS_PRECOBIL.isVisible || controls.FLDSTBL_FLDS_PRICE___.isVisible">
+								<q-control-wrapper
+									v-show="controls.FLDSTBL_FLDS_DURATION.isVisible"
+									class="${Vue.GetControlWrapperClass($controlsColumn)}">
 									<base-input-structure
-										v-if="controls.FLDSTBL_FLDS_DURATION.isVisible"
 										class="i-text"
 										v-bind="controls.FLDSTBL_FLDS_DURATION"
 										v-on="controls.FLDSTBL_FLDS_DURATION.handlers"
@@ -424,12 +398,11 @@
 											v-bind="controls.FLDSTBL_FLDS_DURATION.props"
 											@update:model-value="model.ValDuration.fnUpdateValue" />
 									</base-input-structure>
-								</q-col>
-								<q-col
-									v-if="controls.FLDSTBL_FLDS_NPASSAGE.isVisible"
-									cols="auto">
+								</q-control-wrapper>
+								<q-control-wrapper
+									v-show="controls.FLDSTBL_FLDS_NPASSAGE.isVisible"
+									class="${Vue.GetControlWrapperClass($controlsColumn)}">
 									<base-input-structure
-										v-if="controls.FLDSTBL_FLDS_NPASSAGE.isVisible"
 										class="i-text"
 										v-bind="controls.FLDSTBL_FLDS_NPASSAGE"
 										v-on="controls.FLDSTBL_FLDS_NPASSAGE.handlers"
@@ -441,12 +414,11 @@
 											v-bind="controls.FLDSTBL_FLDS_NPASSAGE.props"
 											@update:model-value="model.ValNpassage.fnUpdateValue" />
 									</base-input-structure>
-								</q-col>
-								<q-col
-									v-if="controls.FLDSTBL_FLDS_PRECOBIL.isVisible"
-									cols="auto">
+								</q-control-wrapper>
+								<q-control-wrapper
+									v-show="controls.FLDSTBL_FLDS_PRECOBIL.isVisible"
+									class="${Vue.GetControlWrapperClass($controlsColumn)}">
 									<base-input-structure
-										v-if="controls.FLDSTBL_FLDS_PRECOBIL.isVisible"
 										class="i-text"
 										v-bind="controls.FLDSTBL_FLDS_PRECOBIL"
 										v-on="controls.FLDSTBL_FLDS_PRECOBIL.handlers"
@@ -458,12 +430,11 @@
 											v-bind="controls.FLDSTBL_FLDS_PRECOBIL.props"
 											@update:model-value="model.ValPrecobil.fnUpdateValue" />
 									</base-input-structure>
-								</q-col>
-								<q-col
-									v-if="controls.FLDSTBL_FLDS_PRICE___.isVisible"
-									cols="auto">
+								</q-control-wrapper>
+								<q-control-wrapper
+									v-show="controls.FLDSTBL_FLDS_PRICE___.isVisible"
+									class="${Vue.GetControlWrapperClass($controlsColumn)}">
 									<base-input-structure
-										v-if="controls.FLDSTBL_FLDS_PRICE___.isVisible"
 										class="i-text"
 										v-bind="controls.FLDSTBL_FLDS_PRICE___"
 										v-on="controls.FLDSTBL_FLDS_PRICE___.handlers"
@@ -475,26 +446,24 @@
 											v-bind="controls.FLDSTBL_FLDS_PRICE___.props"
 											@update:model-value="model.ValPrice.fnUpdateValue" />
 									</base-input-structure>
-								</q-col>
-							</q-row>
+								</q-control-wrapper>
+							</q-row-container>
 							<!-- End FLDSTBL_PSEUDNOVOGR03 -->
 						</q-group-box-container>
-					</q-col>
-					<q-col
-						v-if="controls.FLDSTBL_PSEUDNOVOGR04.isVisible"
-						cols="auto">
+					</q-control-wrapper>
+					<q-control-wrapper
+						v-show="controls.FLDSTBL_PSEUDNOVOGR04.isVisible"
+						class="${Vue.GetControlWrapperClass($controlsColumn)}">
 						<q-group-box-container
-							v-if="controls.FLDSTBL_PSEUDNOVOGR04.isVisible"
 							id="FLDSTBL_PSEUDNOVOGR04"
 							v-bind="controls.FLDSTBL_PSEUDNOVOGR04"
 							:is-visible="controls.FLDSTBL_PSEUDNOVOGR04.isVisible">
 							<!-- Start FLDSTBL_PSEUDNOVOGR04 -->
-							<q-row v-if="controls.FLDSTBL_FLDS_SSNUMBER.isVisible || controls.FLDSTBL_FLDS_ZIPFIELD.isVisible || controls.FLDSTBL_FLDS_VATNUMBR.isVisible || controls.FLDSTBL_FLDS_LICPLATE.isVisible || controls.FLDSTBL_FLDS_BANKNMBR.isVisible || controls.FLDSTBL_FLDS_EMAILFLD.isVisible || controls.FLDSTBL_FLDS_IBANFIEL.isVisible || controls.FLDSTBL_FLDS_UPPRTEXT.isVisible || controls.FLDSTBL_FLDS_NRCNTRY_.isVisible">
-								<q-col
-									v-if="controls.FLDSTBL_FLDS_SSNUMBER.isVisible"
-									cols="auto">
+							<q-row-container v-show="controls.FLDSTBL_FLDS_SSNUMBER.isVisible || controls.FLDSTBL_FLDS_ZIPFIELD.isVisible || controls.FLDSTBL_FLDS_VATNUMBR.isVisible || controls.FLDSTBL_FLDS_LICPLATE.isVisible || controls.FLDSTBL_FLDS_BANKNMBR.isVisible || controls.FLDSTBL_FLDS_EMAILFLD.isVisible || controls.FLDSTBL_FLDS_IBANFIEL.isVisible || controls.FLDSTBL_FLDS_UPPRTEXT.isVisible || controls.FLDSTBL_FLDS_NRCNTRY_.isVisible">
+								<q-control-wrapper
+									v-show="controls.FLDSTBL_FLDS_SSNUMBER.isVisible"
+									class="${Vue.GetControlWrapperClass($controlsColumn)}">
 									<base-input-structure
-										v-if="controls.FLDSTBL_FLDS_SSNUMBER.isVisible"
 										class="i-text"
 										v-bind="controls.FLDSTBL_FLDS_SSNUMBER"
 										v-on="controls.FLDSTBL_FLDS_SSNUMBER.handlers"
@@ -505,14 +474,13 @@
 											v-if="controls.FLDSTBL_FLDS_SSNUMBER.isVisible"
 											v-bind="controls.FLDSTBL_FLDS_SSNUMBER"
 											:model-value="model.ValSsnumber.value"
-											@change="model.ValSsnumber.fnUpdateValueOnChange" />
+											@update:model-value="model.ValSsnumber.fnUpdateValue" />
 									</base-input-structure>
-								</q-col>
-								<q-col
-									v-if="controls.FLDSTBL_FLDS_ZIPFIELD.isVisible"
-									cols="auto">
+								</q-control-wrapper>
+								<q-control-wrapper
+									v-show="controls.FLDSTBL_FLDS_ZIPFIELD.isVisible"
+									class="${Vue.GetControlWrapperClass($controlsColumn)}">
 									<base-input-structure
-										v-if="controls.FLDSTBL_FLDS_ZIPFIELD.isVisible"
 										class="i-text"
 										v-bind="controls.FLDSTBL_FLDS_ZIPFIELD"
 										v-on="controls.FLDSTBL_FLDS_ZIPFIELD.handlers"
@@ -523,14 +491,13 @@
 											v-if="controls.FLDSTBL_FLDS_ZIPFIELD.isVisible"
 											v-bind="controls.FLDSTBL_FLDS_ZIPFIELD"
 											:model-value="model.ValZipfield.value"
-											@change="model.ValZipfield.fnUpdateValueOnChange" />
+											@update:model-value="model.ValZipfield.fnUpdateValue" />
 									</base-input-structure>
-								</q-col>
-								<q-col
-									v-if="controls.FLDSTBL_FLDS_VATNUMBR.isVisible"
-									cols="auto">
+								</q-control-wrapper>
+								<q-control-wrapper
+									v-show="controls.FLDSTBL_FLDS_VATNUMBR.isVisible"
+									class="${Vue.GetControlWrapperClass($controlsColumn)}">
 									<base-input-structure
-										v-if="controls.FLDSTBL_FLDS_VATNUMBR.isVisible"
 										class="i-text"
 										v-bind="controls.FLDSTBL_FLDS_VATNUMBR"
 										v-on="controls.FLDSTBL_FLDS_VATNUMBR.handlers"
@@ -541,14 +508,13 @@
 											v-if="controls.FLDSTBL_FLDS_VATNUMBR.isVisible"
 											v-bind="controls.FLDSTBL_FLDS_VATNUMBR"
 											:model-value="model.ValVatnumbr.value"
-											@change="model.ValVatnumbr.fnUpdateValueOnChange" />
+											@update:model-value="model.ValVatnumbr.fnUpdateValue" />
 									</base-input-structure>
-								</q-col>
-								<q-col
-									v-if="controls.FLDSTBL_FLDS_LICPLATE.isVisible"
-									cols="auto">
+								</q-control-wrapper>
+								<q-control-wrapper
+									v-show="controls.FLDSTBL_FLDS_LICPLATE.isVisible"
+									class="${Vue.GetControlWrapperClass($controlsColumn)}">
 									<base-input-structure
-										v-if="controls.FLDSTBL_FLDS_LICPLATE.isVisible"
 										class="i-text"
 										v-bind="controls.FLDSTBL_FLDS_LICPLATE"
 										v-on="controls.FLDSTBL_FLDS_LICPLATE.handlers"
@@ -559,14 +525,13 @@
 											v-if="controls.FLDSTBL_FLDS_LICPLATE.isVisible"
 											v-bind="controls.FLDSTBL_FLDS_LICPLATE"
 											:model-value="model.ValLicplate.value"
-											@change="model.ValLicplate.fnUpdateValueOnChange" />
+											@update:model-value="model.ValLicplate.fnUpdateValue" />
 									</base-input-structure>
-								</q-col>
-								<q-col
-									v-if="controls.FLDSTBL_FLDS_BANKNMBR.isVisible"
-									cols="auto">
+								</q-control-wrapper>
+								<q-control-wrapper
+									v-show="controls.FLDSTBL_FLDS_BANKNMBR.isVisible"
+									class="${Vue.GetControlWrapperClass($controlsColumn)}">
 									<base-input-structure
-										v-if="controls.FLDSTBL_FLDS_BANKNMBR.isVisible"
 										class="i-text"
 										v-bind="controls.FLDSTBL_FLDS_BANKNMBR"
 										v-on="controls.FLDSTBL_FLDS_BANKNMBR.handlers"
@@ -577,14 +542,13 @@
 											v-if="controls.FLDSTBL_FLDS_BANKNMBR.isVisible"
 											v-bind="controls.FLDSTBL_FLDS_BANKNMBR"
 											:model-value="model.ValBanknmbr.value"
-											@change="model.ValBanknmbr.fnUpdateValueOnChange" />
+											@update:model-value="model.ValBanknmbr.fnUpdateValue" />
 									</base-input-structure>
-								</q-col>
-								<q-col
-									v-if="controls.FLDSTBL_FLDS_EMAILFLD.isVisible"
-									cols="auto">
+								</q-control-wrapper>
+								<q-control-wrapper
+									v-show="controls.FLDSTBL_FLDS_EMAILFLD.isVisible"
+									class="${Vue.GetControlWrapperClass($controlsColumn)}">
 									<base-input-structure
-										v-if="controls.FLDSTBL_FLDS_EMAILFLD.isVisible"
 										class="i-text"
 										v-bind="controls.FLDSTBL_FLDS_EMAILFLD"
 										v-on="controls.FLDSTBL_FLDS_EMAILFLD.handlers"
@@ -595,14 +559,13 @@
 											v-if="controls.FLDSTBL_FLDS_EMAILFLD.isVisible"
 											v-bind="controls.FLDSTBL_FLDS_EMAILFLD"
 											:model-value="model.ValEmailfld.value"
-											@change="model.ValEmailfld.fnUpdateValueOnChange" />
+											@update:model-value="model.ValEmailfld.fnUpdateValue" />
 									</base-input-structure>
-								</q-col>
-								<q-col
-									v-if="controls.FLDSTBL_FLDS_IBANFIEL.isVisible"
-									cols="auto">
+								</q-control-wrapper>
+								<q-control-wrapper
+									v-show="controls.FLDSTBL_FLDS_IBANFIEL.isVisible"
+									class="${Vue.GetControlWrapperClass($controlsColumn)}">
 									<base-input-structure
-										v-if="controls.FLDSTBL_FLDS_IBANFIEL.isVisible"
 										class="i-text"
 										v-bind="controls.FLDSTBL_FLDS_IBANFIEL"
 										v-on="controls.FLDSTBL_FLDS_IBANFIEL.handlers"
@@ -613,14 +576,13 @@
 											v-if="controls.FLDSTBL_FLDS_IBANFIEL.isVisible"
 											v-bind="controls.FLDSTBL_FLDS_IBANFIEL"
 											:model-value="model.ValIbanfiel.value"
-											@change="model.ValIbanfiel.fnUpdateValueOnChange" />
+											@update:model-value="model.ValIbanfiel.fnUpdateValue" />
 									</base-input-structure>
-								</q-col>
-								<q-col
-									v-if="controls.FLDSTBL_FLDS_UPPRTEXT.isVisible"
-									cols="auto">
+								</q-control-wrapper>
+								<q-control-wrapper
+									v-show="controls.FLDSTBL_FLDS_UPPRTEXT.isVisible"
+									class="${Vue.GetControlWrapperClass($controlsColumn)}">
 									<base-input-structure
-										v-if="controls.FLDSTBL_FLDS_UPPRTEXT.isVisible"
 										class="i-text"
 										v-bind="controls.FLDSTBL_FLDS_UPPRTEXT"
 										v-on="controls.FLDSTBL_FLDS_UPPRTEXT.handlers"
@@ -631,14 +593,13 @@
 											v-if="controls.FLDSTBL_FLDS_UPPRTEXT.isVisible"
 											v-bind="controls.FLDSTBL_FLDS_UPPRTEXT"
 											:model-value="model.ValUpprtext.value"
-											@change="model.ValUpprtext.fnUpdateValueOnChange" />
+											@update:model-value="model.ValUpprtext.fnUpdateValue" />
 									</base-input-structure>
-								</q-col>
-								<q-col
-									v-if="controls.FLDSTBL_FLDS_NRCNTRY_.isVisible"
-									cols="auto">
+								</q-control-wrapper>
+								<q-control-wrapper
+									v-show="controls.FLDSTBL_FLDS_NRCNTRY_.isVisible"
+									class="${Vue.GetControlWrapperClass($controlsColumn)}">
 									<base-input-structure
-										v-if="controls.FLDSTBL_FLDS_NRCNTRY_.isVisible"
 										class="i-text"
 										v-bind="controls.FLDSTBL_FLDS_NRCNTRY_"
 										v-on="controls.FLDSTBL_FLDS_NRCNTRY_.handlers"
@@ -650,26 +611,24 @@
 											v-bind="controls.FLDSTBL_FLDS_NRCNTRY_.props"
 											@update:model-value="model.ValNrcntry.fnUpdateValue" />
 									</base-input-structure>
-								</q-col>
-							</q-row>
+								</q-control-wrapper>
+							</q-row-container>
 							<!-- End FLDSTBL_PSEUDNOVOGR04 -->
 						</q-group-box-container>
-					</q-col>
-					<q-col
-						v-if="controls.FLDSTBL_PSEUDNOVOGR05.isVisible"
-						cols="auto">
+					</q-control-wrapper>
+					<q-control-wrapper
+						v-show="controls.FLDSTBL_PSEUDNOVOGR05.isVisible"
+						class="${Vue.GetControlWrapperClass($controlsColumn)}">
 						<q-group-box-container
-							v-if="controls.FLDSTBL_PSEUDNOVOGR05.isVisible"
 							id="FLDSTBL_PSEUDNOVOGR05"
 							v-bind="controls.FLDSTBL_PSEUDNOVOGR05"
 							:is-visible="controls.FLDSTBL_PSEUDNOVOGR05.isVisible">
 							<!-- Start FLDSTBL_PSEUDNOVOGR05 -->
-							<q-row v-if="controls.FLDSTBL_FLDS_PASSFLD_.isVisible || controls.FLDSTBL_FLDS_CLRPICKE.isVisible">
-								<q-col
-									v-if="controls.FLDSTBL_FLDS_PASSFLD_.isVisible"
-									cols="auto">
+							<q-row-container v-show="controls.FLDSTBL_FLDS_PASSFLD_.isVisible || controls.FLDSTBL_FLDS_CLRPICKE.isVisible">
+								<q-control-wrapper
+									v-show="controls.FLDSTBL_FLDS_PASSFLD_.isVisible"
+									class="${Vue.GetControlWrapperClass($controlsColumn)}">
 									<base-input-structure
-										v-if="controls.FLDSTBL_FLDS_PASSFLD_.isVisible"
 										class="i-text"
 										v-bind="controls.FLDSTBL_FLDS_PASSFLD_"
 										v-on="controls.FLDSTBL_FLDS_PASSFLD_.handlers"
@@ -681,12 +640,11 @@
 											@blur="onBlur(controls.FLDSTBL_FLDS_PASSFLD_, model.ValPassfld.value)"
 											@change="model.ValPassfld.fnUpdateValueOnChange" />
 									</base-input-structure>
-								</q-col>
-								<q-col
-									v-if="controls.FLDSTBL_FLDS_CLRPICKE.isVisible"
-									cols="auto">
+								</q-control-wrapper>
+								<q-control-wrapper
+									v-show="controls.FLDSTBL_FLDS_CLRPICKE.isVisible"
+									class="${Vue.GetControlWrapperClass($controlsColumn)}">
 									<base-input-structure
-										v-if="controls.FLDSTBL_FLDS_CLRPICKE.isVisible"
 										class="i-text"
 										v-bind="controls.FLDSTBL_FLDS_CLRPICKE"
 										v-on="controls.FLDSTBL_FLDS_CLRPICKE.handlers"
@@ -698,26 +656,24 @@
 											@blur="onBlur(controls.FLDSTBL_FLDS_CLRPICKE, model.ValClrpicke.value)"
 											@change="model.ValClrpicke.fnUpdateValueOnChange" />
 									</base-input-structure>
-								</q-col>
-							</q-row>
+								</q-control-wrapper>
+							</q-row-container>
 							<!-- End FLDSTBL_PSEUDNOVOGR05 -->
 						</q-group-box-container>
-					</q-col>
-					<q-col
-						v-if="controls.FLDSTBL_PSEUDNOVOGR07.isVisible"
-						cols="auto">
+					</q-control-wrapper>
+					<q-control-wrapper
+						v-show="controls.FLDSTBL_PSEUDNOVOGR07.isVisible"
+						class="${Vue.GetControlWrapperClass($controlsColumn)}">
 						<q-group-box-container
-							v-if="controls.FLDSTBL_PSEUDNOVOGR07.isVisible"
 							id="FLDSTBL_PSEUDNOVOGR07"
 							v-bind="controls.FLDSTBL_PSEUDNOVOGR07"
 							:is-visible="controls.FLDSTBL_PSEUDNOVOGR07.isVisible">
 							<!-- Start FLDSTBL_PSEUDNOVOGR07 -->
-							<q-row v-if="controls.FLDSTBL_FLDS_LOGOEXTE.isVisible || controls.FLDSTBL_FLDS_LOGO____.isVisible || controls.FLDSTBL_FLDS_ATTACH__.isVisible">
-								<q-col
-									v-if="controls.FLDSTBL_FLDS_LOGOEXTE.isVisible"
-									cols="auto">
+							<q-row-container v-show="controls.FLDSTBL_FLDS_LOGOEXTE.isVisible || controls.FLDSTBL_FLDS_LOGO____.isVisible || controls.FLDSTBL_FLDS_ATTACH__.isVisible">
+								<q-control-wrapper
+									v-show="controls.FLDSTBL_FLDS_LOGOEXTE.isVisible"
+									class="${Vue.GetControlWrapperClass($controlsColumn)}">
 									<base-input-structure
-										v-if="controls.FLDSTBL_FLDS_LOGOEXTE.isVisible"
 										class="q-image"
 										v-bind="controls.FLDSTBL_FLDS_LOGOEXTE"
 										v-on="controls.FLDSTBL_FLDS_LOGOEXTE.handlers"
@@ -729,12 +685,11 @@
 											v-bind="controls.FLDSTBL_FLDS_LOGOEXTE.props"
 											v-on="controls.FLDSTBL_FLDS_LOGOEXTE.handlers" />
 									</base-input-structure>
-								</q-col>
-								<q-col
-									v-if="controls.FLDSTBL_FLDS_LOGO____.isVisible"
-									cols="auto">
+								</q-control-wrapper>
+								<q-control-wrapper
+									v-show="controls.FLDSTBL_FLDS_LOGO____.isVisible"
+									class="${Vue.GetControlWrapperClass($controlsColumn)}">
 									<base-input-structure
-										v-if="controls.FLDSTBL_FLDS_LOGO____.isVisible"
 										class="q-image"
 										v-bind="controls.FLDSTBL_FLDS_LOGO____"
 										v-on="controls.FLDSTBL_FLDS_LOGO____.handlers"
@@ -746,12 +701,11 @@
 											v-bind="controls.FLDSTBL_FLDS_LOGO____.props"
 											v-on="controls.FLDSTBL_FLDS_LOGO____.handlers" />
 									</base-input-structure>
-								</q-col>
-								<q-col
-									v-if="controls.FLDSTBL_FLDS_ATTACH__.isVisible"
-									cols="auto">
+								</q-control-wrapper>
+								<q-control-wrapper
+									v-show="controls.FLDSTBL_FLDS_ATTACH__.isVisible"
+									class="${Vue.GetControlWrapperClass($controlsColumn)}">
 									<base-input-structure
-										v-if="controls.FLDSTBL_FLDS_ATTACH__.isVisible"
 										class="i-text"
 										v-bind="controls.FLDSTBL_FLDS_ATTACH__"
 										v-on="controls.FLDSTBL_FLDS_ATTACH__.handlers"
@@ -763,16 +717,15 @@
 											v-bind="controls.FLDSTBL_FLDS_ATTACH__.props"
 											v-on="controls.FLDSTBL_FLDS_ATTACH__.handlers" />
 									</base-input-structure>
-								</q-col>
-							</q-row>
+								</q-control-wrapper>
+							</q-row-container>
 							<!-- End FLDSTBL_PSEUDNOVOGR07 -->
 						</q-group-box-container>
-					</q-col>
-					<q-col
-						v-if="controls.FLDSTBL_FLDS_CREATDAT.isVisible"
-						cols="auto">
+					</q-control-wrapper>
+					<q-control-wrapper
+						v-show="controls.FLDSTBL_FLDS_CREATDAT.isVisible"
+						class="${Vue.GetControlWrapperClass($controlsColumn)}">
 						<base-input-structure
-							v-if="controls.FLDSTBL_FLDS_CREATDAT.isVisible"
 							class="i-text"
 							v-bind="controls.FLDSTBL_FLDS_CREATDAT"
 							v-on="controls.FLDSTBL_FLDS_CREATDAT.handlers"
@@ -786,12 +739,11 @@
 								@reset-icon-click="model.ValCreatdat.fnUpdateValue(model.ValCreatdat.originalValue ?? new Date())"
 								@update:model-value="model.ValCreatdat.fnUpdateValue($event ?? '')" />
 						</base-input-structure>
-					</q-col>
-					<q-col
-						v-if="controls.FLDSTBL_FLDS_CREATUSE.isVisible"
-						cols="auto">
+					</q-control-wrapper>
+					<q-control-wrapper
+						v-show="controls.FLDSTBL_FLDS_CREATUSE.isVisible"
+						class="${Vue.GetControlWrapperClass($controlsColumn)}">
 						<base-input-structure
-							v-if="controls.FLDSTBL_FLDS_CREATUSE.isVisible"
 							class="i-text"
 							v-bind="controls.FLDSTBL_FLDS_CREATUSE"
 							v-on="controls.FLDSTBL_FLDS_CREATUSE.handlers"
@@ -803,12 +755,11 @@
 								@blur="onBlur(controls.FLDSTBL_FLDS_CREATUSE, model.ValCreatuse.value)"
 								@change="model.ValCreatuse.fnUpdateValueOnChange" />
 						</base-input-structure>
-					</q-col>
-					<q-col
-						v-if="controls.FLDSTBL_FLDS_CREATINS.isVisible"
-						cols="auto">
+					</q-control-wrapper>
+					<q-control-wrapper
+						v-show="controls.FLDSTBL_FLDS_CREATINS.isVisible"
+						class="${Vue.GetControlWrapperClass($controlsColumn)}">
 						<base-input-structure
-							v-if="controls.FLDSTBL_FLDS_CREATINS.isVisible"
 							class="i-text"
 							v-bind="controls.FLDSTBL_FLDS_CREATINS"
 							v-on="controls.FLDSTBL_FLDS_CREATINS.handlers"
@@ -822,12 +773,11 @@
 								@reset-icon-click="model.ValCreatins.fnUpdateValue(model.ValCreatins.originalValue ?? new Date())"
 								@update:model-value="model.ValCreatins.fnUpdateValue($event ?? '')" />
 						</base-input-structure>
-					</q-col>
-					<q-col
-						v-if="controls.FLDSTBL_FLDS_CREATHOU.isVisible"
-						cols="auto">
+					</q-control-wrapper>
+					<q-control-wrapper
+						v-show="controls.FLDSTBL_FLDS_CREATHOU.isVisible"
+						class="${Vue.GetControlWrapperClass($controlsColumn)}">
 						<base-input-structure
-							v-if="controls.FLDSTBL_FLDS_CREATHOU.isVisible"
 							class="i-text"
 							v-bind="controls.FLDSTBL_FLDS_CREATHOU"
 							v-on="controls.FLDSTBL_FLDS_CREATHOU.handlers"
@@ -841,25 +791,21 @@
 								@reset-icon-click="model.ValCreathou.fnUpdateValue(model.ValCreathou.originalValue ?? new Date())"
 								@update:model-value="model.ValCreathou.fnUpdateValue($event ?? '')" />
 						</base-input-structure>
-					</q-col>
-					<q-col
-						v-if="controls.FLDSTBL_PSEUDFEECA___.isVisible"
-						cols="auto">
+					</q-control-wrapper>
+					<q-control-wrapper
+						v-show="controls.FLDSTBL_PSEUDFEECA___.isVisible"
+						class="${Vue.GetControlWrapperClass($controlsColumn)}">
 						<q-table
-							v-if="controls.FLDSTBL_PSEUDFEECA___.isVisible"
+							v-show="controls.FLDSTBL_PSEUDFEECA___.isVisible"
 							v-bind="controls.FLDSTBL_PSEUDFEECA___"
-							v-on="controls.FLDSTBL_PSEUDFEECA___.handlers">
-							<!-- USE /[MANUAL GQT CUSTOM_TABLE FLDSTBL_PSEUDFEECA___]/ -->
-						</q-table>
-						<q-table-extra-extension
-							v-if="controls.FLDSTBL_PSEUDFEECA___.isVisible"
-							:list-ctrl="controls.FLDSTBL_PSEUDFEECA___"
-							:filter-operators="controls.FLDSTBL_PSEUDFEECA___.filterOperators"
 							v-on="controls.FLDSTBL_PSEUDFEECA___.handlers" />
-					</q-col>
-				</q-row>
+						<q-table-extra-extension
+							:list-ctrl="controls.FLDSTBL_PSEUDFEECA___"
+							v-on="controls.FLDSTBL_PSEUDFEECA___.handlers" />
+					</q-control-wrapper>
+				</q-row-container>
 			</template>
-		</q-container>
+		</div>
 	</teleport>
 
 	<hr v-if="!isPopup && showFormFooter" />
@@ -868,7 +814,7 @@
 		v-if="formModalIsReady && showFormFooter"
 		:to="`#${uiContainersId.footer}`"
 		:disabled="!isPopup || isNested">
-		<q-row v-if="showFormFooter">
+		<q-row-container v-if="showFormFooter">
 			<div id="footer-action-btns">
 				<template
 					v-for="btn in formButtons"
@@ -877,7 +823,6 @@
 						v-if="btn.isActive && btn.isVisible && btn.showInFooter"
 						:id="`bottom-${btn.id}`"
 						:label="btn.text"
-						:color="btn.color"
 						:variant="btn.variant"
 						:disabled="btn.disabled"
 						:icon-pos="btn.iconPos"
@@ -889,12 +834,12 @@
 					</q-button>
 				</template>
 			</div>
-		</q-row>
+		</q-row-container>
 	</teleport>
 </template>
 
 <script>
-	/* eslint-disable @typescript-eslint/no-unused-vars */
+	/* eslint-disable no-unused-vars */
 	import { computed, defineAsyncComponent, readonly } from 'vue'
 	import { useRoute } from 'vue-router'
 
@@ -914,7 +859,7 @@
 	import qApi from '@/api/genio/quidgestFunctions.js'
 	import qFunctions from '@/api/genio/projectFunctions.js'
 	import qProjArrays from '@/api/genio/projectArrays.js'
-	/* eslint-enable @typescript-eslint/no-unused-vars */
+	/* eslint-enable no-unused-vars */
 
 	import FormViewModel from './QFormFldstblViewModel.js'
 
@@ -991,8 +936,7 @@
 					primaryKey: 'ValCodflds',
 					designation: computed(() => this.Resources.FIELD_TYPE57098),
 					identifier: '', // Unique identifier received by route (when it's nested).
-					mode: '',
-					availableAgents: [],
+					mode: ''
 				},
 
 				formButtons: {
@@ -1116,11 +1060,7 @@
 						showInFooter: true,
 						isActive: true,
 						isVisible: computed(() => vm.authData.isAllowed && vm.isEditable),
-						action: vm.saveForm,
-						badge: {
-							isVisible: computed(() => vm.model?.isDirty === true),
-							color: 'highlight'
-						}
+						action: vm.saveForm
 					},
 					confirmBtn: {
 						id: 'confirm-btn',
@@ -1264,6 +1204,7 @@
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'FLDSTBL_PSEUDNOVOGR02',
 						maxLength: 50,
+						labelId: 'label_FLDSTBL_FLDS_TXTFIELD',
 						controlLimits: [
 						],
 					}, this),
@@ -1389,23 +1330,25 @@
 						maxIntegers: 1,
 						maxDecimals: 0,
 						arrayName: 'CLASSNUM',
-						helpShortItem: '',
-						helpDetailedItem: '',
+						helpShortItem: 'None',
+						helpDetailedItem: 'None',
 						controlLimits: [
 						],
 					}, this),
-					FLDSTBL_FLDS_RADIOB__: new fieldControlClass.RadioGroupControl({
+					FLDSTBL_FLDS_RADIOB__: new fieldControlClass.ArrayStringControl({
 						modelField: 'ValRadiob',
 						valueChangeEvent: 'fieldChange:flds.radiob',
 						id: 'FLDSTBL_FLDS_RADIOB__',
 						name: 'RADIOB',
+						size: 'small',
 						label: computed(() => this.Resources.RADIO_BTN20980),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.right),
 						container: 'FLDSTBL_PSEUDNOVOGR06',
 						maxLength: 5,
+						labelId: 'label_FLDSTBL_FLDS_RADIOB__',
 						arrayName: 'RADIOBTN',
-						columns: 2,
+						columnNumber: 2,
 						controlLimits: [
 						],
 					}, this),
@@ -1443,7 +1386,7 @@
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'FLDSTBL_PSEUDNOVOGR06',
 						icon: {
-							icon: computed(() => `${this.$app.resourcesPath}pexels-polat-eyyüp-albayrak-13933341.jpg?v=3096`),
+							icon: computed(() => `${this.$app.resourcesPath}pexels-polat-eyyüp-albayrak-13933341.jpg?v=3637`),
 							type: 'img',
 						},
 						height: 500,
@@ -1470,6 +1413,7 @@
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'FLDSTBL_PSEUDNOVOGR06',
 						maxLength: 15,
+						labelId: 'label_FLDSTBL_PSEUDFIELD001',
 						controlLimits: [
 						],
 					}, this),
@@ -1531,7 +1475,7 @@
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'FLDSTBL_PSEUDNOVOGR01',
-						dateTimeType: 'time',
+						format: 'time',
 						controlLimits: [
 						],
 					}, this),
@@ -1555,7 +1499,7 @@
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'FLDSTBL_PSEUDNOVOGR01',
-						dateTimeType: 'date',
+						format: 'date',
 						controlLimits: [
 						],
 					}, this),
@@ -1579,7 +1523,7 @@
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'FLDSTBL_PSEUDNOVOGR01',
-						dateTimeType: 'dateTime',
+						format: 'dateTime',
 						controlLimits: [
 						],
 					}, this),
@@ -1603,7 +1547,7 @@
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'FLDSTBL_PSEUDNOVOGR01',
-						dateTimeType: 'dateTimeSeconds',
+						format: 'dateTimeSeconds',
 						controlLimits: [
 						],
 					}, this),
@@ -1754,6 +1698,7 @@
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'FLDSTBL_PSEUDNOVOGR04',
 						maxLength: 11,
+						labelId: 'label_FLDSTBL_FLDS_SSNUMBER',
 						controlLimits: [
 						],
 					}, this),
@@ -1778,6 +1723,7 @@
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'FLDSTBL_PSEUDNOVOGR04',
 						maxLength: 8,
+						labelId: 'label_FLDSTBL_FLDS_ZIPFIELD',
 						controlLimits: [
 						],
 					}, this),
@@ -1802,6 +1748,7 @@
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'FLDSTBL_PSEUDNOVOGR04',
 						maxLength: 9,
+						labelId: 'label_FLDSTBL_FLDS_VATNUMBR',
 						controlLimits: [
 						],
 					}, this),
@@ -1822,6 +1769,7 @@
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'FLDSTBL_PSEUDNOVOGR04',
 						maxLength: 8,
+						labelId: 'label_FLDSTBL_FLDS_LICPLATE',
 						controlLimits: [
 						],
 					}, this),
@@ -1846,6 +1794,7 @@
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'FLDSTBL_PSEUDNOVOGR04',
 						maxLength: 24,
+						labelId: 'label_FLDSTBL_FLDS_BANKNMBR',
 						controlLimits: [
 						],
 					}, this),
@@ -1870,6 +1819,7 @@
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'FLDSTBL_PSEUDNOVOGR04',
 						maxLength: 50,
+						labelId: 'label_FLDSTBL_FLDS_EMAILFLD',
 						controlLimits: [
 						],
 					}, this),
@@ -1894,6 +1844,7 @@
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'FLDSTBL_PSEUDNOVOGR04',
 						maxLength: 34,
+						labelId: 'label_FLDSTBL_FLDS_IBANFIEL',
 						controlLimits: [
 						],
 					}, this),
@@ -1918,6 +1869,7 @@
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'FLDSTBL_PSEUDNOVOGR04',
 						maxLength: 50,
+						labelId: 'label_FLDSTBL_FLDS_UPPRTEXT',
 						controlLimits: [
 						],
 					}, this),
@@ -1990,6 +1942,7 @@
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'FLDSTBL_PSEUDNOVOGR05',
 						maxLength: 50,
+						labelId: 'label_FLDSTBL_FLDS_PASSFLD_',
 						controlLimits: [
 						],
 					}, this),
@@ -2014,6 +1967,7 @@
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'FLDSTBL_PSEUDNOVOGR05',
 						maxLength: 50,
+						labelId: 'label_FLDSTBL_FLDS_CLRPICKE',
 						controlLimits: [
 						],
 					}, this),
@@ -2107,7 +2061,7 @@
 						label: computed(() => this.Resources.DAY27593),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						dateTimeType: 'date',
+						format: 'date',
 						controlLimits: [
 						],
 					}, this),
@@ -2131,6 +2085,7 @@
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						maxLength: 20,
+						labelId: 'label_FLDSTBL_FLDS_CREATUSE',
 						controlLimits: [
 						],
 					}, this),
@@ -2153,7 +2108,7 @@
 						label: computed(() => this.Resources.COMPLETE_DATE53774),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						dateTimeType: 'dateTimeSeconds',
+						format: 'dateTimeSeconds',
 						controlLimits: [
 						],
 					}, this),
@@ -2176,7 +2131,7 @@
 						label: computed(() => this.Resources.HOUR15646),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						dateTimeType: 'time',
+						format: 'time',
 						controlLimits: [
 						],
 					}, this),
@@ -2199,7 +2154,6 @@
 								field: 'DESCRIP',
 								label: computed(() => this.Resources.DESCRIPTION07383),
 								scrollData: 30,
-								export: 1,
 								pkColumn: 'ValCodflds',
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
@@ -2210,7 +2164,6 @@
 								label: computed(() => this.Resources.FEEDBACK52855),
 								dataLength: 50,
 								scrollData: 30,
-								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 						],
 						config: {
@@ -2226,7 +2179,8 @@
 							permissions: {
 							},
 							searchBarConfig: {
-								visibility: false
+								visibility: false,
+								searchOnPressEnter: true
 							},
 							filtersVisible: false,
 							allowColumnFilters: false,
@@ -2534,23 +2488,17 @@
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 		},
 
-		beforeUnmount()
-		{
-/* eslint-disable indent, vue/html-indent, vue/script-indent */
-// USE /[MANUAL GQT COMPONENT_BEFORE_UNMOUNT FLDSTBL]/
-// eslint-disable-next-line
-/* eslint-enable indent, vue/html-indent, vue/script-indent */
-		},
-
 		methods: {
 			/**
 			 * Called before form init.
 			 */
 			async beforeLoad()
 			{
+				let loadForm = true
+
 				// Execute the "Before init" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.beforeInit)
-				for (const trigger of triggers)
+				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
 				this.emitEvent('before-load-form')
@@ -2560,7 +2508,7 @@
 // eslint-disable-next-line
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 
-				return true
+				return loadForm
 			},
 
 			/**
@@ -2570,7 +2518,7 @@
 			{
 				// Execute the "After init" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.afterInit)
-				for (const trigger of triggers)
+				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
 				this.emitEvent('after-load-form')
@@ -2590,33 +2538,19 @@
 
 				// Execute the "Before apply" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.beforeApply)
-				for (const trigger of triggers)
+				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
-				const ticketsPromise = this.model.updateFilesTickets(true)
-				this.addBusy(ticketsPromise, this.Resources[hardcodedTexts.processing])
-				const canSetDocums = await ticketsPromise
+				const canSetDocums = await this.model.updateFilesTickets(true)
 
 				if (canSetDocums)
 				{
-					let results
-					const changesPromise = this.model.setDocumentChanges()
-					this.addBusy(changesPromise, this.Resources[hardcodedTexts.processing])
-					applyForm = await changesPromise
+					applyForm = await this.model.setDocumentChanges()
 
 					if (applyForm)
 					{
-						const insertsPromise = this.model.saveDocuments()
-						this.addBusy(insertsPromise, this.Resources[hardcodedTexts.processing])
-						results = await insertsPromise
+						const results = await this.model.saveDocuments()
 						applyForm = results.every((e) => e === true)
-					}
-
-					if (!changesPromise || (results && !results.every((e) => e === true)))
-					{
-						this.validationErrors = {
-							Erro: this.Resources.OCORREU_UM_ERRO_AO_T51884
-						}
 					}
 				}
 
@@ -2637,7 +2571,7 @@
 			{
 				// Execute the "After apply" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.afterApply)
-				for (const trigger of triggers)
+				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
 				this.emitEvent('after-apply-form')
@@ -2657,33 +2591,19 @@
 
 				// Execute the "Before save" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.beforeSave)
-				for (const trigger of triggers)
+				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
-				const ticketsPromise = this.model.updateFilesTickets()
-				this.addBusy(ticketsPromise, this.Resources[hardcodedTexts.processing])
-				const canSetDocums = await ticketsPromise
+				const canSetDocums = await this.model.updateFilesTickets()
 
 				if (canSetDocums)
 				{
-					let results
-					const changesPromise = this.model.setDocumentChanges()
-					this.addBusy(changesPromise, this.Resources[hardcodedTexts.processing])
-					saveForm = await changesPromise
+					saveForm = await this.model.setDocumentChanges()
 
 					if (saveForm)
 					{
-						const insertsPromise = this.model.saveDocuments()
-						this.addBusy(insertsPromise, this.Resources[hardcodedTexts.processing])
-						results = await insertsPromise
+						const results = await this.model.saveDocuments()
 						saveForm = results.every((e) => e === true)
-					}
-
-					if (!changesPromise || (results && !results.every((e) => e === true)))
-					{
-						this.validationErrors = {
-							Erro: this.Resources.OCORREU_UM_ERRO_AO_T51884
-						}
 					}
 				}
 
@@ -2702,9 +2622,11 @@
 			 */
 			async afterSave()
 			{
+				let redirectPage = true // Set to 'false' to cancel page redirect.
+
 				// Execute the "After save" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.afterSave)
-				for (const trigger of triggers)
+				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
 				this.emitEvent('after-save-form')
@@ -2714,7 +2636,7 @@
 // eslint-disable-next-line
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 
-				return true
+				return redirectPage
 			},
 
 			/**
@@ -2722,6 +2644,8 @@
 			 */
 			async beforeDel()
 			{
+				let deleteForm = true // Set to 'false' to cancel form delete.
+
 				this.emitEvent('before-delete-form')
 
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
@@ -2729,7 +2653,7 @@
 // eslint-disable-next-line
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 
-				return true
+				return deleteForm
 			},
 
 			/**
@@ -2737,6 +2661,8 @@
 			 */
 			async afterDel()
 			{
+				let redirectPage = true // Set to 'false' to cancel page redirect.
+
 				this.emitEvent('after-delete-form')
 
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
@@ -2744,7 +2670,7 @@
 // eslint-disable-next-line
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 
-				return true
+				return redirectPage
 			},
 
 			/**
@@ -2752,9 +2678,11 @@
 			 */
 			async beforeExit()
 			{
+				let leaveForm = true // Set to 'false' to cancel page redirect.
+
 				// Execute the "Before exit" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.beforeExit)
-				for (const trigger of triggers)
+				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
 				this.emitEvent('before-exit-form')
@@ -2764,7 +2692,7 @@
 // eslint-disable-next-line
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 
-				return true
+				return leaveForm
 			},
 
 			/**
@@ -2774,7 +2702,7 @@
 			{
 				// Execute the "After exit" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.afterExit)
-				for (const trigger of triggers)
+				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
 				this.emitEvent('after-exit-form')
@@ -2835,7 +2763,6 @@
 
 				this.afterControlUpdate(controlField, fieldValue)
 			},
-
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
 // USE /[MANUAL GQT FUNCTIONS_JS FLDSTBL]/
 // eslint-disable-next-line

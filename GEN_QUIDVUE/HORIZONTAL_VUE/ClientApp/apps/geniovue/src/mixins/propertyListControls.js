@@ -11,7 +11,7 @@ export class BaseProperty {
 	 */
 	constructor(options, vueContext)
 	{
-		this.getResource = vueContext.$getResource
+		this.getResource = vueContext.$getResource,
 
 		this.rowId = ''
 		this.id = ''
@@ -27,14 +27,9 @@ export class BaseProperty {
 			disabled: false,
 			readonly: false,
 			required: false
-		}
+		},
 
 		_merge(this, options)
-	}
-
-	destroy()
-	{
-		this.getResource = null
 	}
 }
 
@@ -74,12 +69,9 @@ export class BooleanProperty extends BaseProperty {
 	constructor(options, vueContext)
 	{
 		super({
-			component: 'q-switch',
+			component: 'q-toggle-input',
 			type: 'boolean',
-			defaultValue: false,
-			props: {
-				size: 'small'
-			}
+			defaultValue: false
 		}, vueContext)
 
 		_merge(this, options)
@@ -161,13 +153,6 @@ export class ArrayProperty extends BaseProperty {
 				value: computed(() => this.getResource(element.resourceId))
 			}
 		})
-	}
-
-	destroy()
-	{
-		super.destroy()
-
-		this.array.length = 0
 	}
 }
 

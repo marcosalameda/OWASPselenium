@@ -5,7 +5,7 @@
 		font-size: 1rem;
 		line-height: 1.5rem;
 		font-weight: 700;
-		text-transform: $headings-text-transform;
+		text-transform: uppercase;
 		white-space: nowrap;
 		padding: 0.5rem 0 0 0;
 		color: $secondary;
@@ -15,7 +15,7 @@
 		display: flex;
 		align-items: center;
 		gap: 0.5rem;
-		text-transform: $headings-text-transform;
+		text-transform: uppercase;
 		font-size: 0.9rem;
 		font-weight: 600;
 		color: gray;
@@ -52,7 +52,7 @@
 		&-title {
 			font-weight: 600;
 			font-size: 0.9rem;
-			text-transform: $headings-text-transform;
+			text-transform: uppercase;
 			margin-top: 1.75rem;
 			line-height: 1rem;
 		}
@@ -117,127 +117,6 @@
 				margin-right: 0.5rem;
 			}
 		}
-	}
-
-&__notes {
-		margin-top: 0.6rem !important;
-		top: unset !important;
-
-		&-icon {
-			float: left;
-			font-size: 1.3rem;
-			line-height: 1rem;
-		}
-
-		&-title {
-			font-weight: 600;
-			font-size: 0.9rem;
-			text-transform: $headings-text-transform;
-			margin-top: 1.75rem;
-			line-height: 1rem;
-		}
-
-		&-text {
-			font-weight: 400;
-			font-size: 0.9rem;
-			margin-top: 0.5rem;
-			line-height: 1rem;
-		}
-
-		&-container {
-			display: flex;
-			flex-direction: column;
-			margin-top: 0.5rem;
-			gap: 0.5rem;
-		}
-
-		&-buttoncontainer {
-			display: flex;
-			align-items: center;
-			width: 100%;
-			margin-top: 0.5rem;
-			justify-content: right;
-		}
-
-		&-counter {
-			margin-right: auto;
-			font-weight: bold;
-		}
-
-    &-empty {
-      img {
-        width: 100%;
-      }
-
-      .q-col {
-        justify-content: center;
-      }
-		}
-
-		&__list {
-			list-style-type: none;
-			margin: 0;
-			padding: 2rem 1rem;
-
-			&-header {
-				font-size: 1.25rem;
-			}
-
-			&-item {
-				line-height: 1.25rem;
-				font-weight: 600;
-				letter-spacing: 0.02rem;
-				padding: 1rem 0;
-				border-bottom: 1px solid #fff;
-				color: #fff;
-			}
-
-			&-link {
-				color: #fff !important;
-				text-decoration: none !important;
-
-				&:hover {
-					color: #0064b7 !important;
-					text-decoration: none !important;
-				}
-			}
-
-			&-icon {
-				font-size: 1.15rem;
-				margin-right: 0.5rem;
-			}
-		}
-
-    &-form {
-      background-color: #F7ED96;
-      padding: 0.5rem;
-
-      &--error {
-        color: $white;
-        background-color: $danger;
-        white-space: normal;
-        padding: 0 0.25rem;
-
-        .q-icon {
-          fill: $white;
-        }
-      }
-
-      .q-field {
-        background-color: white;
-      }
-    }
-
-    &-field {
-      &--error {
-        color: $danger;
-        font-size: 0.85rem;
-
-        .q-icon {
-          fill: $danger;
-        }
-      }
-    }
 	}
 
 	&--container {
@@ -468,7 +347,7 @@
 			font-size: 0.95rem;
 			line-height: 1;
 			font-weight: 700;
-			text-transform: $headings-text-transform;
+			text-transform: uppercase;
 			white-space: nowrap;
 		}
 
@@ -733,5 +612,5 @@ ul.nav-treeview li.n-sidebar__nav-item a.n-sidebar__nav-link p {
 }
 
 #chatbot-tab {
-	height: 100%;
+	height: calc(100% - var(--visible-header-height) * 0.4px);
 }

@@ -10,8 +10,8 @@ public class Wid_grapForm : Form
 	/// <summary>
 	/// Company's people count
 	/// </summary>
-	public ListControl PseudField001 => new ListControl(driver, ContainerLocator, "#WID_GRAPPSEUDFIELD001" + IdSuffix);
+	public ListControl PseudField001 => new ListControl(driver, ContainerLocator, "#WID_GRAPPSEUDFIELD001");
 
-	public Wid_grapForm(IWebDriver driver, FORM_MODE mode, By? containerLocator = null, bool usePkInId = false)
-		: base(driver, mode, "WID_GRAP", containerLocator: containerLocator, usePkInId: usePkInId) { }
+	public Wid_grapForm(IWebDriver driver, FORM_MODE mode, By? containerLocator = null)
+		: base(driver, mode, "WID_GRAP", containerLocator: containerLocator) { }
 }

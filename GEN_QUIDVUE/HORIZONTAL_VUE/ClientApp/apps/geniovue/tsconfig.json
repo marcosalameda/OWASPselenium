@@ -23,12 +23,10 @@
   },
   "include": [
     ".storybook/*",
-    "build",
-    "plugins",
     "src/**/*",
     "src/**/*.vue",
     "src/assets/config/Layoutconfig.json",
-    "tests/**/*",
+    "test",
     "svgstore.config.ts"
   ],
   "exclude": []

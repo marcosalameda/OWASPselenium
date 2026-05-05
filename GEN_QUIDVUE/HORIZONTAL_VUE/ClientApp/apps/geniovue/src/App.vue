@@ -11,9 +11,7 @@
 				:resources-path="$app.resourcesPath" />
 
 			<template v-if="progressBar.isVisible">
-				<teleport
-					defer
-					:to="`#${progressBar.containerId}-body`">
+				<teleport :to="`#${progressBar.containerId}-body`">
 					<q-progress
 						v-bind="progressBar.props"
 						v-on="progressBar.handlers" />
@@ -21,7 +19,6 @@
 
 				<teleport
 					v-if="progressBar.modalProps.buttons?.length > 0"
-					defer
 					:to="`#${progressBar.containerId}-footer`">
 					<template
 						v-for="btn in progressBar.modalProps.buttons"
@@ -121,14 +118,14 @@
 		</template>
 	</q-layout>
 
-	<q-dialog
+	<q-modal-container
 		v-for="modal in modals"
 		:key="modal.id"
-		:model-value="modal.isActive"
+		v-bind="modal"
 		:id="`q-modal-${modal.id}`"
-		v-bind="modal.props"
-		@update:model-value="(val) => onModalUpdateModelValue(modal, val)">
-		<template #[`header.append`]>
+		@dismiss="closeModal(modal)"
+		@is-ready="warnModalIsReady(modal)">
+		<template #header>
 			<div :id="`q-modal-${modal.id}-header`" />
 		</template>
 
@@ -139,12 +136,10 @@
 			<div :id="`q-modal-${modal.id}-body`" />
 		</template>
 
-		<template #[`footer.append`]>
+		<template #footer>
 			<div :id="`q-modal-${modal.id}-footer`" />
 		</template>
-	</q-dialog>
-
-	<q-dialog-provider />
+	</q-modal-container>
 
 	<q-suggestions
 		v-if="!isEmpty(suggestionsPopupData.component)"
@@ -276,9 +271,25 @@
 			this.$eventHub.on('navigation-id-change', this.updateNavigationId)
 
 			// Listens for requests of full quality images.
-			this.$eventHub.on('image-request', this.onImageRequest)
+			this.$eventHub.on(
+				'image-request',
+				({ baseArea, params, callback }) => {
+					netAPI.retrieveImage(
+						baseArea,
+						params,
+						(data) => {
+							if (callback)
+								callback(data)
+						})
+				})
 
-			this.$eventHub.on('show-suggestion-popup', this.onShowSuggestionPopup)
+			this.$eventHub.on(
+				'show-suggestion-popup',
+				(component, params) => {
+					this.suggestionsPopupData.component = component
+					this.suggestionsPopupData.params = params
+					this.suggestionsKey++
+				})
 
 			if (this.isEventTracingActive)
 				document.addEventListener('keydown', this.handleKeyPress)
@@ -299,8 +310,8 @@
 			this.$eventHub.off('open-external-app')
 			this.$eventHub.off('closed-external-app')
 			this.$eventHub.off('navigation-id-change', this.updateNavigationId)
-			this.$eventHub.off('image-request', this.onImageRequest)
-			this.$eventHub.off('show-suggestion-popup', this.onShowSuggestionPopup)
+			this.$eventHub.off('image-request')
+			this.$eventHub.off('show-suggestion-popup')
 
 			this.mainAppLoadMonitor.destroy()
 			this.menuLoadMonitor.destroy()
@@ -403,23 +414,6 @@
 				'setFullScreenPage'
 			]),
 
-			onShowSuggestionPopup(component, params)
-			{
-				this.suggestionsPopupData.component = component
-				this.suggestionsPopupData.params = params
-				this.suggestionsKey++
-			},
-
-			onImageRequest({ baseArea, params, callback }) {
-				netAPI.retrieveImage(
-					baseArea,
-					params,
-					(data) => {
-						if (callback)
-							callback(data)
-					})
-			},
-
 			/**
 			 * Changes the state of the cookies.
 			 * @param {boolean} isVisible Value to change
@@ -511,15 +505,10 @@
 			 */
 			closeModal(modal)
 			{
-				let dismiss = true
-
 				if (typeof modal.dismissAction === 'function')
-					dismiss = modal.dismissAction()
+					modal.dismissAction()
 
-				// If the modal is not from a route, remove it
-				// If the modal is from a route, it will be removed when the route changes
-				if (!modal.hasRoute && dismiss !== false)
-					removeModal(modal.id)
+				removeModal(modal.id)
 			},
 
 			/**
@@ -529,19 +518,6 @@
 			warnModalIsReady(modal)
 			{
 				this.$eventHub.emit('modal-is-ready', modal.id)
-			},
-
-			/**
-			 * Called when the modal's model value is updated.
-			 * @param {object} modal The modal to close
-			 * @param {object} modelValue The model value for whether the modal is visible
-			 */
-			onModalUpdateModelValue(modal, modelValue)
-			{
-				if (modelValue)
-					this.warnModalIsReady(modal)
-				else
-					this.closeModal(modal)
 			},
 
 			/**
@@ -651,7 +627,7 @@
 
 				if (to.name !== from.name || !this.showContent)
 				{
-					if (to.meta.isPopup)
+					if (to.params.isPopup === 'true')
 					{
 						this.showInfoMessagesInPopup = true
 
@@ -694,7 +670,7 @@
 						else
 						{
 							// If it is already used as a background, there is no need to update it.
-							if (from.meta.isPopup !== true && this.displayRoute?.name !== from.name)
+							if (from.params.isPopup !== 'true' && this.displayRoute?.name !== from.name)
 								this.displayRoute = shallowRef(from)
 							this.hasPopup = true
 						}

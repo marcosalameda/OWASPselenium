@@ -3,23 +3,20 @@
 		v-if="menuModalIsReady"
 		:to="`#${uiContainersId.body}`"
 		:disabled="!menuInfo.isPopup">
-		<div
+		<form
 			class="form-horizontal"
 			@submit.prevent>
 			<q-row-container>
 				<q-table
 					v-bind="controls.menu"
 					v-on="controls.menu.handlers">
-					<template #header>
-						<q-table-config
-							:table-ctrl="controls.menu"
-							v-on="controls.menu.handlers">
-						</q-table-config>
-					</template>
-					<!-- USE /[MANUAL GQT CUSTOM_TABLE STY_Menu_361]/ -->
 				</q-table>
+
+				<q-table-extra-extension
+					:list-ctrl="controls.menu"
+					v-on="controls.menu.handlers" />
 			</q-row-container>
-		</div>
+		</form>
 	</teleport>
 
 	<teleport
@@ -51,7 +48,7 @@
 </template>
 
 <script>
-	/* eslint-disable @typescript-eslint/no-unused-vars */
+	/* eslint-disable no-unused-vars */
 	import asyncProcM from '@quidgest/clientapp/composables/async'
 	import qEnums from '@quidgest/clientapp/constants/enums'
 	import netAPI from '@quidgest/clientapp/network'
@@ -71,7 +68,7 @@
 	import qApi from '@/api/genio/quidgestFunctions.js'
 	import qFunctions from '@/api/genio/projectFunctions.js'
 	import qProjArrays from '@/api/genio/projectArrays.js'
-	/* eslint-enable @typescript-eslint/no-unused-vars */
+	/* eslint-enable no-unused-vars */
 
 	import MenuViewModel from './QMenuSTY_361ViewModel.js'
 
@@ -156,7 +153,6 @@
 								scrollData: 9,
 								maxDigits: 9,
 								decimalPlaces: 0,
-								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 2,
@@ -166,7 +162,6 @@
 								label: computed(() => this.Resources.TEXT_FIELD41810),
 								dataLength: 50,
 								scrollData: 30,
-								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 3,
@@ -175,7 +170,6 @@
 								field: 'BUTTNGRO',
 								dataLength: 50,
 								scrollData: 30,
-								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 4,
@@ -185,7 +179,6 @@
 								label: computed(() => this.Resources.PROFILE65433),
 								dataLength: 50,
 								scrollData: 30,
-								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 5,
@@ -195,7 +188,6 @@
 								label: computed(() => this.Resources.NAME31974),
 								dataLength: 50,
 								scrollData: 30,
-								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 6,
@@ -205,7 +197,6 @@
 								label: computed(() => this.Resources.LAST_NAME63426),
 								dataLength: 50,
 								scrollData: 30,
-								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.ArrayColumn({
 								order: 7,
@@ -215,8 +206,8 @@
 								label: computed(() => this.Resources.ADDRESS_TYPE64627),
 								dataLength: 8,
 								scrollData: 8,
-								export: 1,
-								array: computed(() => new qProjArrays.QArrayAddresst(vm.$getResource).elements),
+								array: computed(() => qProjArrays.QArrayAddresst.setResources(vm.$getResource).elements),
+								arrayType: qProjArrays.QArrayAddresst.type,
 								arrayDisplayMode: 'D',
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.ArrayColumn({
@@ -227,8 +218,8 @@
 								label: computed(() => this.Resources.PREFIX02493),
 								dataLength: 3,
 								scrollData: 3,
-								export: 1,
-								array: computed(() => new qProjArrays.QArrayPhonepre(vm.$getResource).elements),
+								array: computed(() => qProjArrays.QArrayPhonepre.setResources(vm.$getResource).elements),
+								arrayType: qProjArrays.QArrayPhonepre.type,
 								arrayDisplayMode: 'D',
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.NumericColumn({
@@ -240,7 +231,6 @@
 								scrollData: 15,
 								maxDigits: 15,
 								decimalPlaces: 0,
-								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 10,
@@ -250,7 +240,6 @@
 								label: computed(() => this.Resources.E_MAIL42251),
 								dataLength: 50,
 								scrollData: 30,
-								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 11,
@@ -260,7 +249,6 @@
 								label: computed(() => this.Resources.WEB09813),
 								dataLength: 50,
 								scrollData: 30,
-								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 12,
@@ -270,7 +258,6 @@
 								label: computed(() => this.Resources.IBAN28506),
 								dataLength: 34,
 								scrollData: 30,
-								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 13,
@@ -280,7 +267,6 @@
 								label: computed(() => this.Resources.BANKING_ACCOUNT_NUMB62548),
 								dataLength: 24,
 								scrollData: 24,
-								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 14,
@@ -290,7 +276,6 @@
 								label: computed(() => this.Resources.TEXT04938),
 								dataLength: 50,
 								scrollData: 30,
-								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 15,
@@ -300,7 +285,6 @@
 								label: computed(() => this.Resources.ADRESS39816),
 								dataLength: 50,
 								scrollData: 30,
-								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.ArrayColumn({
 								order: 16,
@@ -310,8 +294,8 @@
 								label: computed(() => this.Resources.ENTITY62049),
 								dataLength: 2,
 								scrollData: 2,
-								export: 1,
-								array: computed(() => new qProjArrays.QArrayBankcomp(vm.$getResource).elements),
+								array: computed(() => qProjArrays.QArrayBankcomp.setResources(vm.$getResource).elements),
+								arrayType: qProjArrays.QArrayBankcomp.type,
 								arrayDisplayMode: 'D',
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 						],
@@ -328,8 +312,10 @@
 							permissions: {
 							},
 							searchBarConfig: {
-								visibility: true
+								visibility: true,
+								searchOnPressEnter: true
 							},
+							filtersVisible: true,
 							allowColumnFilters: true,
 							allowColumnSort: true,
 							crudActions: [
@@ -403,7 +389,9 @@
 									id: 'insert',
 									name: 'insert',
 									title: computed(() => this.Resources.INSERIR43365),
-									icon: { icon: 'add' },
+									icon: {
+										icon: 'add'
+									},
 									isInReadOnly: true,
 									params: {
 										action: vm.openFormAction,
@@ -426,7 +414,6 @@
 							rowClickAction: {
 								id: 'RCA_STY_3611',
 								name: 'form-INGROUPS',
-								isVisible: true,
 								params: {
 									isRoute: true,
 									limits: [
@@ -456,7 +443,6 @@
 						uuid: 'bbdc57e0-4d64-4aa6-8f57-c642f9358f3a',
 						allSelectedRows: 'false',
 						headerLevel: 1,
-						isActiveControl: computed(() => this.isActiveMenu)
 					}, this),
 				}
 			}
@@ -480,14 +466,6 @@
 		{
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
 // USE /[MANUAL GQT FORM_CODEJS STY_MENU_361]/
-// eslint-disable-next-line
-/* eslint-enable indent, vue/html-indent, vue/script-indent */
-		},
-
-		beforeUnmount()
-		{
-/* eslint-disable indent, vue/html-indent, vue/script-indent */
-// USE /[MANUAL GQT COMPONENT_BEFORE_UNMOUNT STY_MENU_361]/
 // eslint-disable-next-line
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 		},

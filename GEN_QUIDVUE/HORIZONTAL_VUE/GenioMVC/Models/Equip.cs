@@ -178,10 +178,10 @@ namespace GenioMVC.Models
 		}
 
 		[DisplayName("Decomission")]
-		/// <summary>Field : "Decomission" Tipo: "D" Formula: ++ "[DECOM->DTDECO]"</summary>
+		/// <summary>Field : "Decomission" Tipo: "DT" Formula: ++ "[DECOM->DTDECO]"</summary>
 		[ShouldSerialize("Equip.ValDtdeco")]
 		[DataType(DataType.Date)]
-		[DateAttribute("D")]
+		[DateAttribute("DT")]
 		public DateTime? ValDtdeco { get { return klass.ValDtdeco; } set { klass.ValDtdeco = value ?? DateTime.MinValue; } }
 
 		[DisplayName("Downed equipment")]

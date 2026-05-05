@@ -10,15 +10,15 @@ public class CatarForm : Form
 	/// <summary>
 	/// Item:
 	/// </summary>
-	public LookupControl ItemItemdes => new LookupControl(driver, ContainerLocator, "container-CATAR___ITEM_ITEMDES_" + IdSuffix);
-	public SeeMorePage ItemItemdesSeeMorePage => new SeeMorePage(driver, "CATAR", "CATAR___ITEM_ITEMDES_" + IdSuffix);
+	public LookupControl ItemItemdes => new LookupControl(driver, ContainerLocator, "container-CATAR___ITEM_ITEMDES_");
+	public SeeMorePage ItemItemdesSeeMorePage => new SeeMorePage(driver, "CATAR", "CATAR___ITEM_ITEMDES_");
 
 	/// <summary>
 	/// Category type
 	/// </summary>
-	public LookupControl CattpTpcatego => new LookupControl(driver, ContainerLocator, "container-CATAR___CATTPTPCATEGO" + IdSuffix);
-	public SeeMorePage CattpTpcategoSeeMorePage => new SeeMorePage(driver, "CATAR", "CATAR___CATTPTPCATEGO" + IdSuffix);
+	public LookupControl CattpTpcatego => new LookupControl(driver, ContainerLocator, "container-CATAR___CATTPTPCATEGO");
+	public SeeMorePage CattpTpcategoSeeMorePage => new SeeMorePage(driver, "CATAR", "CATAR___CATTPTPCATEGO");
 
-	public CatarForm(IWebDriver driver, FORM_MODE mode, By? containerLocator = null, bool usePkInId = false)
-		: base(driver, mode, "CATAR", containerLocator: containerLocator, usePkInId: usePkInId) { }
+	public CatarForm(IWebDriver driver, FORM_MODE mode, By? containerLocator = null)
+		: base(driver, mode, "CATAR", containerLocator: containerLocator) { }
 }

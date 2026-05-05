@@ -1,4 +1,4 @@
-﻿/* eslint-disable @typescript-eslint/no-unused-vars */
+﻿/* eslint-disable no-unused-vars */
 import { computed, reactive, watch } from 'vue'
 import _merge from 'lodash-es/merge'
 
@@ -11,7 +11,7 @@ import netAPI from '@quidgest/clientapp/network'
 import qApi from '@/api/genio/quidgestFunctions.js'
 import qFunctions from '@/api/genio/projectFunctions.js'
 import qProjArrays from '@/api/genio/projectArrays.js'
-/* eslint-enable @typescript-eslint/no-unused-vars */
+/* eslint-enable no-unused-vars */
 
 /**
  * Represents a ViewModel class.
@@ -25,11 +25,11 @@ export default class ViewModel extends FormViewModelBase
 	 * @param {object} options - The options for the ViewModel
 	 * @param {object} values - A ViewModel instance to copy values from
 	 */
-	// eslint-disable-next-line @typescript-eslint/no-unused-vars
+	// eslint-disable-next-line no-unused-vars
 	constructor(vueContext, options, values)
 	{
 		super(vueContext, options)
-		// eslint-disable-next-line @typescript-eslint/no-unused-vars
+		// eslint-disable-next-line no-unused-vars
 		const vm = this.vueContext
 
 		// The view model metadata
@@ -37,9 +37,8 @@ export default class ViewModel extends FormViewModelBase
 			name: 'COMOD',
 			area: 'LENDI',
 			actions: {
-				recalculateFormulas: 'RecalculateFormulas_Comod',
-				updateFilesTickets: 'UpdateFilesTicketsComod',
-				setFile: 'SetFileComod'
+				recalculateFormulas: 'RecalculateFormulas_COMOD',
+				updateFilesTickets: 'UpdateFilesTicketsCOMOD'
 			}
 		})
 
@@ -51,7 +50,7 @@ export default class ViewModel extends FormViewModelBase
 			field: 'CODLENDI',
 			description: '',
 		}).cloneFrom(values?.ValCodlendi))
-		this.stopWatchers.push(watch(() => this.ValCodlendi.value, (newValue, oldValue) => this.onUpdate('lendi.codlendi', this.ValCodlendi, newValue, oldValue)))
+		watch(() => this.ValCodlendi.value, (newValue, oldValue) => this.onUpdate('lendi.codlendi', this.ValCodlendi, newValue, oldValue))
 
 		/** The used foreign keys. */
 		this.ValCodpess1 = reactive(new modelFieldType.ForeignKey({
@@ -62,7 +61,7 @@ export default class ViewModel extends FormViewModelBase
 			relatedArea: 'PESS1',
 			description: computed(() => this.Resources._COMOMODOR01469),
 		}).cloneFrom(values?.ValCodpess1))
-		this.stopWatchers.push(watch(() => this.ValCodpess1.value, (newValue, oldValue) => this.onUpdate('lendi.codpess1', this.ValCodpess1, newValue, oldValue)))
+		watch(() => this.ValCodpess1.value, (newValue, oldValue) => this.onUpdate('lendi.codpess1', this.ValCodpess1, newValue, oldValue))
 
 		this.ValCodpess2 = reactive(new modelFieldType.ForeignKey({
 			id: 'ValCodpess2',
@@ -72,7 +71,7 @@ export default class ViewModel extends FormViewModelBase
 			relatedArea: 'PESS2',
 			description: computed(() => this.Resources._DADATARY21139),
 		}).cloneFrom(values?.ValCodpess2))
-		this.stopWatchers.push(watch(() => this.ValCodpess2.value, (newValue, oldValue) => this.onUpdate('lendi.codpess2', this.ValCodpess2, newValue, oldValue)))
+		watch(() => this.ValCodpess2.value, (newValue, oldValue) => this.onUpdate('lendi.codpess2', this.ValCodpess2, newValue, oldValue))
 
 		this.ValCodequip = reactive(new modelFieldType.ForeignKey({
 			id: 'ValCodequip',
@@ -82,7 +81,7 @@ export default class ViewModel extends FormViewModelBase
 			relatedArea: 'EQUIP',
 			description: computed(() => this.Resources._EQUIPMENT12605),
 		}).cloneFrom(values?.ValCodequip))
-		this.stopWatchers.push(watch(() => this.ValCodequip.value, (newValue, oldValue) => this.onUpdate('lendi.codequip', this.ValCodequip, newValue, oldValue)))
+		watch(() => this.ValCodequip.value, (newValue, oldValue) => this.onUpdate('lendi.codequip', this.ValCodequip, newValue, oldValue))
 
 		/** The remaining form fields. */
 		this.TablePess1Name = reactive(new modelFieldType.String({
@@ -93,9 +92,8 @@ export default class ViewModel extends FormViewModelBase
 			field: 'NAME',
 			maxLength: 85,
 			description: computed(() => this.Resources.NAME31974),
-			ignoreFldSubmit: true,
 		}).cloneFrom(values?.TablePess1Name))
-		this.stopWatchers.push(watch(() => this.TablePess1Name.value, (newValue, oldValue) => this.onUpdate('pess1.name', this.TablePess1Name, newValue, oldValue)))
+		watch(() => this.TablePess1Name.value, (newValue, oldValue) => this.onUpdate('pess1.name', this.TablePess1Name, newValue, oldValue))
 
 		this.TablePess2Name = reactive(new modelFieldType.String({
 			type: 'Lookup',
@@ -105,9 +103,8 @@ export default class ViewModel extends FormViewModelBase
 			field: 'NAME',
 			maxLength: 85,
 			description: computed(() => this.Resources.NAME31974),
-			ignoreFldSubmit: true,
 		}).cloneFrom(values?.TablePess2Name))
-		this.stopWatchers.push(watch(() => this.TablePess2Name.value, (newValue, oldValue) => this.onUpdate('pess2.name', this.TablePess2Name, newValue, oldValue)))
+		watch(() => this.TablePess2Name.value, (newValue, oldValue) => this.onUpdate('pess2.name', this.TablePess2Name, newValue, oldValue))
 
 		this.TableEquipRegistnr = reactive(new modelFieldType.String({
 			type: 'Lookup',
@@ -117,9 +114,8 @@ export default class ViewModel extends FormViewModelBase
 			field: 'REGISTNR',
 			maxLength: 6,
 			description: computed(() => this.Resources.NO__REGISTER04207),
-			ignoreFldSubmit: true,
 		}).cloneFrom(values?.TableEquipRegistnr))
-		this.stopWatchers.push(watch(() => this.TableEquipRegistnr.value, (newValue, oldValue) => this.onUpdate('equip.registnr', this.TableEquipRegistnr, newValue, oldValue)))
+		watch(() => this.TableEquipRegistnr.value, (newValue, oldValue) => this.onUpdate('equip.registnr', this.TableEquipRegistnr, newValue, oldValue))
 
 		this.EquipValDesignat = reactive(new modelFieldType.String({
 			id: 'EquipValDesignat',
@@ -130,7 +126,7 @@ export default class ViewModel extends FormViewModelBase
 			isFixed: true,
 			description: computed(() => this.Resources.DESIGNATION35876),
 		}).cloneFrom(values?.EquipValDesignat))
-		this.stopWatchers.push(watch(() => this.EquipValDesignat.value, (newValue, oldValue) => this.onUpdate('equip.designat', this.EquipValDesignat, newValue, oldValue)))
+		watch(() => this.EquipValDesignat.value, (newValue, oldValue) => this.onUpdate('equip.designat', this.EquipValDesignat, newValue, oldValue))
 
 		this.EquipValFrequenc = reactive(new modelFieldType.Number({
 			id: 'EquipValFrequenc',
@@ -140,10 +136,10 @@ export default class ViewModel extends FormViewModelBase
 			maxDigits: 2,
 			decimalDigits: 0,
 			isFixed: true,
-			arrayOptions: computed(() => new qProjArrays.QArrayFreqempr(vm.$getResource).elements),
+			arrayOptions: computed(() => qProjArrays.QArrayFreqempr.setResources(vm.$getResource).elements),
 			description: computed(() => this.Resources.LOAN_FREQUENCY00701),
 		}).cloneFrom(values?.EquipValFrequenc))
-		this.stopWatchers.push(watch(() => this.EquipValFrequenc.value, (newValue, oldValue) => this.onUpdate('equip.frequenc', this.EquipValFrequenc, newValue, oldValue)))
+		watch(() => this.EquipValFrequenc.value, (newValue, oldValue) => this.onUpdate('equip.frequenc', this.EquipValFrequenc, newValue, oldValue))
 
 		this.ValLendinnr = reactive(new modelFieldType.Number({
 			id: 'ValLendinnr',
@@ -154,7 +150,7 @@ export default class ViewModel extends FormViewModelBase
 			decimalDigits: 0,
 			description: computed(() => this.Resources.NUMBER_OF_LENDING63925),
 		}).cloneFrom(values?.ValLendinnr))
-		this.stopWatchers.push(watch(() => this.ValLendinnr.value, (newValue, oldValue) => this.onUpdate('lendi.lendinnr', this.ValLendinnr, newValue, oldValue)))
+		watch(() => this.ValLendinnr.value, (newValue, oldValue) => this.onUpdate('lendi.lendinnr', this.ValLendinnr, newValue, oldValue))
 
 		this.ValStart = reactive(new modelFieldType.DateTime({
 			id: 'ValStart',
@@ -163,7 +159,7 @@ export default class ViewModel extends FormViewModelBase
 			field: 'START',
 			description: computed(() => this.Resources.BEGINNING18124),
 		}).cloneFrom(values?.ValStart))
-		this.stopWatchers.push(watch(() => this.ValStart.value, (newValue, oldValue) => this.onUpdate('lendi.start', this.ValStart, newValue, oldValue)))
+		watch(() => this.ValStart.value, (newValue, oldValue) => this.onUpdate('lendi.start', this.ValStart, newValue, oldValue))
 
 		this.ValWarndt = reactive(new modelFieldType.DateTime({
 			id: 'ValWarndt',
@@ -173,7 +169,7 @@ export default class ViewModel extends FormViewModelBase
 			isFixed: true,
 			valueFormula: {
 				stopRecalcCondition() { return false },
-				// eslint-disable-next-line @typescript-eslint/no-unused-vars
+				// eslint-disable-next-line no-unused-vars
 				fnFormula(params)
 				{
 					// Formula: SomaDias([LENDI->START],[EQUIP->FREQUENC])
@@ -185,7 +181,7 @@ export default class ViewModel extends FormViewModelBase
 			},
 			description: computed(() => this.Resources.WARNING52043),
 		}).cloneFrom(values?.ValWarndt))
-		this.stopWatchers.push(watch(() => this.ValWarndt.value, (newValue, oldValue) => this.onUpdate('lendi.warndt', this.ValWarndt, newValue, oldValue)))
+		watch(() => this.ValWarndt.value, (newValue, oldValue) => this.onUpdate('lendi.warndt', this.ValWarndt, newValue, oldValue))
 
 		this.ValEnd = reactive(new modelFieldType.DateTime({
 			id: 'ValEnd',
@@ -195,7 +191,7 @@ export default class ViewModel extends FormViewModelBase
 			isFixed: true,
 			valueFormula: {
 				stopRecalcCondition() { return false },
-				// eslint-disable-next-line @typescript-eslint/no-unused-vars
+				// eslint-disable-next-line no-unused-vars
 				fnFormula(params)
 				{
 					// Formula: SomaDias([LENDI->WARNDT],1)
@@ -207,7 +203,7 @@ export default class ViewModel extends FormViewModelBase
 			},
 			description: computed(() => this.Resources.END47577),
 		}).cloneFrom(values?.ValEnd))
-		this.stopWatchers.push(watch(() => this.ValEnd.value, (newValue, oldValue) => this.onUpdate('lendi.end', this.ValEnd, newValue, oldValue)))
+		watch(() => this.ValEnd.value, (newValue, oldValue) => this.onUpdate('lendi.end', this.ValEnd, newValue, oldValue))
 
 		this.ValObservat = reactive(new modelFieldType.MultiLineString({
 			id: 'ValObservat',
@@ -216,7 +212,7 @@ export default class ViewModel extends FormViewModelBase
 			field: 'OBSERVAT',
 			description: computed(() => this.Resources.OBSERVATIONS03729),
 		}).cloneFrom(values?.ValObservat))
-		this.stopWatchers.push(watch(() => this.ValObservat.value, (newValue, oldValue) => this.onUpdate('lendi.observat', this.ValObservat, newValue, oldValue)))
+		watch(() => this.ValObservat.value, (newValue, oldValue) => this.onUpdate('lendi.observat', this.ValObservat, newValue, oldValue))
 
 		this.ValReturndt = reactive(new modelFieldType.Date({
 			id: 'ValReturndt',
@@ -225,7 +221,7 @@ export default class ViewModel extends FormViewModelBase
 			field: 'RETURNDT',
 			description: computed(() => this.Resources.RETURN32222),
 		}).cloneFrom(values?.ValReturndt))
-		this.stopWatchers.push(watch(() => this.ValReturndt.value, (newValue, oldValue) => this.onUpdate('lendi.returndt', this.ValReturndt, newValue, oldValue)))
+		watch(() => this.ValReturndt.value, (newValue, oldValue) => this.onUpdate('lendi.returndt', this.ValReturndt, newValue, oldValue))
 
 		this.ValReturned = reactive(new modelFieldType.Boolean({
 			id: 'ValReturned',
@@ -235,7 +231,7 @@ export default class ViewModel extends FormViewModelBase
 			isFixed: true,
 			valueFormula: {
 				stopRecalcCondition() { return false },
-				// eslint-disable-next-line @typescript-eslint/no-unused-vars
+				// eslint-disable-next-line no-unused-vars
 				fnFormula(params)
 				{
 					// Formula: iif(emptyD([LENDI->RETURNDT])==1,0,1)
@@ -247,7 +243,7 @@ export default class ViewModel extends FormViewModelBase
 			},
 			description: computed(() => this.Resources.RETURNED01606),
 		}).cloneFrom(values?.ValReturned))
-		this.stopWatchers.push(watch(() => this.ValReturned.value, (newValue, oldValue) => this.onUpdate('lendi.returned', this.ValReturned, newValue, oldValue)))
+		watch(() => this.ValReturned.value, (newValue, oldValue) => this.onUpdate('lendi.returned', this.ValReturned, newValue, oldValue))
 	}
 
 	/**

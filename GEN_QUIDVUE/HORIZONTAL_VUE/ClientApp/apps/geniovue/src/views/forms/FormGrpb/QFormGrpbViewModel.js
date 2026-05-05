@@ -1,4 +1,4 @@
-﻿/* eslint-disable @typescript-eslint/no-unused-vars */
+﻿/* eslint-disable no-unused-vars */
 import { computed, reactive, watch } from 'vue'
 import _merge from 'lodash-es/merge'
 
@@ -12,7 +12,7 @@ import qApi from '@/api/genio/quidgestFunctions.js'
 import qFunctions from '@/api/genio/projectFunctions.js'
 import qProjArrays from '@/api/genio/projectArrays.js'
 import DNFormViewModelGrpbPseudtblb from '@/views/forms/FormGrpb/QGridFormGrpbPseudtblbViewModel.js'
-/* eslint-enable @typescript-eslint/no-unused-vars */
+/* eslint-enable no-unused-vars */
 
 /**
  * Represents a ViewModel class.
@@ -26,11 +26,11 @@ export default class ViewModel extends FormViewModelBase
 	 * @param {object} options - The options for the ViewModel
 	 * @param {object} values - A ViewModel instance to copy values from
 	 */
-	// eslint-disable-next-line @typescript-eslint/no-unused-vars
+	// eslint-disable-next-line no-unused-vars
 	constructor(vueContext, options, values)
 	{
 		super(vueContext, options)
-		// eslint-disable-next-line @typescript-eslint/no-unused-vars
+		// eslint-disable-next-line no-unused-vars
 		const vm = this.vueContext
 
 		// The view model metadata
@@ -38,9 +38,8 @@ export default class ViewModel extends FormViewModelBase
 			name: 'GRPB',
 			area: 'GRPB',
 			actions: {
-				recalculateFormulas: 'RecalculateFormulas_Grpb',
-				updateFilesTickets: 'UpdateFilesTicketsGrpb',
-				setFile: 'SetFileGrpb'
+				recalculateFormulas: 'RecalculateFormulas_GRPB',
+				updateFilesTickets: 'UpdateFilesTicketsGRPB'
 			}
 		})
 
@@ -52,7 +51,7 @@ export default class ViewModel extends FormViewModelBase
 			field: 'CODGRPB',
 			description: '',
 		}).cloneFrom(values?.ValCodgrpb))
-		this.stopWatchers.push(watch(() => this.ValCodgrpb.value, (newValue, oldValue) => this.onUpdate('grpb.codgrpb', this.ValCodgrpb, newValue, oldValue)))
+		watch(() => this.ValCodgrpb.value, (newValue, oldValue) => this.onUpdate('grpb.codgrpb', this.ValCodgrpb, newValue, oldValue))
 
 		/** The remaining form fields. */
 		this.ValName = reactive(new modelFieldType.String({
@@ -63,7 +62,7 @@ export default class ViewModel extends FormViewModelBase
 			maxLength: 50,
 			description: computed(() => this.Resources.NAME31974),
 		}).cloneFrom(values?.ValName))
-		this.stopWatchers.push(watch(() => this.ValName.value, (newValue, oldValue) => this.onUpdate('grpb.name', this.ValName, newValue, oldValue)))
+		watch(() => this.ValName.value, (newValue, oldValue) => this.onUpdate('grpb.name', this.ValName, newValue, oldValue))
 		/** The Grid Table List value. */
 		this.ValTblb = reactive(new modelFieldType.GridTableList({
 			id: 'ValTblb',
@@ -71,9 +70,9 @@ export default class ViewModel extends FormViewModelBase
 			field: 'TBLB',
 			viewModelClass: DNFormViewModelGrpbPseudtblb,
 		}, this.vueContext).cloneFrom(values?.ValTblb))
-		this.stopWatchers.push(watch(() => this.ValTblb.value?.newElements, () => this.onUpdate('pseud.tblb', this.ValTblb, this.ValTblb.value), { deep: true }))
-		this.stopWatchers.push(watch(() => this.ValTblb.value?.editedElements, () => this.onUpdate('pseud.tblb', this.ValTblb, this.ValTblb.value), { deep: true }))
-		this.stopWatchers.push(watch(() => this.ValTblb.value?.removedElements, () => this.onUpdate('pseud.tblb', this.ValTblb, this.ValTblb.value), { deep: true }))
+		watch(() => this.ValTblb.value?.newElements, () => this.onUpdate('pseud.tblb', this.ValTblb, this.ValTblb.value), { deep: true })
+		watch(() => this.ValTblb.value?.editedElements, () => this.onUpdate('pseud.tblb', this.ValTblb, this.ValTblb.value), { deep: true })
+		watch(() => this.ValTblb.value?.removedElements, () => this.onUpdate('pseud.tblb', this.ValTblb, this.ValTblb.value), { deep: true })
 	}
 
 	/**

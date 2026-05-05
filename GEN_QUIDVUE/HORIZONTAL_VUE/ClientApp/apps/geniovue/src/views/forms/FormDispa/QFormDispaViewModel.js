@@ -1,4 +1,4 @@
-﻿/* eslint-disable @typescript-eslint/no-unused-vars */
+﻿/* eslint-disable no-unused-vars */
 import { computed, reactive, watch } from 'vue'
 import _merge from 'lodash-es/merge'
 
@@ -11,7 +11,7 @@ import netAPI from '@quidgest/clientapp/network'
 import qApi from '@/api/genio/quidgestFunctions.js'
 import qFunctions from '@/api/genio/projectFunctions.js'
 import qProjArrays from '@/api/genio/projectArrays.js'
-/* eslint-enable @typescript-eslint/no-unused-vars */
+/* eslint-enable no-unused-vars */
 
 /**
  * Represents a ViewModel class.
@@ -25,11 +25,11 @@ export default class ViewModel extends FormViewModelBase
 	 * @param {object} options - The options for the ViewModel
 	 * @param {object} values - A ViewModel instance to copy values from
 	 */
-	// eslint-disable-next-line @typescript-eslint/no-unused-vars
+	// eslint-disable-next-line no-unused-vars
 	constructor(vueContext, options, values)
 	{
 		super(vueContext, options)
-		// eslint-disable-next-line @typescript-eslint/no-unused-vars
+		// eslint-disable-next-line no-unused-vars
 		const vm = this.vueContext
 
 		// The view model metadata
@@ -37,9 +37,8 @@ export default class ViewModel extends FormViewModelBase
 			name: 'DISPA',
 			area: 'DISPA',
 			actions: {
-				recalculateFormulas: 'RecalculateFormulas_Dispa',
-				updateFilesTickets: 'UpdateFilesTicketsDispa',
-				setFile: 'SetFileDispa'
+				recalculateFormulas: 'RecalculateFormulas_DISPA',
+				updateFilesTickets: 'UpdateFilesTicketsDISPA'
 			}
 		})
 
@@ -51,9 +50,19 @@ export default class ViewModel extends FormViewModelBase
 			field: 'CODDISPA',
 			description: '',
 		}).cloneFrom(values?.ValCoddispa))
-		this.stopWatchers.push(watch(() => this.ValCoddispa.value, (newValue, oldValue) => this.onUpdate('dispa.coddispa', this.ValCoddispa, newValue, oldValue)))
+		watch(() => this.ValCoddispa.value, (newValue, oldValue) => this.onUpdate('dispa.coddispa', this.ValCoddispa, newValue, oldValue))
 
 		/** The used foreign keys. */
+		this.ValCoddisst = reactive(new modelFieldType.ForeignKey({
+			id: 'ValCoddisst',
+			originId: 'ValCoddisst',
+			area: 'DISPA',
+			field: 'CODDISST',
+			relatedArea: 'DISST',
+			description: computed(() => this.Resources.___STATUS46938),
+		}).cloneFrom(values?.ValCoddisst))
+		watch(() => this.ValCoddisst.value, (newValue, oldValue) => this.onUpdate('dispa.coddisst', this.ValCoddisst, newValue, oldValue))
+
 		this.ValCodentit = reactive(new modelFieldType.ForeignKey({
 			id: 'ValCodentit',
 			originId: 'ValCodentit',
@@ -62,7 +71,7 @@ export default class ViewModel extends FormViewModelBase
 			relatedArea: 'ENTIT',
 			description: computed(() => this.Resources.__CUSTOMER57515),
 		}).cloneFrom(values?.ValCodentit))
-		this.stopWatchers.push(watch(() => this.ValCodentit.value, (newValue, oldValue) => this.onUpdate('dispa.codentit', this.ValCodentit, newValue, oldValue)))
+		watch(() => this.ValCodentit.value, (newValue, oldValue) => this.onUpdate('dispa.codentit', this.ValCodentit, newValue, oldValue))
 
 		this.ValCodperso = reactive(new modelFieldType.ForeignKey({
 			id: 'ValCodperso',
@@ -72,7 +81,7 @@ export default class ViewModel extends FormViewModelBase
 			relatedArea: 'PERSO',
 			description: computed(() => this.Resources.__PERSON_RESPONSIBLE00553),
 		}).cloneFrom(values?.ValCodperso))
-		this.stopWatchers.push(watch(() => this.ValCodperso.value, (newValue, oldValue) => this.onUpdate('dispa.codperso', this.ValCodperso, newValue, oldValue)))
+		watch(() => this.ValCodperso.value, (newValue, oldValue) => this.onUpdate('dispa.codperso', this.ValCodperso, newValue, oldValue))
 
 		/** The remaining form fields. */
 		this.ValDispadt = reactive(new modelFieldType.DateTime({
@@ -82,7 +91,7 @@ export default class ViewModel extends FormViewModelBase
 			field: 'DISPADT',
 			description: computed(() => this.Resources.DISPATCH_DATE54413),
 		}).cloneFrom(values?.ValDispadt))
-		this.stopWatchers.push(watch(() => this.ValDispadt.value, (newValue, oldValue) => this.onUpdate('dispa.dispadt', this.ValDispadt, newValue, oldValue)))
+		watch(() => this.ValDispadt.value, (newValue, oldValue) => this.onUpdate('dispa.dispadt', this.ValDispadt, newValue, oldValue))
 
 		this.ValDispanr = reactive(new modelFieldType.Number({
 			id: 'ValDispanr',
@@ -93,7 +102,18 @@ export default class ViewModel extends FormViewModelBase
 			decimalDigits: 0,
 			description: computed(() => this.Resources.DISPATCH_NUMBER23616),
 		}).cloneFrom(values?.ValDispanr))
-		this.stopWatchers.push(watch(() => this.ValDispanr.value, (newValue, oldValue) => this.onUpdate('dispa.dispanr', this.ValDispanr, newValue, oldValue)))
+		watch(() => this.ValDispanr.value, (newValue, oldValue) => this.onUpdate('dispa.dispanr', this.ValDispanr, newValue, oldValue))
+
+		this.TableDisstStatus = reactive(new modelFieldType.String({
+			type: 'Lookup',
+			id: 'TableDisstStatus',
+			originId: 'ValStatus',
+			area: 'DISST',
+			field: 'STATUS',
+			maxLength: 50,
+			description: computed(() => this.Resources.STATUS62033),
+		}).cloneFrom(values?.TableDisstStatus))
+		watch(() => this.TableDisstStatus.value, (newValue, oldValue) => this.onUpdate('disst.status', this.TableDisstStatus, newValue, oldValue))
 
 		this.ValStatus = reactive(new modelFieldType.String({
 			id: 'ValStatus',
@@ -104,7 +124,7 @@ export default class ViewModel extends FormViewModelBase
 			isFixed: true,
 			valueFormula: {
 				stopRecalcCondition() { return false },
-				// eslint-disable-next-line @typescript-eslint/no-unused-vars
+				// eslint-disable-next-line no-unused-vars
 				fnFormula(params)
 				{
 					// Formula: iif(emptyD([DISPA->DISPADT])==0,"D",iif(emptyD([DISPA->PREPARED])==0,"P","I"))
@@ -114,10 +134,10 @@ export default class ViewModel extends FormViewModelBase
 				isServerRecalc: false,
 				isEmpty: qApi.emptyC,
 			},
-			arrayOptions: computed(() => new qProjArrays.QArrayDispstat(vm.$getResource).elements),
+			arrayOptions: computed(() => qProjArrays.QArrayDispstat.setResources(vm.$getResource).elements),
 			description: computed(() => this.Resources.STATUS62033),
 		}).cloneFrom(values?.ValStatus))
-		this.stopWatchers.push(watch(() => this.ValStatus.value, (newValue, oldValue) => this.onUpdate('dispa.status', this.ValStatus, newValue, oldValue)))
+		watch(() => this.ValStatus.value, (newValue, oldValue) => this.onUpdate('dispa.status', this.ValStatus, newValue, oldValue))
 
 		this.TableEntitName = reactive(new modelFieldType.String({
 			type: 'Lookup',
@@ -127,9 +147,8 @@ export default class ViewModel extends FormViewModelBase
 			field: 'NAME',
 			maxLength: 85,
 			description: computed(() => this.Resources.LEGAL_NAME42902),
-			ignoreFldSubmit: true,
 		}).cloneFrom(values?.TableEntitName))
-		this.stopWatchers.push(watch(() => this.TableEntitName.value, (newValue, oldValue) => this.onUpdate('entit.name', this.TableEntitName, newValue, oldValue)))
+		watch(() => this.TableEntitName.value, (newValue, oldValue) => this.onUpdate('entit.name', this.TableEntitName, newValue, oldValue))
 
 		this.ValIsprepar = reactive(new modelFieldType.Boolean({
 			id: 'ValIsprepar',
@@ -138,7 +157,7 @@ export default class ViewModel extends FormViewModelBase
 			field: 'ISPREPAR',
 			description: computed(() => this.Resources.IS_PREPARED16113),
 		}).cloneFrom(values?.ValIsprepar))
-		this.stopWatchers.push(watch(() => this.ValIsprepar.value, (newValue, oldValue) => this.onUpdate('dispa.isprepar', this.ValIsprepar, newValue, oldValue)))
+		watch(() => this.ValIsprepar.value, (newValue, oldValue) => this.onUpdate('dispa.isprepar', this.ValIsprepar, newValue, oldValue))
 
 		this.ValPrepared = reactive(new modelFieldType.DateTime({
 			id: 'ValPrepared',
@@ -147,11 +166,11 @@ export default class ViewModel extends FormViewModelBase
 			field: 'PREPARED',
 			valueFormula: {
 				stopRecalcCondition() { return false },
-				// eslint-disable-next-line @typescript-eslint/no-unused-vars
+				// eslint-disable-next-line no-unused-vars
 				fnFormula(params)
 				{
 					// Formula: iif(emptyL([DISPA->ISPREPAR])==1,[ZEROD],[Today])
-					return qApi.iif(qApi.emptyL((this.ValIsprepar.value ? 1 : 0))===1,'',qApi.Today())
+					return qApi.iif(qApi.emptyL((this.ValIsprepar.value ? 1 : 0))===1,'',qApi.Hoje())
 				},
 				dependencyEvents: ['fieldChange:dispa.isprepar'],
 				isServerRecalc: false,
@@ -159,7 +178,7 @@ export default class ViewModel extends FormViewModelBase
 			},
 			description: computed(() => this.Resources.PREPARED38522),
 		}).cloneFrom(values?.ValPrepared))
-		this.stopWatchers.push(watch(() => this.ValPrepared.value, (newValue, oldValue) => this.onUpdate('dispa.prepared', this.ValPrepared, newValue, oldValue)))
+		watch(() => this.ValPrepared.value, (newValue, oldValue) => this.onUpdate('dispa.prepared', this.ValPrepared, newValue, oldValue))
 
 		this.TablePersoName = reactive(new modelFieldType.String({
 			type: 'Lookup',
@@ -169,9 +188,8 @@ export default class ViewModel extends FormViewModelBase
 			field: 'NAME',
 			maxLength: 85,
 			description: computed(() => this.Resources.PERSON_NAME40980),
-			ignoreFldSubmit: true,
 		}).cloneFrom(values?.TablePersoName))
-		this.stopWatchers.push(watch(() => this.TablePersoName.value, (newValue, oldValue) => this.onUpdate('perso.name', this.TablePersoName, newValue, oldValue)))
+		watch(() => this.TablePersoName.value, (newValue, oldValue) => this.onUpdate('perso.name', this.TablePersoName, newValue, oldValue))
 	}
 
 	/**

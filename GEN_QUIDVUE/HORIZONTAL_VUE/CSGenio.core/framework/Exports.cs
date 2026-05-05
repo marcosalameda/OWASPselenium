@@ -1,14 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data;
-using System.IO;
 using System.Text;
+using System.IO;
+using System.Data;
 using System.Xml;
 
 using CSGenio.business;
 using CSGenio.persistence;
-using Quidgest.Persistence;
 using Quidgest.Persistence.GenericQuery;
+using Quidgest.Persistence;
 
 using MigraDocCore.DocumentObjectModel;
 using MigraDocCore.DocumentObjectModel.Tables;
@@ -87,8 +87,6 @@ namespace CSGenio.framework
         {
             this.colunas = columns;
             PersistentSupport sp = PersistentSupport.getPersistentSupport(user.Year, user.Name);
-            // TODO: Protect against cases where it receive zero columns.
-            //  Otherwise, it will select all columns in the area.
             SelectQuery qs = sp.getSelectQueryFromListingMVC<A>(conditions, listing);
 
             return ExportList(qs, exportType, filename,namedbedit);
@@ -119,6 +117,7 @@ namespace CSGenio.framework
             return ExportList(res, exportType, filename, namedbedit);
         }
 
+
         public byte[] ExportList(DataMatrix values, List<QColumn> columns, string exportType, string filename, string namedbedit)
         {
             this.colunas = columns;
@@ -139,6 +138,7 @@ namespace CSGenio.framework
             DataMatrix values = new DataMatrix(ds);
             return ExportList(values, exportType, filename, namedbedit);
         }
+
 
         public byte[] ExportList(DataMatrix values, string exportType, string filename, string namedbedit)
         {
@@ -175,7 +175,7 @@ namespace CSGenio.framework
         {
             PersistentSupport sp = PersistentSupport.getPersistentSupport(user.Year, user.Name);
             SelectQuery qs = sp.getSelectQueryFromListingMVC<A>(conditions, listing);
-
+   
             //get data
             sp.openConnection();
             DataMatrix res = sp.Execute(qs);
@@ -218,7 +218,7 @@ namespace CSGenio.framework
             }
         }
 
-        #region Export
+        #region
 
         private enum ExportType
         {
@@ -231,14 +231,6 @@ namespace CSGenio.framework
 
         public class QColumn
         {
-            /// <summary>
-            /// The FieldRef corresponding to the exported field.
-            /// </summary>
-            /// <remarks>
-            /// The property may be <c>null</c>.
-            /// Currently, it's only used for optimized export of list controls in Vue.
-            /// </remarks>
-            public FieldRef Field { get; private set; }
             public string Name { get; private set; }
             public FieldType Type { get; private set; }
             public FieldFormatting Formatting { get; private set; }
@@ -247,12 +239,23 @@ namespace CSGenio.framework
             public int Size { get; private set; }
             public int Decimals { get; private set; }
             public bool Visible { get; set; }
-            public bool AlwaysExportable { get; set; }
 
-            public QColumn(FieldRef field, FieldType fieldType, string descricao, int size, int decimais, bool visivel, string arrayName = "", bool alwaysExportable = false)
+
+            public QColumn(FieldRef Qfield, FieldType fieldType, string descricao, int size, int decimais, bool visivel)
             {
-                this.Field = field;
-                this.Name = field.FullName;
+                this.Name = Qfield.FullName;
+                this.Type = fieldType;
+                this.Formatting = fieldType.GetFormatting();
+                this.ArrayName = null;
+                this.Description = descricao;
+                this.Size = size;
+                this.Decimals = decimais;
+                this.Visible = visivel;
+            }
+
+            public QColumn(FieldRef Qfield, FieldType fieldType, string descricao, int size, int decimais, bool visivel, string arrayName)
+            {
+                this.Name = Qfield.FullName;
                 this.Type = fieldType;
                 this.Formatting = fieldType.GetFormatting();
                 this.ArrayName = arrayName;
@@ -260,7 +263,6 @@ namespace CSGenio.framework
                 this.Size = size;
                 this.Decimals = decimais;
                 this.Visible = visivel;
-                this.AlwaysExportable = alwaysExportable;
             }
 
             public QColumn(string fieldName, Field campoBD)
@@ -324,6 +326,7 @@ namespace CSGenio.framework
 
                 return visibleColumns;
             }
+
         }
 
         private class ExportToPDF
@@ -337,6 +340,7 @@ namespace CSGenio.framework
             readonly static Font TableFont = new Font("Arial", 10);
             readonly static Unit TableBorderWidth = new Unit(1);
             readonly static XGraphics DefaultGraphics = XGraphics.CreateMeasureContext(new XSize(2000, 2000), XGraphicsUnit.Point, XPageDirection.Downwards);
+
 
             private Document document;
             private Table table;
@@ -464,8 +468,13 @@ namespace CSGenio.framework
                 }
 
                 double scaleFactor = TableMaxWidth / totalColWidth;
-                return scaleFactor >= WidthScaleFactorMin;
+
+                if (scaleFactor < WidthScaleFactorMin)
+                    return false;
+                else
+                    return true;
             }
+
 
             /// <summary>
             /// Creates the static parts of the PDF document.
@@ -571,6 +580,12 @@ namespace CSGenio.framework
                 {
                     row.Cells[c].VerticalAlignment = VerticalAlignment.Center;
                     row.Cells[c].AddParagraph(AdjustIfTooWideToFitIn(row.Cells[c], columns[c].Description));
+                    /*
+                    row.Cells[c].Format.Font.Bold = true;
+                    row.Cells[0].Format.Alignment = ParagraphAlignment.Left;
+                    row.Cells[0].VerticalAlignment = VerticalAlignment.Bottom;
+                    row.Cells[0].MergeDown = 1;
+                    */
                 }
             }
 
@@ -677,6 +692,13 @@ namespace CSGenio.framework
 
         private class ExportToExcel
         {
+            private double CentimeterToPixel(double Centimeter)
+            {
+                double pixel = -1;
+                pixel = (Centimeter * 300) / 2.5399999d;
+                return (double)pixel;
+            }
+
             /// <summary>
             /// Generate Excel document with table content.
             /// </summary>
@@ -693,6 +715,10 @@ namespace CSGenio.framework
                 //fill first row with the columns name
                 for (int i = 0; i < columns.Count; i++)
                 {
+                    //double tableWidth = 27.5; //Vamos assumir a largura de uma pagina A4 menos 2,2cm de margens. Ou seja 29.7 - 2.2 = 27.5cm
+                    //double colPercent = (columns[i].Size * tableWidth) / QColumn.Sum(columns);
+                    //worksheet.Column(i + 1).Width = CentimeterToPixel(colPercent);
+                    //worksheet.Column(i + 1).AutoFit();
                     worksheet.Cells[1, i + 1].Value = columns[i].Description;
                     worksheet.Cells[1, i + 1].Style.Fill.PatternType = ExcelFillStyle.Solid;
                     worksheet.Cells[1, i + 1].Style.Fill.BackgroundColor.SetColor(System.Drawing.Color.FromArgb(0, 141, 210));
@@ -701,7 +727,6 @@ namespace CSGenio.framework
                     worksheet.Cells[1, i + 1].Style.Font.Size = 11;
                     worksheet.Cells[1, i + 1].Style.Font.Name = "Arial";
                 }
-
                 int idx = 2;
                 //run each row of the menu list
                 for(int i = 0; i < values.NumRows; i++)
@@ -771,14 +796,15 @@ namespace CSGenio.framework
                                 }
 
                                 worksheet.Cells[idx, c + 1].Style.Numberformat.Format = numberFormat;
+
+
                                 worksheet.Cells[idx, c + 1].Value = values.GetNumeric(i, columns[c].Name);
                                 break;
 
                             case FieldFormatting.CARACTERES:
                             default:
                                 string text = getTextFromData(values.GetDirect(i, columns[c].Name), columns[c], user);
-                                string sanitizedText = SanitizeForSpreadsheet(text);
-                                worksheet.Cells[idx, c + 1].Value = sanitizedText;
+                                worksheet.Cells[idx, c + 1].Value = text;
                                 break;
                         }
                     }
@@ -840,8 +866,7 @@ namespace CSGenio.framework
                     for (int c = 0; c < columns.Count; c++)
                     {
                         string text = getTextFromData(values.GetDirect(i, columns[c].Name), columns[c], user);
-                        string sanitizedText = SanitizeForSpreadsheet(text);
-                        conteudoCSV.Append(memo2String(sanitizedText) + ";");
+                        conteudoCSV.Append(memo2String(text) + ";");
                     }
                     conteudoCSV.Append(";\r\n");
                 }
@@ -887,7 +912,7 @@ namespace CSGenio.framework
                             string text = getTextFromData(values.GetDirect(i, columns[c].Name), columns[c], user);
                             Qvalues.Add(text);
                         }
-                        CreateNode(tagname, Qvalues, writer);
+                        CreateNode(tagname,Qvalues, writer);
                     }
                     writer.WriteEndElement();
                     writer.WriteEndDocument();
@@ -908,73 +933,36 @@ namespace CSGenio.framework
                 writer.WriteStartElement("Registo");
                 for (int i = 0; i < tags.Count; i++ )
                 {
-                    writer.WriteStartElement(tags[i].Replace(" ", "_"));
+                    writer.WriteStartElement(tags[i].Replace(" ","_"));
                     writer.WriteString(Qvalues[i]);
                     writer.WriteEndElement();
                 }
                 writer.WriteEndElement();
             }
+
         }
 
         internal static string getTextFromData(object data, QColumn column, User user = null)
         {
 			string lang = "";
-			if (user != null)
+			if(user != null)
 				lang = user.Language;
             string text = Conversion.internal2String(data, column.Type);
             if ((column.Type == FieldType.ARRAY_TEXT || column.Type == FieldType.ARRAY_NUMERIC || column.Type == FieldType.ARRAY_LOGIC)
-                && !string.IsNullOrEmpty(column.ArrayName) && !string.IsNullOrEmpty(text))
+                && !String.IsNullOrEmpty(column.ArrayName) && !String.IsNullOrEmpty(text))
             {
                 ArrayInfo array = new ArrayInfo(column.ArrayName);
                 if (array.Elements.Contains(text))// MH [21/03/2016] - Validação se o código exists. Caso contrario provoca erro de execução.
-                    text = array.GetDescription(text, lang);
+                    text = array.GetDescription(text, /*dbSearch.Language*/lang);
                 else text = string.Empty;
             }
 
             return text;
         }
 
-        /// <summary>
-        /// Sanitizes text to prevent CSV/XLS formula injection attacks when the text is used in those files.
-        /// This function wraps the text in double quotes, prepends with a single quote, and escapes
-        /// any existing double quotes to ensure the content is treated as literal text by spreadsheet applications.
-        /// </summary>
-        /// <param name="input">The text to sanitize</param>
-        /// <returns>Sanitized text safe for spreadsheet output</returns>
-        internal static string SanitizeForSpreadsheet(string input)
-        {
-            // Handle null or empty input.
-            if (string.IsNullOrEmpty(input))
-                return input;
-
-            // Check if input starts with dangerous characters or contains field separators/quotes.
-            bool needsSanitization = input.Length > 0 &&
-                (input[0] == '=' ||
-                input[0] == '+' ||
-                input[0] == '-' ||
-                input[0] == '@' ||
-                input[0] == '\t' ||  // Tab (0x09)
-                input[0] == '\r' ||  // Carriage return (0x0D)
-                input.Contains(",") ||
-                input.Contains(";") ||
-                input.Contains("\"") ||
-                input.Contains("'"));
-
-            if (needsSanitization)
-            {
-                // Escape any existing double quotes by doubling them.
-                string escaped = input.Replace("\"", "\"\"");
-
-                // Prepend with single quote and wrap in double quotes.
-                return "\"'" + escaped + "\"";
-            }
-
-            return input;
-        }
-
         #endregion
 
-        #region Import
+       #region Import
 
         public List<A> ImportList<A>(List<Exports.QColumn> columns, string exportType, byte[] file) where A : IArea
         {
@@ -999,13 +987,14 @@ namespace CSGenio.framework
                     "Exports.ImportarListagem", Translations.Get("Ficheiro com dados em formato incorreto"));
             }
 
-            if (!this.CheckIfRightFile(rows[0], columns))
+            if(!this.CheckIfRightFile(rows[0], columns))
             {
                 throw new FrameworkException(Translations.Get("Ficheiro com cabeçalho incorrecto"),
                     "Exports.ImportarListagem", Translations.Get("Ficheiro com cabeçalho incorrecto"));
             }
 
             Dictionary<String, List<Exports.QColumn>> columnsByArea = this.GetColumnsByArea(columns);
+
 
             //Process values into DbArea models
             rows.RemoveAt(0);//Start at 1 to avoid reading Header
@@ -1021,10 +1010,11 @@ namespace CSGenio.framework
                     if (value == null)
                         continue;
 
+
                     string fieldBaseArea = columns[col].BaseArea;
 
                     //Check if foreign Key
-                    if (fieldBaseArea != area.Alias)
+                    if (fieldBaseArea != area.Alias )
                     {
                         if (importedUpperTables.Contains(fieldBaseArea)) // upper table searched already
                             continue;
@@ -1034,7 +1024,7 @@ namespace CSGenio.framework
                         string alias = area.Alias + '.' + relation.SourceRelField;
 
                         importedUpperTables.Add(fieldBaseArea);
-                        List<QColumn> searchColumns = columnsByArea[fieldBaseArea];
+                        List <QColumn> searchColumns= columnsByArea[fieldBaseArea];
 
                         //Get values from this row that come from upper table
                         List<object> upperValues = this.GetValuesFromRow(row, columns, fieldBaseArea);
@@ -1044,8 +1034,7 @@ namespace CSGenio.framework
                         value = this.ImportFromParent(upperValues, parentTable, searchColumns);
 
                         area.insertNameValueField(alias, value);
-                    }
-                    else
+                    } else
                     {
                         area.insertNameValueField(columns[col].Name, value);
                     }
@@ -1063,7 +1052,7 @@ namespace CSGenio.framework
             Dictionary<String, List<Exports.QColumn>> areas = new Dictionary<String, List<Exports.QColumn>>();
             foreach (Exports.QColumn column in columns)
             {
-                if (areas.ContainsKey(column.BaseArea))
+                if(areas.ContainsKey(column.BaseArea))
                 {
                     List<Exports.QColumn> columnsByArea = areas[column.BaseArea];
                     columnsByArea.Add(column);
@@ -1083,7 +1072,7 @@ namespace CSGenio.framework
             for (int col = 0; col < columns.Count; col++)
             {
                 object value = values[col];
-                if (value == null || value.ToString() != columns[col].Description)
+                if(value == null || value.ToString() != columns[col].Description)
                 {
                     return false;
                 }
@@ -1167,7 +1156,7 @@ namespace CSGenio.framework
 				// Change AM/PM to standard tt
 				.Replace("AM/PM", "tt")
 				// Excel uses lower case m for both months and minutes
-				// Change the minute characters to i so the other
+				// Change the minute characters to i so the other 
 				// lowercase m characters that are for months can be changed to uppercase
 				// and then the i characters can be changed back to m
 				.Replace(":mm", ":ii")
@@ -1176,13 +1165,13 @@ namespace CSGenio.framework
 				.Replace("i", "m")
 				// Replace tenths of a second with standard f
 				.Replace(".0", ".f")
-				// Always replace / with - since Excel is inconsistent in using these characters
+				// Always replace / with - since Excel is inconsistent in using these characters 
 				// for format strings and formatted date text
 				.Replace("/", "-");
 		}
 
 		/// <summary>
-		/// Get the parsed Excel cell value using the cell's formatting
+		/// Get the parsed Excel cell value using the cell's formatting 
 		/// or the default formatting if the cell does not have specific formatting
 		/// </summary>
 		/// <param name="cell">Cell object</param>
@@ -1240,7 +1229,7 @@ namespace CSGenio.framework
 
 				DateTimeFieldFormatter formatter = new DateTimeFieldFormatter(formatting);
 
-				// Always replace / with - since Excel is inconsistent in using these characters
+				// Always replace / with - since Excel is inconsistent in using these characters 
 				// for format strings and formatted date text
 				string cellValue = cell.Value == null ? "" : cell.Value.ToString().Replace("/", "-");
 
@@ -1292,6 +1281,7 @@ namespace CSGenio.framework
 
                 rowCount = currentSheet.Dimension.End.Row;// Here is where my issue is
 
+
                 for (int rowIterator = 0; rowIterator < rowCount; rowIterator++)
                 {
                     object[] row = new object[columnCount];
@@ -1314,6 +1304,7 @@ namespace CSGenio.framework
 
             return results;
         }
+
 
         #endregion
     }

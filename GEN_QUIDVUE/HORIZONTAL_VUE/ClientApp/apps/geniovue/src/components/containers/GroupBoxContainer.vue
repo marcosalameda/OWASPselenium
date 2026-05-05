@@ -1,6 +1,7 @@
 ﻿<template>
 	<div
 		:id="controlId"
+		v-show="isVisible"
 		tabindex="-1"
 		:class="['c-groupbox', { 'c-groupbox--no-border': noBorder }, $attrs.class]">
 		<div
@@ -28,17 +29,17 @@
 			:help-control="helpControl"
 			:label="label" />
 
-		<q-container
+		<div
 			:id="`${controlId}-content`"
-			fluid>
+			class="form-flow">
 			<slot></slot>
-		</q-container>
+		</div>
 	</div>
 </template>
 
 <script>
-	import { defineAsyncComponent } from 'vue'
 	import HelpControl from '@/mixins/helpControls.js'
+	import { defineAsyncComponent } from 'vue'
 
 	export default {
 		name: 'QGroupBoxContainer',
@@ -57,8 +58,11 @@
 			/**
 			 * Unique identifier for the control.
 			 */
-			id: String,
-
+			id: {
+				type: String,
+				default: null
+			},
+			
 			/**
 			 * Text strings which might be used to override default texts within the component.
 			 */
@@ -67,7 +71,18 @@
 			/**
 			 * The group label.
 			 */
-			label: String,
+			label: {
+				type: String,
+				default: null
+			},
+
+			/**
+			 * Visible property to hide and show group.
+			 */
+			isVisible: {
+				type: Boolean,
+				default: true
+			},
 
 			/**
 			 * Whether or not the group should have a border.
@@ -88,14 +103,12 @@
 		},
 
 		computed: {
-			labelId()
-			{
+			labelId() {
 				return `label_${this.controlId}`
 			},
 
-			anchorId()
-			{
-				return this.labelId? `#${this.labelId}` : ''
+			anchorId() {
+				return this.labelId? `#${this.labelId}` : ""
 			}
 		}
 	}

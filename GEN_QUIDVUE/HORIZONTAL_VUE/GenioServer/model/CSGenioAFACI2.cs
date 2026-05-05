@@ -1,5 +1,5 @@
 ﻿
- 
+
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -179,6 +179,15 @@ namespace CSGenio.business
 			Qfield.Formula = new InternalOperationFormula(argumentsListByArea, 4, delegate(object[] args, User user, string module, PersistentSupport sp) {
 				return ((((string)args[0])=="L")?(new GlobalFunctions(user,module,sp).GetGeoFromLatLng(((decimal)args[1]),((decimal)args[2]))):(((string)args[3])));
 			});
+			info.RegisterFieldDB(Qfield);
+
+			//- - - - - - - - - - - - - - - - - - -
+			Qfield = new Field(info.Alias, "codcntry", FieldType.KEY_GUID);
+			Qfield.FieldDescription = ">> Country";
+			Qfield.FieldSize =  36;
+			Qfield.VisivelCav = CavVisibilityType.Nunca;
+
+			Qfield.Dupmsg = "";
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
@@ -508,6 +517,17 @@ namespace CSGenio.business
 			set { insertNameValueField(FldGeocoord, value); }
 		}
 
+		/// <summary>Field : ">> Country" Tipo: "CF" Formula:  ""</summary>
+		public static FieldRef FldCodcntry { get { return m_fldCodcntry; } }
+		private static FieldRef m_fldCodcntry = new FieldRef("faci2", "codcntry");
+
+		/// <summary>Field : ">> Country" Tipo: "CF" Formula:  ""</summary>
+		public string ValCodcntry
+		{
+			get { return (string)returnValueField(FldCodcntry); }
+			set { insertNameValueField(FldCodcntry, value); }
+		}
+
 		/// <summary>Field : "ZZSTATE" Type: "INT" Formula:  ""</summary>
 		public static FieldRef FldZzstate { get { return m_fldZzstate; } }
 		private static FieldRef m_fldZzstate = new FieldRef("faci2", "zzstate");
@@ -528,17 +548,16 @@ namespace CSGenio.business
         /// <param name="key">The value of the primary key</param>
         /// <param name="user">The context of the user</param>
         /// <param name="fields">The fields to be filled in the area</param>
-		/// <param name="forUpdate">True if you are preparing to update this record, false otherwise</param>
         /// <returns>An area with the fields requests of the record read or null if the key does not exist</returns>
         /// <remarks>Persistence operations should not be used on a partially positioned register</remarks>
-        public static CSGenioAfaci2 search(PersistentSupport sp, string key, User user, string[] fields = null, bool forUpdate = false)
+        public static CSGenioAfaci2 search(PersistentSupport sp, string key, User user, string[] fields = null)
         {
 			if (string.IsNullOrEmpty(key))
 				return null;
 
 		    CSGenioAfaci2 area = new CSGenioAfaci2(user, user.CurrentModule);
 
-            if (sp.getRecord(area, key, fields, forUpdate))
+            if (sp.getRecord(area, key, fields))
                 return area;
 			return null;
         }
@@ -598,14 +617,14 @@ namespace CSGenio.business
 
 
 
-
-
+ 
 
 
 		// USE /[MANUAL GQT TABAUX FACI2]/
 
      
-              
+
+               
 
 	}
 }

@@ -76,6 +76,11 @@ export const triggerEvents = {
 	afterExit: 'DE'
 }
 
+export const labelDisplay = {
+	'label-toggle': 'label-toggle',
+	'label-left': 'label-left'
+}
+
 /**
  * Opening mode of the file
  */
@@ -95,5 +100,6 @@ export default {
 	breadcrumbTypes,
 	tableViewManagementModes,
 	triggerEvents,
+	labelDisplay,
 	documentViewTypeMode
 }

@@ -1,20 +1,20 @@
-﻿using CSGenio.business;
-using CSGenio.framework;
-using CSGenio.persistence;
-using GenioMVC.Helpers;
-using GenioMVC.Models.Exception;
-using GenioMVC.Models.Navigation;
+﻿using JsonIgnoreAttribute = System.Text.Json.Serialization.JsonIgnoreAttribute;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Quidgest.Persistence;
-using Quidgest.Persistence.GenericQuery;
-
 using System.Collections;
 using System.Collections.Concurrent;
 using System.Collections.Specialized;
 using System.ComponentModel.DataAnnotations;
 using System.Data;
 using System.Globalization;
-using System.Text.Json.Serialization;
+
+using CSGenio.business;
+using CSGenio.framework;
+using CSGenio.persistence;
+using GenioMVC.Helpers;
+using GenioMVC.Models.Exception;
+using GenioMVC.Models.Navigation;
+using Quidgest.Persistence;
+using Quidgest.Persistence.GenericQuery;
 
 namespace GenioMVC.ViewModels.Asset
 {
@@ -40,7 +40,6 @@ namespace GenioMVC.ViewModels.Asset
 		public string ValCodmanuf { get; set; }
 
 		#endregion
-
 		/// <summary>
 		/// Title: "Identification name" | Type: "C"
 		/// </summary>
@@ -75,6 +74,27 @@ namespace GenioMVC.ViewModels.Asset
 		/// </summary>
 		[ValidateSetAccess]
 		public TableDBEdit<GenioMVC.Models.Kinde> TableKindeDesignat { get; set; }
+		/// <summary>
+		/// Title: "Description" | Type: "MO"
+		/// </summary>
+		public string ValDescription { get; set; }
+		/// <summary>
+		/// Title: "Detailed description" | Type: "MO"
+		/// </summary>
+		public string ValLongdesc { get; set; }
+		/// <summary>
+		/// Title: "Category" | Type: "AC"
+		/// </summary>
+		public string ValCategory { get; set; }
+		/// <summary>
+		/// Title: "Background color for category" | Type: "C"
+		/// </summary>
+		public string ValBg_color { get; set; }
+		/// <summary>
+		/// Title: "Asset tags" | Type: "PSEUD"
+		/// </summary>
+		[ValidateSetAccess]
+		public GridTableList<GenioMVC.ViewModels.Atags.Equipm__pseuda_tags___ViewModel> ValA_tags { get; set; }
 		/// <summary>
 		/// Title: "Photo" | Type: "IJ"
 		/// </summary>
@@ -211,6 +231,7 @@ namespace GenioMVC.ViewModels.Asset
 
 			try
 			{
+				ValA_tags?.MapFromModel();
 				ValCodkinde = ViewModelConversion.ToString(m.ValCodkinde);
 				ValCodmanuf = ViewModelConversion.ToString(m.ValCodmanuf);
 				ValName = ViewModelConversion.ToString(m.ValName);
@@ -219,6 +240,10 @@ namespace GenioMVC.ViewModels.Asset
 				ValIdenttyp = ViewModelConversion.ToString(m.ValIdenttyp);
 				ValGrai = ViewModelConversion.ToString(m.ValGrai);
 				ValGiai = ViewModelConversion.ToString(m.ValGiai);
+				ValDescription = ViewModelConversion.ToString(m.ValDescription);
+				ValLongdesc = ViewModelConversion.ToString(m.ValLongdesc);
+				ValCategory = ViewModelConversion.ToString(m.ValCategory);
+				ValBg_color = ViewModelConversion.ToString(m.ValBg_color);
 				ValPhoto = ViewModelConversion.ToImage(m.ValPhoto);
 				ValCodasset = ViewModelConversion.ToString(m.ValCodasset);
 			}
@@ -246,6 +271,7 @@ namespace GenioMVC.ViewModels.Asset
 
 			try
 			{
+				ValA_tags?.MapToModel();
 				m.ValCodkinde = ViewModelConversion.ToString(ValCodkinde);
 				m.ValCodmanuf = ViewModelConversion.ToString(ValCodmanuf);
 				m.ValName = ViewModelConversion.ToString(ValName);
@@ -254,6 +280,10 @@ namespace GenioMVC.ViewModels.Asset
 				m.ValIdenttyp = ViewModelConversion.ToString(ValIdenttyp);
 				m.ValGrai = ViewModelConversion.ToString(ValGrai);
 				m.ValGiai = ViewModelConversion.ToString(ValGiai);
+				m.ValDescription = ViewModelConversion.ToString(ValDescription);
+				m.ValLongdesc = ViewModelConversion.ToString(ValLongdesc);
+				m.ValCategory = ViewModelConversion.ToString(ValCategory);
+				m.ValBg_color = ViewModelConversion.ToString(ValBg_color);
 				if (ValPhoto == null || !ValPhoto.IsThumbnail)
 					m.ValPhoto = ViewModelConversion.ToImage(ValPhoto);
 				m.ValCodasset = ViewModelConversion.ToString(ValCodasset);
@@ -265,7 +295,12 @@ namespace GenioMVC.ViewModels.Asset
 			}
 		}
 
-		/// <inheritdoc />
+		/// <summary>
+		/// Sets the value of a single property of the view model based on the provided table and field names.
+		/// </summary>
+		/// <param name="fullFieldName">The full field name in the format "table.field".</param>
+		/// <param name="value">The field value.</param>
+		/// <exception cref="ArgumentNullException">Thrown if <paramref name="fullFieldName"/> is null.</exception>
 		public override void SetViewModelValue(string fullFieldName, object value)
 		{
 			try
@@ -300,6 +335,18 @@ namespace GenioMVC.ViewModels.Asset
 					case "asset.giai":
 						this.ValGiai = ViewModelConversion.ToString(_value);
 						break;
+					case "asset.description":
+						this.ValDescription = ViewModelConversion.ToString(_value);
+						break;
+					case "asset.longdesc":
+						this.ValLongdesc = ViewModelConversion.ToString(_value);
+						break;
+					case "asset.category":
+						this.ValCategory = ViewModelConversion.ToString(_value);
+						break;
+					case "asset.bg_color":
+						this.ValBg_color = ViewModelConversion.ToString(_value);
+						break;
 					case "asset.photo":
 						this.ValPhoto = ViewModelConversion.ToImage(_value);
 						break;
@@ -327,6 +374,8 @@ namespace GenioMVC.ViewModels.Asset
 		{
 			try { Model = Models.Asset.Find(id ?? Navigation.GetStrValue("asset"), m_userContext, "FEQUIPM"); }
 			finally { Model ??= new Models.Asset(m_userContext) { Identifier = "FEQUIPM" }; }
+
+			ValA_tags?.LoadModel();
 
 			base.LoadModel();
 		}
@@ -361,17 +410,6 @@ namespace GenioMVC.ViewModels.Asset
 				// Conexão deve estar aberta de fora. Podem haver formulas que utilizam funções "manuais".
 				// TODO: It needs to be analyzed whether we should disable the security of field filling here. If there is any case where the field with the block condition can only be calculated after the double calculation of the formulas.
 				MapToModel(Model);
-
-				// If it's inserting or duplicating, needs to fill the default values.
-				if (Navigation.CurrentLevel.FormMode == FormMode.New || Navigation.CurrentLevel.FormMode == FormMode.Duplicate)
-				{
-					FunctionType funcType = Navigation.CurrentLevel.FormMode == FormMode.New
-						? FunctionType.INS
-						: FunctionType.DUP;
-
-					Model.baseklass.fillValuesDefault(m_userContext.PersistentSupport, funcType);
-				}
-
 				// Preencher operações internas
 				Model.klass.fillInternalOperations(m_userContext.PersistentSupport, oldvalues);
 				MapFromModel(Model);
@@ -415,7 +453,6 @@ namespace GenioMVC.ViewModels.Asset
 
 			Load_Equipm__manufname____(qs, lazyLoad);
 			Load_Equipm__kindedesignat(qs, lazyLoad);
-
 // USE /[MANUAL GQT VIEWMODEL_LOADPARTIAL EQUIPM]/
 		}
 
@@ -430,11 +467,13 @@ namespace GenioMVC.ViewModels.Asset
 		{
 			CrudViewModelFieldValidator validator = new(m_userContext.User.Language);
 
+			validator.Merge(ValA_tags?.Validate(), "ValA_tags");
 			validator.StringLength("ValName", Resources.Resources.IDENTIFICATION_NAME16317, ValName, 85);
 
 			validator.Required("ValAssettyp", Resources.Resources.ASSET_TYPE02033, ViewModelConversion.ToString(ValAssettyp), FieldType.ARRAY_TEXT.GetFormatting());
 			validator.StringLength("ValGrai", Resources.Resources.GRAI___GLOBAL_RETURN06821, ValGrai, 50);
 			validator.StringLength("ValGiai", Resources.Resources.GIAI___GLOBAL_INDIVI63214, ValGiai, 50);
+			validator.StringLength("ValBg_color", Resources.Resources.BACKGROUND_COLOR_FOR59228, ValBg_color, 50);
 
 
 			return validator.GetResult();
@@ -447,6 +486,18 @@ namespace GenioMVC.ViewModels.Asset
 // USE /[MANUAL GQT VIEWMODEL_SAVE EQUIPM]/
 		public override void Save()
 		{
+			try
+			{
+				ValA_tags?.Save();
+			}
+			catch (FieldValidationException fvExc)
+			{
+				var sMsg = StatusMessage.Error();
+				foreach (var message in fvExc.StatusMessage.GetErrorList())
+					sMsg.MergeStatusMessage(new StatusMessage(message.Status, message.Message, string.Format("ValA_tags.{0}", message.Origin)));
+
+				throw new FieldValidationException(sMsg, fvExc.ExceptionSite);
+			}
 
 
 			base.Save();
@@ -496,7 +547,10 @@ namespace GenioMVC.ViewModels.Asset
 				CSGenio.business.CSGenioAmanuf.FldManufact,
 				equipm__manufname_____flimitmanuf_manufact);
 
-			TableManufName = new TableDBEdit<Models.Manuf>();
+			TableManufName = new TableDBEdit<Models.Manuf>
+			{
+				IsLazyLoad = lazyLoad
+			};
 
 			if (lazyLoad)
 			{
@@ -511,7 +565,7 @@ namespace GenioMVC.ViewModels.Asset
 
 			if (equipm__manufname____DoLoad)
 			{
-				List<ColumnSort> sorts = [];
+				List<ColumnSort> sorts = new List<ColumnSort>();
 				ColumnSort requestedSort = GetRequestSort(TableManufName, "sTableManufName", "dTableManufName", qs, "manuf");
 				if (requestedSort != null)
 					sorts.Add(requestedSort);
@@ -561,7 +615,7 @@ namespace GenioMVC.ViewModels.Asset
 
 				TableManufName.SetPagination(page, numberItems, listing.HasMore, listing.GetTotal, listing.TotalRecords);
 				TableManufName.Query = query;
-				TableManufName.Elements = listing.RowsForViewModel((r) => new GenioMVC.Models.Manuf(m_userContext, r, true, _fieldsToSerialize_EQUIPM__MANUFNAME____));
+				TableManufName.Elements = listing.RowsForViewModel<GenioMVC.Models.Manuf>((r) => new GenioMVC.Models.Manuf(m_userContext, r, true, _fieldsToSerialize_EQUIPM__MANUFNAME____));
 
 				//created by [ MH ] at [ 14.04.2016 ] - Foi alterada a forma de retornar a key do novo registo inserido / editado no form de apoio do DBEdit.
 				//last update by [ MH ] at [ 10.05.2016 ] - Validação se key encontra-se no level atual, as chaves dos niveis anteriores devem ser ignorados.
@@ -683,7 +737,10 @@ namespace GenioMVC.ViewModels.Asset
 				}
 			}
 
-			TableKindeDesignat = new TableDBEdit<Models.Kinde>();
+			TableKindeDesignat = new TableDBEdit<Models.Kinde>
+			{
+				IsLazyLoad = lazyLoad
+			};
 
 			if (lazyLoad)
 			{
@@ -698,7 +755,7 @@ namespace GenioMVC.ViewModels.Asset
 
 			if (equipm__kindedesignatDoLoad)
 			{
-				List<ColumnSort> sorts = [];
+				List<ColumnSort> sorts = new List<ColumnSort>();
 				ColumnSort requestedSort = GetRequestSort(TableKindeDesignat, "sTableKindeDesignat", "dTableKindeDesignat", qs, "kinde");
 				if (requestedSort != null)
 					sorts.Add(requestedSort);
@@ -748,7 +805,7 @@ namespace GenioMVC.ViewModels.Asset
 
 				TableKindeDesignat.SetPagination(page, numberItems, listing.HasMore, listing.GetTotal, listing.TotalRecords);
 				TableKindeDesignat.Query = query;
-				TableKindeDesignat.Elements = listing.RowsForViewModel((r) => new GenioMVC.Models.Kinde(m_userContext, r, true, _fieldsToSerialize_EQUIPM__KINDEDESIGNAT));
+				TableKindeDesignat.Elements = listing.RowsForViewModel<GenioMVC.Models.Kinde>((r) => new GenioMVC.Models.Kinde(m_userContext, r, true, _fieldsToSerialize_EQUIPM__KINDEDESIGNAT));
 
 				//created by [ MH ] at [ 14.04.2016 ] - Foi alterada a forma de retornar a key do novo registo inserido / editado no form de apoio do DBEdit.
 				//last update by [ MH ] at [ 10.05.2016 ] - Validação se key encontra-se no level atual, as chaves dos niveis anteriores devem ser ignorados.
@@ -864,6 +921,10 @@ namespace GenioMVC.ViewModels.Asset
 				"asset.identtyp" => ViewModelConversion.ToString(modelValue),
 				"asset.grai" => ViewModelConversion.ToString(modelValue),
 				"asset.giai" => ViewModelConversion.ToString(modelValue),
+				"asset.description" => ViewModelConversion.ToString(modelValue),
+				"asset.longdesc" => ViewModelConversion.ToString(modelValue),
+				"asset.category" => ViewModelConversion.ToString(modelValue),
+				"asset.bg_color" => ViewModelConversion.ToString(modelValue),
 				"asset.photo" => ViewModelConversion.ToImage(modelValue),
 				"asset.codasset" => ViewModelConversion.ToString(modelValue),
 				"manuf.codentit" => ViewModelConversion.ToString(modelValue),

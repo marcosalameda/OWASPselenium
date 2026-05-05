@@ -10,38 +10,38 @@ public class RegisForm : Form
 	/// <summary>
 	/// REGISTRATION IN THE PLATFORM
 	/// </summary>
-	public CollapsibleZoneControl PseudNovogr01 => new CollapsibleZoneControl(driver, ContainerLocator, "#REGIS___PSEUDNOVOGR01" + IdSuffix + "-container");
+	public CollapsibleZoneControl PseudNovogr01 => new CollapsibleZoneControl(driver, ContainerLocator, "#REGIS___PSEUDNOVOGR01-container");
 
 	/// <summary>
 	/// Name
 	/// </summary>
-	public BaseInputControl RegisName => new BaseInputControl(driver, ContainerLocator, "container-REGIS___REGISNAME____" + IdSuffix, "#REGIS___REGISNAME____" + IdSuffix);
+	public BaseInputControl RegisName => new BaseInputControl(driver, ContainerLocator, "container-REGIS___REGISNAME____", "#REGIS___REGISNAME____");
 
 	/// <summary>
 	/// Tax ID No:
 	/// </summary>
-	public BaseInputControl RegisNif => new BaseInputControl(driver, ContainerLocator, "container-REGIS___REGISNIF_____" + IdSuffix, "#REGIS___REGISNIF_____" + IdSuffix);
+	public BaseInputControl RegisNif => new BaseInputControl(driver, ContainerLocator, "container-REGIS___REGISNIF_____", "#REGIS___REGISNIF_____");
 
 	/// <summary>
 	/// Telephone
 	/// </summary>
-	public BaseInputControl RegisTelephon => new BaseInputControl(driver, ContainerLocator, "container-REGIS___REGISTELEPHON" + IdSuffix, "#REGIS___REGISTELEPHON" + IdSuffix);
+	public BaseInputControl RegisTelephon => new BaseInputControl(driver, ContainerLocator, "container-REGIS___REGISTELEPHON", "#REGIS___REGISTELEPHON");
 
 	/// <summary>
 	/// Email:
 	/// </summary>
-	public BaseInputControl RegisEmail1 => new BaseInputControl(driver, ContainerLocator, "container-REGIS___REGISEMAIL1__" + IdSuffix, "#REGIS___REGISEMAIL1__" + IdSuffix);
+	public BaseInputControl RegisEmail1 => new BaseInputControl(driver, ContainerLocator, "container-REGIS___REGISEMAIL1__", "#REGIS___REGISEMAIL1__");
 
 	/// <summary>
 	/// Alternative Email
 	/// </summary>
-	public BaseInputControl RegisEmail2 => new BaseInputControl(driver, ContainerLocator, "container-REGIS___REGISEMAIL2__" + IdSuffix, "#REGIS___REGISEMAIL2__" + IdSuffix);
+	public BaseInputControl RegisEmail2 => new BaseInputControl(driver, ContainerLocator, "container-REGIS___REGISEMAIL2__", "#REGIS___REGISEMAIL2__");
 
 	/// <summary>
 	/// @required
 	/// </summary>
 	public IWebElement PseudObrigato => throw new NotImplementedException();
 
-	public RegisForm(IWebDriver driver, FORM_MODE mode, By? containerLocator = null, bool usePkInId = false)
-		: base(driver, mode, "REGIS", containerLocator: containerLocator, usePkInId: usePkInId) { }
+	public RegisForm(IWebDriver driver, FORM_MODE mode, By? containerLocator = null)
+		: base(driver, mode, "REGIS", containerLocator: containerLocator) { }
 }

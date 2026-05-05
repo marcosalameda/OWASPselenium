@@ -1,20 +1,20 @@
-﻿using CSGenio.business;
-using CSGenio.framework;
-using CSGenio.persistence;
-using GenioMVC.Helpers;
-using GenioMVC.Models.Exception;
-using GenioMVC.Models.Navigation;
+﻿using JsonIgnoreAttribute = System.Text.Json.Serialization.JsonIgnoreAttribute;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Quidgest.Persistence;
-using Quidgest.Persistence.GenericQuery;
-
 using System.Collections;
 using System.Collections.Concurrent;
 using System.Collections.Specialized;
 using System.ComponentModel.DataAnnotations;
 using System.Data;
 using System.Globalization;
-using System.Text.Json.Serialization;
+
+using CSGenio.business;
+using CSGenio.framework;
+using CSGenio.persistence;
+using GenioMVC.Helpers;
+using GenioMVC.Models.Exception;
+using GenioMVC.Models.Navigation;
+using Quidgest.Persistence;
+using Quidgest.Persistence.GenericQuery;
 
 namespace GenioMVC.ViewModels.Evcat
 {
@@ -40,7 +40,6 @@ namespace GenioMVC.ViewModels.Evcat
 		public string ValCodpesso { get; set; }
 
 		#endregion
-
 		/// <summary>
 		/// Title: "Name" | Type: "C"
 		/// </summary>
@@ -261,7 +260,12 @@ namespace GenioMVC.ViewModels.Evcat
 			}
 		}
 
-		/// <inheritdoc />
+		/// <summary>
+		/// Sets the value of a single property of the view model based on the provided table and field names.
+		/// </summary>
+		/// <param name="fullFieldName">The full field name in the format "table.field".</param>
+		/// <param name="value">The field value.</param>
+		/// <exception cref="ArgumentNullException">Thrown if <paramref name="fullFieldName"/> is null.</exception>
 		public override void SetViewModelValue(string fullFieldName, object value)
 		{
 			try
@@ -345,17 +349,6 @@ namespace GenioMVC.ViewModels.Evcat
 				// Conexão deve estar aberta de fora. Podem haver formulas que utilizam funções "manuais".
 				// TODO: It needs to be analyzed whether we should disable the security of field filling here. If there is any case where the field with the block condition can only be calculated after the double calculation of the formulas.
 				MapToModel(Model);
-
-				// If it's inserting or duplicating, needs to fill the default values.
-				if (Navigation.CurrentLevel.FormMode == FormMode.New || Navigation.CurrentLevel.FormMode == FormMode.Duplicate)
-				{
-					FunctionType funcType = Navigation.CurrentLevel.FormMode == FormMode.New
-						? FunctionType.INS
-						: FunctionType.DUP;
-
-					Model.baseklass.fillValuesDefault(m_userContext.PersistentSupport, funcType);
-				}
-
 				// Preencher operações internas
 				Model.klass.fillInternalOperations(m_userContext.PersistentSupport, oldvalues);
 				MapFromModel(Model);
@@ -399,7 +392,6 @@ namespace GenioMVC.ViewModels.Evcat
 
 			Load_Evcat___pessoname____(qs, lazyLoad);
 			Load_Evcat___cate1category(qs, lazyLoad);
-
 // USE /[MANUAL GQT VIEWMODEL_LOADPARTIAL EVCAT]/
 		}
 
@@ -469,7 +461,10 @@ namespace GenioMVC.ViewModels.Evcat
 				}
 			}
 
-			TablePessoName = new TableDBEdit<Models.Pesso>();
+			TablePessoName = new TableDBEdit<Models.Pesso>
+			{
+				IsLazyLoad = lazyLoad
+			};
 
 			if (lazyLoad)
 			{
@@ -484,7 +479,7 @@ namespace GenioMVC.ViewModels.Evcat
 
 			if (evcat___pessoname____DoLoad)
 			{
-				List<ColumnSort> sorts = [];
+				List<ColumnSort> sorts = new List<ColumnSort>();
 				ColumnSort requestedSort = GetRequestSort(TablePessoName, "sTablePessoName", "dTablePessoName", qs, "pesso");
 				if (requestedSort != null)
 					sorts.Add(requestedSort);
@@ -534,7 +529,7 @@ namespace GenioMVC.ViewModels.Evcat
 
 				TablePessoName.SetPagination(page, numberItems, listing.HasMore, listing.GetTotal, listing.TotalRecords);
 				TablePessoName.Query = query;
-				TablePessoName.Elements = listing.RowsForViewModel((r) => new GenioMVC.Models.Pesso(m_userContext, r, true, _fieldsToSerialize_EVCAT___PESSONAME____));
+				TablePessoName.Elements = listing.RowsForViewModel<GenioMVC.Models.Pesso>((r) => new GenioMVC.Models.Pesso(m_userContext, r, true, _fieldsToSerialize_EVCAT___PESSONAME____));
 
 				//created by [ MH ] at [ 14.04.2016 ] - Foi alterada a forma de retornar a key do novo registo inserido / editado no form de apoio do DBEdit.
 				//last update by [ MH ] at [ 10.05.2016 ] - Validação se key encontra-se no level atual, as chaves dos niveis anteriores devem ser ignorados.
@@ -656,7 +651,10 @@ namespace GenioMVC.ViewModels.Evcat
 				}
 			}
 
-			TableCate1Category = new TableDBEdit<Models.Cate1>();
+			TableCate1Category = new TableDBEdit<Models.Cate1>
+			{
+				IsLazyLoad = lazyLoad
+			};
 
 			if (lazyLoad)
 			{
@@ -671,7 +669,7 @@ namespace GenioMVC.ViewModels.Evcat
 
 			if (evcat___cate1categoryDoLoad)
 			{
-				List<ColumnSort> sorts = [];
+				List<ColumnSort> sorts = new List<ColumnSort>();
 				ColumnSort requestedSort = GetRequestSort(TableCate1Category, "sTableCate1Category", "dTableCate1Category", qs, "cate1");
 				if (requestedSort != null)
 					sorts.Add(requestedSort);
@@ -721,7 +719,7 @@ namespace GenioMVC.ViewModels.Evcat
 
 				TableCate1Category.SetPagination(page, numberItems, listing.HasMore, listing.GetTotal, listing.TotalRecords);
 				TableCate1Category.Query = query;
-				TableCate1Category.Elements = listing.RowsForViewModel((r) => new GenioMVC.Models.Cate1(m_userContext, r, true, _fieldsToSerialize_EVCAT___CATE1CATEGORY));
+				TableCate1Category.Elements = listing.RowsForViewModel<GenioMVC.Models.Cate1>((r) => new GenioMVC.Models.Cate1(m_userContext, r, true, _fieldsToSerialize_EVCAT___CATE1CATEGORY));
 
 				//created by [ MH ] at [ 14.04.2016 ] - Foi alterada a forma de retornar a key do novo registo inserido / editado no form de apoio do DBEdit.
 				//last update by [ MH ] at [ 10.05.2016 ] - Validação se key encontra-se no level atual, as chaves dos niveis anteriores devem ser ignorados.

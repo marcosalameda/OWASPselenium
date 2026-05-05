@@ -13,7 +13,6 @@
 				:parent-form-mode="rowComponentProps.parentFormMode"
 				:parent-table-permissions="rowComponentProps.permissions"
 				:actions-placement="rowComponentProps.actionsPlacement"
-				is-multiple
 				v-bind="formProps"
 				@close="(...args) => formClose(...args)"
 				@edit="(...args) => $emit('edit', ...args)"
@@ -102,6 +101,14 @@
 			},
 
 			/**
+			 * Whether or not the form is currently visible.
+			 */
+			isVisible: {
+				type: Boolean,
+				default: true
+			},
+
+			/**
 			 * The nested form data required to load form.
 			 * {
 			 *     id,
@@ -186,9 +193,9 @@
 		{
 			this.updateFormData(this.formData)
 
-			this.$eventHub.on('new-extended-record', this.emitModelUpdate)
+			this.$eventHub.on('new-extended-record', (val) => this.$emit('update:model-value', val))
 
-			const eventData = {
+			let eventData = {
 				supportFormId: this.id,
 				rowKey: this.modelValue ?? undefined,
 				formMode: this.formProps.mode
@@ -196,17 +203,7 @@
 			this.handleModelUpdateEvent(eventData)
 		},
 
-		beforeUnmount()
-		{
-			this.$eventHub.off('new-extended-record', this.emitModelUpdate)
-		},
-
 		methods: {
-			emitModelUpdate(val)
-			{
-				this.$emit('update:model-value', val)
-			},
-
 			/**
 			 * Used to updated the form props each time the form data is updated.
 			 * @param {object} newFormData The new data of the form

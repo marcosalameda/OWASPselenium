@@ -1,14 +1,12 @@
-﻿using CSGenio;
-using CSGenio.business;
-using CSGenio.framework;
-using CSGenio.persistence;
-using OtpNet;
-using Quidgest.Persistence.GenericQuery;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
+﻿using System;
 using System.Text;
-using System.Web;
+using System.Security.Principal;
+using CSGenio.business;
+using CSGenio.persistence;
+using Quidgest.Persistence.GenericQuery;
+using System.Collections.Generic;
+using CSGenio.framework;
+using OtpNet;
 
 namespace GenioServer.security
 {
@@ -16,24 +14,8 @@ namespace GenioServer.security
     [CredentialProvider(typeof(UserPassCredential))]
     public class TOTPIdentityProvider : BaseIdentityProvider
     {
-        /// <summary>
-        /// Issuer name displayed in the TOTP qrcode when registering
-        /// </summary>
-        [SecurityProviderOption(optional: true)]
-        [Description("Issuer name displayed in the TOTP qrcode when registering.")]
-        public string Issuer { get; set; } = Configuration.Program;
-
         /// <inheritdoc/>
-        public TOTPIdentityProvider(IdentityProviderCfgEl config) : base(config)
-        {
-        }
-
-        public TOTPIdentityProvider() : base(new IdentityProviderCfgEl() { Name = "Totp" })
-        {
-        }
-
-        /// <inheritdoc/>
-        public override GenioIdentity Authenticate(Credential credential)
+        public override IIdentity Authenticate(Credential credential)
         {
             IList<string> anos = new List<string>(Configuration.Years);
             if (Configuration.Years.Count == 0)
@@ -41,7 +23,7 @@ namespace GenioServer.security
                 anos.Add(Configuration.DefaultYear);
             }
             Type classname = credential.GetType();
-            GenioIdentity id = null;
+            IIdentity id = null;
 
             foreach (string Qyear in anos)
             {
@@ -55,7 +37,7 @@ namespace GenioServer.security
                     known = true;
                 }
                 if (!known)
-                    throw new InvalidOperationException("The type " + credential.GetType().FullName + " is not supported for QuidgestIdentityProvider authentication.");
+                    throw new Exception("The type " + credential.GetType().FullName + " is not supported for QuidgestIdentityProvider authentication.");
 
                 sp.closeConnection();
 
@@ -66,7 +48,7 @@ namespace GenioServer.security
             return id;
         }
 
-        private bool IsOk(string valPsw2favl, string pass)
+        public bool IsOk(string valPsw2favl, string pass)
         {
             var secretBytes = Encoding.ASCII.GetBytes(valPsw2favl);
             var p = new Totp(secretBytes);
@@ -74,7 +56,7 @@ namespace GenioServer.security
             return pass == genCode;
         }
 
-        private GenioIdentity Authenticate(UserPassCredential credential, PersistentSupport sp)
+        private IIdentity Authenticate(UserPassCredential credential, PersistentSupport sp)
         {
             SelectQuery select = new SelectQuery()
                 .Select("psw", "psw2favl")
@@ -108,13 +90,7 @@ namespace GenioServer.security
                     sp.Execute(updQ);
                 }
 
-                return new()
-                {
-                    Name = credential.Username,
-                    IsAuthenticated = true,
-                    AuthenticationType = this.GetType().Name,
-                    IdProperty = GenioIdentityType.InternalId
-                };
+                return new GenericIdentity(credential.Username);
             }
 
             //add one more attempt if user fail the pass
@@ -128,37 +104,12 @@ namespace GenioServer.security
 
             return null;
         }
-		       
-
-        /// <inheritdoc/>
-        public override string NewCredentialRequest(string username)
-        {
-            string secret = PasswordFactory.StringRandom(20, true);
-            byte[] secretByte = Encoding.ASCII.GetBytes(secret);
-            var uri = new OtpUri(OtpType.Totp, secretByte, username, Issuer);
+		
+		public static string GetUrlQrCode (string username, string pass2Fa)
+        { 
+            byte[] secretByte = Encoding.ASCII.GetBytes(pass2Fa);
+            var uri = new OtpUri(OtpType.Totp, secretByte, username, Configuration.Program);
             return uri.ToString();
         }
-
-        /// <inheritdoc/>
-        public override CredentialSecret NewCredentialCreate(string username, string originalChallenge, string assertion)
-        {
-            var uri = new Uri(originalChallenge);
-            var otpParams = HttpUtility.ParseQueryString(uri.Query);
-            var secretBase64 = otpParams.Get("secret");
-            var secretBytes = Base32Encoding.ToBytes(secretBase64);
-            var secret = Encoding.ASCII.GetString(secretBytes);
-
-            if (!IsOk(secret, assertion))
-                throw new FrameworkException("Verification code does not match the Totp Qrcode", "TotpIdentityProvider.NewCredentialCreate", "");
-
-            return new TwoFaSecret()
-            {
-                Username = username,
-                Mode = Auth2FAModes.TOTP,
-                Value = secret
-            };
-        }
-
     }
-
 }

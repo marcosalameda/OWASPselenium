@@ -126,7 +126,7 @@
 				if (!btnsObj || Object.keys(btnsObj).length < 1)
 					return false
 
-				for (const i in btnsObj)
+				for (let i in btnsObj)
 					if (btnsObj[i].isActive && btnsObj[i].isVisible)
 						return true
 

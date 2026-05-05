@@ -1,8 +1,7 @@
-﻿using System.Collections.Specialized;
-using System.Text.Json.Serialization;
+﻿using JsonIgnoreAttribute = System.Text.Json.Serialization.JsonIgnoreAttribute;
+using System.Collections.Specialized;
 
 using CSGenio.business;
-using CSGenio.core.framework.table;
 using CSGenio.framework;
 using GenioMVC.Helpers;
 using GenioMVC.Models.Navigation;
@@ -10,17 +9,37 @@ using Quidgest.Persistence.GenericQuery;
 
 namespace GenioMVC.ViewModels
 {
-	/// <summary>
-	/// Initializes a new instance of the <see cref="ListViewModel" /> class.
-	/// </summary>
-	/// <param name="userContext">The current user request context</param>
-	public abstract class ListViewModel(UserContext userContext) : ViewModelBase(userContext)
+	public enum TableViewsManagementMode
+	{
+		/// <summary>
+		/// The user is not allowed to change the list in any way.
+		/// </summary>
+		None,
+
+		/// <summary>
+		/// The user is allowed to customize the table but the changes are not saved.
+		/// </summary>
+		NonPersistent,
+
+		/// <summary>
+		/// The user changes are automatically saved in a single user table configuration.
+		/// </summary>
+		PersistOne,
+
+		/// <summary>
+		/// The user can fully create and manage multiple table configurations.
+		/// </summary>
+		PersistMany
+	}
+
+	public abstract class ListViewModel : ViewModelBase
 	{
 		protected List<CSGenioAlstcol> userColumns;
 
 		/// <summary>
 		/// Gets the alias of the table.
 		/// </summary>
+		[JsonIgnore]
 		public abstract string TableAlias { get; }
 
 		/// <summary>
@@ -42,13 +61,15 @@ namespace GenioMVC.ViewModels
 		/// Gets the list base conditions.
 		/// For row reordering.
 		/// </summary>
-		public abstract CriteriaSet BaseConditions { get; }
+		[JsonIgnore]
+		public abstract CriteriaSet baseConditions { get; }
 
 		/// <summary>
 		/// Gets the list of relations.
 		/// For row reordering.
 		/// </summary>
-		public abstract List<Relation> Relations { get; }
+		[JsonIgnore]
+		public abstract List<Relation> relations { get; }
 
 		/// <summary>
 		/// Gets the user column configuration.
@@ -60,37 +81,38 @@ namespace GenioMVC.ViewModels
 		/// Gets or sets the table limits.
 		/// </summary>
 		[JsonIgnore]
-		public List<Limit> TableLimits { get; set; }
+		public List<Limit> tableLimits { get; set; }
 
 		/// <summary>
 		/// Gets or sets the data to display the table limits.
 		/// </summary>
-		[JsonPropertyName("tableLimitsDisplayData")]
-		public List<LimitDisplayData> TableLimitsDisplayData { get; set; }
+		public List<LimitDisplayData> tableLimitsDisplayData { get; set; }
 
 		/// <summary>
 		/// Gets the table views management mode.
 		/// </summary>
-		[JsonIgnore]
-		public virtual TableManagementMode ViewsManagementMode => TableManagementMode.None;
+		virtual protected TableViewsManagementMode ViewsManagementMode => TableViewsManagementMode.None;
 
 		/// <summary>
 		/// Gets the names of the user table configurations.
 		/// </summary>
-		[JsonPropertyName("tableConfigNames")]
-		public List<string> TableConfigNames { get; set; }
+		public List<string> UserTableConfigNames { get; set; }
 
 		/// <summary>
 		/// Gets the name of the default user table configuration.
 		/// </summary>
-		[JsonPropertyName("defaultTableConfigName")]
-		public string DefaultTableConfigName { get; set; }
+		public string UserTableConfigNameDefault { get; set; }
 
 		/// <summary>
 		/// The current table configuration.
 		/// </summary>
-		[JsonPropertyName("currentTableConfig")]
-		public TableConfiguration CurrentTableConfig { get; set; }
+		public CSGenio.framework.TableConfiguration.TableConfiguration CurrentTableConfig { get; set; }
+
+		/// <summary>
+		/// Initializes a new instance of the <see cref="ListViewModel" /> class.
+		/// </summary>
+		/// <param name="userContext">The current user request context</param>
+		public ListViewModel(UserContext userContext) : base(userContext) {}
 
 		/// <summary>
 		/// Applies manual code to change the static limits property
@@ -101,50 +123,21 @@ namespace GenioMVC.ViewModels
 		}
 
 		/// <summary>
-		/// Determines which table configuration to use and loads it
-		/// </summary>
-		/// <param name="currentTableConfig">The currently active table configuration</param>
-		/// <param name="configName">The name of a specific configuration to load</param>
-		/// <param name="loadDefaultView">If true, forces loading of the default configuration</param>
-		/// <param name="defaultTableConfig">A fallback configuration to use if no other configuration is available</param>
-		/// <returns>The table configuration to be applied</returns>
-		public TableConfiguration GetTableConfig(TableConfiguration currentTableConfig = null, string configName = "", bool loadDefaultView = false, TableConfiguration defaultTableConfig = null)
-		{
-			TableConfiguration tableConfig = currentTableConfig ?? new();
-
-			if (ViewsManagementMode == TableManagementMode.PersistOne ||
-				ViewsManagementMode == TableManagementMode.PersistMany)
-			{
-				tableConfig = TableUiSettings.Load(
-					m_userContext.PersistentSupport,
-					m_userContext.User,
-					Uuid
-				).DetermineTableConfig(
-					currentTableConfig,
-					configName,
-					loadDefaultView,
-					defaultTableConfig
-				);
-			}
-
-			return tableConfig;
-		}
-
-		/// <summary>
 		/// Gets the user table configuration names from the loaded data and sets the corresponding properties.
 		/// </summary>
 		public void LoadUserTableConfigNameProperties()
 		{
-			if (ViewsManagementMode == TableManagementMode.PersistOne ||
-				ViewsManagementMode == TableManagementMode.PersistMany)
+			if (ViewsManagementMode == TableViewsManagementMode.PersistOne ||
+				ViewsManagementMode == TableViewsManagementMode.PersistMany)
 			{
 				TableUiSettings _tableUiSettings = TableUiSettings.Load(
 					m_userContext.PersistentSupport,
-					m_userContext.User,
-					Uuid);
+					Uuid,
+					m_userContext.User
+				);
 
-				TableConfigNames = _tableUiSettings?.UserTableConfigNames;
-				DefaultTableConfigName = _tableUiSettings?.DefaultTableConfiguration?.Name;
+				UserTableConfigNames = _tableUiSettings?.UserTableConfigNames;
+				UserTableConfigNameDefault = _tableUiSettings?.DefaultTableConfiguration?.Name;
 			}
 		}
 
@@ -154,21 +147,19 @@ namespace GenioMVC.ViewModels
 		protected void FillTableLimitsDisplayData()
 		{
 			// Nothing to do if table has no limits.
-			if (TableLimits == null || TableLimits.Count < 1)
+			if (this.tableLimits == null || this.tableLimits.Count < 1)
 				return;
 
-			TableLimitsDisplayData = [];
+			this.tableLimitsDisplayData = new List<LimitDisplayData>();
 
 			string userLanguage = m_userContext.User.Language;
 			CSGenio.persistence.PersistentSupport sp = m_userContext.PersistentSupport;
 
 			// Iterate limits and set display data.
-			foreach (Limit limit in TableLimits)
+			foreach (Limit limit in this.tableLimits)
 			{
-				LimitDisplayData limitDisplayData = new()
-				{
-					Type = Enum.GetName(typeof(LimitType), limit.TipoLimite)
-				};
+				LimitDisplayData limitDisplayData = new LimitDisplayData();
+				limitDisplayData.Type = Enum.GetName(typeof(LimitType), limit.TipoLimite);
 
 				string Area = "",
 					AreaPlural = "",
@@ -301,7 +292,7 @@ namespace GenioMVC.ViewModels
 				limitDisplayData.ApplyOnlyIfExists = limit.NaoAplicaSeNulo.ToString();
 
 				// Add limit data to array.
-				TableLimitsDisplayData.Add(limitDisplayData);
+				this.tableLimitsDisplayData.Add(limitDisplayData);
 			}
 		}
 
@@ -433,7 +424,7 @@ namespace GenioMVC.ViewModels
 		/// </summary>
 		/// <param name="columnConfig">Column configuration specified by the user.</param>
 		/// <param name="includeInvisibleFields">Whether to include invisible fields.</param>
-		public List<TableSearchColumn> GetSearchColumns(List<ColumnConfiguration> columnConfig, bool includeInvisibleFields = false)
+		public List<TableSearchColumn> GetSearchColumns(List<CSGenio.framework.TableConfiguration.ColumnConfiguration> columnConfig, bool includeInvisibleFields = false)
 		{
 			// If the user has some hidden columns we should not search in them
 			if (includeInvisibleFields)
@@ -446,7 +437,8 @@ namespace GenioMVC.ViewModels
 		/// <summary>
 		/// Gets the list of columns to export.
 		/// </summary>
-		public abstract List<Exports.QColumn> GetColumnsToExport();
+		/// <param name="ajaxRequest">Whether the request was initiated via AJAX.</param>
+		public abstract List<Exports.QColumn> GetColumnsToExport(bool ajaxRequest = false);
 
 		/// <summary>
 		/// Builds the list CriteriaSet with all the limits, filters and conditions
@@ -466,23 +458,23 @@ namespace GenioMVC.ViewModels
 		/// <param name="crs">Pass a CriteriaSet by reference to be modified</param>
 		/// <param name="isToExport">If the  table is to be exported</param>
 		/// <inheritdoc/>
-		public abstract CriteriaSet BuildCriteriaSet(TableConfiguration tableConfig, NameValueCollection requestValues, out bool tableReload, CriteriaSet crs = null, bool isToExport = false);
+		public abstract CriteriaSet BuildCriteriaSet(CSGenio.framework.TableConfiguration.TableConfiguration tableConfig, NameValueCollection requestValues, out bool tableReload, CriteriaSet crs = null, bool isToExport = false);
 
 		/// <summary>
 		/// Gets the list of columns to export, accounting for the column configuration.
 		/// </summary>
-		/// <param name="columnConfig">Column order and visibility</param>
-		public List<Exports.QColumn> GetExportColumns(List<ColumnConfiguration> columnConfig)
+		/// <param name="ColumnConfiguration">Column order and visibility</param>
+		public List<Exports.QColumn> GetExportColumns(List<CSGenio.framework.TableConfiguration.ColumnConfiguration> ColumnConfiguration)
 		{
-			List<Exports.QColumn> defaultColumns = GetColumnsToExport();
-			List<Exports.QColumn> configuredColumns = [];
+			List<Exports.QColumn> defaultColumns = this.GetColumnsToExport(false);
+			List<Exports.QColumn> configuredColumns = new List<Exports.QColumn>();
 
 			// If configuration is defined, get visible columns from the default configuration
-			if (columnConfig == null)
-				return defaultColumns.Where((col) => col.Visible).ToList();
+			if (ColumnConfiguration == null)
+				return defaultColumns.Where((col) => col.Visible == true).ToList();
 
 			// Get column data with the order and visibility set in the column configuration
-			foreach (ColumnConfiguration currentConfiguredColumn in columnConfig)
+			foreach (CSGenio.framework.TableConfiguration.ColumnConfiguration currentConfiguredColumn in ColumnConfiguration)
 			{
 				if (currentConfiguredColumn == null || currentConfiguredColumn.Name == null)
 					continue;
@@ -494,7 +486,7 @@ namespace GenioMVC.ViewModels
 
 				// If the name only has the column name, set the table name as the name of this table
 				if (sepIdx == -1)
-					currentTableName = TableAlias.ToLower();
+					currentTableName = this.TableAlias.ToLower();
 				// If the name has the table and column names, use the part before the '.' as the table name
 				else
 					currentTableName = currentConfiguredColumn.Name.Substring(0, sepIdx).ToLower();
@@ -511,14 +503,9 @@ namespace GenioMVC.ViewModels
 				// Set the visibility to match the configuration of this column
 				currentColumn.Visible = currentConfiguredColumn.Visibility == 1;
 
-				// Determine export logic
-				bool shouldExport =
-					currentConfiguredColumn.Exportability == 2 ||
-					(currentConfiguredColumn.Exportability == 1 && currentColumn.Visible);
-
-				if (shouldExport)
+				// If the column is visible and exportable, add it to the list of columns to export
+				if (currentColumn.Visible && currentConfiguredColumn.Exportability == 1)
 					configuredColumns.Add(currentColumn);
-
 			}
 
 			return configuredColumns;

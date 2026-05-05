@@ -1,20 +1,20 @@
-﻿using CSGenio.business;
-using CSGenio.framework;
-using CSGenio.persistence;
-using GenioMVC.Helpers;
-using GenioMVC.Models.Exception;
-using GenioMVC.Models.Navigation;
+﻿using JsonIgnoreAttribute = System.Text.Json.Serialization.JsonIgnoreAttribute;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Quidgest.Persistence;
-using Quidgest.Persistence.GenericQuery;
-
 using System.Collections;
 using System.Collections.Concurrent;
 using System.Collections.Specialized;
 using System.ComponentModel.DataAnnotations;
 using System.Data;
 using System.Globalization;
-using System.Text.Json.Serialization;
+
+using CSGenio.business;
+using CSGenio.framework;
+using CSGenio.persistence;
+using GenioMVC.Helpers;
+using GenioMVC.Models.Exception;
+using GenioMVC.Models.Navigation;
+using Quidgest.Persistence;
+using Quidgest.Persistence.GenericQuery;
 
 namespace GenioMVC.ViewModels.Decom
 {
@@ -32,19 +32,14 @@ namespace GenioMVC.ViewModels.Decom
 		#region Foreign keys
 
 		#endregion
-
-		/// <summary>
-		/// Title: "No decomission" | Type: "N"
-		/// </summary>
-		public decimal? ValDecomnr { get; set; }
 		/// <summary>
 		/// Title: "Decomission" | Type: "DT"
 		/// </summary>
 		public DateTime? ValDtdeco { get; set; }
 		/// <summary>
-		/// Title: "Notes" | Type: "MO"
+		/// Title: "No bate" | Type: "N"
 		/// </summary>
-		public string ValNote { get; set; }
+		public decimal? ValDecomnr { get; set; }
 
 		#region Navigations
 		#endregion
@@ -176,9 +171,8 @@ namespace GenioMVC.ViewModels.Decom
 
 			try
 			{
-				ValDecomnr = ViewModelConversion.ToNumeric(m.ValDecomnr);
 				ValDtdeco = ViewModelConversion.ToDateTime(m.ValDtdeco);
-				ValNote = ViewModelConversion.ToString(m.ValNote);
+				ValDecomnr = ViewModelConversion.ToNumeric(m.ValDecomnr);
 				ValCoddeco = ViewModelConversion.ToString(m.ValCoddeco);
 			}
 			catch (Exception)
@@ -205,9 +199,8 @@ namespace GenioMVC.ViewModels.Decom
 
 			try
 			{
-				m.ValDecomnr = ViewModelConversion.ToNumeric(ValDecomnr);
 				m.ValDtdeco = ViewModelConversion.ToDateTime(ValDtdeco);
-				m.ValNote = ViewModelConversion.ToString(ValNote);
+				m.ValDecomnr = ViewModelConversion.ToNumeric(ValDecomnr);
 				m.ValCoddeco = ViewModelConversion.ToString(ValCoddeco);
 			}
 			catch (Exception)
@@ -217,7 +210,12 @@ namespace GenioMVC.ViewModels.Decom
 			}
 		}
 
-		/// <inheritdoc />
+		/// <summary>
+		/// Sets the value of a single property of the view model based on the provided table and field names.
+		/// </summary>
+		/// <param name="fullFieldName">The full field name in the format "table.field".</param>
+		/// <param name="value">The field value.</param>
+		/// <exception cref="ArgumentNullException">Thrown if <paramref name="fullFieldName"/> is null.</exception>
 		public override void SetViewModelValue(string fullFieldName, object value)
 		{
 			try
@@ -228,14 +226,11 @@ namespace GenioMVC.ViewModels.Decom
 
 				switch (fullFieldName)
 				{
-					case "decom.decomnr":
-						this.ValDecomnr = ViewModelConversion.ToNumeric(_value);
-						break;
 					case "decom.dtdeco":
 						this.ValDtdeco = ViewModelConversion.ToDateTime(_value);
 						break;
-					case "decom.note":
-						this.ValNote = ViewModelConversion.ToString(_value);
+					case "decom.decomnr":
+						this.ValDecomnr = ViewModelConversion.ToNumeric(_value);
 						break;
 					case "decom.coddeco":
 						this.ValCoddeco = ViewModelConversion.ToString(_value);
@@ -295,17 +290,6 @@ namespace GenioMVC.ViewModels.Decom
 				// Conexão deve estar aberta de fora. Podem haver formulas que utilizam funções "manuais".
 				// TODO: It needs to be analyzed whether we should disable the security of field filling here. If there is any case where the field with the block condition can only be calculated after the double calculation of the formulas.
 				MapToModel(Model);
-
-				// If it's inserting or duplicating, needs to fill the default values.
-				if (Navigation.CurrentLevel.FormMode == FormMode.New || Navigation.CurrentLevel.FormMode == FormMode.Duplicate)
-				{
-					FunctionType funcType = Navigation.CurrentLevel.FormMode == FormMode.New
-						? FunctionType.INS
-						: FunctionType.DUP;
-
-					Model.baseklass.fillValuesDefault(m_userContext.PersistentSupport, funcType);
-				}
-
 				// Preencher operações internas
 				Model.klass.fillInternalOperations(m_userContext.PersistentSupport, oldvalues);
 				MapFromModel(Model);
@@ -347,7 +331,6 @@ namespace GenioMVC.ViewModels.Decom
 			// Add characteristics
 			Characs = new List<string>();
 
-
 // USE /[MANUAL GQT VIEWMODEL_LOADPARTIAL ABATE]/
 		}
 
@@ -363,9 +346,9 @@ namespace GenioMVC.ViewModels.Decom
 			CrudViewModelFieldValidator validator = new(m_userContext.User.Language);
 
 
-			validator.Required("ValDecomnr", Resources.Resources.NO_DECOMISSION13045, ViewModelConversion.ToNumeric(ValDecomnr), FieldType.NUMERIC.GetFormatting());
-
 			validator.Required("ValDtdeco", Resources.Resources.DECOMISSION14486, ViewModelConversion.ToDateTime(ValDtdeco), FieldType.DATETIME.GetFormatting());
+
+			validator.Required("ValDecomnr", Resources.Resources.NO_BATE21045, ViewModelConversion.ToNumeric(ValDecomnr), FieldType.NUMERIC.GetFormatting());
 
 
 			return validator.GetResult();
@@ -407,9 +390,8 @@ namespace GenioMVC.ViewModels.Decom
 		{
 			return identifier switch
 			{
-				"decom.decomnr" => ViewModelConversion.ToNumeric(modelValue),
 				"decom.dtdeco" => ViewModelConversion.ToDateTime(modelValue),
-				"decom.note" => ViewModelConversion.ToString(modelValue),
+				"decom.decomnr" => ViewModelConversion.ToNumeric(modelValue),
 				"decom.coddeco" => ViewModelConversion.ToString(modelValue),
 				_ => modelValue
 			};

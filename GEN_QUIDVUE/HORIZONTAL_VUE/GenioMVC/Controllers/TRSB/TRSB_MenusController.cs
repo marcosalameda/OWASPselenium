@@ -28,32 +28,53 @@ namespace GenioMVC.Controllers
 {
 	public partial class TrsbController : ControllerBase
 	{
-		private static readonly NavigationLocation ACTION_PTN_MENU_3141 = new NavigationLocation("RELATED_TABLES__BASI34539", "PTN_Menu_3141", "Trsb") { vueRouteName = "menu-PTN_3141" };
+		private static readonly NavigationLocation ACTION_PTN_MENU_3151 = new NavigationLocation("RELATED_TABLES__BASI34539", "PTN_Menu_3151", "Trsb") { vueRouteName = "menu-PTN_3151" };
 
 
 		//
-		// GET: /Trsb/PTN_Menu_3141
-		[ActionName("PTN_Menu_3141")]
+		// GET: /Trsb/PTN_Menu_3151
+		[ActionName("PTN_Menu_3151")]
 		[HttpPost]
-		public ActionResult PTN_Menu_3141([FromBody] RequestMenuModel requestModel)
+		public ActionResult PTN_Menu_3151([FromBody]RequestMenuModel requestModel)
 		{
 			var queryParams = requestModel.QueryParams;
 
-			PTN_Menu_3141_ViewModel model = new(m_userContext);
+			int perPage = CSGenio.framework.Configuration.NrRegDBedit;
+			string rowsPerPageOptionsString = "";
 
-			CSGenio.core.framework.table.TableConfiguration tableConfig = model.GetTableConfig(
-				requestModel.TableConfiguration,
-				requestModel.UserTableConfigName,
-				requestModel.LoadDefaultView);
+			PTN_Menu_3151_ViewModel model = new PTN_Menu_3151_ViewModel(UserContext.Current);
+
+			// Table configuration load options
+			CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions tableConfigOptions = new CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions();
+
+
+			// Determine which table configuration to use and load it
+			CSGenio.framework.TableConfiguration.TableConfiguration tableConfig = TableUiSettings.Load(
+				UserContext.Current.PersistentSupport,
+				model.Uuid,
+				UserContext.Current.User,
+				tableConfigOptions
+			).DetermineTableConfig(
+				requestModel?.TableConfiguration,
+				requestModel?.UserTableConfigName,
+				(bool)requestModel?.LoadDefaultView,
+				tableConfigOptions
+			);
 
 			// Determine rows per page
-			tableConfig.RowsPerPage = tableConfig.DetermineRowsPerPage(CSGenio.framework.Configuration.NrRegDBedit, "");
+			tableConfig.RowsPerPage = CSGenio.framework.TableConfiguration.TableConfigurationHelpers.DetermineRowsPerPage(tableConfig.RowsPerPage, perPage, rowsPerPageOptionsString);
+
+			// Determine what columns have totalizers
+			tableConfig.TotalizerColumns = requestModel.TotalizerColumns;
+
+			// For tables with multiple selection enabled, determine currently selected rows
+			tableConfig.SelectedRows = requestModel.SelectedRows;
 
 			bool isHomePage = RouteData.Values.ContainsKey("isHomePage") ? (bool)RouteData.Values["isHomePage"] : false;
 			if (isHomePage)
-				Navigation.SetValue("HomePage", "PTN_Menu_3141");
+				Navigation.SetValue("HomePage", "PTN_Menu_3151");
 
-			// If there was a recent operation on this table then force the primary persistence server to be called and ignore the read only feature
+			//If there was a recent operation on this table then force the primary persistence server to be called and ignore the read only feature
 			if (string.IsNullOrEmpty(Navigation.GetStrValue("ForcePrimaryRead_trsb")))
 				UserContext.Current.SetPersistenceReadOnly(true);
 			else
@@ -65,32 +86,33 @@ namespace GenioMVC.Controllers
 			if (result.Status.Equals(CSGenio.framework.Status.E))
 				return PermissionError(result.Message);
 
-			NameValueCollection querystring = [];
+			NameValueCollection querystring = new NameValueCollection();
 			if (queryParams != null && queryParams.Count > 0)
 				querystring.AddRange(queryParams);
 
 			if (!isHomePage &&
-				(Navigation.CurrentLevel == null || !ACTION_PTN_MENU_3141.IsSameAction(Navigation.CurrentLevel.Location)) &&
-				Navigation.CurrentLevel.Location.Action != ACTION_PTN_MENU_3141.Action)
+				(Navigation.CurrentLevel == null || !ACTION_PTN_MENU_3151.IsSameAction(Navigation.CurrentLevel.Location)) &&
+				Navigation.CurrentLevel.Location.Action != ACTION_PTN_MENU_3151.Action)
 				CSGenio.framework.Audit.registAction(UserContext.Current.User, Resources.Resources.MENU01948 + " " + Navigation.CurrentLevel.Location.ShortDescription());
 			else if (isHomePage)
 			{
-				CSGenio.framework.Audit.registAction(UserContext.Current.User, Resources.Resources.MENU01948 + " " + ACTION_PTN_MENU_3141.ShortDescription());
+				CSGenio.framework.Audit.registAction(UserContext.Current.User, Resources.Resources.MENU01948 + " " + ACTION_PTN_MENU_3151.ShortDescription());
 				Navigation.SetValue("HomePageContainsList", true);
 			}
 
 
 
-// USE /[MANUAL PTN MENU_GET 3141]/
+// USE /[MANUAL PTN MENU_GET 3151]/
 
-			try
-			{
-				model.Load(tableConfig, querystring, Request.IsAjaxRequest());
-			}
-			catch (Exception e)
-			{
-				return JsonERROR(HandleException(e), model);
-			}
+
+            try
+            {
+			    model.Load(tableConfig, querystring, Request.IsAjaxRequest());
+            }
+            catch(Exception e)
+            {
+                return JsonERROR(HandleException(e), model);
+            }
 
 
 			return JsonOK(model);

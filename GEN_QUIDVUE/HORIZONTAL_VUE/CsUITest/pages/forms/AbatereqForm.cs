@@ -15,28 +15,28 @@ public class AbatereqForm : Form
 	/// <summary>
 	/// Number
 	/// </summary>
-	public BaseInputControl DecomDecomnr => new BaseInputControl(driver, ContainerLocator, "container-ABATEREQDECOMDECOMNR_" + IdSuffix, "#ABATEREQDECOMDECOMNR_" + IdSuffix);
-
-	/// <summary>
-	/// Notes
-	/// </summary>
-	public BaseInputControl DecomNote => new BaseInputControl(driver, ContainerLocator, "container-ABATEREQDECOMNOTE____" + IdSuffix, "#ABATEREQDECOMNOTE____" + IdSuffix);
+	public BaseInputControl DecomDecomnr => new BaseInputControl(driver, ContainerLocator, "container-ABATEREQDECOMDECOMNR_", "#ABATEREQDECOMDECOMNR_");
 
 	/// <summary>
 	/// Collapsible
 	/// </summary>
-	public CollapsibleZoneControl PseudCollapse => new CollapsibleZoneControl(driver, ContainerLocator, "#ABATEREQPSEUDCOLLAPSE" + IdSuffix + "-container");
+	public IWebElement PseudCollapse => throw new NotImplementedException();
+
+	/// <summary>
+	/// Notes
+	/// </summary>
+	public BaseInputControl DecomNote => new BaseInputControl(driver, ContainerLocator, "container-ABATEREQDECOMNOTE____", "#ABATEREQDECOMNOTE____");
 
 	/// <summary>
 	/// Tab
 	/// </summary>
-	public TabControl PseudAbatetab => new TabControl(driver, ContainerLocator, "[data-testid='tab-container-ABATEREQPSEUDABATETAB']");
+	public TabControl PseudAbatetab => new TabControl(driver, ContainerLocator, "#tab-container-ABATEREQPSEUDABATETAB");
 
 	/// <summary>
 	/// Decomission
 	/// </summary>
-	public DateInputControl AbatetabDecomDtdeco => new DateInputControl(driver, ContainerLocator, "#ABATETABDECOMDTDECO__" + IdSuffix, "dd/MM/yyyy HH:mm");
+	public DateInputControl AbatetabDecomDtdeco => new DateInputControl(driver, ContainerLocator, "#ABATETABDECOMDTDECO__", "dd/MM/yyyy HH:mm");
 
-	public AbatereqForm(IWebDriver driver, FORM_MODE mode, By? containerLocator = null, bool usePkInId = false)
-		: base(driver, mode, "ABATEREQ", containerLocator: containerLocator, usePkInId: usePkInId) { }
+	public AbatereqForm(IWebDriver driver, FORM_MODE mode, By? containerLocator = null)
+		: base(driver, mode, "ABATEREQ", containerLocator: containerLocator) { }
 }

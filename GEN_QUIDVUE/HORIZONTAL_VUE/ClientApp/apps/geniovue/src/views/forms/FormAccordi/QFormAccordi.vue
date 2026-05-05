@@ -9,13 +9,12 @@
 			<div
 				v-if="showFormHeader"
 				class="c-action-bar">
-				<component
+				<h1
 					v-if="formControl.uiComponents.header && formInfo.designation"
-					:is="topHeadingTag"
 					:id="formTitleId"
 					class="form-header">
 					{{ formInfo.designation }}
-				</component>
+				</h1>
 
 				<div class="c-action-bar__menu">
 					<template
@@ -39,13 +38,9 @@
 									:label="btn.label"
 									:disabled="btn.disabled"
 									@click="btn.action">
-									<template v-if="btn.icon">
-										<q-badge-indicator
-											:enabled="btn.badge?.isVisible ?? false"
-											:color="btn.badge?.color">
-											<q-icon v-bind="btn.icon" />
-										</q-badge-indicator>
-									</template>
+									<q-icon
+										v-if="btn.icon"
+										v-bind="btn.icon" />
 								</q-toggle-group-item>
 							</template>
 						</q-toggle-group>
@@ -57,7 +52,7 @@
 				v-if="$app.layout.FormAnchorsPosition === 'form-header' && visibleGroups.length > 0"
 				:anchors="anchorGroups"
 				:controls="visibleControls"
-				@focus-control="focusControl" />
+				@focus-control="(...args) => focusControl(...args)" />
 		</div>
 	</teleport>
 
@@ -78,7 +73,6 @@
 						v-if="btn.isActive && btn.isVisible && btn.showInHeading"
 						:id="`heading-${btn.id}`"
 						:label="btn.text"
-						:color="btn.color"
 						:variant="btn.variant"
 						:disabled="btn.disabled"
 						:icon-pos="btn.iconPos"
@@ -92,31 +86,27 @@
 			</q-button-group>
 		</div>
 
-		<q-container
-			fluid
+		<div
+			class="form-flow"
 			data-key="ACCORDI"
-			:data-identifier="primaryKeyValue"
-			:data-loading="!formInitialDataLoaded || !isActiveForm">
+			:data-loading="!formInitialDataLoaded">
 			<template v-if="formControl.initialized && showFormBody">
-				<q-row v-if="controls.ACCORDI_PSEUDNOVOGR02.isVisible">
-					<q-col
-						v-if="controls.ACCORDI_PSEUDNOVOGR02.isVisible"
-						cols="auto">
+				<q-row-container v-show="controls.ACCORDI_PSEUDNOVOGR02.isVisible">
+					<q-control-wrapper
+						v-show="controls.ACCORDI_PSEUDNOVOGR02.isVisible"
+						class="${Vue.GetControlWrapperClass($controlsColumn)}">
 						<q-group-collapsible
-							v-if="controls.ACCORDI_PSEUDNOVOGR02.isVisible"
+							id="ACCORDI_PSEUDNOVOGR02"
 							v-bind="controls.ACCORDI_PSEUDNOVOGR02"
-							:id="getControlId(controls.ACCORDI_PSEUDNOVOGR02)"
 							v-on="controls.ACCORDI_PSEUDNOVOGR02.handlers">
 							<!-- Start ACCORDI_PSEUDNOVOGR02 -->
-							<q-row v-if="controls.ACCORDI_CMPNYDESIGNAT.isVisible">
-								<q-col
-									v-if="controls.ACCORDI_CMPNYDESIGNAT.isVisible"
-									cols="auto">
+							<q-row-container v-show="controls.ACCORDI_CMPNYDESIGNAT.isVisible">
+								<q-control-wrapper
+									v-show="controls.ACCORDI_CMPNYDESIGNAT.isVisible"
+									class="${Vue.GetControlWrapperClass($controlsColumn)}">
 									<base-input-structure
-										v-if="controls.ACCORDI_CMPNYDESIGNAT.isVisible"
 										class="i-text"
-										v-bind="controls.ACCORDI_CMPNYDESIGNAT.wrapperProps"
-										:id="getControlId(controls.ACCORDI_CMPNYDESIGNAT)"
+										v-bind="controls.ACCORDI_CMPNYDESIGNAT"
 										v-on="controls.ACCORDI_CMPNYDESIGNAT.handlers"
 										:loading="controls.ACCORDI_CMPNYDESIGNAT.props.loading"
 										:reporting-mode-on="reportingModeCAV"
@@ -124,24 +114,21 @@
 										<q-lookup
 											v-if="controls.ACCORDI_CMPNYDESIGNAT.isVisible"
 											v-bind="controls.ACCORDI_CMPNYDESIGNAT.props"
-											:id="getControlId(controls.ACCORDI_CMPNYDESIGNAT)"
 											v-on="controls.ACCORDI_CMPNYDESIGNAT.handlers" />
 										<q-see-more-accordi-cmpnydesignat
 											v-if="controls.ACCORDI_CMPNYDESIGNAT.seeMoreIsVisible"
 											v-bind="controls.ACCORDI_CMPNYDESIGNAT.seeMoreParams"
 											v-on="controls.ACCORDI_CMPNYDESIGNAT.handlers" />
 									</base-input-structure>
-								</q-col>
-							</q-row>
-							<q-row v-if="controls.ACCORDI_PESS1NAME____.isVisible || controls.ACCORDI_EQUIPSEQUENNR.isVisible">
-								<q-col
-									v-if="controls.ACCORDI_PESS1NAME____.isVisible"
-									cols="auto">
+								</q-control-wrapper>
+							</q-row-container>
+							<q-row-container v-show="controls.ACCORDI_PESS1NAME____.isVisible || controls.ACCORDI_EQUIPSEQUENNR.isVisible">
+								<q-control-wrapper
+									v-show="controls.ACCORDI_PESS1NAME____.isVisible"
+									class="${Vue.GetControlWrapperClass($controlsColumn)}">
 									<base-input-structure
-										v-if="controls.ACCORDI_PESS1NAME____.isVisible"
 										class="i-text"
-										v-bind="controls.ACCORDI_PESS1NAME____.wrapperProps"
-										:id="getControlId(controls.ACCORDI_PESS1NAME____)"
+										v-bind="controls.ACCORDI_PESS1NAME____"
 										v-on="controls.ACCORDI_PESS1NAME____.handlers"
 										:loading="controls.ACCORDI_PESS1NAME____.props.loading"
 										:reporting-mode-on="reportingModeCAV"
@@ -149,22 +136,19 @@
 										<q-lookup
 											v-if="controls.ACCORDI_PESS1NAME____.isVisible"
 											v-bind="controls.ACCORDI_PESS1NAME____.props"
-											:id="getControlId(controls.ACCORDI_PESS1NAME____)"
 											v-on="controls.ACCORDI_PESS1NAME____.handlers" />
 										<q-see-more-accordi-pess1name
 											v-if="controls.ACCORDI_PESS1NAME____.seeMoreIsVisible"
 											v-bind="controls.ACCORDI_PESS1NAME____.seeMoreParams"
 											v-on="controls.ACCORDI_PESS1NAME____.handlers" />
 									</base-input-structure>
-								</q-col>
-								<q-col
-									v-if="controls.ACCORDI_EQUIPSEQUENNR.isVisible"
-									cols="auto">
+								</q-control-wrapper>
+								<q-control-wrapper
+									v-show="controls.ACCORDI_EQUIPSEQUENNR.isVisible"
+									class="${Vue.GetControlWrapperClass($controlsColumn)}">
 									<base-input-structure
-										v-if="controls.ACCORDI_EQUIPSEQUENNR.isVisible"
 										class="i-text"
-										v-bind="controls.ACCORDI_EQUIPSEQUENNR.wrapperProps"
-										:id="getControlId(controls.ACCORDI_EQUIPSEQUENNR)"
+										v-bind="controls.ACCORDI_EQUIPSEQUENNR"
 										v-on="controls.ACCORDI_EQUIPSEQUENNR.handlers"
 										:loading="controls.ACCORDI_EQUIPSEQUENNR.props.loading"
 										:reporting-mode-on="reportingModeCAV"
@@ -172,34 +156,30 @@
 										<q-numeric-input
 											v-if="controls.ACCORDI_EQUIPSEQUENNR.isVisible"
 											v-bind="controls.ACCORDI_EQUIPSEQUENNR.props"
-											:id="getControlId(controls.ACCORDI_EQUIPSEQUENNR)"
 											@update:model-value="model.ValSequennr.fnUpdateValue" />
 									</base-input-structure>
-								</q-col>
-							</q-row>
+								</q-control-wrapper>
+							</q-row-container>
 							<!-- End ACCORDI_PSEUDNOVOGR02 -->
 						</q-group-collapsible>
-					</q-col>
-				</q-row>
-				<q-row v-if="controls.ACCORDI_PSEUDNOVOGR06.isVisible">
-					<q-col
-						v-if="controls.ACCORDI_PSEUDNOVOGR06.isVisible"
-						cols="auto">
+					</q-control-wrapper>
+				</q-row-container>
+				<q-row-container v-show="controls.ACCORDI_PSEUDNOVOGR06.isVisible">
+					<q-control-wrapper
+						v-show="controls.ACCORDI_PSEUDNOVOGR06.isVisible"
+						class="${Vue.GetControlWrapperClass($controlsColumn)}">
 						<q-group-collapsible
-							v-if="controls.ACCORDI_PSEUDNOVOGR06.isVisible"
+							id="ACCORDI_PSEUDNOVOGR06"
 							v-bind="controls.ACCORDI_PSEUDNOVOGR06"
-							:id="getControlId(controls.ACCORDI_PSEUDNOVOGR06)"
 							v-on="controls.ACCORDI_PSEUDNOVOGR06.handlers">
 							<!-- Start ACCORDI_PSEUDNOVOGR06 -->
-							<q-row v-if="controls.ACCORDI_EQUIPPHOTOGRA.isVisible">
-								<q-col
-									v-if="controls.ACCORDI_EQUIPPHOTOGRA.isVisible"
-									cols="auto">
+							<q-row-container v-show="controls.ACCORDI_EQUIPPHOTOGRA.isVisible">
+								<q-control-wrapper
+									v-show="controls.ACCORDI_EQUIPPHOTOGRA.isVisible"
+									class="${Vue.GetControlWrapperClass($controlsColumn)}">
 									<base-input-structure
-										v-if="controls.ACCORDI_EQUIPPHOTOGRA.isVisible"
 										class="q-image"
-										v-bind="controls.ACCORDI_EQUIPPHOTOGRA.wrapperProps"
-										:id="getControlId(controls.ACCORDI_EQUIPPHOTOGRA)"
+										v-bind="controls.ACCORDI_EQUIPPHOTOGRA"
 										v-on="controls.ACCORDI_EQUIPPHOTOGRA.handlers"
 										:loading="controls.ACCORDI_EQUIPPHOTOGRA.props.loading"
 										:reporting-mode-on="reportingModeCAV"
@@ -207,117 +187,98 @@
 										<q-image
 											v-if="controls.ACCORDI_EQUIPPHOTOGRA.isVisible"
 											v-bind="controls.ACCORDI_EQUIPPHOTOGRA.props"
-											:id="getControlId(controls.ACCORDI_EQUIPPHOTOGRA)"
 											v-on="controls.ACCORDI_EQUIPPHOTOGRA.handlers" />
 									</base-input-structure>
-								</q-col>
-							</q-row>
+								</q-control-wrapper>
+							</q-row-container>
 							<!-- End ACCORDI_PSEUDNOVOGR06 -->
 						</q-group-collapsible>
-					</q-col>
-				</q-row>
-				<q-row v-if="controls.ACCORDI_PSEUDNOVOGR05.isVisible">
-					<q-col
-						v-if="controls.ACCORDI_PSEUDNOVOGR05.isVisible"
-						cols="auto">
+					</q-control-wrapper>
+				</q-row-container>
+				<q-row-container v-show="controls.ACCORDI_PSEUDNOVOGR05.isVisible">
+					<q-control-wrapper
+						v-show="controls.ACCORDI_PSEUDNOVOGR05.isVisible"
+						class="${Vue.GetControlWrapperClass($controlsColumn)}">
 						<q-accordion
 							v-if="controls.ACCORDI_PSEUDNOVOGR05.isVisible"
-							:id="getControlId(controls.ACCORDI_PSEUDNOVOGR05)"
-							v-model="controls.ACCORDI_PSEUDNOVOGR05.openChild">
+							id="ACCORDI_PSEUDNOVOGR05"
+							v-bind="controls.ACCORDI_PSEUDNOVOGR05">
 							<!-- Start ACCORDI_PSEUDNOVOGR05 -->
-							<q-accordion-item
-								v-if="controls.ACCORDI_PSEUDNOVOGR03.isVisible"
-								:id="getControlId(controls.ACCORDI_PSEUDNOVOGR03) + '-container'"
-								value="ACCORDI_PSEUDNOVOGR03"
-								:title="controls.ACCORDI_PSEUDNOVOGR03.label">
+							<q-group-collapsible
+								id="ACCORDI_PSEUDNOVOGR03"
+								v-bind="controls.ACCORDI_PSEUDNOVOGR03"
+								v-on="controls.ACCORDI_PSEUDNOVOGR03.handlers">
 								<!-- Start ACCORDI_PSEUDNOVOGR03 -->
-								<q-row v-if="controls.ACCORDI_PSEUDINSTALAG.isVisible">
-									<q-col
-										v-if="controls.ACCORDI_PSEUDINSTALAG.isVisible"
-										cols="auto">
+								<q-row-container v-show="controls.ACCORDI_PSEUDINSTALAG.isVisible">
+									<q-control-wrapper
+										v-show="controls.ACCORDI_PSEUDINSTALAG.isVisible"
+										class="${Vue.GetControlWrapperClass($controlsColumn)}">
 										<q-table
-											v-if="controls.ACCORDI_PSEUDINSTALAG.isVisible"
+											v-show="controls.ACCORDI_PSEUDINSTALAG.isVisible"
 											v-bind="controls.ACCORDI_PSEUDINSTALAG"
-											:id="getControlId(controls.ACCORDI_PSEUDINSTALAG)"
-											v-on="controls.ACCORDI_PSEUDINSTALAG.handlers">
-											<template #header>
-												<q-table-config
-													:table-ctrl="controls.ACCORDI_PSEUDINSTALAG"
-													v-on="controls.ACCORDI_PSEUDINSTALAG.handlers" />
-											</template>
-											<!-- USE /[MANUAL GQT CUSTOM_TABLE ACCORDI_PSEUDINSTALAG]/ -->
-										</q-table>
-									</q-col>
-								</q-row>
+											v-on="controls.ACCORDI_PSEUDINSTALAG.handlers" />
+										<q-table-extra-extension
+											:list-ctrl="controls.ACCORDI_PSEUDINSTALAG"
+											v-on="controls.ACCORDI_PSEUDINSTALAG.handlers" />
+									</q-control-wrapper>
+								</q-row-container>
 								<!-- End ACCORDI_PSEUDNOVOGR03 -->
-							</q-accordion-item>
-							<q-accordion-item
-								v-if="controls.ACCORDI_PSEUDNOVOGR04.isVisible"
-								:id="getControlId(controls.ACCORDI_PSEUDNOVOGR04) + '-container'"
-								value="ACCORDI_PSEUDNOVOGR04"
-								:title="controls.ACCORDI_PSEUDNOVOGR04.label">
+							</q-group-collapsible>
+							<q-group-collapsible
+								id="ACCORDI_PSEUDNOVOGR04"
+								v-bind="controls.ACCORDI_PSEUDNOVOGR04"
+								v-on="controls.ACCORDI_PSEUDNOVOGR04.handlers">
 								<!-- Start ACCORDI_PSEUDNOVOGR04 -->
-								<q-row v-if="controls.ACCORDI_PSEUDINSTALAC.isVisible">
-									<q-col
-										v-if="controls.ACCORDI_PSEUDINSTALAC.isVisible"
-										cols="auto">
+								<q-row-container v-show="controls.ACCORDI_PSEUDINSTALAC.isVisible">
+									<q-control-wrapper
+										v-show="controls.ACCORDI_PSEUDINSTALAC.isVisible"
+										class="${Vue.GetControlWrapperClass($controlsColumn)}">
 										<q-table
-											v-if="controls.ACCORDI_PSEUDINSTALAC.isVisible"
+											v-show="controls.ACCORDI_PSEUDINSTALAC.isVisible"
 											v-bind="controls.ACCORDI_PSEUDINSTALAC"
-											:id="getControlId(controls.ACCORDI_PSEUDINSTALAC)"
-											v-on="controls.ACCORDI_PSEUDINSTALAC.handlers">
-											<template #header>
-												<q-table-config
-													:table-ctrl="controls.ACCORDI_PSEUDINSTALAC"
-													v-on="controls.ACCORDI_PSEUDINSTALAC.handlers" />
-											</template>
-											<!-- USE /[MANUAL GQT CUSTOM_TABLE ACCORDI_PSEUDINSTALAC]/ -->
-										</q-table>
-									</q-col>
-								</q-row>
+											v-on="controls.ACCORDI_PSEUDINSTALAC.handlers" />
+										<q-table-extra-extension
+											:list-ctrl="controls.ACCORDI_PSEUDINSTALAC"
+											v-on="controls.ACCORDI_PSEUDINSTALAC.handlers" />
+									</q-control-wrapper>
+								</q-row-container>
 								<!-- End ACCORDI_PSEUDNOVOGR04 -->
-							</q-accordion-item>
-							<q-accordion-item
-								v-if="controls.ACCORDI_PSEUDNOVOGR11.isVisible"
-								:id="getControlId(controls.ACCORDI_PSEUDNOVOGR11) + '-container'"
-								value="ACCORDI_PSEUDNOVOGR11"
-								:title="controls.ACCORDI_PSEUDNOVOGR11.label">
+							</q-group-collapsible>
+							<q-group-collapsible
+								id="ACCORDI_PSEUDNOVOGR11"
+								v-bind="controls.ACCORDI_PSEUDNOVOGR11"
+								v-on="controls.ACCORDI_PSEUDNOVOGR11.handlers">
 								<!-- Start ACCORDI_PSEUDNOVOGR11 -->
-								<q-row v-if="controls.ACCORDI_PSEUDREPARACO.isVisible">
-									<q-col
-										v-if="controls.ACCORDI_PSEUDREPARACO.isVisible"
-										cols="auto">
+								<q-row-container v-show="controls.ACCORDI_PSEUDREPARACO.isVisible">
+									<q-control-wrapper
+										v-show="controls.ACCORDI_PSEUDREPARACO.isVisible"
+										class="${Vue.GetControlWrapperClass($controlsColumn)}">
 										<q-table
-											v-if="controls.ACCORDI_PSEUDREPARACO.isVisible"
+											v-show="controls.ACCORDI_PSEUDREPARACO.isVisible"
 											v-bind="controls.ACCORDI_PSEUDREPARACO"
-											:id="getControlId(controls.ACCORDI_PSEUDREPARACO)"
-											v-on="controls.ACCORDI_PSEUDREPARACO.handlers">
-											<template #header>
-												<q-table-config
-													:table-ctrl="controls.ACCORDI_PSEUDREPARACO"
-													v-on="controls.ACCORDI_PSEUDREPARACO.handlers" />
-											</template>
-											<!-- USE /[MANUAL GQT CUSTOM_TABLE ACCORDI_PSEUDREPARACO]/ -->
-										</q-table>
-									</q-col>
-								</q-row>
+											v-on="controls.ACCORDI_PSEUDREPARACO.handlers" />
+										<q-table-extra-extension
+											:list-ctrl="controls.ACCORDI_PSEUDREPARACO"
+											v-on="controls.ACCORDI_PSEUDREPARACO.handlers" />
+									</q-control-wrapper>
+								</q-row-container>
 								<!-- End ACCORDI_PSEUDNOVOGR11 -->
-							</q-accordion-item>
+							</q-group-collapsible>
 							<!-- End ACCORDI_PSEUDNOVOGR05 -->
 						</q-accordion>
-					</q-col>
-				</q-row>
+					</q-control-wrapper>
+				</q-row-container>
 			</template>
-		</q-container>
+		</div>
 	</teleport>
 
-	<q-divider v-if="!isPopup && showFormFooter" />
+	<hr v-if="!isPopup && showFormFooter" />
 
 	<teleport
 		v-if="formModalIsReady && showFormFooter"
 		:to="`#${uiContainersId.footer}`"
 		:disabled="!isPopup || isNested">
-		<q-row v-if="showFormFooter">
+		<q-row-container v-if="showFormFooter">
 			<div id="footer-action-btns">
 				<template
 					v-for="btn in formButtons"
@@ -326,7 +287,6 @@
 						v-if="btn.isActive && btn.isVisible && btn.showInFooter"
 						:id="`bottom-${btn.id}`"
 						:label="btn.text"
-						:color="btn.color"
 						:variant="btn.variant"
 						:disabled="btn.disabled"
 						:icon-pos="btn.iconPos"
@@ -338,12 +298,12 @@
 					</q-button>
 				</template>
 			</div>
-		</q-row>
+		</q-row-container>
 	</teleport>
 </template>
 
 <script>
-	/* eslint-disable @typescript-eslint/no-unused-vars */
+	/* eslint-disable no-unused-vars */
 	import { computed, defineAsyncComponent, readonly } from 'vue'
 	import { useRoute } from 'vue-router'
 
@@ -363,7 +323,7 @@
 	import qApi from '@/api/genio/quidgestFunctions.js'
 	import qFunctions from '@/api/genio/projectFunctions.js'
 	import qProjArrays from '@/api/genio/projectArrays.js'
-	/* eslint-enable @typescript-eslint/no-unused-vars */
+	/* eslint-enable no-unused-vars */
 
 	import FormViewModel from './QFormAccordiViewModel.js'
 
@@ -442,8 +402,7 @@
 					primaryKey: 'ValCodequip',
 					designation: computed(() => this.Resources.ACCORDIONS05516),
 					identifier: '', // Unique identifier received by route (when it's nested).
-					mode: '',
-					availableAgents: [],
+					mode: ''
 				},
 
 				formButtons: {
@@ -551,11 +510,7 @@
 						showInFooter: true,
 						isActive: true,
 						isVisible: computed(() => vm.authData.isAllowed && vm.isEditable),
-						action: vm.saveForm,
-						badge: {
-							isVisible: computed(() => vm.model?.isDirty === true),
-							color: 'highlight'
-						}
+						action: vm.saveForm
 					},
 					confirmBtn: {
 						id: 'confirm-btn',
@@ -662,7 +617,6 @@
 						label: computed(() => this.Resources.COMPANY20759),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						startsExpanded: false,
 						isCollapsible: true,
 						anchored: false,
 						directChildren: ['ACCORDI_CMPNYDESIGNAT', 'ACCORDI_PESS1NAME____', 'ACCORDI_EQUIPSEQUENNR'],
@@ -726,13 +680,9 @@
 							set 'pess1.codpesso'(value) { vm.model.ValCodpess1.updateValue(value) },
 							set 'pess1.name'(value) { vm.model.TablePess1Name.updateValue(value) },
 						}),
+						insertEnabled: true,
+						supportForm: 'PESS1',
 						controlLimits: [
-							{
-								identifier: ['cmpny', 'equip.codempre'],
-								dependencyEvents: ['fieldChange:equip.codempre'],
-								dependencyField: 'EQUIP.CODEMPRE',
-								fnValueSelector: (model) => model.ValCodempre.value
-							},
 						],
 					}, this),
 					ACCORDI_EQUIPSEQUENNR: new fieldControlClass.NumberControl({
@@ -758,7 +708,6 @@
 						label: computed(() => this.Resources.PHOTO32097),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						startsExpanded: false,
 						isCollapsible: true,
 						anchored: false,
 						directChildren: ['ACCORDI_EQUIPPHOTOGRA'],
@@ -802,8 +751,6 @@
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'ACCORDI_PSEUDNOVOGR05',
-						isInAccordion: true,
-						borderless: false,
 						isCollapsible: true,
 						anchored: false,
 						directChildren: ['ACCORDI_PSEUDINSTALAG'],
@@ -813,12 +760,11 @@
 					ACCORDI_PSEUDINSTALAG: new fieldControlClass.TableListControl({
 						id: 'ACCORDI_PSEUDINSTALAG',
 						name: 'INSTALAG',
-						size: 'xxlarge',
+						size: '',
 						label: computed(() => this.Resources.FACILITIES_23844),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'ACCORDI_PSEUDNOVOGR03',
-						headerLevel: computed(() => this.baseHeadingLevel + 1),
 						controller: 'EQUIP',
 						action: 'Accordi_ValInstalag',
 						hasDependencies: false,
@@ -832,7 +778,6 @@
 								label: computed(() => this.Resources.SINCE47259),
 								scrollData: 16,
 								dateTimeType: 'dateTime',
-								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.DateColumn({
 								order: 2,
@@ -842,7 +787,6 @@
 								label: computed(() => this.Resources.UNTIL39173),
 								scrollData: 16,
 								dateTimeType: 'dateTime',
-								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.NumericColumn({
 								order: 3,
@@ -853,7 +797,6 @@
 								scrollData: 10,
 								maxDigits: 7,
 								decimalPlaces: 2,
-								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.CurrencyColumn({
 								order: 4,
@@ -864,7 +807,6 @@
 								scrollData: 12,
 								maxDigits: 9,
 								decimalPlaces: 2,
-								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.CurrencyColumn({
 								order: 5,
@@ -875,7 +817,6 @@
 								scrollData: 12,
 								maxDigits: 9,
 								decimalPlaces: 2,
-								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 						],
 						config: {
@@ -891,8 +832,10 @@
 							permissions: {
 							},
 							searchBarConfig: {
-								visibility: false
+								visibility: false,
+								searchOnPressEnter: true
 							},
+							filtersVisible: false,
 							allowColumnFilters: false,
 							allowColumnSort: true,
 							crudActions: [
@@ -966,7 +909,9 @@
 									id: 'insert',
 									name: 'insert',
 									title: computed(() => this.Resources.INSERIR43365),
-									icon: { icon: 'add' },
+									icon: {
+										icon: 'add'
+									},
 									isInReadOnly: false,
 									params: {
 										action: vm.openFormAction,
@@ -1013,7 +958,7 @@
 								sortOrder: 'asc'
 							}
 						},
-						globalEvents: ['changed-INSTA', 'changed-EQUIP', 'changed-TPEQU'],
+						globalEvents: ['changed-TPEQU', 'changed-INSTA', 'changed-EQUIP'],
 						uuid: 'Accordi_ValInstalag',
 						allSelectedRows: 'false',
 						controlLimits: [
@@ -1033,8 +978,6 @@
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'ACCORDI_PSEUDNOVOGR05',
-						isInAccordion: true,
-						borderless: false,
 						isCollapsible: true,
 						anchored: false,
 						directChildren: ['ACCORDI_PSEUDINSTALAC'],
@@ -1044,12 +987,11 @@
 					ACCORDI_PSEUDINSTALAC: new fieldControlClass.TableListControl({
 						id: 'ACCORDI_PSEUDINSTALAC',
 						name: 'INSTALAC',
-						size: 'xxlarge',
+						size: '',
 						label: computed(() => this.Resources.FACILITIES08876),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'ACCORDI_PSEUDNOVOGR04',
-						headerLevel: computed(() => this.baseHeadingLevel + 1),
 						controller: 'EQUIP',
 						action: 'Accordi_ValInstalac',
 						hasDependencies: false,
@@ -1063,7 +1005,6 @@
 								label: computed(() => this.Resources.SINCE47259),
 								scrollData: 16,
 								dateTimeType: 'dateTime',
-								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.DateColumn({
 								order: 2,
@@ -1073,7 +1014,6 @@
 								label: computed(() => this.Resources.UNTIL39173),
 								scrollData: 16,
 								dateTimeType: 'dateTime',
-								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.NumericColumn({
 								order: 3,
@@ -1084,7 +1024,6 @@
 								scrollData: 10,
 								maxDigits: 7,
 								decimalPlaces: 2,
-								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.CurrencyColumn({
 								order: 4,
@@ -1095,7 +1034,6 @@
 								scrollData: 12,
 								maxDigits: 9,
 								decimalPlaces: 2,
-								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.CurrencyColumn({
 								order: 5,
@@ -1106,7 +1044,6 @@
 								scrollData: 12,
 								maxDigits: 9,
 								decimalPlaces: 2,
-								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.GeographicColumn({
 								order: 6,
@@ -1118,7 +1055,6 @@
 								scrollData: 30,
 								sortable: false,
 								searchable: false,
-								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 						],
 						config: {
@@ -1134,8 +1070,10 @@
 							permissions: {
 							},
 							searchBarConfig: {
-								visibility: false
+								visibility: false,
+								searchOnPressEnter: true
 							},
+							filtersVisible: false,
 							allowColumnFilters: false,
 							allowColumnSort: true,
 							generalCustomActions: [
@@ -1157,7 +1095,7 @@
 								sortOrder: 'asc'
 							}
 						},
-						globalEvents: ['changed-INSTA', 'changed-EQUIP', 'changed-TPEQU'],
+						globalEvents: ['changed-TPEQU', 'changed-INSTA', 'changed-EQUIP'],
 						uuid: 'Accordi_ValInstalac',
 						allSelectedRows: 'false',
 						controlLimits: [
@@ -1177,8 +1115,6 @@
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'ACCORDI_PSEUDNOVOGR05',
-						isInAccordion: true,
-						borderless: false,
 						isCollapsible: true,
 						anchored: false,
 						directChildren: ['ACCORDI_PSEUDREPARACO'],
@@ -1188,12 +1124,11 @@
 					ACCORDI_PSEUDREPARACO: new fieldControlClass.TableListControl({
 						id: 'ACCORDI_PSEUDREPARACO',
 						name: 'REPARACO',
-						size: 'xxlarge',
+						size: '',
 						label: computed(() => this.Resources.EQUIPMENT_REPAIRS_35392),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'ACCORDI_PSEUDNOVOGR11',
-						headerLevel: computed(() => this.baseHeadingLevel + 1),
 						controller: 'EQUIP',
 						action: 'Accordi_ValReparaco',
 						hasDependencies: false,
@@ -1208,7 +1143,6 @@
 								scrollData: 10,
 								maxDigits: 10,
 								decimalPlaces: 0,
-								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.DateColumn({
 								order: 2,
@@ -1218,7 +1152,6 @@
 								label: computed(() => this.Resources.FIXED_IN00179),
 								scrollData: 16,
 								dateTimeType: 'dateTime',
-								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 3,
@@ -1228,7 +1161,6 @@
 								label: computed(() => this.Resources.SPECIALTY09304),
 								dataLength: 50,
 								scrollData: 30,
-								export: 1,
 								pkColumn: 'ValCodcateg',
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
@@ -1239,7 +1171,6 @@
 								label: computed(() => this.Resources.EXPERT27393),
 								dataLength: 85,
 								scrollData: 30,
-								export: 1,
 								pkColumn: 'ValCodpesso',
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
@@ -1249,7 +1180,6 @@
 								field: 'DESCRIPT',
 								label: computed(() => this.Resources.DESCRIPTION_OF_THE_R26085),
 								scrollData: 30,
-								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.NumericColumn({
 								order: 6,
@@ -1260,7 +1190,6 @@
 								scrollData: 10,
 								maxDigits: 10,
 								decimalPlaces: 0,
-								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 						],
 						config: {
@@ -1276,8 +1205,10 @@
 							permissions: {
 							},
 							searchBarConfig: {
-								visibility: false
+								visibility: false,
+								searchOnPressEnter: true
 							},
+							filtersVisible: false,
 							allowColumnFilters: false,
 							allowColumnSort: true,
 							crudActions: [
@@ -1351,7 +1282,9 @@
 									id: 'insert',
 									name: 'insert',
 									title: computed(() => this.Resources.INSERIR43365),
-									icon: { icon: 'add' },
+									icon: {
+										icon: 'add'
+									},
 									isInReadOnly: false,
 									params: {
 										action: vm.openFormAction,
@@ -1398,7 +1331,7 @@
 								sortOrder: 'asc'
 							}
 						},
-						globalEvents: ['changed-CATE1', 'changed-EQUIP', 'changed-PESSO', 'changed-REPAR', 'changed-SPECI', 'changed-CMPNY'],
+						globalEvents: ['changed-CATE1', 'changed-SPECI', 'changed-CMPNY', 'changed-EQUIP', 'changed-PESSO', 'changed-REPAR'],
 						uuid: 'Accordi_ValReparaco',
 						allSelectedRows: 'false',
 						controlLimits: [
@@ -1532,23 +1465,17 @@
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 		},
 
-		beforeUnmount()
-		{
-/* eslint-disable indent, vue/html-indent, vue/script-indent */
-// USE /[MANUAL GQT COMPONENT_BEFORE_UNMOUNT ACCORDI]/
-// eslint-disable-next-line
-/* eslint-enable indent, vue/html-indent, vue/script-indent */
-		},
-
 		methods: {
 			/**
 			 * Called before form init.
 			 */
 			async beforeLoad()
 			{
+				let loadForm = true
+
 				// Execute the "Before init" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.beforeInit)
-				for (const trigger of triggers)
+				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
 				this.emitEvent('before-load-form')
@@ -1558,7 +1485,7 @@
 // eslint-disable-next-line
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 
-				return true
+				return loadForm
 			},
 
 			/**
@@ -1568,7 +1495,7 @@
 			{
 				// Execute the "After init" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.afterInit)
-				for (const trigger of triggers)
+				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
 				this.emitEvent('after-load-form')
@@ -1588,33 +1515,19 @@
 
 				// Execute the "Before apply" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.beforeApply)
-				for (const trigger of triggers)
+				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
-				const ticketsPromise = this.model.updateFilesTickets(true)
-				this.addBusy(ticketsPromise, this.Resources[hardcodedTexts.processing])
-				const canSetDocums = await ticketsPromise
+				const canSetDocums = await this.model.updateFilesTickets(true)
 
 				if (canSetDocums)
 				{
-					let results
-					const changesPromise = this.model.setDocumentChanges()
-					this.addBusy(changesPromise, this.Resources[hardcodedTexts.processing])
-					applyForm = await changesPromise
+					applyForm = await this.model.setDocumentChanges()
 
 					if (applyForm)
 					{
-						const insertsPromise = this.model.saveDocuments()
-						this.addBusy(insertsPromise, this.Resources[hardcodedTexts.processing])
-						results = await insertsPromise
+						const results = await this.model.saveDocuments()
 						applyForm = results.every((e) => e === true)
-					}
-
-					if (!changesPromise || (results && !results.every((e) => e === true)))
-					{
-						this.validationErrors = {
-							Erro: this.Resources.OCORREU_UM_ERRO_AO_T51884
-						}
 					}
 				}
 
@@ -1635,7 +1548,7 @@
 			{
 				// Execute the "After apply" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.afterApply)
-				for (const trigger of triggers)
+				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
 				this.emitEvent('after-apply-form')
@@ -1655,33 +1568,19 @@
 
 				// Execute the "Before save" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.beforeSave)
-				for (const trigger of triggers)
+				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
-				const ticketsPromise = this.model.updateFilesTickets()
-				this.addBusy(ticketsPromise, this.Resources[hardcodedTexts.processing])
-				const canSetDocums = await ticketsPromise
+				const canSetDocums = await this.model.updateFilesTickets()
 
 				if (canSetDocums)
 				{
-					let results
-					const changesPromise = this.model.setDocumentChanges()
-					this.addBusy(changesPromise, this.Resources[hardcodedTexts.processing])
-					saveForm = await changesPromise
+					saveForm = await this.model.setDocumentChanges()
 
 					if (saveForm)
 					{
-						const insertsPromise = this.model.saveDocuments()
-						this.addBusy(insertsPromise, this.Resources[hardcodedTexts.processing])
-						results = await insertsPromise
+						const results = await this.model.saveDocuments()
 						saveForm = results.every((e) => e === true)
-					}
-
-					if (!changesPromise || (results && !results.every((e) => e === true)))
-					{
-						this.validationErrors = {
-							Erro: this.Resources.OCORREU_UM_ERRO_AO_T51884
-						}
 					}
 				}
 
@@ -1700,9 +1599,11 @@
 			 */
 			async afterSave()
 			{
+				let redirectPage = true // Set to 'false' to cancel page redirect.
+
 				// Execute the "After save" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.afterSave)
-				for (const trigger of triggers)
+				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
 				this.emitEvent('after-save-form')
@@ -1712,7 +1613,7 @@
 // eslint-disable-next-line
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 
-				return true
+				return redirectPage
 			},
 
 			/**
@@ -1720,6 +1621,8 @@
 			 */
 			async beforeDel()
 			{
+				let deleteForm = true // Set to 'false' to cancel form delete.
+
 				this.emitEvent('before-delete-form')
 
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
@@ -1727,7 +1630,7 @@
 // eslint-disable-next-line
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 
-				return true
+				return deleteForm
 			},
 
 			/**
@@ -1735,6 +1638,8 @@
 			 */
 			async afterDel()
 			{
+				let redirectPage = true // Set to 'false' to cancel page redirect.
+
 				this.emitEvent('after-delete-form')
 
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
@@ -1742,7 +1647,7 @@
 // eslint-disable-next-line
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 
-				return true
+				return redirectPage
 			},
 
 			/**
@@ -1750,9 +1655,11 @@
 			 */
 			async beforeExit()
 			{
+				let leaveForm = true // Set to 'false' to cancel page redirect.
+
 				// Execute the "Before exit" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.beforeExit)
-				for (const trigger of triggers)
+				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
 				this.emitEvent('before-exit-form')
@@ -1762,7 +1669,7 @@
 // eslint-disable-next-line
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 
-				return true
+				return leaveForm
 			},
 
 			/**
@@ -1772,7 +1679,7 @@
 			{
 				// Execute the "After exit" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.afterExit)
-				for (const trigger of triggers)
+				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
 				this.emitEvent('after-exit-form')

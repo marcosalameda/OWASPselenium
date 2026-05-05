@@ -1,48 +1,29 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Antiforgery;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 using CSGenio.core.logger;
 using CSGenio.framework;
-using GenioMVC.Helpers.Menus;
 
 namespace GenioMVC.Controllers
 {
 	public class ConfigController : ControllerExtension
 	{
 		private readonly bool enableOtlpTracing;
-
 		public ConfigController(UserContextService userContextService, IConfiguration config) : base(userContextService)
 		{
-			var telemetryConfig = config.GetSection("TelemetryConfig").Get<TelemetryConfiguration>();
-			enableOtlpTracing = telemetryConfig?.EnableTracing ?? false;
-		}
-
-		private object getVersionInfo()
-		{
-			return new
-			{
-				buildVersion = VersionInfo.Build,
-				dbIdxVersion = VersionInfo.DatabaseIndex,
-				dbVersion = VersionInfo.DatabaseSchema.ToString(),
-				genioVersion = VersionInfo.GenioVersion.Replace('.', ','),
-				trackChangesVersion = VersionInfo.Release,
-				assemblyVersion = VersionInfo.GenAssemblyVersion,
-				generationDate = new
-				{
-					year = VersionInfo.GenerationDate.Year,
-					month = VersionInfo.GenerationDate.Month,
-					day = VersionInfo.GenerationDate.Day
-				}
-			};
+			IConfigurationSection telemetryConfig = config.GetSection("TelemetryConfig");
+			if (telemetryConfig?.Exists() ?? false)
+				enableOtlpTracing = telemetryConfig.Get<TelemetryConfiguration>().EnableTracing;
 		}
 
 		private object getConfig()
 		{
-			User user = m_userContext.User;
+			// User
+			var user = UserContext.Current.User;
 
-			string defaultSystem = Configuration.DefaultYear;
-			List<string> years = Configuration.Years;
-
+			var defaultSystem = Configuration.DefaultYear;
+			var years = Configuration.Years;
 			/*
 				When the user is already authenticated, we need to validate whether the year
 					in which the request was made is among the years to which they have permission.
@@ -61,7 +42,7 @@ namespace GenioMVC.Controllers
 			}
 
 			// Modules
-			List<MenuEntry> availableModulesMenus = Menus.AvailableModules(m_userContext);
+			var availableModulesMenus = Helpers.Menus.Menus.AvailableModules(UserContext.Current);
 			var availableModules = availableModulesMenus.Select(m => new {
 				id = m.ID,
 				title = m.Title,
@@ -70,21 +51,20 @@ namespace GenioMVC.Controllers
 				image = m.ImageVUE
 			}).ToDictionary(m => m.id, m => m);
 
-			string defaultModule = availableModules.FirstOrDefault().Key ?? "Public";
-			string currentModule = user.CurrentModule;
+			var defaultModule = availableModules.FirstOrDefault().Key ?? "Public";
+			var currentModule = user.CurrentModule;
 			if (currentModule == null || !availableModules.ContainsKey(currentModule))
 				currentModule = defaultModule;
 
 			// Number format
-			object numberFormat = new
+			var numberFormat = new
 			{
-				Configuration.NumberFormat.DecimalSeparator,
-				Configuration.NumberFormat.GroupSeparator,
-				Configuration.NumberFormat.NegativeFormat
+				DecimalSeparator = Configuration.NumberFormat.DecimalSeparator,
+				GroupSeparator = Configuration.NumberFormat.GroupSeparator
 			};
 
 			// DateTime format's
-			object dateFormat = new
+			var dateFormat = new
 			{
 				time = Configuration.DateFormat.Time,
 				date = Configuration.DateFormat.Date,
@@ -93,19 +73,19 @@ namespace GenioMVC.Controllers
 			};
 
 			// Full Calendar license
-			string schedulerLicense = Configuration.ExistsProperty("SchedulerLicense") ? Configuration.GetProperty("SchedulerLicense") : null;
+			var schedulerLicense = Configuration.ExistsProperty("SchedulerLicense") ? Configuration.GetProperty("SchedulerLicense") : null;
 
 			// Home page
-			bool isGuestUser = user.IsGuest();
-			ViewModels.Home.HomePage_ViewModel homePages = new(m_userContext, isGuestUser);
+			var isGuestUser = user.IsGuest();
+			var homePages = new ViewModels.Home.HomePage_ViewModel(UserContext.Current, isGuestUser);
 
 			// Password Recover
-			bool hasPasswordRecovery = GenioServer.security.SecurityFactory.HasPasswordManagement() && !string.IsNullOrEmpty(Configuration.PasswordRecoveryEmail);
+			var hasPasswordRecovery = GenioServer.security.SecurityFactory.HasPasswordManagement() && !String.IsNullOrEmpty(Configuration.PasswordRecoveryEmail);
 
 			// Authentification
-			bool hasUsernameAuth = GenioServer.security.SecurityFactory.HasUsernameAuth();
+			var hasUsernameAuth = GenioServer.security.SecurityFactory.HasUsernameAuth();
 
-			return new
+			var conf = new
 			{
 				availableModules,
 				defaultModule,
@@ -122,16 +102,17 @@ namespace GenioMVC.Controllers
 				hasPasswordRecovery,
 				hasUsernameAuth,
 				eventTracking = Configuration.EventTracking,
-				enableTracing = enableOtlpTracing,
-				versionInfo = getVersionInfo()
+				enableTracing = enableOtlpTracing
 			};
+			return conf;
 		}
 
 		[HttpGet]
 		[AllowAnonymous]
 		public JsonResult GetConfig()
 		{
-			object conf = getConfig();
+			var conf = getConfig();
+
 			return JsonOK(conf);
 		}
 
@@ -146,16 +127,6 @@ namespace GenioMVC.Controllers
 			*/
 
 			return JsonOK();
-		}
-
-		/// <summary>
-		/// Returns system version information from the server
-		/// </summary>
-		[HttpGet]
-		[AllowAnonymous]
-		public JsonResult GetVersionInfo()
-		{
-			return JsonOK(getVersionInfo());
 		}
 	}
 }

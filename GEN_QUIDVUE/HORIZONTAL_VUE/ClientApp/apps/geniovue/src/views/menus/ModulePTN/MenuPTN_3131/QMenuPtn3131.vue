@@ -3,23 +3,20 @@
 		v-if="menuModalIsReady"
 		:to="`#${uiContainersId.body}`"
 		:disabled="!menuInfo.isPopup">
-		<div
+		<form
 			class="form-horizontal"
 			@submit.prevent>
 			<q-row-container>
 				<q-table
 					v-bind="controls.menu"
 					v-on="controls.menu.handlers">
-					<template #header>
-						<q-table-config
-							:table-ctrl="controls.menu"
-							v-on="controls.menu.handlers">
-						</q-table-config>
-					</template>
-					<!-- USE /[MANUAL GQT CUSTOM_TABLE PTN_Menu_3131]/ -->
 				</q-table>
+
+				<q-table-extra-extension
+					:list-ctrl="controls.menu"
+					v-on="controls.menu.handlers" />
 			</q-row-container>
-		</div>
+		</form>
 	</teleport>
 
 	<teleport
@@ -51,7 +48,7 @@
 </template>
 
 <script>
-	/* eslint-disable @typescript-eslint/no-unused-vars */
+	/* eslint-disable no-unused-vars */
 	import asyncProcM from '@quidgest/clientapp/composables/async'
 	import qEnums from '@quidgest/clientapp/constants/enums'
 	import netAPI from '@quidgest/clientapp/network'
@@ -71,7 +68,7 @@
 	import qApi from '@/api/genio/quidgestFunctions.js'
 	import qFunctions from '@/api/genio/projectFunctions.js'
 	import qProjArrays from '@/api/genio/projectArrays.js'
-	/* eslint-enable @typescript-eslint/no-unused-vars */
+	/* eslint-enable no-unused-vars */
 
 	import MenuViewModel from './QMenuPTN_3131ViewModel.js'
 
@@ -155,7 +152,6 @@
 								label: computed(() => this.Resources.TEXT04938),
 								dataLength: 50,
 								scrollData: 30,
-								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 2,
@@ -164,7 +160,6 @@
 								field: 'TEXTML',
 								label: computed(() => this.Resources.MULTILINE_TEXT38013),
 								scrollData: 30,
-								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.NumericColumn({
 								order: 3,
@@ -175,7 +170,6 @@
 								scrollData: 10,
 								maxDigits: 10,
 								decimalPlaces: 0,
-								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.NumericColumn({
 								order: 4,
@@ -186,7 +180,6 @@
 								scrollData: 10,
 								maxDigits: 6,
 								decimalPlaces: 3,
-								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.CurrencyColumn({
 								order: 5,
@@ -197,7 +190,6 @@
 								scrollData: 10,
 								maxDigits: 7,
 								decimalPlaces: 2,
-								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.CurrencyColumn({
 								order: 6,
@@ -208,7 +200,6 @@
 								scrollData: 10,
 								maxDigits: 5,
 								decimalPlaces: 4,
-								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.BooleanColumn({
 								order: 7,
@@ -217,7 +208,6 @@
 								field: 'BOOL',
 								label: computed(() => this.Resources.BOOLEAN45002),
 								scrollData: 1,
-								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.DateColumn({
 								order: 8,
@@ -227,7 +217,6 @@
 								label: computed(() => this.Resources.DATE18475),
 								scrollData: 8,
 								dateTimeType: 'date',
-								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.DateColumn({
 								order: 9,
@@ -237,7 +226,6 @@
 								label: computed(() => this.Resources.DATETIME__MINUTES_59352),
 								scrollData: 16,
 								dateTimeType: 'dateTime',
-								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.DateColumn({
 								order: 10,
@@ -247,7 +235,6 @@
 								label: computed(() => this.Resources.DATETIME__SECONDS_49861),
 								scrollData: 19,
 								dateTimeType: 'dateTimeSeconds',
-								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 11,
@@ -258,7 +245,6 @@
 								dataLength: 5,
 								scrollData: 5,
 								dateTimeType: 'time',
-								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.ArrayColumn({
 								order: 12,
@@ -268,8 +254,8 @@
 								label: computed(() => this.Resources.ENUMERATION__TEXT_15855),
 								dataLength: 1,
 								scrollData: 1,
-								export: 1,
-								array: computed(() => new qProjArrays.QArrayTypet(vm.$getResource).elements),
+								array: computed(() => qProjArrays.QArrayTypet.setResources(vm.$getResource).elements),
+								arrayType: qProjArrays.QArrayTypet.type,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.ArrayColumn({
 								order: 13,
@@ -280,8 +266,8 @@
 								scrollData: 1,
 								maxDigits: 1,
 								decimalPlaces: 0,
-								export: 1,
-								array: computed(() => new qProjArrays.QArrayTypen(vm.$getResource).elements),
+								array: computed(() => qProjArrays.QArrayTypen.setResources(vm.$getResource).elements),
+								arrayType: qProjArrays.QArrayTypen.type,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 						],
 						config: {
@@ -290,15 +276,18 @@
 							pkColumn: 'ValCodtblb',
 							tableAlias: 'TBLB',
 							tableNamePlural: computed(() => this.Resources.TABLES__BASIC_TYPES_29665),
-							viewManagement: 'U',
+							viewManagement: 'S',
 							showLimitsInfo: true,
 							tableTitle: computed(() => this.Resources.TABLES__BASIC_TYPES_29665),
-							showRecordCount: true,
+							perPageOptions: [20,25,30],
+							showAlternatePagination: true,
 							permissions: {
 							},
 							searchBarConfig: {
-								visibility: true
+								visibility: true,
+								searchOnPressEnter: true
 							},
+							filtersVisible: true,
 							allowColumnFilters: true,
 							allowColumnSort: true,
 							crudActions: [
@@ -372,7 +361,9 @@
 									id: 'insert',
 									name: 'insert',
 									title: computed(() => this.Resources.INSERIR43365),
-									icon: { icon: 'add' },
+									icon: {
+										icon: 'add'
+									},
 									isInReadOnly: true,
 									params: {
 										action: vm.openFormAction,
@@ -395,7 +386,6 @@
 							rowClickAction: {
 								id: 'RCA_PTN_31311',
 								name: 'form-TBLB',
-								isVisible: true,
 								params: {
 									isRoute: true,
 									limits: [
@@ -423,11 +413,10 @@
 								sortOrder: 'asc'
 							}
 						},
-						globalEvents: ['changed-GRPB', 'changed-TBLB'],
+						globalEvents: ['changed-TBLB', 'changed-GRPB'],
 						uuid: '3fd77cd2-766d-43a4-b089-f0a2b4bfc9d9',
 						allSelectedRows: 'false',
 						headerLevel: 1,
-						isActiveControl: computed(() => this.isActiveMenu)
 					}, this),
 				}
 			}
@@ -451,14 +440,6 @@
 		{
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
 // USE /[MANUAL GQT FORM_CODEJS PTN_MENU_3131]/
-// eslint-disable-next-line
-/* eslint-enable indent, vue/html-indent, vue/script-indent */
-		},
-
-		beforeUnmount()
-		{
-/* eslint-disable indent, vue/html-indent, vue/script-indent */
-// USE /[MANUAL GQT COMPONENT_BEFORE_UNMOUNT PTN_MENU_3131]/
 // eslint-disable-next-line
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 		},

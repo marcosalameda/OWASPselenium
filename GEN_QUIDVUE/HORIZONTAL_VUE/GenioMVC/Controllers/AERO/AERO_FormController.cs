@@ -9,7 +9,6 @@ using System.Data;
 using System.Data.Entity;
 using System.Linq;
 using System.Reflection;
-using System.Dynamic;
 
 using CSGenio.business;
 using CSGenio.core.persistence;
@@ -56,11 +55,11 @@ namespace GenioMVC.Controllers
 // USE /[MANUAL GQT CONTROLLER_SHOW AERO]/
 
 		[HttpPost]
-		public ActionResult Aero_Show_GET([FromBody] RequestIdModel requestModel)
+		public ActionResult Aero_Show_GET([FromBody]RequestIdModel requestModel)
 		{
-			string id = requestModel.Id;
-			Aero_ViewModel model = new(UserContext.Current);
-			EventSink eventSink = new()
+			var id = requestModel.Id;
+			var model = new Aero_ViewModel(UserContext.Current);
+			var eventSink = new EventSink()
 			{
 				MethodName = "Aero_Show_GET",
 				AreaName = "aero",
@@ -76,7 +75,13 @@ namespace GenioMVC.Controllers
 				}
 			};
 
-			return GenericHandleGetFormShow(eventSink, model, id);
+			using (CSGenio.core.di.GenioDI.MetricsOtlp.RecordTime("page_load_time", new System.Diagnostics.TagList([
+				new("PageId", "AERO.SHOW"),
+				new("PageType", "form")
+			]), "ms", "Time to load the page."))
+			{
+				return GenericHandleGetFormShow(eventSink, model, id);
+			}
 		}
 
 		#endregion
@@ -85,14 +90,14 @@ namespace GenioMVC.Controllers
 
 // USE /[MANUAL GQT CONTROLLER_NEW_GET AERO]/
 		[HttpPost]
-		public ActionResult Aero_New_GET([FromBody] RequestNewGetModel requestModel)
+		public ActionResult Aero_New_GET([FromBody]RequestNewGetModel requestModel)
 		{
-			string id = requestModel.Id;
-			bool isNewLocation = requestModel.IsNewLocation;
+			var id = requestModel.Id;
+			var isNewLocation = requestModel.IsNewLocation;
 			var prefillValues = requestModel.PrefillValues;
 
-			Aero_ViewModel model = new(UserContext.Current);
-			EventSink eventSink = new()
+			var model = new Aero_ViewModel(UserContext.Current);
+			var eventSink = new EventSink()
 			{
 				MethodName = "Aero_New_GET",
 				AreaName = "aero",
@@ -112,7 +117,13 @@ namespace GenioMVC.Controllers
 				}
 			};
 
-			return GenericHandleGetFormNew(eventSink, model, id, isNewLocation, prefillValues);
+			using (CSGenio.core.di.GenioDI.MetricsOtlp.RecordTime("page_load_time", new System.Diagnostics.TagList([
+				new("PageId", "AERO.SHOW"),
+				new("PageType", "form")
+			]), "ms", "Time to load the page."))
+			{
+				return GenericHandleGetFormNew(eventSink, model, id, isNewLocation, prefillValues);
+			}
 		}
 
 		//
@@ -121,7 +132,7 @@ namespace GenioMVC.Controllers
 		[HttpPost]
 		public ActionResult Aero_New([FromBody]Aero_ViewModel model, [FromQuery]bool redirect = true)
 		{
-			EventSink eventSink = new()
+			var eventSink = new EventSink()
 			{
 				MethodName = "Aero_New",
 				ViewName = "Aero",
@@ -146,7 +157,13 @@ namespace GenioMVC.Controllers
 				}
 			};
 
-			return GenericHandlePostFormNew(eventSink, model);
+			using (CSGenio.core.di.GenioDI.MetricsOtlp.RecordTime("page_load_time", new System.Diagnostics.TagList([
+				new("PageId", "AERO.NEW"),
+				new("PageType", "form")
+			]), "ms", "Time to load the page."))
+			{
+				return GenericHandlePostFormNew(eventSink, model);
+			}
 		}
 
 		#endregion
@@ -155,11 +172,11 @@ namespace GenioMVC.Controllers
 
 // USE /[MANUAL GQT CONTROLLER_EDIT_GET AERO]/
 		[HttpPost]
-		public ActionResult Aero_Edit_GET([FromBody] RequestIdModel requestModel)
+		public ActionResult Aero_Edit_GET([FromBody]RequestIdModel requestModel)
 		{
-			string id = requestModel.Id;
-			Aero_ViewModel model = new(UserContext.Current);
-			EventSink eventSink = new()
+			var id = requestModel.Id;
+			var model = new Aero_ViewModel(UserContext.Current);
+			var eventSink = new EventSink()
 			{
 				MethodName = "Aero_Edit_GET",
 				AreaName = "aero",
@@ -176,7 +193,13 @@ namespace GenioMVC.Controllers
 				}
 			};
 
-			return GenericHandleGetFormEdit(eventSink, model, id);
+			using (CSGenio.core.di.GenioDI.MetricsOtlp.RecordTime("page_load_time", new System.Diagnostics.TagList([
+				new("PageId", "AERO.SHOW"),
+				new("PageType", "form")
+			]), "ms", "Time to load the page."))
+			{
+				return GenericHandleGetFormEdit(eventSink, model, id);
+			}
 		}
 
 		//
@@ -185,7 +208,7 @@ namespace GenioMVC.Controllers
 		[HttpPost]
 		public ActionResult Aero_Edit([FromBody]Aero_ViewModel model, [FromQuery]bool redirect)
 		{
-			EventSink eventSink = new()
+			var eventSink = new EventSink()
 			{
 				MethodName = "Aero_Edit",
 				ViewName = "Aero",
@@ -210,7 +233,13 @@ namespace GenioMVC.Controllers
 				}
 			};
 
-			return GenericHandlePostFormEdit(eventSink, model);
+			using (CSGenio.core.di.GenioDI.MetricsOtlp.RecordTime("page_load_time", new System.Diagnostics.TagList([
+				new("PageId", "AERO.EDIT"),
+				new("PageType", "form")
+			]), "ms", "Time to load the page."))
+			{
+				return GenericHandlePostFormEdit(eventSink, model);
+			}
 		}
 
 		#endregion
@@ -219,11 +248,11 @@ namespace GenioMVC.Controllers
 
 // USE /[MANUAL GQT CONTROLLER_DELETE_GET AERO]/
 		[HttpPost]
-		public ActionResult Aero_Delete_GET([FromBody] RequestIdModel requestModel)
+		public ActionResult Aero_Delete_GET([FromBody]RequestIdModel requestModel)
 		{
-			string id = requestModel.Id;
-			Aero_ViewModel model = new(UserContext.Current);
-			EventSink eventSink = new()
+			var id = requestModel.Id;
+			var model = new Aero_ViewModel(UserContext.Current);
+			var eventSink = new EventSink()
 			{
 				MethodName = "Aero_Delete_GET",
 				AreaName = "aero",
@@ -240,20 +269,26 @@ namespace GenioMVC.Controllers
 				}
 			};
 
-			return GenericHandleGetFormDelete(eventSink, model, id);
+			using (CSGenio.core.di.GenioDI.MetricsOtlp.RecordTime("page_load_time", new System.Diagnostics.TagList([
+				new("PageId", "AERO.SHOW"),
+				new("PageType", "form")
+			]), "ms", "Time to load the page."))
+			{
+				return GenericHandleGetFormDelete(eventSink, model, id);
+			}
 		}
 
 		//
 		// POST: /Aero/Aero_Delete
 // USE /[MANUAL GQT CONTROLLER_DELETE_POST AERO]/
 		[HttpPost]
-		public ActionResult Aero_Delete([FromBody] RequestIdModel requestModel)
+		public ActionResult Aero_Delete([FromBody]RequestIdModel requestModel)
 		{
-			string id = requestModel.Id;
-			Aero_ViewModel model = new(UserContext.Current, id);
+			var id = requestModel.Id;
+			var model = new Aero_ViewModel (UserContext.Current, id);
 			model.MapFromModel();
 
-			EventSink eventSink = new()
+			var eventSink = new EventSink()
 			{
 				MethodName = "Aero_Delete",
 				ViewName = "Aero",
@@ -269,7 +304,13 @@ namespace GenioMVC.Controllers
 				}
 			};
 
-			return GenericHandlePostFormDelete(eventSink, model);
+			using (CSGenio.core.di.GenioDI.MetricsOtlp.RecordTime("page_load_time", new System.Diagnostics.TagList([
+				new("PageId", "AERO.DELETE"),
+				new("PageType", "form")
+			]), "ms", "Time to load the page."))
+			{
+				return GenericHandlePostFormDelete(eventSink, model);
+			}
 		}
 
 		public ActionResult Aero_Delete_Redirect()
@@ -285,13 +326,13 @@ namespace GenioMVC.Controllers
 // USE /[MANUAL GQT CONTROLLER_DUPLICATE_GET AERO]/
 
 		[HttpPost]
-		public ActionResult Aero_Duplicate_GET([FromBody] RequestNewGetModel requestModel)
+		public ActionResult Aero_Duplicate_GET([FromBody]RequestNewGetModel requestModel)
 		{
-			string id = requestModel.Id;
-			bool isNewLocation = requestModel.IsNewLocation;
+			var id = requestModel.Id;
+			var isNewLocation = requestModel.IsNewLocation;
 
-			Aero_ViewModel model = new(UserContext.Current);
-			EventSink eventSink = new()
+			var model = new Aero_ViewModel(UserContext.Current);
+			var eventSink = new EventSink()
 			{
 				MethodName = "Aero_Duplicate_GET",
 				AreaName = "aero",
@@ -307,7 +348,13 @@ namespace GenioMVC.Controllers
 				}
 			};
 
-			return GenericHandleGetFormDuplicate(eventSink, model, id, isNewLocation);
+			using (CSGenio.core.di.GenioDI.MetricsOtlp.RecordTime("page_load_time", new System.Diagnostics.TagList([
+				new("PageId", "AERO.SHOW"),
+				new("PageType", "form")
+			]), "ms", "Time to load the page."))
+			{
+				return GenericHandleGetFormDuplicate(eventSink, model, id, isNewLocation);
+			}
 		}
 
 		//
@@ -316,7 +363,7 @@ namespace GenioMVC.Controllers
 		[HttpPost]
 		public ActionResult Aero_Duplicate([FromBody]Aero_ViewModel model, [FromQuery]bool redirect = true)
 		{
-			EventSink eventSink = new()
+			var eventSink = new EventSink()
 			{
 				MethodName = "Aero_Duplicate",
 				ViewName = "Aero",
@@ -341,7 +388,13 @@ namespace GenioMVC.Controllers
 				}
 			};
 
-			return GenericHandlePostFormDuplicate(eventSink, model);
+			using (CSGenio.core.di.GenioDI.MetricsOtlp.RecordTime("page_load_time", new System.Diagnostics.TagList([
+				new("PageId", "AERO.DUPLICATE"),
+				new("PageType", "form")
+			]), "ms", "Time to load the page."))
+			{
+				return GenericHandlePostFormDuplicate(eventSink, model);
+			}
 		}
 
 		#endregion
@@ -358,15 +411,8 @@ namespace GenioMVC.Controllers
 				PersistentSupport sp = UserContext.Current.PersistentSupport;
 				try
 				{
-					var recordKey = Navigation.GetStrValue("aero");
-					var model = GenioMVC.Models.Aero.Find(recordKey, UserContext.Current);
-					if (model.ValZzstate == 0)
-					{
-						Navigation.ClearValue("aero");
-						string errorMessage = Resources.Resources.ESTE_REGISTO_JA_FOI_02595;
-						Log.Error($"${errorMessage} ID: ${recordKey}");
-						return JsonOK(new { Success = true, currentNavigationLevel = Navigation.CurrentLevel.Level, Warning = errorMessage });
-					}
+					var model = new GenioMVC.Models.Aero(UserContext.Current);
+					model.klass.QPrimaryKey = Navigation.GetStrValue("aero");
 
 // USE /[MANUAL GQT BEFORE_CANCEL AERO]/
 

@@ -20,9 +20,9 @@ namespace Administration.Models
     {
         [Display(Name = "BASE_DE_DADOS58234", ResourceType = typeof(Resources.Resources))]
         public string DBSchema { get; set; }
-
+        
         [Display(Name = "TAMANHO_DA_BD56664", ResourceType = typeof(Resources.Resources))]
-        public decimal DBSize { get; set; }
+        public decimal DBSize { get; set; }       
 
         [Display(Name = "VERSAO_DO_SCHEMA11580", ResourceType = typeof(Resources.Resources))]
         public decimal VersionDb { get; set; }
@@ -33,17 +33,11 @@ namespace Administration.Models
         [Display(Name = "VERSAO_DOS_SCRIPTS52566", ResourceType = typeof(Resources.Resources))]
         public decimal VersionReIdx { get; set; }
 
-        [Display(Name = "VERSAO_DE_BASE_DE_DA46937", ResourceType = typeof(Resources.Resources))]
+        [Display(Name = "DATABASE_VERSION15344", ResourceType = typeof(Resources.Resources))]
         public int VersionUpgrIndx { get; set; }
 
-        [Display(Name = "VERSAO_DA_APLICACAO45955", ResourceType = typeof(Resources.Resources))]
+        [Display(Name = "APPLICATION_VERSION32207", ResourceType = typeof(Resources.Resources))]
         public int VersionUpgrScripts { get; set; }
-
-        [Display(Name = "VERSAO_MAIS_RECENTE_17266", ResourceType = typeof(Resources.Resources))]
-        public int UserSettingsVersion { get; set; }
-
-        [Display(Name = "VERSAO_DAS_CONFIGURA31783", ResourceType = typeof(Resources.Resources))]
-        public int CurrentUserSettingsVersion { get; set; }
 
         [Display(Name = "ATUALIZACAO_DISPONIV00656", ResourceType = typeof(Resources.Resources))]
         public bool UpgradeIsAvailable { get; set; }
@@ -183,7 +177,7 @@ namespace Administration.Models
         public List<UnusedIndexItem> UnusedIndexesList { get; set; }
 
         public List<RecommendedIndexItem> RecommendedIndexesList { get; set; }
-
+	
         [Display(Name = "ESTADO07788", ResourceType = typeof(Resources.Resources))]
         public string ResultMsg { get; set; }
     }
@@ -207,12 +201,12 @@ namespace Administration.Models
 
         public AlertTypeEnum AlertType { get; set; }
 
-        //description of checkbox
+        //description of checkbox 
         [Display(Name = "ULTIMA_VERIFICACAO35305", ResourceType = typeof(Resources.Resources))]
         public DateTime LastUpdate { get; set; }
         public List<IncoherentRelationItem> IncoherentRelations { get; set; }
         public List<OrphanRelation> OrphanRelations { get; set; }
-        //Value of use views checkbox
+        //Value of use views checkbox 
 
         [Display(Name = "Tipo de pesquisa")]
         public HardCodedLists.RelationsMode RelationMode { get; set; }
@@ -360,7 +354,7 @@ namespace Administration.Models
         [Display(Name = "PALAVRA_PASSE44126", ResourceType = typeof(Resources.Resources))]
         [Required]
         public string DbPsw { get; set; }
-
+        
         public AlertTypeEnum AlertType { get; set; }
 
         [Display(Name = "BASES_DE_DADOS_DISPO02109", ResourceType = typeof(Resources.Resources))]
@@ -379,7 +373,7 @@ namespace Administration.Models
 
         public int Timeout { get; set; }
     }
-
+	
 	public enum DisplayEncrypt
     {
         [Display(Name = "AES 128")]
@@ -391,7 +385,7 @@ namespace Administration.Models
         [Display(Name = "Triple DES")]
         TRIPLE_DES_3KEY
     }
-
+	
 	public class DbSecurityModel
     {
         [Display(Name = "NOME_DE_UTILIZADOR58858", ResourceType = typeof(Resources.Resources))]
@@ -443,16 +437,16 @@ namespace Administration.Models
         {
             MigrateFiles = new List<MigrateFileItem>();
             var sp = CSGenio.persistence.PersistentSupport.getPersistentSupport(year);
-
+ 
             //Fetch File count
             string sql = @"SELECT COUNT(*) AS cnt FROM docums WITH (NOLOCK) WHERE docpath IS NULL";
             CSGenio.persistence.DataMatrix dm = sp.executeQuery(sql);
             this.FileCount = dm.GetInteger(0, "cnt");
-
+ 
             //Fetch top data from DB
             sql = @"SELECT TOP 50 documid, nome, tamanho, tabela, campo FROM docums WITH (NOLOCK) WHERE docpath IS NULL";
             dm = sp.executeQuery(sql);
-
+ 
             for (int i = 0; i < dm.NumRows; i++)
             {
                 MigrateFileItem file = new MigrateFileItem();
@@ -461,7 +455,7 @@ namespace Administration.Models
                 file.Size = Convert.ToDecimal(dm.GetNumeric(i, "tamanho") / 1000000);
                 file.Table = dm.GetString(i, "tabela");
                 file.Field = dm.GetString(i, "campo");
-
+ 
                 MigrateFiles.Add(file);
             }
         }

@@ -101,7 +101,7 @@
 
 	init()
 	{
-		const row = this.table.getElementsByTagName('tr')[0]
+		let row = this.table.getElementsByTagName('tr')[0]
 		this.cols = row ? row.children : undefined
 		if (!this.cols)
 			return
@@ -110,7 +110,7 @@
 
 		for (let i = 0; i < this.cols.length; i++)
 		{
-			const div = this.createDiv(this.headerHeight)
+			let div = this.createDiv(this.headerHeight)
 			this.cols[i].appendChild(div)
 			this.setListeners(div)
 		}
@@ -118,7 +118,7 @@
 
 	createDiv()
 	{
-		const div = document.createElement('div')
+		var div = document.createElement('div')
 		div.style.top = 0
 		div.style.right = 0
 		div.style.width = '5px'
@@ -139,7 +139,7 @@
 		//Store table width in pixels
 		this.tableWidth = this.table.offsetWidth
 
-		const padding = this.paddingDiff(this.curCol)
+		var padding = this.paddingDiff(this.curCol)
 
 		this.curColWidth = this.curCol.offsetWidth - padding
 		//FOR: Allowing table width to adjust to fit resized columns
@@ -148,14 +148,14 @@
 
 		// Add mouse move and up listeners only when clicking on the column header
 		// so they are not running when the functions they call are not needed
-		const onmousemove = {
+		let onmousemove = {
 			event: 'mousemove',
 			fn: this._mousemoveListener.bind(this)
 		}
 		document.addEventListener(onmousemove.event, onmousemove.fn)
 		this.documentEventListeners.push(onmousemove)
 
-		const onmouseup = {
+		let onmouseup = {
 			event: 'mouseup',
 			fn: this._mouseupListener.bind(this)
 		}
@@ -165,8 +165,8 @@
 
 	_mouseoverListener(e)
 	{
-		const borderWidthTop = this.getStyleVal(this.table, 'border-top-width')
-		const borderWidthBottom = this.getStyleVal(this.table, 'border-bottom-width')
+		var borderWidthTop = this.getStyleVal(this.table, 'border-top-width')
+		var borderWidthBottom = this.getStyleVal(this.table, 'border-bottom-width')
 		e.target.style.height = parseFloat(this.table.clientHeight) - parseFloat(borderWidthTop) - parseFloat(borderWidthBottom) + 'px'
 		e.target.style.borderRight = '2px solid #0000ff'
 	}
@@ -181,14 +181,14 @@
 	{
 		if (this.curCol)
 		{
-			const diffX = e.pageX - this.pageX
+			var diffX = e.pageX - this.pageX
 
 			this.curCol.style.width = (this.curColWidth + diffX) + 'px'
 
 			//FOR: Allowing table width to adjust to fit resized columns
 			//Prevent table width from getting smaller if the current column can't get any smaller
 			//Get new column width
-			const padding = this.paddingDiff(this.curCol)
+			var padding = this.paddingDiff(this.curCol)
 			this.curColWidthNext = this.curCol.offsetWidth - padding
 			//If column width changed, change table width to fit
 			if (parseInt(this.curColWidthNext) !== parseInt(this.curColWidthPrev))
@@ -260,26 +260,26 @@
 
 	setListeners(div)
 	{
-		const objListeners = {
+		let objListeners = {
 			element: div,
 			eListeners: []
 		}
 
-		const onmousedown = {
+		let onmousedown = {
 			event: 'mousedown',
 			fn: this._mousedownListener.bind(this)
 		}
 		div.addEventListener(onmousedown.event, onmousedown.fn)
 		objListeners.eListeners.push(onmousedown)
 
-		const onmouseover = {
+		let onmouseover = {
 			event: 'mouseover',
 			fn: this._mouseoverListener.bind(this)
 		}
 		div.addEventListener(onmouseover.event, onmouseover.fn)
 		objListeners.eListeners.push(onmouseover)
 
-		const onmouseout = {
+		let onmouseout = {
 			event: 'mouseout',
 			fn: this._mouseoutListener.bind(this)
 		}
@@ -299,8 +299,8 @@
 		if (this.getStyleVal(col, 'box-sizing') === 'border-box')
 			return 0
 
-		const padLeft = this.getStyleVal(col, 'padding-left')
-		const padRight = this.getStyleVal(col, 'padding-right')
+		var padLeft = this.getStyleVal(col, 'padding-left')
+		var padRight = this.getStyleVal(col, 'padding-right')
 		return (parseInt(padLeft) + parseInt(padRight))
 	}
 }

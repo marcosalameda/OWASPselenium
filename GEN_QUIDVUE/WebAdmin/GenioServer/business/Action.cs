@@ -1,7 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-
-using CSGenio.core.business;
 using CSGenio.framework;
 using CSGenio.persistence;
 using Quidgest.Persistence.GenericQuery;
@@ -214,7 +212,9 @@ namespace CSGenio.business.Triggers
 			_srcTable = srcTable;
 		}
 
-		/// <inheritdoc/>
+		/// <summary>
+		/// Executes the action.
+		/// </summary>
 		public override void Execute()
 		{
 			List<DbArea> rows = GetAffectedRows(_srcTable);
@@ -270,7 +270,9 @@ namespace CSGenio.business.Triggers
 			_recalcFormulas = recalcFormulas;
 		}
 
-		/// <inheritdoc/>
+		/// <summary>
+		/// Executes the action.
+		/// </summary>
 		public override void Execute()
 		{
 			// Context of the formula
@@ -350,7 +352,9 @@ namespace CSGenio.business.Triggers
 			_ndbf = ndbf;
 		}
 
-		/// <inheritdoc/>
+		/// <summary>
+		/// Executes the action.
+		/// </summary>
 		public override void Execute()
 		{
 			// Determine the rows to recalc
@@ -381,12 +385,15 @@ namespace CSGenio.business.Triggers
 		/// </summary>
 		/// <param name="context">The context.</param>
 		/// <param name="notificationId">The identifier of the notification to send.</param>
-		public SendNotificationAction(TriggerContext context, string notificationId) : base(context)
+		public SendNotificationAction(TriggerContext context, string notificationId)
+			: base(context)
 		{
 			_notificationId = notificationId;
 		}
 
-		/// <inheritdoc/>
+		/// <summary>
+		/// Executes the action.
+		/// </summary>
 		public override void Execute()
 		{
 			Notification viewModel = PersistentSupport.getNotifications()[_notificationId] as Notification;
@@ -394,62 +401,21 @@ namespace CSGenio.business.Triggers
 		}
 	}
 
-	/// <summary>
-	/// An action that calls an AI agent.
-	/// </summary>
+
 	public class CallAiAgentAction : Action
 	{
+
 		private readonly core.ai.ModelAiAgent _agent;
 
-		/// <summary>
-		/// Initializes a new instance of the <see cref="CallAiAgentAction" /> class.
-		/// </summary>
-		/// <param name="context">The context.</param>
-		/// <param name="agent">The AI agent.</param>
 		public CallAiAgentAction(TriggerContext context, core.ai.ModelAiAgent agent) : base(context)
 		{
 			_agent = agent;
 		}
 
-		/// <inheritdoc/>
 		public override void Execute()
 		{
-			CSGenio.core.ai.AgentContextData agentContext = new CSGenio.core.ai.AgentContextData()
-			{
-				Username = _context.User.Name,
-				AgentId = _agent.AGENT_ID,
-				Module = _context.User.CurrentModule,
-				Subsystem = _context.User.Year
-			};
-			if(!string.IsNullOrEmpty(_context.Area.QPrimaryKey))
-				agentContext.CurrentRecordId = _context.Area.QPrimaryKey;
-
-			_agent.Execute(_context.Area, _context.PersistentSupport, _context.User, agentContext);
+			_agent.Execute(_context.Area, _context.PersistentSupport, _context.User);
 			_agent.PersistRecord(_context.PersistentSupport);
-		}
-	}
-
-	/// <summary>
-	/// An action that runs a formula group.
-	/// </summary>
-	public class RunFormulaGroupAction : Action
-	{
-		private readonly string groupId;
-
-		/// <summary>
-		/// Initializes a new instance of the <see cref="RunFormulaGroupAction" /> class.
-		/// </summary>
-		/// <param name="context">The context.</param>
-		/// <param name="groupId">The formula group identifier.</param>
-		public RunFormulaGroupAction(TriggerContext context, string groupId) : base(context)
-		{
-			this.groupId = groupId;
-		}
-
-		/// <inheritdoc/>
-		public override void Execute()
-		{
-			FormulaGroup.Execute(_context.PersistentSupport, groupId);
 		}
 	}
 }

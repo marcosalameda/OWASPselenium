@@ -19,7 +19,7 @@ const state = () => {
 		valuesOfPHEs: {},
 
 		/**
-		 * The route to be opened after logging in, for cases when there was an attempt to
+		 * The route to be opened after logging in, for cases when there was an attempt to 
 		 * navigate to a URL that requires authentication and login was completed afterward.
 		 */
 		routeAfterLogin: undefined
@@ -35,7 +35,8 @@ const getters = {
 	 * True if a user is currently logged in, false otherwise.
 	 * @param {object} state The current global state
 	 */
-	userIsLoggedIn(state) {
+	userIsLoggedIn(state)
+	{
 		return state.username !== '' && state.username !== 'guest'
 	}
 }
@@ -49,19 +50,25 @@ const actions = {
 	 * Sets the current user's info, according to the data coming from the server.
 	 * @param {object} data The current user's data
 	 */
-	setUserData(data) {
-		if (typeof data !== 'object' || data === null) return
+	setUserData(data)
+	{
+		if (typeof data !== 'object' || data === null)
+			return
 
-		if (_has(data, 'Name')) this.username = data.Name
-		if (_has(data, 'Ephs')) this.valuesOfPHEs = data.Ephs
+		if (_has(data, 'Name'))
+			this.username = data.Name
+		if (_has(data, 'Ephs'))
+			this.valuesOfPHEs = data.Ephs
 	},
 
 	/**
 	 * Adds a new entry to the PHE values.
 	 * @param {object} data The key and value of the entry
 	 */
-	addPHEChoice(data) {
-		if (typeof data !== 'object' || data === null) return
+	addPHEChoice(data)
+	{
+		if (typeof data !== 'object' || data === null)
+			return
 		if (typeof data.key !== 'string' || !Array.isArray(data.value) || data.value.length === 0)
 			return
 
@@ -72,14 +79,16 @@ const actions = {
 	 * Method to save or remove the route that should be opened after successful authentication
 	 * @param {object} routeData Route data
 	 */
-	setRedirectRouteAfterLogin(routeData) {
+	setRedirectRouteAfterLogin(routeData)
+	{
 		this.routeAfterLogin = routeData
 	},
 
 	/**
 	 * Clears the info of the current user.
 	 */
-	resetStore() {
+	resetStore()
+	{
 		Object.assign(this, state())
 	}
 }

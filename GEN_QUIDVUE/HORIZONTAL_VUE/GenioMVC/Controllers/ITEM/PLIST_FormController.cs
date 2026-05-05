@@ -9,7 +9,6 @@ using System.Data;
 using System.Data.Entity;
 using System.Linq;
 using System.Reflection;
-using System.Dynamic;
 
 using CSGenio.business;
 using CSGenio.core.persistence;
@@ -56,11 +55,11 @@ namespace GenioMVC.Controllers
 // USE /[MANUAL GQT CONTROLLER_SHOW PLIST]/
 
 		[HttpPost]
-		public ActionResult Plist_Show_GET([FromBody] RequestIdModel requestModel)
+		public ActionResult Plist_Show_GET([FromBody]RequestIdModel requestModel)
 		{
-			string id = requestModel.Id;
-			Plist_ViewModel model = new(UserContext.Current);
-			EventSink eventSink = new()
+			var id = requestModel.Id;
+			var model = new Plist_ViewModel(UserContext.Current);
+			var eventSink = new EventSink()
 			{
 				MethodName = "Plist_Show_GET",
 				AreaName = "item",
@@ -76,7 +75,13 @@ namespace GenioMVC.Controllers
 				}
 			};
 
-			return GenericHandleGetFormShow(eventSink, model, id);
+			using (CSGenio.core.di.GenioDI.MetricsOtlp.RecordTime("page_load_time", new System.Diagnostics.TagList([
+				new("PageId", "PLIST.SHOW"),
+				new("PageType", "form")
+			]), "ms", "Time to load the page."))
+			{
+				return GenericHandleGetFormShow(eventSink, model, id);
+			}
 		}
 
 		#endregion
@@ -85,14 +90,14 @@ namespace GenioMVC.Controllers
 
 // USE /[MANUAL GQT CONTROLLER_NEW_GET PLIST]/
 		[HttpPost]
-		public ActionResult Plist_New_GET([FromBody] RequestNewGetModel requestModel)
+		public ActionResult Plist_New_GET([FromBody]RequestNewGetModel requestModel)
 		{
-			string id = requestModel.Id;
-			bool isNewLocation = requestModel.IsNewLocation;
+			var id = requestModel.Id;
+			var isNewLocation = requestModel.IsNewLocation;
 			var prefillValues = requestModel.PrefillValues;
 
-			Plist_ViewModel model = new(UserContext.Current);
-			EventSink eventSink = new()
+			var model = new Plist_ViewModel(UserContext.Current);
+			var eventSink = new EventSink()
 			{
 				MethodName = "Plist_New_GET",
 				AreaName = "item",
@@ -112,7 +117,13 @@ namespace GenioMVC.Controllers
 				}
 			};
 
-			return GenericHandleGetFormNew(eventSink, model, id, isNewLocation, prefillValues);
+			using (CSGenio.core.di.GenioDI.MetricsOtlp.RecordTime("page_load_time", new System.Diagnostics.TagList([
+				new("PageId", "PLIST.SHOW"),
+				new("PageType", "form")
+			]), "ms", "Time to load the page."))
+			{
+				return GenericHandleGetFormNew(eventSink, model, id, isNewLocation, prefillValues);
+			}
 		}
 
 		//
@@ -121,7 +132,7 @@ namespace GenioMVC.Controllers
 		[HttpPost]
 		public ActionResult Plist_New([FromBody]Plist_ViewModel model, [FromQuery]bool redirect = true)
 		{
-			EventSink eventSink = new()
+			var eventSink = new EventSink()
 			{
 				MethodName = "Plist_New",
 				ViewName = "Plist",
@@ -146,7 +157,13 @@ namespace GenioMVC.Controllers
 				}
 			};
 
-			return GenericHandlePostFormNew(eventSink, model);
+			using (CSGenio.core.di.GenioDI.MetricsOtlp.RecordTime("page_load_time", new System.Diagnostics.TagList([
+				new("PageId", "PLIST.NEW"),
+				new("PageType", "form")
+			]), "ms", "Time to load the page."))
+			{
+				return GenericHandlePostFormNew(eventSink, model);
+			}
 		}
 
 		#endregion
@@ -155,11 +172,11 @@ namespace GenioMVC.Controllers
 
 // USE /[MANUAL GQT CONTROLLER_EDIT_GET PLIST]/
 		[HttpPost]
-		public ActionResult Plist_Edit_GET([FromBody] RequestIdModel requestModel)
+		public ActionResult Plist_Edit_GET([FromBody]RequestIdModel requestModel)
 		{
-			string id = requestModel.Id;
-			Plist_ViewModel model = new(UserContext.Current);
-			EventSink eventSink = new()
+			var id = requestModel.Id;
+			var model = new Plist_ViewModel(UserContext.Current);
+			var eventSink = new EventSink()
 			{
 				MethodName = "Plist_Edit_GET",
 				AreaName = "item",
@@ -176,7 +193,13 @@ namespace GenioMVC.Controllers
 				}
 			};
 
-			return GenericHandleGetFormEdit(eventSink, model, id);
+			using (CSGenio.core.di.GenioDI.MetricsOtlp.RecordTime("page_load_time", new System.Diagnostics.TagList([
+				new("PageId", "PLIST.SHOW"),
+				new("PageType", "form")
+			]), "ms", "Time to load the page."))
+			{
+				return GenericHandleGetFormEdit(eventSink, model, id);
+			}
 		}
 
 		//
@@ -185,7 +208,7 @@ namespace GenioMVC.Controllers
 		[HttpPost]
 		public ActionResult Plist_Edit([FromBody]Plist_ViewModel model, [FromQuery]bool redirect)
 		{
-			EventSink eventSink = new()
+			var eventSink = new EventSink()
 			{
 				MethodName = "Plist_Edit",
 				ViewName = "Plist",
@@ -210,7 +233,13 @@ namespace GenioMVC.Controllers
 				}
 			};
 
-			return GenericHandlePostFormEdit(eventSink, model);
+			using (CSGenio.core.di.GenioDI.MetricsOtlp.RecordTime("page_load_time", new System.Diagnostics.TagList([
+				new("PageId", "PLIST.EDIT"),
+				new("PageType", "form")
+			]), "ms", "Time to load the page."))
+			{
+				return GenericHandlePostFormEdit(eventSink, model);
+			}
 		}
 
 		#endregion
@@ -219,11 +248,11 @@ namespace GenioMVC.Controllers
 
 // USE /[MANUAL GQT CONTROLLER_DELETE_GET PLIST]/
 		[HttpPost]
-		public ActionResult Plist_Delete_GET([FromBody] RequestIdModel requestModel)
+		public ActionResult Plist_Delete_GET([FromBody]RequestIdModel requestModel)
 		{
-			string id = requestModel.Id;
-			Plist_ViewModel model = new(UserContext.Current);
-			EventSink eventSink = new()
+			var id = requestModel.Id;
+			var model = new Plist_ViewModel(UserContext.Current);
+			var eventSink = new EventSink()
 			{
 				MethodName = "Plist_Delete_GET",
 				AreaName = "item",
@@ -240,20 +269,26 @@ namespace GenioMVC.Controllers
 				}
 			};
 
-			return GenericHandleGetFormDelete(eventSink, model, id);
+			using (CSGenio.core.di.GenioDI.MetricsOtlp.RecordTime("page_load_time", new System.Diagnostics.TagList([
+				new("PageId", "PLIST.SHOW"),
+				new("PageType", "form")
+			]), "ms", "Time to load the page."))
+			{
+				return GenericHandleGetFormDelete(eventSink, model, id);
+			}
 		}
 
 		//
 		// POST: /Item/Plist_Delete
 // USE /[MANUAL GQT CONTROLLER_DELETE_POST PLIST]/
 		[HttpPost]
-		public ActionResult Plist_Delete([FromBody] RequestIdModel requestModel)
+		public ActionResult Plist_Delete([FromBody]RequestIdModel requestModel)
 		{
-			string id = requestModel.Id;
-			Plist_ViewModel model = new(UserContext.Current, id);
+			var id = requestModel.Id;
+			var model = new Plist_ViewModel (UserContext.Current, id);
 			model.MapFromModel();
 
-			EventSink eventSink = new()
+			var eventSink = new EventSink()
 			{
 				MethodName = "Plist_Delete",
 				ViewName = "Plist",
@@ -269,7 +304,13 @@ namespace GenioMVC.Controllers
 				}
 			};
 
-			return GenericHandlePostFormDelete(eventSink, model);
+			using (CSGenio.core.di.GenioDI.MetricsOtlp.RecordTime("page_load_time", new System.Diagnostics.TagList([
+				new("PageId", "PLIST.DELETE"),
+				new("PageType", "form")
+			]), "ms", "Time to load the page."))
+			{
+				return GenericHandlePostFormDelete(eventSink, model);
+			}
 		}
 
 		public ActionResult Plist_Delete_Redirect()
@@ -285,13 +326,13 @@ namespace GenioMVC.Controllers
 // USE /[MANUAL GQT CONTROLLER_DUPLICATE_GET PLIST]/
 
 		[HttpPost]
-		public ActionResult Plist_Duplicate_GET([FromBody] RequestNewGetModel requestModel)
+		public ActionResult Plist_Duplicate_GET([FromBody]RequestNewGetModel requestModel)
 		{
-			string id = requestModel.Id;
-			bool isNewLocation = requestModel.IsNewLocation;
+			var id = requestModel.Id;
+			var isNewLocation = requestModel.IsNewLocation;
 
-			Plist_ViewModel model = new(UserContext.Current);
-			EventSink eventSink = new()
+			var model = new Plist_ViewModel(UserContext.Current);
+			var eventSink = new EventSink()
 			{
 				MethodName = "Plist_Duplicate_GET",
 				AreaName = "item",
@@ -307,7 +348,13 @@ namespace GenioMVC.Controllers
 				}
 			};
 
-			return GenericHandleGetFormDuplicate(eventSink, model, id, isNewLocation);
+			using (CSGenio.core.di.GenioDI.MetricsOtlp.RecordTime("page_load_time", new System.Diagnostics.TagList([
+				new("PageId", "PLIST.SHOW"),
+				new("PageType", "form")
+			]), "ms", "Time to load the page."))
+			{
+				return GenericHandleGetFormDuplicate(eventSink, model, id, isNewLocation);
+			}
 		}
 
 		//
@@ -316,7 +363,7 @@ namespace GenioMVC.Controllers
 		[HttpPost]
 		public ActionResult Plist_Duplicate([FromBody]Plist_ViewModel model, [FromQuery]bool redirect = true)
 		{
-			EventSink eventSink = new()
+			var eventSink = new EventSink()
 			{
 				MethodName = "Plist_Duplicate",
 				ViewName = "Plist",
@@ -341,7 +388,13 @@ namespace GenioMVC.Controllers
 				}
 			};
 
-			return GenericHandlePostFormDuplicate(eventSink, model);
+			using (CSGenio.core.di.GenioDI.MetricsOtlp.RecordTime("page_load_time", new System.Diagnostics.TagList([
+				new("PageId", "PLIST.DUPLICATE"),
+				new("PageType", "form")
+			]), "ms", "Time to load the page."))
+			{
+				return GenericHandlePostFormDuplicate(eventSink, model);
+			}
 		}
 
 		#endregion
@@ -358,7 +411,7 @@ namespace GenioMVC.Controllers
 				PersistentSupport sp = UserContext.Current.PersistentSupport;
 				try
 				{
-					GenioMVC.Models.Item model = new(UserContext.Current);
+					var model = new GenioMVC.Models.Item(UserContext.Current);
 					model.klass.QPrimaryKey = Navigation.GetStrValue("item");
 
 // USE /[MANUAL GQT BEFORE_CANCEL PLIST]/
@@ -405,6 +458,9 @@ namespace GenioMVC.Controllers
 		{
 			var queryParams = requestModel.QueryParams;
 
+			int perPage = CSGenio.framework.Configuration.NrRegDBedit;
+			string rowsPerPageOptionsString = "";
+
 			// If there was a recent operation on this table then force the primary persistence server to be called and ignore the read only feature
 			if (string.IsNullOrEmpty(Navigation.GetStrValue("ForcePrimaryRead_wareh")))
 				UserContext.Current.SetPersistenceReadOnly(true);
@@ -414,7 +470,7 @@ namespace GenioMVC.Controllers
 				UserContext.Current.SetPersistenceReadOnly(false);
 			}
 
-			NameValueCollection requestValues = [];
+			var requestValues = new NameValueCollection();
 			if (queryParams != null)
 			{
 				// Add to request values
@@ -424,12 +480,35 @@ namespace GenioMVC.Controllers
 
 			IsStateReadonly = true;
 
-			Models.Item parentCtx = requestModel.Model == null ? null : new(m_userContext);
-			requestModel.Model?.Init(m_userContext);
+			Models.Item parentCtx = requestModel.Model == null ? null : new(UserContext.Current);
+			requestModel.Model?.Init(UserContext.Current);
 			requestModel.Model?.MapToModel(parentCtx);
-			Plist_WarehValWarehdes_ViewModel model = new(m_userContext, parentCtx);
+			Plist_WarehValWarehdes_ViewModel model = new(UserContext.Current, parentCtx);
 
-			CSGenio.core.framework.table.TableConfiguration tableConfig = model.GetTableConfig(requestModel.TableConfiguration);
+			// Table configuration load options
+			CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions tableConfigOptions = new CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions();
+
+			// Determine which table configuration to use and load it
+			CSGenio.framework.TableConfiguration.TableConfiguration tableConfig = TableUiSettings.Load(
+				UserContext.Current.PersistentSupport,
+				model.Uuid,
+				UserContext.Current.User,
+				tableConfigOptions
+			).DetermineTableConfig(
+				requestModel?.TableConfiguration,
+				requestModel?.UserTableConfigName,
+				(bool)requestModel?.LoadDefaultView,
+				tableConfigOptions
+			);
+
+			// Determine rows per page
+			tableConfig.RowsPerPage = CSGenio.framework.TableConfiguration.TableConfigurationHelpers.DetermineRowsPerPage(tableConfig.RowsPerPage, perPage, rowsPerPageOptionsString);
+
+			// Determine which columns have totalizers
+			tableConfig.TotalizerColumns = requestModel.TotalizerColumns;
+
+			// For tables with multiple selection enabled, determine currently selected rows
+			tableConfig.SelectedRows = requestModel.SelectedRows;
 
 			model.setModes(Request.Query["m"].ToString());
 			model.Load(tableConfig, requestValues, Request.IsAjaxRequest());
@@ -450,6 +529,9 @@ namespace GenioMVC.Controllers
 		{
 			var queryParams = requestModel.QueryParams;
 
+			int perPage = CSGenio.framework.Configuration.NrRegDBedit;
+			string rowsPerPageOptionsString = "";
+
 			// If there was a recent operation on this table then force the primary persistence server to be called and ignore the read only feature
 			if (string.IsNullOrEmpty(Navigation.GetStrValue("ForcePrimaryRead_itemp")))
 				UserContext.Current.SetPersistenceReadOnly(true);
@@ -459,7 +541,7 @@ namespace GenioMVC.Controllers
 				UserContext.Current.SetPersistenceReadOnly(false);
 			}
 
-			NameValueCollection requestValues = [];
+			var requestValues = new NameValueCollection();
 			if (queryParams != null)
 			{
 				// Add to request values
@@ -467,12 +549,35 @@ namespace GenioMVC.Controllers
 					requestValues.Add(kv.Key, kv.Value);
 			}
 
-			Models.Item parentCtx = requestModel.Model == null ? null : new(m_userContext);
-			requestModel.Model?.Init(m_userContext);
+			Models.Item parentCtx = requestModel.Model == null ? null : new(UserContext.Current);
+			requestModel.Model?.Init(UserContext.Current);
 			requestModel.Model?.MapToModel(parentCtx);
-			Plist_ValPlist_ViewModel model = new(m_userContext, parentCtx);
+			Plist_ValPlist_ViewModel model = new(UserContext.Current, parentCtx);
 
-			CSGenio.core.framework.table.TableConfiguration tableConfig = requestModel.TableConfiguration ?? new();
+			// Table configuration load options
+			CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions tableConfigOptions = new CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions();
+
+			// Determine which table configuration to use and load it
+			CSGenio.framework.TableConfiguration.TableConfiguration tableConfig = TableUiSettings.Load(
+				UserContext.Current.PersistentSupport,
+				model.Uuid,
+				UserContext.Current.User,
+				tableConfigOptions
+			).DetermineTableConfig(
+				requestModel?.TableConfiguration,
+				requestModel?.UserTableConfigName,
+				(bool)requestModel?.LoadDefaultView,
+				tableConfigOptions
+			);
+
+			// Determine rows per page
+			tableConfig.RowsPerPage = CSGenio.framework.TableConfiguration.TableConfigurationHelpers.DetermineRowsPerPage(tableConfig.RowsPerPage, perPage, rowsPerPageOptionsString);
+
+			// Determine which columns have totalizers
+			tableConfig.TotalizerColumns = requestModel.TotalizerColumns;
+
+			// For tables with multiple selection enabled, determine currently selected rows
+			tableConfig.SelectedRows = requestModel.SelectedRows;
 
 			model.setModes(Request.Query["m"].ToString());
 			model.Load(tableConfig, requestValues, Request.IsAjaxRequest());

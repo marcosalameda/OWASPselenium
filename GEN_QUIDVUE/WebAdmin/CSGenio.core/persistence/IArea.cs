@@ -33,10 +33,8 @@ namespace CSGenio.persistence
 
         object returnValueField(string fieldName);
 
-        void insertNameValueField(string fieldName, object Qvalue, bool fromDatabase = false);
+        void insertNameValueField(string fieldName, object Qvalue);
 
         string QPrimaryKey { get; }
-        
-        bool IsBookmarkLocked { get; set; }
     }
 }

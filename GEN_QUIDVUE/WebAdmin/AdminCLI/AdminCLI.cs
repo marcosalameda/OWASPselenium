@@ -1,6 +1,9 @@
 ﻿using CommandLine;
+using CSGenio.persistence;
 using CSGenio.config;
 using DbAdmin;
+using GenioServer.security;
+using System;
 
 namespace AdminCLI
 {
@@ -8,7 +11,6 @@ namespace AdminCLI
     {
         private static DBMaintenance dBMaintenance;
         private static SysConfiguration sysConfiguration;
-        private static DBUserManagement dBUserManagement;
 
         private static IConfigurationManager _configManager;
 
@@ -20,23 +22,12 @@ namespace AdminCLI
             //Parse console arguments
             try
             {
-                var parsedArgs = CommandLine.Parser.Default.ParseArguments<
-                    ReindexOptions, 
-                    ListReindexScriptsOptions,
-                    SetupUserProvidersOptions,
-                    WriteConfigurationOptions,
-                    ReadConfigurationOptions, 
-                    BackupOptions, 
-                    RestoreOptions, 
-                    RemoveBackupOptions, 
-                    CreateRedirectOptions, 
-                    ConfigOptions, 
-                    DbStatusOptions>(args);
+                var parsedArgs = CommandLine.Parser.Default.ParseArguments<ReindexOptions, ListReindexScriptsOptions, WriteConfigurationOptions, 
+                    ReadConfigurationOptions, BackupOptions, RestoreOptions, RemoveBackupOptions, CreateRedirectOptions, ConfigOptions>(args);
 
                 return parsedArgs.MapResult(
                     (ReindexOptions opts) => Reindex(opts),
                     (ListReindexScriptsOptions opts) => ListReindexScripts(opts),
-                    (SetupUserProvidersOptions opts) => SetupUserProviders(opts),
                     (WriteConfigurationOptions opts) => WriteConfiguration(opts),
                     (ReadConfigurationOptions opts) => ReadConfiguration(opts),
                     (BackupOptions opts) => Backup(opts),
@@ -44,7 +35,6 @@ namespace AdminCLI
                     (RemoveBackupOptions opts) => RemoveBackup(opts),
                     (CreateRedirectOptions opts) => CreateNewRedirect(opts),
                     (ConfigOptions opts) => HandleConfig(opts),
-                    (DbStatusOptions opts) => DbStatus(opts),
                     errs => 1);
             }
             catch (Exception e) {
@@ -60,7 +50,6 @@ namespace AdminCLI
 
             //Initialize library classes
             dBMaintenance = new DBMaintenance(AppDomain.CurrentDomain.BaseDirectory);
-            dBUserManagement = new DBUserManagement();
             _configManager = new FileConfigurationManager(CSGenio.framework.Configuration.GetConfigPath());
             sysConfiguration = new SysConfiguration(_configManager);
         }

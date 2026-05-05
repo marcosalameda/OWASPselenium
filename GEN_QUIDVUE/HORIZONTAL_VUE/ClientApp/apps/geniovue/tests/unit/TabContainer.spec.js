@@ -5,8 +5,8 @@ import TabContainer from '@/components/containers/TabContainer.vue'
 
 describe('TabContainer.vue', () => {
 	let wrapper
-	const alignValueLeft = 'left'
-	const iconAlignmentValue = 'right'
+	let alignValueLeft = 'left'
+	let iconAlignmentValue = 'right'
 
 	beforeEach(() => {
 		wrapper = shallowMount(TabContainer, {

@@ -9,7 +9,6 @@ using System.Data;
 using System.Data.Entity;
 using System.Linq;
 using System.Reflection;
-using System.Dynamic;
 
 using CSGenio.business;
 using CSGenio.core.persistence;
@@ -33,12 +32,12 @@ namespace GenioMVC.Controllers
 	{
 		#region NavigationLocation Names
 
-		private static readonly NavigationLocation ACTION_ABATE_CANCEL = new("EQUIPMENT_DECOMMISSI11875", "Abate_Cancel", "Decom") { vueRouteName = "form-ABATE", mode = "CANCEL" };
-		private static readonly NavigationLocation ACTION_ABATE_SHOW = new("EQUIPMENT_DECOMMISSI11875", "Abate_Show", "Decom") { vueRouteName = "form-ABATE", mode = "SHOW" };
-		private static readonly NavigationLocation ACTION_ABATE_NEW = new("EQUIPMENT_DECOMMISSI11875", "Abate_New", "Decom") { vueRouteName = "form-ABATE", mode = "NEW" };
-		private static readonly NavigationLocation ACTION_ABATE_EDIT = new("EQUIPMENT_DECOMMISSI11875", "Abate_Edit", "Decom") { vueRouteName = "form-ABATE", mode = "EDIT" };
-		private static readonly NavigationLocation ACTION_ABATE_DUPLICATE = new("EQUIPMENT_DECOMMISSI11875", "Abate_Duplicate", "Decom") { vueRouteName = "form-ABATE", mode = "DUPLICATE" };
-		private static readonly NavigationLocation ACTION_ABATE_DELETE = new("EQUIPMENT_DECOMMISSI11875", "Abate_Delete", "Decom") { vueRouteName = "form-ABATE", mode = "DELETE" };
+		private static readonly NavigationLocation ACTION_ABATE_CANCEL = new("DESATIVACAO_DE_EQUIP16900", "Abate_Cancel", "Decom") { vueRouteName = "form-ABATE", mode = "CANCEL" };
+		private static readonly NavigationLocation ACTION_ABATE_SHOW = new("DESATIVACAO_DE_EQUIP16900", "Abate_Show", "Decom") { vueRouteName = "form-ABATE", mode = "SHOW" };
+		private static readonly NavigationLocation ACTION_ABATE_NEW = new("DESATIVACAO_DE_EQUIP16900", "Abate_New", "Decom") { vueRouteName = "form-ABATE", mode = "NEW" };
+		private static readonly NavigationLocation ACTION_ABATE_EDIT = new("DESATIVACAO_DE_EQUIP16900", "Abate_Edit", "Decom") { vueRouteName = "form-ABATE", mode = "EDIT" };
+		private static readonly NavigationLocation ACTION_ABATE_DUPLICATE = new("DESATIVACAO_DE_EQUIP16900", "Abate_Duplicate", "Decom") { vueRouteName = "form-ABATE", mode = "DUPLICATE" };
+		private static readonly NavigationLocation ACTION_ABATE_DELETE = new("DESATIVACAO_DE_EQUIP16900", "Abate_Delete", "Decom") { vueRouteName = "form-ABATE", mode = "DELETE" };
 
 		#endregion
 
@@ -56,11 +55,11 @@ namespace GenioMVC.Controllers
 // USE /[MANUAL GQT CONTROLLER_SHOW ABATE]/
 
 		[HttpPost]
-		public ActionResult Abate_Show_GET([FromBody] RequestIdModel requestModel)
+		public ActionResult Abate_Show_GET([FromBody]RequestIdModel requestModel)
 		{
-			string id = requestModel.Id;
-			Abate_ViewModel model = new(UserContext.Current);
-			EventSink eventSink = new()
+			var id = requestModel.Id;
+			var model = new Abate_ViewModel(UserContext.Current);
+			var eventSink = new EventSink()
 			{
 				MethodName = "Abate_Show_GET",
 				AreaName = "decom",
@@ -76,7 +75,13 @@ namespace GenioMVC.Controllers
 				}
 			};
 
-			return GenericHandleGetFormShow(eventSink, model, id);
+			using (CSGenio.core.di.GenioDI.MetricsOtlp.RecordTime("page_load_time", new System.Diagnostics.TagList([
+				new("PageId", "ABATE.SHOW"),
+				new("PageType", "form")
+			]), "ms", "Time to load the page."))
+			{
+				return GenericHandleGetFormShow(eventSink, model, id);
+			}
 		}
 
 		#endregion
@@ -85,14 +90,14 @@ namespace GenioMVC.Controllers
 
 // USE /[MANUAL GQT CONTROLLER_NEW_GET ABATE]/
 		[HttpPost]
-		public ActionResult Abate_New_GET([FromBody] RequestNewGetModel requestModel)
+		public ActionResult Abate_New_GET([FromBody]RequestNewGetModel requestModel)
 		{
-			string id = requestModel.Id;
-			bool isNewLocation = requestModel.IsNewLocation;
+			var id = requestModel.Id;
+			var isNewLocation = requestModel.IsNewLocation;
 			var prefillValues = requestModel.PrefillValues;
 
-			Abate_ViewModel model = new(UserContext.Current);
-			EventSink eventSink = new()
+			var model = new Abate_ViewModel(UserContext.Current);
+			var eventSink = new EventSink()
 			{
 				MethodName = "Abate_New_GET",
 				AreaName = "decom",
@@ -112,7 +117,13 @@ namespace GenioMVC.Controllers
 				}
 			};
 
-			return GenericHandleGetFormNew(eventSink, model, id, isNewLocation, prefillValues);
+			using (CSGenio.core.di.GenioDI.MetricsOtlp.RecordTime("page_load_time", new System.Diagnostics.TagList([
+				new("PageId", "ABATE.SHOW"),
+				new("PageType", "form")
+			]), "ms", "Time to load the page."))
+			{
+				return GenericHandleGetFormNew(eventSink, model, id, isNewLocation, prefillValues);
+			}
 		}
 
 		//
@@ -121,7 +132,7 @@ namespace GenioMVC.Controllers
 		[HttpPost]
 		public ActionResult Abate_New([FromBody]Abate_ViewModel model, [FromQuery]bool redirect = true)
 		{
-			EventSink eventSink = new()
+			var eventSink = new EventSink()
 			{
 				MethodName = "Abate_New",
 				ViewName = "Abate",
@@ -146,7 +157,13 @@ namespace GenioMVC.Controllers
 				}
 			};
 
-			return GenericHandlePostFormNew(eventSink, model);
+			using (CSGenio.core.di.GenioDI.MetricsOtlp.RecordTime("page_load_time", new System.Diagnostics.TagList([
+				new("PageId", "ABATE.NEW"),
+				new("PageType", "form")
+			]), "ms", "Time to load the page."))
+			{
+				return GenericHandlePostFormNew(eventSink, model);
+			}
 		}
 
 		#endregion
@@ -155,11 +172,11 @@ namespace GenioMVC.Controllers
 
 // USE /[MANUAL GQT CONTROLLER_EDIT_GET ABATE]/
 		[HttpPost]
-		public ActionResult Abate_Edit_GET([FromBody] RequestIdModel requestModel)
+		public ActionResult Abate_Edit_GET([FromBody]RequestIdModel requestModel)
 		{
-			string id = requestModel.Id;
-			Abate_ViewModel model = new(UserContext.Current);
-			EventSink eventSink = new()
+			var id = requestModel.Id;
+			var model = new Abate_ViewModel(UserContext.Current);
+			var eventSink = new EventSink()
 			{
 				MethodName = "Abate_Edit_GET",
 				AreaName = "decom",
@@ -176,7 +193,13 @@ namespace GenioMVC.Controllers
 				}
 			};
 
-			return GenericHandleGetFormEdit(eventSink, model, id);
+			using (CSGenio.core.di.GenioDI.MetricsOtlp.RecordTime("page_load_time", new System.Diagnostics.TagList([
+				new("PageId", "ABATE.SHOW"),
+				new("PageType", "form")
+			]), "ms", "Time to load the page."))
+			{
+				return GenericHandleGetFormEdit(eventSink, model, id);
+			}
 		}
 
 		//
@@ -185,7 +208,7 @@ namespace GenioMVC.Controllers
 		[HttpPost]
 		public ActionResult Abate_Edit([FromBody]Abate_ViewModel model, [FromQuery]bool redirect)
 		{
-			EventSink eventSink = new()
+			var eventSink = new EventSink()
 			{
 				MethodName = "Abate_Edit",
 				ViewName = "Abate",
@@ -210,7 +233,13 @@ namespace GenioMVC.Controllers
 				}
 			};
 
-			return GenericHandlePostFormEdit(eventSink, model);
+			using (CSGenio.core.di.GenioDI.MetricsOtlp.RecordTime("page_load_time", new System.Diagnostics.TagList([
+				new("PageId", "ABATE.EDIT"),
+				new("PageType", "form")
+			]), "ms", "Time to load the page."))
+			{
+				return GenericHandlePostFormEdit(eventSink, model);
+			}
 		}
 
 		#endregion
@@ -219,11 +248,11 @@ namespace GenioMVC.Controllers
 
 // USE /[MANUAL GQT CONTROLLER_DELETE_GET ABATE]/
 		[HttpPost]
-		public ActionResult Abate_Delete_GET([FromBody] RequestIdModel requestModel)
+		public ActionResult Abate_Delete_GET([FromBody]RequestIdModel requestModel)
 		{
-			string id = requestModel.Id;
-			Abate_ViewModel model = new(UserContext.Current);
-			EventSink eventSink = new()
+			var id = requestModel.Id;
+			var model = new Abate_ViewModel(UserContext.Current);
+			var eventSink = new EventSink()
 			{
 				MethodName = "Abate_Delete_GET",
 				AreaName = "decom",
@@ -240,20 +269,26 @@ namespace GenioMVC.Controllers
 				}
 			};
 
-			return GenericHandleGetFormDelete(eventSink, model, id);
+			using (CSGenio.core.di.GenioDI.MetricsOtlp.RecordTime("page_load_time", new System.Diagnostics.TagList([
+				new("PageId", "ABATE.SHOW"),
+				new("PageType", "form")
+			]), "ms", "Time to load the page."))
+			{
+				return GenericHandleGetFormDelete(eventSink, model, id);
+			}
 		}
 
 		//
 		// POST: /Decom/Abate_Delete
 // USE /[MANUAL GQT CONTROLLER_DELETE_POST ABATE]/
 		[HttpPost]
-		public ActionResult Abate_Delete([FromBody] RequestIdModel requestModel)
+		public ActionResult Abate_Delete([FromBody]RequestIdModel requestModel)
 		{
-			string id = requestModel.Id;
-			Abate_ViewModel model = new(UserContext.Current, id);
+			var id = requestModel.Id;
+			var model = new Abate_ViewModel (UserContext.Current, id);
 			model.MapFromModel();
 
-			EventSink eventSink = new()
+			var eventSink = new EventSink()
 			{
 				MethodName = "Abate_Delete",
 				ViewName = "Abate",
@@ -269,7 +304,13 @@ namespace GenioMVC.Controllers
 				}
 			};
 
-			return GenericHandlePostFormDelete(eventSink, model);
+			using (CSGenio.core.di.GenioDI.MetricsOtlp.RecordTime("page_load_time", new System.Diagnostics.TagList([
+				new("PageId", "ABATE.DELETE"),
+				new("PageType", "form")
+			]), "ms", "Time to load the page."))
+			{
+				return GenericHandlePostFormDelete(eventSink, model);
+			}
 		}
 
 		public ActionResult Abate_Delete_Redirect()
@@ -285,13 +326,13 @@ namespace GenioMVC.Controllers
 // USE /[MANUAL GQT CONTROLLER_DUPLICATE_GET ABATE]/
 
 		[HttpPost]
-		public ActionResult Abate_Duplicate_GET([FromBody] RequestNewGetModel requestModel)
+		public ActionResult Abate_Duplicate_GET([FromBody]RequestNewGetModel requestModel)
 		{
-			string id = requestModel.Id;
-			bool isNewLocation = requestModel.IsNewLocation;
+			var id = requestModel.Id;
+			var isNewLocation = requestModel.IsNewLocation;
 
-			Abate_ViewModel model = new(UserContext.Current);
-			EventSink eventSink = new()
+			var model = new Abate_ViewModel(UserContext.Current);
+			var eventSink = new EventSink()
 			{
 				MethodName = "Abate_Duplicate_GET",
 				AreaName = "decom",
@@ -307,7 +348,13 @@ namespace GenioMVC.Controllers
 				}
 			};
 
-			return GenericHandleGetFormDuplicate(eventSink, model, id, isNewLocation);
+			using (CSGenio.core.di.GenioDI.MetricsOtlp.RecordTime("page_load_time", new System.Diagnostics.TagList([
+				new("PageId", "ABATE.SHOW"),
+				new("PageType", "form")
+			]), "ms", "Time to load the page."))
+			{
+				return GenericHandleGetFormDuplicate(eventSink, model, id, isNewLocation);
+			}
 		}
 
 		//
@@ -316,7 +363,7 @@ namespace GenioMVC.Controllers
 		[HttpPost]
 		public ActionResult Abate_Duplicate([FromBody]Abate_ViewModel model, [FromQuery]bool redirect = true)
 		{
-			EventSink eventSink = new()
+			var eventSink = new EventSink()
 			{
 				MethodName = "Abate_Duplicate",
 				ViewName = "Abate",
@@ -341,7 +388,13 @@ namespace GenioMVC.Controllers
 				}
 			};
 
-			return GenericHandlePostFormDuplicate(eventSink, model);
+			using (CSGenio.core.di.GenioDI.MetricsOtlp.RecordTime("page_load_time", new System.Diagnostics.TagList([
+				new("PageId", "ABATE.DUPLICATE"),
+				new("PageType", "form")
+			]), "ms", "Time to load the page."))
+			{
+				return GenericHandlePostFormDuplicate(eventSink, model);
+			}
 		}
 
 		#endregion
@@ -358,15 +411,8 @@ namespace GenioMVC.Controllers
 				PersistentSupport sp = UserContext.Current.PersistentSupport;
 				try
 				{
-					var recordKey = Navigation.GetStrValue("decom");
-					var model = GenioMVC.Models.Decom.Find(recordKey, UserContext.Current);
-					if (model.ValZzstate == 0)
-					{
-						Navigation.ClearValue("decom");
-						string errorMessage = Resources.Resources.ESTE_REGISTO_JA_FOI_02595;
-						Log.Error($"${errorMessage} ID: ${recordKey}");
-						return JsonOK(new { Success = true, currentNavigationLevel = Navigation.CurrentLevel.Level, Warning = errorMessage });
-					}
+					var model = new GenioMVC.Models.Decom(UserContext.Current);
+					model.klass.QPrimaryKey = Navigation.GetStrValue("decom");
 
 // USE /[MANUAL GQT BEFORE_CANCEL ABATE]/
 

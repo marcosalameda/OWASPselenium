@@ -1,4 +1,4 @@
-﻿/* eslint-disable @typescript-eslint/no-unused-vars */
+﻿/* eslint-disable no-unused-vars */
 import { computed, reactive, watch } from 'vue'
 import _merge from 'lodash-es/merge'
 
@@ -11,7 +11,7 @@ import netAPI from '@quidgest/clientapp/network'
 import qApi from '@/api/genio/quidgestFunctions.js'
 import qFunctions from '@/api/genio/projectFunctions.js'
 import qProjArrays from '@/api/genio/projectArrays.js'
-/* eslint-enable @typescript-eslint/no-unused-vars */
+/* eslint-enable no-unused-vars */
 
 /**
  * Represents a ViewModel class.
@@ -25,11 +25,11 @@ export default class ViewModel extends FormViewModelBase
 	 * @param {object} options - The options for the ViewModel
 	 * @param {object} values - A ViewModel instance to copy values from
 	 */
-	// eslint-disable-next-line @typescript-eslint/no-unused-vars
+	// eslint-disable-next-line no-unused-vars
 	constructor(vueContext, options, values)
 	{
 		super(vueContext, options)
-		// eslint-disable-next-line @typescript-eslint/no-unused-vars
+		// eslint-disable-next-line no-unused-vars
 		const vm = this.vueContext
 
 		// The view model metadata
@@ -37,9 +37,8 @@ export default class ViewModel extends FormViewModelBase
 			name: 'ASSPA',
 			area: 'ASSPA',
 			actions: {
-				recalculateFormulas: 'RecalculateFormulas_Asspa',
-				updateFilesTickets: 'UpdateFilesTicketsAsspa',
-				setFile: 'SetFileAsspa'
+				recalculateFormulas: 'RecalculateFormulas_ASSPA',
+				updateFilesTickets: 'UpdateFilesTicketsASSPA'
 			}
 		})
 
@@ -51,7 +50,7 @@ export default class ViewModel extends FormViewModelBase
 			field: 'CODASSPA',
 			description: '',
 		}).cloneFrom(values?.ValCodasspa))
-		this.stopWatchers.push(watch(() => this.ValCodasspa.value, (newValue, oldValue) => this.onUpdate('asspa.codasspa', this.ValCodasspa, newValue, oldValue)))
+		watch(() => this.ValCodasspa.value, (newValue, oldValue) => this.onUpdate('asspa.codasspa', this.ValCodasspa, newValue, oldValue))
 
 		/** The used foreign keys. */
 		this.ValCodasset = reactive(new modelFieldType.ForeignKey({
@@ -62,7 +61,7 @@ export default class ViewModel extends FormViewModelBase
 			relatedArea: 'ASSET',
 			description: '',
 		}).cloneFrom(values?.ValCodasset))
-		this.stopWatchers.push(watch(() => this.ValCodasset.value, (newValue, oldValue) => this.onUpdate('asspa.codasset', this.ValCodasset, newValue, oldValue)))
+		watch(() => this.ValCodasset.value, (newValue, oldValue) => this.onUpdate('asspa.codasset', this.ValCodasset, newValue, oldValue))
 
 		this.ValCodparam = reactive(new modelFieldType.ForeignKey({
 			id: 'ValCodparam',
@@ -72,7 +71,7 @@ export default class ViewModel extends FormViewModelBase
 			relatedArea: 'PARAM',
 			description: '',
 		}).cloneFrom(values?.ValCodparam))
-		this.stopWatchers.push(watch(() => this.ValCodparam.value, (newValue, oldValue) => this.onUpdate('asspa.codparam', this.ValCodparam, newValue, oldValue)))
+		watch(() => this.ValCodparam.value, (newValue, oldValue) => this.onUpdate('asspa.codparam', this.ValCodparam, newValue, oldValue))
 
 		/** The remaining form fields. */
 		this.TableAssetName = reactive(new modelFieldType.String({
@@ -83,9 +82,8 @@ export default class ViewModel extends FormViewModelBase
 			field: 'NAME',
 			maxLength: 85,
 			description: computed(() => this.Resources.IDENTIFICATION_NAME16317),
-			ignoreFldSubmit: true,
 		}).cloneFrom(values?.TableAssetName))
-		this.stopWatchers.push(watch(() => this.TableAssetName.value, (newValue, oldValue) => this.onUpdate('asset.name', this.TableAssetName, newValue, oldValue)))
+		watch(() => this.TableAssetName.value, (newValue, oldValue) => this.onUpdate('asset.name', this.TableAssetName, newValue, oldValue))
 
 		this.ValDatatype = reactive(new modelFieldType.String({
 			id: 'ValDatatype',
@@ -93,10 +91,10 @@ export default class ViewModel extends FormViewModelBase
 			area: 'ASSPA',
 			field: 'DATATYPE',
 			maxLength: 1,
-			arrayOptions: computed(() => new qProjArrays.QArrayDatatype(vm.$getResource).elements),
+			arrayOptions: computed(() => qProjArrays.QArrayDatatype.setResources(vm.$getResource).elements),
 			description: computed(() => this.Resources.DATA_TYPE47159),
 		}).cloneFrom(values?.ValDatatype))
-		this.stopWatchers.push(watch(() => this.ValDatatype.value, (newValue, oldValue) => this.onUpdate('asspa.datatype', this.ValDatatype, newValue, oldValue)))
+		watch(() => this.ValDatatype.value, (newValue, oldValue) => this.onUpdate('asspa.datatype', this.ValDatatype, newValue, oldValue))
 
 		this.ValDecimalplaces = reactive(new modelFieldType.Number({
 			id: 'ValDecimalplaces',
@@ -107,7 +105,7 @@ export default class ViewModel extends FormViewModelBase
 			decimalDigits: 0,
 			description: computed(() => this.Resources.DECIMAL_PLACES62575),
 		}).cloneFrom(values?.ValDecimalplaces))
-		this.stopWatchers.push(watch(() => this.ValDecimalplaces.value, (newValue, oldValue) => this.onUpdate('asspa.decimalplaces', this.ValDecimalplaces, newValue, oldValue)))
+		watch(() => this.ValDecimalplaces.value, (newValue, oldValue) => this.onUpdate('asspa.decimalplaces', this.ValDecimalplaces, newValue, oldValue))
 
 		this.TableParamParamete = reactive(new modelFieldType.String({
 			type: 'Lookup',
@@ -117,9 +115,8 @@ export default class ViewModel extends FormViewModelBase
 			field: 'PARAMETE',
 			maxLength: 50,
 			description: computed(() => this.Resources.PARAMETER41976),
-			ignoreFldSubmit: true,
 		}).cloneFrom(values?.TableParamParamete))
-		this.stopWatchers.push(watch(() => this.TableParamParamete.value, (newValue, oldValue) => this.onUpdate('param.parameter', this.TableParamParamete, newValue, oldValue)))
+		watch(() => this.TableParamParamete.value, (newValue, oldValue) => this.onUpdate('param.parameter', this.TableParamParamete, newValue, oldValue))
 
 		this.ValText = reactive(new modelFieldType.String({
 			id: 'ValText',
@@ -129,7 +126,7 @@ export default class ViewModel extends FormViewModelBase
 			maxLength: 50,
 			description: computed(() => this.Resources.TEXT04938),
 		}).cloneFrom(values?.ValText))
-		this.stopWatchers.push(watch(() => this.ValText.value, (newValue, oldValue) => this.onUpdate('asspa.text', this.ValText, newValue, oldValue)))
+		watch(() => this.ValText.value, (newValue, oldValue) => this.onUpdate('asspa.text', this.ValText, newValue, oldValue))
 
 		this.ValQuantity = reactive(new modelFieldType.Number({
 			id: 'ValQuantity',
@@ -140,7 +137,7 @@ export default class ViewModel extends FormViewModelBase
 			decimalDigits: 4,
 			description: computed(() => this.Resources.QUANTITY06415),
 		}).cloneFrom(values?.ValQuantity))
-		this.stopWatchers.push(watch(() => this.ValQuantity.value, (newValue, oldValue) => this.onUpdate('asspa.quantity', this.ValQuantity, newValue, oldValue)))
+		watch(() => this.ValQuantity.value, (newValue, oldValue) => this.onUpdate('asspa.quantity', this.ValQuantity, newValue, oldValue))
 
 		this.ValDate = reactive(new modelFieldType.Date({
 			id: 'ValDate',
@@ -149,7 +146,7 @@ export default class ViewModel extends FormViewModelBase
 			field: 'DATE',
 			description: computed(() => this.Resources.DATE18475),
 		}).cloneFrom(values?.ValDate))
-		this.stopWatchers.push(watch(() => this.ValDate.value, (newValue, oldValue) => this.onUpdate('asspa.date', this.ValDate, newValue, oldValue)))
+		watch(() => this.ValDate.value, (newValue, oldValue) => this.onUpdate('asspa.date', this.ValDate, newValue, oldValue))
 
 		this.ValToshow = reactive(new modelFieldType.String({
 			id: 'ValToshow',
@@ -160,7 +157,7 @@ export default class ViewModel extends FormViewModelBase
 			isFixed: true,
 			valueFormula: {
 				stopRecalcCondition() { return false },
-				// eslint-disable-next-line @typescript-eslint/no-unused-vars
+				// eslint-disable-next-line no-unused-vars
 				fnFormula(params)
 				{
 					// Formula: iif([ASSPA->DATATYPE]=="T",[ASSPA->TEXT],iif([ASSPA->DATATYPE]=="N",NumericToString([ASSPA->QUANTITY],0),iif([ASSPA->DATATYPE]=="D",NumericToString(Year([ASSPA->DATE]),0)+"-"+RIGHT("00"+NumericToString(Month([ASSPA->DATE]),0),2)+"-"+RIGHT("00"+NumericToString(Day([ASSPA->DATE]),0),2),"") ) )
@@ -172,7 +169,7 @@ export default class ViewModel extends FormViewModelBase
 			},
 			description: computed(() => this.Resources.TO_SHOW13268),
 		}).cloneFrom(values?.ValToshow))
-		this.stopWatchers.push(watch(() => this.ValToshow.value, (newValue, oldValue) => this.onUpdate('asspa.toshow', this.ValToshow, newValue, oldValue)))
+		watch(() => this.ValToshow.value, (newValue, oldValue) => this.onUpdate('asspa.toshow', this.ValToshow, newValue, oldValue))
 	}
 
 	/**

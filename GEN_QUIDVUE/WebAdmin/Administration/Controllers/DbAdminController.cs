@@ -1,29 +1,26 @@
-﻿using System;
+﻿using Administration.AuxClass;
+using CSGenio;
+using CSGenio.business;
+using CSGenio.framework;
+using CSGenio.persistence;
+using ExecuteQueryCore;
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Text;
+using Administration.Models;
+using System.Threading.Tasks;
+using Quidgest.Persistence.GenericQuery;
 using System.Net;
 using System.Net.Http;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
-
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using HttpGetAttribute = Microsoft.AspNetCore.Mvc.HttpGetAttribute;
 using HttpPostAttribute = Microsoft.AspNetCore.Mvc.HttpPostAttribute;
-
-using Administration.AuxClass;
-using Administration.Models;
-using CSGenio;
-using CSGenio.business;
-using CSGenio.core.persistence;
-using CSGenio.framework;
-using CSGenio.persistence;
+using System.Threading;
 using DbAdmin;
-using ExecuteQueryCore;
-using Quidgest.Persistence.GenericQuery;
 
 namespace Administration.Controllers
 {
@@ -204,13 +201,7 @@ namespace Administration.Controllers
                 model.DBSize = AuxFunctions.GetDBSize(year, model.DBSchema);
                 // read upgrade index version
                 model.VersionUpgrIndx = CSGenio.framework.Configuration.GetDbUpgrIndx(year);
-
-                PersistentSupport sp = PersistentSupport.getPersistentSupport(CurrentYear);
-                DatabaseVersionReader dbVersionReader = new(sp);
-                model.CurrentUserSettingsVersion = dbVersionReader.GetDbUserSettingsVersion();
             }
-
-            model.UserSettingsVersion = CSGenio.framework.Configuration.UserSettingsVersion;
 
             // read app version from the code watermark
             model.VersionApp = CSGenio.framework.Configuration.Version;
@@ -363,15 +354,12 @@ namespace Administration.Controllers
         {
             try
             {
-                if(!ModelState.IsValid)
-                    throw new BusinessException(Resources.Resources.ALGUNS_CAMPOS_ESTAO_27860, "DbAdminController.reindex", Resources.Resources.ALGUNS_CAMPOS_ESTAO_27860);
-
                 //Check if something is running
-                if (RdxItem?.Progress.State == RdxProgressStatus.RUNNING)
-                    return Json(new { Success = true });
-
-                //Dispose previous cancellation token source if it exists
-                reindexCTknSrc?.Dispose();
+                if (RdxItem != null)
+                {
+                    if (RdxItem.Progress.State == RdxProgressStatus.RUNNING)
+                        return Json(new { Success = true });
+                }
 
                 //Create cancellation token
                 reindexCTknSrc = new CancellationTokenSource();
@@ -1445,6 +1433,26 @@ namespace Administration.Controllers
                     Name = model.Year
                 };
 
+                if(!string.IsNullOrEmpty(model.NewAuditDBSchema))
+                {
+                    dataSystem.DataSystemLog = new DataSystemXml()
+                    {
+                        Type = curDataSystem.Type,
+                        Server = curDataSystem.Server,
+                        Login = curDataSystem.Login,
+                        Password = curDataSystem.Password,
+                        Schemas = new List<DataXml>()
+                        {
+                            new DataXml()
+                            {
+                                Id = string.Format("LOG_{0}", curDataSchema.Id),
+                                Schema = model.NewAuditDBSchema
+                            }
+                        },
+                        Name = string.Format("LOG_{0}", model.Year)
+                    };
+                }
+
                 // Adicionar o novo DataSystems
                 conf.DataSystems.Add(dataSystem);
                 configManager.StoreConfig(conf);
@@ -1475,7 +1483,7 @@ namespace Administration.Controllers
                     // 2) Execução dos scripts da Criação de BD Schema
                     if (model.CriarBD)
                     {
-                        var firstFaseRdx = new List<string>() { "CREATEDB", "CREATESP", "CREATESCHEMA", "CREATEHRDSCHEMA", "UPDATEFUNCTIONS", "TBLREBUILD", "UPDATECFG", "UPDATESP", "ADDINDEX" };
+                        var firstFaseRdx = new List<string>() { "CREATEDB", "CREATESP", "CREATESCHEMA", "CREATEHRDSCHEMA", "TBLREBUILD", "UPDATECFG", "UPDATESP", "ADDINDEX" };
                         reindexOrder.ReIndexItems.ForEach(rdxf => rdxf.Selected = firstFaseRdx.Contains(rdxf.Id));
                         reindexOrder.timeout = model.Timeout;
                         reindexOrder.CalculateOrder();
@@ -1487,13 +1495,32 @@ namespace Administration.Controllers
                                 ChangeYearProgressBar.Text = "";
                                 ChangeYearProgressBar.Percent = 20;
                             }
-                            else if (status.State == RdxProgressStatus.ERROR)
-                            {
-                                throw new OperationCanceledException($"{status.Message} - ({status.ActualScript})");
-                            }
                             else
                             {
                                 ChangeYearProgressBar.Text = string.Format("Creating Schema: {0}", status.ActualScript);
+                                ChangeYearProgressBar.Percent = Convert.ToInt32(status.Percentage() * 0.2);
+                            }
+                        };
+                        RdxUpgradeSchema.ChangedExecutionScript += changedExecutionScript;
+                        PersistentSupport.upgradeSchema(RdxUpgradeSchema, dataSystem);
+                        RdxUpgradeSchema.ChangedExecutionScript -= changedExecutionScript;
+                    }
+                    else {
+                        // Delete log triggers
+                        reindexOrder.ReIndexItems.ForEach(rdxf => rdxf.Selected = rdxf.Id == "DELETELOGTRIGGERS");
+                        reindexOrder.timeout = model.Timeout;
+                        reindexOrder.CalculateOrder();
+                        RdxUpgradeSchema.OrderExec = reindexOrder.GetOrderToExecute();
+                        changedExecutionScript += (sender, eventArgs, status) =>
+                        {
+                            if (status.State == RdxProgressStatus.SUCCESS)
+                            {
+                                ChangeYearProgressBar.Text = "";
+                                ChangeYearProgressBar.Percent = 20;
+                            }
+                            else
+                            {
+                                ChangeYearProgressBar.Text = string.Format("Delete log triggers: {0}", status.ActualScript);
                                 ChangeYearProgressBar.Percent = Convert.ToInt32(status.Percentage() * 0.2);
                             }
                         };
@@ -1527,10 +1554,6 @@ namespace Administration.Controllers
                             ChangeYearProgressBar.Text = "";
                             ChangeYearProgressBar.Percent = 90;
                         }
-                        else if (status.State == RdxProgressStatus.ERROR)
-                        {
-                            throw new OperationCanceledException($"{status.Message} - ({status.ActualScript})");
-                        }
                         else
                         {
                             ChangeYearProgressBar.Text = string.Format("Recalc formulas: {0}", status.ActualScript);
@@ -1546,6 +1569,33 @@ namespace Administration.Controllers
                     ChangeYearProgressBar.Text = "Executing after change year manual code";
                     AfterChangeYear(curDataSystem, dataSystem);
                     ChangeYearProgressBar.Percent = 95;
+
+                    // 5) Criar os log triggers
+                    var loggingScripts = dataSystem.DataSystemLog != null && dataSystem.DataSystemLog.Schemas.Count != 0 ? // Se estiver definido, cria a base de dados de auditoría
+                        new List<string>() { "CREATEDBLOG", "CREATESCHEMALOG", "CREATELOGVIEWSLOG", "DELETELOGTRIGGERS", "CREATELOGTRIGGERS", "CREATELOGVIEWS" } :
+                        new List<string>() { "DELETELOGTRIGGERS", "CREATELOGTRIGGERS", "CREATELOGVIEWS" };
+                    reindexOrder.ReIndexItems.ForEach(rdxf => rdxf.Selected = loggingScripts.Contains(rdxf.Id));
+                    reindexOrder.timeout = model.Timeout;
+                    reindexOrder.CalculateOrder();
+                    RdxUpgradeSchema.OrderExec = reindexOrder.GetOrderToExecute();
+                    changedExecutionScript = null;
+                    changedExecutionScript += (sender, eventArgs, status) =>
+                    {
+                        if (status.State == RdxProgressStatus.SUCCESS)
+                        {
+                            ChangeYearProgressBar.Text = "";
+                            ChangeYearProgressBar.Percent = 97;
+                        }
+                        else
+                        {
+                            ChangeYearProgressBar.Text = string.Format("Creating logs: {0}", status.ActualScript);
+                            ChangeYearProgressBar.Percent += Convert.ToInt32(status.Percentage() * 0.2);
+                        }
+                    };
+                    RdxUpgradeSchema.ChangedExecutionScript += changedExecutionScript;
+                    PersistentSupport.upgradeSchema(RdxUpgradeSchema, dataSystem);
+                    RdxUpgradeSchema.ChangedExecutionScript -= changedExecutionScript;
+                    ChangeYearProgressBar.Percent = 97;
 
                     model.AlertType = AlertTypeEnum.success;
                     ChangeYearProgressBar.Text = ChangeYearProgressBar.EndMsg = Resources.Resources.MUDANCA_DE_ANO_CONCL59631;

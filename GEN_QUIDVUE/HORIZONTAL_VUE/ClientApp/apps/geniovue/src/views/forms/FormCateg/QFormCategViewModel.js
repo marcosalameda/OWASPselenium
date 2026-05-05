@@ -1,4 +1,4 @@
-﻿/* eslint-disable @typescript-eslint/no-unused-vars */
+﻿/* eslint-disable no-unused-vars */
 import { computed, reactive, watch } from 'vue'
 import _merge from 'lodash-es/merge'
 
@@ -11,7 +11,7 @@ import netAPI from '@quidgest/clientapp/network'
 import qApi from '@/api/genio/quidgestFunctions.js'
 import qFunctions from '@/api/genio/projectFunctions.js'
 import qProjArrays from '@/api/genio/projectArrays.js'
-/* eslint-enable @typescript-eslint/no-unused-vars */
+/* eslint-enable no-unused-vars */
 
 /**
  * Represents a ViewModel class.
@@ -25,11 +25,11 @@ export default class ViewModel extends FormViewModelBase
 	 * @param {object} options - The options for the ViewModel
 	 * @param {object} values - A ViewModel instance to copy values from
 	 */
-	// eslint-disable-next-line @typescript-eslint/no-unused-vars
+	// eslint-disable-next-line no-unused-vars
 	constructor(vueContext, options, values)
 	{
 		super(vueContext, options)
-		// eslint-disable-next-line @typescript-eslint/no-unused-vars
+		// eslint-disable-next-line no-unused-vars
 		const vm = this.vueContext
 
 		// The view model metadata
@@ -37,9 +37,8 @@ export default class ViewModel extends FormViewModelBase
 			name: 'CATEG',
 			area: 'CATEG',
 			actions: {
-				recalculateFormulas: 'RecalculateFormulas_Categ',
-				updateFilesTickets: 'UpdateFilesTicketsCateg',
-				setFile: 'SetFileCateg'
+				recalculateFormulas: 'RecalculateFormulas_CATEG',
+				updateFilesTickets: 'UpdateFilesTicketsCATEG'
 			}
 		})
 
@@ -51,7 +50,7 @@ export default class ViewModel extends FormViewModelBase
 			field: 'CODCATEG',
 			description: '',
 		}).cloneFrom(values?.ValCodcateg))
-		this.stopWatchers.push(watch(() => this.ValCodcateg.value, (newValue, oldValue) => this.onUpdate('categ.codcateg', this.ValCodcateg, newValue, oldValue)))
+		watch(() => this.ValCodcateg.value, (newValue, oldValue) => this.onUpdate('categ.codcateg', this.ValCodcateg, newValue, oldValue))
 
 		/** The remaining form fields. */
 		this.ValCategoria = reactive(new modelFieldType.String({
@@ -62,7 +61,7 @@ export default class ViewModel extends FormViewModelBase
 			maxLength: 50,
 			description: computed(() => this.Resources.CATEGORY18978),
 		}).cloneFrom(values?.ValCategoria))
-		this.stopWatchers.push(watch(() => this.ValCategoria.value, (newValue, oldValue) => this.onUpdate('categ.categoria', this.ValCategoria, newValue, oldValue)))
+		watch(() => this.ValCategoria.value, (newValue, oldValue) => this.onUpdate('categ.categoria', this.ValCategoria, newValue, oldValue))
 
 		this.ValAbbreviation = reactive(new modelFieldType.String({
 			id: 'ValAbbreviation',
@@ -72,7 +71,7 @@ export default class ViewModel extends FormViewModelBase
 			maxLength: 10,
 			description: computed(() => this.Resources.ABBREVIATION31267),
 		}).cloneFrom(values?.ValAbbreviation))
-		this.stopWatchers.push(watch(() => this.ValAbbreviation.value, (newValue, oldValue) => this.onUpdate('categ.abbreviation', this.ValAbbreviation, newValue, oldValue)))
+		watch(() => this.ValAbbreviation.value, (newValue, oldValue) => this.onUpdate('categ.abbreviation', this.ValAbbreviation, newValue, oldValue))
 	}
 
 	/**

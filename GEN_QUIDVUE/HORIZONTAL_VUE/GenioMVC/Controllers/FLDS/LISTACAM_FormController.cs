@@ -9,7 +9,6 @@ using System.Data;
 using System.Data.Entity;
 using System.Linq;
 using System.Reflection;
-using System.Dynamic;
 
 using CSGenio.business;
 using CSGenio.core.persistence;
@@ -56,11 +55,11 @@ namespace GenioMVC.Controllers
 // USE /[MANUAL GQT CONTROLLER_SHOW LISTACAM]/
 
 		[HttpPost]
-		public ActionResult Listacam_Show_GET([FromBody] RequestIdModel requestModel)
+		public ActionResult Listacam_Show_GET([FromBody]RequestIdModel requestModel)
 		{
-			string id = requestModel.Id;
-			Listacam_ViewModel model = new(UserContext.Current);
-			EventSink eventSink = new()
+			var id = requestModel.Id;
+			var model = new Listacam_ViewModel(UserContext.Current);
+			var eventSink = new EventSink()
 			{
 				MethodName = "Listacam_Show_GET",
 				AreaName = "flds",
@@ -76,7 +75,13 @@ namespace GenioMVC.Controllers
 				}
 			};
 
-			return GenericHandleGetFormShow(eventSink, model, id);
+			using (CSGenio.core.di.GenioDI.MetricsOtlp.RecordTime("page_load_time", new System.Diagnostics.TagList([
+				new("PageId", "LISTACAM.SHOW"),
+				new("PageType", "form")
+			]), "ms", "Time to load the page."))
+			{
+				return GenericHandleGetFormShow(eventSink, model, id);
+			}
 		}
 
 		#endregion
@@ -85,14 +90,14 @@ namespace GenioMVC.Controllers
 
 // USE /[MANUAL GQT CONTROLLER_NEW_GET LISTACAM]/
 		[HttpPost]
-		public ActionResult Listacam_New_GET([FromBody] RequestNewGetModel requestModel)
+		public ActionResult Listacam_New_GET([FromBody]RequestNewGetModel requestModel)
 		{
-			string id = requestModel.Id;
-			bool isNewLocation = requestModel.IsNewLocation;
+			var id = requestModel.Id;
+			var isNewLocation = requestModel.IsNewLocation;
 			var prefillValues = requestModel.PrefillValues;
 
-			Listacam_ViewModel model = new(UserContext.Current);
-			EventSink eventSink = new()
+			var model = new Listacam_ViewModel(UserContext.Current);
+			var eventSink = new EventSink()
 			{
 				MethodName = "Listacam_New_GET",
 				AreaName = "flds",
@@ -112,7 +117,13 @@ namespace GenioMVC.Controllers
 				}
 			};
 
-			return GenericHandleGetFormNew(eventSink, model, id, isNewLocation, prefillValues);
+			using (CSGenio.core.di.GenioDI.MetricsOtlp.RecordTime("page_load_time", new System.Diagnostics.TagList([
+				new("PageId", "LISTACAM.SHOW"),
+				new("PageType", "form")
+			]), "ms", "Time to load the page."))
+			{
+				return GenericHandleGetFormNew(eventSink, model, id, isNewLocation, prefillValues);
+			}
 		}
 
 		//
@@ -121,7 +132,7 @@ namespace GenioMVC.Controllers
 		[HttpPost]
 		public ActionResult Listacam_New([FromBody]Listacam_ViewModel model, [FromQuery]bool redirect = true)
 		{
-			EventSink eventSink = new()
+			var eventSink = new EventSink()
 			{
 				MethodName = "Listacam_New",
 				ViewName = "Listacam",
@@ -146,7 +157,13 @@ namespace GenioMVC.Controllers
 				}
 			};
 
-			return GenericHandlePostFormNew(eventSink, model);
+			using (CSGenio.core.di.GenioDI.MetricsOtlp.RecordTime("page_load_time", new System.Diagnostics.TagList([
+				new("PageId", "LISTACAM.NEW"),
+				new("PageType", "form")
+			]), "ms", "Time to load the page."))
+			{
+				return GenericHandlePostFormNew(eventSink, model);
+			}
 		}
 
 		#endregion
@@ -155,11 +172,11 @@ namespace GenioMVC.Controllers
 
 // USE /[MANUAL GQT CONTROLLER_EDIT_GET LISTACAM]/
 		[HttpPost]
-		public ActionResult Listacam_Edit_GET([FromBody] RequestIdModel requestModel)
+		public ActionResult Listacam_Edit_GET([FromBody]RequestIdModel requestModel)
 		{
-			string id = requestModel.Id;
-			Listacam_ViewModel model = new(UserContext.Current);
-			EventSink eventSink = new()
+			var id = requestModel.Id;
+			var model = new Listacam_ViewModel(UserContext.Current);
+			var eventSink = new EventSink()
 			{
 				MethodName = "Listacam_Edit_GET",
 				AreaName = "flds",
@@ -176,7 +193,13 @@ namespace GenioMVC.Controllers
 				}
 			};
 
-			return GenericHandleGetFormEdit(eventSink, model, id);
+			using (CSGenio.core.di.GenioDI.MetricsOtlp.RecordTime("page_load_time", new System.Diagnostics.TagList([
+				new("PageId", "LISTACAM.SHOW"),
+				new("PageType", "form")
+			]), "ms", "Time to load the page."))
+			{
+				return GenericHandleGetFormEdit(eventSink, model, id);
+			}
 		}
 
 		//
@@ -185,7 +208,7 @@ namespace GenioMVC.Controllers
 		[HttpPost]
 		public ActionResult Listacam_Edit([FromBody]Listacam_ViewModel model, [FromQuery]bool redirect)
 		{
-			EventSink eventSink = new()
+			var eventSink = new EventSink()
 			{
 				MethodName = "Listacam_Edit",
 				ViewName = "Listacam",
@@ -210,7 +233,13 @@ namespace GenioMVC.Controllers
 				}
 			};
 
-			return GenericHandlePostFormEdit(eventSink, model);
+			using (CSGenio.core.di.GenioDI.MetricsOtlp.RecordTime("page_load_time", new System.Diagnostics.TagList([
+				new("PageId", "LISTACAM.EDIT"),
+				new("PageType", "form")
+			]), "ms", "Time to load the page."))
+			{
+				return GenericHandlePostFormEdit(eventSink, model);
+			}
 		}
 
 		#endregion
@@ -219,11 +248,11 @@ namespace GenioMVC.Controllers
 
 // USE /[MANUAL GQT CONTROLLER_DELETE_GET LISTACAM]/
 		[HttpPost]
-		public ActionResult Listacam_Delete_GET([FromBody] RequestIdModel requestModel)
+		public ActionResult Listacam_Delete_GET([FromBody]RequestIdModel requestModel)
 		{
-			string id = requestModel.Id;
-			Listacam_ViewModel model = new(UserContext.Current);
-			EventSink eventSink = new()
+			var id = requestModel.Id;
+			var model = new Listacam_ViewModel(UserContext.Current);
+			var eventSink = new EventSink()
 			{
 				MethodName = "Listacam_Delete_GET",
 				AreaName = "flds",
@@ -240,20 +269,26 @@ namespace GenioMVC.Controllers
 				}
 			};
 
-			return GenericHandleGetFormDelete(eventSink, model, id);
+			using (CSGenio.core.di.GenioDI.MetricsOtlp.RecordTime("page_load_time", new System.Diagnostics.TagList([
+				new("PageId", "LISTACAM.SHOW"),
+				new("PageType", "form")
+			]), "ms", "Time to load the page."))
+			{
+				return GenericHandleGetFormDelete(eventSink, model, id);
+			}
 		}
 
 		//
 		// POST: /Flds/Listacam_Delete
 // USE /[MANUAL GQT CONTROLLER_DELETE_POST LISTACAM]/
 		[HttpPost]
-		public ActionResult Listacam_Delete([FromBody] RequestIdModel requestModel)
+		public ActionResult Listacam_Delete([FromBody]RequestIdModel requestModel)
 		{
-			string id = requestModel.Id;
-			Listacam_ViewModel model = new(UserContext.Current, id);
+			var id = requestModel.Id;
+			var model = new Listacam_ViewModel (UserContext.Current, id);
 			model.MapFromModel();
 
-			EventSink eventSink = new()
+			var eventSink = new EventSink()
 			{
 				MethodName = "Listacam_Delete",
 				ViewName = "Listacam",
@@ -269,7 +304,13 @@ namespace GenioMVC.Controllers
 				}
 			};
 
-			return GenericHandlePostFormDelete(eventSink, model);
+			using (CSGenio.core.di.GenioDI.MetricsOtlp.RecordTime("page_load_time", new System.Diagnostics.TagList([
+				new("PageId", "LISTACAM.DELETE"),
+				new("PageType", "form")
+			]), "ms", "Time to load the page."))
+			{
+				return GenericHandlePostFormDelete(eventSink, model);
+			}
 		}
 
 		public ActionResult Listacam_Delete_Redirect()
@@ -285,13 +326,13 @@ namespace GenioMVC.Controllers
 // USE /[MANUAL GQT CONTROLLER_DUPLICATE_GET LISTACAM]/
 
 		[HttpPost]
-		public ActionResult Listacam_Duplicate_GET([FromBody] RequestNewGetModel requestModel)
+		public ActionResult Listacam_Duplicate_GET([FromBody]RequestNewGetModel requestModel)
 		{
-			string id = requestModel.Id;
-			bool isNewLocation = requestModel.IsNewLocation;
+			var id = requestModel.Id;
+			var isNewLocation = requestModel.IsNewLocation;
 
-			Listacam_ViewModel model = new(UserContext.Current);
-			EventSink eventSink = new()
+			var model = new Listacam_ViewModel(UserContext.Current);
+			var eventSink = new EventSink()
 			{
 				MethodName = "Listacam_Duplicate_GET",
 				AreaName = "flds",
@@ -307,7 +348,13 @@ namespace GenioMVC.Controllers
 				}
 			};
 
-			return GenericHandleGetFormDuplicate(eventSink, model, id, isNewLocation);
+			using (CSGenio.core.di.GenioDI.MetricsOtlp.RecordTime("page_load_time", new System.Diagnostics.TagList([
+				new("PageId", "LISTACAM.SHOW"),
+				new("PageType", "form")
+			]), "ms", "Time to load the page."))
+			{
+				return GenericHandleGetFormDuplicate(eventSink, model, id, isNewLocation);
+			}
 		}
 
 		//
@@ -316,7 +363,7 @@ namespace GenioMVC.Controllers
 		[HttpPost]
 		public ActionResult Listacam_Duplicate([FromBody]Listacam_ViewModel model, [FromQuery]bool redirect = true)
 		{
-			EventSink eventSink = new()
+			var eventSink = new EventSink()
 			{
 				MethodName = "Listacam_Duplicate",
 				ViewName = "Listacam",
@@ -341,7 +388,13 @@ namespace GenioMVC.Controllers
 				}
 			};
 
-			return GenericHandlePostFormDuplicate(eventSink, model);
+			using (CSGenio.core.di.GenioDI.MetricsOtlp.RecordTime("page_load_time", new System.Diagnostics.TagList([
+				new("PageId", "LISTACAM.DUPLICATE"),
+				new("PageType", "form")
+			]), "ms", "Time to load the page."))
+			{
+				return GenericHandlePostFormDuplicate(eventSink, model);
+			}
 		}
 
 		#endregion
@@ -358,15 +411,8 @@ namespace GenioMVC.Controllers
 				PersistentSupport sp = UserContext.Current.PersistentSupport;
 				try
 				{
-					var recordKey = Navigation.GetStrValue("flds");
-					var model = GenioMVC.Models.Flds.Find(recordKey, UserContext.Current);
-					if (model.ValZzstate == 0)
-					{
-						Navigation.ClearValue("flds");
-						string errorMessage = Resources.Resources.ESTE_REGISTO_JA_FOI_02595;
-						Log.Error($"${errorMessage} ID: ${recordKey}");
-						return JsonOK(new { Success = true, currentNavigationLevel = Navigation.CurrentLevel.Level, Warning = errorMessage });
-					}
+					var model = new GenioMVC.Models.Flds(UserContext.Current);
+					model.klass.QPrimaryKey = Navigation.GetStrValue("flds");
 
 // USE /[MANUAL GQT BEFORE_CANCEL LISTACAM]/
 
@@ -435,17 +481,6 @@ namespace GenioMVC.Controllers
 		{
 			requestModel.Model.Init(UserContext.Current);
 			return UpdateFilesTickets(requestModel.Tickets, requestModel.Model, requestModel.IsApply);
-		}
-
-		/// <summary>
-		/// Stores a new document, in the Docums table, associated to field ATTACH
-		/// </summary>
-		/// <param name="requestModel">The request model with the document and ticket</param>
-		/// <returns>A JSON response with the result of the operation</returns>
-		public ActionResult SetFileListacamAttach([FromForm] RequestDocumsCreateModel requestModel)
-		{
-			List<string> extensions = [];
-			return base.SetFile(requestModel.Ticket, requestModel.Mode, requestModel.Version, extensions);
 		}
 	}
 }

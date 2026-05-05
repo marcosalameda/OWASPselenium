@@ -10,12 +10,10 @@
 				<q-table
 					v-bind="controls.menu"
 					v-on="controls.menu.handlers">
-					<!-- USE /[MANUAL GQT CUSTOM_TABLE UIS_Menu_1111]/ -->
 				</q-table>
 
 				<q-table-extra-extension
 					:list-ctrl="controls.menu"
-					:filter-operators="controls.menu.filterOperators"
 					v-on="controls.menu.handlers" />
 			</q-row-container>
 		</form>
@@ -50,7 +48,7 @@
 </template>
 
 <script>
-	/* eslint-disable @typescript-eslint/no-unused-vars */
+	/* eslint-disable no-unused-vars */
 	import asyncProcM from '@quidgest/clientapp/composables/async'
 	import qEnums from '@quidgest/clientapp/constants/enums'
 	import netAPI from '@quidgest/clientapp/network'
@@ -70,7 +68,7 @@
 	import qApi from '@/api/genio/quidgestFunctions.js'
 	import qFunctions from '@/api/genio/projectFunctions.js'
 	import qProjArrays from '@/api/genio/projectArrays.js'
-	/* eslint-enable @typescript-eslint/no-unused-vars */
+	/* eslint-enable no-unused-vars */
 
 	import MenuViewModel from './QMenuUIS_1111ViewModel.js'
 
@@ -154,7 +152,6 @@
 								label: computed(() => this.Resources.COMPONENT_TYPE58053),
 								dataLength: 50,
 								scrollData: 30,
-								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.ArrayColumn({
 								order: 2,
@@ -165,47 +162,34 @@
 								scrollData: 1,
 								maxDigits: 1,
 								decimalPlaces: 0,
-								export: 1,
-								array: computed(() => new qProjArrays.QArrayComponenticons(vm.$getResource).elements),
+								array: computed(() => qProjArrays.QArrayComponenticons.setResources(vm.$getResource).elements),
 								arrayType: qProjArrays.QArrayComponenticons.type,
 								arrayDisplayMode: 'ID',
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
-							new listColumnTypes.TextColumn({
-								order: 3,
-								name: 'ValRelease',
-								area: 'COMPO',
-								field: 'RELEASE',
-								label: computed(() => this.Resources.RELEASE04894),
-								dataLength: 6,
-								scrollData: 15,
-								export: 1,
-							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.BooleanColumn({
-								order: 4,
+								order: 3,
 								name: 'ValMvc',
 								area: 'COMPO',
 								field: 'MVC',
 								label: computed(() => this.Resources.MVC48022),
 								scrollData: 1,
-								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.BooleanColumn({
-								order: 5,
+								order: 4,
 								name: 'ValVuemvc',
 								area: 'COMPO',
 								field: 'VUEMVC',
 								label: computed(() => this.Resources.VUE05393),
 								scrollData: 1,
-								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
-								order: 6,
+								order: 5,
 								name: 'ValCompdesc',
 								area: 'COMPO',
 								field: 'COMPDESC',
 								label: computed(() => this.Resources.DESCRIPTION07438),
-								scrollData: 100,
-								export: 1,
+								scrollData: 200,
+								sortable: false,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 						],
 						config: {
@@ -221,7 +205,8 @@
 							permissions: {
 							},
 							searchBarConfig: {
-								visibility: true
+								visibility: true,
+								searchOnPressEnter: true
 							},
 							filtersVisible: true,
 							allowColumnFilters: true,
@@ -322,7 +307,6 @@
 							rowClickAction: {
 								id: 'RCA_UIS_11111',
 								name: 'form-COMPTYPE',
-								isVisible: true,
 								params: {
 									isRoute: true,
 									limits: [
@@ -361,8 +345,7 @@
 								dependencyField: '',
 								fnValueSelector: () => vm.$route.params['compc'],
 							},
-						],
-						isActiveControl: computed(() => this.isActiveMenu)
+						]
 					}, this),
 				}
 			}
@@ -386,14 +369,6 @@
 		{
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
 // USE /[MANUAL GQT FORM_CODEJS UIS_MENU_1111]/
-// eslint-disable-next-line
-/* eslint-enable indent, vue/html-indent, vue/script-indent */
-		},
-
-		beforeUnmount()
-		{
-/* eslint-disable indent, vue/html-indent, vue/script-indent */
-// USE /[MANUAL GQT COMPONENT_BEFORE_UNMOUNT UIS_MENU_1111]/
 // eslint-disable-next-line
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 		},

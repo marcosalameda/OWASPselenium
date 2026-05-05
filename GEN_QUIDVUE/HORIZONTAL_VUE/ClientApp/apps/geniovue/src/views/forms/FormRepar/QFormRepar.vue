@@ -9,13 +9,12 @@
 			<div
 				v-if="showFormHeader"
 				class="c-action-bar">
-				<component
+				<h1
 					v-if="formControl.uiComponents.header && formInfo.designation"
-					:is="topHeadingTag"
 					:id="formTitleId"
 					class="form-header">
 					{{ formInfo.designation }}
-				</component>
+				</h1>
 
 				<div class="c-action-bar__menu">
 					<template
@@ -39,13 +38,9 @@
 									:label="btn.label"
 									:disabled="btn.disabled"
 									@click="btn.action">
-									<template v-if="btn.icon">
-										<q-badge-indicator
-											:enabled="btn.badge?.isVisible ?? false"
-											:color="btn.badge?.color">
-											<q-icon v-bind="btn.icon" />
-										</q-badge-indicator>
-									</template>
+									<q-icon
+										v-if="btn.icon"
+										v-bind="btn.icon" />
 								</q-toggle-group-item>
 							</template>
 						</q-toggle-group>
@@ -57,7 +52,7 @@
 				v-if="$app.layout.FormAnchorsPosition === 'form-header' && visibleGroups.length > 0"
 				:anchors="anchorGroups"
 				:controls="visibleControls"
-				@focus-control="focusControl" />
+				@focus-control="(...args) => focusControl(...args)" />
 		</div>
 	</teleport>
 
@@ -78,7 +73,6 @@
 						v-if="btn.isActive && btn.isVisible && btn.showInHeading"
 						:id="`heading-${btn.id}`"
 						:label="btn.text"
-						:color="btn.color"
 						:variant="btn.variant"
 						:disabled="btn.disabled"
 						:icon-pos="btn.iconPos"
@@ -92,21 +86,18 @@
 			</q-button-group>
 		</div>
 
-		<q-container
-			fluid
+		<div
+			class="form-flow"
 			data-key="REPAR"
-			:data-identifier="primaryKeyValue"
-			:data-loading="!formInitialDataLoaded || !isActiveForm">
+			:data-loading="!formInitialDataLoaded">
 			<template v-if="formControl.initialized && showFormBody">
-				<q-row v-if="controls.REPAR___EQUIPREGISTNR.isVisible || controls.REPAR___EQUIPDESIGNAT.isVisible || controls.REPAR___EQUIPPHOTOGRA.isVisible || controls.REPAR___REPARDTREPARA.isVisible || controls.REPAR___REPARNRREPARA.isVisible">
-					<q-col
-						v-if="controls.REPAR___EQUIPREGISTNR.isVisible"
-						cols="auto">
+				<q-row-container v-show="controls.REPAR___EQUIPREGISTNR.isVisible || controls.REPAR___EQUIPDESIGNAT.isVisible || controls.REPAR___EQUIPPHOTOGRA.isVisible">
+					<q-control-wrapper
+						v-show="controls.REPAR___EQUIPREGISTNR.isVisible"
+						class="${Vue.GetControlWrapperClass($controlsColumn)}">
 						<base-input-structure
-							v-if="controls.REPAR___EQUIPREGISTNR.isVisible"
 							class="i-text"
-							v-bind="controls.REPAR___EQUIPREGISTNR.wrapperProps"
-							:id="getControlId(controls.REPAR___EQUIPREGISTNR)"
+							v-bind="controls.REPAR___EQUIPREGISTNR"
 							v-on="controls.REPAR___EQUIPREGISTNR.handlers"
 							:loading="controls.REPAR___EQUIPREGISTNR.props.loading"
 							:reporting-mode-on="reportingModeCAV"
@@ -114,41 +105,35 @@
 							<q-lookup
 								v-if="controls.REPAR___EQUIPREGISTNR.isVisible"
 								v-bind="controls.REPAR___EQUIPREGISTNR.props"
-								:id="getControlId(controls.REPAR___EQUIPREGISTNR)"
 								v-on="controls.REPAR___EQUIPREGISTNR.handlers" />
 							<q-see-more-repar-equipregistnr
 								v-if="controls.REPAR___EQUIPREGISTNR.seeMoreIsVisible"
 								v-bind="controls.REPAR___EQUIPREGISTNR.seeMoreParams"
 								v-on="controls.REPAR___EQUIPREGISTNR.handlers" />
 						</base-input-structure>
-					</q-col>
-					<q-col
-						v-if="controls.REPAR___EQUIPDESIGNAT.isVisible"
-						cols="auto">
+					</q-control-wrapper>
+					<q-control-wrapper
+						v-show="controls.REPAR___EQUIPDESIGNAT.isVisible"
+						class="${Vue.GetControlWrapperClass($controlsColumn)}">
 						<base-input-structure
-							v-if="controls.REPAR___EQUIPDESIGNAT.isVisible"
 							class="i-text"
-							v-bind="controls.REPAR___EQUIPDESIGNAT.wrapperProps"
-							:id="getControlId(controls.REPAR___EQUIPDESIGNAT)"
+							v-bind="controls.REPAR___EQUIPDESIGNAT"
 							v-on="controls.REPAR___EQUIPDESIGNAT.handlers"
 							:loading="controls.REPAR___EQUIPDESIGNAT.props.loading"
 							:reporting-mode-on="reportingModeCAV"
 							:suggestion-mode-on="suggestionModeOn">
 							<q-text-field
 								v-bind="controls.REPAR___EQUIPDESIGNAT.props"
-								:id="getControlId(controls.REPAR___EQUIPDESIGNAT)"
 								@blur="onBlur(controls.REPAR___EQUIPDESIGNAT, model.EquipValDesignat.value)"
 								@change="model.EquipValDesignat.fnUpdateValueOnChange" />
 						</base-input-structure>
-					</q-col>
-					<q-col
-						v-if="controls.REPAR___EQUIPPHOTOGRA.isVisible"
-						cols="auto">
+					</q-control-wrapper>
+					<q-control-wrapper
+						v-show="controls.REPAR___EQUIPPHOTOGRA.isVisible"
+						class="${Vue.GetControlWrapperClass($controlsColumn)}">
 						<base-input-structure
-							v-if="controls.REPAR___EQUIPPHOTOGRA.isVisible"
 							class="q-image"
-							v-bind="controls.REPAR___EQUIPPHOTOGRA.wrapperProps"
-							:id="getControlId(controls.REPAR___EQUIPPHOTOGRA)"
+							v-bind="controls.REPAR___EQUIPPHOTOGRA"
 							v-on="controls.REPAR___EQUIPPHOTOGRA.handlers"
 							:loading="controls.REPAR___EQUIPPHOTOGRA.props.loading"
 							:reporting-mode-on="reportingModeCAV"
@@ -156,18 +141,17 @@
 							<q-image
 								v-if="controls.REPAR___EQUIPPHOTOGRA.isVisible"
 								v-bind="controls.REPAR___EQUIPPHOTOGRA.props"
-								:id="getControlId(controls.REPAR___EQUIPPHOTOGRA)"
 								v-on="controls.REPAR___EQUIPPHOTOGRA.handlers" />
 						</base-input-structure>
-					</q-col>
-					<q-col
-						v-if="controls.REPAR___REPARDTREPARA.isVisible"
-						cols="auto">
+					</q-control-wrapper>
+				</q-row-container>
+				<q-row-container v-show="controls.REPAR___REPARDTREPARA.isVisible || controls.REPAR___REPARNRREPARA.isVisible">
+					<q-control-wrapper
+						v-show="controls.REPAR___REPARDTREPARA.isVisible"
+						class="${Vue.GetControlWrapperClass($controlsColumn)}">
 						<base-input-structure
-							v-if="controls.REPAR___REPARDTREPARA.isVisible"
 							class="i-text"
-							v-bind="controls.REPAR___REPARDTREPARA.wrapperProps"
-							:id="getControlId(controls.REPAR___REPARDTREPARA)"
+							v-bind="controls.REPAR___REPARDTREPARA"
 							v-on="controls.REPAR___REPARDTREPARA.handlers"
 							:loading="controls.REPAR___REPARDTREPARA.props.loading"
 							:reporting-mode-on="reportingModeCAV"
@@ -175,20 +159,17 @@
 							<q-date-time-picker
 								v-if="controls.REPAR___REPARDTREPARA.isVisible"
 								v-bind="controls.REPAR___REPARDTREPARA.props"
-								:id="getControlId(controls.REPAR___REPARDTREPARA)"
 								:model-value="model.ValDtrepara.value"
 								@reset-icon-click="model.ValDtrepara.fnUpdateValue(model.ValDtrepara.originalValue ?? new Date())"
 								@update:model-value="model.ValDtrepara.fnUpdateValue($event ?? '')" />
 						</base-input-structure>
-					</q-col>
-					<q-col
-						v-if="controls.REPAR___REPARNRREPARA.isVisible"
-						cols="auto">
+					</q-control-wrapper>
+					<q-control-wrapper
+						v-show="controls.REPAR___REPARNRREPARA.isVisible"
+						class="${Vue.GetControlWrapperClass($controlsColumn)}">
 						<base-input-structure
-							v-if="controls.REPAR___REPARNRREPARA.isVisible"
 							class="i-text"
-							v-bind="controls.REPAR___REPARNRREPARA.wrapperProps"
-							:id="getControlId(controls.REPAR___REPARNRREPARA)"
+							v-bind="controls.REPAR___REPARNRREPARA"
 							v-on="controls.REPAR___REPARNRREPARA.handlers"
 							:loading="controls.REPAR___REPARNRREPARA.props.loading"
 							:reporting-mode-on="reportingModeCAV"
@@ -196,20 +177,17 @@
 							<q-numeric-input
 								v-if="controls.REPAR___REPARNRREPARA.isVisible"
 								v-bind="controls.REPAR___REPARNRREPARA.props"
-								:id="getControlId(controls.REPAR___REPARNRREPARA)"
 								@update:model-value="model.ValNrrepara.fnUpdateValue" />
 						</base-input-structure>
-					</q-col>
-				</q-row>
-				<q-row v-if="controls.REPAR___REPARTIPOAREA.isVisible">
-					<q-col
-						v-if="controls.REPAR___REPARTIPOAREA.isVisible"
-						cols="auto">
+					</q-control-wrapper>
+				</q-row-container>
+				<q-row-container v-show="controls.REPAR___REPARTIPOAREA.isVisible">
+					<q-control-wrapper
+						v-show="controls.REPAR___REPARTIPOAREA.isVisible"
+						class="${Vue.GetControlWrapperClass($controlsColumn)}">
 						<base-input-structure
-							v-if="controls.REPAR___REPARTIPOAREA.isVisible"
 							class="i-radio-container"
-							v-bind="controls.REPAR___REPARTIPOAREA.wrapperProps"
-							:id="getControlId(controls.REPAR___REPARTIPOAREA)"
+							v-bind="controls.REPAR___REPARTIPOAREA"
 							v-on="controls.REPAR___REPARTIPOAREA.handlers"
 							:label-position="labelAlignment.topleft"
 							:loading="controls.REPAR___REPARTIPOAREA.props.loading"
@@ -217,27 +195,25 @@
 							:suggestion-mode-on="suggestionModeOn">
 							<q-radio-group
 								v-if="controls.REPAR___REPARTIPOAREA.isVisible"
-								v-bind="controls.REPAR___REPARTIPOAREA.props"
-								:id="getControlId(controls.REPAR___REPARTIPOAREA)"
-								v-on="controls.REPAR___REPARTIPOAREA.handlers">
-								<q-radio-button
-									v-for="radio in controls.REPAR___REPARTIPOAREA.items"
-									:key="radio.key"
-									:label="radio.value"
-									:value="radio.key" />
-							</q-radio-group>
+								id="REPAR___REPARTIPOAREA"
+								:model-value="model.ValTipoarea.value"
+								deselect-radio
+								:label-left-side="controls.REPAR___REPARTIPOAREA.labelPosition === labelAlignment.left"
+								:number-of-columns="controls.REPAR___REPARTIPOAREA.columnNumber"
+								:is-required="controls.REPAR___REPARTIPOAREA.isRequired"
+								:readonly="controls.REPAR___REPARTIPOAREA.readonly"
+								:options-list="controls.REPAR___REPARTIPOAREA.items"
+								@update:model-value="model.ValTipoarea.fnUpdateValue" />
 						</base-input-structure>
-					</q-col>
-				</q-row>
-				<q-row v-if="controls.REPAR___SPECIESPECIAL.isVisible || controls.REPAR___PESSONAME____.isVisible">
-					<q-col
-						v-if="controls.REPAR___SPECIESPECIAL.isVisible"
-						cols="auto">
+					</q-control-wrapper>
+				</q-row-container>
+				<q-row-container v-show="controls.REPAR___SPECIESPECIAL.isVisible || controls.REPAR___PESSONAME____.isVisible">
+					<q-control-wrapper
+						v-show="controls.REPAR___SPECIESPECIAL.isVisible"
+						class="${Vue.GetControlWrapperClass($controlsColumn)}">
 						<base-input-structure
-							v-if="controls.REPAR___SPECIESPECIAL.isVisible"
 							class="i-text"
-							v-bind="controls.REPAR___SPECIESPECIAL.wrapperProps"
-							:id="getControlId(controls.REPAR___SPECIESPECIAL)"
+							v-bind="controls.REPAR___SPECIESPECIAL"
 							v-on="controls.REPAR___SPECIESPECIAL.handlers"
 							:loading="controls.REPAR___SPECIESPECIAL.props.loading"
 							:reporting-mode-on="reportingModeCAV"
@@ -245,22 +221,19 @@
 							<q-lookup
 								v-if="controls.REPAR___SPECIESPECIAL.isVisible"
 								v-bind="controls.REPAR___SPECIESPECIAL.props"
-								:id="getControlId(controls.REPAR___SPECIESPECIAL)"
 								v-on="controls.REPAR___SPECIESPECIAL.handlers" />
 							<q-see-more-repar-speciespecial
 								v-if="controls.REPAR___SPECIESPECIAL.seeMoreIsVisible"
 								v-bind="controls.REPAR___SPECIESPECIAL.seeMoreParams"
 								v-on="controls.REPAR___SPECIESPECIAL.handlers" />
 						</base-input-structure>
-					</q-col>
-					<q-col
-						v-if="controls.REPAR___PESSONAME____.isVisible"
-						cols="auto">
+					</q-control-wrapper>
+					<q-control-wrapper
+						v-show="controls.REPAR___PESSONAME____.isVisible"
+						class="${Vue.GetControlWrapperClass($controlsColumn)}">
 						<base-input-structure
-							v-if="controls.REPAR___PESSONAME____.isVisible"
 							class="i-text"
-							v-bind="controls.REPAR___PESSONAME____.wrapperProps"
-							:id="getControlId(controls.REPAR___PESSONAME____)"
+							v-bind="controls.REPAR___PESSONAME____"
 							v-on="controls.REPAR___PESSONAME____.handlers"
 							:loading="controls.REPAR___PESSONAME____.props.loading"
 							:reporting-mode-on="reportingModeCAV"
@@ -268,24 +241,21 @@
 							<q-lookup
 								v-if="controls.REPAR___PESSONAME____.isVisible"
 								v-bind="controls.REPAR___PESSONAME____.props"
-								:id="getControlId(controls.REPAR___PESSONAME____)"
 								v-on="controls.REPAR___PESSONAME____.handlers" />
 							<q-see-more-repar-pessoname
 								v-if="controls.REPAR___PESSONAME____.seeMoreIsVisible"
 								v-bind="controls.REPAR___PESSONAME____.seeMoreParams"
 								v-on="controls.REPAR___PESSONAME____.handlers" />
 						</base-input-structure>
-					</q-col>
-				</q-row>
-				<q-row v-if="controls.REPAR___REPARDESCRIPT.isVisible || controls.REPAR___REPARHOURS___.isVisible">
-					<q-col
-						v-if="controls.REPAR___REPARDESCRIPT.isVisible"
-						cols="auto">
+					</q-control-wrapper>
+				</q-row-container>
+				<q-row-container v-show="controls.REPAR___REPARDESCRIPT.isVisible">
+					<q-control-wrapper
+						v-show="controls.REPAR___REPARDESCRIPT.isVisible"
+						class="${Vue.GetControlWrapperClass($controlsColumn)}">
 						<base-input-structure
-							v-if="controls.REPAR___REPARDESCRIPT.isVisible"
 							class="i-textarea"
-							v-bind="controls.REPAR___REPARDESCRIPT.wrapperProps"
-							:id="getControlId(controls.REPAR___REPARDESCRIPT)"
+							v-bind="controls.REPAR___REPARDESCRIPT"
 							v-on="controls.REPAR___REPARDESCRIPT.handlers"
 							:loading="controls.REPAR___REPARDESCRIPT.props.loading"
 							:reporting-mode-on="reportingModeCAV"
@@ -293,18 +263,38 @@
 							<q-text-area
 								v-if="controls.REPAR___REPARDESCRIPT.isVisible"
 								v-bind="controls.REPAR___REPARDESCRIPT.props"
-								:id="getControlId(controls.REPAR___REPARDESCRIPT)"
 								v-on="controls.REPAR___REPARDESCRIPT.handlers" />
 						</base-input-structure>
-					</q-col>
-					<q-col
-						v-if="controls.REPAR___REPARHOURS___.isVisible"
-						cols="auto">
+					</q-control-wrapper>
+				</q-row-container>
+				<q-row-container v-show="controls.REPAR___PSEUDCATEG_AI.isVisible">
+					<q-control-wrapper
+						v-show="controls.REPAR___PSEUDCATEG_AI.isVisible"
+						class="${Vue.GetControlWrapperClass($controlsColumn)}">
 						<base-input-structure
-							v-if="controls.REPAR___REPARHOURS___.isVisible"
+							class="i-button"
+							v-bind="controls.REPAR___PSEUDCATEG_AI"
+							v-on="controls.REPAR___PSEUDCATEG_AI.handlers"
+							:loading="controls.REPAR___PSEUDCATEG_AI.props.loading"
+							:reporting-mode-on="reportingModeCAV"
+							:suggestion-mode-on="suggestionModeOn">
+							<q-button
+								v-if="controls.REPAR___PSEUDCATEG_AI.isVisible"
+								id="REPAR___PSEUDCATEG_AI"
+								:label="controls.REPAR___PSEUDCATEG_AI.label"
+								:disabled="controls.REPAR___PSEUDCATEG_AI.isBlocked"
+								@click="controls.REPAR___PSEUDCATEG_AI.action($event)">
+							</q-button>
+						</base-input-structure>
+					</q-control-wrapper>
+				</q-row-container>
+				<q-row-container v-show="controls.REPAR___REPARHOURS___.isVisible">
+					<q-control-wrapper
+						v-show="controls.REPAR___REPARHOURS___.isVisible"
+						class="${Vue.GetControlWrapperClass($controlsColumn)}">
+						<base-input-structure
 							class="i-text"
-							v-bind="controls.REPAR___REPARHOURS___.wrapperProps"
-							:id="getControlId(controls.REPAR___REPARHOURS___)"
+							v-bind="controls.REPAR___REPARHOURS___"
 							v-on="controls.REPAR___REPARHOURS___.handlers"
 							:loading="controls.REPAR___REPARHOURS___.props.loading"
 							:reporting-mode-on="reportingModeCAV"
@@ -312,22 +302,21 @@
 							<q-numeric-input
 								v-if="controls.REPAR___REPARHOURS___.isVisible"
 								v-bind="controls.REPAR___REPARHOURS___.props"
-								:id="getControlId(controls.REPAR___REPARHOURS___)"
 								@update:model-value="model.ValHours.fnUpdateValue" />
 						</base-input-structure>
-					</q-col>
-				</q-row>
+					</q-control-wrapper>
+				</q-row-container>
 			</template>
-		</q-container>
+		</div>
 	</teleport>
 
-	<q-divider v-if="!isPopup && showFormFooter" />
+	<hr v-if="!isPopup && showFormFooter" />
 
 	<teleport
 		v-if="formModalIsReady && showFormFooter"
 		:to="`#${uiContainersId.footer}`"
 		:disabled="!isPopup || isNested">
-		<q-row v-if="showFormFooter">
+		<q-row-container v-if="showFormFooter">
 			<div id="footer-action-btns">
 				<template
 					v-for="btn in formButtons"
@@ -336,7 +325,6 @@
 						v-if="btn.isActive && btn.isVisible && btn.showInFooter"
 						:id="`bottom-${btn.id}`"
 						:label="btn.text"
-						:color="btn.color"
 						:variant="btn.variant"
 						:disabled="btn.disabled"
 						:icon-pos="btn.iconPos"
@@ -348,12 +336,12 @@
 					</q-button>
 				</template>
 			</div>
-		</q-row>
+		</q-row-container>
 	</teleport>
 </template>
 
 <script>
-	/* eslint-disable @typescript-eslint/no-unused-vars */
+	/* eslint-disable no-unused-vars */
 	import { computed, defineAsyncComponent, readonly } from 'vue'
 	import { useRoute } from 'vue-router'
 
@@ -373,7 +361,7 @@
 	import qApi from '@/api/genio/quidgestFunctions.js'
 	import qFunctions from '@/api/genio/projectFunctions.js'
 	import qProjArrays from '@/api/genio/projectArrays.js'
-	/* eslint-enable @typescript-eslint/no-unused-vars */
+	/* eslint-enable no-unused-vars */
 
 	import FormViewModel from './QFormReparViewModel.js'
 
@@ -453,8 +441,7 @@
 					primaryKey: 'ValCodrepar',
 					designation: computed(() => this.Resources.REPAIR34508),
 					identifier: '', // Unique identifier received by route (when it's nested).
-					mode: '',
-					availableAgents: [],
+					mode: ''
 				},
 
 				formButtons: {
@@ -562,11 +549,7 @@
 						showInFooter: true,
 						isActive: true,
 						isVisible: computed(() => vm.authData.isAllowed && vm.isEditable),
-						action: vm.saveForm,
-						badge: {
-							isVisible: computed(() => vm.model?.isDirty === true),
-							color: 'highlight'
-						}
+						action: vm.saveForm
 					},
 					confirmBtn: {
 						id: 'confirm-btn',
@@ -671,7 +654,7 @@
 						valueChangeEvent: 'fieldChange:equip.registnr',
 						id: 'REPAR___EQUIPREGISTNR',
 						name: 'REGISTNR',
-						size: 'mini',
+						size: 'medium',
 						label: computed(() => this.Resources.REGISTRATION_NO_06209),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
@@ -710,6 +693,7 @@
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						maxLength: 85,
+						labelId: 'label_REPAR___EQUIPDESIGNAT',
 						controlLimits: [
 						],
 					}, this),
@@ -725,7 +709,7 @@
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						height: 50,
-						width: 100,
+						width: 30,
 						dataTitle: computed(() => genericFunctions.formatString(vm.Resources.IMAGEM_UTILIZADA_PAR17299, vm.Resources.PHOTO51874)),
 						controlLimits: [
 						],
@@ -739,7 +723,7 @@
 						label: computed(() => this.Resources.REPAIRED_ON23617),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						dateTimeType: 'dateTime',
+						format: 'dateTime',
 						controlLimits: [
 						],
 					}, this),
@@ -759,17 +743,19 @@
 						controlLimits: [
 						],
 					}, this),
-					REPAR___REPARTIPOAREA: new fieldControlClass.RadioGroupControl({
+					REPAR___REPARTIPOAREA: new fieldControlClass.ArrayStringControl({
 						modelField: 'ValTipoarea',
 						valueChangeEvent: 'fieldChange:repar.tipoarea',
 						id: 'REPAR___REPARTIPOAREA',
 						name: 'TIPOAREA',
+						size: 'medium',
 						label: computed(() => this.Resources.TECHNICAL_AREA50773),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						maxLength: 1,
+						labelId: 'label_REPAR___REPARTIPOAREA',
 						arrayName: 'AreaTecn',
-						columns: 1,
+						columnNumber: 4,
 						controlLimits: [
 						],
 					}, this),
@@ -778,7 +764,7 @@
 						valueChangeEvent: 'fieldChange:speci.especial',
 						id: 'REPAR___SPECIESPECIAL',
 						name: 'ESPECIAL',
-						size: 'xlarge',
+						size: 'medium',
 						label: computed(() => this.Resources.SPECIALTY09304),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
@@ -800,12 +786,6 @@
 							set 'speci.areatecn'(value) { vm.model.SpeciValAreatecn.updateValue(value) },
 						}),
 						controlLimits: [
-							{
-								identifier: 'repar.tipoarea',
-								dependencyEvents: ['fieldChange:repar.tipoarea'],
-								dependencyField: 'REPAR.TIPOAREA',
-								fnValueSelector: (model) => model.ValTipoarea.value,
-							},
 						],
 					}, this),
 					REPAR___PESSONAME____: new fieldControlClass.LookupControl({
@@ -813,7 +793,7 @@
 						valueChangeEvent: 'fieldChange:pesso.name',
 						id: 'REPAR___PESSONAME____',
 						name: 'NAME',
-						size: 'xxlarge',
+						size: 'large',
 						label: computed(() => this.Resources.TECHNICIAN44001),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
@@ -834,12 +814,6 @@
 							set 'pesso.name'(value) { vm.model.TablePessoName.updateValue(value) },
 						}),
 						controlLimits: [
-							{
-								identifier: ['speci', 'repar.codespec'],
-								dependencyEvents: ['fieldChange:repar.codespec'],
-								dependencyField: 'REPAR.CODESPEC',
-								fnValueSelector: (model) => model.ValCodespec.value
-							},
 						],
 					}, this),
 					REPAR___REPARDESCRIPT: new fieldControlClass.MultilineStringControl({
@@ -853,6 +827,24 @@
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						rows: 3,
 						cols: 85,
+						controlLimits: [
+						],
+					}, this),
+					REPAR___PSEUDCATEG_AI: new fieldControlClass.ButtonControl({
+						id: 'REPAR___PSEUDCATEG_AI',
+						name: 'CATEG_AI',
+						size: 'medium',
+						hasLabel: false,
+						label: computed(() => this.Resources.CATEGORIZE52450),
+						placeholder: '',
+						labelPosition: computed(() => this.labelAlignment.topleft),
+						// eslint-disable-next-line
+						action: (event) => {
+							let btnAction = () => {
+								vm.Repar_BT_CATEG_AI(vm.primaryKeyValue)
+							}
+							btnAction()
+						},
 						controlLimits: [
 						],
 					}, this),
@@ -989,23 +981,17 @@
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 		},
 
-		beforeUnmount()
-		{
-/* eslint-disable indent, vue/html-indent, vue/script-indent */
-// USE /[MANUAL GQT COMPONENT_BEFORE_UNMOUNT REPAR]/
-// eslint-disable-next-line
-/* eslint-enable indent, vue/html-indent, vue/script-indent */
-		},
-
 		methods: {
 			/**
 			 * Called before form init.
 			 */
 			async beforeLoad()
 			{
+				let loadForm = true
+
 				// Execute the "Before init" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.beforeInit)
-				for (const trigger of triggers)
+				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
 				this.emitEvent('before-load-form')
@@ -1015,7 +1001,7 @@
 // eslint-disable-next-line
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 
-				return true
+				return loadForm
 			},
 
 			/**
@@ -1025,7 +1011,7 @@
 			{
 				// Execute the "After init" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.afterInit)
-				for (const trigger of triggers)
+				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
 				this.emitEvent('after-load-form')
@@ -1045,33 +1031,19 @@
 
 				// Execute the "Before apply" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.beforeApply)
-				for (const trigger of triggers)
+				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
-				const ticketsPromise = this.model.updateFilesTickets(true)
-				this.addBusy(ticketsPromise, this.Resources[hardcodedTexts.processing])
-				const canSetDocums = await ticketsPromise
+				const canSetDocums = await this.model.updateFilesTickets(true)
 
 				if (canSetDocums)
 				{
-					let results
-					const changesPromise = this.model.setDocumentChanges()
-					this.addBusy(changesPromise, this.Resources[hardcodedTexts.processing])
-					applyForm = await changesPromise
+					applyForm = await this.model.setDocumentChanges()
 
 					if (applyForm)
 					{
-						const insertsPromise = this.model.saveDocuments()
-						this.addBusy(insertsPromise, this.Resources[hardcodedTexts.processing])
-						results = await insertsPromise
+						const results = await this.model.saveDocuments()
 						applyForm = results.every((e) => e === true)
-					}
-
-					if (!changesPromise || (results && !results.every((e) => e === true)))
-					{
-						this.validationErrors = {
-							Erro: this.Resources.OCORREU_UM_ERRO_AO_T51884
-						}
 					}
 				}
 
@@ -1092,7 +1064,7 @@
 			{
 				// Execute the "After apply" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.afterApply)
-				for (const trigger of triggers)
+				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
 				this.emitEvent('after-apply-form')
@@ -1112,33 +1084,19 @@
 
 				// Execute the "Before save" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.beforeSave)
-				for (const trigger of triggers)
+				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
-				const ticketsPromise = this.model.updateFilesTickets()
-				this.addBusy(ticketsPromise, this.Resources[hardcodedTexts.processing])
-				const canSetDocums = await ticketsPromise
+				const canSetDocums = await this.model.updateFilesTickets()
 
 				if (canSetDocums)
 				{
-					let results
-					const changesPromise = this.model.setDocumentChanges()
-					this.addBusy(changesPromise, this.Resources[hardcodedTexts.processing])
-					saveForm = await changesPromise
+					saveForm = await this.model.setDocumentChanges()
 
 					if (saveForm)
 					{
-						const insertsPromise = this.model.saveDocuments()
-						this.addBusy(insertsPromise, this.Resources[hardcodedTexts.processing])
-						results = await insertsPromise
+						const results = await this.model.saveDocuments()
 						saveForm = results.every((e) => e === true)
-					}
-
-					if (!changesPromise || (results && !results.every((e) => e === true)))
-					{
-						this.validationErrors = {
-							Erro: this.Resources.OCORREU_UM_ERRO_AO_T51884
-						}
 					}
 				}
 
@@ -1157,9 +1115,11 @@
 			 */
 			async afterSave()
 			{
+				let redirectPage = true // Set to 'false' to cancel page redirect.
+
 				// Execute the "After save" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.afterSave)
-				for (const trigger of triggers)
+				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
 				this.emitEvent('after-save-form')
@@ -1169,7 +1129,7 @@
 // eslint-disable-next-line
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 
-				return true
+				return redirectPage
 			},
 
 			/**
@@ -1177,6 +1137,8 @@
 			 */
 			async beforeDel()
 			{
+				let deleteForm = true // Set to 'false' to cancel form delete.
+
 				this.emitEvent('before-delete-form')
 
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
@@ -1184,7 +1146,7 @@
 // eslint-disable-next-line
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 
-				return true
+				return deleteForm
 			},
 
 			/**
@@ -1192,6 +1154,8 @@
 			 */
 			async afterDel()
 			{
+				let redirectPage = true // Set to 'false' to cancel page redirect.
+
 				this.emitEvent('after-delete-form')
 
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
@@ -1199,7 +1163,7 @@
 // eslint-disable-next-line
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 
-				return true
+				return redirectPage
 			},
 
 			/**
@@ -1207,9 +1171,11 @@
 			 */
 			async beforeExit()
 			{
+				let leaveForm = true // Set to 'false' to cancel page redirect.
+
 				// Execute the "Before exit" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.beforeExit)
-				for (const trigger of triggers)
+				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
 				this.emitEvent('before-exit-form')
@@ -1219,7 +1185,7 @@
 // eslint-disable-next-line
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 
-				return true
+				return leaveForm
 			},
 
 			/**
@@ -1229,7 +1195,7 @@
 			{
 				// Execute the "After exit" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.afterExit)
-				for (const trigger of triggers)
+				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
 				this.emitEvent('after-exit-form')
@@ -1289,6 +1255,89 @@
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 
 				this.afterControlUpdate(controlField, fieldValue)
+			},
+
+			/**
+			 * Execute the triggers of the trigger button CATEG_AI.
+			 * Event triggered by a click on the trigger button CATEG_AI.
+			 * @param {string} id The primary key of the record
+			 */
+			// eslint-disable-next-line
+			async Repar_BT_CATEG_AI(id)
+			{
+				setProgressBar({ title: computed(() => this.Resources.CATEGORIZING_REPAIR_02121) }, { max: 2 })
+
+				// Parallel trigger execution.
+				await Promise.all([
+					Promise.resolve((async () => {
+						await this.Repar_BT_CATEG_AI_REPAIR_AGENT_1(id)
+					})()),
+				])
+
+				resetProgressBar()
+			},
+
+			/**
+			 * Client-side component of action #1 (AGENT) of trigger REPAIR_AGENT.
+			 * @param {string} id The primary key of the record
+			 */
+			// eslint-disable-next-line
+			async Repar_BT_CATEG_AI_REPAIR_AGENT_1(id)
+			{
+				setProgressBar({}, { modelValue: 1 })
+				try
+				{
+					const data = await netAPI.postData(
+						'Repar',
+						'Repar_BT_CATEG_AI_REPAIR_AGENT_1',
+						this.model.serverObjModel,
+						undefined,
+						undefined,
+						undefined,
+						this.navigationId)
+
+					if (typeof data.success !== 'string' || typeof data.message !== 'string')
+						throw new Error('Invalid data structure.')
+
+					const result = qEnums.messageTypes[data.success]
+
+					if (!this.isEmpty(result))
+					{
+						if (result !== 'error')
+						{
+							// Return the promise of followup method.
+							return this.Repar_BT_CATEG_AI_REPAIR_AGENT_2(id)
+						}
+						else
+							genericFunctions.displayMessage(data.message, 'error')
+					}
+					else
+					{
+						this.$eventTracker.addError({
+							origin: 'Trigger REPAIR_AGENT',
+							message: 'Routine "Repar_BT_CATEG_AI" finished execution with an unknown result type: ' + data.success
+						})
+					}
+				}
+				catch (e)
+				{
+					genericFunctions.displayMessage(this.Resources.NAO_FOI_POSSIVEL_CON65121, 'error')
+					this.$eventTracker.addError({
+						origin: 'Trigger REPAIR_AGENT (catch)',
+						message: e.toString()
+					})
+				}
+			},
+
+			/**
+			 * Client-side component of action #2 (CREFRESH) of trigger REPAIR_AGENT.
+			 * @param {string} id The primary key of the record
+			 */
+			// eslint-disable-next-line
+			async Repar_BT_CATEG_AI_REPAIR_AGENT_2(id)
+			{
+				setProgressBar({}, { modelValue: 2 })
+				await this.controls.REPAR___REPARTIPOAREA.reload()
 			},
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
 // USE /[MANUAL GQT FUNCTIONS_JS REPAR]/

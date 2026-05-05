@@ -58,6 +58,15 @@
 							<q-control-wrapper class="control-row-group">
 								<base-input-structure
 									class="i-text">
+									<text-input
+										v-model="Model.NewAuditDBSchema"
+										:label="Resources.NOME_DA_BASE_DE_DADO15982"
+										:placeholder="Resources.DEFINIR_APENAS_SE_UM31533" />
+								</base-input-structure>
+							</q-control-wrapper>
+							<q-control-wrapper class="control-row-group">
+								<base-input-structure
+									class="i-text">
 									<q-checkbox
 										v-model="Model.CriarBD"
 										:label="Resources.CRIAR_A_BASE_DE_DADO55641" />
@@ -78,10 +87,6 @@
 										v-model="Model.DirFilestream"
 										:label="Resources.DIRETORIA_DE_FILESTR39886" />
 								</base-input-structure>
-							</q-control-wrapper>
-							<q-control-wrapper class="control-row-group">
-								<text-input v-model="Model.Timeout"
-											:label="'Timeout'" />								
 							</q-control-wrapper>
 
 						<row class="footer-btn">

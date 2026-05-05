@@ -1,292 +1,295 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-
-using CSGenio.core.framework.table;
+﻿using CSGenio.core.persistence;
 using CSGenio.framework;
+using CSGenio.framework.TableConfiguration;
 using CSGenio.persistence;
 using Quidgest.Persistence.GenericQuery;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 
-namespace CSGenio.business;
-
-/// <summary>
-/// Manages user interface settings for table configurations in VUE applications.
-/// This class handles loading, caching, and manipulation of table view configurations
-/// including default settings, user-specific configurations, and configuration persistence.
-/// </summary>
-/// <param name="sp">The persistence support instance for database operations.</param>
-/// <param name="user">The user whose table configurations are being managed.</param>
-/// <param name="uuid">The unique identifier for the table/view being configured.</param>
-/// <param name="key">The cache key used to identify this settings instance.</param>
-public class TableUiSettings(PersistentSupport sp, User user, string uuid, string key) : UserUiSettings(key)
+namespace CSGenio.business
 {
-	private readonly PersistentSupport sp = sp;
-	private readonly string uuid = uuid;
-	private readonly User user = user;
-
 	/// <summary>
-	/// Gets the default table configuration for the current table and user.
-	/// This configuration is marked as the default in the database and serves as the
-	/// fallback when no specific configuration is requested.
+	/// For new table configurations (views) in VUE applications
 	/// </summary>
-	/// <value>The default table configuration, or null if none exists.</value>
-	public TableConfiguration DefaultTableConfiguration { get; private set; }
+    public class TableUiSettings : UserUiSettings
+    {
+        /// <summary>
+        /// Database support.
+        /// </summary>
+        private PersistentSupport Sp { get; set; }
 
-	/// <summary>
-	/// Gets the list of names for all available table configurations for the current user and table.
-	/// These are user-defined configurations that can be loaded by name.
-	/// </summary>
-	/// <value>A list of configuration names available to the current user.</value>
-	public List<string> UserTableConfigNames { get; private set; }
+        /// <summary>
+        /// User interface ID.
+        /// </summary>
+        private string Uuid { get; set; }
 
-	/// <summary>
-	/// Loads user settings including the default table configuration and all available configuration names.
-	/// This method populates the <see cref="DefaultTableConfiguration"/> and <see cref="UserTableConfigNames"/> properties.
-	/// </summary>
-	/// <remarks>
-	/// This method is called during initialization to retrieve all relevant table configuration
-	/// data from the database and prepare it for use by the application.
-	/// </remarks>
-	private void LoadUserSettings()
-	{
-		DefaultTableConfiguration = GetTableDefaultConfig(sp, user, uuid);
-		UserTableConfigNames = GetTableConfigNames(sp, user, uuid);
-	}
+        /// <summary>
+        /// User.
+        /// </summary>
+        private User User { get; set; }
 
-	/// <summary>
-	/// Creates a TableConfiguration object from a database configuration record.
-	/// This method handles version updates, parsing, and property assignment for the configuration.
-	/// </summary>
-	/// <param name="sp">The persistence support instance for database operations.</param>
-	/// <param name="user">The user associated with the configuration.</param>
-	/// <param name="configRecord">The database record containing the configuration data.</param>
-	/// <returns>
-	/// A fully populated <see cref="TableConfiguration"/> object with name, version, and UUID set,
-	/// or null if the configuration update failed.
-	/// </returns>
-	/// <remarks>
-	/// This method automatically applies any necessary version updates to the configuration
-	/// before parsing and returning it. If version updates fail, null is returned.
-	/// </remarks>
-	private static TableConfiguration GetConfigFromRecord(PersistentSupport sp, User user, CSGenioAtblcfg configRecord)
-	{
-		// Update the table configuration, if necessary
-		return TableConfigurationUpdater.UpdateTableConfiguration(sp, user, configRecord)
-			? TableConfiguration.ParseTableConfigData(configRecord)
-			: null;
-	}
+        /// <summary>
+        /// Gets the default table configuration.
+        /// </summary>
+        public TableConfiguration DefaultTableConfiguration { get; private set; }
 
-	/// <summary>
-	/// Retrieves table UI settings from the application cache.
-	/// </summary>
-	/// <param name="cacheKey">The unique cache key identifying the settings to retrieve.</param>
-	/// <returns>The cached <see cref="TableUiSettings"/> instance, or null if not found in cache.</returns>
-	/// <remarks>
-	/// This method provides type-safe access to cached table UI settings by casting the result
-	/// from the base UserUiSettings cache lookup.
-	/// </remarks>
-	protected new static TableUiSettings GetFromCache(string cacheKey)
-	{
-		return UserUiSettings.GetFromCache(cacheKey) as TableUiSettings;
-	}
+        /// <summary>
+        /// Gets the list of all table configuration names.
+        /// </summary>
+        public List<string> UserTableConfigNames { get; private set; }
 
-	/// <summary>
-	/// Loads table user interface settings from cache or database.
-	/// If settings are not found in cache, they are loaded from the database and then cached.
-	/// This is the primary method for obtaining a configured <see cref="TableUiSettings"/> instance.
-	/// </summary>
-	/// <param name="sp">The persistence support instance for database operations.</param>
-	/// <param name="user">The user for whom to load settings.</param>
-	/// <param name="uuid">The unique identifier for the table/view whose settings should be loaded.</param>
-	/// <returns>A fully configured <see cref="TableUiSettings"/> instance with loaded settings.</returns>
-	/// <remarks>
-	/// This method implements a cache-first strategy: it checks the cache first, and only
-	/// loads from the database if no cached version is found. Once loaded, settings are
-	/// automatically cached for future use.
-	/// </remarks>
-	public static TableUiSettings Load(PersistentSupport sp, User user, string uuid)
-	{
-		string cacheKey = GenerateCacheKey(uuid, user);
-		TableUiSettings settings = GetFromCache(cacheKey);
+        /// <summary>
+        /// Initializes a new instance of the class.
+        /// </summary>
+        public TableUiSettings(string key, PersistentSupport sp, string uuid, User user) : base(key)
+        {
+            Sp = sp;
+            Uuid = uuid;
+            User = user;
+        }
 
-		if (settings == null)
-		{
-			settings = new TableUiSettings(sp, user, uuid, cacheKey);
-			settings.LoadUserSettings();
-			settings.CacheSettings();
-		}
+        /// <summary>
+        /// Loads user interface settings from cache or database.
+        /// </summary>
+        /// <param name="sp">The persistence support instance for database operations.</param>
+        /// <param name="uuid">The unique identifier for the settings.</param>
+        /// <param name="user">The user for whom to load settings.</param>
+        /// <returns>A UserUiSettings instance containing the loaded settings.</returns>
+        public static TableUiSettings Load(PersistentSupport sp, string uuid, User user, TableConfigurationLoadOptions options = null)
+        {
+            string cacheKey = GenerateCacheKey(uuid, user);
+            TableUiSettings settings = GetFromCache(cacheKey);
 
-		return settings;
-	}
+            if (settings == null)
+            {
+                settings = new TableUiSettings(cacheKey, sp, uuid, user);
+                settings.LoadUserSettings(sp, uuid, user, options);
+                settings.CacheSettings();
+            }
 
-	/// <summary>
-	/// Retrieves a table configuration record from the database by name.
-	/// This method returns the raw database record containing the configuration data.
-	/// </summary>
-	/// <param name="sp">The persistence support instance for database operations.</param>
-	/// <param name="user">The user who owns the configuration.</param>
-	/// <param name="uuid">The unique identifier for the table/view.</param>
-	/// <param name="configName">The name of the specific configuration to retrieve.</param>
-	/// <returns>
-	/// A <see cref="CSGenioAtblcfg"/> record containing the configuration data,
-	/// or null if no matching configuration is found.
-	/// </returns>
-	/// <remarks>
-	/// This method performs a direct database lookup without applying version updates
-	/// or parsing the configuration data. Use <see cref="GetTableConfig"/> if you need
-	/// a fully processed configuration object.
-	/// </remarks>
-	public static CSGenioAtblcfg GetTableConfigRecord(PersistentSupport sp, User user, string uuid, string configName)
-	{
-		// Get saved configuration
-		return CSGenioAtblcfg.searchList(
-			sp,
-			user,
-			CriteriaSet.And()
-				.Equal(CSGenioAtblcfg.FldCodpsw, user.Codpsw)
-				.Equal(CSGenioAtblcfg.FldUuid, uuid)
-				.Equal(CSGenioAtblcfg.FldName, configName)
-			)
-			.FirstOrDefault();
-	}
+            return settings;
+        }
 
-	/// <summary>
-	/// Retrieves and parses a named table configuration from the database.
-	/// This method loads the configuration data and applies any necessary version updates.
-	/// </summary>
-	/// <param name="sp">The persistence support instance for database operations.</param>
-	/// <param name="user">The user who owns the configuration.</param>
-	/// <param name="uuid">The unique identifier for the table/view.</param>
-	/// <param name="configName">The name of the specific configuration to retrieve.</param>
-	/// <returns>
-	/// A fully parsed <see cref="TableConfiguration"/> object with name and version information,
-	/// or null if the configuration doesn't exist or version updates failed.
-	/// </returns>
-	/// <remarks>
-	/// This method combines database retrieval with configuration processing, including
-	/// automatic version updates. It's the recommended way to load named configurations
-	/// for application use.
-	/// </remarks>
-	public static TableConfiguration GetTableConfig(PersistentSupport sp, User user, string uuid, string configName)
-	{
-		// Get record from the database
-		CSGenioAtblcfg configRecord = GetTableConfigRecord(sp, user, uuid, configName);
+        /// <summary>
+        /// Loads the names of all available table configurations.
+        /// </summary>
+        private void LoadUserSettings(PersistentSupport sp, string uuid, User user, TableConfigurationLoadOptions options = null)
+        {
+            DefaultTableConfiguration = GetTableDefaultConfig(sp, user, uuid, options);
+            UserTableConfigNames = GetTableConfigNames(sp, user, uuid);
+        }
 
-		return configRecord == null
-			? null
-			: GetConfigFromRecord(sp, user, configRecord);
-	}
+        /// <summary>
+        /// Retrieves settings from cache.
+        /// </summary>
+        protected new static TableUiSettings GetFromCache(string cacheKey)
+        {
+            return UserUiSettings.GetFromCache(cacheKey) as TableUiSettings;
+        }
+		
+		/// <summary>
+        /// Parse string-encoded table configuration data to an object.
+		/// </summary>
+        public static TableConfiguration ParseTableConfigData(string encodedString)
+        {
+            // Set options to allow converting numbers to strings (used in advanced filters, column filters, searchbar filters)
+            JsonSerializerOptions serializationOptions = new JsonSerializerOptions
+            {
+                PropertyNameCaseInsensitive = true,
+                NumberHandling = JsonNumberHandling.AllowReadingFromString | JsonNumberHandling.WriteAsString
+            };
 
-	/// <summary>
-	/// Retrieves the default table configuration from the database for a specific table and user.
-	/// The default configuration is identified by having the 'IsDefault' flag set to 1 in the database.
-	/// </summary>
-	/// <param name="sp">The persistence support instance for database operations.</param>
-	/// <param name="user">The user whose default configuration should be retrieved.</param>
-	/// <param name="uuid">The unique identifier for the table/view.</param>
-	/// <returns>
-	/// The default <see cref="TableConfiguration"/> for the specified table and user,
-	/// or null if no default configuration exists or version updates failed.
-	/// </returns>
-	/// <remarks>
-	/// This method automatically applies version updates to outdated configurations.
-	/// Only one configuration per user and table can be marked as default in the database.
-	/// </remarks>
-	public static TableConfiguration GetTableDefaultConfig(PersistentSupport sp, User user, string uuid)
-	{
-		// Get record from the database
-		CSGenioAtblcfg configRecord = CSGenioAtblcfg.searchList(
-			sp,
-			user,
-			CriteriaSet.And()
-				.Equal(CSGenioAtblcfg.FldCodpsw, user.Codpsw)
-				.Equal(CSGenioAtblcfg.FldUuid, uuid)
-				.Equal(CSGenioAtblcfg.FldIsdefault, 1)
-			)
-			.FirstOrDefault();
+            TableConfiguration tableConfiguration;
 
-		return configRecord == null
-			? null
-			: GetConfigFromRecord(sp, user, configRecord);
-	}
+            try
+            {
+                tableConfiguration = JsonSerializer.Deserialize<TableConfiguration>(encodedString, serializationOptions);
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex.Message);
+                tableConfiguration = new TableConfiguration();
+            }
 
-	/// <summary>
-	/// Retrieves the names of all available table configurations for a specific user and table.
-	/// This method returns only the configuration names, not the full configuration data.
-	/// The returned list is ordered alphabetically by configuration name.
-	/// </summary>
-	/// <param name="sp">The persistence support instance for database operations.</param>
-	/// <param name="user">The user whose configurations should be retrieved.</param>
-	/// <param name="uuid">The unique identifier for the table/view.</param>
-	/// <returns>A list of configuration names available to the specified user for the given table, ordered alphabetically.</returns>
-	/// <remarks>
-	/// This is an efficient way to get a list of available configurations without loading
-	/// the full configuration data. Useful for populating configuration selection UI elements.
-	/// The results are sorted alphabetically for consistent and predictable ordering.
-	/// </remarks>
-	public static List<string> GetTableConfigNames(PersistentSupport sp, User user, string uuid)
-	{
-		return CSGenioAtblcfg.searchList(
-			sp,
-			user,
-			CriteriaSet.And()
-				.Equal(CSGenioAtblcfg.FldCodpsw, user.Codpsw)
-				.Equal(CSGenioAtblcfg.FldUuid, uuid),
-			[CSGenioAtblcfg.FldName.Field])
-			.Select(c => c.ValName)
-			.OrderBy(name => name)
-			.ToList();
-	}
+            return tableConfiguration;
+        }
 
-	/// <summary>
-	/// Determines which table configuration to use based on the provided parameters and loading preferences.
-	/// This method implements the logic for choosing between current, default, named, or fallback configurations.
-	/// </summary>
-	/// <param name="currentTableConfig">The currently active table configuration.</param>
-	/// <param name="configName">The name of a specific configuration to load.</param>
-	/// <param name="loadDefaultView">If true, forces loading of the default configuration.</param>
-	/// <param name="defaultTableConfig">A fallback configuration to use if no other configuration is available.</param>
-	/// <returns>
-	/// The most appropriate <see cref="TableConfiguration"/> based on the following priority:
-	/// 1. Default configuration (if <paramref name="loadDefaultView"/> is true)
-	/// 2. Named configuration (if <paramref name="configName"/> is provided)
-	/// 3. Current configuration (<paramref name="currentTableConfig"/>)
-	/// 4. Provided <paramref name="defaultTableConfig"/>
-	/// 5. New empty configuration (as final fallback)
-	/// </returns>
-	/// <remarks>
-	/// This method encapsulates the business logic for configuration selection, ensuring
-	/// that appropriate fallbacks are used when preferred configurations are not available.
-	/// It never returns null - there is always a fallback to a new empty configuration.
-	/// </remarks>
-	public TableConfiguration DetermineTableConfig(TableConfiguration currentTableConfig = null, string configName = "", bool loadDefaultView = false, TableConfiguration defaultTableConfig = null)
-	{
-		// Default to the current table configuration
-		TableConfiguration tableConfig = currentTableConfig;
+        /// <summary>
+        /// Get a table configuration record from the database.
+		/// </summary>
+        public static CSGenioAtblcfg GetTableConfigNameRecord(PersistentSupport sp, User user, string uuid, string configName)
+        {
+            //Get saved configuration
+            return CSGenioAtblcfg.searchList(sp, user, CriteriaSet.And()
+                .Equal(CSGenioAtblcfg.FldCodpsw, user.Codpsw)
+                .Equal(CSGenioAtblcfg.FldUuid, uuid)
+                .Equal(CSGenioAtblcfg.FldName, configName),
+                new string[] { CSGenioAtblcfg.FldCodtblcfg, CSGenioAtblcfg.FldName.Field, CSGenioAtblcfg.FldConfig.Field, CSGenioAtblcfg.FldUsrsetv.Field })
+                .FirstOrDefault();
+        }
 
-		// If loading the default configuration
-		if (!string.IsNullOrEmpty(uuid) && loadDefaultView)
-			tableConfig = DefaultTableConfiguration;
-		// If loading a saved table configuration
-		else if (!string.IsNullOrEmpty(uuid) && !string.IsNullOrEmpty(configName))
-			tableConfig = GetTableConfig(sp, user, uuid, configName);
+        /// <summary>
+        /// Get a table configuration from the database.
+		/// </summary>
+        public static TableConfiguration GetTableConfig(PersistentSupport sp, User user, string uuid, string configName, TableConfigurationLoadOptions options = null)
+        {
+            // Get record from the database
+            CSGenioAtblcfg configRecord = GetTableConfigNameRecord(sp, user, uuid, configName);
 
-		tableConfig ??= defaultTableConfig ?? new TableConfiguration();
+            // If configuration does not exist
+            if (configRecord == null)
+                return null;
 
-		return tableConfig;
-	}
+            // Parse to object
+            TableConfiguration tableConfig = ParseTableConfigData(configRecord.ValConfig);
 
-	/// <summary>
-	/// Gets the names of all available table configurations for the current user and table instance.
-	/// This is an instance method that uses the cached configuration names loaded during initialization.
-	/// </summary>
-	/// <returns>A list of configuration names available to the current user for the current table.</returns>
-	/// <remarks>
-	/// This method provides access to the cached configuration names without requiring
-	/// additional database queries. The names are loaded once during initialization.
-	/// </remarks>
-	/// <seealso cref="GetTableConfigNames(PersistentSupport, User, string)"/>
-	public List<string> GetTableConfigNames()
-	{
-		return UserTableConfigNames;
-	}
+            // Add configuration name
+            tableConfig.Name = configRecord.ValName;
+
+            // Add configuration version
+            tableConfig.Version = configRecord.ValUsrsetv;
+
+            // Update table configuration with load options and re-save if necessary
+            TableConfigurationHelpers.UpdateSavedTableConfiguration(sp, user, configRecord, tableConfig, options);
+
+            return tableConfig;
+        }
+
+        /// <summary>
+        /// Get default table configuration from the database.
+		/// </summary>
+        public static TableConfiguration GetTableDefaultConfig(PersistentSupport sp, User user, string uuid, TableConfigurationLoadOptions options = null)
+        {
+            // Get table configuration and name fields from the default configuration record
+            // tblcfg has the table configurations
+            // tblcfgsel has the records that specify which record in tblcfg, if any, is the default
+            SelectQuery query = new SelectQuery()
+                .Select(CSGenioAtblcfg.FldCodtblcfg)
+                .Select(CSGenioAtblcfg.FldName)
+                .Select(CSGenioAtblcfg.FldConfig)
+                .Select(CSGenioAtblcfg.FldUsrsetv)
+                .From(Area.AreaTBLCFG)
+                .Join(Area.AreaTBLCFGSEL)
+                    .On(CriteriaSet.And().Equal(CSGenioAtblcfg.FldCodtblcfg, CSGenioAtblcfgsel.FldCodtblcfg)
+                )
+                .Where(CriteriaSet.And()
+                    .Equal(CSGenioAtblcfg.FldCodpsw, user.Codpsw)
+                    .Equal(CSGenioAtblcfg.FldUuid, uuid)
+                );
+
+            var result = sp.Execute(query);
+
+            // If configuration does not exist
+            if (result.NumRows == 0 || result.NumCols != 4)
+                return null;
+
+            string tableConfigPk = DBConversion.ToString(result.GetDirect(0, 0));
+            string tableConfigName = DBConversion.ToString(result.GetDirect(0, 1));
+            string tableConfigJson = DBConversion.ToString(result.GetDirect(0, 2));
+            int tableConfigVersion = DBConversion.ToInteger(result.GetDirect(0, 3));
+
+            // If configuration is empty
+            if (string.IsNullOrEmpty(tableConfigJson))
+                return null;
+
+            // Parse to object
+            TableConfiguration tableConfig = ParseTableConfigData(tableConfigJson);
+
+            // Add configuration name
+            tableConfig.Name = tableConfigName;
+
+            // Add configuration version
+            tableConfig.Version = tableConfigVersion;
+
+            // Update table configuration with load options accounting for version changes
+            bool shouldSave = TableConfigurationHelpers.ApplyTableConfigurationVersionChanges(tableConfig, options);
+
+            // Re-save updated configuration if necessary
+            // Should not be done when in maintenance mode
+            if (shouldSave && !Maintenance.Current.IsActive)
+            {
+                try
+                {
+                    // Update configuration data
+                    // Serialize only the properties that should be saved and ignore null values
+                    JsonSerializerOptions serializerOptions = new JsonSerializerOptions();
+                    serializerOptions.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull;
+
+                    string configStr = JsonSerializer.Serialize<TableConfigurationSaved>(tableConfig, serializerOptions);
+
+                    UpdateQuery updateQuery = new UpdateQuery()
+                        .Update(Area.AreaTBLCFG)
+                        .Set(CSGenioAtblcfg.FldConfig, configStr)
+                        .Set(CSGenioAtblcfg.FldUsrsetv, Configuration.UserSettingsVersion)
+                        .Where(CriteriaSet.And()
+                            .Equal(CSGenioAtblcfg.FldCodtblcfg, tableConfigPk)
+                        );
+
+                    sp.openConnection();
+                    sp.Execute(updateQuery);
+                    sp.closeConnection();
+                }
+                catch (Exception ex)
+                {
+                    Log.Error(ex.Message);
+                }
+            }
+
+            return tableConfig;
+        }
+
+        /// <summary>
+        /// Determine which table configuration to use.
+		/// </summary>
+        public TableConfiguration DetermineTableConfig(PersistentSupport sp, User user, string uuid, TableConfiguration currentTableConfig, string configName = "", bool loadDefaultView = false, TableConfigurationLoadOptions options = null, TableConfiguration defaultTableConfig = null)
+        {
+            // Default to the current table configuration
+            TableConfiguration tableConfig = currentTableConfig;
+
+            // If loading the default configuration
+            if (!string.IsNullOrEmpty(uuid) && loadDefaultView)
+                tableConfig = DefaultTableConfiguration;
+            // If loading a saved table configuration
+            else if (!string.IsNullOrEmpty(uuid) && !string.IsNullOrEmpty(configName))
+                tableConfig = GetTableConfig(sp, user, uuid, configName, options);
+
+            if (tableConfig == null)
+                tableConfig = defaultTableConfig ?? new TableConfiguration();
+
+            return tableConfig;
+        }
+
+        /// <summary>
+        /// Determine which table configuration to use.
+		/// </summary>
+        public TableConfiguration DetermineTableConfig(TableConfiguration currentTableConfig, string configName = "", bool loadDefaultView = false, TableConfigurationLoadOptions options = null, TableConfiguration defaultTableConfig = null)
+        {
+            return DetermineTableConfig(Sp, User, Uuid, currentTableConfig, configName, loadDefaultView, options, defaultTableConfig);
+        }
+
+        /// <summary>
+        /// Gets the names of all available table configurations.
+        /// </summary>
+        public static List<string> GetTableConfigNames(PersistentSupport sp, User user, string uuid)
+        {
+            List<CSGenioAtblcfg> userTableConfigs = CSGenioAtblcfg.searchList(sp, user, CriteriaSet.And()
+                .Equal(CSGenioAtblcfg.FldCodpsw, user.Codpsw)
+                .Equal(CSGenioAtblcfg.FldUuid, uuid),
+                new string[] { CSGenioAtblcfg.FldName.Field })
+                .ToList();
+
+            return userTableConfigs.Select(c => c.ValName).ToList();
+        }
+
+        /// <summary>
+        /// Gets the names of all available table configurations.
+        /// </summary>
+        public List<string> GetTableConfigNames()
+        {
+            return GetTableConfigNames(Sp, User, Uuid);
+        }
+    }
 }

@@ -7,8 +7,6 @@
 </template>
 
 <script>
-	import { BooleanResources } from '@/mixins/controlsResources.js'
-
 	export default {
 		name: 'QRenderBoolean',
 
@@ -51,15 +49,9 @@
 				return classes
 			},
 
-			resolvedTexts() {
-				if (this.texts) return this.texts
-
-				return new BooleanResources(this.$getResource)
-			},
-
 			valueText()
 			{
-				return this.value ? this.resolvedTexts.yesLabel : this.resolvedTexts.noLabel
+				return this.value ? this.texts.yesLabel : this.texts.noLabel
 			}
 		}
 	}

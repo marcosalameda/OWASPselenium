@@ -1,8 +1,7 @@
-﻿using CSGenio;
-using CSGenio.framework;
+﻿using CSGenio.framework;
 using System;
 using System.Collections.Generic;
-using System.Linq;
+using System.Security.Principal;
 
 namespace GenioServer.security
 {
@@ -22,16 +21,11 @@ namespace GenioServer.security
         string Description { get; set; }
 
         /// <summary>
-        /// True if this provider will be used for 2FA
-        /// </summary>
-        bool Is2FA {  get; set; }
-
-        /// <summary>
         /// Authenticates a user
         /// </summary>
         /// <param name="credential">The user credentials</param>
         /// <returns>The user identity</returns>
-        GenioIdentity Authenticate(Credential credential);
+        IIdentity Authenticate(Credential credential);
 
         /// <summary>
         /// Determines whether username and password authentication is enabled.
@@ -66,29 +60,14 @@ namespace GenioServer.security
         /// <returns>The fully formed logout uri</returns>
         string GetRedirectLogoutUrl(string callback, string state = null);
 
-
         /// <summary>
-        /// Creates a challenge for a login attempt
+        /// Extracts the external unique id from the credential and saves it to the internal user.
+        /// If the credential is invalid or the user is inconsistent the method should fail.
         /// </summary>
-        /// <param name="username">The username for which the new credentials are being requested</param>
-        /// <returns>A opaque string representing the challenge for the login to use. The client side UI must know how parse this information.</returns>
-        public string AuthenticateChallenge(string username);
-
-        /// <summary>
-        /// Requests the settings supported by this provider for creating a new credential
-        /// </summary>
-        /// <param name="username">The username for which the new credentials are being requested</param>
-        /// <returns>A opaque string representing the settings for this request to use. The client side UI must know how parse this information.</returns>
-        public string NewCredentialRequest(string username);
-
-        /// <summary>
-        /// Checks that the user can correctly acknowledge a challenge, and creates a secret that can be stored with the user
-        /// </summary>
-        /// <param name="username">Username that requested the challenge</param>
-        /// <param name="originalChallenge">The original challenge that was sent to the user</param>
-        /// <param name="assertion">Proof sent by the user that he has the key for the challenge</param>
-        public CredentialSecret NewCredentialCreate(string username, string originalChallenge, string assertion);
-
+        /// <param name="credential">The credential to associate</param>
+        /// <param name="user">The user where the credential will be associated</param>
+        /// <returns>True if the registration is sucessfull, false otherwise</returns>
+        bool RegisterExternalId(Credential credential, User user);
     }
 
     /// <summary>
@@ -103,9 +82,6 @@ namespace GenioServer.security
         public virtual string Description { get; set; }
 
         /// <inheritdoc/>
-        public virtual bool Is2FA { get; set; } = false;
-
-        /// <inheritdoc/>
         public virtual bool HasRedirectLogin() => false;
 
         /// <inheritdoc/>
@@ -115,56 +91,13 @@ namespace GenioServer.security
         public virtual string GetRedirectLogoutUrl(string callback, string state = null) => "";
 
         /// <inheritdoc/>
+        public virtual bool RegisterExternalId(Credential credential, User user) => true;
+
+        /// <inheritdoc/>
         public virtual bool HasUsernameAuth() => false;
 
         /// <inheritdoc/>
-        public abstract GenioIdentity Authenticate(Credential credential);
-
-        /// <inheritdoc/>
-        public virtual string AuthenticateChallenge(string username) => "";
-
-        /// <inheritdoc/>
-        public virtual string NewCredentialRequest(string username) => "";
-
-        /// <inheritdoc/>
-        public virtual CredentialSecret NewCredentialCreate(string username, string originalChallenge, string assertion)
-        {
-            throw new NotImplementedException("Storing credentials not supported");
-        }
-        /// <summary>
-        /// Initializes the provider with all the options read from the config
-        /// </summary>
-        /// <param name="config">The provide configuration</param>
-        /// <remarks>
-        /// Subclasses need to mark properties they wish parsed with SecurityProviderOptionAttribute
-        /// </remarks>
-        public BaseIdentityProvider(IdentityProviderCfgEl config)
-        {
-            Id = config.Name;
-            Description = config.Description ?? "";
-            Is2FA = config.Is2FA;
-
-            var t = GetType();
-            var props = t.GetProperties();
-            foreach (var p in props)
-            {
-                var attrs = p.GetCustomAttributes(typeof(SecurityProviderOptionAttribute), true);
-                if (attrs == null || attrs.Length == 0)
-                    continue;
-
-                if (config.Options.TryGetValue(p.Name, out var optValue))
-                {
-                    if (p.PropertyType.IsAssignableFrom(typeof(List<string>)))
-                        p.SetValue(this, optValue.Split(';').ToList());
-                    else
-                        p.SetValue(this, Convert.ChangeType(optValue, p.PropertyType, System.Globalization.CultureInfo.InvariantCulture), null);
-                }
-                else if (!(attrs[0] as SecurityProviderOptionAttribute).Optional)
-                    throw new FrameworkException($"Invalid provider parameters", "BaseIdentityProvider.ctor", $"Property {p.Name} is mandatory for provider {Id}");
-            }
-        }
-
-
+        public abstract IIdentity Authenticate(Credential credential);
     }
 
     /// <summary>

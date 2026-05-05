@@ -5,23 +5,28 @@
 				v-if="userIsLoggedIn && $app.appAlerts.length > 0"
 				id="sidebar-collapse"
 				class="nav-link n-menu__aside-link"
+				href="javascript:void(0)"
+				role="button"
 				aria-haspopup="true"
 				aria-expanded="true"
+				:aria-label="texts.options"
 				:tabindex="$attrs.tabindex"
-				@click.stop.prevent="toggleAlert">
+				@click.stop.prevent="openAlert">
 				<span
 					data-toggle="tooltip"
 					data-placement="left"
 					:title="texts.alerts">
 					<q-icon icon="notifications" />
 				</span>
+
 				<span
 					class="e-badge e-badge--highlight"
 					aria-hidden="true">
 					{{ notifications.length }}
 				</span>
+
 				<span class="hidden-elem">
-					{{ texts.alerts }}
+					{{ texts.options }}
 				</span>
 			</q-button>
 
@@ -33,6 +38,7 @@
 				data-table-action-selected="false"
 				aria-haspopup="true"
 				:aria-expanded="showUserOptionsMenu"
+				:title="texts.userAvatar"
 				:tabindex="$attrs.tabindex">
 				<img
 					class="avatar"
@@ -42,9 +48,6 @@
 					:src="avatarSrc"
 					:alt="texts.userAvatar"
 					:title="userData.name" />
-				<span class="hidden-elem">
-					{{ texts.user }}
-				</span>
 			</q-button>
 
 			<q-popover
@@ -77,7 +80,7 @@
 								data-placement="top"
 								class="c-sidebar__list-link"
 								:title="getMenuText(menu.Title)"
-								:link="getMenuRoute(menu)"
+								:link="getMenuRoute(menu, true)"
 								:tabindex="$attrs.tabindex">
 								<i
 									v-if="menu.Font"
@@ -132,8 +135,7 @@
 								class="c-sidebar__list-item"
 								v-if="hasUserSettings">
 								<a
-									role="button"
-									href="#"
+									href="javascript:void(0)"
 									data-toggle="tooltip"
 									class="c-sidebar__list-link"
 									data-placement="top"
@@ -149,8 +151,7 @@
 
 							<li class="c-sidebar__list-item">
 								<a
-									role="button"
-									href="#"
+									href="javascript:void(0)"
 									data-toggle="tooltip"
 									data-placement="top"
 									class="c-sidebar__list-link"
@@ -269,11 +270,11 @@
 			logOff,
 
 			/**
-			 * Emits an event to toggle the alerts tab.
+			 * Emits an event to open the alerts tab.
 			 */
-			toggleAlert()
+			openAlert()
 			{
-				this.$eventHub.emit('toggle-sidebar-on-tab', 'alerts-tab')
+				this.$eventHub.emit('open-sidebar-on-tab', 'alerts-tab')
 			},
 
 			/**
@@ -313,12 +314,14 @@
 			/**
 			 * Build the route for avatar custom menu list.
 			 */
-			getMenuRoute(menu)
+			getMenuRoute(menu, isPHE)
 			{
 				if (typeof menu !== 'object')
 					menu = {}
+				if (typeof isPHE !== 'boolean')
+					isPHE = false
 
-				let routeName = 'home'
+				var routeName = 'home'
 				if (!this.isEmpty(menu.Action))
 					routeName = menu.Action
 
@@ -336,6 +339,9 @@
 					routeParams.params.id = menu.RecordID
 					routeParams.params.mode = 'SHOW'
 				}
+
+				if (isPHE)
+					routeParams.params.isPopup = true
 
 				return routeParams
 			},

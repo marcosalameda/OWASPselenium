@@ -12,7 +12,7 @@ import { v4 as uuidv4 } from 'uuid'
 
 import { Base } from './base'
 
-export class GridTableListValue {
+class GridTableListValue {
 	constructor(fieldValue) {
 		this.elements = []
 		this.newElements = _get(fieldValue, 'newElements', [])
@@ -30,21 +30,14 @@ export class GridTableListValue {
 	}
 
 	/**
-	 * A list of the elements that are empty and serve only as placeholder (should always be one).
+	 * A list of the rows that aren't dirty.
 	 */
 	get emptyRows() {
 		return this.newElements.filter((row) => !row.isDirty)
 	}
 
 	/**
-	 * The number of elements.
-	 */
-	get rowCount() {
-		return this.elements.length + this.newElements.length - this.emptyRows.length
-	}
-
-	/**
-	 * Whether the grid is dirty.
+	 * Whether the row is dirty.
 	 */
 	get isDirty() {
 		return _some([
@@ -162,7 +155,7 @@ export class GridTableListValue {
 	 * @param {object} vueContext The Vue context in which this value will be used
 	 */
 	setValue(newValue, viewModelClass, vueContext) {
-		if (newValue === null || viewModelClass === undefined || vueContext === undefined) return
+		if (viewModelClass === undefined || vueContext === undefined) return
 
 		const elements = [],
 			newElements = []
@@ -354,17 +347,10 @@ export class GridTableList extends Base {
 	}
 
 	/**
-	 * A list of the elements that are empty and serve only as placeholder (should always be one).
+	 * The rows in the grid that are not dirty.
 	 */
 	get emptyRows() {
 		return this.value.emptyRows
-	}
-
-	/**
-	 * The number of elements.
-	 */
-	get rowCount() {
-		return this.value.rowCount
 	}
 
 	/**
@@ -491,19 +477,5 @@ export class GridTableList extends Base {
 	 */
 	undoDeletion(row) {
 		this.value.undoDeletion(row)
-	}
-
-	/**
-	 * @override
-	 */
-	destroy() {
-		super.destroy()
-
-		const elements = [...this.elements, ...this.newElements]
-		for (const element of elements) element.destroy()
-
-		this.elements.length = 0
-		this.newElements.length = 0
-		this.removedElements.length = 0
 	}
 }

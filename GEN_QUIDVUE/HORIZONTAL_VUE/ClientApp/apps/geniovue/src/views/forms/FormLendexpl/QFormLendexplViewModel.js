@@ -1,4 +1,4 @@
-﻿/* eslint-disable @typescript-eslint/no-unused-vars */
+﻿/* eslint-disable no-unused-vars */
 import { computed, reactive, watch } from 'vue'
 import _merge from 'lodash-es/merge'
 
@@ -11,7 +11,7 @@ import netAPI from '@quidgest/clientapp/network'
 import qApi from '@/api/genio/quidgestFunctions.js'
 import qFunctions from '@/api/genio/projectFunctions.js'
 import qProjArrays from '@/api/genio/projectArrays.js'
-/* eslint-enable @typescript-eslint/no-unused-vars */
+/* eslint-enable no-unused-vars */
 
 /**
  * Represents a ViewModel class.
@@ -25,11 +25,11 @@ export default class ViewModel extends FormViewModelBase
 	 * @param {object} options - The options for the ViewModel
 	 * @param {object} values - A ViewModel instance to copy values from
 	 */
-	// eslint-disable-next-line @typescript-eslint/no-unused-vars
+	// eslint-disable-next-line no-unused-vars
 	constructor(vueContext, options, values)
 	{
 		super(vueContext, options)
-		// eslint-disable-next-line @typescript-eslint/no-unused-vars
+		// eslint-disable-next-line no-unused-vars
 		const vm = this.vueContext
 
 		// The view model metadata
@@ -37,62 +37,57 @@ export default class ViewModel extends FormViewModelBase
 			name: 'LENDEXPL',
 			area: 'Home',
 			actions: {
-				recalculateFormulas: 'RecalculateFormulas_Lendexpl',
-				updateFilesTickets: 'UpdateFilesTicketsLendexpl',
-				setFile: 'SetFileLendexpl'
+				recalculateFormulas: 'RecalculateFormulas_LENDEXPL',
+				updateFilesTickets: 'UpdateFilesTicketsLENDEXPL'
 			}
 		})
 
 
 		/** The remaining form fields. */
-		this.ValGender = reactive(new modelFieldType.String({
+		this.Pess1ValGender = reactive(new modelFieldType.String({
 			type: 'FormFilter',
-			id: 'ValGender',
+			id: 'Pess1ValGender',
 			originId: 'ValGender',
 			area: 'PESS1',
 			field: 'GENDER',
 			maxLength: 1,
-			arrayOptions: computed(() => new qProjArrays.QArrayGenero(vm.$getResource).elements),
+			arrayOptions: computed(() => qProjArrays.QArrayGenero.setResources(vm.$getResource).elements),
 			description: computed(() => this.Resources.GENRE63303),
-			isGlobalFilterField: true,
-			ignoreFldSubmit: true,
-		}).cloneFrom(values?.ValGender))
-		this.stopWatchers.push(watch(() => this.ValGender.value, (newValue, oldValue) => this.onUpdate('pess1.gender', this.ValGender, newValue, oldValue)))
+		}).cloneFrom(values?.Pess1ValGender))
+		watch(() => this.Pess1ValGender.value, (newValue, oldValue) => this.onUpdate('pess1.gender', this.Pess1ValGender, newValue, oldValue))
 
-		this.ValFrequenc = reactive(new modelFieldType.Number({
+		this.EquipValFrequenc = reactive(new modelFieldType.Number({
 			type: 'FormFilter',
-			id: 'ValFrequenc',
+			id: 'EquipValFrequenc',
 			originId: 'ValFrequenc',
 			area: 'EQUIP',
 			field: 'FREQUENC',
 			maxDigits: 2,
 			decimalDigits: 0,
-			arrayOptions: computed(() => new qProjArrays.QArrayFreqempr(vm.$getResource).elements),
+			arrayOptions: computed(() => qProjArrays.QArrayFreqempr.setResources(vm.$getResource).elements),
 			description: computed(() => this.Resources.LOAN_FREQUENCY00701),
-			isGlobalFilterField: true,
-			ignoreFldSubmit: true,
-		}).cloneFrom(values?.ValFrequenc))
-		this.stopWatchers.push(watch(() => this.ValFrequenc.value, (newValue, oldValue) => this.onUpdate('equip.frequenc', this.ValFrequenc, newValue, oldValue)))
+		}).cloneFrom(values?.EquipValFrequenc))
+		watch(() => this.EquipValFrequenc.value, (newValue, oldValue) => this.onUpdate('equip.frequenc', this.EquipValFrequenc, newValue, oldValue))
 
-		this.ValBought = reactive(new modelFieldType.Boolean({
-			id: 'ValBought',
+		this.EquipValBought = reactive(new modelFieldType.Boolean({
+			type: 'FormFilter',
+			id: 'EquipValBought',
 			originId: 'ValBought',
 			area: 'EQUIP',
 			field: 'BOUGHT',
-			isFixed: true,
 			description: computed(() => this.Resources.BOUGHT32044),
-		}).cloneFrom(values?.ValBought))
-		this.stopWatchers.push(watch(() => this.ValBought.value, (newValue, oldValue) => this.onUpdate('equip.bought', this.ValBought, newValue, oldValue)))
+		}).cloneFrom(values?.EquipValBought))
+		watch(() => this.EquipValBought.value, (newValue, oldValue) => this.onUpdate('equip.bought', this.EquipValBought, newValue, oldValue))
 
-		this.ValReturned = reactive(new modelFieldType.Boolean({
-			id: 'ValReturned',
+		this.LendiValReturned = reactive(new modelFieldType.Boolean({
+			type: 'FormFilter',
+			id: 'LendiValReturned',
 			originId: 'ValReturned',
 			area: 'LENDI',
 			field: 'RETURNED',
-			isFixed: true,
 			description: computed(() => this.Resources.RETURNED01606),
-		}).cloneFrom(values?.ValReturned))
-		this.stopWatchers.push(watch(() => this.ValReturned.value, (newValue, oldValue) => this.onUpdate('lendi.returned', this.ValReturned, newValue, oldValue)))
+		}).cloneFrom(values?.LendiValReturned))
+		watch(() => this.LendiValReturned.value, (newValue, oldValue) => this.onUpdate('lendi.returned', this.LendiValReturned, newValue, oldValue))
 	}
 
 	/**

@@ -1,4 +1,4 @@
-﻿/* eslint-disable @typescript-eslint/no-unused-vars */
+﻿/* eslint-disable no-unused-vars */
 import { computed, reactive, watch } from 'vue'
 import _merge from 'lodash-es/merge'
 
@@ -11,7 +11,7 @@ import netAPI from '@quidgest/clientapp/network'
 import qApi from '@/api/genio/quidgestFunctions.js'
 import qFunctions from '@/api/genio/projectFunctions.js'
 import qProjArrays from '@/api/genio/projectArrays.js'
-/* eslint-enable @typescript-eslint/no-unused-vars */
+/* eslint-enable no-unused-vars */
 
 /**
  * Represents a ViewModel class.
@@ -25,11 +25,11 @@ export default class ViewModel extends FormViewModelBase
 	 * @param {object} options - The options for the ViewModel
 	 * @param {object} values - A ViewModel instance to copy values from
 	 */
-	// eslint-disable-next-line @typescript-eslint/no-unused-vars
+	// eslint-disable-next-line no-unused-vars
 	constructor(vueContext, options, values)
 	{
 		super(vueContext, options)
-		// eslint-disable-next-line @typescript-eslint/no-unused-vars
+		// eslint-disable-next-line no-unused-vars
 		const vm = this.vueContext
 
 		// The view model metadata
@@ -37,9 +37,8 @@ export default class ViewModel extends FormViewModelBase
 			name: 'TABPR',
 			area: 'TABPR',
 			actions: {
-				recalculateFormulas: 'RecalculateFormulas_Tabpr',
-				updateFilesTickets: 'UpdateFilesTicketsTabpr',
-				setFile: 'SetFileTabpr'
+				recalculateFormulas: 'RecalculateFormulas_TABPR',
+				updateFilesTickets: 'UpdateFilesTicketsTABPR'
 			}
 		})
 
@@ -51,7 +50,7 @@ export default class ViewModel extends FormViewModelBase
 			field: 'CODTABPR',
 			description: '',
 		}).cloneFrom(values?.ValCodtabpr))
-		this.stopWatchers.push(watch(() => this.ValCodtabpr.value, (newValue, oldValue) => this.onUpdate('tabpr.codtabpr', this.ValCodtabpr, newValue, oldValue)))
+		watch(() => this.ValCodtabpr.value, (newValue, oldValue) => this.onUpdate('tabpr.codtabpr', this.ValCodtabpr, newValue, oldValue))
 
 		/** The used foreign keys. */
 		this.ValCodtpeq1 = reactive(new modelFieldType.ForeignKey({
@@ -62,7 +61,7 @@ export default class ViewModel extends FormViewModelBase
 			relatedArea: 'TPEQU',
 			description: computed(() => this.Resources._TYPE_OF_EQUIPMENT35057),
 		}).cloneFrom(values?.ValCodtpeq1))
-		this.stopWatchers.push(watch(() => this.ValCodtpeq1.value, (newValue, oldValue) => this.onUpdate('tabpr.codtpeq1', this.ValCodtpeq1, newValue, oldValue)))
+		watch(() => this.ValCodtpeq1.value, (newValue, oldValue) => this.onUpdate('tabpr.codtpeq1', this.ValCodtpeq1, newValue, oldValue))
 
 		/** The remaining form fields. */
 		this.TableTpequTipoequi = reactive(new modelFieldType.String({
@@ -73,9 +72,8 @@ export default class ViewModel extends FormViewModelBase
 			field: 'TIPOEQUI',
 			maxLength: 50,
 			description: computed(() => this.Resources.TYPE_OF_EQUIPMENT18080),
-			ignoreFldSubmit: true,
 		}).cloneFrom(values?.TableTpequTipoequi))
-		this.stopWatchers.push(watch(() => this.TableTpequTipoequi.value, (newValue, oldValue) => this.onUpdate('tpequ.tipoequi', this.TableTpequTipoequi, newValue, oldValue)))
+		watch(() => this.TableTpequTipoequi.value, (newValue, oldValue) => this.onUpdate('tpequ.tipoequi', this.TableTpequTipoequi, newValue, oldValue))
 
 		this.ValSince = reactive(new modelFieldType.DateTime({
 			id: 'ValSince',
@@ -84,7 +82,7 @@ export default class ViewModel extends FormViewModelBase
 			field: 'SINCE',
 			description: computed(() => this.Resources.SINCE47259),
 		}).cloneFrom(values?.ValSince))
-		this.stopWatchers.push(watch(() => this.ValSince.value, (newValue, oldValue) => this.onUpdate('tabpr.since', this.ValSince, newValue, oldValue)))
+		watch(() => this.ValSince.value, (newValue, oldValue) => this.onUpdate('tabpr.since', this.ValSince, newValue, oldValue))
 
 		this.ValPrecohor = reactive(new modelFieldType.Number({
 			id: 'ValPrecohor',
@@ -95,7 +93,7 @@ export default class ViewModel extends FormViewModelBase
 			decimalDigits: 2,
 			description: computed(() => this.Resources.PRICE_BY_HOUR01060),
 		}).cloneFrom(values?.ValPrecohor))
-		this.stopWatchers.push(watch(() => this.ValPrecohor.value, (newValue, oldValue) => this.onUpdate('tabpr.precohor', this.ValPrecohor, newValue, oldValue)))
+		watch(() => this.ValPrecohor.value, (newValue, oldValue) => this.onUpdate('tabpr.precohor', this.ValPrecohor, newValue, oldValue))
 	}
 
 	/**

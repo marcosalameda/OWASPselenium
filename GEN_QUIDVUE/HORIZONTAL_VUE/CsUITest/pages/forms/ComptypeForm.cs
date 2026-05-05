@@ -48,6 +48,11 @@ public class ComptypeForm : Form
 	public TabControl PseudCacessi => new TabControl(driver, ContainerLocator, "#tab-container-COMPTYPEPSEUDCACESSI_");
 
 	/// <summary>
+	/// Configurations
+	/// </summary>
+	public TabControl PseudConfigcomp => new TabControl(driver, ContainerLocator, "#tab-container-COMPTYPE__PSEUD__CONFIGCOMP");
+
+	/// <summary>
 	/// Components Class
 	/// </summary>
 	public LookupControl ComptabCompcCompclas => new LookupControl(driver, ContainerLocator, "container-COMPTAB_COMPCCOMPCLAS");
@@ -114,11 +119,6 @@ public class ComptypeForm : Form
 	public CollapsibleZoneControl C_usagePseudNewgrp01 => new CollapsibleZoneControl(driver, ContainerLocator, "#C_USAGE_PSEUDNEWGRP01-container");
 
 	/// <summary>
-	/// Storybook
-	/// </summary>
-	public ButtonControl C_usagePseudStorybookusa => new ButtonControl(driver, ContainerLocator, "#C_USAGE__PSEUD__STORYBOOKUSA");
-
-	/// <summary>
 	/// Demo 1
 	/// </summary>
 	public ButtonControl C_usagePseudDemocomp => new ButtonControl(driver, ContainerLocator, "#C_USAGE_PSEUDDEMOCOMP");
@@ -127,6 +127,16 @@ public class ComptypeForm : Form
 	/// Accessibilty Compliance & Best Practices
 	/// </summary>
 	public BaseInputControl CacessiCompoAccessib => new BaseInputControl(driver, ContainerLocator, "container-CACESSI_COMPOACCESSIB", "#CACESSI_COMPOACCESSIB");
+
+	/// <summary>
+	/// Show Release Field
+	/// </summary>
+	public CheckboxInputControl ConfigcompCompoReleaselogic => new CheckboxInputControl(driver, ContainerLocator, "#container-CONFIGCOMP__COMPO__RELEASELOGIC");
+
+	/// <summary>
+	/// Storybook Link
+	/// </summary>
+	public BaseInputControl ConfigcompCompoWeblink => new BaseInputControl(driver, ContainerLocator, "container-CONFIGCOMP__COMPO__WEBLINK", "#CONFIGCOMP__COMPO__WEBLINK");
 
 	public ComptypeForm(IWebDriver driver, FORM_MODE mode, By? containerLocator = null)
 		: base(driver, mode, "COMPTYPE", containerLocator: containerLocator) { }

@@ -3,23 +3,20 @@
 		v-if="menuModalIsReady"
 		:to="`#${uiContainersId.body}`"
 		:disabled="!menuInfo.isPopup">
-		<div
+		<form
 			class="form-horizontal"
 			@submit.prevent>
 			<q-row-container>
 				<q-table
 					v-bind="controls.menu"
 					v-on="controls.menu.handlers">
-					<template #header>
-						<q-table-config
-							:table-ctrl="controls.menu"
-							v-on="controls.menu.handlers">
-						</q-table-config>
-					</template>
-					<!-- USE /[MANUAL GQT CUSTOM_TABLE PTN_Menu_LIST_DB_MB_MC_R]/ -->
 				</q-table>
+
+				<q-table-extra-extension
+					:list-ctrl="controls.menu"
+					v-on="controls.menu.handlers" />
 			</q-row-container>
-		</div>
+		</form>
 	</teleport>
 
 	<teleport
@@ -51,7 +48,7 @@
 </template>
 
 <script>
-	/* eslint-disable @typescript-eslint/no-unused-vars */
+	/* eslint-disable no-unused-vars */
 	import asyncProcM from '@quidgest/clientapp/composables/async'
 	import qEnums from '@quidgest/clientapp/constants/enums'
 	import netAPI from '@quidgest/clientapp/network'
@@ -71,7 +68,7 @@
 	import qApi from '@/api/genio/quidgestFunctions.js'
 	import qFunctions from '@/api/genio/projectFunctions.js'
 	import qProjArrays from '@/api/genio/projectArrays.js'
-	/* eslint-enable @typescript-eslint/no-unused-vars */
+	/* eslint-enable no-unused-vars */
 
 	import MenuViewModel from './QMenuPTN_LIST_DB_MB_MC_RViewModel.js'
 
@@ -157,7 +154,6 @@
 								scrollData: 3,
 								sortable: false,
 								searchable: false,
-								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.DateColumn({
 								order: 2,
@@ -167,7 +163,6 @@
 								label: computed(() => this.Resources.DATE18475),
 								scrollData: 8,
 								dateTimeType: 'date',
-								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.ArrayColumn({
 								order: 3,
@@ -177,8 +172,8 @@
 								label: computed(() => this.Resources.AVAILABILITY56489),
 								dataLength: 1,
 								scrollData: 1,
-								export: 1,
-								array: computed(() => new qProjArrays.QArrayDsiponib(vm.$getResource).elements),
+								array: computed(() => qProjArrays.QArrayDsiponib.setResources(vm.$getResource).elements),
+								arrayType: qProjArrays.QArrayDsiponib.type,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.BooleanColumn({
 								order: 4,
@@ -187,7 +182,6 @@
 								field: 'VALID',
 								label: computed(() => this.Resources.IN_USE42606),
 								scrollData: 1,
-								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 						],
 						config: {
@@ -208,8 +202,10 @@
 								canInsert: false
 							},
 							searchBarConfig: {
-								visibility: true
+								visibility: true,
+								searchOnPressEnter: true
 							},
+							filtersVisible: true,
 							allowColumnFilters: true,
 							allowColumnSort: true,
 							generalCustomActions: [
@@ -264,7 +260,6 @@
 							rowClickAction: {
 								id: 'RCA_PTN_3A111',
 								name: 'PTN_MenuMC_3A11',
-								isVisible: true,
 								params: {
 									limits: [
 										{
@@ -284,17 +279,10 @@
 								sortOrder: 'asc'
 							}
 						},
-						actionIDs: [
-							'PTN_3A11',
-						],
 						globalEvents: ['changed-GITEM', 'changed-ITEM', 'changed-WAREH'],
 						uuid: '6ef09042-07c7-4515-a46d-6e9b3833501c',
 						allSelectedRows: 'false',
 						headerLevel: 1,
-						isActiveControl: computed(() => this.isActiveMenu)
-					}, this),
-					PTN_3A11: new controlClass.ButtonControl({
-						id: 'PTN_3A11',
 					}, this),
 				}
 			}
@@ -331,10 +319,6 @@
 			// Listener for MC action in case of redirect by Jump if just one.
 			this.$eventHub.off('EXEC-PTN_MenuMC_3A11', this.PTN_MenuMC_3A11)
 			this.$eventHub.off('EXEC-MENU-ROUTINE-PTN_LIST_DB_MB_MC_R', this.onExecRoutineEvent)
-/* eslint-disable indent, vue/html-indent, vue/script-indent */
-// USE /[MANUAL GQT COMPONENT_BEFORE_UNMOUNT PTN_MENU_LIST_DB_MB_MC_R]/
-// eslint-disable-next-line
-/* eslint-enable indent, vue/html-indent, vue/script-indent */
 		},
 
 		methods: {

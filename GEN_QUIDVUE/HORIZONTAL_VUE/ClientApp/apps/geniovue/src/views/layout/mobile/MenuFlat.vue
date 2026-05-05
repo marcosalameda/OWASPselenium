@@ -177,9 +177,9 @@
 			onFocusOut(event) {
 				if (this.mobileLayoutActive) {
 					// Main menu element
-					const sidebarMenu = this.$refs?.sidebarMenu
+					let sidebarMenu = this.$refs?.sidebarMenu
 					// Element that gets focus
-					const focusedElem = event?.relatedTarget
+					let focusedElem = event?.relatedTarget
 
 					// If focus goes to an element within the menu, logically the 'focus' is on the menu
 					if (sidebarMenu.contains(focusedElem))

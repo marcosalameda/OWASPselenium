@@ -151,6 +151,18 @@ export function setupRouter(i18n) {
         component: () => import(/* webpackChunkName: "manage_message" */ './views/Notifications/ManageMessage.vue'),
         props: true
     },
+    {
+      path: '/:culture/:system/AuditViewer',
+      name: 'audit_viewer',
+      component: () => import(/* webpackChunkName: "audit_viewer" */ './views/Audit_viewer.vue'),
+      props: true
+    },
+    {
+      path: '/:culture/:system/MessageQueue',
+      name: 'message_queue',
+      component: () => import(/* webpackChunkName: "message_queue" */ './views/Message_queue.vue'),
+      props: true
+    },
   ];
 
     const router = createRouter({

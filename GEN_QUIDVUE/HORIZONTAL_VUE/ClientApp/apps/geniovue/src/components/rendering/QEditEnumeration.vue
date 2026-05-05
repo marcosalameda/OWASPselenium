@@ -1,38 +1,52 @@
 ﻿<template>
-	<q-select
+	<component
+		:is="options?.component ? options.component : 'base-input-structure'"
 		:id="`${tableName}_${rowIndex}_${columnName}`"
-		:key="domKey"
-		:model-value="value"
-		:size="size"
-		:class="classes"
-		:items="items"
-		:texts="texts"
-		:badges="isMultiple"
-		:multiple="isMultiple"
-		inline
-		required
-		item-value="key"
-		item-label="value"
-		@update:model-value="updateSelectedValue" />
+		:class="containerClasses"
+		:label-attrs="{ class: 'i-text__label' }"
+		:model-field-ref="modelField"
+		:error-display-type="options?.errorDisplayType">
+		<q-select
+			:id="`${tableName}_${rowIndex}_${columnName}`"
+			:model-value="value?.key"
+			:size="size"
+			:class="classes"
+			:items="items"
+			:texts="texts"
+			inline
+			clearable
+			item-value="key"
+			item-label="value"
+			@update:model-value="updateSelectedValue" />
+	</component>
 </template>
 
 <script>
 	import _isEmpty from 'lodash-es/isEmpty'
 
 	import { inputSize } from '@quidgest/clientapp/constants/enums'
+	import modelFieldType from '@quidgest/clientapp/models/fields'
+
+	import BaseInputStructure from '@/components/inputs/BaseInputStructure.vue'
+	import GridBaseInputStructure from '@/components/inputs/GridBaseInputStructure.vue'
 
 	export default {
 		name: 'QEditEnumeration',
 
 		emits: ['update', 'loaded'],
 
+		components: {
+			BaseInputStructure,
+			GridBaseInputStructure
+		},
+
 		props: {
 			/**
-			 * The current selected value of the enumeration.
+			 * The current selected value of the enumeration, represented as an object with a key-value pair.
 			 */
 			value: {
-				type: [String, Number, Array],
-				default: ''
+				type: Object,
+				default: () => ({})
 			},
 
 			/**
@@ -84,6 +98,22 @@
 			},
 
 			/**
+			 * Classes to be applied to the control's container.
+			 */
+			containerClasses: {
+				type: Array,
+				default: () => []
+			},
+
+			/**
+			 * A list of error messages associated with the control.
+			 */
+			errorMessages: {
+				type: Array,
+				default: () => []
+			},
+
+			/**
 			 * Object containing localized text strings for the component's texts
 			 */
 			texts: {
@@ -97,7 +127,7 @@
 		data()
 		{
 			return {
-				domKey: 0
+				modelField: new modelFieldType.String()
 			}
 		},
 
@@ -108,37 +138,61 @@
 
 		computed: {
 			/**
-			 * The dropdown items.
+			 * Transforms the distinctValues object or array from options into the format expected by QSelect.
 			 */
 			items()
 			{
-				return this.options.array
-			},
+				if (!this.options.distinctValues)
+					return this.options.array
 
-			/**
-			 * Whether multiple selection should be allowed.
-			 */
-			isMultiple()
-			{
-				return Array.isArray(this.value)
+				const optionsArr = []
+				const optionsObj = this.options.distinctValues
+
+				const parseKey = this.options.arrayType === 'N' || this.options.arrayType === 'L'
+
+				for (let key in optionsObj)
+				{
+					if (key.length < 1)
+						continue
+
+					const value = optionsObj[key]
+					const arrKey = this.options.keyIsValue ? value : (parseKey ? parseInt(key) : key)
+
+					optionsArr.push({ key: arrKey, value: value })
+				}
+
+				return optionsArr
 			}
 		},
 
 		methods: {
+			/**
+			 * Emits the search query for the QSelect component when the user performs a search.
+			 * @param {string} value - The search query entered by the user.
+			 */
+			updateSearchQuery(value)
+			{
+				this.searchValue = value
+			},
+
 			/**
 			 * Updates the currently selected value in the QSelect component and emits it to the parent component.
 			 * @param {string|number} key - The key representing the selected enumeration option.
 			 */
 			updateSelectedValue(key)
 			{
-				this.$emit('update', key)
+				const option = this.items.find((option) => option.key === key)
+				this.$emit('update', option)
 			}
 		},
 
 		watch: {
-			isMultiple()
-			{
-				this.domKey++
+			errorMessages: {
+				handler(newValue)
+				{
+					this.modelField.serverErrorMessages = newValue
+				},
+				deep: true
 			}
 		}
 	}

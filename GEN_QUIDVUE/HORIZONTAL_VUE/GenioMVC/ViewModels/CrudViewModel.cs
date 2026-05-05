@@ -193,24 +193,6 @@ namespace GenioMVC.ViewModels
 		/// </summary>
 		/// <param name="values">A dictionary containing the keys in the format "table.field" and values to populate the view model with. Must not be null.</param>
 		void PopulateViewModel(Dictionary<string, object> values);
-
-		/// <summary>
-		/// Indicates whether saving is permitted despite warnings being present.
-		/// </summary>
-		bool CanSaveWithWarnings { get; set; }
-
-		/// <summary>
-		/// Configures whether saving is allowed even when warnings are present.
-		/// </summary>
-		/// <param name="enabled">
-		/// If set to <c>true</c>, the save operation will be permitted despite active warnings.
-		/// If <c>false</c>, warnings will prevent saving.
-		/// </param>
-		/// <remarks>
-		/// Use this method when the operation should proceed with non-critical issues
-		/// that do not require user intervention or correction.
-		/// </remarks>
-		void AllowSavingWithWarnings(bool enabled);
 	}
 
 	public abstract class CrudViewModel<T> : ViewModelBase, ICrudViewModel where T : Models.ModelBase
@@ -253,12 +235,8 @@ namespace GenioMVC.ViewModels
 			}
 		}
 
-		/// <inheritdoc />
 		public string QPrimaryKey { get => Model?.baseklass.QPrimaryKey; }
 
-		/// <summary>
-		/// Dictionary with custom properties to be sent to the client-side
-		/// </summary>
 		public IDictionary<string, object> ExtraProperties { get; private set; }
 
 		protected CrudViewModel(UserContext userContext, string? identifier = null, bool nestedForm = false) : base(userContext)
@@ -305,19 +283,16 @@ namespace GenioMVC.ViewModels
 		/// </summary>
 		protected virtual void FillExtraProperties() { /* Method intentionally left empty. */ }
 
-		/// <inheritdoc />
 		public void Load()
 		{
 			Load(new NameValueCollection(), false, false);
 		}
 
-		/// <inheritdoc />
 		public void Destroy()
 		{
 			Destroy(QPrimaryKey);
 		}
 
-		/// <inheritdoc />
 		public void MapFromModel()
 		{
 			MapFromModel(Model);
@@ -345,7 +320,6 @@ namespace GenioMVC.ViewModels
 				oldValues = null;
 		}
 
-		/// <inheritdoc />
 		[JsonIgnore]
 		public abstract bool HasWriteConditions { get; }
 
@@ -357,28 +331,20 @@ namespace GenioMVC.ViewModels
 
 		public abstract CrudViewModelValidationResult Validate();
 
-		/// <inheritdoc />
 		public abstract void Save();
 
-		/// <inheritdoc />
 		public abstract void Apply();
 
-		/// <inheritdoc />
 		public abstract void Duplicate(string id);
 
-		/// <inheritdoc />
 		public abstract void Destroy(string id);
 
-		/// <inheritdoc />
 		public abstract void New();
 
-		/// <inheritdoc />
 		public abstract void Load(NameValueCollection qs, bool editable, bool ajaxRequest = false, bool lazyLoad = false);
 
-		/// <inheritdoc />
 		public abstract void LoadPartial(NameValueCollection qs, bool lazyLoad = false);
 
-		/// <inheritdoc />
 		public abstract void NewLoad();
 
 		/// <summary>
@@ -394,22 +360,19 @@ namespace GenioMVC.ViewModels
 		/// <exception cref="ModelNotFoundException">Thrown if <paramref name="model"/> is null.</exception>
 		public abstract void MapToModel(T model);
 
-		/// <inheritdoc />
+		/// <summary>
+		/// Performs the mapping of field values from the ViewModel to the Model.
+		/// </summary>
 		public abstract void MapToModel();
 
-		/// <inheritdoc />
 		public abstract void SetViewModelValue(string fullFieldName, object value);
 
-		/// <inheritdoc />
 		public abstract StatusMessage ViewConditions();
 
-		/// <inheritdoc />
 		public abstract StatusMessage InsertConditions();
 
-		/// <inheritdoc />
 		public abstract StatusMessage UpdateConditions();
 
-		/// <inheritdoc />
 		public abstract StatusMessage DeleteConditions();
 
 		protected abstract void InitLevels();
@@ -418,17 +381,20 @@ namespace GenioMVC.ViewModels
 
 		protected abstract void LoadDocumentsProperties(T model);
 
-		/// <inheritdoc />
 		public abstract StatusMessage EvaluateWriteConditions(bool isApply);
 
-		/// <inheritdoc />
 		public StatusMessage Validate(bool isApply)
 		{
 			return Validation.validateFieldsChange(Model.baseklass, m_userContext.PersistentSupport, m_userContext.User, isApply);
 		}
 
-		/// <inheritdoc />
 		public virtual void LoadGlob(NameValueCollection qs, bool editable, bool ajaxRequest = false) { }
+
+		[JsonIgnore]
+		public bool IsInsideCalendar { get; set; }
+
+		[JsonIgnore]
+		public CalendarVariables CalendarOptions { get; set; }
 
 		/// <summary>
 		/// Indicates whether the protection that prevents mapping the fields from the ViewModel to the Model that could not be edited in this form is disabled.
@@ -455,30 +421,11 @@ namespace GenioMVC.ViewModels
 		/// <param name="values">A dictionary containing the keys in the format "table.field" and values to populate the view model with. Must not be null.</param>
 		public void PopulateViewModel(Dictionary<string, object> values)
 		{
-			foreach (var kvp in values ?? [])
-				SetViewModelValue(kvp.Key, kvp.Value);
-		}
-
-		/// <summary>
-		/// Indicates whether saving is permitted despite warnings being present.
-		/// </summary>
-		[ShouldSerialize("CanSaveWithWarnings")]
-		public bool CanSaveWithWarnings { get; set; } = false;
-
-		/// <summary>
-		/// Configures whether saving is allowed even when warnings are present.
-		/// </summary>
-		/// <param name="enabled">
-		/// If set to <c>true</c>, the save operation will be permitted despite active warnings.
-		/// If <c>false</c>, warnings will prevent saving.
-		/// </param>
-		/// <remarks>
-		/// Use this method when the operation should proceed with non-critical issues
-		/// that do not require user intervention or correction.
-		/// </remarks>
-		public void AllowSavingWithWarnings(bool enabled)
-		{
-			CanSaveWithWarnings = enabled;
+			if (values != null)
+			{
+				foreach (var kvp in values)
+					SetViewModelValue(kvp.Key, kvp.Value);
+			}
 		}
 	}
 }

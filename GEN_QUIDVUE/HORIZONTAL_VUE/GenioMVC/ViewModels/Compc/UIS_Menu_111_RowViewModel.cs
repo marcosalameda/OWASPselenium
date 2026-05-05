@@ -37,19 +37,19 @@ public class UIS_Menu_111_RowViewModel : Models.Compc
 			{
 				Order = 1,
 				Area = "COMPC",
-				Field = "COMPCLAS",
+				Field = "CLASSICO",
 			},
 			new ListColumn()
 			{
 				Order = 2,
 				Area = "COMPC",
-				Field = "CLASSDES",
+				Field = "COMPCLAS",
 			},
 			new ListColumn()
 			{
 				Order = 3,
 				Area = "COMPC",
-				Field = "CLASSICO",
+				Field = "CLASSDES",
 			},
 		];
 	}

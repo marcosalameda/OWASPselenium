@@ -58,12 +58,14 @@ export const Simple = {
 
 		template: `
 			<q-tabs v-bind="args" @tab-changed="(newVal) => args.selectedTab = newVal">
-				<template
-					v-for="tab in args.tabsList"
-					:key="tab.id">
-					<section v-show="args.selectedTab === tab.id">
-						<p class="panel-text">Content for {{ tab.label }}.</p>
-					</section>
+				<template #tab-panel>
+					<template
+						v-for="tab in args.tabsList"
+						:key="tab.id">
+						<section v-show="args.selectedTab === tab.id">
+							<p class="panel-text">Content for {{ tab.label }}.</p>
+						</section>
+					</template>
 				</template>
 			</q-tabs>
 		`

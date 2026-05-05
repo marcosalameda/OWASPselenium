@@ -10,13 +10,13 @@ public class EspecForm : Form
 	/// <summary>
 	/// Specialty
 	/// </summary>
-	public BaseInputControl SpeciEspecial => new BaseInputControl(driver, ContainerLocator, "container-ESPEC___SPECIESPECIAL" + IdSuffix, "#ESPEC___SPECIESPECIAL" + IdSuffix);
+	public BaseInputControl SpeciEspecial => new BaseInputControl(driver, ContainerLocator, "container-ESPEC___SPECIESPECIAL", "#ESPEC___SPECIESPECIAL");
 
 	/// <summary>
 	/// Technical  area
 	/// </summary>
-	public RadiobuttonControl SpeciAreatecn => new RadiobuttonControl(driver, ContainerLocator, "container-ESPEC___SPECIAREATECN" + IdSuffix);
+	public RadiobuttonControl SpeciAreatecn => new RadiobuttonControl(driver, ContainerLocator, "container-ESPEC___SPECIAREATECN");
 
-	public EspecForm(IWebDriver driver, FORM_MODE mode, By? containerLocator = null, bool usePkInId = false)
-		: base(driver, mode, "ESPEC", containerLocator: containerLocator, usePkInId: usePkInId) { }
+	public EspecForm(IWebDriver driver, FORM_MODE mode, By? containerLocator = null)
+		: base(driver, mode, "ESPEC", containerLocator: containerLocator) { }
 }

@@ -83,6 +83,7 @@ namespace CSGenio.business
 			// Automatic audit stamps in BD
             //------------------------------
 
+
 			return info;
 		}
 		
@@ -165,6 +166,22 @@ namespace CSGenio.business
             return null;
         }
 
+        public string[] getModules()
+        {
+        
+            string[] modulos=new string[10];
+            modulos[0]="TBS";
+            modulos[1]="WMS";
+            modulos[2]="IMO";
+            modulos[3]="TRN";
+            modulos[4]="STY";
+            modulos[5]="PTN";
+            modulos[6]="REG";
+            modulos[7]="UIS";
+            modulos[8]="GQT";
+            modulos[9]="XRS";
+            return modulos;
+        }
 
 	}
 }

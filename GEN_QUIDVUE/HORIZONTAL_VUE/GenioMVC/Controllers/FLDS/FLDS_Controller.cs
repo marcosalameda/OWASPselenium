@@ -96,6 +96,14 @@ namespace GenioMVC.Controllers
 							result = model.TableAeroName;
 						}
 						break;
+					case "FLDSTBL_AERO_NAME____":	// Field (DB)
+						{
+							var model = new Fldstbl_ViewModel(UserContext.Current) { editable = false };
+							model.MapFromModel(row);
+							model.Load_Fldstbl_aero_name____(qs);
+							result = model.TableAeroName;
+						}
+						break;
 					default:
 						break;
 				}
@@ -106,7 +114,7 @@ namespace GenioMVC.Controllers
 			}
 
 			if (result != null)
-				return JsonOK(result);
+				return JsonOK(new { List = result.List, TotalRows = result.Pagination.TotalRows, Selected = result.Selected, Value = result.Value });
 			return JsonERROR("Not found any valid result");
 		}
 
@@ -134,6 +142,9 @@ namespace GenioMVC.Controllers
 						break;
 					case "FIELDHLPAERO_NAME____":	// Field (DB)
 						values = new Fieldhlp_ViewModel(UserContext.Current).GetDependant_FieldhlpTableAeroName(Selected);
+						break;
+					case "FLDSTBL_AERO_NAME____":	// Field (DB)
+						values = new Fldstbl_ViewModel(UserContext.Current).GetDependant_FldstblTableAeroName(Selected);
 						break;
 					default: break;
 				}
@@ -189,6 +200,411 @@ namespace GenioMVC.Controllers
 		{
 			return GenericRecalculateFormulas(formData, "flds",
 				(primaryKey) => Models.Flds.Find(primaryKey, UserContext.Current, "FFIELDHLP"),
+				(model) => formData.MapToModel(model as Models.Flds)
+			);
+		}
+
+		// POST: /Flds/FLDSCOND_FLDS_FSERVER1_ShowWhen
+		[HttpPost]
+		public JsonResult FLDSCOND_FLDS_FSERVER1_ShowWhen([FromBody] ViewModels.Flds.Fldscond_ViewModel formData)
+		{
+			try
+			{
+				// Create a model from form data to avoid extra database queries.
+				var p = new Models.Flds(UserContext.Current);
+
+				// At this moment, in the case of runtime calculation of server-side formulas, to improve performance and reduce database load,
+				// the values coming from the client-side will be accepted as valid, since they won't be saved and are only being used for calculation.
+				formData.DisableUserValuesSecurity();
+				// Map client-side form data into the model
+				formData.MapToModel(p);
+
+				// Formula: !(!isEmptyL([FLDS->TBLCOND]) && [FLDS->COND] == "HIDE") && HasRole("A")
+				var result = !(!(((Logical)p.ValTblcond) == 0)&&((string)p.ValCond)=="HIDE")&&CSGenio.business.GlobalFunctions.HasRole(m_userContext.User,"A");
+				return JsonOK(result);
+			}
+			catch (Exception ex)
+			{
+				return JsonERROR(ex.Message);
+			}
+		}
+
+		// POST: /Flds/FLDSCOND_FLDS_FSERVER1_BlockWhen
+		[HttpPost]
+		public JsonResult FLDSCOND_FLDS_FSERVER1_BlockWhen([FromBody] ViewModels.Flds.Fldscond_ViewModel formData)
+		{
+			try
+			{
+				// Create a model from form data to avoid extra database queries.
+				var p = new Models.Flds(UserContext.Current);
+
+				// At this moment, in the case of runtime calculation of server-side formulas, to improve performance and reduce database load,
+				// the values coming from the client-side will be accepted as valid, since they won't be saved and are only being used for calculation.
+				formData.DisableUserValuesSecurity();
+				// Map client-side form data into the model
+				formData.MapToModel(p);
+
+				// Formula: !isEmptyL([FLDS->TBLCOND]) && [FLDS->COND] == "BLOCK" && HasRole("A")
+				var result = !(((Logical)p.ValTblcond) == 0)&&((string)p.ValCond)=="BLOCK"&&CSGenio.business.GlobalFunctions.HasRole(m_userContext.User,"A");
+				return JsonOK(result);
+			}
+			catch (Exception ex)
+			{
+				return JsonERROR(ex.Message);
+			}
+		}
+
+		// POST: /Flds/FLDSCOND_FLDSCONDFLDS_FSERVER2_ShowWhen
+		[HttpPost]
+		public JsonResult FLDSCOND_FLDSCONDFLDS_FSERVER2_ShowWhen([FromBody] ViewModels.Flds.Fldscond_ViewModel formData)
+		{
+			try
+			{
+				// Create a model from form data to avoid extra database queries.
+				var p = new Models.Flds(UserContext.Current);
+
+				// At this moment, in the case of runtime calculation of server-side formulas, to improve performance and reduce database load,
+				// the values coming from the client-side will be accepted as valid, since they won't be saved and are only being used for calculation.
+				formData.DisableUserValuesSecurity();
+				// Map client-side form data into the model
+				formData.MapToModel(p);
+
+				// Formula: !(!isEmptyL([FLDS->FORMCOND]) && [FLDS->COND] == "HIDE") && HasRole("A")
+				var result = !(!(((Logical)p.ValFormcond) == 0)&&((string)p.ValCond)=="HIDE")&&CSGenio.business.GlobalFunctions.HasRole(m_userContext.User,"A");
+				return JsonOK(result);
+			}
+			catch (Exception ex)
+			{
+				return JsonERROR(ex.Message);
+			}
+		}
+
+		// POST: /Flds/FLDSCOND_FLDSCONDFLDS_FSERVER2_BlockWhen
+		[HttpPost]
+		public JsonResult FLDSCOND_FLDSCONDFLDS_FSERVER2_BlockWhen([FromBody] ViewModels.Flds.Fldscond_ViewModel formData)
+		{
+			try
+			{
+				// Create a model from form data to avoid extra database queries.
+				var p = new Models.Flds(UserContext.Current);
+
+				// At this moment, in the case of runtime calculation of server-side formulas, to improve performance and reduce database load,
+				// the values coming from the client-side will be accepted as valid, since they won't be saved and are only being used for calculation.
+				formData.DisableUserValuesSecurity();
+				// Map client-side form data into the model
+				formData.MapToModel(p);
+
+				// Formula: !isEmptyL([FLDS->FORMCOND]) && [FLDS->COND] == "BLOCK" && HasRole("A")
+				var result = !(((Logical)p.ValFormcond) == 0)&&((string)p.ValCond)=="BLOCK"&&CSGenio.business.GlobalFunctions.HasRole(m_userContext.User,"A");
+				return JsonOK(result);
+			}
+			catch (Exception ex)
+			{
+				return JsonERROR(ex.Message);
+			}
+		}
+
+		// POST: /Flds/FLDSCOND_FLDSCONDFLDS_FSERVER3_ShowWhen
+		[HttpPost]
+		public JsonResult FLDSCOND_FLDSCONDFLDS_FSERVER3_ShowWhen([FromBody] ViewModels.Flds.Fldscond_ViewModel formData)
+		{
+			try
+			{
+				// Create a model from form data to avoid extra database queries.
+				var p = new Models.Flds(UserContext.Current);
+
+				// At this moment, in the case of runtime calculation of server-side formulas, to improve performance and reduce database load,
+				// the values coming from the client-side will be accepted as valid, since they won't be saved and are only being used for calculation.
+				formData.DisableUserValuesSecurity();
+				// Map client-side form data into the model
+				formData.MapToModel(p);
+
+				// Formula: !(!isEmptyL([FLDS->FORMCOND]) && [FLDS->COND] == "HIDE") && HasRole("A")
+				var result = !(!(((Logical)p.ValFormcond) == 0)&&((string)p.ValCond)=="HIDE")&&CSGenio.business.GlobalFunctions.HasRole(m_userContext.User,"A");
+				return JsonOK(result);
+			}
+			catch (Exception ex)
+			{
+				return JsonERROR(ex.Message);
+			}
+		}
+
+		// POST: /Flds/FLDSCOND_FLDSCONDFLDS_FSERVER3_BlockWhen
+		[HttpPost]
+		public JsonResult FLDSCOND_FLDSCONDFLDS_FSERVER3_BlockWhen([FromBody] ViewModels.Flds.Fldscond_ViewModel formData)
+		{
+			try
+			{
+				// Create a model from form data to avoid extra database queries.
+				var p = new Models.Flds(UserContext.Current);
+
+				// At this moment, in the case of runtime calculation of server-side formulas, to improve performance and reduce database load,
+				// the values coming from the client-side will be accepted as valid, since they won't be saved and are only being used for calculation.
+				formData.DisableUserValuesSecurity();
+				// Map client-side form data into the model
+				formData.MapToModel(p);
+
+				// Formula: !isEmptyL([FLDS->FORMCOND]) && [FLDS->COND] == "BLOCK" && HasRole("A")
+				var result = !(((Logical)p.ValFormcond) == 0)&&((string)p.ValCond)=="BLOCK"&&CSGenio.business.GlobalFunctions.HasRole(m_userContext.User,"A");
+				return JsonOK(result);
+			}
+			catch (Exception ex)
+			{
+				return JsonERROR(ex.Message);
+			}
+		}
+
+		// POST: /Flds/FLDSCOND_FLDS_FSERVER3_ShowWhen
+		[HttpPost]
+		public JsonResult FLDSCOND_FLDS_FSERVER3_ShowWhen([FromBody] ViewModels.Flds.Fldscond_ViewModel formData)
+		{
+			try
+			{
+				// Create a model from form data to avoid extra database queries.
+				var p = new Models.Flds(UserContext.Current);
+
+				// At this moment, in the case of runtime calculation of server-side formulas, to improve performance and reduce database load,
+				// the values coming from the client-side will be accepted as valid, since they won't be saved and are only being used for calculation.
+				formData.DisableUserValuesSecurity();
+				// Map client-side form data into the model
+				formData.MapToModel(p);
+
+				// Formula: !(!isEmptyL([FLDS->TBLCOND]) && [FLDS->COND] == "HIDE") && HasRole("A")
+				var result = !(!(((Logical)p.ValTblcond) == 0)&&((string)p.ValCond)=="HIDE")&&CSGenio.business.GlobalFunctions.HasRole(m_userContext.User,"A");
+				return JsonOK(result);
+			}
+			catch (Exception ex)
+			{
+				return JsonERROR(ex.Message);
+			}
+		}
+
+		// POST: /Flds/FLDSCOND_FLDS_FSERVER3_BlockWhen
+		[HttpPost]
+		public JsonResult FLDSCOND_FLDS_FSERVER3_BlockWhen([FromBody] ViewModels.Flds.Fldscond_ViewModel formData)
+		{
+			try
+			{
+				// Create a model from form data to avoid extra database queries.
+				var p = new Models.Flds(UserContext.Current);
+
+				// At this moment, in the case of runtime calculation of server-side formulas, to improve performance and reduce database load,
+				// the values coming from the client-side will be accepted as valid, since they won't be saved and are only being used for calculation.
+				formData.DisableUserValuesSecurity();
+				// Map client-side form data into the model
+				formData.MapToModel(p);
+
+				// Formula: !isEmptyL([FLDS->TBLCOND]) && [FLDS->COND] == "BLOCK" && HasRole("A")
+				var result = !(((Logical)p.ValTblcond) == 0)&&((string)p.ValCond)=="BLOCK"&&CSGenio.business.GlobalFunctions.HasRole(m_userContext.User,"A");
+				return JsonOK(result);
+			}
+			catch (Exception ex)
+			{
+				return JsonERROR(ex.Message);
+			}
+		}
+
+		// POST: /Flds/FLDSCOND_FLDSCONDPSEUDSTATICTX_ShowWhen
+		[HttpPost]
+		public JsonResult FLDSCOND_FLDSCONDPSEUDSTATICTX_ShowWhen([FromBody] ViewModels.Flds.Fldscond_ViewModel formData)
+		{
+			try
+			{
+				// Create a model from form data to avoid extra database queries.
+				var p = new Models.Flds(UserContext.Current);
+
+				// At this moment, in the case of runtime calculation of server-side formulas, to improve performance and reduce database load,
+				// the values coming from the client-side will be accepted as valid, since they won't be saved and are only being used for calculation.
+				formData.DisableUserValuesSecurity();
+				// Map client-side form data into the model
+				formData.MapToModel(p);
+
+				// Formula: !(!isEmptyL([FLDS->FORMCOND]) && [FLDS->COND] == "HIDE") && HasRole("A")
+				var result = !(!(((Logical)p.ValFormcond) == 0)&&((string)p.ValCond)=="HIDE")&&CSGenio.business.GlobalFunctions.HasRole(m_userContext.User,"A");
+				return JsonOK(result);
+			}
+			catch (Exception ex)
+			{
+				return JsonERROR(ex.Message);
+			}
+		}
+
+		// POST: /Flds/FLDSCOND_FLDSCONDPSEUDSTATICTX_BlockWhen
+		[HttpPost]
+		public JsonResult FLDSCOND_FLDSCONDPSEUDSTATICTX_BlockWhen([FromBody] ViewModels.Flds.Fldscond_ViewModel formData)
+		{
+			try
+			{
+				// Create a model from form data to avoid extra database queries.
+				var p = new Models.Flds(UserContext.Current);
+
+				// At this moment, in the case of runtime calculation of server-side formulas, to improve performance and reduce database load,
+				// the values coming from the client-side will be accepted as valid, since they won't be saved and are only being used for calculation.
+				formData.DisableUserValuesSecurity();
+				// Map client-side form data into the model
+				formData.MapToModel(p);
+
+				// Formula: !isEmptyL([FLDS->FORMCOND]) && [FLDS->COND] == "BLOCK" && HasRole("A")
+				var result = !(((Logical)p.ValFormcond) == 0)&&((string)p.ValCond)=="BLOCK"&&CSGenio.business.GlobalFunctions.HasRole(m_userContext.User,"A");
+				return JsonOK(result);
+			}
+			catch (Exception ex)
+			{
+				return JsonERROR(ex.Message);
+			}
+		}
+
+		// POST: /Flds/FLDSCOND_FLDSCONDPSEUDLISTBTN__ShowWhen
+		[HttpPost]
+		public JsonResult FLDSCOND_FLDSCONDPSEUDLISTBTN__ShowWhen([FromBody] ViewModels.Flds.Fldscond_ViewModel formData)
+		{
+			try
+			{
+				// Create a model from form data to avoid extra database queries.
+				var p = new Models.Flds(UserContext.Current);
+
+				// At this moment, in the case of runtime calculation of server-side formulas, to improve performance and reduce database load,
+				// the values coming from the client-side will be accepted as valid, since they won't be saved and are only being used for calculation.
+				formData.DisableUserValuesSecurity();
+				// Map client-side form data into the model
+				formData.MapToModel(p);
+
+				// Formula: !(!isEmptyL([FLDS->FORMCOND]) && [FLDS->COND] == "HIDE") && HasRole("A")
+				var result = !(!(((Logical)p.ValFormcond) == 0)&&((string)p.ValCond)=="HIDE")&&CSGenio.business.GlobalFunctions.HasRole(m_userContext.User,"A");
+				return JsonOK(result);
+			}
+			catch (Exception ex)
+			{
+				return JsonERROR(ex.Message);
+			}
+		}
+
+		// POST: /Flds/FLDSCOND_FLDSCONDPSEUDLISTBTN__BlockWhen
+		[HttpPost]
+		public JsonResult FLDSCOND_FLDSCONDPSEUDLISTBTN__BlockWhen([FromBody] ViewModels.Flds.Fldscond_ViewModel formData)
+		{
+			try
+			{
+				// Create a model from form data to avoid extra database queries.
+				var p = new Models.Flds(UserContext.Current);
+
+				// At this moment, in the case of runtime calculation of server-side formulas, to improve performance and reduce database load,
+				// the values coming from the client-side will be accepted as valid, since they won't be saved and are only being used for calculation.
+				formData.DisableUserValuesSecurity();
+				// Map client-side form data into the model
+				formData.MapToModel(p);
+
+				// Formula: !isEmptyL([FLDS->FORMCOND]) && [FLDS->COND] == "BLOCK" && HasRole("A")
+				var result = !(((Logical)p.ValFormcond) == 0)&&((string)p.ValCond)=="BLOCK"&&CSGenio.business.GlobalFunctions.HasRole(m_userContext.User,"A");
+				return JsonOK(result);
+			}
+			catch (Exception ex)
+			{
+				return JsonERROR(ex.Message);
+			}
+		}
+		// POST: /Flds/FLDSCOND_FLDSCONDFLDS_FSERVER1_RequiredCondition
+		[HttpPost]
+		public JsonResult FLDSCOND_FLDSCONDFLDS_FSERVER1_RequiredCondition([FromBody] ViewModels.Flds.Fldscond_ViewModel formData)
+		{
+			try
+			{
+				// Create a model from form data to avoid extra database queries.
+				var p = new Models.Flds(UserContext.Current);
+
+				// Map client-side form data into the model
+				formData.MapToModel(p);
+
+				// Formula: !isEmptyL([FLDS->TBLCOND]) && [FLDS->COND] == "REQUIRE" && HasRole("A")
+				if ((Logical)(!(((Logical)p.ValTblcond) == 0)&&((string)p.ValCond)=="REQUIRE"&&CSGenio.business.GlobalFunctions.HasRole(m_userContext.User,"A")))
+					return JsonOK(true);
+
+				return JsonOK(false);
+			}
+			catch (Exception ex)
+			{
+				return JsonERROR(ex.Message);
+			}
+		}
+
+		// POST: /Flds/FLDSCOND_FLDSCONDFLDS_FSERVER2_RequiredCondition
+		[HttpPost]
+		public JsonResult FLDSCOND_FLDSCONDFLDS_FSERVER2_RequiredCondition([FromBody] ViewModels.Flds.Fldscond_ViewModel formData)
+		{
+			try
+			{
+				// Create a model from form data to avoid extra database queries.
+				var p = new Models.Flds(UserContext.Current);
+
+				// Map client-side form data into the model
+				formData.MapToModel(p);
+
+				// Formula: !isEmptyL([FLDS->FORMCOND]) && [FLDS->COND] == "REQUIRE" && HasRole("A")
+				if ((Logical)(!(((Logical)p.ValFormcond) == 0)&&((string)p.ValCond)=="REQUIRE"&&CSGenio.business.GlobalFunctions.HasRole(m_userContext.User,"A")))
+					return JsonOK(true);
+
+				return JsonOK(false);
+			}
+			catch (Exception ex)
+			{
+				return JsonERROR(ex.Message);
+			}
+		}
+
+		// POST: /Flds/FLDSCOND_FLDSCONDFLDS_FSERVER3_RequiredCondition
+		[HttpPost]
+		public JsonResult FLDSCOND_FLDSCONDFLDS_FSERVER3_RequiredCondition([FromBody] ViewModels.Flds.Fldscond_ViewModel formData)
+		{
+			try
+			{
+				// Create a model from form data to avoid extra database queries.
+				var p = new Models.Flds(UserContext.Current);
+
+				// Map client-side form data into the model
+				formData.MapToModel(p);
+
+				// Formula: !isEmptyL([FLDS->TBLCOND]) && [FLDS->COND] == "REQUIRE" && HasRole("A")
+				if ((Logical)(!(((Logical)p.ValTblcond) == 0)&&((string)p.ValCond)=="REQUIRE"&&CSGenio.business.GlobalFunctions.HasRole(m_userContext.User,"A")))
+					return JsonOK(true);
+				// Formula: !isEmptyL([FLDS->FORMCOND]) && [FLDS->COND] == "REQUIRE" && HasRole("A")
+				if ((Logical)(!(((Logical)p.ValFormcond) == 0)&&((string)p.ValCond)=="REQUIRE"&&CSGenio.business.GlobalFunctions.HasRole(m_userContext.User,"A")))
+					return JsonOK(true);
+
+				return JsonOK(false);
+			}
+			catch (Exception ex)
+			{
+				return JsonERROR(ex.Message);
+			}
+		}
+
+
+		/// <summary>
+		/// Recalculate formulas of the "Fldscond" form. (++, CT, SR, CL and U1)
+		/// </summary>
+		/// <param name="formData">Current form data</param>
+		/// <returns></returns>
+		[HttpPost]
+		public JsonResult RecalculateFormulas_Fldscond([FromBody]Fldscond_ViewModel formData)
+		{
+			return GenericRecalculateFormulas(formData, "flds",
+				(primaryKey) => Models.Flds.Find(primaryKey, UserContext.Current, "FFLDSCOND"),
+				(model) => formData.MapToModel(model as Models.Flds)
+			);
+		}
+
+
+
+		/// <summary>
+		/// Recalculate formulas of the "Fldstbl" form. (++, CT, SR, CL and U1)
+		/// </summary>
+		/// <param name="formData">Current form data</param>
+		/// <returns></returns>
+		[HttpPost]
+		public JsonResult RecalculateFormulas_Fldstbl([FromBody]Fldstbl_ViewModel formData)
+		{
+			return GenericRecalculateFormulas(formData, "flds",
+				(primaryKey) => Models.Flds.Find(primaryKey, UserContext.Current, "FFLDSTBL"),
 				(model) => formData.MapToModel(model as Models.Flds)
 			);
 		}
@@ -294,6 +710,16 @@ namespace GenioMVC.Controllers
 		public ActionResult GetFile([FromBody] RequestDocumGetModel requestModel)
 		{
 			return base.GetFile(requestModel.Ticket, requestModel.ViewType);
+		}
+
+		/// <summary>
+		/// Stores a new document in the Docums table
+		/// </summary>
+		/// <param name="requestModel">The request model with the document and ticket</param>
+		/// <returns>A JSON response with the result of the operation</returns>
+		public ActionResult SetFile([FromForm] RequestDocumsCreateModel requestModel)
+		{
+			return base.SetFile(requestModel.Ticket, requestModel.Mode, requestModel.Version);
 		}
 
 		/// <summary>

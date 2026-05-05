@@ -64,12 +64,6 @@ namespace DbAdmin.IntegrationTest
 
             work.DoWork(_user);
             Assert.AreEqual(ArrayS_prstat.E_T_4, work.Process.ValRtstatus);
-
-            //Teardown
-            sp.openTransaction();
-            var process = CSGenioAs_apr.search(sp, jobId, _user);
-            process.delete(sp);
-            sp.closeTransaction();
         }
 
         [Test]
@@ -92,44 +86,6 @@ namespace DbAdmin.IntegrationTest
 
             work.DoWork(_user);
             Assert.AreEqual(ArrayS_prstat.E_T_4, work.Process.ValRtstatus);
-
-            //Teardown
-            sp.openTransaction();
-            var process = CSGenioAs_apr.search(sp, jobId, _user);
-            process.delete(sp);
-            sp.closeTransaction();
-        }
-
-        [Test]
-        public void InvalidJobIsIgnored()
-        {
-            var validJob = new TestAsyncProcess();
-            var invalidJob = new InvalidAsyncProcess();
-
-            sp.openTransaction();
-            var invalidJobId = invalidJob.Schedule(sp, _user);
-            var jobId = validJob.Schedule(sp, _user);        
-            sp.closeTransaction();
-
-            Assert.That(jobId, Is.Not.Null);
-            Assert.That(jobId, Is.Not.Empty);
-
-            SchedulerBroker scheduler = SchedulerBroker.GetBroker();
-            GenioWork work = (GenioWork)scheduler.GetWork(_user);
-            Assert.IsNotNull(work);
-            Assert.AreEqual(ArrayS_prstat.E_AG_3, work.Process.ValRtstatus);
-            Assert.That(jobId, Is.EqualTo(work.Process.QPrimaryKey));
-
-            work.DoWork(_user);
-            Assert.AreEqual(ArrayS_prstat.E_T_4, work.Process.ValRtstatus);
-
-            //Teardown
-            sp.openTransaction();
-            var validProcess = CSGenioAs_apr.search(sp, jobId, _user);
-            validProcess.delete(sp);
-            var invalidProcess = CSGenioAs_apr.search(sp, invalidJobId, _user);
-            invalidProcess.delete(sp);
-            sp.closeTransaction();
         }
     }
 }

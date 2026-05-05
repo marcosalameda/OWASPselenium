@@ -6,7 +6,7 @@ namespace CSGenio.reporting
     /// </summary>
     public class ReportLimitParameter
     {
-        public enum LimitSource { SE, SU, DB, DM, AC };
+        public enum LimitSource { SE, SU, DB, DM };
 
         public LimitSource Source { get; set; }
 
@@ -78,13 +78,5 @@ namespace CSGenio.reporting
         public string[] FieldValue { get; set; }
 
         public ReportLimitParameter_DM() : base(LimitSource.DM) { }
-    }
-    public class ReportLimitParameter_AC : ReportLimitParameter
-    {
-        /// <summary>
-        /// Field value for auto complete
-        /// </summary>
-        public string FieldValue { get; set; }
-        public ReportLimitParameter_AC() : base(LimitSource.AC) { }
     }
 }

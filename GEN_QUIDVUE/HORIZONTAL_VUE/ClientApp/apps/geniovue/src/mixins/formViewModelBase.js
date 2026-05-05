@@ -53,11 +53,12 @@ export default class FormViewModelBase extends ViewModelBase
 	{
 		const dirtyFields = []
 
-		for (const modelField in this)
+		for (let modelField in this)
 		{
 			const fieldObj = this[modelField]
 
-			if (fieldObj instanceof Base && fieldObj.isDirty)
+			if (fieldObj instanceof Base &&
+				fieldObj.isDirty)
 				dirtyFields.push(fieldObj)
 		}
 
@@ -77,7 +78,7 @@ export default class FormViewModelBase extends ViewModelBase
 	 */
 	get isDirty()
 	{
-		return _some(this, (modelField) => modelField instanceof Base && modelField.isDirty && !modelField.isGlobalFilterField)
+		return _some(this, (modelField) => modelField instanceof Base && modelField.isDirty)
 	}
 
 	/**
@@ -93,22 +94,10 @@ export default class FormViewModelBase extends ViewModelBase
 	 */
 	resetValues()
 	{
-		for (const modelField in this)
+		for (let modelField in this)
 		{
 			const fieldObj = this[modelField]
 			fieldObj.resetValue()
-		}
-	}
-
-	/**
-	 * Clears the values of all model fields.
-	 */
-	clearValues()
-	{
-		for (const modelField in this)
-		{
-			const fieldObj = this[modelField]
-			fieldObj.hydrate(fieldObj.constructor.EMPTY_VALUE)
 		}
 	}
 
@@ -128,7 +117,7 @@ export default class FormViewModelBase extends ViewModelBase
 		{
 			let hasChanged = false
 
-			for (const i in triggerFields)
+			for (let i in triggerFields)
 			{
 				const fieldValue = triggerFields[i]
 
@@ -160,7 +149,7 @@ export default class FormViewModelBase extends ViewModelBase
 					if (typeof data !== 'object')
 						return
 
-					for (const modelField in this)
+					for (let modelField in this)
 					{
 						const fieldObj = this[modelField]
 
@@ -210,7 +199,7 @@ export default class FormViewModelBase extends ViewModelBase
 				if (typeof modelField.valueFormula.runFormula !== 'function')
 				{
 					modelField.valueFormula.runFormula = (originFieldData) => {
-						if (modelField.valueFormula.stopRecalcCondition.call(this))
+						if (modelField.valueFormula.stopRecalcCondition())
 							return
 
 						const execCondition = modelField.valueFormula.execCondition
@@ -275,7 +264,7 @@ export default class FormViewModelBase extends ViewModelBase
 	 */
 	validateModel()
 	{
-		const modelValidations = {}
+		let modelValidations = {}
 
 		_forEach(this, (modelField, modelFieldName) => {
 			if (modelField instanceof Base)
@@ -306,7 +295,7 @@ export default class FormViewModelBase extends ViewModelBase
 		const tickets = [],
 			documentFields = Object.values(this).filter((e) => e instanceof Document && e.isDirty && e.type !== 'Lookup')
 
-		for (const field of documentFields)
+		for (let field of documentFields)
 		{
 			const currentDocument = field.currentDocument.value
 			const ticketInfo = {
@@ -332,7 +321,7 @@ export default class FormViewModelBase extends ViewModelBase
 					(data, request) => {
 						if (request.data?.Success)
 						{
-							for (const ticketInfo of data.tickets)
+							for (let ticketInfo of data.tickets)
 							{
 								const currentDocument = this[ticketInfo.fieldId].currentDocument.value
 								currentDocument.ticket = ticketInfo.ticket
@@ -350,7 +339,7 @@ export default class FormViewModelBase extends ViewModelBase
 							})
 
 							// If something goes wrong, reset the tickets.
-							for (const field of documentFields)
+							for (let field of documentFields)
 							{
 								const areaKeyField = this.vueContext.dataApi.keys[field.area.toLowerCase()]
 								field.setTickets(areaKeyField.value, this.navigationId)
@@ -376,13 +365,10 @@ export default class FormViewModelBase extends ViewModelBase
 	 */
 	async saveDocuments()
 	{
-		if (_isEmpty(this.modelInfo.actions.setFile))
-			return []
-
 		const promises = [],
 			documentFields = Object.values(this).filter((e) => e instanceof Document && e.isDirty && e.type !== 'Lookup')
 
-		for (const field of documentFields)
+		for (let field of documentFields)
 		{
 			const currentDocument = field.currentDocument
 
@@ -394,7 +380,7 @@ export default class FormViewModelBase extends ViewModelBase
 			const promise = new Promise((resolve) => {
 				uploadFile(
 					field.area,
-					`${this.modelInfo.actions.setFile}${field.field}`,
+					'SetFile',
 					currentDocument.value.fileData,
 					currentDocument.dataToSubmit,
 					(data) => {
@@ -406,7 +392,7 @@ export default class FormViewModelBase extends ViewModelBase
 
 							const areaKeyField = this.vueContext.dataApi.keys[field.area.toLowerCase()]
 							field.setTickets(areaKeyField.value, this.navigationId)
-							currentDocument.clearValue()
+							currentDocument.reset()
 
 							resolve(true)
 						}
@@ -457,7 +443,7 @@ export default class FormViewModelBase extends ViewModelBase
 		const unsavedChanges = [],
 			documentFields = Object.values(this).filter((e) => e instanceof Document && e.isDirty && e.type !== 'Lookup')
 
-		for (const field of documentFields)
+		for (let field of documentFields)
 		{
 			const currentDocument = field.currentDocument.value,
 				properties = field.properties,
@@ -493,14 +479,14 @@ export default class FormViewModelBase extends ViewModelBase
 					(_, request) => {
 						if (request.data?.Success)
 						{
-							for (const field of documentFields)
+							for (let field of documentFields)
 							{
 								const areaKeyField = this.vueContext.dataApi.keys[field.area.toLowerCase()]
 								field.setTickets(areaKeyField.value, this.navigationId)
 
 								// Only reset if not also submitting a new file to replace the one that was deleted.
 								if (field.currentDocument.value.submitMode === -1)
-									field.currentDocument.clearValue()
+									field.currentDocument.reset()
 							}
 
 							resolve(true)
@@ -522,7 +508,7 @@ export default class FormViewModelBase extends ViewModelBase
 					this.navigationId)
 			})
 
-			return await promise
+			return await Promise.resolve(promise)
 		}
 
 		return true

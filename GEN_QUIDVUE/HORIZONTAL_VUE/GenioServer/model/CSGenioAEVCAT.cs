@@ -1,5 +1,5 @@
 ﻿
- 
+
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -86,11 +86,6 @@ namespace CSGenio.business
 			Qfield.CavDesignation = "UP_MANUAL46500";
 
 			Qfield.Dupmsg = "";
-			argumentsListByArea = new List<ByAreaArguments>();
-			argumentsListByArea.Add(new ByAreaArguments(new string[] {"until"}, new int[] {0}, "evcat", "codprogr"));
-			Qfield.ShowWhen = new ConditionFormula(argumentsListByArea, 1, delegate(object[] args, User user, string module, PersistentSupport sp) {
-				return GenFunctions.emptyD(((DateTime)args[0]))==1;
-			});
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
@@ -100,12 +95,7 @@ namespace CSGenio.business
 			Qfield.CavDesignation = "UNTIL39173";
 
 			Qfield.Dupmsg = "";
-			argumentsListByArea = new List<ByAreaArguments>();
-			argumentsListByArea.Add(new ByAreaArguments(new string[] {"untilman","until"}, new int[] {0,1}, "evcat", "codprogr"));
-			Qfield.ShowWhen = new ConditionFormula(argumentsListByArea, 2, delegate(object[] args, User user, string module, PersistentSupport sp) {
-				return GenFunctions.emptyD(((DateTime)args[0]))==1&&GenFunctions.emptyD(((DateTime)args[1]))==0;
-			});
-			Qfield.Formula = new EndPeriodFormula("since", "codpesso");
+      Qfield.Formula = new EndPeriodFormula("since", "codpesso");
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
@@ -166,8 +156,8 @@ namespace CSGenio.business
 			info.Pathways.Add("pesso","pesso");
 			info.Pathways.Add("cntry","pesso");
 			info.Pathways.Add("categ","pesso");
-			info.Pathways.Add("pais1","pesso");
 			info.Pathways.Add("cmpny","pesso");
+			info.Pathways.Add("pais1","pesso");
 			info.Pathways.Add("regi1","pesso");
 		}
 
@@ -184,13 +174,12 @@ namespace CSGenio.business
 			//Actualiza as seguintes rotinas de ultimo Qvalue:
 			info.LastValueArgs = new List<LastValueArgument>();
 			info.LastValueArgs.Add( new LastValueArgument("pesso",
-				new string [] {"codcateg","dtultcat"},
-				new string [] {"codcateg","since"},
+				new string [] {"dtultcat","codcateg"},
+				new string [] {"since","codcateg"},
 				"since",
 				null,
 
 	"today", true));
-
 
 
 			info.InternalOperationFields = new string[] {
@@ -416,17 +405,16 @@ namespace CSGenio.business
         /// <param name="key">The value of the primary key</param>
         /// <param name="user">The context of the user</param>
         /// <param name="fields">The fields to be filled in the area</param>
-		/// <param name="forUpdate">True if you are preparing to update this record, false otherwise</param>
         /// <returns>An area with the fields requests of the record read or null if the key does not exist</returns>
         /// <remarks>Persistence operations should not be used on a partially positioned register</remarks>
-        public static CSGenioAevcat search(PersistentSupport sp, string key, User user, string[] fields = null, bool forUpdate = false)
+        public static CSGenioAevcat search(PersistentSupport sp, string key, User user, string[] fields = null)
         {
 			if (string.IsNullOrEmpty(key))
 				return null;
 
 		    CSGenioAevcat area = new CSGenioAevcat(user, user.CurrentModule);
 
-            if (sp.getRecord(area, key, fields, forUpdate))
+            if (sp.getRecord(area, key, fields))
                 return area;
 			return null;
         }
@@ -486,13 +474,13 @@ namespace CSGenio.business
 
 
 
-
-
+ 
 
 
 		// USE /[MANUAL GQT TABAUX EVCAT]/
 
      
+
          
 
 	}

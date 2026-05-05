@@ -10,12 +10,10 @@
 				<q-table
 					v-bind="controls.menu"
 					v-on="controls.menu.handlers">
-					<!-- USE /[MANUAL GQT CUSTOM_TABLE STY_Menu_441]/ -->
 				</q-table>
 
 				<q-table-extra-extension
 					:list-ctrl="controls.menu"
-					:filter-operators="controls.menu.filterOperators"
 					v-on="controls.menu.handlers" />
 			</q-row-container>
 		</form>
@@ -50,7 +48,7 @@
 </template>
 
 <script>
-	/* eslint-disable @typescript-eslint/no-unused-vars */
+	/* eslint-disable no-unused-vars */
 	import asyncProcM from '@quidgest/clientapp/composables/async'
 	import qEnums from '@quidgest/clientapp/constants/enums'
 	import netAPI from '@quidgest/clientapp/network'
@@ -70,7 +68,7 @@
 	import qApi from '@/api/genio/quidgestFunctions.js'
 	import qFunctions from '@/api/genio/projectFunctions.js'
 	import qProjArrays from '@/api/genio/projectArrays.js'
-	/* eslint-enable @typescript-eslint/no-unused-vars */
+	/* eslint-enable no-unused-vars */
 
 	import MenuViewModel from './QMenuSTY_441ViewModel.js'
 
@@ -154,7 +152,6 @@
 								label: computed(() => this.Resources.GLOBAL_ARTICLE17761),
 								dataLength: 85,
 								scrollData: 85,
-								export: 1,
 								pkColumn: 'ValCodgitem',
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
@@ -165,7 +162,6 @@
 								label: computed(() => this.Resources.WAREHOUSE51864),
 								dataLength: 85,
 								scrollData: 85,
-								export: 1,
 								pkColumn: 'ValCodwareh',
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.ArrayColumn({
@@ -176,8 +172,7 @@
 								label: computed(() => this.Resources.TYPE00312),
 								dataLength: 1,
 								scrollData: 1,
-								export: 1,
-								array: computed(() => new qProjArrays.QArrayTipoarti(vm.$getResource).elements),
+								array: computed(() => qProjArrays.QArrayTipoarti.setResources(vm.$getResource).elements),
 								arrayType: qProjArrays.QArrayTipoarti.type,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
@@ -188,7 +183,6 @@
 								label: computed(() => this.Resources.ITEM40802),
 								dataLength: 85,
 								scrollData: 85,
-								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.NumericColumn({
 								order: 5,
@@ -199,7 +193,6 @@
 								scrollData: 10,
 								maxDigits: 10,
 								decimalPlaces: 0,
-								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.NumericColumn({
 								order: 6,
@@ -210,7 +203,6 @@
 								scrollData: 10,
 								maxDigits: 10,
 								decimalPlaces: 0,
-								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.NumericColumn({
 								order: 7,
@@ -221,7 +213,6 @@
 								scrollData: 10,
 								maxDigits: 10,
 								decimalPlaces: 0,
-								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.ImageColumn({
 								order: 8,
@@ -233,7 +224,6 @@
 								scrollData: 3,
 								sortable: false,
 								searchable: false,
-								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 9,
@@ -242,7 +232,6 @@
 								field: 'CATEGORY',
 								label: computed(() => this.Resources.CATEGORY18978),
 								scrollData: 85,
-								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 						],
 						config: {
@@ -258,7 +247,8 @@
 							permissions: {
 							},
 							searchBarConfig: {
-								visibility: true
+								visibility: true,
+								searchOnPressEnter: true
 							},
 							filtersVisible: true,
 							allowColumnFilters: true,
@@ -359,7 +349,6 @@
 							rowClickAction: {
 								id: 'RCA_STY_4411',
 								name: 'form-PLIST',
-								isVisible: true,
 								params: {
 									isRoute: true,
 									limits: [
@@ -385,11 +374,10 @@
 								sortOrder: 'asc'
 							}
 						},
-						globalEvents: ['changed-WAREH', 'changed-ITEM', 'changed-GITEM'],
+						globalEvents: ['changed-GITEM', 'changed-ITEM', 'changed-WAREH'],
 						uuid: '1a23820b-f641-4064-b042-83810cb95223',
 						allSelectedRows: 'false',
 						headerLevel: 1,
-						isActiveControl: computed(() => this.isActiveMenu)
 					}, this),
 				}
 			}
@@ -413,14 +401,6 @@
 		{
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
 // USE /[MANUAL GQT FORM_CODEJS STY_MENU_441]/
-// eslint-disable-next-line
-/* eslint-enable indent, vue/html-indent, vue/script-indent */
-		},
-
-		beforeUnmount()
-		{
-/* eslint-disable indent, vue/html-indent, vue/script-indent */
-// USE /[MANUAL GQT COMPONENT_BEFORE_UNMOUNT STY_MENU_441]/
 // eslint-disable-next-line
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 		},

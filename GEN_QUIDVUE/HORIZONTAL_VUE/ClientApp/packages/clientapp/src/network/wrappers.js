@@ -232,20 +232,11 @@ export function postData(
  * @param {object} params An object with additional parameters
  * @param {function} _fnCallback A callback function (optional)
  * @param {string} navigationId The Navigation context Id
- * @param {Object} options The Axios additional options
  * @returns A «Promise» to be resolved when the request completes.
  */
-export function fetchFormData(
-	controller,
-	formName,
-	formMode,
-	params,
-	_fnCallback,
-	navigationId,
-	options
-) {
+export function fetchFormData(controller, formName, formMode, params, _fnCallback, navigationId) {
 	const action = `${formName}_${formMode}_GET`
-	return postData(controller, action, params, _fnCallback, undefined, options, navigationId)
+	return postData(controller, action, params, _fnCallback, undefined, undefined, navigationId)
 }
 
 /**

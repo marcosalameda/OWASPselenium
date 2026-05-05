@@ -1,20 +1,20 @@
-﻿using CSGenio.business;
-using CSGenio.framework;
-using CSGenio.persistence;
-using GenioMVC.Helpers;
-using GenioMVC.Models.Exception;
-using GenioMVC.Models.Navigation;
+﻿using JsonIgnoreAttribute = System.Text.Json.Serialization.JsonIgnoreAttribute;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Quidgest.Persistence;
-using Quidgest.Persistence.GenericQuery;
-
 using System.Collections;
 using System.Collections.Concurrent;
 using System.Collections.Specialized;
 using System.ComponentModel.DataAnnotations;
 using System.Data;
 using System.Globalization;
-using System.Text.Json.Serialization;
+
+using CSGenio.business;
+using CSGenio.framework;
+using CSGenio.persistence;
+using GenioMVC.Helpers;
+using GenioMVC.Models.Exception;
+using GenioMVC.Models.Navigation;
+using Quidgest.Persistence;
+using Quidgest.Persistence.GenericQuery;
 
 namespace GenioMVC.ViewModels.Anexd
 {
@@ -40,7 +40,6 @@ namespace GenioMVC.ViewModels.Anexd
 		public string ValCodlang { get; set; }
 
 		#endregion
-
 		/// <summary>
 		/// Title: "No. register" | Type: "C"
 		/// </summary>
@@ -99,6 +98,15 @@ namespace GenioMVC.ViewModels.Anexd
 
 		#region Fields for formulas
 
+		// Field for formula
+		/// <summary>Used only for lazy loading of the EquipValCodequip field</summary>
+		[JsonIgnore]
+		[ValidateSetAccess]
+		public Func<string> funcEquipValCodequip { get; set; }
+		private string _auxEquipValCodequip { get; set; }
+		/// <summary>Field: "" Tipo: "+"</summary>
+		[ValidateSetAccess]
+		public string EquipValCodequip { get { return funcEquipValCodequip != null ? funcEquipValCodequip() : _auxEquipValCodequip; } private set { funcEquipValCodequip = () => value; } }
 
 		#endregion
 
@@ -220,6 +228,7 @@ namespace GenioMVC.ViewModels.Anexd
 				ValTittradu = ViewModelConversion.ToString(m.ValTittradu);
 				ValDocument = ViewModelConversion.ToString(m.ValDocument);
 				ValDocumentfk = ViewModelConversion.ToString(m.ValDocumentfk);
+				funcEquipValCodequip = () => ViewModelConversion.ToString(m.Equip.ValCodequip);
 				ValCodanexd = ViewModelConversion.ToString(m.ValCodanexd);
 			}
 			catch (Exception)
@@ -271,7 +280,12 @@ namespace GenioMVC.ViewModels.Anexd
 			}
 		}
 
-		/// <inheritdoc />
+		/// <summary>
+		/// Sets the value of a single property of the view model based on the provided table and field names.
+		/// </summary>
+		/// <param name="fullFieldName">The full field name in the format "table.field".</param>
+		/// <param name="value">The field value.</param>
+		/// <exception cref="ArgumentNullException">Thrown if <paramref name="fullFieldName"/> is null.</exception>
 		public override void SetViewModelValue(string fullFieldName, object value)
 		{
 			try
@@ -358,17 +372,6 @@ namespace GenioMVC.ViewModels.Anexd
 				// Conexão deve estar aberta de fora. Podem haver formulas que utilizam funções "manuais".
 				// TODO: It needs to be analyzed whether we should disable the security of field filling here. If there is any case where the field with the block condition can only be calculated after the double calculation of the formulas.
 				MapToModel(Model);
-
-				// If it's inserting or duplicating, needs to fill the default values.
-				if (Navigation.CurrentLevel.FormMode == FormMode.New || Navigation.CurrentLevel.FormMode == FormMode.Duplicate)
-				{
-					FunctionType funcType = Navigation.CurrentLevel.FormMode == FormMode.New
-						? FunctionType.INS
-						: FunctionType.DUP;
-
-					Model.baseklass.fillValuesDefault(m_userContext.PersistentSupport, funcType);
-				}
-
 				// Preencher operações internas
 				Model.klass.fillInternalOperations(m_userContext.PersistentSupport, oldvalues);
 				MapFromModel(Model);
@@ -420,7 +423,6 @@ namespace GenioMVC.ViewModels.Anexd
 
 			Load_Anexd___equipregistnr(qs, lazyLoad);
 			Load_Anexd___langulangua__(qs, lazyLoad);
-
 // USE /[MANUAL GQT VIEWMODEL_LOADPARTIAL ANEXD]/
 		}
 
@@ -493,7 +495,10 @@ namespace GenioMVC.ViewModels.Anexd
 				}
 			}
 
-			TableEquipRegistnr = new TableDBEdit<Models.Equip>();
+			TableEquipRegistnr = new TableDBEdit<Models.Equip>
+			{
+				IsLazyLoad = lazyLoad
+			};
 
 			if (lazyLoad)
 			{
@@ -508,7 +513,7 @@ namespace GenioMVC.ViewModels.Anexd
 
 			if (anexd___equipregistnrDoLoad)
 			{
-				List<ColumnSort> sorts = [];
+				List<ColumnSort> sorts = new List<ColumnSort>();
 				ColumnSort requestedSort = GetRequestSort(TableEquipRegistnr, "sTableEquipRegistnr", "dTableEquipRegistnr", qs, "equip");
 				if (requestedSort != null)
 					sorts.Add(requestedSort);
@@ -558,7 +563,7 @@ namespace GenioMVC.ViewModels.Anexd
 
 				TableEquipRegistnr.SetPagination(page, numberItems, listing.HasMore, listing.GetTotal, listing.TotalRecords);
 				TableEquipRegistnr.Query = query;
-				TableEquipRegistnr.Elements = listing.RowsForViewModel((r) => new GenioMVC.Models.Equip(m_userContext, r, true, _fieldsToSerialize_ANEXD___EQUIPREGISTNR));
+				TableEquipRegistnr.Elements = listing.RowsForViewModel<GenioMVC.Models.Equip>((r) => new GenioMVC.Models.Equip(m_userContext, r, true, _fieldsToSerialize_ANEXD___EQUIPREGISTNR));
 
 				//created by [ MH ] at [ 14.04.2016 ] - Foi alterada a forma de retornar a key do novo registo inserido / editado no form de apoio do DBEdit.
 				//last update by [ MH ] at [ 10.05.2016 ] - Validação se key encontra-se no level atual, as chaves dos niveis anteriores devem ser ignorados.
@@ -628,6 +633,7 @@ namespace GenioMVC.ViewModels.Anexd
 			var row = GetDependant_AnexdTableEquipRegistnr(this.ValCodequip);
 			try
 			{
+				this.funcEquipValCodequip = () => (string)row["equip.codequip"];
 
 				// Fill List fields
 				this.ValCodequip = ViewModelConversion.ToString(row["equip.codequip"]);
@@ -680,7 +686,10 @@ namespace GenioMVC.ViewModels.Anexd
 				}
 			}
 
-			TableLanguLangua = new TableDBEdit<Models.Langu>();
+			TableLanguLangua = new TableDBEdit<Models.Langu>
+			{
+				IsLazyLoad = lazyLoad
+			};
 
 			if (lazyLoad)
 			{
@@ -695,7 +704,7 @@ namespace GenioMVC.ViewModels.Anexd
 
 			if (anexd___langulangua__DoLoad)
 			{
-				List<ColumnSort> sorts = [];
+				List<ColumnSort> sorts = new List<ColumnSort>();
 				ColumnSort requestedSort = GetRequestSort(TableLanguLangua, "sTableLanguLangua", "dTableLanguLangua", qs, "langu");
 				if (requestedSort != null)
 					sorts.Add(requestedSort);
@@ -745,7 +754,7 @@ namespace GenioMVC.ViewModels.Anexd
 
 				TableLanguLangua.SetPagination(page, numberItems, listing.HasMore, listing.GetTotal, listing.TotalRecords);
 				TableLanguLangua.Query = query;
-				TableLanguLangua.Elements = listing.RowsForViewModel((r) => new GenioMVC.Models.Langu(m_userContext, r, true, _fieldsToSerialize_ANEXD___LANGULANGUA__));
+				TableLanguLangua.Elements = listing.RowsForViewModel<GenioMVC.Models.Langu>((r) => new GenioMVC.Models.Langu(m_userContext, r, true, _fieldsToSerialize_ANEXD___LANGULANGUA__));
 
 				//created by [ MH ] at [ 14.04.2016 ] - Foi alterada a forma de retornar a key do novo registo inserido / editado no form de apoio do DBEdit.
 				//last update by [ MH ] at [ 10.05.2016 ] - Validação se key encontra-se no level atual, as chaves dos niveis anteriores devem ser ignorados.
@@ -860,8 +869,8 @@ namespace GenioMVC.ViewModels.Anexd
 				"anexd.title" => ViewModelConversion.ToString(modelValue),
 				"anexd.tittradu" => ViewModelConversion.ToString(modelValue),
 				"anexd.document" => ViewModelConversion.ToString(modelValue),
-				"anexd.codanexd" => ViewModelConversion.ToString(modelValue),
 				"equip.codequip" => ViewModelConversion.ToString(modelValue),
+				"anexd.codanexd" => ViewModelConversion.ToString(modelValue),
 				"equip.registnr" => ViewModelConversion.ToString(modelValue),
 				"langu.codlang" => ViewModelConversion.ToString(modelValue),
 				"langu.langua" => ViewModelConversion.ToString(modelValue),

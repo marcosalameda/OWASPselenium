@@ -17,11 +17,11 @@
 							borderless
 							:title="Resources.EXPORTAR35632"
 							@click="exportQueue(props.row)">
-							<q-icon icon="file-export" />
+							<q-icon icon="export" />
 						</q-button>
 					</template>
 				</qtable>
-
+				
 				<!-- Modal -->
 				<export_queue
 					:Model="exportForm.data"
@@ -120,17 +120,10 @@
 				this.exportForm.data = { };
 			}
 		},
-
+		
 		created() {
 			this.tQueues.rows = this.model?.MQueues?.Queues || [];
 			this.tQueues.total_rows = this.tQueues.rows.length;
-		},
-
-		watch: {
-			'model.MQueues'() {
-				this.tQueues.rows = this.model?.MQueues?.Queues || [];
-				this.tQueues.total_rows = this.tQueues.rows.length;
-			}
 		}
 	};
 </script>

@@ -9,13 +9,12 @@
 			<div
 				v-if="showFormHeader"
 				class="c-action-bar">
-				<component
+				<h1
 					v-if="formControl.uiComponents.header && formInfo.designation"
-					:is="topHeadingTag"
 					:id="formTitleId"
 					class="form-header">
 					{{ formInfo.designation }}
-				</component>
+				</h1>
 
 				<div class="c-action-bar__menu">
 					<template
@@ -39,13 +38,9 @@
 									:label="btn.label"
 									:disabled="btn.disabled"
 									@click="btn.action">
-									<template v-if="btn.icon">
-										<q-badge-indicator
-											:enabled="btn.badge?.isVisible ?? false"
-											:color="btn.badge?.color">
-											<q-icon v-bind="btn.icon" />
-										</q-badge-indicator>
-									</template>
+									<q-icon
+										v-if="btn.icon"
+										v-bind="btn.icon" />
 								</q-toggle-group-item>
 							</template>
 						</q-toggle-group>
@@ -57,7 +52,7 @@
 				v-if="$app.layout.FormAnchorsPosition === 'form-header' && visibleGroups.length > 0"
 				:anchors="anchorGroups"
 				:controls="visibleControls"
-				@focus-control="focusControl" />
+				@focus-control="(...args) => focusControl(...args)" />
 		</div>
 	</teleport>
 
@@ -78,7 +73,6 @@
 						v-if="btn.isActive && btn.isVisible && btn.showInHeading"
 						:id="`heading-${btn.id}`"
 						:label="btn.text"
-						:color="btn.color"
 						:variant="btn.variant"
 						:disabled="btn.disabled"
 						:icon-pos="btn.iconPos"
@@ -92,31 +86,27 @@
 			</q-button-group>
 		</div>
 
-		<q-container
-			fluid
+		<div
+			class="form-flow"
 			data-key="PROPRALL"
-			:data-identifier="primaryKeyValue"
-			:data-loading="!formInitialDataLoaded || !isActiveForm">
+			:data-loading="!formInitialDataLoaded">
 			<template v-if="formControl.initialized && showFormBody">
-				<q-row v-if="controls.PROPRALLPSEUDNOVOGR03.isVisible">
-					<q-col
-						v-if="controls.PROPRALLPSEUDNOVOGR03.isVisible"
-						cols="auto">
+				<q-row-container v-show="controls.PROPRALLPSEUDNOVOGR03.isVisible">
+					<q-control-wrapper
+						v-show="controls.PROPRALLPSEUDNOVOGR03.isVisible"
+						class="${Vue.GetControlWrapperClass($controlsColumn)}">
 						<q-group-box-container
-							v-if="controls.PROPRALLPSEUDNOVOGR03.isVisible"
+							id="PROPRALLPSEUDNOVOGR03"
 							v-bind="controls.PROPRALLPSEUDNOVOGR03"
-							:id="getControlId(controls.PROPRALLPSEUDNOVOGR03)"
-							:no-border="controls.PROPRALLPSEUDNOVOGR03.borderless">
+							:is-visible="controls.PROPRALLPSEUDNOVOGR03.isVisible">
 							<!-- Start PROPRALLPSEUDNOVOGR03 -->
-							<q-row v-if="controls.PROPRALLPROPRPHOTOGRA.isVisible">
-								<q-col
-									v-if="controls.PROPRALLPROPRPHOTOGRA.isVisible"
-									cols="auto">
+							<q-row-container v-show="controls.PROPRALLPROPRPHOTOGRA.isVisible">
+								<q-control-wrapper
+									v-show="controls.PROPRALLPROPRPHOTOGRA.isVisible"
+									class="${Vue.GetControlWrapperClass($controlsColumn)}">
 									<base-input-structure
-										v-if="controls.PROPRALLPROPRPHOTOGRA.isVisible"
 										class="q-image"
-										v-bind="controls.PROPRALLPROPRPHOTOGRA.wrapperProps"
-										:id="getControlId(controls.PROPRALLPROPRPHOTOGRA)"
+										v-bind="controls.PROPRALLPROPRPHOTOGRA"
 										v-on="controls.PROPRALLPROPRPHOTOGRA.handlers"
 										:loading="controls.PROPRALLPROPRPHOTOGRA.props.loading"
 										:reporting-mode-on="reportingModeCAV"
@@ -124,51 +114,48 @@
 										<q-image
 											v-if="controls.PROPRALLPROPRPHOTOGRA.isVisible"
 											v-bind="controls.PROPRALLPROPRPHOTOGRA.props"
-											:id="getControlId(controls.PROPRALLPROPRPHOTOGRA)"
 											v-on="controls.PROPRALLPROPRPHOTOGRA.handlers" />
 									</base-input-structure>
-								</q-col>
-							</q-row>
+								</q-control-wrapper>
+							</q-row-container>
 							<!-- End PROPRALLPSEUDNOVOGR03 -->
 						</q-group-box-container>
-					</q-col>
-				</q-row>
-				<q-row v-if="controls.PROPRALLPSEUDNOVOGR02.isVisible">
-					<q-col v-if="controls.PROPRALLPSEUDNOVOGR02.isVisible">
+					</q-control-wrapper>
+				</q-row-container>
+				<q-row-container
+					v-show="controls.PROPRALLPSEUDNOVOGR02.isVisible"
+					is-large>
+					<q-control-wrapper
+						v-show="controls.PROPRALLPSEUDNOVOGR02.isVisible"
+						class="${Vue.GetControlWrapperClass($controlsColumn)}">
 						<q-group-box-container
-							v-if="controls.PROPRALLPSEUDNOVOGR02.isVisible"
+							id="PROPRALLPSEUDNOVOGR02"
 							v-bind="controls.PROPRALLPSEUDNOVOGR02"
-							:id="getControlId(controls.PROPRALLPSEUDNOVOGR02)"
-							:no-border="controls.PROPRALLPSEUDNOVOGR02.borderless">
+							:is-visible="controls.PROPRALLPSEUDNOVOGR02.isVisible">
 							<!-- Start PROPRALLPSEUDNOVOGR02 -->
-							<q-row v-if="controls.PROPRALLPROPRNAME____.isVisible || controls.PROPRALLPROPRPRECOEST.isVisible || controls.PROPRALLTPPROTPPROPRI.isVisible || controls.PROPRALLPROPRMOBILADA.isVisible">
-								<q-col
-									v-if="controls.PROPRALLPROPRNAME____.isVisible"
-									cols="auto">
+							<q-row-container v-show="controls.PROPRALLPROPRNAME____.isVisible || controls.PROPRALLPROPRPRECOEST.isVisible || controls.PROPRALLTPPROTPPROPRI.isVisible || controls.PROPRALLPROPRMOBILADA.isVisible">
+								<q-control-wrapper
+									v-show="controls.PROPRALLPROPRNAME____.isVisible"
+									class="${Vue.GetControlWrapperClass($controlsColumn)}">
 									<base-input-structure
-										v-if="controls.PROPRALLPROPRNAME____.isVisible"
 										class="i-text"
-										v-bind="controls.PROPRALLPROPRNAME____.wrapperProps"
-										:id="getControlId(controls.PROPRALLPROPRNAME____)"
+										v-bind="controls.PROPRALLPROPRNAME____"
 										v-on="controls.PROPRALLPROPRNAME____.handlers"
 										:loading="controls.PROPRALLPROPRNAME____.props.loading"
 										:reporting-mode-on="reportingModeCAV"
 										:suggestion-mode-on="suggestionModeOn">
 										<q-text-field
 											v-bind="controls.PROPRALLPROPRNAME____.props"
-											:id="getControlId(controls.PROPRALLPROPRNAME____)"
 											@blur="onBlur(controls.PROPRALLPROPRNAME____, model.ValName.value)"
 											@change="model.ValName.fnUpdateValueOnChange" />
 									</base-input-structure>
-								</q-col>
-								<q-col
-									v-if="controls.PROPRALLPROPRPRECOEST.isVisible || controls.PROPRALLTPPROTPPROPRI.isVisible"
-									cols="auto">
+								</q-control-wrapper>
+								<q-control-wrapper
+									v-show="controls.PROPRALLPROPRPRECOEST.isVisible || controls.PROPRALLTPPROTPPROPRI.isVisible"
+									class="${Vue.GetControlWrapperClass($controlsColumn)}">
 									<base-input-structure
-										v-if="controls.PROPRALLPROPRPRECOEST.isVisible"
 										class="i-text"
-										v-bind="controls.PROPRALLPROPRPRECOEST.wrapperProps"
-										:id="getControlId(controls.PROPRALLPROPRPRECOEST)"
+										v-bind="controls.PROPRALLPROPRPRECOEST"
 										v-on="controls.PROPRALLPROPRPRECOEST.handlers"
 										:loading="controls.PROPRALLPROPRPRECOEST.props.loading"
 										:reporting-mode-on="reportingModeCAV"
@@ -176,14 +163,11 @@
 										<q-numeric-input
 											v-if="controls.PROPRALLPROPRPRECOEST.isVisible"
 											v-bind="controls.PROPRALLPROPRPRECOEST.props"
-											:id="getControlId(controls.PROPRALLPROPRPRECOEST)"
 											@update:model-value="model.ValPrecoest.fnUpdateValue" />
 									</base-input-structure>
 									<base-input-structure
-										v-if="controls.PROPRALLTPPROTPPROPRI.isVisible"
 										class="i-text"
-										v-bind="controls.PROPRALLTPPROTPPROPRI.wrapperProps"
-										:id="getControlId(controls.PROPRALLTPPROTPPROPRI)"
+										v-bind="controls.PROPRALLTPPROTPPROPRI"
 										v-on="controls.PROPRALLTPPROTPPROPRI.handlers"
 										:loading="controls.PROPRALLTPPROTPPROPRI.props.loading"
 										:reporting-mode-on="reportingModeCAV"
@@ -191,45 +175,39 @@
 										<q-lookup
 											v-if="controls.PROPRALLTPPROTPPROPRI.isVisible"
 											v-bind="controls.PROPRALLTPPROTPPROPRI.props"
-											:id="getControlId(controls.PROPRALLTPPROTPPROPRI)"
 											v-on="controls.PROPRALLTPPROTPPROPRI.handlers" />
 										<q-see-more-propralltpprotppropri
 											v-if="controls.PROPRALLTPPROTPPROPRI.seeMoreIsVisible"
 											v-bind="controls.PROPRALLTPPROTPPROPRI.seeMoreParams"
 											v-on="controls.PROPRALLTPPROTPPROPRI.handlers" />
 									</base-input-structure>
-								</q-col>
-								<q-col
-									v-if="controls.PROPRALLPROPRMOBILADA.isVisible"
-									cols="auto">
+								</q-control-wrapper>
+								<q-control-wrapper
+									v-show="controls.PROPRALLPROPRMOBILADA.isVisible"
+									class="${Vue.GetControlWrapperClass($controlsColumn)}">
 									<base-input-structure
-										v-if="controls.PROPRALLPROPRMOBILADA.isVisible"
-										class="i-text"
-										v-bind="controls.PROPRALLPROPRMOBILADA.wrapperProps"
-										:id="getControlId(controls.PROPRALLPROPRMOBILADA)"
+										class="i-checkbox"
+										v-bind="controls.PROPRALLPROPRMOBILADA"
 										v-on="controls.PROPRALLPROPRMOBILADA.handlers"
 										:loading="controls.PROPRALLPROPRMOBILADA.props.loading"
 										:reporting-mode-on="reportingModeCAV"
 										:suggestion-mode-on="suggestionModeOn">
 										<template #label>
-											<q-checkbox
+											<q-checkbox-input
 												v-if="controls.PROPRALLPROPRMOBILADA.isVisible"
 												v-bind="controls.PROPRALLPROPRMOBILADA.props"
-												:id="getControlId(controls.PROPRALLPROPRMOBILADA)"
 												v-on="controls.PROPRALLPROPRMOBILADA.handlers" />
 										</template>
 									</base-input-structure>
-								</q-col>
-							</q-row>
-							<q-row v-if="controls.PROPRALLPROPRQTD_WC__.isVisible || controls.PROPRALLPROPRQTDQUART.isVisible || controls.PROPRALLPROPRM2______.isVisible || controls.PROPRALLPROPRDTDISPON.isVisible">
-								<q-col
-									v-if="controls.PROPRALLPROPRQTD_WC__.isVisible"
-									cols="auto">
+								</q-control-wrapper>
+							</q-row-container>
+							<q-row-container v-show="controls.PROPRALLPROPRQTD_WC__.isVisible || controls.PROPRALLPROPRQTDQUART.isVisible || controls.PROPRALLPROPRM2______.isVisible || controls.PROPRALLPROPRDTDISPON.isVisible">
+								<q-control-wrapper
+									v-show="controls.PROPRALLPROPRQTD_WC__.isVisible"
+									class="${Vue.GetControlWrapperClass($controlsColumn)}">
 									<base-input-structure
-										v-if="controls.PROPRALLPROPRQTD_WC__.isVisible"
 										class="i-text"
-										v-bind="controls.PROPRALLPROPRQTD_WC__.wrapperProps"
-										:id="getControlId(controls.PROPRALLPROPRQTD_WC__)"
+										v-bind="controls.PROPRALLPROPRQTD_WC__"
 										v-on="controls.PROPRALLPROPRQTD_WC__.handlers"
 										:loading="controls.PROPRALLPROPRQTD_WC__.props.loading"
 										:reporting-mode-on="reportingModeCAV"
@@ -237,18 +215,15 @@
 										<q-numeric-input
 											v-if="controls.PROPRALLPROPRQTD_WC__.isVisible"
 											v-bind="controls.PROPRALLPROPRQTD_WC__.props"
-											:id="getControlId(controls.PROPRALLPROPRQTD_WC__)"
 											@update:model-value="model.ValQtd_wc.fnUpdateValue" />
 									</base-input-structure>
-								</q-col>
-								<q-col
-									v-if="controls.PROPRALLPROPRQTDQUART.isVisible"
-									cols="auto">
+								</q-control-wrapper>
+								<q-control-wrapper
+									v-show="controls.PROPRALLPROPRQTDQUART.isVisible"
+									class="${Vue.GetControlWrapperClass($controlsColumn)}">
 									<base-input-structure
-										v-if="controls.PROPRALLPROPRQTDQUART.isVisible"
 										class="i-text"
-										v-bind="controls.PROPRALLPROPRQTDQUART.wrapperProps"
-										:id="getControlId(controls.PROPRALLPROPRQTDQUART)"
+										v-bind="controls.PROPRALLPROPRQTDQUART"
 										v-on="controls.PROPRALLPROPRQTDQUART.handlers"
 										:loading="controls.PROPRALLPROPRQTDQUART.props.loading"
 										:reporting-mode-on="reportingModeCAV"
@@ -256,18 +231,15 @@
 										<q-numeric-input
 											v-if="controls.PROPRALLPROPRQTDQUART.isVisible"
 											v-bind="controls.PROPRALLPROPRQTDQUART.props"
-											:id="getControlId(controls.PROPRALLPROPRQTDQUART)"
 											@update:model-value="model.ValQtdquart.fnUpdateValue" />
 									</base-input-structure>
-								</q-col>
-								<q-col
-									v-if="controls.PROPRALLPROPRM2______.isVisible"
-									cols="auto">
+								</q-control-wrapper>
+								<q-control-wrapper
+									v-show="controls.PROPRALLPROPRM2______.isVisible"
+									class="${Vue.GetControlWrapperClass($controlsColumn)}">
 									<base-input-structure
-										v-if="controls.PROPRALLPROPRM2______.isVisible"
 										class="i-text"
-										v-bind="controls.PROPRALLPROPRM2______.wrapperProps"
-										:id="getControlId(controls.PROPRALLPROPRM2______)"
+										v-bind="controls.PROPRALLPROPRM2______"
 										v-on="controls.PROPRALLPROPRM2______.handlers"
 										:loading="controls.PROPRALLPROPRM2______.props.loading"
 										:reporting-mode-on="reportingModeCAV"
@@ -275,18 +247,15 @@
 										<q-numeric-input
 											v-if="controls.PROPRALLPROPRM2______.isVisible"
 											v-bind="controls.PROPRALLPROPRM2______.props"
-											:id="getControlId(controls.PROPRALLPROPRM2______)"
 											@update:model-value="model.ValM2.fnUpdateValue" />
 									</base-input-structure>
-								</q-col>
-								<q-col
-									v-if="controls.PROPRALLPROPRDTDISPON.isVisible"
-									cols="auto">
+								</q-control-wrapper>
+								<q-control-wrapper
+									v-show="controls.PROPRALLPROPRDTDISPON.isVisible"
+									class="${Vue.GetControlWrapperClass($controlsColumn)}">
 									<base-input-structure
-										v-if="controls.PROPRALLPROPRDTDISPON.isVisible"
 										class="i-text"
-										v-bind="controls.PROPRALLPROPRDTDISPON.wrapperProps"
-										:id="getControlId(controls.PROPRALLPROPRDTDISPON)"
+										v-bind="controls.PROPRALLPROPRDTDISPON"
 										v-on="controls.PROPRALLPROPRDTDISPON.handlers"
 										:loading="controls.PROPRALLPROPRDTDISPON.props.loading"
 										:reporting-mode-on="reportingModeCAV"
@@ -294,22 +263,19 @@
 										<q-date-time-picker
 											v-if="controls.PROPRALLPROPRDTDISPON.isVisible"
 											v-bind="controls.PROPRALLPROPRDTDISPON.props"
-											:id="getControlId(controls.PROPRALLPROPRDTDISPON)"
 											:model-value="model.ValDtdispon.value"
 											@reset-icon-click="model.ValDtdispon.fnUpdateValue(model.ValDtdispon.originalValue ?? new Date())"
 											@update:model-value="model.ValDtdispon.fnUpdateValue($event ?? '')" />
 									</base-input-structure>
-								</q-col>
-							</q-row>
-							<q-row v-if="controls.PROPRALLPROPRDESCRIPT.isVisible">
-								<q-col
-									v-if="controls.PROPRALLPROPRDESCRIPT.isVisible"
-									cols="auto">
+								</q-control-wrapper>
+							</q-row-container>
+							<q-row-container v-show="controls.PROPRALLPROPRDESCRIPT.isVisible">
+								<q-control-wrapper
+									v-show="controls.PROPRALLPROPRDESCRIPT.isVisible"
+									class="${Vue.GetControlWrapperClass($controlsColumn)}">
 									<base-input-structure
-										v-if="controls.PROPRALLPROPRDESCRIPT.isVisible"
 										class="i-text"
-										v-bind="controls.PROPRALLPROPRDESCRIPT.wrapperProps"
-										:id="getControlId(controls.PROPRALLPROPRDESCRIPT)"
+										v-bind="controls.PROPRALLPROPRDESCRIPT"
 										v-on="controls.PROPRALLPROPRDESCRIPT.handlers"
 										:loading="controls.PROPRALLPROPRDESCRIPT.props.loading"
 										:reporting-mode-on="reportingModeCAV"
@@ -317,20 +283,17 @@
 										<q-text-editor
 											v-if="controls.PROPRALLPROPRDESCRIPT.isVisible"
 											v-bind="controls.PROPRALLPROPRDESCRIPT.props"
-											:id="getControlId(controls.PROPRALLPROPRDESCRIPT)"
 											v-on="controls.PROPRALLPROPRDESCRIPT.handlers" />
 									</base-input-structure>
-								</q-col>
-							</q-row>
-							<q-row v-if="controls.PROPRALLPESSONAME____.isVisible">
-								<q-col
-									v-if="controls.PROPRALLPESSONAME____.isVisible"
-									cols="auto">
+								</q-control-wrapper>
+							</q-row-container>
+							<q-row-container v-show="controls.PROPRALLPESSONAME____.isVisible">
+								<q-control-wrapper
+									v-show="controls.PROPRALLPESSONAME____.isVisible"
+									class="${Vue.GetControlWrapperClass($controlsColumn)}">
 									<base-input-structure
-										v-if="controls.PROPRALLPESSONAME____.isVisible"
 										class="i-text"
-										v-bind="controls.PROPRALLPESSONAME____.wrapperProps"
-										:id="getControlId(controls.PROPRALLPESSONAME____)"
+										v-bind="controls.PROPRALLPESSONAME____"
 										v-on="controls.PROPRALLPESSONAME____.handlers"
 										:loading="controls.PROPRALLPESSONAME____.props.loading"
 										:reporting-mode-on="reportingModeCAV"
@@ -338,36 +301,36 @@
 										<q-lookup
 											v-if="controls.PROPRALLPESSONAME____.isVisible"
 											v-bind="controls.PROPRALLPESSONAME____.props"
-											:id="getControlId(controls.PROPRALLPESSONAME____)"
 											v-on="controls.PROPRALLPESSONAME____.handlers" />
 										<q-see-more-proprallpessoname
 											v-if="controls.PROPRALLPESSONAME____.seeMoreIsVisible"
 											v-bind="controls.PROPRALLPESSONAME____.seeMoreParams"
 											v-on="controls.PROPRALLPESSONAME____.handlers" />
 									</base-input-structure>
-								</q-col>
-							</q-row>
+								</q-control-wrapper>
+							</q-row-container>
 							<!-- End PROPRALLPSEUDNOVOGR02 -->
 						</q-group-box-container>
-					</q-col>
-				</q-row>
-				<q-row v-if="controls.PROPRALLPSEUDNOVOGR01.isVisible">
-					<q-col v-if="controls.PROPRALLPSEUDNOVOGR01.isVisible">
+					</q-control-wrapper>
+				</q-row-container>
+				<q-row-container
+					v-show="controls.PROPRALLPSEUDNOVOGR01.isVisible"
+					is-large>
+					<q-control-wrapper
+						v-show="controls.PROPRALLPSEUDNOVOGR01.isVisible"
+						class="${Vue.GetControlWrapperClass($controlsColumn)}">
 						<q-group-box-container
-							v-if="controls.PROPRALLPSEUDNOVOGR01.isVisible"
+							id="PROPRALLPSEUDNOVOGR01"
 							v-bind="controls.PROPRALLPSEUDNOVOGR01"
-							:id="getControlId(controls.PROPRALLPSEUDNOVOGR01)"
-							:no-border="controls.PROPRALLPSEUDNOVOGR01.borderless">
+							:is-visible="controls.PROPRALLPSEUDNOVOGR01.isVisible">
 							<!-- Start PROPRALLPSEUDNOVOGR01 -->
-							<q-row v-if="controls.PROPRALLCNTRYCOUNTRY_.isVisible">
-								<q-col
-									v-if="controls.PROPRALLCNTRYCOUNTRY_.isVisible"
-									cols="auto">
+							<q-row-container v-show="controls.PROPRALLCNTRYCOUNTRY_.isVisible">
+								<q-control-wrapper
+									v-show="controls.PROPRALLCNTRYCOUNTRY_.isVisible"
+									class="${Vue.GetControlWrapperClass($controlsColumn)}">
 									<base-input-structure
-										v-if="controls.PROPRALLCNTRYCOUNTRY_.isVisible"
 										class="i-text"
-										v-bind="controls.PROPRALLCNTRYCOUNTRY_.wrapperProps"
-										:id="getControlId(controls.PROPRALLCNTRYCOUNTRY_)"
+										v-bind="controls.PROPRALLCNTRYCOUNTRY_"
 										v-on="controls.PROPRALLCNTRYCOUNTRY_.handlers"
 										:loading="controls.PROPRALLCNTRYCOUNTRY_.props.loading"
 										:reporting-mode-on="reportingModeCAV"
@@ -375,24 +338,21 @@
 										<q-lookup
 											v-if="controls.PROPRALLCNTRYCOUNTRY_.isVisible"
 											v-bind="controls.PROPRALLCNTRYCOUNTRY_.props"
-											:id="getControlId(controls.PROPRALLCNTRYCOUNTRY_)"
 											v-on="controls.PROPRALLCNTRYCOUNTRY_.handlers" />
 										<q-see-more-proprallcntrycountry
 											v-if="controls.PROPRALLCNTRYCOUNTRY_.seeMoreIsVisible"
 											v-bind="controls.PROPRALLCNTRYCOUNTRY_.seeMoreParams"
 											v-on="controls.PROPRALLCNTRYCOUNTRY_.handlers" />
 									</base-input-structure>
-								</q-col>
-							</q-row>
-							<q-row v-if="controls.PROPRALLREGIOREGIAO__.isVisible || controls.PROPRALLPROPRENDERECO.isVisible">
-								<q-col
-									v-if="controls.PROPRALLREGIOREGIAO__.isVisible"
-									cols="auto">
+								</q-control-wrapper>
+							</q-row-container>
+							<q-row-container v-show="controls.PROPRALLREGIOREGIAO__.isVisible || controls.PROPRALLPROPRENDERECO.isVisible">
+								<q-control-wrapper
+									v-show="controls.PROPRALLREGIOREGIAO__.isVisible"
+									class="${Vue.GetControlWrapperClass($controlsColumn)}">
 									<base-input-structure
-										v-if="controls.PROPRALLREGIOREGIAO__.isVisible"
 										class="i-text"
-										v-bind="controls.PROPRALLREGIOREGIAO__.wrapperProps"
-										:id="getControlId(controls.PROPRALLREGIOREGIAO__)"
+										v-bind="controls.PROPRALLREGIOREGIAO__"
 										v-on="controls.PROPRALLREGIOREGIAO__.handlers"
 										:loading="controls.PROPRALLREGIOREGIAO__.props.loading"
 										:reporting-mode-on="reportingModeCAV"
@@ -400,22 +360,19 @@
 										<q-lookup
 											v-if="controls.PROPRALLREGIOREGIAO__.isVisible"
 											v-bind="controls.PROPRALLREGIOREGIAO__.props"
-											:id="getControlId(controls.PROPRALLREGIOREGIAO__)"
 											v-on="controls.PROPRALLREGIOREGIAO__.handlers" />
 										<q-see-more-proprallregioregiao
 											v-if="controls.PROPRALLREGIOREGIAO__.seeMoreIsVisible"
 											v-bind="controls.PROPRALLREGIOREGIAO__.seeMoreParams"
 											v-on="controls.PROPRALLREGIOREGIAO__.handlers" />
 									</base-input-structure>
-								</q-col>
-								<q-col
-									v-if="controls.PROPRALLPROPRENDERECO.isVisible"
-									cols="auto">
+								</q-control-wrapper>
+								<q-control-wrapper
+									v-show="controls.PROPRALLPROPRENDERECO.isVisible"
+									class="${Vue.GetControlWrapperClass($controlsColumn)}">
 									<base-input-structure
-										v-if="controls.PROPRALLPROPRENDERECO.isVisible"
 										class="i-textarea"
-										v-bind="controls.PROPRALLPROPRENDERECO.wrapperProps"
-										:id="getControlId(controls.PROPRALLPROPRENDERECO)"
+										v-bind="controls.PROPRALLPROPRENDERECO"
 										v-on="controls.PROPRALLPROPRENDERECO.handlers"
 										:loading="controls.PROPRALLPROPRENDERECO.props.loading"
 										:reporting-mode-on="reportingModeCAV"
@@ -423,108 +380,95 @@
 										<q-text-area
 											v-if="controls.PROPRALLPROPRENDERECO.isVisible"
 											v-bind="controls.PROPRALLPROPRENDERECO.props"
-											:id="getControlId(controls.PROPRALLPROPRENDERECO)"
 											v-on="controls.PROPRALLPROPRENDERECO.handlers" />
 									</base-input-structure>
-								</q-col>
-							</q-row>
-							<q-row v-if="controls.PROPRALLPROPRLOCALIDA.isVisible">
-								<q-col
-									v-if="controls.PROPRALLPROPRLOCALIDA.isVisible"
-									cols="auto">
+								</q-control-wrapper>
+							</q-row-container>
+							<q-row-container v-show="controls.PROPRALLPROPRLOCALIDA.isVisible">
+								<q-control-wrapper
+									v-show="controls.PROPRALLPROPRLOCALIDA.isVisible"
+									class="${Vue.GetControlWrapperClass($controlsColumn)}">
 									<base-input-structure
-										v-if="controls.PROPRALLPROPRLOCALIDA.isVisible"
 										class="i-text"
-										v-bind="controls.PROPRALLPROPRLOCALIDA.wrapperProps"
-										:id="getControlId(controls.PROPRALLPROPRLOCALIDA)"
+										v-bind="controls.PROPRALLPROPRLOCALIDA"
 										v-on="controls.PROPRALLPROPRLOCALIDA.handlers"
 										:loading="controls.PROPRALLPROPRLOCALIDA.props.loading"
 										:reporting-mode-on="reportingModeCAV"
 										:suggestion-mode-on="suggestionModeOn">
 										<q-text-field
 											v-bind="controls.PROPRALLPROPRLOCALIDA.props"
-											:id="getControlId(controls.PROPRALLPROPRLOCALIDA)"
 											@blur="onBlur(controls.PROPRALLPROPRLOCALIDA, model.ValLocalida.value)"
 											@change="model.ValLocalida.fnUpdateValueOnChange" />
 									</base-input-structure>
-								</q-col>
-							</q-row>
-							<q-row v-if="controls.PROPRALLPROPRPOSTALCO.isVisible || controls.PROPRALLPROPRPOSTALLO.isVisible">
-								<q-col
-									v-if="controls.PROPRALLPROPRPOSTALCO.isVisible"
-									cols="auto">
+								</q-control-wrapper>
+							</q-row-container>
+							<q-row-container v-show="controls.PROPRALLPROPRPOSTALCO.isVisible || controls.PROPRALLPROPRPOSTALLO.isVisible">
+								<q-control-wrapper
+									v-show="controls.PROPRALLPROPRPOSTALCO.isVisible"
+									class="${Vue.GetControlWrapperClass($controlsColumn)}">
 									<base-input-structure
-										v-if="controls.PROPRALLPROPRPOSTALCO.isVisible"
 										class="i-text"
-										v-bind="controls.PROPRALLPROPRPOSTALCO.wrapperProps"
-										:id="getControlId(controls.PROPRALLPROPRPOSTALCO)"
+										v-bind="controls.PROPRALLPROPRPOSTALCO"
 										v-on="controls.PROPRALLPROPRPOSTALCO.handlers"
 										:loading="controls.PROPRALLPROPRPOSTALCO.props.loading"
 										:reporting-mode-on="reportingModeCAV"
 										:suggestion-mode-on="suggestionModeOn">
 										<q-text-field
 											v-bind="controls.PROPRALLPROPRPOSTALCO.props"
-											:id="getControlId(controls.PROPRALLPROPRPOSTALCO)"
 											@blur="onBlur(controls.PROPRALLPROPRPOSTALCO, model.ValPostalco.value)"
 											@change="model.ValPostalco.fnUpdateValueOnChange" />
 									</base-input-structure>
-								</q-col>
-								<q-col
-									v-if="controls.PROPRALLPROPRPOSTALLO.isVisible"
-									cols="auto">
+								</q-control-wrapper>
+								<q-control-wrapper
+									v-show="controls.PROPRALLPROPRPOSTALLO.isVisible"
+									class="${Vue.GetControlWrapperClass($controlsColumn)}">
 									<base-input-structure
-										v-if="controls.PROPRALLPROPRPOSTALLO.isVisible"
 										class="i-text"
-										v-bind="controls.PROPRALLPROPRPOSTALLO.wrapperProps"
-										:id="getControlId(controls.PROPRALLPROPRPOSTALLO)"
+										v-bind="controls.PROPRALLPROPRPOSTALLO"
 										v-on="controls.PROPRALLPROPRPOSTALLO.handlers"
 										:loading="controls.PROPRALLPROPRPOSTALLO.props.loading"
 										:reporting-mode-on="reportingModeCAV"
 										:suggestion-mode-on="suggestionModeOn">
 										<q-text-field
 											v-bind="controls.PROPRALLPROPRPOSTALLO.props"
-											:id="getControlId(controls.PROPRALLPROPRPOSTALLO)"
 											@blur="onBlur(controls.PROPRALLPROPRPOSTALLO, model.ValPostallo.value)"
 											@change="model.ValPostallo.fnUpdateValueOnChange" />
 									</base-input-structure>
-								</q-col>
-							</q-row>
+								</q-control-wrapper>
+							</q-row-container>
 							<!-- End PROPRALLPSEUDNOVOGR01 -->
 						</q-group-box-container>
-					</q-col>
-				</q-row>
-				<q-row v-if="controls.PROPRALLPROPRCOORDGEO.isVisible">
-					<q-col
-						v-if="controls.PROPRALLPROPRCOORDGEO.isVisible"
-						cols="auto">
+					</q-control-wrapper>
+				</q-row-container>
+				<q-row-container v-show="controls.PROPRALLPROPRCOORDGEO.isVisible">
+					<q-control-wrapper
+						v-show="controls.PROPRALLPROPRCOORDGEO.isVisible"
+						class="${Vue.GetControlWrapperClass($controlsColumn)}">
 						<base-input-structure
-							v-if="controls.PROPRALLPROPRCOORDGEO.isVisible"
 							class="i-text"
-							v-bind="controls.PROPRALLPROPRCOORDGEO.wrapperProps"
-							:id="getControlId(controls.PROPRALLPROPRCOORDGEO)"
+							v-bind="controls.PROPRALLPROPRCOORDGEO"
 							v-on="controls.PROPRALLPROPRCOORDGEO.handlers"
 							:loading="controls.PROPRALLPROPRCOORDGEO.props.loading"
 							:reporting-mode-on="reportingModeCAV"
 							:suggestion-mode-on="suggestionModeOn">
 							<q-text-field
 								v-bind="controls.PROPRALLPROPRCOORDGEO.props"
-								:id="getControlId(controls.PROPRALLPROPRCOORDGEO)"
 								@blur="onBlur(controls.PROPRALLPROPRCOORDGEO, model.ValCoordgeo.value)"
 								@change="model.ValCoordgeo.fnUpdateValueOnChange" />
 						</base-input-structure>
-					</q-col>
-				</q-row>
+					</q-control-wrapper>
+				</q-row-container>
 			</template>
-		</q-container>
+		</div>
 	</teleport>
 
-	<q-divider v-if="!isPopup && showFormFooter" />
+	<hr v-if="!isPopup && showFormFooter" />
 
 	<teleport
 		v-if="formModalIsReady && showFormFooter"
 		:to="`#${uiContainersId.footer}`"
 		:disabled="!isPopup || isNested">
-		<q-row v-if="showFormFooter">
+		<q-row-container v-if="showFormFooter">
 			<div id="footer-action-btns">
 				<template
 					v-for="btn in formButtons"
@@ -533,7 +477,6 @@
 						v-if="btn.isActive && btn.isVisible && btn.showInFooter"
 						:id="`bottom-${btn.id}`"
 						:label="btn.text"
-						:color="btn.color"
 						:variant="btn.variant"
 						:disabled="btn.disabled"
 						:icon-pos="btn.iconPos"
@@ -545,12 +488,12 @@
 					</q-button>
 				</template>
 			</div>
-		</q-row>
+		</q-row-container>
 	</teleport>
 </template>
 
 <script>
-	/* eslint-disable @typescript-eslint/no-unused-vars */
+	/* eslint-disable no-unused-vars */
 	import { computed, defineAsyncComponent, readonly } from 'vue'
 	import { useRoute } from 'vue-router'
 
@@ -570,7 +513,7 @@
 	import qApi from '@/api/genio/quidgestFunctions.js'
 	import qFunctions from '@/api/genio/projectFunctions.js'
 	import qProjArrays from '@/api/genio/projectArrays.js'
-	/* eslint-enable @typescript-eslint/no-unused-vars */
+	/* eslint-enable no-unused-vars */
 
 	import FormViewModel from './QFormProprallViewModel.js'
 
@@ -651,8 +594,7 @@
 					primaryKey: 'ValCodpropr',
 					designation: computed(() => this.Resources.PROPERTY43977),
 					identifier: '', // Unique identifier received by route (when it's nested).
-					mode: '',
-					availableAgents: [],
+					mode: ''
 				},
 
 				formButtons: {
@@ -760,11 +702,7 @@
 						showInFooter: true,
 						isActive: true,
 						isVisible: computed(() => vm.authData.isAllowed && vm.isEditable),
-						action: vm.saveForm,
-						badge: {
-							isVisible: computed(() => vm.model?.isDirty === true),
-							color: 'highlight'
-						}
+						action: vm.saveForm
 					},
 					confirmBtn: {
 						id: 'confirm-btn',
@@ -871,7 +809,6 @@
 						label: computed(() => this.Resources.PHOTO51874),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						borderless: false,
 						isCollapsible: false,
 						anchored: false,
 						directChildren: ['PROPRALLPROPRPHOTOGRA'],
@@ -901,7 +838,6 @@
 						label: computed(() => this.Resources.IDENTIFICATION37731),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						borderless: false,
 						isCollapsible: false,
 						anchored: false,
 						directChildren: ['PROPRALLPROPRNAME____', 'PROPRALLPROPRPRECOEST', 'PROPRALLTPPROTPPROPRI', 'PROPRALLPROPRMOBILADA', 'PROPRALLPROPRQTD_WC__', 'PROPRALLPROPRQTDQUART', 'PROPRALLPROPRM2______', 'PROPRALLPROPRDTDISPON', 'PROPRALLPROPRDESCRIPT', 'PROPRALLPESSONAME____'],
@@ -919,6 +855,7 @@
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'PROPRALLPSEUDNOVOGR02',
 						maxLength: 85,
+						labelId: 'label_PROPRALLPROPRNAME____',
 						controlLimits: [
 						],
 					}, this),
@@ -975,7 +912,6 @@
 						label: computed(() => this.Resources.LOCALIZATION34148),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						borderless: false,
 						isCollapsible: false,
 						anchored: false,
 						directChildren: ['PROPRALLCNTRYCOUNTRY_', 'PROPRALLREGIOREGIAO__', 'PROPRALLPROPRENDERECO', 'PROPRALLPROPRLOCALIDA', 'PROPRALLPROPRPOSTALCO', 'PROPRALLPROPRPOSTALLO'],
@@ -1055,12 +991,6 @@
 						insertEnabled: true,
 						supportForm: 'REGIA',
 						controlLimits: [
-							{
-								identifier: ['cntry', 'propr.codcntry'],
-								dependencyEvents: ['fieldChange:propr.codcntry'],
-								dependencyField: 'PROPR.CODCNTRY',
-								fnValueSelector: (model) => model.ValCodcntry.value
-							},
 						],
 					}, this),
 					PROPRALLPROPRENDERECO: new fieldControlClass.MultilineStringControl({
@@ -1089,6 +1019,7 @@
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'PROPRALLPSEUDNOVOGR01',
 						maxLength: 50,
+						labelId: 'label_PROPRALLPROPRLOCALIDA',
 						controlLimits: [
 						],
 					}, this),
@@ -1103,6 +1034,7 @@
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'PROPRALLPSEUDNOVOGR01',
 						maxLength: 20,
+						labelId: 'label_PROPRALLPROPRPOSTALCO',
 						controlLimits: [
 						],
 					}, this),
@@ -1117,6 +1049,7 @@
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'PROPRALLPSEUDNOVOGR01',
 						maxLength: 50,
+						labelId: 'label_PROPRALLPROPRPOSTALLO',
 						controlLimits: [
 						],
 					}, this),
@@ -1175,7 +1108,7 @@
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'PROPRALLPSEUDNOVOGR02',
-						dateTimeType: 'date',
+						format: 'date',
 						controlLimits: [
 						],
 					}, this),
@@ -1233,12 +1166,6 @@
 							set 'pesso.name'(value) { vm.model.TablePessoName.updateValue(value) },
 						}),
 						controlLimits: [
-							{
-								identifier: ['cntry', 'propr.codcntry'],
-								dependencyEvents: ['fieldChange:propr.codcntry'],
-								dependencyField: 'PROPR.CODCNTRY',
-								fnValueSelector: (model) => model.ValCodcntry.value
-							},
 						],
 					}, this),
 				},
@@ -1379,23 +1306,17 @@
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 		},
 
-		beforeUnmount()
-		{
-/* eslint-disable indent, vue/html-indent, vue/script-indent */
-// USE /[MANUAL GQT COMPONENT_BEFORE_UNMOUNT PROPRALL]/
-// eslint-disable-next-line
-/* eslint-enable indent, vue/html-indent, vue/script-indent */
-		},
-
 		methods: {
 			/**
 			 * Called before form init.
 			 */
 			async beforeLoad()
 			{
+				let loadForm = true
+
 				// Execute the "Before init" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.beforeInit)
-				for (const trigger of triggers)
+				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
 				this.emitEvent('before-load-form')
@@ -1405,7 +1326,7 @@
 // eslint-disable-next-line
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 
-				return true
+				return loadForm
 			},
 
 			/**
@@ -1415,7 +1336,7 @@
 			{
 				// Execute the "After init" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.afterInit)
-				for (const trigger of triggers)
+				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
 				this.emitEvent('after-load-form')
@@ -1435,33 +1356,19 @@
 
 				// Execute the "Before apply" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.beforeApply)
-				for (const trigger of triggers)
+				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
-				const ticketsPromise = this.model.updateFilesTickets(true)
-				this.addBusy(ticketsPromise, this.Resources[hardcodedTexts.processing])
-				const canSetDocums = await ticketsPromise
+				const canSetDocums = await this.model.updateFilesTickets(true)
 
 				if (canSetDocums)
 				{
-					let results
-					const changesPromise = this.model.setDocumentChanges()
-					this.addBusy(changesPromise, this.Resources[hardcodedTexts.processing])
-					applyForm = await changesPromise
+					applyForm = await this.model.setDocumentChanges()
 
 					if (applyForm)
 					{
-						const insertsPromise = this.model.saveDocuments()
-						this.addBusy(insertsPromise, this.Resources[hardcodedTexts.processing])
-						results = await insertsPromise
+						const results = await this.model.saveDocuments()
 						applyForm = results.every((e) => e === true)
-					}
-
-					if (!changesPromise || (results && !results.every((e) => e === true)))
-					{
-						this.validationErrors = {
-							Erro: this.Resources.OCORREU_UM_ERRO_AO_T51884
-						}
 					}
 				}
 
@@ -1482,7 +1389,7 @@
 			{
 				// Execute the "After apply" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.afterApply)
-				for (const trigger of triggers)
+				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
 				this.emitEvent('after-apply-form')
@@ -1502,33 +1409,19 @@
 
 				// Execute the "Before save" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.beforeSave)
-				for (const trigger of triggers)
+				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
-				const ticketsPromise = this.model.updateFilesTickets()
-				this.addBusy(ticketsPromise, this.Resources[hardcodedTexts.processing])
-				const canSetDocums = await ticketsPromise
+				const canSetDocums = await this.model.updateFilesTickets()
 
 				if (canSetDocums)
 				{
-					let results
-					const changesPromise = this.model.setDocumentChanges()
-					this.addBusy(changesPromise, this.Resources[hardcodedTexts.processing])
-					saveForm = await changesPromise
+					saveForm = await this.model.setDocumentChanges()
 
 					if (saveForm)
 					{
-						const insertsPromise = this.model.saveDocuments()
-						this.addBusy(insertsPromise, this.Resources[hardcodedTexts.processing])
-						results = await insertsPromise
+						const results = await this.model.saveDocuments()
 						saveForm = results.every((e) => e === true)
-					}
-
-					if (!changesPromise || (results && !results.every((e) => e === true)))
-					{
-						this.validationErrors = {
-							Erro: this.Resources.OCORREU_UM_ERRO_AO_T51884
-						}
 					}
 				}
 
@@ -1547,9 +1440,11 @@
 			 */
 			async afterSave()
 			{
+				let redirectPage = true // Set to 'false' to cancel page redirect.
+
 				// Execute the "After save" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.afterSave)
-				for (const trigger of triggers)
+				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
 				this.emitEvent('after-save-form')
@@ -1559,7 +1454,7 @@
 // eslint-disable-next-line
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 
-				return true
+				return redirectPage
 			},
 
 			/**
@@ -1567,6 +1462,8 @@
 			 */
 			async beforeDel()
 			{
+				let deleteForm = true // Set to 'false' to cancel form delete.
+
 				this.emitEvent('before-delete-form')
 
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
@@ -1574,7 +1471,7 @@
 // eslint-disable-next-line
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 
-				return true
+				return deleteForm
 			},
 
 			/**
@@ -1582,6 +1479,8 @@
 			 */
 			async afterDel()
 			{
+				let redirectPage = true // Set to 'false' to cancel page redirect.
+
 				this.emitEvent('after-delete-form')
 
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
@@ -1589,7 +1488,7 @@
 // eslint-disable-next-line
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 
-				return true
+				return redirectPage
 			},
 
 			/**
@@ -1597,9 +1496,11 @@
 			 */
 			async beforeExit()
 			{
+				let leaveForm = true // Set to 'false' to cancel page redirect.
+
 				// Execute the "Before exit" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.beforeExit)
-				for (const trigger of triggers)
+				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
 				this.emitEvent('before-exit-form')
@@ -1609,7 +1510,7 @@
 // eslint-disable-next-line
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 
-				return true
+				return leaveForm
 			},
 
 			/**
@@ -1619,7 +1520,7 @@
 			{
 				// Execute the "After exit" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.afterExit)
-				for (const trigger of triggers)
+				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
 				this.emitEvent('after-exit-form')

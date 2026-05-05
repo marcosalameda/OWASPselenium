@@ -13,14 +13,6 @@ export default {
 		GenericMenuHandlers
 	],
 
-	data()
-	{
-		return {
-			// When a PopUp form is opened, the menus behind it cannot appear to be loaded, especially because of E2E testing.
-			isActiveMenu: true
-		}
-	},
-
 	created()
 	{
 		this.componentOnLoadProc.addBusy(loadResources(this, this.interfaceMetadata.requiredTextResources), this.Resources[hardcodedTexts.genericLoad], 300)
@@ -29,7 +21,7 @@ export default {
 		this.componentOnLoadProc.once(async () => {
 			this.setMenuNavProperties()
 
-			for (const i in this.controls)
+			for (let i in this.controls)
 			{
 				await this.controls[i].init()
 				this.controls[i].initData?.()
@@ -42,7 +34,6 @@ export default {
 		this.$eventTracker.addTrace({ origin: 'mounted (menuHandler)', message: 'Menu is mounted', contextData: { menuInfo: this.menuInfo } })
 
 		// Listens for changes to the DB and updates the list accordingly.
-		this.$eventHub.on('change-content-active-state', this.changeMenuActiveState)
 		this.internalEvents.onMany(this.controls.menu.internalEvents, this.loadList)
 		this.$eventHub.onMany(this.controls.menu.globalEvents, this.loadList)
 	},
@@ -51,28 +42,8 @@ export default {
 	{
 		this.$eventTracker.addTrace({ origin: 'beforeUnmount (menuHandler)', message: 'Menu will be unmounted', contextData: { menuInfo: this.menuInfo } })
 		// Removes the listeners.
-		this.internalEvents?.offMany(this.controls.menu.internalEvents, this.loadList) // The generic handler, in beforeUnmount, already removes all events.
+		this.internalEvents.offMany(this.controls.menu.internalEvents, this.loadList)
 		this.$eventHub.offMany(this.controls.menu.globalEvents, this.loadList)
-		this.$eventHub.off('change-content-active-state', this.changeMenuActiveState)
-
-		this.changeMenuActiveState(false)
-
-		if (this.controls)
-		{
-			const controlsIds = Object.keys(this.controls)
-			controlsIds.forEach((controlId) => {
-				if (typeof this.controls[controlId].destroy === 'function')
-					this.controls[controlId].destroy()
-				this.controls[controlId] = null
-				delete this.controls[controlId]
-			})
-		}
-
-		if (typeof this.model?.destroy === 'function')
-		{
-			this.model.destroy()
-			this.model = null
-		}
 	},
 
 	computed: {
@@ -102,7 +73,7 @@ export default {
 		 * Fetches the data of the menu list from the server.
 		 * @returns A promise to be resolved after the request completes.
 		 */
-		loadList()
+		async loadList()
 		{
 			return this.controls.menu.reload()
 		},
@@ -120,25 +91,6 @@ export default {
 				}
 			}
 			this.setNavProperties(navProps)
-		},
-
-		/**
-		 * Changes the menus's status.
-		 * When a PopUp form is opened, the menus behind it should be marked as inactive.
-		 * @param {Boolean} isActive Indicates whether the menu is currently active.
-		 */
-		changeMenuActiveState(isActive)
-		{
-			this.isActiveMenu = isActive
-		},
-
-		/**
-		 * Applies the filters model to the list and reloads it.
-		 * @param {object} model The filters form view model
-		 */
-		applyFilters(model)
-		{
-			this.controls.menu.updateGlobalFilters(model)
 		}
 	},
 

@@ -118,6 +118,18 @@
 									</a>
 								</li>
 								<li class="nav-item n-sidebar__nav-item">
+									<a class="nav-link n-sidebar__nav-link" @click.stop="tryNavigate($event, 'audit_viewer')">
+										<q-icon icon ="information" />
+										<p>&nbsp;{{ Resources.AUDITORIA_DO_SISTEMA08460 }}</p>
+									</a>
+								</li>
+								<li class="nav-item n-sidebar__nav-item">
+									<a class="nav-link n-sidebar__nav-link" @click.stop="tryNavigate($event, 'message_queue')">
+										<q-icon icon ="email" />
+										<p>&nbsp;{{ Resources.MESSAGE_QUEUEING34227 }}</p>
+									</a>
+								</li>
+								<li class="nav-item n-sidebar__nav-item">
 									<a class="nav-link n-sidebar__nav-link" @click.stop="tryNavigate($event, 'report_management')">
 										<q-icon icon ="file-chart" />
 										<p>&nbsp;{{ Resources.GESTAO_DE_RELATORIOS37970 }}</p>
@@ -151,9 +163,6 @@ import '@/utils/globalUtils.js';
 import { reusableMixin } from '@/mixins/mainMixin';
 import { QUtils } from '@/utils/mainUtils';
 
-import store from './store'
-import { mapGetters } from 'vuex'
-
 export default {
 	name: 'app',
 	mixins: [reusableMixin],
@@ -169,11 +178,12 @@ export default {
 				{ Value: 'en-US', Text: 'English' },
 				{ Value: 'pt-PT', Text: 'Português' },
 			],
+			Years: [],
+			DefaultYear: '',
 			hideDataSystems: false
 		}
 	},
 	computed: {
-		...mapGetters(['Years', 'DefaultYear']),
 		Paths() {
 			var vm = this;
 			if ($.isEmptyObject(vm.currentApp) || $.isEmptyObject(vm.Model.Paths))
@@ -191,14 +201,16 @@ export default {
 	},
 	methods: {
 		setYears(years, defaultYear) {
-			store.dispatch('setYears', Array.isArray(years) ? years : [])
-			store.dispatch('setDefaultYear', defaultYear)
+			var vm = this,
+				_years = years || [];
+			vm.Years = [];
+			$.each(_years, function (i, y) {
+				vm.Years.push({ Text: y, Value: y});
+			});
+			vm.DefaultYear = defaultYear;
+			if ($.isEmptyObject(vm.currentYear) || !$.isArray(vm.currentYear, _years)) { vm.currentYear = vm.DefaultYear; }
 
-			if ($.isEmptyObject(this.currentYear) || this.Years.findIndex(year => year.Value === this.currentYear) === -1) {
-				this.currentYear = this.DefaultYear;
-			}
-
-			this.isMultiYearApp = this.Years.length > 1
+			vm.isMultiYearApp = vm.Years.length > 1
 		},
 		getYears() {
 			var vm = this;

@@ -133,32 +133,21 @@
 			// Prevent dropping outside allowed areas
 			window.addEventListener(
 				'dragover',
-				this.onDragover,
+				(event) => {
+					event.preventDefault()
+				},
 				false
 			)
 			window.addEventListener(
 				'drop',
-				this.onDrop,
+				(event) => {
+					event.preventDefault()
+					this.draggingCard = null
+				},
 				false
 			)
 		},
-
-		beforeUnmount()
-		{
-			window.removeEventListener('dragover', this.onDragover)
-			window.removeEventListener('drop', this.onDrop)
-		},
-
 		methods: {
-			onDragover(event) {
-				event.preventDefault()
-			},
-
-			onDrop(event) {
-				event.preventDefault()
-				this.draggingCard = null
-			},
-
 			cardsByColumn(columnId) {
 				return this.sortedCardsByColumn[columnId] || []
 			},

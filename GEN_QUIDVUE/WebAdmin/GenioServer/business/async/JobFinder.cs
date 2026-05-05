@@ -19,13 +19,20 @@ namespace CSGenio.business.async
 
         public GenioExecutableJob ObtainJob(Process process)
         {
-            var jobTypes = GetJobTypes();
+            QCacheInstance cache = QCache.Instance.ManualCode;
+
+            Dictionary<String, Type> loaded = cache.Get("loadedProcesses") as Dictionary<String, Type>;
+            if (loaded == null)
+            {
+                loaded = GetJobTypes();
+            }
+
 
             string type = process.ValType;
             string mode = process.ValModoproc;
             string key = type + ";" + mode;
 
-            Type processType = jobTypes[key];
+            Type processType = loaded[key];
             if (processType != null)
             {
                 return createJob(processType, process);
@@ -71,17 +78,8 @@ namespace CSGenio.business.async
     {
         protected override Dictionary<string, Type> GetJobTypes()
         {
-            QCacheInstance cache = QCache.Instance.AsyncProcesses;
-            Dictionary<String, Type> loadedProcesses = cache.Get("processTypes") as Dictionary<String, Type>;
-            if (loadedProcesses != null)
-            {
-                return loadedProcesses;
-            }
-            else
-            {
-                loadedProcesses = new Dictionary<String, Type>();
-            }
-
+            Dictionary<String, Type> loadedProcesses = new Dictionary<String, Type>();
+            
             var assemblyList = new List<Assembly>
             {
                 Assembly.Load("GenioServer"),
@@ -95,9 +93,8 @@ namespace CSGenio.business.async
                     AddType(loadedProcesses, tipo);
                 }
             }
-            Log.Info("Async Process Types loaded");
 
-            cache.Put("processTypes", loadedProcesses);
+            QCache.Instance.ManualCode.Put("loadedProcesses", loadedProcesses);
             return loadedProcesses;
         }
     }

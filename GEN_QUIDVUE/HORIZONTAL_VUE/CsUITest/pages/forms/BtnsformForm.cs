@@ -8,6 +8,6 @@ namespace quidgest.uitests.pages.forms;
 public class BtnsformForm : Form
 {
 
-	public BtnsformForm(IWebDriver driver, FORM_MODE mode, By? containerLocator = null, bool usePkInId = false)
-		: base(driver, mode, "BTNSFORM", containerLocator: containerLocator, usePkInId: usePkInId) { }
+	public BtnsformForm(IWebDriver driver, FORM_MODE mode, By? containerLocator = null)
+		: base(driver, mode, "BTNSFORM", containerLocator: containerLocator) { }
 }

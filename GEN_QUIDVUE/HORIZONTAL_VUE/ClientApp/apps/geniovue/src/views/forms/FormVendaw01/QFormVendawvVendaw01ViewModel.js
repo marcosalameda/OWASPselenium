@@ -1,4 +1,4 @@
-﻿/* eslint-disable @typescript-eslint/no-unused-vars */
+﻿/* eslint-disable no-unused-vars */
 import { computed, reactive, watch } from 'vue'
 import _merge from 'lodash-es/merge'
 
@@ -11,7 +11,7 @@ import netAPI from '@quidgest/clientapp/network'
 import qApi from '@/api/genio/quidgestFunctions.js'
 import qFunctions from '@/api/genio/projectFunctions.js'
 import qProjArrays from '@/api/genio/projectArrays.js'
-/* eslint-enable @typescript-eslint/no-unused-vars */
+/* eslint-enable no-unused-vars */
 
 /**
  * Represents a ViewModel class.
@@ -25,11 +25,11 @@ export default class ViewModel extends FormViewModelBase
 	 * @param {object} options - The options for the ViewModel
 	 * @param {object} values - A ViewModel instance to copy values from
 	 */
-	// eslint-disable-next-line @typescript-eslint/no-unused-vars
+	// eslint-disable-next-line no-unused-vars
 	constructor(vueContext, options, values)
 	{
 		super(vueContext, options)
-		// eslint-disable-next-line @typescript-eslint/no-unused-vars
+		// eslint-disable-next-line no-unused-vars
 		const vm = this.vueContext
 
 		// The view model metadata
@@ -37,9 +37,8 @@ export default class ViewModel extends FormViewModelBase
 			name: 'VENDAW01',
 			area: 'SALE',
 			actions: {
-				recalculateFormulas: 'RecalculateFormulas_Vendaw01',
-				updateFilesTickets: 'UpdateFilesTicketsVendaw01',
-				setFile: 'SetFileVendaw01'
+				recalculateFormulas: 'RecalculateFormulas_VENDAW01',
+				updateFilesTickets: 'UpdateFilesTicketsVENDAW01'
 			}
 		})
 
@@ -51,7 +50,7 @@ export default class ViewModel extends FormViewModelBase
 			field: 'CODVENDA',
 			description: '',
 		}).cloneFrom(values?.ValCodvenda))
-		this.stopWatchers.push(watch(() => this.ValCodvenda.value, (newValue, oldValue) => this.onUpdate('sale.codvenda', this.ValCodvenda, newValue, oldValue)))
+		watch(() => this.ValCodvenda.value, (newValue, oldValue) => this.onUpdate('sale.codvenda', this.ValCodvenda, newValue, oldValue))
 
 		/** The used foreign keys. */
 		this.ValCodorgan = reactive(new modelFieldType.ForeignKey({
@@ -62,7 +61,7 @@ export default class ViewModel extends FormViewModelBase
 			relatedArea: 'ORGAN',
 			description: '',
 		}).cloneFrom(values?.ValCodorgan))
-		this.stopWatchers.push(watch(() => this.ValCodorgan.value, (newValue, oldValue) => this.onUpdate('sale.codorgan', this.ValCodorgan, newValue, oldValue)))
+		watch(() => this.ValCodorgan.value, (newValue, oldValue) => this.onUpdate('sale.codorgan', this.ValCodorgan, newValue, oldValue))
 
 		/** The remaining form fields. */
 		this.TableOrganOrganiza = reactive(new modelFieldType.String({
@@ -73,9 +72,8 @@ export default class ViewModel extends FormViewModelBase
 			field: 'ORGANIZA',
 			maxLength: 85,
 			description: computed(() => this.Resources.ORGANIZATION64123),
-			ignoreFldSubmit: true,
 		}).cloneFrom(values?.TableOrganOrganiza))
-		this.stopWatchers.push(watch(() => this.TableOrganOrganiza.value, (newValue, oldValue) => this.onUpdate('organ.organiza', this.TableOrganOrganiza, newValue, oldValue)))
+		watch(() => this.TableOrganOrganiza.value, (newValue, oldValue) => this.onUpdate('organ.organiza', this.TableOrganOrganiza, newValue, oldValue))
 
 		this.ValIdentifi = reactive(new modelFieldType.String({
 			id: 'ValIdentifi',
@@ -85,7 +83,7 @@ export default class ViewModel extends FormViewModelBase
 			maxLength: 85,
 			description: computed(() => this.Resources.IDENTIFICATION_OF_BU58085),
 		}).cloneFrom(values?.ValIdentifi))
-		this.stopWatchers.push(watch(() => this.ValIdentifi.value, (newValue, oldValue) => this.onUpdate('sale.identifi', this.ValIdentifi, newValue, oldValue)))
+		watch(() => this.ValIdentifi.value, (newValue, oldValue) => this.onUpdate('sale.identifi', this.ValIdentifi, newValue, oldValue))
 
 		this.ValPotcompr = reactive(new modelFieldType.String({
 			id: 'ValPotcompr',
@@ -95,7 +93,7 @@ export default class ViewModel extends FormViewModelBase
 			maxLength: 50,
 			description: computed(() => this.Resources.POTENTIAL_BUYERS56564),
 		}).cloneFrom(values?.ValPotcompr))
-		this.stopWatchers.push(watch(() => this.ValPotcompr.value, (newValue, oldValue) => this.onUpdate('sale.potcompr', this.ValPotcompr, newValue, oldValue)))
+		watch(() => this.ValPotcompr.value, (newValue, oldValue) => this.onUpdate('sale.potcompr', this.ValPotcompr, newValue, oldValue))
 
 		this.ValProspecc = reactive(new modelFieldType.Boolean({
 			id: 'ValProspecc',
@@ -104,7 +102,7 @@ export default class ViewModel extends FormViewModelBase
 			field: 'PROSPECC',
 			description: computed(() => this.Resources.PROSPECTING_CARRIED_08979),
 		}).cloneFrom(values?.ValProspecc))
-		this.stopWatchers.push(watch(() => this.ValProspecc.value, (newValue, oldValue) => this.onUpdate('sale.prospecc', this.ValProspecc, newValue, oldValue)))
+		watch(() => this.ValProspecc.value, (newValue, oldValue) => this.onUpdate('sale.prospecc', this.ValProspecc, newValue, oldValue))
 	}
 
 	/**

@@ -330,7 +330,8 @@ export default {
 						dataType: "Text",
 						dataDisplay: listFunctions.textDisplayCell,
 						dataSearch: listFunctions.textSearchCell,
-						sortable: false
+						sortable: false,
+						distinctValues: [],
 					},
 					{
 						label: "Text",
@@ -422,6 +423,7 @@ export default {
 					name: "DFLDS",
 					pkColumn: "PrimaryKey",
 					tableTitle: "Basic Types",
+					lcid: "pt-PT",
 					numberFormat: {
 						decimalSeparator: ",",
 						groupSeparator: ".",
@@ -438,6 +440,9 @@ export default {
 						type: "popup",
 						mode: "insert",
 						repeatInsert: false,
+					},
+					globalSearch: {
+						visibility: false,
 					},
 					crudActions: [
 						{ "name":"show_table", "title": "custom", "icon": "duplicate", "iconSvg": "duplicate", isInReadOnly: false, "params": {"type": "form", "formName": "FORMY", "mode": "SHOW"} },
@@ -459,42 +464,51 @@ export default {
 					{
 						id: 'filter_GQT_Menu_111_DEVOLUCAO',
 						isMultiple: false,
-						selected: '3',
+						value: '2',
 						filters: [
 							{
+								key: '0',
+								value: {text: 'POR_DEVOLVER13204', selected: false},
+								id: 'filter_GQT_Menu_111_DEVOLUCAO_0'
+							},
+
+							{
 								key: '1',
-								value: 'To return'
+								value: {text: 'DEVOLVIDOS52106', selected: false},
+								id: 'filter_GQT_Menu_111_DEVOLUCAO_1'
 							},
 							{
 								key: '2',
-								value: 'Returned'
+								value: {text: 'TODOS59977', selected: true},
+								id: 'filter_GQT_Menu_111_DEVOLUCAO_2'
 							},
-							{
-								key: '3',
-								value: 'All'
-							}
+
 						]
-					}
+					},
 				],
 				activeFilters: {
-					selected: ['upcoming'],
-					items: [
+					options: [
 						{
-							key: 'current',
-							value: 'Active'
+							key: '0',
+							value: {text: 'ACTIVE', selected: false},
+							id: 'filter_GQT_Menu_111_ActiveFilter_A'
 						},
 						{
-							key: 'previous',
-							value: 'Inactive'
+							key: '1',
+							value: {text: 'INACTIVE', selected: false},
+							id: 'filter_GQT_Menu_111_ActiveFilter_I'
 						},
 						{
-							key: 'upcoming',
-							value: 'Futures'
-						}
+							key: '2',
+							value: {text: 'FUTURE', selected: true},
+							id: 'filter_GQT_Menu_111_ActiveFilter_F'
+						},
+
 					],
 					dateValue: {
 						type: "date",
 						title: "Date",
+						id: "GQT_Menu_111_dataRef",
 						value: ""
 					}
 				},
@@ -827,7 +841,8 @@ export default {
 						dataType: "Text",
 						dataDisplay: listFunctions.textDisplayCell,
 						dataSearch: listFunctions.textSearchCell,
-						sortable: false
+						sortable: false,
+						distinctValues: [],
 					},
 					{
 						label: "Text",
@@ -883,6 +898,7 @@ export default {
 					name: "MDFLDS",
 					pkColumn: "PrimaryKey",
 					tableTitle: "Multi level Tree",
+					lcid: "pt-PT",
 					numberFormat: {
 						decimalSeparator: ",",
 						groupSeparator: ".",
@@ -899,6 +915,9 @@ export default {
 						type: "popup",
 						mode: "insert",
 						repeatInsert: false,
+					},
+					globalSearch: {
+						visibility: false,
 					},
 					crudActions: [
 						{ "name":"show_table", "title": "custom", "icon": "duplicate", "iconSvg": "duplicate", isInReadOnly: false, "params": {"type": "form", "formName": "FORMY", "mode": "SHOW"} },
@@ -920,42 +939,48 @@ export default {
 					{
 						id: 'filter_GQT_Menu_111_DEVOLUCAO',
 						isMultiple: false,
-						selected: '3',
+						value: '2',
 						filters: [
 							{
+								key: '0',
+								value: {text: 'POR_DEVOLVER13204', selected: false},
+								id: 'filter_GQT_Menu_111_DEVOLUCAO_0'
+							},
+							{
 								key: '1',
-								value: 'To return'
+								value: {text: 'DEVOLVIDOS52106', selected: false},
+								id: 'filter_GQT_Menu_111_DEVOLUCAO_1'
 							},
 							{
 								key: '2',
-								value: 'Returned'
+								value: {text: 'TODOS59977', selected: true},
+								id: 'filter_GQT_Menu_111_DEVOLUCAO_2'
 							},
-							{
-								key: '3',
-								value: 'All'
-							}
 						]
-					}
+					},
 				],
 				activeFilters: {
-					selected: ['upcoming'],
-					items: [
+					options: [
 						{
-							key: 'current',
-							value: 'Active'
+							key: '0',
+							value: {text: 'ACTIVE', selected: false},
+							id: 'filter_GQT_Menu_111_ActiveFilter_A'
 						},
 						{
-							key: 'previous',
-							value: 'Inactive'
+							key: '1',
+							value: {text: 'INACTIVE', selected: false},
+							id: 'filter_GQT_Menu_111_ActiveFilter_I'
 						},
 						{
-							key: 'upcoming',
-							value: 'Futures'
-						}
+							key: '2',
+							value: {text: 'FUTURE', selected: true},
+							id: 'filter_GQT_Menu_111_ActiveFilter_F'
+						},
 					],
 					dateValue: {
 						type: "date",
 						title: "Date",
+						id: "GQT_Menu_111_dataRef",
 						value: ""
 					}
 				},
@@ -1287,7 +1312,8 @@ export default {
 						dataType: "Text",
 						dataDisplay: listFunctions.textDisplayCell,
 						dataSearch: listFunctions.textSearchCell,
-						sortable: false
+						sortable: false,
+						distinctValues: [],
 					},
 					{
 						label: "Text",
@@ -1343,6 +1369,7 @@ export default {
 					name: "IDFLDS",
 					pkColumn: "PrimaryKey",
 					tableTitle: "Customize Icons",
+					lcid: "pt-PT",
 					numberFormat: {
 						decimalSeparator: ",",
 						groupSeparator: ".",
@@ -1359,6 +1386,9 @@ export default {
 						type: "popup",
 						mode: "insert",
 						repeatInsert: false,
+					},
+					globalSearch: {
+						visibility: false,
 					},
 					crudActions: [
 						{ "name":"show_table", "title": "custom", "icon": "duplicate", "iconSvg": "duplicate", isInReadOnly: false, "params": {"type": "form", "formName": "FORMY", "mode": "SHOW"} },
@@ -1380,42 +1410,48 @@ export default {
 					{
 						id: 'filter_GQT_Menu_111_DEVOLUCAO',
 						isMultiple: false,
-						selected: '3',
+						value: '2',
 						filters: [
 							{
+								key: '0',
+								value: {text: 'POR_DEVOLVER13204', selected: false},
+								id: 'filter_GQT_Menu_111_DEVOLUCAO_0'
+							},
+							{
 								key: '1',
-								value: 'To return'
+								value: {text: 'DEVOLVIDOS52106', selected: false},
+								id: 'filter_GQT_Menu_111_DEVOLUCAO_1'
 							},
 							{
 								key: '2',
-								value: 'Returned'
+								value: {text: 'TODOS59977', selected: true},
+								id: 'filter_GQT_Menu_111_DEVOLUCAO_2'
 							},
-							{
-								key: '3',
-								value: 'All'
-							}
 						]
-					}
+					},
 				],
 				activeFilters: {
-					selected: ['upcoming'],
-					items: [
+					options: [
 						{
-							key: 'current',
-							value: 'Active'
+							key: '0',
+							value: {text: 'ACTIVE', selected: false},
+							id: 'filter_GQT_Menu_111_ActiveFilter_A'
 						},
 						{
-							key: 'previous',
-							value: 'Inactive'
+							key: '1',
+							value: {text: 'INACTIVE', selected: false},
+							id: 'filter_GQT_Menu_111_ActiveFilter_I'
 						},
 						{
-							key: 'upcoming',
-							value: 'Futures'
-						}
+							key: '2',
+							value: {text: 'FUTURE', selected: true},
+							id: 'filter_GQT_Menu_111_ActiveFilter_F'
+						},
 					],
 					dateValue: {
 						type: "date",
 						title: "Date",
+						id: "GQT_Menu_111_dataRef",
 						value: ""
 					}
 				},
@@ -1737,6 +1773,9 @@ export default {
 							"mode": "SHOW",
 							"isPopup": false
 						},
+						globalSearch: {
+							visibility: false,
+						},
 						cellAction: true,
 						hasTreeShowHide:true,
 						scrollData: 5,
@@ -1856,6 +1895,7 @@ export default {
 					name: "NDFLDS",
 					pkColumn: "PrimaryKey",
 					tableTitle: "Invalid Tree Data",
+					lcid: "pt-PT",
 					numberFormat: {
 						decimalSeparator: ",",
 						groupSeparator: ".",
@@ -1872,6 +1912,9 @@ export default {
 						type: "popup",
 						mode: "insert",
 						repeatInsert: false,
+					},
+					globalSearch: {
+						visibility: false,
 					},
 					crudActions: [
 						{ "name":"show_table", "title": "custom", "icon": "duplicate", "iconSvg": "duplicate", isInReadOnly: false, "params": {"type": "form", "formName": "FORMY", "mode": "SHOW"} },
@@ -2216,7 +2259,8 @@ export default {
 						dataType: "Text",
 						dataDisplay: listFunctions.textDisplayCell,
 						dataSearch: listFunctions.textSearchCell,
-						sortable: false
+						sortable: false,
+						distinctValues: [],
 					},
 					{
 						label: "Text",
@@ -2272,6 +2316,7 @@ export default {
 					name: "LDFLD",
 					pkColumn: "PrimaryKey",
 					tableTitle: "Large Tree Cells",
+					lcid: "pt-PT",
 					numberFormat: {
 						decimalSeparator: ",",
 						groupSeparator: ".",
@@ -2288,6 +2333,9 @@ export default {
 						type: "popup",
 						mode: "insert",
 						repeatInsert: false,
+					},
+					globalSearch: {
+						visibility: false,
 					},
 					crudActions: [
 						{ "name":"show_table", "title": "custom", "icon": "duplicate", "iconSvg": "duplicate", isInReadOnly: false, "params": {"type": "form", "formName": "FORMY", "mode": "SHOW"} },
@@ -2309,42 +2357,49 @@ export default {
 					{
 						id: 'filter_GQT_Menu_111_DEVOLUCAO',
 						isMultiple: false,
-						selected: '3',
+						value: '2',
 						filters: [
 							{
+								key: '0',
+								value: {text: 'POR_DEVOLVER13204', selected: false},
+								id: 'filter_GQT_Menu_111_DEVOLUCAO_0'
+							},
+							{
 								key: '1',
-								value: 'To return'
+								value: {text: 'DEVOLVIDOS52106', selected: false},
+								id: 'filter_GQT_Menu_111_DEVOLUCAO_1'
 							},
 							{
 								key: '2',
-								value: 'Returned'
+								value: {text: 'TODOS59977', selected: true},
+								id: 'filter_GQT_Menu_111_DEVOLUCAO_2'
 							},
-							{
-								key: '3',
-								value: 'All'
-							}
 						]
-					}
+					},
 				],
 				activeFilters: {
-					selected: ['upcoming'],
-					items: [
+					options: [
 						{
-							key: 'current',
-							value: 'Active'
+							key: '0',
+							value: {text: 'ACTIVE', selected: false},
+							id: 'filter_GQT_Menu_111_ActiveFilter_A'
 						},
 						{
-							key: 'previous',
-							value: 'Inactive'
+							key: '1',
+							value: {text: 'INACTIVE', selected: false},
+							id: 'filter_GQT_Menu_111_ActiveFilter_I'
 						},
 						{
-							key: 'upcoming',
-							value: 'Futures'
-						}
+							key: '2',
+							value: {text: 'FUTURE', selected: true},
+							id: 'filter_GQT_Menu_111_ActiveFilter_F'
+						},
+
 					],
 					dateValue: {
 						type: "date",
 						title: "Date",
+						id: "GQT_Menu_111_dataRef",
 						value: ""
 					}
 				},
@@ -2540,7 +2595,8 @@ export default {
 						dataType: "Text",
 						dataDisplay: listFunctions.textDisplayCell,
 						dataSearch: listFunctions.textSearchCell,
-						sortable: false
+						sortable: false,
+						distinctValues: [],
 					},
 					{
 						label: "Numeric1",
@@ -2626,6 +2682,7 @@ export default {
 					name: "RDFLDS",
 					pkColumn: "PrimaryKey",
 					tableTitle: "Remove Rows",
+					lcid: "pt-PT",
 					numberFormat: {
 						decimalSeparator: ",",
 						groupSeparator: ".",
@@ -2643,6 +2700,9 @@ export default {
 						mode: "insert",
 						repeatInsert: false,
 					},
+					globalSearch: {
+						visibility: false,
+					},
 					actionsPlacement: "left",
 					rowClickActionInternal: "",
 					rowBgColorSelected: "#e0e0e0",
@@ -2657,15 +2717,15 @@ export default {
 	},
 	simpleUsageMethods: {
 		runAction(eventName, emittedAction) {
-			const str = eventName + ":\n" + JSON.stringify(emittedAction);
+			var str = eventName + ":\n" + JSON.stringify(emittedAction);
 			alert(str);
 		},
 		displayEmit(emittedAction) {
-			const str = JSON.stringify(emittedAction);
+			var str = JSON.stringify(emittedAction);
 			alert(str);
 		},
 		displayAction(eventName, emittedAction) {
-			const str = eventName + ":\n" + JSON.stringify(emittedAction);
+			var str = eventName + ":\n" + JSON.stringify(emittedAction);
 			alert(str);
 		},
 
@@ -2695,13 +2755,13 @@ export default {
 		},
 		//FOR: EXTENDED ROW ACTIONS - REMOVE
 		removeRow(rows, rowNum) {
-			const rowIdx = rows.findIndex((elem) => elem.Rownum === rowNum);
+			var rowIdx = rows.findIndex((elem) => elem.Rownum === rowNum);
 			rows.splice(rowIdx, 1);
 		},
 		arrayToTree(rows) {
 			// 1. Creating all nodes of the tree.
 
-			const allNodes = {};
+			let allNodes = {};
 			rows.forEach((row) => {
 				//	Rownum should not be equal to 0.
 				if (row.Rownum === 0) {
@@ -2711,7 +2771,7 @@ export default {
 				allNodes[row.Rownum] = { ...row, children: [] };
 			});
 
-			const treeDataRows = [];
+			let treeDataRows = [];
 			rows.forEach((row) => {
 				if (row.ParentRownum) {
 				// It's a child Node.

@@ -10,12 +10,10 @@
 				<q-table
 					v-bind="controls.menu"
 					v-on="controls.menu.handlers">
-					<!-- USE /[MANUAL GQT CUSTOM_TABLE PTN_Menu_3171]/ -->
 				</q-table>
 
 				<q-table-extra-extension
 					:list-ctrl="controls.menu"
-					:filter-operators="controls.menu.filterOperators"
 					v-on="controls.menu.handlers" />
 			</q-row-container>
 		</form>
@@ -50,7 +48,7 @@
 </template>
 
 <script>
-	/* eslint-disable @typescript-eslint/no-unused-vars */
+	/* eslint-disable no-unused-vars */
 	import asyncProcM from '@quidgest/clientapp/composables/async'
 	import qEnums from '@quidgest/clientapp/constants/enums'
 	import netAPI from '@quidgest/clientapp/network'
@@ -70,7 +68,7 @@
 	import qApi from '@/api/genio/quidgestFunctions.js'
 	import qFunctions from '@/api/genio/projectFunctions.js'
 	import qProjArrays from '@/api/genio/projectArrays.js'
-	/* eslint-enable @typescript-eslint/no-unused-vars */
+	/* eslint-enable no-unused-vars */
 
 	import MenuViewModel from './QMenuPTN_3171ViewModel.js'
 
@@ -155,7 +153,7 @@
 								dataLength: 6,
 								scrollData: 6,
 								showWhen: {
-									// eslint-disable-next-line @typescript-eslint/no-unused-vars
+									// eslint-disable-next-line no-unused-vars
 									fnFormula(params)
 									{
 										// Formula: 1==1
@@ -164,7 +162,6 @@
 									dependencyEvents: [],
 									isServerRecalc: false,
 								},
-								export: 1,
 								pkColumn: 'ValCodequip',
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
@@ -175,7 +172,6 @@
 								label: computed(() => this.Resources.NAME31974),
 								dataLength: 85,
 								scrollData: 30,
-								export: 1,
 								pkColumn: 'ValCodpesso',
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.BooleanColumn({
@@ -186,7 +182,7 @@
 								label: computed(() => this.Resources.IF_OUT_OF_DATE49042),
 								scrollData: 1,
 								showWhen: {
-									// eslint-disable-next-line @typescript-eslint/no-unused-vars
+									// eslint-disable-next-line no-unused-vars
 									fnFormula(params)
 									{
 										// Formula: 1==0
@@ -195,7 +191,6 @@
 									dependencyEvents: [],
 									isServerRecalc: false,
 								},
-								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 						],
 						config: {
@@ -216,7 +211,8 @@
 								canInsert: false
 							},
 							searchBarConfig: {
-								visibility: true
+								visibility: true,
+								searchOnPressEnter: true
 							},
 							filtersVisible: true,
 							allowColumnFilters: true,
@@ -240,11 +236,10 @@
 								sortOrder: 'asc'
 							}
 						},
-						globalEvents: ['changed-PESS2', 'changed-LENDI', 'changed-PESS1', 'changed-EQUIP'],
+						globalEvents: ['changed-LENDI', 'changed-PESS1', 'changed-EQUIP', 'changed-PESS2'],
 						uuid: '268f1687-b188-404a-b931-891cf50aad64',
 						allSelectedRows: 'false',
 						headerLevel: 1,
-						isActiveControl: computed(() => this.isActiveMenu)
 					}, this),
 				}
 			}
@@ -268,14 +263,6 @@
 		{
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
 // USE /[MANUAL GQT FORM_CODEJS PTN_MENU_3171]/
-// eslint-disable-next-line
-/* eslint-enable indent, vue/html-indent, vue/script-indent */
-		},
-
-		beforeUnmount()
-		{
-/* eslint-disable indent, vue/html-indent, vue/script-indent */
-// USE /[MANUAL GQT COMPONENT_BEFORE_UNMOUNT PTN_MENU_3171]/
 // eslint-disable-next-line
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 		},

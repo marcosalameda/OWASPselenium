@@ -2,7 +2,6 @@
 
   <PropertyGroup>
     <TargetFrameworks>net8.0;net48</TargetFrameworks>
-    <ProduceReferenceAssembly>true</ProduceReferenceAssembly>
   </PropertyGroup>
 
   <!-- Core specific libraries-->

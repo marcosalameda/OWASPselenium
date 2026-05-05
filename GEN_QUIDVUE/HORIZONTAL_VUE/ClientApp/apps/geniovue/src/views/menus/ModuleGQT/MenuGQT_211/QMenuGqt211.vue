@@ -3,23 +3,20 @@
 		v-if="menuModalIsReady"
 		:to="`#${uiContainersId.body}`"
 		:disabled="!menuInfo.isPopup">
-		<div
+		<form
 			class="form-horizontal"
 			@submit.prevent>
 			<q-row-container>
 				<q-table
 					v-bind="controls.menu"
 					v-on="controls.menu.handlers">
-					<template #header>
-						<q-table-config
-							:table-ctrl="controls.menu"
-							v-on="controls.menu.handlers">
-						</q-table-config>
-					</template>
-					<!-- USE /[MANUAL GQT CUSTOM_TABLE GQT_Menu_211]/ -->
 				</q-table>
+
+				<q-table-extra-extension
+					:list-ctrl="controls.menu"
+					v-on="controls.menu.handlers" />
 			</q-row-container>
-		</div>
+		</form>
 	</teleport>
 
 	<teleport
@@ -51,7 +48,7 @@
 </template>
 
 <script>
-	/* eslint-disable @typescript-eslint/no-unused-vars */
+	/* eslint-disable no-unused-vars */
 	import asyncProcM from '@quidgest/clientapp/composables/async'
 	import qEnums from '@quidgest/clientapp/constants/enums'
 	import netAPI from '@quidgest/clientapp/network'
@@ -71,7 +68,7 @@
 	import qApi from '@/api/genio/quidgestFunctions.js'
 	import qFunctions from '@/api/genio/projectFunctions.js'
 	import qProjArrays from '@/api/genio/projectArrays.js'
-	/* eslint-enable @typescript-eslint/no-unused-vars */
+	/* eslint-enable no-unused-vars */
 
 	import MenuViewModel from './QMenuGQT_211ViewModel.js'
 
@@ -155,7 +152,6 @@
 								label: computed(() => this.Resources.DESIGNATION35876),
 								dataLength: 85,
 								scrollData: 30,
-								export: 1,
 								pkColumn: 'ValCodempre',
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.NumericColumn({
@@ -167,7 +163,6 @@
 								scrollData: 6,
 								maxDigits: 6,
 								decimalPlaces: 0,
-								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 3,
@@ -177,7 +172,6 @@
 								label: computed(() => this.Resources.NO__REGISTER04207),
 								dataLength: 6,
 								scrollData: 6,
-								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 4,
@@ -187,7 +181,6 @@
 								label: computed(() => this.Resources.TYPE_OF_EQUIPMENT18080),
 								dataLength: 50,
 								scrollData: 30,
-								export: 1,
 								pkColumn: 'ValCodtpequ',
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
@@ -198,7 +191,6 @@
 								label: computed(() => this.Resources.DESIGNATION35876),
 								dataLength: 85,
 								scrollData: 30,
-								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.DateColumn({
 								order: 6,
@@ -208,7 +200,6 @@
 								label: computed(() => this.Resources.ACQUISITION44180),
 								scrollData: 8,
 								dateTimeType: 'date',
-								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.DateColumn({
 								order: 7,
@@ -217,8 +208,7 @@
 								field: 'DTDECO',
 								label: computed(() => this.Resources.DECOMISSION14486),
 								scrollData: 8,
-								dateTimeType: 'date',
-								export: 1,
+								dateTimeType: 'dateTime',
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.HyperLinkColumn({
 								order: 8,
@@ -228,7 +218,6 @@
 								label: computed(() => this.Resources.SITIO_FABRICANTE26458),
 								dataLength: 256,
 								scrollData: 30,
-								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 						],
 						config: {
@@ -244,8 +233,10 @@
 							permissions: {
 							},
 							searchBarConfig: {
-								visibility: true
+								visibility: true,
+								searchOnPressEnter: true
 							},
+							filtersVisible: true,
 							allowColumnFilters: true,
 							allowColumnSort: true,
 							crudActions: [
@@ -319,7 +310,9 @@
 									id: 'insert',
 									name: 'insert',
 									title: computed(() => this.Resources.INSERIR43365),
-									icon: { icon: 'add' },
+									icon: {
+										icon: 'add'
+									},
 									isInReadOnly: true,
 									params: {
 										action: vm.openFormAction,
@@ -342,7 +335,6 @@
 							rowClickAction: {
 								id: 'RCA_GQT_2111',
 								name: 'form-EQUIP',
-								isVisible: true,
 								params: {
 									isRoute: true,
 									limits: [
@@ -370,33 +362,31 @@
 							}
 						},
 						activeFilters: {
-							selected: ['current'],
-							default: ['current'],
-							items: [
-								{
-									id: 'filter_GQT_Menu_211_current',
+							options: {
+								active: {
+									id: 'filter_GQT_Menu_211_ActiveFilter_A',
 									value: computed(() => this.Resources.ATIVOS54304),
-									key: 'current'
+									selected: true
 								},
-								{
-									id: 'filter_GQT_Menu_211_previous',
+								inactive: {
+									id: 'filter_GQT_Menu_211_ActiveFilter_I',
 									value: computed(() => this.Resources.INATIVOS00149),
-									key: 'previous'
+									selected: false
 								},
-								{
-									id: 'filter_GQT_Menu_211_upcoming',
+								future: {
+									id: 'filter_GQT_Menu_211_ActiveFilter_F',
 									value: computed(() => this.Resources.FUTUROS10545),
-									key: 'upcoming'
+									selected: false
 								}
-							],
-							date: {
-								id: 'filter_GQT_Menu_211_date',
+							},
+							dateValue: {
+								id: 'GQT_Menu_211_dataRef',
 								type: 'date',
 								value: new Date(),
 								title: computed(() => this.Resources.DATA18071),
 							}
 						},
-						globalEvents: ['changed-EQUIP', 'changed-TPEQU', 'changed-ROOM1', 'changed-DECOM', 'changed-PESS1', 'changed-WAREH', 'changed-ITEM', 'changed-CMPNY'],
+						globalEvents: ['changed-TPEQU', 'changed-ROOM1', 'changed-CMPNY', 'changed-EQUIP', 'changed-WAREH', 'changed-ITEM', 'changed-DECOM', 'changed-PESS1'],
 						uuid: '9c20afa8-9950-45e5-9447-fccf9853de7d',
 						allSelectedRows: 'false',
 						viewModes: [
@@ -568,7 +558,6 @@
 							},
 						],
 						headerLevel: 1,
-						isActiveControl: computed(() => this.isActiveMenu)
 					}, this),
 				}
 			}
@@ -592,14 +581,6 @@
 		{
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
 // USE /[MANUAL GQT FORM_CODEJS GQT_MENU_211]/
-// eslint-disable-next-line
-/* eslint-enable indent, vue/html-indent, vue/script-indent */
-		},
-
-		beforeUnmount()
-		{
-/* eslint-disable indent, vue/html-indent, vue/script-indent */
-// USE /[MANUAL GQT COMPONENT_BEFORE_UNMOUNT GQT_MENU_211]/
 // eslint-disable-next-line
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 		},

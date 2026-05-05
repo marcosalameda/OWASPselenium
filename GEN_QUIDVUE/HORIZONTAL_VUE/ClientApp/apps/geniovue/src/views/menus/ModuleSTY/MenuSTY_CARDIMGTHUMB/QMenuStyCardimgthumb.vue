@@ -3,23 +3,20 @@
 		v-if="menuModalIsReady"
 		:to="`#${uiContainersId.body}`"
 		:disabled="!menuInfo.isPopup">
-		<div
+		<form
 			class="form-horizontal"
 			@submit.prevent>
 			<q-row-container>
 				<q-table
 					v-bind="controls.menu"
 					v-on="controls.menu.handlers">
-					<template #header>
-						<q-table-config
-							:table-ctrl="controls.menu"
-							v-on="controls.menu.handlers">
-						</q-table-config>
-					</template>
-					<!-- USE /[MANUAL GQT CUSTOM_TABLE STY_Menu_CARDIMGTHUMB]/ -->
 				</q-table>
+
+				<q-table-extra-extension
+					:list-ctrl="controls.menu"
+					v-on="controls.menu.handlers" />
 			</q-row-container>
-		</div>
+		</form>
 	</teleport>
 
 	<teleport
@@ -51,7 +48,7 @@
 </template>
 
 <script>
-	/* eslint-disable @typescript-eslint/no-unused-vars */
+	/* eslint-disable no-unused-vars */
 	import asyncProcM from '@quidgest/clientapp/composables/async'
 	import qEnums from '@quidgest/clientapp/constants/enums'
 	import netAPI from '@quidgest/clientapp/network'
@@ -71,7 +68,7 @@
 	import qApi from '@/api/genio/quidgestFunctions.js'
 	import qFunctions from '@/api/genio/projectFunctions.js'
 	import qProjArrays from '@/api/genio/projectArrays.js'
-	/* eslint-enable @typescript-eslint/no-unused-vars */
+	/* eslint-enable no-unused-vars */
 
 	import MenuViewModel from './QMenuSTY_CARDIMGTHUMBViewModel.js'
 
@@ -155,7 +152,6 @@
 								label: computed(() => this.Resources.NAME31974),
 								dataLength: 50,
 								scrollData: 30,
-								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.DateColumn({
 								order: 2,
@@ -165,7 +161,6 @@
 								label: computed(() => this.Resources.DATA_DE_NASCIMENTO48110),
 								scrollData: 8,
 								dateTimeType: 'date',
-								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.ArrayColumn({
 								order: 3,
@@ -175,8 +170,8 @@
 								label: computed(() => this.Resources.SEXO52099),
 								dataLength: 9,
 								scrollData: 9,
-								export: 1,
-								array: computed(() => new qProjArrays.QArraySexo(vm.$getResource).elements),
+								array: computed(() => qProjArrays.QArraySexo.setResources(vm.$getResource).elements),
+								arrayType: qProjArrays.QArraySexo.type,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.NumericColumn({
 								order: 4,
@@ -187,7 +182,6 @@
 								scrollData: 1,
 								maxDigits: 6,
 								decimalPlaces: 0,
-								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 5,
@@ -197,7 +191,6 @@
 								label: computed(() => this.Resources.ADDRESS04342),
 								dataLength: 100,
 								scrollData: 30,
-								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 6,
@@ -207,7 +200,6 @@
 								label: computed(() => this.Resources.ZIP_CODE56964),
 								dataLength: 8,
 								scrollData: 8,
-								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 7,
@@ -217,7 +209,6 @@
 								label: computed(() => this.Resources.PAIS04637),
 								dataLength: 50,
 								scrollData: 30,
-								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 8,
@@ -227,7 +218,6 @@
 								label: computed(() => this.Resources.EMAIL25170),
 								dataLength: 150,
 								scrollData: 30,
-								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.NumericColumn({
 								order: 9,
@@ -238,7 +228,6 @@
 								scrollData: 9,
 								maxDigits: 9,
 								decimalPlaces: 0,
-								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 10,
@@ -248,7 +237,6 @@
 								label: computed(() => this.Resources.NATURALNESS33189),
 								dataLength: 50,
 								scrollData: 30,
-								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 11,
@@ -258,7 +246,6 @@
 								label: computed(() => this.Resources.NACIONALIDADE23735),
 								dataLength: 50,
 								scrollData: 30,
-								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 12,
@@ -268,7 +255,6 @@
 								label: computed(() => this.Resources.WAREHOUSE51864),
 								dataLength: 85,
 								scrollData: 30,
-								export: 1,
 								pkColumn: 'ValCodwareh',
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.ImageColumn({
@@ -281,7 +267,6 @@
 								scrollData: 3,
 								sortable: false,
 								searchable: false,
-								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 						],
 						config: {
@@ -301,8 +286,10 @@
 								canDelete: false,
 							},
 							searchBarConfig: {
-								visibility: true
+								visibility: true,
+								searchOnPressEnter: true
 							},
+							filtersVisible: true,
 							allowColumnFilters: true,
 							allowColumnSort: true,
 							crudActions: [
@@ -312,7 +299,9 @@
 									id: 'insert',
 									name: 'insert',
 									title: computed(() => this.Resources.INSERIR43365),
-									icon: { icon: 'add' },
+									icon: {
+										icon: 'add'
+									},
 									isInReadOnly: true,
 									params: {
 										action: vm.openFormAction,
@@ -335,7 +324,6 @@
 							rowClickAction: {
 								id: 'RCA_STY_22411',
 								name: 'form-ARMAPESS',
-								isVisible: true,
 								params: {
 									isRoute: true,
 									limits: [
@@ -361,7 +349,7 @@
 								sortOrder: 'asc'
 							}
 						},
-						globalEvents: ['changed-WAREH', 'changed-WPESS'],
+						globalEvents: ['changed-WPESS', 'changed-WAREH'],
 						uuid: '5b3c192d-de40-4fc4-bf07-308da67f2edd',
 						allSelectedRows: 'false',
 						viewModes: [
@@ -395,8 +383,8 @@
 										allowsMultiple: true,
 										sources: [
 											'WPESS.NACIONAL',
-											'WPESS.NFUNC',
 											'WPESS.DATE',
+											'WPESS.NFUNC',
 										]
 									},
 									image: {
@@ -443,16 +431,12 @@
 										rawValue: 'grid',
 										isMapped: false
 									},
-									gridMode: {
-										rawValue: 'fixed',
-										isMapped: false
-									},
 									containerAlignment: {
 										rawValue: 'left',
 										isMapped: false
 									},
 									hoverScaleAmount: {
-										rawValue: 1.05,
+										rawValue: '1.05',
 										isMapped: false
 									},
 									showColumnTitles: {
@@ -473,7 +457,6 @@
 							},
 						],
 						headerLevel: 1,
-						isActiveControl: computed(() => this.isActiveMenu)
 					}, this),
 				}
 			}
@@ -497,14 +480,6 @@
 		{
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
 // USE /[MANUAL GQT FORM_CODEJS STY_MENU_CARDIMGTHUMB]/
-// eslint-disable-next-line
-/* eslint-enable indent, vue/html-indent, vue/script-indent */
-		},
-
-		beforeUnmount()
-		{
-/* eslint-disable indent, vue/html-indent, vue/script-indent */
-// USE /[MANUAL GQT COMPONENT_BEFORE_UNMOUNT STY_MENU_CARDIMGTHUMB]/
 // eslint-disable-next-line
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 		},

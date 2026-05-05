@@ -104,11 +104,8 @@
 					</q-row-container>
 
 					<q-row-container is-large>
-						<q-control-wrapper
-							id="container-ChangePassword"
-							class="row-line-group">
+						<q-control-wrapper class="row-line-group">
 							<q-button
-								id="ChangePassword"
 								variant="bold"
 								:label="texts.changePassword"
 								:title="texts.changePassword"
@@ -207,14 +204,9 @@
 			<q-control-wrapper class="row-line-group">
 				<q-group-box-container :label="texts.twoFactorAuth">
 					<p>{{ texts.twoFactorAuthHelp }} {{ $app.applicationName }}</p>
+
 					<p>{{ texts.twoFactorAuthFirstStep }}</p>
-					<div>
-						<q-badge
-							v-if="model.Current2FA"
-							color="primary">
-							{{ model.Current2FA }}
-						</q-badge>
-					</div>
+
 					<q-button
 						class="fit-content"
 						:label="texts.setup2fa"
@@ -342,6 +334,7 @@
 						valueChangeEvent: 'fieldChange:pseud.nome',
 						name: 'ValNome',
 						maxLength: this.$app.authConfig.maxUsrSize,
+						labelId: 'label_ValNome',
 						isRequired: true,
 						size: 'medium'
 					}, this),
@@ -354,6 +347,7 @@
 						label: computed(() => this.Resources[hardcodedTexts.currentPassword]),
 						labelPosition: '',
 						maxLength: this.$app.authConfig.maxPswSize,
+						labelId: 'label_OldPassword',
 						isRequired: true,
 						size: 'large'
 					}, this),
@@ -366,6 +360,7 @@
 						label: computed(() => this.Resources[hardcodedTexts.newPassword]),
 						labelPosition: '',
 						maxLength: this.$app.authConfig.maxPswSize,
+						labelId: 'label_NewPassword',
 						isRequired: true,
 						size: 'large'
 					}, this),
@@ -378,6 +373,7 @@
 						label: computed(() => this.Resources[hardcodedTexts.confirmPassword]),
 						labelPosition: '',
 						maxLength: this.$app.authConfig.maxPswSize,
+						labelId: 'label_ConfirmPassword',
 						isRequired: true,
 						size: 'large'
 					}, this),
@@ -391,6 +387,7 @@
 						labelPosition: '',
 						placeholder: computed(() => this.Resources[hardcodedTexts.currentPassword]),
 						maxLength: this.$app.authConfig.maxPswSize,
+						labelId: 'label_Password',
 						isRequired: true,
 						size: 'large'
 					}, this)
@@ -461,7 +458,7 @@
 
 			setData(modelValue)
 			{
-				for (const fld in this.model)
+				for (let fld in this.model)
 				{
 					if (this.model[fld] instanceof modelFieldType.Base)
 						this.model[fld].updateValue(modelValue[fld])
@@ -516,11 +513,11 @@
 
 			changePassword()
 			{
-				const _model = {}
+				let _model = {}
 
 				this.showErrors = false
 
-				for (const fld in this.model)
+				for (let fld in this.model)
 				{
 					if (this.model[fld] instanceof modelFieldType.Base)
 						_model[fld] = this.model[fld].value

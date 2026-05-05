@@ -131,9 +131,9 @@ namespace GenioMVC.Models
 		public string ValContact { get { return klass.ValContact; } set { klass.ValContact = value; } }
 
 		[DisplayName("Owner")]
-		/// <summary>Field : "Owner" Tipo: "L" Formula:  ""</summary>
+		/// <summary>Field : "Owner" Tipo: "C" Formula:  ""</summary>
 		[ShouldSerialize("Manuf.ValOwner")]
-		public bool ValOwner { get { return Convert.ToBoolean(klass.ValOwner); } set { klass.ValOwner = Convert.ToInt32(value); } }
+		public string ValOwner { get { return klass.ValOwner; } set { klass.ValOwner = value; } }
 
 		[DisplayName("Carrier")]
 		/// <summary>Field : "Carrier" Tipo: "L" Formula:  ""</summary>

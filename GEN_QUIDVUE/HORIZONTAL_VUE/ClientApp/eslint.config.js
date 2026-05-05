@@ -3,15 +3,17 @@
 import lintJs from '@eslint/js'
 import pluginVitest from '@vitest/eslint-plugin'
 //import prettierConfig from '@vue/eslint-config-prettier'
-import { defineConfigWithVueTs, vueTsConfigs } from '@vue/eslint-config-typescript'
+import { defineConfigWithVueTs /*, vueTsConfigs*/ } from '@vue/eslint-config-typescript'
 //import storybook from 'eslint-plugin-storybook'
 import lintVue from 'eslint-plugin-vue'
 import globals from 'globals'
+import vueParser from 'vue-eslint-parser'
 
 export default defineConfigWithVueTs(
 	{
 		name: 'app/files-to-lint',
-		files: ['**/*.{js,ts,vue}']
+		//files: ['**/*.{js,ts,vue}']
+		files: ['**/*.{js,vue}']
 	},
 
 	{
@@ -24,7 +26,7 @@ export default defineConfigWithVueTs(
 
 	// TODO: Enable this MUCH stricter preset
 	// vueTsConfigs.recommendedTypeChecked
-	vueTsConfigs.recommended,
+	//vueTsConfigs.recommended,
 
 	pluginVitest.configs.recommended,
 	//...storybook.configs['flat/recommended'],
@@ -33,6 +35,8 @@ export default defineConfigWithVueTs(
 
 	{
 		languageOptions: {
+			parser: vueParser,
+			ecmaVersion: 'latest',
 			globals: {
 				...globals.node,
 				...globals.commonjs,
@@ -45,25 +49,20 @@ export default defineConfigWithVueTs(
 	},
 
 	{
-		files: ['**/*.{js,ts,vue}'],
+		files: ['**/*.{js,vue}'],
 		rules: {
-			// FIXME: Enable this rule when the codebase is ready
-			'@typescript-eslint/no-this-alias': 'off',
-			'@typescript-eslint/no-unused-expressions': ['error', { allowTernary: true }],
-			'@typescript-eslint/no-unused-vars': 'warn',
 			eqeqeq: 'error',
 			'no-console': 'warn',
 			'no-debugger': 'warn',
 			'no-fallthrough': 'off',
 			'no-mixed-spaces-and-tabs': 'warn',
 			'no-unreachable': 'warn',
-			'no-var': 'warn',
-			'prefer-const': 'warn'
+			'no-unused-vars': 'warn'
 		}
 	},
 
 	{
-		files: ['**/*.{js,ts}'],
+		files: ['**/*.js'],
 		rules: {
 			indent: ['warn', 'tab', { SwitchCase: 1 }]
 		}
@@ -72,7 +71,7 @@ export default defineConfigWithVueTs(
 	{
 		files: ['**/*.vue'],
 		rules: {
-			'vue/block-lang': ['error', { script: { lang: ['js', 'ts'] } }],
+			'vue/block-lang': ['error', { script: { lang: 'js' } }],
 			'vue/block-order': ['warn', { order: ['template', 'script', 'style'] }],
 			'vue/custom-event-name-casing': [
 				'warn',

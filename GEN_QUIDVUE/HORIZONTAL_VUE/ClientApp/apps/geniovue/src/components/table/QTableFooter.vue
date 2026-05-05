@@ -1,16 +1,9 @@
 ﻿<template>
-	<template v-if="showRowsSelectedCount">
-		<span
-			v-if="allRowsSelected"
-			class="selected-rows-counter">
-			{{ texts.allRowsSelected }}
-		</span>
-		<span
-			v-else
-			class="selected-rows-counter">
-			{{ rowsSelectedCount }} {{ texts.textRowsSelected }}
-		</span>
-	</template>
+	<span
+		v-if="showRowsSelectedCount"
+		class="selected-rows-counter">
+		{{ rowsSelectedCount }} {{ texts.textRowsSelected }}
+	</span>
 
 	<q-table-group-actions-menu
 		v-if="hasRowSelectActions"
@@ -30,9 +23,10 @@
 		</span>
 	</div>
 	<!-- END: Record count -->
-
 	<!-- BEGIN: Pagination row -->
-	<div :class="paginationClasses">
+	<div
+		:class="paginationClasses">
+		<!-- BEGIN: Pagination -->
 		<q-table-pagination-alt
 			v-if="showAlternatePagination"
 			ref="paginationAlt"
@@ -47,7 +41,8 @@
 			:disabled="disabled"
 			:table-id="tableId"
 			@update:page="$emit('update:page', $event)"
-			@update:per-page="$emit('update:perPage', $event)" />
+			@update:per-page="$emit('update:perPage', $event)">
+		</q-table-pagination-alt>
 		<q-table-pagination
 			v-else
 			:texts="texts"
@@ -55,16 +50,17 @@
 			:per-page="perPage"
 			:per-page-options="perPageOptions"
 			:total="rowCount"
-			:num-visible-pagination-buttons="numVisiblePaginationButtons"
+			:num-visibile-pagination-buttons="numVisibilePaginationButtons"
 			:show-per-page-menu="showPerPageMenu"
 			:per-page-label="perPageLabel"
 			:disabled="disabled"
 			:table-id="tableId"
 			@update:page="$emit('update:page', $event)"
-			@update:per-page="$emit('update:perPage', $event)" />
+			@update:per-page="$emit('update:perPage', $event)">
+		</q-table-pagination>
+		<!-- END: Pagination -->
 	</div>
 	<!-- END: Pagination row -->
-
 	<!-- BEGIN: Pagination info -->
 	<div
 		v-if="selectedRowsInfo && isSelectable"
@@ -78,19 +74,18 @@
 		</div>
 	</div>
 	<!-- END: Pagination info -->
-
-	<!-- BEGIN: Row general action buttons -->
-	<slot />
-	<!-- END: Row general action buttons -->
-
-	<!-- BEGIN: Limit information button -->
-	<q-table-limit-info
-		v-if="showLimits"
-		:limits="tableLimits"
-		:table-id="tableId"
-		:table-name-plural="tableNamePlural"
-		:texts="texts" />
-	<!-- END: Limit information button -->
+	<div class="d-flex">
+		<!-- BEGIN: Row general action buttons -->
+		<slot name="row-general-actions"></slot>
+		<!-- END: Row general action buttons -->
+		<!-- BEGIN: Limit information button -->
+		<q-table-limit-info
+			v-if="showLimits"
+			:limits="tableLimits"
+			:table-name-plural="tableNamePlural"
+			:texts="texts" />
+		<!-- END: Limit information button -->
+	</div>
 </template>
 
 <script>
@@ -145,6 +140,22 @@
 			},
 
 			/**
+			 * The count of all rows that match the current filters applied.
+			 */
+			filteredRowsLength: {
+				type: Number,
+				default: 0
+			},
+
+			/**
+			 * The count of all rows in the dataset without any filters applied.
+			 */
+			originalRowsLength: {
+				type: Number,
+				default: 0
+			},
+
+			/**
 			 * The current active page number.
 			 */
 			page: {
@@ -187,7 +198,9 @@
 			/**
 			 * The number of buttons to show in the pagination control for page numbers.
 			 */
-			numVisiblePaginationButtons: Number,
+			numVisibilePaginationButtons: {
+				type: Number
+			},
 
 			/**
 			 * Information about selected rows.
@@ -217,14 +230,6 @@
 			 * Flag to determine if the counter for selected rows should be shown.
 			 */
 			showRowsSelectedCount: {
-				type: Boolean,
-				default: false
-			},
-
-			/**
-			 * Flag to determine if all rows are selected.
-			 */
-			allRowsSelected: {
 				type: Boolean,
 				default: false
 			},

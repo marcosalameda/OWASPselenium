@@ -26,6 +26,10 @@
 						v-model="Security.AllowAuthenticationRecovery"
 						:label="resources.allowAuthenticationRecovery" />
 					<q-checkbox
+						v-model="Security.Activate2FA"
+						:label="resources.activateTwoFactorAuth" />
+					<q-checkbox
+						v-if="Security.Activate2FA"
 						v-model="Security.Mandatory2FA"
 						:label="resources.mandatoryTwoFactorAuth" />
 					<numeric-input
@@ -165,14 +169,6 @@
 								:label="hardcodedTexts.insert"
 								@click="createRoleProvider">
 								<q-icon icon="add" />
-							</q-button>
-						</td>
-					</tr>
-					<tr>
-						<td colspan="5">
-							<q-button :label="hardcodedTexts.executeMaintenanceTasks"
-									  @click="setupProviders">
-								<q-icon icon="tools" />
 							</q-button>
 						</td>
 					</tr>
@@ -346,20 +342,16 @@
 							item-value="Value"
 							item-label="Text" />
 					</base-input-structure>
-					<q-checkbox v-model="rowIs2fa"
-								label="2FA"
-								:readonly="inDeleteMode" />
 					<div v-for="c in tempConfig" :key="c.PropertyName">
 						<base-input-structure
 							:label="c.DisplayName"
 							:id="c.DisplayName"
 							:isVisible="true"
-							:isRequired="!c.Optional"
 							:showPopoverButton="true"
 							:popoverTitle="c.DisplayName"
 							:popoverText="c.Description">
 							<q-text-field
-								v-model="c.PValue"
+								v-model="c.Value"
 								size="large"
 								:readonly="inDeleteMode"
 								:required="!c.Optional" />
@@ -395,21 +387,24 @@
 							:readonly="inDeleteMode"
 							size="large" />
 					</base-input-structure>
-					<div v-for="c in tempRoleConfig" :key="c.PropertyName">
-						<base-input-structure
-							:label="c.DisplayName"
-							:id="c.DisplayName"
-							:isVisible="true"
-							:isRequired="!c.Optional"
-							:showPopoverButton="true"
-							:popoverTitle="c.DisplayName"
-							:popoverText="c.Description">
-							<q-text-field
-								v-model="c.PValue"
-								:required="!c.Optional"
-								:readonly="inDeleteMode"
-								size="large" />
-						</base-input-structure>
+					<q-text-field
+						v-model="rolePrecond"
+						:label="resources.precondition"
+						:readonly="inDeleteMode"
+						size="large" />
+					<div v-for="c in tempConfig" :key="c.PropertyName">
+					<base-input-structure
+						:label="c.DisplayName"
+						:isVisible="true"
+						:showPopoverButton="true"
+						:popoverTitle="c.DisplayName"
+						:popoverText="c.Description">
+						<q-text-field
+							v-model="c.Value"
+							:required="!c.Optional"
+							:readonly="inDeleteMode"
+							size="large" />
+					</base-input-structure>
 					</div>
 				</div>
 			</template>
@@ -461,7 +456,7 @@
 
 <script>
 	// @ is an alias to /src
-	import { reusableMixin, ReadProviderConfig, WriteProviderConfig } from '@/mixins/mainMixin';
+	import { reusableMixin, NormalizeValue, ReadProviderConfig } from '@/mixins/mainMixin';
 	import { QUtils } from '@/utils/mainUtils';
 	import { reactive, computed } from 'vue';
 	import QAlert from '@/components/QAlert.vue';
@@ -500,7 +495,6 @@
 				rowName: "",
 				rowDescription: "",
 				rowType: "",
-				rowIs2fa: false,
 				tempConfig: [],
 				showUserDialog: false,
 				userRows: [],
@@ -547,14 +541,9 @@
 						sort: true
 					},
 					{
-						label: '2FA',
-						name: "Is2FA",
-						sort: false
-					},
-					{
 						label: computed(() => this.Resources[texts.configuration]),
-						name: "Options",
-						sort: false
+						name: "Config",
+						sort: true
 					}],
 					config: {
 						table_title: this.resources.identityProvidersTitle,
@@ -591,8 +580,13 @@
 					},
 					{
 						label: computed(() => this.Resources[texts.configuration]),
-						name: "Options",
-						sort: false
+						name: "Config",
+						sort: true
+					},
+					{
+						label: this.resources.precondition,
+						name: "Precond",
+						sort: true
 					}],
 					config: {
 						table_title: this.resources.roleProvidersTitle,
@@ -653,10 +647,11 @@
 				return this.userName === '' || this.userType === '' || (this.dialogMode === 'new' && this.isSameName)
 			},
 			invalidIdentityProps() {
-				return this.rowName === '' || this.rowType === '' || this.tempConfig.some(c => c.Optional === false && (!c.PValue || c.PValue.trim() === ''))
+				const configArray = Array.isArray(this.tempConfig) ? this.tempConfig : [this.tempConfig];
+				return this.rowName === '' || this.rowType === '' || configArray.some(c => !c.Value || c.Value.trim() === '')
 			},
 			invalidRoleProps() {
-				return this.roleName === '' || this.roleType === '' || this.tempRoleConfig.some(c => c.Optional === false && (!c.PValue || c.PValue.trim() === ''))
+				return this.roleName === '' || this.roleType === ''
 			},
 			inDeleteMode() {
 				return this.dialogMode === 'delete';
@@ -704,10 +699,12 @@
 					securityLabel: this.Resources[texts.securityLabel],
 					pathsLabel: this.Resources[texts.pathsLabel],
 					configuration: this.Resources[texts.configuration],
+					precondin: this.Resources[texts.autoLogin],
+					identitition: this.Resources[texts.precondition],
+					autoLogyProvidersTitle: this.Resources[texts.identityProvidersTitle],
 					roleProvidersTitle: this.Resources[texts.roleProvidersTitle],
 					fixedUsersTitle: this.Resources[texts.fixedUsersTitle],
-					authentication: this.Resources[texts.authentication],
-					executeMaintenanceTasks: this.Resources[texts.executeMaintenanceTasks]
+					authentication: this.Resources[texts.authentication]
 				};
 			},
 		},
@@ -954,15 +951,72 @@
 					}
 				})
 			},
+			onTypeChange(context) {
+				switch (context) {
+					case 'identityProvider':
+						if (this.rowType === 'GenioServer.security.LdapQueryIdentityProvider' ||
+							this.rowType === 'GenioServer.security.LdapIdentityProvider') {
+							this.tempConfig = ReadProviderConfig(this.rowType, this.tempConfig, this.SelectLists.IdentityProviderTypeList);
+						} else {
+							this.tempConfig = this.getProviderConfig(this.rowType);
+						}
+						break;
+					case 'roleProvider':
+						this.tempRoleConfig = this.getRoleProviderConfig(this.roleType);
+						break;
+					default:
+						break;
+				}
+			},
+			getProviderConfig(type) {
+				const provider = this.SelectLists.IdentityProviderTypeList.find(
+					(p) => p.TypeFullName === type
+				);
+				if (!provider) return [];
+				return provider.Options.map((option) => ({
+					Value: NormalizeValue(option, this.tempConfig),
+					...option,
+				}));
+			},
+			getRoleProviderConfig(type) {
+				const roleProvider = this.SelectLists.RoleProviderTypeList.find(
+					(p) => p.TypeFullName === type
+				);
+				if (!roleProvider) return [];
+				return roleProvider.Options.map((option) => ({
+					Value: NormalizeValue(option, this.tempRoleConfig),
+					...option,
+				}));
+			},
+			buildConfigFromTempConfig(tempConfig) {
+				let config = {};
 
+				tempConfig.forEach(option => {
+					config[option.PropertyName] = option.Value || "";
+				});
+				const optionsString = JSON.stringify(config);
+				return `Options=${optionsString}`;
+			},
 			SaveIdentityProvider() {
-				let config = WriteProviderConfig(this.tempConfig, this.rowType, this.SelectLists.IdentityProviderTypeList);
+				let config;
+				if (this.tempConfig && Object.keys(this.tempConfig).length > 0) {
+					if (this.rowType === 'GenioServer.security.LdapQueryIdentityProvider' ||
+					this.rowType === 'GenioServer.security.LdapIdentityProvider') {
+						config = Object.entries(this.tempConfig.reduce((acc, curr) => {
+							acc[curr.PropertyName] = curr.Value;
+							return acc;
+						}, {}))
+						.map(([key, value]) => `${encodeURIComponent(key)}=${encodeURIComponent(value)}`)
+						.join('&');
+					} else {
+						config = this.buildConfigFromTempConfig(this.tempConfig);
+					}
+				}
 				const idProValues = {
 					Name: this.rowName,
 					Description: this.rowDescription,
-					Is2FA: this.rowIs2fa,
 					Type: this.rowType,
-					Options: config,
+					Config: config,
 					FormMode: this.dialogMode,
 					Rownum: this.rowNum
 				}
@@ -975,9 +1029,8 @@
 										FormMode: this.dialogMode,
 										Name: this.rowName,
 										Description: this.rowDescription,
-										Is2FA: this.rowIs2fa,
 										Type: this.rowType,
-										Options: config,
+										Config: config,
 										Rownum: this.identityProvidersRows.length
 									}
 								)
@@ -987,8 +1040,7 @@
 								this.identityProvidersRows[newPropIndex].Type = this.rowType;
 								this.identityProvidersRows[newPropIndex].Name = this.rowName;
 								this.identityProvidersRows[newPropIndex].Description = this.rowDescription;
-								this.identityProvidersRows[newPropIndex].Is2FA = this.rowIs2fa;
-								this.identityProvidersRows[newPropIndex].Options = config;
+								this.identityProvidersRows[newPropIndex].Config = config;
 								this.identityProvidersRows[newPropIndex].Rownum = this.rowNum;
 								break;
 							case 'delete':
@@ -1007,13 +1059,12 @@
 				});
 			},
 			clearIdentityProviderValues(){
-				this.dialogMode = '';
-				this.rowType = '';
-				this.rowName = '';
-				this.rowDescription = '';
-				this.rowIs2fa = false;
-				this.tempConfig = [];
-				this.buttons = [];
+				this.dialogMode = '',
+				this.rowType = '',
+				this.rowName = '',
+				this.rowDescription = '',
+				this.tempConfig = []
+				this.buttons = []
 			},
 			showIdentityProviderModal(mode) {
 				this.dialogMode = mode;
@@ -1023,22 +1074,26 @@
 			changeIdentityProvider(identityProvidersRows) {
 				this.rowName = identityProvidersRows.Name;
 				this.rowDescription = identityProvidersRows.Description;
-				this.rowIs2fa = identityProvidersRows.Is2FA;
 				this.rowType = identityProvidersRows.Type;
 				this.rowNum = identityProvidersRows.Rownum;
+				let configString = identityProvidersRows.Config;
 
-				this.tempConfig = ReadProviderConfig(this.rowType, identityProvidersRows.Options, this.SelectLists.IdentityProviderTypeList);
+				this.tempConfig = configString?.startsWith("Options=")
+				? configString.substring(8)
+				: configString || {};
 
 				this.showIdentityProviderModal('edit');
 			},
 			deleteIdentityProvider(identityProvidersRows) {
 				this.rowName = identityProvidersRows.Name;
 				this.rowDescription = identityProvidersRows.Description;
-				this.rowIs2fa = identityProvidersRows.Is2FA;
 				this.rowType = identityProvidersRows.Type;
 				this.rowNum = identityProvidersRows.Rownum;
+				let configString = identityProvidersRows.Config;
 
-				this.tempConfig = ReadProviderConfig(this.rowType, identityProvidersRows.Options, this.SelectLists.IdentityProviderTypeList);
+				this.tempConfig = configString?.startsWith("Options=")
+				? configString.substring(8)
+				: configString || {};
 
 				this.showIdentityProviderModal('delete');
 			},
@@ -1129,12 +1184,12 @@
 				this.showUserModal('new');
 			},
 			SaveRoleProvider() {
-				let roleConfig = WriteProviderConfig(this.tempRoleConfig, this.roleType, this.SelectLists.RoleProviderTypeList);
+				const roleConfig = this.buildConfigFromTempConfig(this.tempRoleConfig);
 				const roleValues = {
 					Name: this.roleName,
 					Type: this.roleType,
 					Precond: this.rolePrecond,
-					Options: roleConfig,
+					Config: roleConfig.Options,
 					FormMode: this.dialogMode,
 					Rownum: this.roleNum
 				}
@@ -1147,7 +1202,7 @@
 										Name: this.roleName,
 										Type: this.roleType,
 										Precond: this.rolePrecond,
-										Options: roleConfig,
+										Config: roleConfig.Options,
 										FormMode: this.dialogMode,
 										Rownum: this.roleRows.length
 									}
@@ -1157,7 +1212,7 @@
 								const newRoleRowsIndex = this.roleRows.findIndex(value => value.Rownum == this.roleNum)
 								this.roleRows[newRoleRowsIndex].Type = this.roleType;
 								this.roleRows[newRoleRowsIndex].Precond = this.rolePrecond;
-								this.roleRows[newRoleRowsIndex].Options = roleConfig;
+								this.roleRows[newRoleRowsIndex].Config = roleConfig.Options;
 								this.roleRows[newRoleRowsIndex].Name = this.roleName;
 								break;
 							case 'delete':
@@ -1196,28 +1251,18 @@
 				this.roleName = roleRows.Name
 				this.roleType = roleRows.Type
 				this.rolePrecond = roleRows.Precond
-				this.tempRoleConfig = ReadProviderConfig(roleRows.Type, roleRows.Options, this.SelectLists.RoleProviderTypeList);
+				this.tempRoleConfig =  JSON.parse(roleRows.Config)
 				this.showRoleProviderModal('edit');
 			},
 			deleteRoleProvider(roleRows) {
 				this.roleName = roleRows.Name
 				this.roleType = roleRows.Type
 				this.rolePrecond = roleRows.Precond
-				this.tempRoleConfig = ReadProviderConfig(roleRows.Type, roleRows.Options, this.SelectLists.RoleProviderTypeList);
+				this.tempRoleConfig =  JSON.parse(roleRows.Config)
 				this.showRoleProviderModal('delete');
 			},
 			createRoleProvider() {
 				this.showRoleProviderModal('new');
-			},
-			setupProviders() {
-				QUtils.postData('Config', 'SetupProviders', {}, { appId: this.$store.state.currentApp }, (data) => {
-					if (data.success) {
-						this.$emit('alert-class', { ResultMsg: "ok", AlertType: 'success' });
-					}
-					else {
-						this.$emit('alert-class', { ResultMsg: data.Message, AlertType: 'danger' });
-					}
-				});
 			},
 		},
 		created() {
@@ -1237,6 +1282,11 @@
 			this.roleRows = this.Security.RoleProviders || [];
 		},
 		watch: {
+			'Security.Activate2FA': function (val) {
+				if (!val) {
+					this.Security.Mandatory2FA = false;
+				}
+			},
 			invalidUserProps(newValue) {
 				if (this.buttons.length > 0)
 					this.buttons[0].props.disabled = newValue
@@ -1250,24 +1300,13 @@
 					this.buttons[0].props.disabled = newValue
 			},
 			rowType(newValue) {
-				if (newValue && this.showIdentityDialog) {
-					//if the dialog is open and the provider type changes, try to match up the current options with the new type list of properties
-					const currentRow = this.identityProvidersRows.find(
-						row => row.Rownum === this.rowNum
-					);
-
-					this.tempConfig = ReadProviderConfig(
-						newValue,
-						currentRow?.Options ?? null,
-						this.SelectLists.IdentityProviderTypeList
-					);
+				if (newValue) {
+					this.onTypeChange("identityProvider");
 				}
 			},
 			roleType(newValue) {
-				if (newValue && this.showRoleDialog) {
-					//if the dialog is open and the provider type changes, try to match up the current options with the new type list of properties
-					const propIndex = this.roleRows.findIndex(value => value.Rownum == this.roleNum);
-					this.tempRoleConfig = ReadProviderConfig(newValue, this.roleRows[propIndex].Options, this.SelectLists.RoleProviderTypeList);
+				if (newValue) {
+					this.onTypeChange("roleProvider");
 				}
 			}
 		}

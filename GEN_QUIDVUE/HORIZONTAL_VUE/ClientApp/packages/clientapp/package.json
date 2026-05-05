@@ -10,21 +10,23 @@
   "jsdelivr": "dist/clientapp.js",
   "unpkg": "dist/clientapp.js",
   "types": "dist/index.d.ts",
-  "sass": "dist/styles/index.scss",
-  "style": "dist/index.css",
+  "sass": "dist/clientapp.scss",
+  "style": "dist/clientapp.css",
   "sideEffects": false,
   "files": [
     "dist"
   ],
   "exports": {
     ".": {
-      "sass": "./dist/styles/index.scss",
-      "style": "./dist/index.css",
+      "sass": "./dist/clientapp.scss",
+      "style": "./dist/clientapp.css",
       "types": "./dist/index.d.ts",
       "default": "./dist/index.js"
     },
-    "./components": "./dist/components/index.js",
-    "./components/*": "./dist/components/*/index.js",
+    "./styles": {
+      "sass": "./dist/clientapp.scss",
+      "default": "./dist/clientapp.css"
+    },
     "./composables": "./dist/composables/index.js",
     "./composables/*": "./dist/composables/*/index.js",
     "./constants": "./dist/constants/index.js",
@@ -37,10 +39,6 @@
     "./plugins/*": "./dist/plugins/*/index.js",
     "./stores": "./dist/stores/index.js",
     "./stores/*": "./dist/stores/*/index.js",
-    "./styles": {
-      "sass": "./dist/styles/index.scss",
-      "default": "./dist/index.css"
-    },
     "./telemetry": "./dist/telemetry/index.js",
     "./telemetry/*": "./dist/telemetry/*/index.js",
     "./utils": "./dist/utils/index.js",
@@ -49,9 +47,7 @@
   },
   "scripts": {
     "clean": "rimraf dist coverage storybook-static",
-    "build": "pnpm clean && pnpm run build:dist && pnpm run build:css",
-    "build:dist": "vite build",
-    "build:css": "node build/css.js",
+    "build": "vite build",
     "type-check": "vue-tsc --noEmit --composite false",
     "format": "prettier --check --cache .",
     "format:fix": "prettier --write --cache .",
@@ -67,6 +63,7 @@
     "date-fns": "4.1.0",
     "eventemitter3": "5.0.1",
     "lodash-es": "4.17.21",
+    "sweetalert2": "11.1.10",
     "tinycolor2": "1.6.0",
     "uuid": "11.0.5"
   },
@@ -75,13 +72,9 @@
     "@pinia/testing": "0.1.7",
     "@rollup/plugin-node-resolve": "^16.0.0",
     "@rollup/plugin-terser": "^0.4.4",
-    "@storybook/vue3": "^8.6.3",
     "@vitejs/plugin-vue": "catalog:",
     "@vue/test-utils": "catalog:",
-    "autoprefixer": "^10.4.20",
-    "cssnano": "^7.0.6",
     "fast-glob": "^3.3.3",
-    "postcss": "^8.5.1",
     "vite": "catalog:",
     "vite-plugin-dts": "^4.5.0",
     "vue-tsc": "^2.2.0"

@@ -1,4 +1,4 @@
-﻿/* eslint-disable @typescript-eslint/no-unused-vars */
+﻿/* eslint-disable no-unused-vars */
 import { computed, reactive, watch } from 'vue'
 import _merge from 'lodash-es/merge'
 
@@ -11,7 +11,7 @@ import netAPI from '@quidgest/clientapp/network'
 import qApi from '@/api/genio/quidgestFunctions.js'
 import qFunctions from '@/api/genio/projectFunctions.js'
 import qProjArrays from '@/api/genio/projectArrays.js'
-/* eslint-enable @typescript-eslint/no-unused-vars */
+/* eslint-enable no-unused-vars */
 
 /**
  * Represents a ViewModel class.
@@ -25,11 +25,11 @@ export default class ViewModel extends FormViewModelBase
 	 * @param {object} options - The options for the ViewModel
 	 * @param {object} values - A ViewModel instance to copy values from
 	 */
-	// eslint-disable-next-line @typescript-eslint/no-unused-vars
+	// eslint-disable-next-line no-unused-vars
 	constructor(vueContext, options, values)
 	{
 		super(vueContext, options)
-		// eslint-disable-next-line @typescript-eslint/no-unused-vars
+		// eslint-disable-next-line no-unused-vars
 		const vm = this.vueContext
 
 		// The view model metadata
@@ -37,9 +37,8 @@ export default class ViewModel extends FormViewModelBase
 			name: 'REGIA_ML',
 			area: 'REGIO',
 			actions: {
-				recalculateFormulas: 'RecalculateFormulas_Regia_ml',
-				updateFilesTickets: 'UpdateFilesTicketsRegia_ml',
-				setFile: 'SetFileRegia_ml'
+				recalculateFormulas: 'RecalculateFormulas_REGIA_ML',
+				updateFilesTickets: 'UpdateFilesTicketsREGIA_ML'
 			}
 		})
 
@@ -51,7 +50,7 @@ export default class ViewModel extends FormViewModelBase
 			field: 'CODREGIA',
 			description: '',
 		}).cloneFrom(values?.ValCodregia))
-		this.stopWatchers.push(watch(() => this.ValCodregia.value, (newValue, oldValue) => this.onUpdate('regio.codregia', this.ValCodregia, newValue, oldValue)))
+		watch(() => this.ValCodregia.value, (newValue, oldValue) => this.onUpdate('regio.codregia', this.ValCodregia, newValue, oldValue))
 
 		/** The used foreign keys. */
 		this.ValCodcntry = reactive(new modelFieldType.ForeignKey({
@@ -62,7 +61,7 @@ export default class ViewModel extends FormViewModelBase
 			relatedArea: 'CNTRY',
 			description: '',
 		}).cloneFrom(values?.ValCodcntry))
-		this.stopWatchers.push(watch(() => this.ValCodcntry.value, (newValue, oldValue) => this.onUpdate('regio.codcntry', this.ValCodcntry, newValue, oldValue)))
+		watch(() => this.ValCodcntry.value, (newValue, oldValue) => this.onUpdate('regio.codcntry', this.ValCodcntry, newValue, oldValue))
 
 		this.ValCodpais1 = reactive(new modelFieldType.ForeignKey({
 			id: 'ValCodpais1',
@@ -72,7 +71,7 @@ export default class ViewModel extends FormViewModelBase
 			relatedArea: 'PAIS1',
 			description: '',
 		}).cloneFrom(values?.ValCodpais1))
-		this.stopWatchers.push(watch(() => this.ValCodpais1.value, (newValue, oldValue) => this.onUpdate('regio.codpais1', this.ValCodpais1, newValue, oldValue)))
+		watch(() => this.ValCodpais1.value, (newValue, oldValue) => this.onUpdate('regio.codpais1', this.ValCodpais1, newValue, oldValue))
 
 		/** The remaining form fields. */
 		this.TableCntryCountry = reactive(new modelFieldType.String({
@@ -83,9 +82,8 @@ export default class ViewModel extends FormViewModelBase
 			field: 'COUNTRY',
 			maxLength: 90,
 			description: computed(() => this.Resources.COUNTRY64133),
-			ignoreFldSubmit: true,
 		}).cloneFrom(values?.TableCntryCountry))
-		this.stopWatchers.push(watch(() => this.TableCntryCountry.value, (newValue, oldValue) => this.onUpdate('cntry.country', this.TableCntryCountry, newValue, oldValue)))
+		watch(() => this.TableCntryCountry.value, (newValue, oldValue) => this.onUpdate('cntry.country', this.TableCntryCountry, newValue, oldValue))
 
 		this.ValRegiao = reactive(new modelFieldType.String({
 			id: 'ValRegiao',
@@ -95,7 +93,7 @@ export default class ViewModel extends FormViewModelBase
 			maxLength: 50,
 			description: computed(() => this.Resources.REGION12723),
 		}).cloneFrom(values?.ValRegiao))
-		this.stopWatchers.push(watch(() => this.ValRegiao.value, (newValue, oldValue) => this.onUpdate('regio.regiao', this.ValRegiao, newValue, oldValue)))
+		watch(() => this.ValRegiao.value, (newValue, oldValue) => this.onUpdate('regio.regiao', this.ValRegiao, newValue, oldValue))
 
 		this.TablePais1Country = reactive(new modelFieldType.String({
 			type: 'Lookup',
@@ -105,9 +103,8 @@ export default class ViewModel extends FormViewModelBase
 			field: 'COUNTRY',
 			maxLength: 90,
 			description: computed(() => this.Resources.COUNTRY64133),
-			ignoreFldSubmit: true,
 		}).cloneFrom(values?.TablePais1Country))
-		this.stopWatchers.push(watch(() => this.TablePais1Country.value, (newValue, oldValue) => this.onUpdate('pais1.country', this.TablePais1Country, newValue, oldValue)))
+		watch(() => this.TablePais1Country.value, (newValue, oldValue) => this.onUpdate('pais1.country', this.TablePais1Country, newValue, oldValue))
 	}
 
 	/**

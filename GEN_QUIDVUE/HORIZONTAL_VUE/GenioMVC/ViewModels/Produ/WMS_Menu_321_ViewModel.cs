@@ -1,13 +1,13 @@
-﻿using SelectList = Microsoft.AspNetCore.Mvc.Rendering.SelectList;
+﻿using JsonIgnoreAttribute = System.Text.Json.Serialization.JsonIgnoreAttribute;
+using JsonPropertyName = System.Text.Json.Serialization.JsonPropertyNameAttribute;
+using SelectList = Microsoft.AspNetCore.Mvc.Rendering.SelectList;
 using System.Collections.Specialized;
 using System.Data;
 using System.Globalization;
 using System.Linq;
-using System.Text.Json.Serialization;
 
 using CSGenio.business;
 using CSGenio.core.di;
-using CSGenio.core.framework.table;
 using CSGenio.framework;
 using GenioMVC.Helpers;
 using GenioMVC.Models.Exception;
@@ -22,18 +22,16 @@ namespace GenioMVC.ViewModels.Produ
 		/// <summary>
 		/// Gets or sets the object that represents the table and its elements.
 		/// </summary>
-		[JsonPropertyName("table")]
+		[JsonPropertyName("Table")]
 		public TablePartial<WMS_Menu_321_RowViewModel> Menu { get; set; }
 
-		[JsonIgnore]
-		public override TableManagementMode ViewsManagementMode => TableManagementMode.PersistOne;
+		protected override TableViewsManagementMode ViewsManagementMode => TableViewsManagementMode.PersistOne;
 
 		/// <inheritdoc/>
 		[JsonIgnore]
 		public override string TableAlias => "produ";
 
 		/// <inheritdoc/>
-		[JsonPropertyName("uuid")]
 		public override string Uuid => "2ea79590-c020-42b1-b8c3-c1e74fe946b6";
 
 		/// <inheritdoc/>
@@ -62,7 +60,7 @@ namespace GenioMVC.ViewModels.Produ
 
 		/// <inheritdoc/>
 		[JsonIgnore]
-		public override CriteriaSet BaseConditions
+		public override CriteriaSet baseConditions
 		{
 			get
 			{
@@ -74,7 +72,7 @@ namespace GenioMVC.ViewModels.Produ
 
 		/// <inheritdoc/>
 		[JsonIgnore]
-		public override List<Relation> Relations
+		public override List<Relation> relations
 		{
 			get
 			{
@@ -145,10 +143,10 @@ namespace GenioMVC.ViewModels.Produ
 		}
 
 		/// <inheritdoc/>
-		public override List<Exports.QColumn> GetColumnsToExport()
+		public override List<Exports.QColumn> GetColumnsToExport(bool ajaxRequest = false)
 		{
-			return
-			[
+			var columns = new List<Exports.QColumn>()
+			{
 				new Exports.QColumn(CSGenioAprodu.FldProduct, FieldType.TEXT, Resources.Resources.PRODUCT12880, 30, 0, true),
 				new Exports.QColumn(CSGenioAprodu.FldSku, FieldType.TEXT, Resources.Resources.SKU42303, 20, 0, true),
 				new Exports.QColumn(CSGenioAprodu.FldGtin, FieldType.TEXT, Resources.Resources.GTIN45487, 14, 0, true),
@@ -157,20 +155,24 @@ namespace GenioMVC.ViewModels.Produ
 				new Exports.QColumn(CSGenioAprodu.FldWeight, FieldType.NUMERIC, Resources.Resources.WEIGHT36329, 10, 2, true),
 				new Exports.QColumn(CSGenioAlocat.FldGln, FieldType.TEXT, Resources.Resources.GLN35528, 30, 0, true),
 				new Exports.QColumn(CSGenioAlcext.FldGlnext, FieldType.TEXT, Resources.Resources.GLN_EXT31913, 30, 0, true),
-			];
+			};
+
+			columns.RemoveAll(item => item == null);
+			return columns;
 		}
 
 		public void LoadToExport(out ListingMVC<CSGenioAprodu> listing, out CriteriaSet conditions, out List<Exports.QColumn> columns, NameValueCollection requestValues, bool ajaxRequest = false)
 		{
-			CSGenio.core.framework.table.TableConfiguration tableConfig = new();
+			CSGenio.framework.TableConfiguration.TableConfiguration tableConfig = new CSGenio.framework.TableConfiguration.TableConfiguration();
+
 			LoadToExport(out listing, out conditions, out columns, tableConfig, requestValues, ajaxRequest);
 		}
 
-		public void LoadToExport(out ListingMVC<CSGenioAprodu> listing, out CriteriaSet conditions, out List<Exports.QColumn> columns, CSGenio.core.framework.table.TableConfiguration tableConfig, NameValueCollection requestValues, bool ajaxRequest = false)
+		public void LoadToExport(out ListingMVC<CSGenioAprodu> listing, out CriteriaSet conditions, out List<Exports.QColumn> columns, CSGenio.framework.TableConfiguration.TableConfiguration tableConfig, NameValueCollection requestValues, bool ajaxRequest = false)
 		{
 			listing = null;
 			conditions = null;
-			columns = this.GetExportColumns(tableConfig.ColumnConfigurations);
+			columns = this.GetExportColumns(tableConfig.ColumnConfiguration);
 
 			// Store number of records to reset it after loading
 			int rowsPerPage = tableConfig.RowsPerPage;
@@ -198,7 +200,7 @@ namespace GenioMVC.ViewModels.Produ
 				new Exports.QColumn(CSGenioAprodu.FldWeight, FieldType.NUMERIC, Resources.Resources.WEIGHT36329, 9, 2, true),
 				new Exports.QColumn(CSGenioAprodu.FldPrice, FieldType.CURRENCY, Resources.Resources.PRICE06900, 11, 4, true),
 				new Exports.QColumn(CSGenioAprodu.FldImage, FieldType.IMAGE, Resources.Resources.IMAGE65174, 3, 1, true),
-				new Exports.QColumn(CSGenioAprodu.FldIn_use, FieldType.ARRAY_LOGIC, Resources.Resources.IN_USE42606, 1, 0, true, "YesNo"),
+				new Exports.QColumn(CSGenioAprodu.FldIn_use, FieldType.ARRAY_LOGIC, Resources.Resources.IN_USE42606, 1, 0, true),
 				new Exports.QColumn(CSGenioAlocat.FldGln, FieldType.TEXT, Resources.Resources.GLN35528, 30, 0, true),
 				new Exports.QColumn(CSGenioAlcext.FldGlnext, FieldType.TEXT, Resources.Resources.GLN_EXT31913, 30, 0, true),
 			};
@@ -207,25 +209,29 @@ namespace GenioMVC.ViewModels.Produ
 		/// <inheritdoc/>
 		public override CriteriaSet BuildCriteriaSet(NameValueCollection requestValues, out bool tableReload, CriteriaSet crs = null, bool isToExport = false)
 		{
-			CSGenio.core.framework.table.TableConfiguration tableConfig = new();
+			CSGenio.framework.TableConfiguration.TableConfiguration tableConfig = new();
 			return BuildCriteriaSet(tableConfig, requestValues, out tableReload, crs, isToExport);
 		}
 
 		/// <inheritdoc/>
-		public override CriteriaSet BuildCriteriaSet(CSGenio.core.framework.table.TableConfiguration tableConfig, NameValueCollection requestValues, out bool tableReload, CriteriaSet crs = null, bool isToExport = false)
+		public override CriteriaSet BuildCriteriaSet(CSGenio.framework.TableConfiguration.TableConfiguration tableConfig, NameValueCollection requestValues, out bool tableReload, CriteriaSet crs = null, bool isToExport = false)
 		{
 			User u = m_userContext.User;
 			tableReload = true;
 
-			crs ??= CriteriaSet.And();
+			if (crs == null)
+				crs = CriteriaSet.And();
 
-			Menu ??= new TablePartial<WMS_Menu_321_RowViewModel>();
+
+			if (Menu == null)
+				Menu = new TablePartial<WMS_Menu_321_RowViewModel>();
 			// Set table name (used in getting searchable column names)
 			Menu.TableName = TableAlias;
 
 			Menu.SetFilters(false, false);
 
-			crs.SubSets.Add(ProcessSearchFilters(Menu, GetSearchColumns(tableConfig.ColumnConfigurations), tableConfig));
+
+			crs.SubSets.Add(ProcessSearchFilters(Menu, GetSearchColumns(tableConfig.ColumnConfiguration), tableConfig));
 
 
 			//Subfilters
@@ -234,8 +240,6 @@ namespace GenioMVC.ViewModels.Produ
 
 			crs.SubSets.Add(subfilters);
 
-			// Form field filters
-			crs.SubSets.Add(ProcessFieldFilters(tableConfig.GlobalFilters));
 
 			crs.SubSets.Add(GetCustomizedStaticLimits(StaticLimits));
 
@@ -301,7 +305,7 @@ namespace GenioMVC.ViewModels.Produ
 		/// <param name="conditions">The conditions.</param>
 		public void Load(int numberListItems, NameValueCollection requestValues, bool ajaxRequest, bool isToExport, ref ListingMVC<CSGenioAprodu> Qlisting, ref CriteriaSet conditions)
 		{
-			CSGenio.core.framework.table.TableConfiguration tableConfig = new();
+			CSGenio.framework.TableConfiguration.TableConfiguration tableConfig = new CSGenio.framework.TableConfiguration.TableConfiguration();
 
 			tableConfig.RowsPerPage = numberListItems;
 
@@ -316,7 +320,7 @@ namespace GenioMVC.ViewModels.Produ
 		/// <param name="ajaxRequest">Whether the request was initiated via AJAX.</param>
 		/// <param name="isToExport">Whether the list is being loaded to be exported</param>
 		/// <param name="conditions">The conditions.</param>
-		public void Load(CSGenio.core.framework.table.TableConfiguration tableConfig, NameValueCollection requestValues, bool ajaxRequest, bool isToExport = false, CriteriaSet conditions = null)
+		public void Load(CSGenio.framework.TableConfiguration.TableConfiguration tableConfig, NameValueCollection requestValues, bool ajaxRequest, bool isToExport = false, CriteriaSet conditions = null)
 		{
 			ListingMVC<CSGenioAprodu> listing = null;
 
@@ -332,143 +336,150 @@ namespace GenioMVC.ViewModels.Produ
 		/// <param name="isToExport">Whether the list is being loaded to be exported</param>
 		/// <param name="Qlisting">The rows.</param>
 		/// <param name="conditions">The conditions.</param>
-		public void Load(CSGenio.core.framework.table.TableConfiguration tableConfig, NameValueCollection requestValues, bool ajaxRequest, bool isToExport, ref ListingMVC<CSGenioAprodu> Qlisting, ref CriteriaSet conditions)
+		public void Load(CSGenio.framework.TableConfiguration.TableConfiguration tableConfig, NameValueCollection requestValues, bool ajaxRequest, bool isToExport, ref ListingMVC<CSGenioAprodu> Qlisting, ref CriteriaSet conditions)
 		{
-			User u = m_userContext.User;
-			Menu = new TablePartial<WMS_Menu_321_RowViewModel>();
-
-			CriteriaSet wms_menu_321Conds = CriteriaSet.And();
-			bool tableReload = true;
-
-			//FOR: MENU LIST SORTING
-			Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
-			allSortOrders.Add("PRODU.PRODUCT", new OrderedDictionary());
-			allSortOrders["PRODU.PRODUCT"].Add("PRODU.PRODUCT", "A");
-
-
-			int numberListItems = tableConfig.RowsPerPage;
-			var pageNumber = ajaxRequest ? tableConfig.Page : 1;
-
-			// Added to avoid 0 or -1 pages when setting number of records to -1 to disable pagination
-			if (pageNumber < 1)
-				pageNumber = 1;
-
-			List<ColumnSort> sorts = GetRequestSorts(this.Menu, tableConfig, "produ", allSortOrders);
-
-			if (sorts == null || sorts.Count == 0)
+			using (GenioDI.MetricsOtlp.RecordTime("page_load_time", new System.Diagnostics.TagList([
+                new("PageId", "WMS.321"),
+                new("PageType", "menu")
+            ]), "ms", "Time to load the page."))
 			{
-				sorts = new List<ColumnSort>();
-				sorts.Add(new ColumnSort(new ColumnReference(CSGenioAprodu.FldProduct), SortOrder.Ascending));
+				User u = m_userContext.User;
+				Menu = new TablePartial<WMS_Menu_321_RowViewModel>();
 
-			}
+				CriteriaSet wms_menu_321Conds = CriteriaSet.And();
+				bool tableReload = true;
 
-			FieldRef[] fields = new FieldRef[] { CSGenioAprodu.FldCodprodu, CSGenioAprodu.FldZzstate, CSGenioAprodu.FldProduct, CSGenioAprodu.FldSku, CSGenioAprodu.FldGtin, CSGenioAprodu.FldDescript, CSGenioAprodu.FldSize, CSGenioAprodu.FldWeight, CSGenioAprodu.FldCodlocat, CSGenioAlocat.FldCodlocat, CSGenioAlocat.FldGln, CSGenioAprodu.FldCodlcext, CSGenioAlcext.FldCodlcext, CSGenioAlcext.FldGlnext };
-
-			// List of column names that should display totalized (aggregated) values.
-			List<string> totalizerColumns = [];
-			List<FieldRef> fieldsWithTotalizers = [.. fields.Where(field => totalizerColumns.Contains(field.FullName))];
-
-			FieldRef firstVisibleColumn = null;
-			if (sorts.Count == 0)
-			{
-				firstVisibleColumn = tableConfig?.GetFirstVisibleColumn(TableAlias);
-
-				firstVisibleColumn ??= new FieldRef("produ", "product");
-			}
-			// Limitations
-			this.TableLimits ??= [];
-			// Comparer to check if limit is already present in TableLimits
-			LimitComparer limitComparer = new();
-
-			//Tooltip for EPHs affecting this viewmodel list
-			{
-				Limit limit = new Limit();
-				limit.TipoLimite = LimitType.EPH;
-				CSGenioAprodu model_limit_area = new CSGenioAprodu(m_userContext.User);
-				List<Limit> area_EPH_limits = EPH_Limit_Filler(ref limit, model_limit_area, "ML321");
-				if (area_EPH_limits.Count > 0)
-					this.TableLimits.AddRange(area_EPH_limits);
-			}
+				//FOR: MENU LIST SORTING
+				Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
+				allSortOrders.Add("PRODU.PRODUCT", new OrderedDictionary());
+				allSortOrders["PRODU.PRODUCT"].Add("PRODU.PRODUCT", "A");
 
 
-			if (conditions == null)
-				conditions = CriteriaSet.And();
 
-			conditions.SubSets.Add(wms_menu_321Conds);
-			wms_menu_321Conds = BuildCriteriaSet(tableConfig, requestValues, out bool hasAllRequiredLimits, conditions, isToExport);
-			tableReload &= hasAllRequiredLimits;
+				int numberListItems = tableConfig.RowsPerPage;
+				var pageNumber = ajaxRequest ? tableConfig.Page : 1;
 
-// USE /[MANUAL WMS OVERRQ 321]/
-
-			bool distinct = false;
-
-			if (isToExport)
-			{
-				if (!tableReload)
-					return;
-
-				var exportColumns = GetExportColumns(tableConfig.ColumnConfigurations);
-				var exportFieldRefs = exportColumns.Select(eCol => eCol.Field).Where(fldRef => fldRef != null).ToArray();
-
-				Qlisting = Models.ModelBase.BuildListingForExport<CSGenioAprodu>(m_userContext, false, ref wms_menu_321Conds, exportFieldRefs, (pageNumber - 1) * numberListItems, numberListItems, sorts, "ML321", true, firstVisibleColumn: firstVisibleColumn);
-
-// USE /[MANUAL WMS OVERRQLSTEXP 321]/
-
-				return;
-			}
-
-			if (tableReload)
-			{
-// USE /[MANUAL WMS OVERRQLIST 321]/
-
-				string QMVC_POS_RECORD = Navigation.GetStrValue("QMVC_POS_RECORD_produ");
-				Navigation.DestroyEntry("QMVC_POS_RECORD_produ");
-				CriteriaSet m_PagingPosEPHs = null;
-
-				if (!string.IsNullOrEmpty(QMVC_POS_RECORD))
-				{
-					var m_iCurPag = m_userContext.PersistentSupport.getPagingPos(CSGenioAprodu.GetInformation(), QMVC_POS_RECORD, sorts, wms_menu_321Conds, m_PagingPosEPHs, firstVisibleColumn: firstVisibleColumn);
-					if (m_iCurPag != -1)
-						pageNumber = ((m_iCurPag - 1) / numberListItems) + 1;
-				}
-
-				ListingMVC<CSGenioAprodu> listing = Models.ModelBase.Where<CSGenioAprodu>(m_userContext, distinct, wms_menu_321Conds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "ML321", true, false, QMVC_POS_RECORD, m_PagingPosEPHs, firstVisibleColumn, fieldsWithTotalizers, tableConfig.SelectedRows);
-
-				if (listing.CurrentPage > 0)
-					pageNumber = listing.CurrentPage;
-
-				//Added to avoid 0 or -1 pages when setting number of records to -1 to disable pagination
+				// Added to avoid 0 or -1 pages when setting number of records to -1 to disable pagination
 				if (pageNumber < 1)
 					pageNumber = 1;
 
-				//Set document field values to objects
-				SetDocumentFields(listing);
+				List<ColumnSort> sorts = GetRequestSorts(this.Menu, tableConfig.ColumnOrderBy, "produ", allSortOrders);
 
-				Menu.Elements = MapWMS_Menu_321(listing);
+				if (sorts == null || sorts.Count == 0)
+				{
+					sorts = new List<ColumnSort>();
+				sorts.Add(new ColumnSort(new ColumnReference(CSGenioAprodu.FldProduct), SortOrder.Ascending));
 
-				Menu.Identifier = "ML321";
-				Menu.Slots = new Dictionary<string, List<object>>();
+				}
 
-				// Last updated by [CJP] at [2015.02.03]
-				// Adds the identifier to each element
-				foreach (var element in Menu.Elements)
-					element.Identifier = "ML321";
+				FieldRef[] fields = new FieldRef[] { CSGenioAprodu.FldCodprodu, CSGenioAprodu.FldZzstate, CSGenioAprodu.FldProduct, CSGenioAprodu.FldSku, CSGenioAprodu.FldGtin, CSGenioAprodu.FldDescript, CSGenioAprodu.FldSize, CSGenioAprodu.FldWeight, CSGenioAprodu.FldCodlocat, CSGenioAlocat.FldCodlocat, CSGenioAlocat.FldGln, CSGenioAprodu.FldCodlcext, CSGenioAlcext.FldCodlcext, CSGenioAlcext.FldGlnext };
 
-				Menu.SetPagination(pageNumber, listing.NumRegs, listing.HasMore, listing.GetTotal, listing.TotalRecords);
 
-				// Set table totalizers
-				if (listing.Totalizers != null && listing.Totalizers.Count > 0)
-					Menu.SetTotalizers(listing.Totalizers);
+				// Totalizers
+				List<FieldRef> fieldsWithTotalizers = fields.Where(field => tableConfig.TotalizerColumns.Contains(field.FullName)).ToList();
+
+				FieldRef firstVisibleColumn = null;
+
+				if (sorts == null)
+				{
+					firstVisibleColumn = tableConfig?.getFirstVisibleColumn(TableAlias);
+
+					firstVisibleColumn ??= new FieldRef("produ", "product");
+				}
+
+
+				// Limitations
+				this.tableLimits ??= [];
+				// Comparer to check if limit is already present in tableLimits
+				LimitComparer limitComparer = new();
+
+				//Tooltip for EPHs affecting this viewmodel list
+				{
+					Limit limit = new Limit();
+					limit.TipoLimite = LimitType.EPH;
+					CSGenioAprodu model_limit_area = new CSGenioAprodu(m_userContext.User);
+					List<Limit> area_EPH_limits = EPH_Limit_Filler(ref limit, model_limit_area, "ML321");
+					if (area_EPH_limits.Count > 0)
+						this.tableLimits.AddRange(area_EPH_limits);
+				}
+
+
+				if (conditions == null)
+					conditions = CriteriaSet.And();
+
+				conditions.SubSets.Add(wms_menu_321Conds);
+				wms_menu_321Conds = BuildCriteriaSet(tableConfig, requestValues, out bool hasAllRequiredLimits, conditions, isToExport);
+				tableReload &= hasAllRequiredLimits;
+
+// USE /[MANUAL WMS OVERRQ 321]/
+
+				bool distinct = false;
+
+				if (isToExport)
+				{
+					if (!tableReload)
+						return;
+
+					Qlisting = Models.ModelBase.Where<CSGenioAprodu>(m_userContext, false, wms_menu_321Conds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "ML321", true, firstVisibleColumn: firstVisibleColumn);
+
+// USE /[MANUAL WMS OVERRQLSTEXP 321]/
+
+					return;
+				}
+
+				if (tableReload)
+				{
+// USE /[MANUAL WMS OVERRQLIST 321]/
+
+					string QMVC_POS_RECORD = Navigation.GetStrValue("QMVC_POS_RECORD_produ");
+					Navigation.DestroyEntry("QMVC_POS_RECORD_produ");
+					CriteriaSet m_PagingPosEPHs = null;
+
+					if (!string.IsNullOrEmpty(QMVC_POS_RECORD))
+					{
+						var m_iCurPag = m_userContext.PersistentSupport.getPagingPos(CSGenioAprodu.GetInformation(), QMVC_POS_RECORD, sorts, wms_menu_321Conds, m_PagingPosEPHs, firstVisibleColumn: firstVisibleColumn);
+						if (m_iCurPag != -1)
+							pageNumber = ((m_iCurPag - 1) / numberListItems) + 1;
+					}
+
+					ListingMVC<CSGenioAprodu> listing = Models.ModelBase.Where<CSGenioAprodu>(m_userContext, distinct, wms_menu_321Conds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "ML321", true, false, QMVC_POS_RECORD, m_PagingPosEPHs, firstVisibleColumn, fieldsWithTotalizers, tableConfig.SelectedRows);
+
+					if (listing.CurrentPage > 0)
+						pageNumber = listing.CurrentPage;
+
+					//Added to avoid 0 or -1 pages when setting number of records to -1 to disable pagination
+					if (pageNumber < 1)
+						pageNumber = 1;
+
+					//Set document field values to objects
+					SetDocumentFields(listing);
+
+					Menu.Elements = MapWMS_Menu_321(listing);
+
+					Menu.Identifier = "ML321";
+					Menu.Slots = new Dictionary<string, List<object>>();
+
+					// Last updated by [CJP] at [2015.02.03]
+					// Adds the identifier to each element
+					foreach (var element in Menu.Elements)
+						element.Identifier = "ML321";
+
+					Menu.SetPagination(pageNumber, listing.NumRegs, listing.HasMore, listing.GetTotal, listing.TotalRecords);
+
+					// Set table totalizers
+					if (listing.Totalizers != null && listing.Totalizers.Count > 0)
+						Menu.SetTotalizers(listing.Totalizers);
+				}
+
+				// Set table limits display property
+				FillTableLimitsDisplayData();
+
+				// Store table configuration so it gets sent to the client-side to be processed
+				CurrentTableConfig = tableConfig;
+
+				// Load the user table configuration names and default name
+				LoadUserTableConfigNameProperties();
 			}
-
-			// Set table limits display property
-			FillTableLimitsDisplayData();
-
-			// Store table configuration so it gets sent to the client-side to be processed
-			CurrentTableConfig = tableConfig;
-
-			// Load the user table configuration names and default name
-			LoadUserTableConfigNameProperties();
 		}
 
 		private List<WMS_Menu_321_RowViewModel> MapWMS_Menu_321(ListingMVC<CSGenioAprodu> Qlisting)

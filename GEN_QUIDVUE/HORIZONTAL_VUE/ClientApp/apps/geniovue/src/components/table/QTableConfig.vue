@@ -1,115 +1,110 @@
 ﻿<template>
-	<q-input-group
-		v-if="tableCtrl.config.allowManageViews || configActionsCount > 0"
-		data-testid="table-config"
-		size="block">
-		<q-select
-			v-if="tableCtrl.config.allowManageViews && tableCtrl.config.tableConfigNames.length > 0"
-			:model-value="selectedViewId"
-			:items="savedConfigViews"
-			:texts="tableCtrl.texts"
-			:groups="viewsGroups"
-			size="small"
-			:aria-label="tableCtrl.texts.viewText"
-			@update:model-value="confirmAndSetSelectedViewById" />
+	<!-- BEGIN: Config Popup -->
+	<teleport
+		v-if="showPopup"
+		:to="`#q-modal-${modalId}-header`"
+		:key="domKey">
+		<div>
+			<h4 
+				class="c-modal__header-title"
+				:id="`q-modal-${modalId}_title`">
+				{{ texts.tableConfig }}
+			</h4>
+		</div>
+	</teleport>
 
-		<template #append>
-			<q-button
-				v-if="tableCtrl.config.allowManageViews"
-				borderless
-				:disabled="!tableCtrl.confirmChanges"
-				:title="tableCtrl.texts.saveChanges"
-				@click="saveCurrentView()">
-				<q-badge-indicator
-					color="highlight"
-					:enabled="tableCtrl.confirmChanges">
-					<q-icon icon="save" />
-				</q-badge-indicator>
-			</q-button>
+	<teleport
+		v-if="showPopup"
+		:to="`#q-modal-${modalId}-body`"
+		:key="domKey">
+		<q-tab-container
+			v-bind="tabGroup"
+			@mounted="setAllTabsShowContent('tabGroup', true, true)"
+			@before-unmount="setAllTabsShowContent('tabGroup', false, true)"
+			@tab-changed="changeTab('tabGroup', 'selectedTab', $event)">
+			<template #tab-panel>
+				<template
+					v-for="tab in tabGroup.tabsList"
+					:key="tab.id">
+					<section v-show="tabGroup.selectedTab === tab.id">
+						<div :id="'q-modal-' + tab.id + '-header'"></div>
+						<div :id="'q-modal-' + tab.id + '-body'"></div>
+					</section>
+				</template>
+			</template>
+		</q-tab-container>
+	</teleport>
 
-			<q-button
-				v-if="configActionsCount === 1"
-				:id="controlId"
-				data-testid="table-config-details"
-				borderless
-				:title="tableCtrl.texts.tableConfig"
-				@click="onConfigSelect()">
-				<q-icon icon="table-configuration" />
-			</q-button>
-			<q-action-list
-				v-else-if="configActionsCount > 1"
-				:id="controlId"
-				data-testid="table-config-details"
-				borderless
-				placement="bottom-start"
-				:title="tableCtrl.texts.tableConfig"
-				:items="configItems"
-				:groups="configGroups"
-				@click="onConfigSelect">
-				<q-icon icon="table-configuration" />
-			</q-action-list>
+	<teleport
+		v-if="showPopup"
+		:to="`#q-modal-${modalId}-footer`"
+		:key="domKey">
+		<template
+			v-for="tab in tabGroup.tabsList"
+			:key="tab.id">
+			<section v-show="tabGroup.selectedTab === tab.id">
+				<div :id="'q-modal-' + tab.id + '-footer'"></div>
+			</section>
 		</template>
-	</q-input-group>
-
-	<q-table-config-popup
-		v-if="tableCtrl.popupIsVisible && tableCtrl.selectedConfigTab"
-		:modal-id="`q-modal-${modalId}`"
-		:tab="tableCtrl.selectedConfigTab"
-		:table-ctrl="tableCtrl"
-		:config-data="configData"
-		v-on="configHandlers">
-		<template #default>
-			<q-select
-				v-if="tableCtrl.config.allowManageViews"
-				:model-value="selectedUnsavedViewId"
-				:disabled="!canSwitchViews"
-				:groups="viewsGroups"
-				:items="allConfigViews"
-				:label="tableCtrl.texts.selectedView"
-				:texts="tableCtrl.texts"
-				label-position="left"
-				size="medium"
-				@update:model-value="confirmAndSetSelectedViewById" />
-		</template>
-		<template #filters="{ onFiltersUpdate }">
-			<slot
-				name="filters"
-				:on-filters-update="onFiltersUpdate" />
-		</template>
-	</q-table-config-popup>
+		<div class="actions float-right"></div>
+	</teleport>
+	<!-- END: Config Popup -->
 </template>
 
 <script>
-	import { computed, defineAsyncComponent } from 'vue'
-	import isEmpty from 'lodash-es/isEmpty'
+	import { computed } from 'vue'
+	import _find from 'lodash-es/find'
 
-	import { displayMessage } from '@quidgest/clientapp/utils/genericFunctions'
-	import { QActionList } from '@quidgest/clientapp/components'
+	import QTabContainer from '@/components/containers/TabContainer.vue'
 
 	export default {
 		name: 'QTableConfig',
 
 		emits: [
-			'hide-config',
-			'mark-config-dirty',
-			'refresh',
-			'save-view',
-			'show-config',
-			'update:config'
+			'apply-config',
+			'hide-popup',
+			'reset-config',
+			'show-popup',
+			'signal-component'
 		],
 
 		components: {
-			QActionList,
-			QTableConfigPopup: defineAsyncComponent(() => import('./QTableConfigPopup.vue'))
+			QTabContainer
 		},
 
 		inheritAttrs: false,
 
 		props: {
 			/**
-			 * Control object containing necessary state and configuration properties of the table component.
+			 * The control object containing configuration details and state for the table.
+			 * Used for managing properties such as column configuration and filters.
 			 */
 			tableCtrl: {
+				type: Object,
+				required: true
+			},
+
+			/**
+			 * An object containing signals that can trigger different actions within the configuration modal.
+			 * These could include showing or hiding the modal, or navigating between different sections of the configuration.
+			 */
+			signal: {
+				type: Object,
+				default: () => ({})
+			},
+
+			/**
+			 * The identifier for the modal container where the configuration component is rendered.
+			 */
+			modalId: {
+				type: String,
+				required: true
+			},
+
+			/**
+			 * Object containing localized strings for various UI components and labels within the configuration modal.
+			 */
+			texts: {
 				type: Object,
 				required: true
 			}
@@ -117,385 +112,117 @@
 
 		expose: [],
 
-		data()
-		{
+		data() {
 			return {
-				tableId: this.tableCtrl.id || this.tableCtrl.config.name || `q-table-${this._.uid}`,
-				configItems: [
-					{
-						key: 'views',
-						label: computed(() => this.tableCtrl.texts.manageViews),
-						icon: { icon: 'view-manager' },
-						group: 'default',
-						isVisible: computed(() => this.tableCtrl.config.configOptions.find((op) => op.id === 'views')?.visible ?? false)
-					},
-					{
-						key: 'columns',
-						label: computed(() => this.tableCtrl.texts.configureColumns),
-						icon: { icon: 'list' },
-						group: 'default',
-						isVisible: computed(() => this.tableCtrl.config.configOptions.find((op) => op.id === 'columns')?.visible ?? false)
-					},
-					{
-						key: 'filters',
-						label: computed(() => this.tableCtrl.texts.configureFilters),
-						icon: { icon: 'filter' },
-						group: 'default',
-						isVisible: computed(() => this.tableCtrl.config.configOptions.find((op) => op.id === 'filters')?.visible ?? false)
-					},
-					{
-						key: 'new-view',
-						label: computed(() => this.tableCtrl.texts.createView),
-						icon: { icon: 'add' },
-						group: 'create',
-						isVisible: computed(() => this.tableCtrl.config.configOptions.find((op) => op.id === 'views')?.visible ?? false)
-					}
-				],
-				viewsGroups: [
-					{ id: 'user' },
-					{ id: 'system' }
-				],
-				configGroups: [
-					{
-						id: 'default',
-						display: 'dropdown'
-					},
-					{
-						id: 'create',
-						display: 'dropdown'
-					}
-				],
-				configHandlers: {
-					apply: (eventData) => this.applyConfig(eventData),
-					hide: () => this.hideConfig(),
-					setCurrentView: (eventData) => this.setCurrentView(eventData),
-					showView: (eventData) => this.confirmAndSetSelectedViewById(eventData, true),
-					'update:config': (eventData) => this.updateConfig(eventData),
-					'update:views': (eventData) => this.updateViews(eventData)
-				},
-				configData: {},
-				viewsData: null,
-				newSelectedViewName: undefined
-			}
-		},
+				showPopup: false,
+				domKey: 0,
 
-		beforeUnmount()
-		{
-			this.configItems = null
-			this.configHandlers = null
-			this.configData = null
-			this.viewsData = null
-		},
-
-		computed: {
-			/**
-			 * The configuration identifier.
-			 */
-			controlId()
-			{
-				return `${this.tableId}-config-menu`
-			},
-
-			/**
-			 * The configuration modal identifier.
-			 */
-			modalId()
-			{
-				return `${this.tableId}-config`
-			},
-
-			/**
-			 * The list of saved views.
-			 */
-			savedConfigViews()
-			{
-				const views = []
-				let viewIdx = 1
-
-				for (const configName of this.tableCtrl.config.tableConfigNames)
-				{
-					views.push({
-						key: ++viewIdx,
-						value: configName,
-						group: 'user'
-					})
+				tabGroup: {
+					selectedTab: 'column-config',
+					alignTabs: 'left',
+					iconAlignment: 'left',
+					isVisible: true,
+					tabsList: [
+						{
+							id: 'column-config',
+							componentId: 'columnConfig',
+							name: 'columns',
+							label: this.texts.configureColumns,
+							isBlocked: computed(() => _find(this.tableCtrl.config.configOptionsUse, ['id', 'columnConfig'])?.active === false),
+							isVisible: computed(() => {
+								return (
+									this.tableCtrl.config.allowColumnConfiguration &&
+									_find(this.tableCtrl.config.configOptionsUse, ['id', 'columnConfig'])?.visible
+								)
+							})
+						},
+						{
+							id: 'advanced-filters',
+							componentId: 'advancedFilters',
+							name: 'filters',
+							label: this.texts.advancedFiltersText,
+							isBlocked: computed(() => _find(this.tableCtrl.config.configOptionsUse, ['id', 'advancedFilters'])?.active === false),
+							isVisible: computed(() => {
+								return (
+									this.tableCtrl.config.allowAdvancedFilters &&
+									_find(this.tableCtrl.config.configOptionsUse, ['id', 'advancedFilters'])?.visible
+								)
+							})
+						},
+						{
+							id: 'view-save',
+							componentId: 'viewSave',
+							name: 'newView',
+							label: this.texts.saveViewText,
+							isBlocked: computed(() => _find(this.tableCtrl.config.configOptionsUse, ['id', 'viewSave'])?.active === false),
+							isVisible: computed(() => {
+								return (
+									this.tableCtrl.config.allowManageViews && _find(this.tableCtrl.config.configOptionsUse, ['id', 'viewSave'])?.visible
+								)
+							})
+						},
+						{
+							id: 'views',
+							componentId: 'views',
+							name: 'views',
+							label: this.texts.viewManagerText,
+							isBlocked: computed(() => _find(this.tableCtrl.config.configOptionsUse, ['id', 'views'])?.active === false),
+							isVisible: computed(() => {
+								return this.tableCtrl.config.allowManageViews && _find(this.tableCtrl.config.configOptionsUse, ['id', 'views'])?.visible
+							})
+						}
+					]
 				}
-
-				views.push({
-					key: 1,
-					value: this.tableCtrl.texts.baseTable,
-					group: 'system'
-				})
-
-				return views
-			},
-
-			/**
-			 * The list of all views (even the unsaved one, if any).
-			 */
-			allConfigViews()
-			{
-				const views = [...this.savedConfigViews]
-
-				// If the view can't be switched, it means there's a new view created
-				// with unsaved changes, therefore, we need to add it to the list.
-				if (!this.canSwitchViews)
-				{
-					views.push({
-						key: views.length + 1,
-						value: this.newSelectedViewName,
-						group: 'user'
-					})
-				}
-
-				return views
-			},
-
-			/**
-			 * Whether the user can switch to another view.
-			 * Users can't switch to another view if they've created a new view based on the current one.
-			 */
-			canSwitchViews()
-			{
-				return typeof this.newSelectedViewName !== 'string'
-			},
-
-			/**
-			 * The identifier of the selected table view.
-			 */
-			selectedViewId()
-			{
-				return this.getViewIdByName(this.tableCtrl.config.userTableConfigName)
-			},
-
-			/**
-			 * The identifier of the selected table view, even if still unsaved.
-			 */
-			selectedUnsavedViewId()
-			{
-				return this.getViewIdByName(this.newSelectedViewName ?? this.tableCtrl.config.userTableConfigName)
-			},
-
-			/**
-			 * The number of available actions.
-			 */
-			configActionsCount()
-			{
-				return this.configItems.filter((i) => i.isVisible).length
-			},
-
-			/**
-			 * True if there are unapplied configuration changes, false otherwise.
-			 */
-			isDirty()
-			{
-				return !isEmpty(this.configData)
-			},
-
-			/**
-			 * True if there are changes in the configuration or in the views, false otherwise.
-			 */
-			hasChanges()
-			{
-				return this.isDirty || this.viewsData !== null
 			}
 		},
 
 		methods: {
-			/**
-			 * Opens the configuration popup in the specified tab.
-			 * @param {string} selectedTab The desired tab
-			 */
-			openConfigTab(selectedTab)
-			{
-				this.$emit('show-config', {
-					selectedTab,
-					modalProps: {
-						id: this.modalId,
-						returnElement: this.controlId
-					}
+			//Show popup
+			fnShowPopup() {
+				this.$emit('show-popup', { id: this.modalId, props: { returnElement: this.signal.returnElement } })
+				this.$nextTick().then(() => {
+					this.showPopup = true
+					this.domKey++
 				})
 			},
 
-			/**
-			 * Handles the selection of one of the configuration options.
-			 * @param {string} optionId The identifier of the selected option
-			 */
-			onConfigSelect(optionId)
-			{
-				if (optionId === 'new-view')
-					this.$emit('save-view', { name: '' })
-				else
-					this.openConfigTab(optionId)
+			//Hide popup
+			fnHidePopup() {
+				//This is needed to reset the extra properties used in the advanced filters tab
+				//If this is not done, these properties remain and can show up next time the user opens table configuration
+				this.$emit('signal-component', 'advancedFilters', { columnFilter: null, columnName: null, selectedFilterIdx: undefined }, true)
+				this.$emit('hide-popup', this.modalId)
 			},
 
-			/**
-			 * Gets the view identifier according to the specified name.
-			 * @param {string} name The view name
-			 */
-			getViewIdByName(name)
-			{
-				const view = this.allConfigViews.find((e) => e.value === name)
-				return view?.key ?? 1
+			getTab(tab, selectedTab) {
+				return _find(this[tab]['tabsList'], (x) => x.id === selectedTab)
 			},
 
-			/**
-			 * Gets the view name according to the specified identifier.
-			 * @param {number} id The view identifier
-			 */
-			getViewNameById(id)
-			{
-				// View with identifier 1 corresponds to the base table.
-				if (id === 1)
-					return ''
-
-				const view = this.allConfigViews.find((e) => e.key === id)
-				return view?.value
-			},
-
-			/**
-			 * Sets the selected view, using it's id.
-			 * @param {number} id The view identifier
-			 * @param {boolean} closePopup Whether to close the configuration popup afterwards
-			 */
-			setSelectedViewById(id, closePopup = false)
-			{
-				if (this.selectedUnsavedViewId === id)
-					return
-
-				// Remove any unsaved changes.
-				this.updateConfig({})
-				this.setCurrentView()
-
-				const viewName = this.getViewNameById(id)
-				if (typeof viewName === 'string')
-				{
-					this.$emit('refresh', viewName)
-					if (closePopup)
-						this.hideConfig()
+			setAllTabsShowContent(tabGroupId, show, mergeProps) {
+				for (let tabId in this[tabGroupId]['tabsList']) {
+					let tabObj = this[tabGroupId]['tabsList'][tabId]
+					this.$emit('signal-component', tabObj.componentId, { showInline: show, showHeader: false }, mergeProps)
 				}
 			},
 
-			/**
-			 * Confirms whether to save, if there are changes, and sets the selected view.
-			 * @param {number} id The view identifier
-			 * @param {boolean} closePopup Whether to close the configuration popup afterwards
-			 */
-			confirmAndSetSelectedViewById(id, closePopup = false)
-			{
-				if (this.selectedUnsavedViewId === id)
-					return
-
-				if ((this.tableCtrl.confirmChanges || this.isDirty) && !this.tableCtrl.readonly)
-				{
-					const buttons = {
-						confirm: {
-							label: this.tableCtrl.texts.saveText,
-							action: () => this.saveCurrentView(id)
-						},
-						cancel: {
-							label: this.tableCtrl.texts.discard,
-							action: () => this.setSelectedViewById(id, closePopup)
-						}
-					}
-					displayMessage(`${this.tableCtrl.texts.wantToSaveChangesToView}`, 'warning', null, buttons)
-				}
-				else
-					this.setSelectedViewById(id, closePopup)
-			},
-
-			/**
-			 * Saves the current view.
-			 * @param {number} id The identifier of a view to change to after the save operation
-			 */
-			saveCurrentView(id)
-			{
-				this.$emit('save-view', {
-					name: this.tableCtrl.config.userTableConfigName,
-					config: this.configData,
-					changeTo: this.getViewNameById(id)
-				})
-
-				// Remove the changes that were just saved.
-				this.updateConfig({})
-				this.setCurrentView()
-			},
-
-			/**
-			 * Updates the user configuration.
-			 * @param {object} config The configuration
-			 */
-			updateConfig(config)
-			{
-				this.configData = config
-			},
-
-			/**
-			 * Updates the user configuration views.
-			 * @param {array} views The configuration views
-			 */
-			updateViews(views)
-			{
-				this.viewsData = views
-			},
-
-			/**
-			 * Emits the event to hide the configuration popup.
-			 */
-			hideConfig()
-			{
-				this.$emit('hide-config', this.modalId)
-			},
-
-			/**
-			 * Emits the event to update the user configuration.
-			 * @param {boolean} save Whether to save the changes being applied
-			 */
-			applyConfig(save)
-			{
-				if (this.hasChanges)
-				{
-					const config = {
-						modalId: this.modalId,
-						save,
-						...this.configData
-					}
-
-					if (this.viewsData !== null)
-						config.views = this.viewsData
-
-					this.$emit('update:config', config)
-				}
-				else
-					this.hideConfig()
-			},
-
-			/**
-			 * Adds a current unsaved view to the list of views.
-			 * @param {string} viewName The name of the view
-			 */
-			setCurrentView(viewName)
-			{
-				this.newSelectedViewName = viewName
+			changeTab(tab, tabProp, selectedTab) {
+				this[tab][tabProp] = selectedTab
 			}
 		},
 
 		watch: {
-			isDirty()
-			{
-				this.$emit('mark-config-dirty', this.hasChanges)
-			},
-
-			viewsData()
-			{
-				this.$emit('mark-config-dirty', this.hasChanges)
-			},
-
-			'tableCtrl.popupIsVisible'()
-			{
-				this.updateConfig({})
-				this.setCurrentView()
-				this.updateViews(null)
+			signal: {
+				handler(newValue) {
+					if (newValue.show) {
+						this.fnShowPopup()
+					} else if (newValue.show === false) {
+						this.fnHidePopup()
+					}
+					if (newValue.selectedTab) {
+						this.changeTab('tabGroup', 'selectedTab', newValue.selectedTab)
+					}
+				},
+				deep: true
 			}
 		}
 	}

@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using CSGenio.framework;
 using System.Text;
 using CSGenio.persistence;
+//using System.Web.UI;
 using System.IO;
 using System.Collections;
 using System.Linq;
@@ -76,6 +77,32 @@ namespace CSGenio.business
         /// <returns>O Pedido flash vai ser inicializado</returns>
         public delegate RequestFlashBSC CreatesFlashScorecard(string[] args, User user);
 
+        /// <summary>
+        /// Constructor estático da classe to adicionar todos os tipos de scorecards que existem 
+        /// no programa
+        /// </summary>
+        /*static RequestFlashBSC()
+        {
+            todosFlashes = new Dictionary<string, CreatesFlashScorecard>();
+			                                                                                    parametrosFlash = new Hashtable();
+            //todosScorecards.Add("id", delegate(string[] args,User user) { return new PedidoFlashScorecardId(args,user); });
+        }*/
+
+        /// <summary>
+        /// Função que dado o identifier da o Scorecard, os argumentos e o user
+        /// devolve o PedidoFlashScorecard correspondente
+        /// </summary>
+        /// <param name="id">id do Scorecard</param>
+        /// <param name="args">argumentos do pedido</param>
+        /// <param name="utilizador">user em sessão</param>
+        /// <returns>devolve o pedido do Scorecard correspondente</returns>
+        /*public static RequestFlashBSC criarFlash(string id, string[] args, User user)
+        {
+            if (todosFlashes.ContainsKey(id))
+                return todosFlashes[id](args, user);
+            else
+                throw new BusinessException("Erro ao criar o Scorecard Flash.", "RequestFlashBSC.criarFlash", "The scorecard with id " + id + " wasn't found.");
+        }*/
 
         /// <summary>
         /// Constructor da classe

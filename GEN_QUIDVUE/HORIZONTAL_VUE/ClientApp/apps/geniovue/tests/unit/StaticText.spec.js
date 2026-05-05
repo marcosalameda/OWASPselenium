@@ -6,7 +6,7 @@ import StaticText from '@/components/QStaticText.vue'
 
 describe('QStaticText.vue', () => {
 	it('Checks if it renders text with HTML', async () => {
-		const m = fakeData.simpleUsage().htmlText
+		let m = fakeData.simpleUsage().htmlText
 		const wrapper = await render(StaticText, {
 			props: {
 				text: m,
@@ -15,7 +15,7 @@ describe('QStaticText.vue', () => {
 			}
 		})
 
-		const text =
+		let text =
 `<div class="i-static-text input-xxlarge">
   <p class="MsoNormal">
     <span lang="EN-US" style="mso-ansi-language:EN-US"> (<span style="color:red">*</span>) Field
@@ -32,7 +32,7 @@ describe('QStaticText.vue', () => {
 	})
 
 	it('Checks if it renders text without HTML', async () => {
-		const m = fakeData.simpleUsage().htmlText
+		let m = fakeData.simpleUsage().htmlText
 		const wrapper = await render(StaticText, {
 			props: {
 				text: m,
@@ -41,7 +41,7 @@ describe('QStaticText.vue', () => {
 			}
 		})
 
-		const text =
+		let text =
 `<div class="i-static-text input-xxlarge">&lt;p class=MsoNormal&gt;
   &lt;span lang=EN-US style='mso-ansi-language:EN-US'&gt; (&lt;span style='color:red'&gt;*&lt;/span&gt;) Field
   &lt;b style='mso-bidi-font-weight:normal'&gt;

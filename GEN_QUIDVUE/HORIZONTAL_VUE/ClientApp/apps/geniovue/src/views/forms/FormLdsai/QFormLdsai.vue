@@ -9,13 +9,12 @@
 			<div
 				v-if="showFormHeader"
 				class="c-action-bar">
-				<component
+				<h1
 					v-if="formControl.uiComponents.header && formInfo.designation"
-					:is="topHeadingTag"
 					:id="formTitleId"
 					class="form-header">
 					{{ formInfo.designation }}
-				</component>
+				</h1>
 
 				<div class="c-action-bar__menu">
 					<template
@@ -39,13 +38,9 @@
 									:label="btn.label"
 									:disabled="btn.disabled"
 									@click="btn.action">
-									<template v-if="btn.icon">
-										<q-badge-indicator
-											:enabled="btn.badge?.isVisible ?? false"
-											:color="btn.badge?.color">
-											<q-icon v-bind="btn.icon" />
-										</q-badge-indicator>
-									</template>
+									<q-icon
+										v-if="btn.icon"
+										v-bind="btn.icon" />
 								</q-toggle-group-item>
 							</template>
 						</q-toggle-group>
@@ -57,7 +52,7 @@
 				v-if="$app.layout.FormAnchorsPosition === 'form-header' && visibleGroups.length > 0"
 				:anchors="anchorGroups"
 				:controls="visibleControls"
-				@focus-control="focusControl" />
+				@focus-control="(...args) => focusControl(...args)" />
 		</div>
 	</teleport>
 
@@ -78,7 +73,6 @@
 						v-if="btn.isActive && btn.isVisible && btn.showInHeading"
 						:id="`heading-${btn.id}`"
 						:label="btn.text"
-						:color="btn.color"
 						:variant="btn.variant"
 						:disabled="btn.disabled"
 						:icon-pos="btn.iconPos"
@@ -92,21 +86,18 @@
 			</q-button-group>
 		</div>
 
-		<q-container
-			fluid
+		<div
+			class="form-flow"
 			data-key="LDSAI"
-			:data-identifier="primaryKeyValue"
-			:data-loading="!formInitialDataLoaded || !isActiveForm">
+			:data-loading="!formInitialDataLoaded">
 			<template v-if="formControl.initialized && showFormBody">
-				<q-row v-if="controls.LDSAI___OUTPTDOCUMENR.isVisible">
-					<q-col
-						v-if="controls.LDSAI___OUTPTDOCUMENR.isVisible"
-						cols="auto">
+				<q-row-container v-show="controls.LDSAI___OUTPTDOCUMENR.isVisible">
+					<q-control-wrapper
+						v-show="controls.LDSAI___OUTPTDOCUMENR.isVisible"
+						class="${Vue.GetControlWrapperClass($controlsColumn)}">
 						<base-input-structure
-							v-if="controls.LDSAI___OUTPTDOCUMENR.isVisible"
 							class="i-text"
-							v-bind="controls.LDSAI___OUTPTDOCUMENR.wrapperProps"
-							:id="getControlId(controls.LDSAI___OUTPTDOCUMENR)"
+							v-bind="controls.LDSAI___OUTPTDOCUMENR"
 							v-on="controls.LDSAI___OUTPTDOCUMENR.handlers"
 							:loading="controls.LDSAI___OUTPTDOCUMENR.props.loading"
 							:reporting-mode-on="reportingModeCAV"
@@ -114,32 +105,32 @@
 							<q-lookup
 								v-if="controls.LDSAI___OUTPTDOCUMENR.isVisible"
 								v-bind="controls.LDSAI___OUTPTDOCUMENR.props"
-								:id="getControlId(controls.LDSAI___OUTPTDOCUMENR)"
 								v-on="controls.LDSAI___OUTPTDOCUMENR.handlers" />
 							<q-see-more-ldsai-outptdocumenr
 								v-if="controls.LDSAI___OUTPTDOCUMENR.seeMoreIsVisible"
 								v-bind="controls.LDSAI___OUTPTDOCUMENR.seeMoreParams"
 								v-on="controls.LDSAI___OUTPTDOCUMENR.handlers" />
 						</base-input-structure>
-					</q-col>
-				</q-row>
-				<q-row v-if="controls.LDSAI___PSEUDNOVOGR01.isVisible">
-					<q-col v-if="controls.LDSAI___PSEUDNOVOGR01.isVisible">
+					</q-control-wrapper>
+				</q-row-container>
+				<q-row-container
+					v-show="controls.LDSAI___PSEUDNOVOGR01.isVisible"
+					is-large>
+					<q-control-wrapper
+						v-show="controls.LDSAI___PSEUDNOVOGR01.isVisible"
+						class="${Vue.GetControlWrapperClass($controlsColumn)}">
 						<q-group-box-container
-							v-if="controls.LDSAI___PSEUDNOVOGR01.isVisible"
+							id="LDSAI___PSEUDNOVOGR01"
 							v-bind="controls.LDSAI___PSEUDNOVOGR01"
-							:id="getControlId(controls.LDSAI___PSEUDNOVOGR01)"
-							:no-border="controls.LDSAI___PSEUDNOVOGR01.borderless">
+							:is-visible="controls.LDSAI___PSEUDNOVOGR01.isVisible">
 							<!-- Start LDSAI___PSEUDNOVOGR01 -->
-							<q-row v-if="controls.LDSAI___OUTPULINE____.isVisible || controls.LDSAI___WAREHWAREHDES.isVisible">
-								<q-col
-									v-if="controls.LDSAI___OUTPULINE____.isVisible"
-									cols="auto">
+							<q-row-container v-show="controls.LDSAI___OUTPULINE____.isVisible || controls.LDSAI___WAREHWAREHDES.isVisible">
+								<q-control-wrapper
+									v-show="controls.LDSAI___OUTPULINE____.isVisible"
+									class="${Vue.GetControlWrapperClass($controlsColumn)}">
 									<base-input-structure
-										v-if="controls.LDSAI___OUTPULINE____.isVisible"
 										class="i-text"
-										v-bind="controls.LDSAI___OUTPULINE____.wrapperProps"
-										:id="getControlId(controls.LDSAI___OUTPULINE____)"
+										v-bind="controls.LDSAI___OUTPULINE____"
 										v-on="controls.LDSAI___OUTPULINE____.handlers"
 										:loading="controls.LDSAI___OUTPULINE____.props.loading"
 										:reporting-mode-on="reportingModeCAV"
@@ -147,18 +138,15 @@
 										<q-numeric-input
 											v-if="controls.LDSAI___OUTPULINE____.isVisible"
 											v-bind="controls.LDSAI___OUTPULINE____.props"
-											:id="getControlId(controls.LDSAI___OUTPULINE____)"
 											@update:model-value="model.ValLine.fnUpdateValue" />
 									</base-input-structure>
-								</q-col>
-								<q-col
-									v-if="controls.LDSAI___WAREHWAREHDES.isVisible"
-									cols="auto">
+								</q-control-wrapper>
+								<q-control-wrapper
+									v-show="controls.LDSAI___WAREHWAREHDES.isVisible"
+									class="${Vue.GetControlWrapperClass($controlsColumn)}">
 									<base-input-structure
-										v-if="controls.LDSAI___WAREHWAREHDES.isVisible"
 										class="i-text"
-										v-bind="controls.LDSAI___WAREHWAREHDES.wrapperProps"
-										:id="getControlId(controls.LDSAI___WAREHWAREHDES)"
+										v-bind="controls.LDSAI___WAREHWAREHDES"
 										v-on="controls.LDSAI___WAREHWAREHDES.handlers"
 										:loading="controls.LDSAI___WAREHWAREHDES.props.loading"
 										:reporting-mode-on="reportingModeCAV"
@@ -166,24 +154,21 @@
 										<q-lookup
 											v-if="controls.LDSAI___WAREHWAREHDES.isVisible"
 											v-bind="controls.LDSAI___WAREHWAREHDES.props"
-											:id="getControlId(controls.LDSAI___WAREHWAREHDES)"
 											v-on="controls.LDSAI___WAREHWAREHDES.handlers" />
 										<q-see-more-ldsai-warehwarehdes
 											v-if="controls.LDSAI___WAREHWAREHDES.seeMoreIsVisible"
 											v-bind="controls.LDSAI___WAREHWAREHDES.seeMoreParams"
 											v-on="controls.LDSAI___WAREHWAREHDES.handlers" />
 									</base-input-structure>
-								</q-col>
-							</q-row>
-							<q-row v-if="controls.LDSAI___ITEM_ITEMDES_.isVisible">
-								<q-col
-									v-if="controls.LDSAI___ITEM_ITEMDES_.isVisible"
-									cols="auto">
+								</q-control-wrapper>
+							</q-row-container>
+							<q-row-container v-show="controls.LDSAI___ITEM_ITEMDES_.isVisible">
+								<q-control-wrapper
+									v-show="controls.LDSAI___ITEM_ITEMDES_.isVisible"
+									class="${Vue.GetControlWrapperClass($controlsColumn)}">
 									<base-input-structure
-										v-if="controls.LDSAI___ITEM_ITEMDES_.isVisible"
 										class="i-text"
-										v-bind="controls.LDSAI___ITEM_ITEMDES_.wrapperProps"
-										:id="getControlId(controls.LDSAI___ITEM_ITEMDES_)"
+										v-bind="controls.LDSAI___ITEM_ITEMDES_"
 										v-on="controls.LDSAI___ITEM_ITEMDES_.handlers"
 										:loading="controls.LDSAI___ITEM_ITEMDES_.props.loading"
 										:reporting-mode-on="reportingModeCAV"
@@ -191,24 +176,21 @@
 										<q-lookup
 											v-if="controls.LDSAI___ITEM_ITEMDES_.isVisible"
 											v-bind="controls.LDSAI___ITEM_ITEMDES_.props"
-											:id="getControlId(controls.LDSAI___ITEM_ITEMDES_)"
 											v-on="controls.LDSAI___ITEM_ITEMDES_.handlers" />
 										<q-see-more-ldsai-item-itemdes
 											v-if="controls.LDSAI___ITEM_ITEMDES_.seeMoreIsVisible"
 											v-bind="controls.LDSAI___ITEM_ITEMDES_.seeMoreParams"
 											v-on="controls.LDSAI___ITEM_ITEMDES_.handlers" />
 									</base-input-structure>
-								</q-col>
-							</q-row>
-							<q-row v-if="controls.LDSAI___OUTPUEXITQNTY.isVisible || controls.LDSAI___OUDOCNRDOCSDA.isVisible">
-								<q-col
-									v-if="controls.LDSAI___OUTPUEXITQNTY.isVisible"
-									cols="auto">
+								</q-control-wrapper>
+							</q-row-container>
+							<q-row-container v-show="controls.LDSAI___OUTPUEXITQNTY.isVisible || controls.LDSAI___OUDOCNRDOCSDA.isVisible">
+								<q-control-wrapper
+									v-show="controls.LDSAI___OUTPUEXITQNTY.isVisible"
+									class="${Vue.GetControlWrapperClass($controlsColumn)}">
 									<base-input-structure
-										v-if="controls.LDSAI___OUTPUEXITQNTY.isVisible"
 										class="i-text"
-										v-bind="controls.LDSAI___OUTPUEXITQNTY.wrapperProps"
-										:id="getControlId(controls.LDSAI___OUTPUEXITQNTY)"
+										v-bind="controls.LDSAI___OUTPUEXITQNTY"
 										v-on="controls.LDSAI___OUTPUEXITQNTY.handlers"
 										:loading="controls.LDSAI___OUTPUEXITQNTY.props.loading"
 										:reporting-mode-on="reportingModeCAV"
@@ -216,18 +198,15 @@
 										<q-numeric-input
 											v-if="controls.LDSAI___OUTPUEXITQNTY.isVisible"
 											v-bind="controls.LDSAI___OUTPUEXITQNTY.props"
-											:id="getControlId(controls.LDSAI___OUTPUEXITQNTY)"
 											@update:model-value="model.ValExitqnty.fnUpdateValue" />
 									</base-input-structure>
-								</q-col>
-								<q-col
-									v-if="controls.LDSAI___OUDOCNRDOCSDA.isVisible"
-									cols="auto">
+								</q-control-wrapper>
+								<q-control-wrapper
+									v-show="controls.LDSAI___OUDOCNRDOCSDA.isVisible"
+									class="${Vue.GetControlWrapperClass($controlsColumn)}">
 									<base-input-structure
-										v-if="controls.LDSAI___OUDOCNRDOCSDA.isVisible"
 										class="i-text"
-										v-bind="controls.LDSAI___OUDOCNRDOCSDA.wrapperProps"
-										:id="getControlId(controls.LDSAI___OUDOCNRDOCSDA)"
+										v-bind="controls.LDSAI___OUDOCNRDOCSDA"
 										v-on="controls.LDSAI___OUDOCNRDOCSDA.handlers"
 										:loading="controls.LDSAI___OUDOCNRDOCSDA.props.loading"
 										:reporting-mode-on="reportingModeCAV"
@@ -235,30 +214,29 @@
 										<q-lookup
 											v-if="controls.LDSAI___OUDOCNRDOCSDA.isVisible"
 											v-bind="controls.LDSAI___OUDOCNRDOCSDA.props"
-											:id="getControlId(controls.LDSAI___OUDOCNRDOCSDA)"
 											v-on="controls.LDSAI___OUDOCNRDOCSDA.handlers" />
 										<q-see-more-ldsai-oudocnrdocsda
 											v-if="controls.LDSAI___OUDOCNRDOCSDA.seeMoreIsVisible"
 											v-bind="controls.LDSAI___OUDOCNRDOCSDA.seeMoreParams"
 											v-on="controls.LDSAI___OUDOCNRDOCSDA.handlers" />
 									</base-input-structure>
-								</q-col>
-							</q-row>
+								</q-control-wrapper>
+							</q-row-container>
 							<!-- End LDSAI___PSEUDNOVOGR01 -->
 						</q-group-box-container>
-					</q-col>
-				</q-row>
+					</q-control-wrapper>
+				</q-row-container>
 			</template>
-		</q-container>
+		</div>
 	</teleport>
 
-	<q-divider v-if="!isPopup && showFormFooter" />
+	<hr v-if="!isPopup && showFormFooter" />
 
 	<teleport
 		v-if="formModalIsReady && showFormFooter"
 		:to="`#${uiContainersId.footer}`"
 		:disabled="!isPopup || isNested">
-		<q-row v-if="showFormFooter">
+		<q-row-container v-if="showFormFooter">
 			<div id="footer-action-btns">
 				<template
 					v-for="btn in formButtons"
@@ -267,7 +245,6 @@
 						v-if="btn.isActive && btn.isVisible && btn.showInFooter"
 						:id="`bottom-${btn.id}`"
 						:label="btn.text"
-						:color="btn.color"
 						:variant="btn.variant"
 						:disabled="btn.disabled"
 						:icon-pos="btn.iconPos"
@@ -279,12 +256,12 @@
 					</q-button>
 				</template>
 			</div>
-		</q-row>
+		</q-row-container>
 	</teleport>
 </template>
 
 <script>
-	/* eslint-disable @typescript-eslint/no-unused-vars */
+	/* eslint-disable no-unused-vars */
 	import { computed, defineAsyncComponent, readonly } from 'vue'
 	import { useRoute } from 'vue-router'
 
@@ -304,7 +281,7 @@
 	import qApi from '@/api/genio/quidgestFunctions.js'
 	import qFunctions from '@/api/genio/projectFunctions.js'
 	import qProjArrays from '@/api/genio/projectArrays.js'
-	/* eslint-enable @typescript-eslint/no-unused-vars */
+	/* eslint-enable no-unused-vars */
 
 	import FormViewModel from './QFormLdsaiViewModel.js'
 
@@ -385,8 +362,7 @@
 					primaryKey: 'ValCodoutpu',
 					designation: computed(() => this.Resources.OUTPUT44370),
 					identifier: '', // Unique identifier received by route (when it's nested).
-					mode: '',
-					availableAgents: [],
+					mode: ''
 				},
 
 				formButtons: {
@@ -494,11 +470,7 @@
 						showInFooter: true,
 						isActive: true,
 						isVisible: computed(() => vm.authData.isAllowed && vm.isEditable),
-						action: vm.saveForm,
-						badge: {
-							isVisible: computed(() => vm.model?.isDirty === true),
-							color: 'highlight'
-						}
+						action: vm.saveForm
 					},
 					confirmBtn: {
 						id: 'confirm-btn',
@@ -635,7 +607,6 @@
 						label: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						borderless: false,
 						isCollapsible: false,
 						anchored: false,
 						directChildren: ['LDSAI___OUTPULINE____', 'LDSAI___WAREHWAREHDES', 'LDSAI___ITEM_ITEMDES_', 'LDSAI___OUTPUEXITQNTY', 'LDSAI___OUDOCNRDOCSDA'],
@@ -716,12 +687,6 @@
 							set 'item.itemdes'(value) { vm.model.TableItemItemdes.updateValue(value) },
 						}),
 						controlLimits: [
-							{
-								identifier: ['wareh', 'outpu.codwareh'],
-								dependencyEvents: ['fieldChange:outpu.codwareh'],
-								dependencyField: 'OUTPU.CODWAREH',
-								fnValueSelector: (model) => model.ValCodwareh.value
-							},
 						],
 					}, this),
 					LDSAI___OUTPUEXITQNTY: new fieldControlClass.NumberControl({
@@ -880,23 +845,17 @@
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 		},
 
-		beforeUnmount()
-		{
-/* eslint-disable indent, vue/html-indent, vue/script-indent */
-// USE /[MANUAL GQT COMPONENT_BEFORE_UNMOUNT LDSAI]/
-// eslint-disable-next-line
-/* eslint-enable indent, vue/html-indent, vue/script-indent */
-		},
-
 		methods: {
 			/**
 			 * Called before form init.
 			 */
 			async beforeLoad()
 			{
+				let loadForm = true
+
 				// Execute the "Before init" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.beforeInit)
-				for (const trigger of triggers)
+				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
 				this.emitEvent('before-load-form')
@@ -906,7 +865,7 @@
 // eslint-disable-next-line
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 
-				return true
+				return loadForm
 			},
 
 			/**
@@ -916,7 +875,7 @@
 			{
 				// Execute the "After init" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.afterInit)
-				for (const trigger of triggers)
+				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
 				this.emitEvent('after-load-form')
@@ -936,33 +895,19 @@
 
 				// Execute the "Before apply" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.beforeApply)
-				for (const trigger of triggers)
+				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
-				const ticketsPromise = this.model.updateFilesTickets(true)
-				this.addBusy(ticketsPromise, this.Resources[hardcodedTexts.processing])
-				const canSetDocums = await ticketsPromise
+				const canSetDocums = await this.model.updateFilesTickets(true)
 
 				if (canSetDocums)
 				{
-					let results
-					const changesPromise = this.model.setDocumentChanges()
-					this.addBusy(changesPromise, this.Resources[hardcodedTexts.processing])
-					applyForm = await changesPromise
+					applyForm = await this.model.setDocumentChanges()
 
 					if (applyForm)
 					{
-						const insertsPromise = this.model.saveDocuments()
-						this.addBusy(insertsPromise, this.Resources[hardcodedTexts.processing])
-						results = await insertsPromise
+						const results = await this.model.saveDocuments()
 						applyForm = results.every((e) => e === true)
-					}
-
-					if (!changesPromise || (results && !results.every((e) => e === true)))
-					{
-						this.validationErrors = {
-							Erro: this.Resources.OCORREU_UM_ERRO_AO_T51884
-						}
 					}
 				}
 
@@ -983,7 +928,7 @@
 			{
 				// Execute the "After apply" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.afterApply)
-				for (const trigger of triggers)
+				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
 				this.emitEvent('after-apply-form')
@@ -1003,33 +948,19 @@
 
 				// Execute the "Before save" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.beforeSave)
-				for (const trigger of triggers)
+				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
-				const ticketsPromise = this.model.updateFilesTickets()
-				this.addBusy(ticketsPromise, this.Resources[hardcodedTexts.processing])
-				const canSetDocums = await ticketsPromise
+				const canSetDocums = await this.model.updateFilesTickets()
 
 				if (canSetDocums)
 				{
-					let results
-					const changesPromise = this.model.setDocumentChanges()
-					this.addBusy(changesPromise, this.Resources[hardcodedTexts.processing])
-					saveForm = await changesPromise
+					saveForm = await this.model.setDocumentChanges()
 
 					if (saveForm)
 					{
-						const insertsPromise = this.model.saveDocuments()
-						this.addBusy(insertsPromise, this.Resources[hardcodedTexts.processing])
-						results = await insertsPromise
+						const results = await this.model.saveDocuments()
 						saveForm = results.every((e) => e === true)
-					}
-
-					if (!changesPromise || (results && !results.every((e) => e === true)))
-					{
-						this.validationErrors = {
-							Erro: this.Resources.OCORREU_UM_ERRO_AO_T51884
-						}
 					}
 				}
 
@@ -1048,9 +979,11 @@
 			 */
 			async afterSave()
 			{
+				let redirectPage = true // Set to 'false' to cancel page redirect.
+
 				// Execute the "After save" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.afterSave)
-				for (const trigger of triggers)
+				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
 				this.emitEvent('after-save-form')
@@ -1060,7 +993,7 @@
 // eslint-disable-next-line
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 
-				return true
+				return redirectPage
 			},
 
 			/**
@@ -1068,6 +1001,8 @@
 			 */
 			async beforeDel()
 			{
+				let deleteForm = true // Set to 'false' to cancel form delete.
+
 				this.emitEvent('before-delete-form')
 
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
@@ -1075,7 +1010,7 @@
 // eslint-disable-next-line
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 
-				return true
+				return deleteForm
 			},
 
 			/**
@@ -1083,6 +1018,8 @@
 			 */
 			async afterDel()
 			{
+				let redirectPage = true // Set to 'false' to cancel page redirect.
+
 				this.emitEvent('after-delete-form')
 
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
@@ -1090,7 +1027,7 @@
 // eslint-disable-next-line
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 
-				return true
+				return redirectPage
 			},
 
 			/**
@@ -1098,9 +1035,11 @@
 			 */
 			async beforeExit()
 			{
+				let leaveForm = true // Set to 'false' to cancel page redirect.
+
 				// Execute the "Before exit" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.beforeExit)
-				for (const trigger of triggers)
+				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
 				this.emitEvent('before-exit-form')
@@ -1110,7 +1049,7 @@
 // eslint-disable-next-line
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 
-				return true
+				return leaveForm
 			},
 
 			/**
@@ -1120,7 +1059,7 @@
 			{
 				// Execute the "After exit" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.afterExit)
-				for (const trigger of triggers)
+				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
 				this.emitEvent('after-exit-form')

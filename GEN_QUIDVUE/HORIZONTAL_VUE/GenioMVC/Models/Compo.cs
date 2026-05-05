@@ -54,8 +54,8 @@ namespace GenioMVC.Models
 			set { _compc = value; }
 		}
 
-		[DisplayName("Release version")]
-		/// <summary>Field : "Release version" Tipo: "C" Formula:  ""</summary>
+		[DisplayName("Genio version")]
+		/// <summary>Field : "Genio version" Tipo: "C" Formula:  ""</summary>
 		[ShouldSerialize("Compo.ValRelease")]
 		public string ValRelease { get { return klass.ValRelease; } set { klass.ValRelease = value; } }
 
@@ -129,6 +129,16 @@ namespace GenioMVC.Models
 		public decimal ValCompicon { get { return klass.ValCompicon; } set { klass.ValCompicon = value; } }
 		[JsonIgnore]
 		public SelectList ArrayValcompicon { get { return new SelectList(CSGenio.business.ArrayComponenticons.GetDictionary(), "Key", "Value", ValCompicon); } set { ValCompicon = Convert.ToDecimal(value.SelectedValue); } }
+
+		[DisplayName("Link")]
+		/// <summary>Field : "Link" Tipo: "C" Formula:  ""</summary>
+		[ShouldSerialize("Compo.ValWeblink")]
+		public string ValWeblink { get { return klass.ValWeblink; } set { klass.ValWeblink = value; } }
+
+		[DisplayName("Release version")]
+		/// <summary>Field : "Release version" Tipo: "L" Formula:  ""</summary>
+		[ShouldSerialize("Compo.ValReleaselogic")]
+		public bool ValReleaselogic { get { return Convert.ToBoolean(klass.ValReleaselogic); } set { klass.ValReleaselogic = Convert.ToInt32(value); } }
 
 		[DisplayName("ZZSTATE")]
 		[ShouldSerialize("Compo.ValZzstate")]

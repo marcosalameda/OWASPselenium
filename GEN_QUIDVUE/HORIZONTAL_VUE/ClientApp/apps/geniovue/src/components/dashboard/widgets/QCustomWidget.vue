@@ -13,9 +13,9 @@
 				:src="`${config.resourcesPath}no-widgets.png`"
 				:alt="texts.noDataText" />
 
-			<h2 class="no-widgets__message">
+			<h5 class="no-widgets__message">
 				{{ texts.noDataText }}
-			</h2>
+			</h5>
 		</div>
 	</div>
 </template>

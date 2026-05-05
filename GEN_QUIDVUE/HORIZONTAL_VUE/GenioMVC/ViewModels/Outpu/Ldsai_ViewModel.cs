@@ -1,20 +1,20 @@
-﻿using CSGenio.business;
-using CSGenio.framework;
-using CSGenio.persistence;
-using GenioMVC.Helpers;
-using GenioMVC.Models.Exception;
-using GenioMVC.Models.Navigation;
+﻿using JsonIgnoreAttribute = System.Text.Json.Serialization.JsonIgnoreAttribute;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Quidgest.Persistence;
-using Quidgest.Persistence.GenericQuery;
-
 using System.Collections;
 using System.Collections.Concurrent;
 using System.Collections.Specialized;
 using System.ComponentModel.DataAnnotations;
 using System.Data;
 using System.Globalization;
-using System.Text.Json.Serialization;
+
+using CSGenio.business;
+using CSGenio.framework;
+using CSGenio.persistence;
+using GenioMVC.Helpers;
+using GenioMVC.Models.Exception;
+using GenioMVC.Models.Navigation;
+using Quidgest.Persistence;
+using Quidgest.Persistence.GenericQuery;
 
 namespace GenioMVC.ViewModels.Outpu
 {
@@ -48,7 +48,6 @@ namespace GenioMVC.ViewModels.Outpu
 		public string ValCodwareh { get; set; }
 
 		#endregion
-
 		/// <summary>
 		/// Title: "Document No." | Type: "N"
 		/// </summary>
@@ -58,7 +57,7 @@ namespace GenioMVC.ViewModels.Outpu
 		/// Title: "" | Type: "CE"
 		/// </summary>
 		[ValidateSetAccess]
-		public string OutptValCodwareh
+		public string OutptValCodwareh 
 		{
 			get
 			{
@@ -281,7 +280,12 @@ namespace GenioMVC.ViewModels.Outpu
 			}
 		}
 
-		/// <inheritdoc />
+		/// <summary>
+		/// Sets the value of a single property of the view model based on the provided table and field names.
+		/// </summary>
+		/// <param name="fullFieldName">The full field name in the format "table.field".</param>
+		/// <param name="value">The field value.</param>
+		/// <exception cref="ArgumentNullException">Thrown if <paramref name="fullFieldName"/> is null.</exception>
 		public override void SetViewModelValue(string fullFieldName, object value)
 		{
 			try
@@ -368,17 +372,6 @@ namespace GenioMVC.ViewModels.Outpu
 				// Conexão deve estar aberta de fora. Podem haver formulas que utilizam funções "manuais".
 				// TODO: It needs to be analyzed whether we should disable the security of field filling here. If there is any case where the field with the block condition can only be calculated after the double calculation of the formulas.
 				MapToModel(Model);
-
-				// If it's inserting or duplicating, needs to fill the default values.
-				if (Navigation.CurrentLevel.FormMode == FormMode.New || Navigation.CurrentLevel.FormMode == FormMode.Duplicate)
-				{
-					FunctionType funcType = Navigation.CurrentLevel.FormMode == FormMode.New
-						? FunctionType.INS
-						: FunctionType.DUP;
-
-					Model.baseklass.fillValuesDefault(m_userContext.PersistentSupport, funcType);
-				}
-
 				// Preencher operações internas
 				Model.klass.fillInternalOperations(m_userContext.PersistentSupport, oldvalues);
 				MapFromModel(Model);
@@ -424,7 +417,6 @@ namespace GenioMVC.ViewModels.Outpu
 			Load_Ldsai___warehwarehdes(qs, lazyLoad);
 			Load_Ldsai___item_itemdes_(qs, lazyLoad);
 			Load_Ldsai___oudocnrdocsda(qs, lazyLoad);
-
 // USE /[MANUAL GQT VIEWMODEL_LOADPARTIAL LDSAI]/
 		}
 
@@ -494,7 +486,10 @@ namespace GenioMVC.ViewModels.Outpu
 				}
 			}
 
-			TableOutptDocumenr = new TableDBEdit<Models.Outpt>();
+			TableOutptDocumenr = new TableDBEdit<Models.Outpt>
+			{
+				IsLazyLoad = lazyLoad
+			};
 
 			if (lazyLoad)
 			{
@@ -509,7 +504,7 @@ namespace GenioMVC.ViewModels.Outpu
 
 			if (ldsai___outptdocumenrDoLoad)
 			{
-				List<ColumnSort> sorts = [];
+				List<ColumnSort> sorts = new List<ColumnSort>();
 				ColumnSort requestedSort = GetRequestSort(TableOutptDocumenr, "sTableOutptDocumenr", "dTableOutptDocumenr", qs, "outpt");
 				if (requestedSort != null)
 					sorts.Add(requestedSort);
@@ -559,7 +554,7 @@ namespace GenioMVC.ViewModels.Outpu
 
 				TableOutptDocumenr.SetPagination(page, numberItems, listing.HasMore, listing.GetTotal, listing.TotalRecords);
 				TableOutptDocumenr.Query = query;
-				TableOutptDocumenr.Elements = listing.RowsForViewModel((r) => new GenioMVC.Models.Outpt(m_userContext, r, true, _fieldsToSerialize_LDSAI___OUTPTDOCUMENR));
+				TableOutptDocumenr.Elements = listing.RowsForViewModel<GenioMVC.Models.Outpt>((r) => new GenioMVC.Models.Outpt(m_userContext, r, true, _fieldsToSerialize_LDSAI___OUTPTDOCUMENR));
 
 				//created by [ MH ] at [ 14.04.2016 ] - Foi alterada a forma de retornar a key do novo registo inserido / editado no form de apoio do DBEdit.
 				//last update by [ MH ] at [ 10.05.2016 ] - Validação se key encontra-se no level atual, as chaves dos niveis anteriores devem ser ignorados.
@@ -682,7 +677,10 @@ namespace GenioMVC.ViewModels.Outpu
 				}
 			}
 
-			TableWarehWarehdes = new TableDBEdit<Models.Wareh>();
+			TableWarehWarehdes = new TableDBEdit<Models.Wareh>
+			{
+				IsLazyLoad = lazyLoad
+			};
 
 			if (lazyLoad)
 			{
@@ -697,7 +695,7 @@ namespace GenioMVC.ViewModels.Outpu
 
 			if (ldsai___warehwarehdesDoLoad)
 			{
-				List<ColumnSort> sorts = [];
+				List<ColumnSort> sorts = new List<ColumnSort>();
 				ColumnSort requestedSort = GetRequestSort(TableWarehWarehdes, "sTableWarehWarehdes", "dTableWarehWarehdes", qs, "wareh");
 				if (requestedSort != null)
 					sorts.Add(requestedSort);
@@ -747,7 +745,7 @@ namespace GenioMVC.ViewModels.Outpu
 
 				TableWarehWarehdes.SetPagination(page, numberItems, listing.HasMore, listing.GetTotal, listing.TotalRecords);
 				TableWarehWarehdes.Query = query;
-				TableWarehWarehdes.Elements = listing.RowsForViewModel((r) => new GenioMVC.Models.Wareh(m_userContext, r, true, _fieldsToSerialize_LDSAI___WAREHWAREHDES));
+				TableWarehWarehdes.Elements = listing.RowsForViewModel<GenioMVC.Models.Wareh>((r) => new GenioMVC.Models.Wareh(m_userContext, r, true, _fieldsToSerialize_LDSAI___WAREHWAREHDES));
 
 				//created by [ MH ] at [ 14.04.2016 ] - Foi alterada a forma de retornar a key do novo registo inserido / editado no form de apoio do DBEdit.
 				//last update by [ MH ] at [ 10.05.2016 ] - Validação se key encontra-se no level atual, as chaves dos niveis anteriores devem ser ignorados.
@@ -873,7 +871,10 @@ namespace GenioMVC.ViewModels.Outpu
 			// Area limit
 			ldsai___item_itemdes_DoLoad &= AddCriteriaAreaLimit(ldsai___item_itemdes_Conds, CSGenio.business.CSGenioAwareh.FldCodwareh, "wareh", this.ValCodwareh, true);
 
-			TableItemItemdes = new TableDBEdit<Models.Item>();
+			TableItemItemdes = new TableDBEdit<Models.Item>
+			{
+				IsLazyLoad = lazyLoad
+			};
 
 			if (lazyLoad)
 			{
@@ -891,7 +892,7 @@ namespace GenioMVC.ViewModels.Outpu
 
 			if (ldsai___item_itemdes_DoLoad)
 			{
-				List<ColumnSort> sorts = [];
+				List<ColumnSort> sorts = new List<ColumnSort>();
 				ColumnSort requestedSort = GetRequestSort(TableItemItemdes, "sTableItemItemdes", "dTableItemItemdes", qs, "item");
 				if (requestedSort != null)
 					sorts.Add(requestedSort);
@@ -941,7 +942,7 @@ namespace GenioMVC.ViewModels.Outpu
 
 				TableItemItemdes.SetPagination(page, numberItems, listing.HasMore, listing.GetTotal, listing.TotalRecords);
 				TableItemItemdes.Query = query;
-				TableItemItemdes.Elements = listing.RowsForViewModel((r) => new GenioMVC.Models.Item(m_userContext, r, true, _fieldsToSerialize_LDSAI___ITEM_ITEMDES_));
+				TableItemItemdes.Elements = listing.RowsForViewModel<GenioMVC.Models.Item>((r) => new GenioMVC.Models.Item(m_userContext, r, true, _fieldsToSerialize_LDSAI___ITEM_ITEMDES_));
 
 				//created by [ MH ] at [ 14.04.2016 ] - Foi alterada a forma de retornar a key do novo registo inserido / editado no form de apoio do DBEdit.
 				//last update by [ MH ] at [ 10.05.2016 ] - Validação se key encontra-se no level atual, as chaves dos niveis anteriores devem ser ignorados.
@@ -1072,7 +1073,10 @@ namespace GenioMVC.ViewModels.Outpu
 				}
 			}
 
-			TableOudocNrdocsda = new TableDBEdit<Models.Oudoc>();
+			TableOudocNrdocsda = new TableDBEdit<Models.Oudoc>
+			{
+				IsLazyLoad = lazyLoad
+			};
 
 			if (lazyLoad)
 			{
@@ -1087,7 +1091,7 @@ namespace GenioMVC.ViewModels.Outpu
 
 			if (ldsai___oudocnrdocsdaDoLoad)
 			{
-				List<ColumnSort> sorts = [];
+				List<ColumnSort> sorts = new List<ColumnSort>();
 				ColumnSort requestedSort = GetRequestSort(TableOudocNrdocsda, "sTableOudocNrdocsda", "dTableOudocNrdocsda", qs, "oudoc");
 				if (requestedSort != null)
 					sorts.Add(requestedSort);
@@ -1137,7 +1141,7 @@ namespace GenioMVC.ViewModels.Outpu
 
 				TableOudocNrdocsda.SetPagination(page, numberItems, listing.HasMore, listing.GetTotal, listing.TotalRecords);
 				TableOudocNrdocsda.Query = query;
-				TableOudocNrdocsda.Elements = listing.RowsForViewModel((r) => new GenioMVC.Models.Oudoc(m_userContext, r, true, _fieldsToSerialize_LDSAI___OUDOCNRDOCSDA));
+				TableOudocNrdocsda.Elements = listing.RowsForViewModel<GenioMVC.Models.Oudoc>((r) => new GenioMVC.Models.Oudoc(m_userContext, r, true, _fieldsToSerialize_LDSAI___OUDOCNRDOCSDA));
 
 				//created by [ MH ] at [ 14.04.2016 ] - Foi alterada a forma de retornar a key do novo registo inserido / editado no form de apoio do DBEdit.
 				//last update by [ MH ] at [ 10.05.2016 ] - Validação se key encontra-se no level atual, as chaves dos niveis anteriores devem ser ignorados.

@@ -1,4 +1,4 @@
-﻿/* eslint-disable @typescript-eslint/no-unused-vars */
+﻿/* eslint-disable no-unused-vars */
 import { computed, reactive, watch } from 'vue'
 import _merge from 'lodash-es/merge'
 
@@ -11,7 +11,7 @@ import netAPI from '@quidgest/clientapp/network'
 import qApi from '@/api/genio/quidgestFunctions.js'
 import qFunctions from '@/api/genio/projectFunctions.js'
 import qProjArrays from '@/api/genio/projectArrays.js'
-/* eslint-enable @typescript-eslint/no-unused-vars */
+/* eslint-enable no-unused-vars */
 
 /**
  * Represents a ViewModel class.
@@ -25,11 +25,11 @@ export default class ViewModel extends FormViewModelBase
 	 * @param {object} options - The options for the ViewModel
 	 * @param {object} values - A ViewModel instance to copy values from
 	 */
-	// eslint-disable-next-line @typescript-eslint/no-unused-vars
+	// eslint-disable-next-line no-unused-vars
 	constructor(vueContext, options, values)
 	{
 		super(vueContext, options)
-		// eslint-disable-next-line @typescript-eslint/no-unused-vars
+		// eslint-disable-next-line no-unused-vars
 		const vm = this.vueContext
 
 		// The view model metadata
@@ -37,9 +37,8 @@ export default class ViewModel extends FormViewModelBase
 			name: 'IDIOM',
 			area: 'LANGU',
 			actions: {
-				recalculateFormulas: 'RecalculateFormulas_Idiom',
-				updateFilesTickets: 'UpdateFilesTicketsIdiom',
-				setFile: 'SetFileIdiom'
+				recalculateFormulas: 'RecalculateFormulas_IDIOM',
+				updateFilesTickets: 'UpdateFilesTicketsIDIOM'
 			}
 		})
 
@@ -51,7 +50,7 @@ export default class ViewModel extends FormViewModelBase
 			field: 'CODLANG',
 			description: '',
 		}).cloneFrom(values?.ValCodlang))
-		this.stopWatchers.push(watch(() => this.ValCodlang.value, (newValue, oldValue) => this.onUpdate('langu.codlang', this.ValCodlang, newValue, oldValue)))
+		watch(() => this.ValCodlang.value, (newValue, oldValue) => this.onUpdate('langu.codlang', this.ValCodlang, newValue, oldValue))
 
 		/** The remaining form fields. */
 		this.ValLangua = reactive(new modelFieldType.String({
@@ -62,7 +61,7 @@ export default class ViewModel extends FormViewModelBase
 			maxLength: 50,
 			description: computed(() => this.Resources.LANGUAGE16872),
 		}).cloneFrom(values?.ValLangua))
-		this.stopWatchers.push(watch(() => this.ValLangua.value, (newValue, oldValue) => this.onUpdate('langu.langua', this.ValLangua, newValue, oldValue)))
+		watch(() => this.ValLangua.value, (newValue, oldValue) => this.onUpdate('langu.langua', this.ValLangua, newValue, oldValue))
 
 		this.ValAcron = reactive(new modelFieldType.String({
 			id: 'ValAcron',
@@ -72,7 +71,7 @@ export default class ViewModel extends FormViewModelBase
 			maxLength: 5,
 			description: computed(() => this.Resources.ACRONYM00872),
 		}).cloneFrom(values?.ValAcron))
-		this.stopWatchers.push(watch(() => this.ValAcron.value, (newValue, oldValue) => this.onUpdate('langu.acron', this.ValAcron, newValue, oldValue)))
+		watch(() => this.ValAcron.value, (newValue, oldValue) => this.onUpdate('langu.acron', this.ValAcron, newValue, oldValue))
 	}
 
 	/**

@@ -9,13 +9,12 @@
 			<div
 				v-if="showFormHeader"
 				class="c-action-bar">
-				<component
+				<h1
 					v-if="formControl.uiComponents.header && formInfo.designation"
-					:is="topHeadingTag"
 					:id="formTitleId"
 					class="form-header">
 					{{ formInfo.designation }}
-				</component>
+				</h1>
 
 				<div class="c-action-bar__menu">
 					<template
@@ -39,13 +38,9 @@
 									:label="btn.label"
 									:disabled="btn.disabled"
 									@click="btn.action">
-									<template v-if="btn.icon">
-										<q-badge-indicator
-											:enabled="btn.badge?.isVisible ?? false"
-											:color="btn.badge?.color">
-											<q-icon v-bind="btn.icon" />
-										</q-badge-indicator>
-									</template>
+									<q-icon
+										v-if="btn.icon"
+										v-bind="btn.icon" />
 								</q-toggle-group-item>
 							</template>
 						</q-toggle-group>
@@ -57,7 +52,7 @@
 				v-if="$app.layout.FormAnchorsPosition === 'form-header' && visibleGroups.length > 0"
 				:anchors="anchorGroups"
 				:controls="visibleControls"
-				@focus-control="focusControl" />
+				@focus-control="(...args) => focusControl(...args)" />
 		</div>
 	</teleport>
 
@@ -78,7 +73,6 @@
 						v-if="btn.isActive && btn.isVisible && btn.showInHeading"
 						:id="`heading-${btn.id}`"
 						:label="btn.text"
-						:color="btn.color"
 						:variant="btn.variant"
 						:disabled="btn.disabled"
 						:icon-pos="btn.iconPos"
@@ -92,29 +86,29 @@
 			</q-button-group>
 		</div>
 
-		<q-container
-			fluid
+		<div
+			class="form-flow"
 			data-key="LOCAT"
-			:data-identifier="primaryKeyValue"
-			:data-loading="!formInitialDataLoaded || !isActiveForm">
+			:data-loading="!formInitialDataLoaded">
 			<template v-if="formControl.initialized && showFormBody">
-				<q-row v-if="controls.LOCAT___PSEUDNOVOGR01.isVisible">
-					<q-col v-if="controls.LOCAT___PSEUDNOVOGR01.isVisible">
+				<q-row-container
+					v-show="controls.LOCAT___PSEUDNOVOGR01.isVisible"
+					is-large>
+					<q-control-wrapper
+						v-show="controls.LOCAT___PSEUDNOVOGR01.isVisible"
+						class="${Vue.GetControlWrapperClass($controlsColumn)}">
 						<q-group-box-container
-							v-if="controls.LOCAT___PSEUDNOVOGR01.isVisible"
+							id="LOCAT___PSEUDNOVOGR01"
 							v-bind="controls.LOCAT___PSEUDNOVOGR01"
-							:id="getControlId(controls.LOCAT___PSEUDNOVOGR01)"
-							:no-border="controls.LOCAT___PSEUDNOVOGR01.borderless">
+							:is-visible="controls.LOCAT___PSEUDNOVOGR01.isVisible">
 							<!-- Start LOCAT___PSEUDNOVOGR01 -->
-							<q-row v-if="controls.LOCAT___ENTITNAME____.isVisible">
-								<q-col
-									v-if="controls.LOCAT___ENTITNAME____.isVisible"
-									cols="auto">
+							<q-row-container v-show="controls.LOCAT___ENTITNAME____.isVisible">
+								<q-control-wrapper
+									v-show="controls.LOCAT___ENTITNAME____.isVisible"
+									class="${Vue.GetControlWrapperClass($controlsColumn)}">
 									<base-input-structure
-										v-if="controls.LOCAT___ENTITNAME____.isVisible"
 										class="i-text"
-										v-bind="controls.LOCAT___ENTITNAME____.wrapperProps"
-										:id="getControlId(controls.LOCAT___ENTITNAME____)"
+										v-bind="controls.LOCAT___ENTITNAME____"
 										v-on="controls.LOCAT___ENTITNAME____.handlers"
 										:loading="controls.LOCAT___ENTITNAME____.props.loading"
 										:reporting-mode-on="reportingModeCAV"
@@ -122,24 +116,21 @@
 										<q-lookup
 											v-if="controls.LOCAT___ENTITNAME____.isVisible"
 											v-bind="controls.LOCAT___ENTITNAME____.props"
-											:id="getControlId(controls.LOCAT___ENTITNAME____)"
 											v-on="controls.LOCAT___ENTITNAME____.handlers" />
 										<q-see-more-locat-entitname
 											v-if="controls.LOCAT___ENTITNAME____.seeMoreIsVisible"
 											v-bind="controls.LOCAT___ENTITNAME____.seeMoreParams"
 											v-on="controls.LOCAT___ENTITNAME____.handlers" />
 									</base-input-structure>
-								</q-col>
-							</q-row>
-							<q-row v-if="controls.LOCAT___FACILNAME____.isVisible">
-								<q-col
-									v-if="controls.LOCAT___FACILNAME____.isVisible"
-									cols="auto">
+								</q-control-wrapper>
+							</q-row-container>
+							<q-row-container v-show="controls.LOCAT___FACILNAME____.isVisible">
+								<q-control-wrapper
+									v-show="controls.LOCAT___FACILNAME____.isVisible"
+									class="${Vue.GetControlWrapperClass($controlsColumn)}">
 									<base-input-structure
-										v-if="controls.LOCAT___FACILNAME____.isVisible"
 										class="i-text"
-										v-bind="controls.LOCAT___FACILNAME____.wrapperProps"
-										:id="getControlId(controls.LOCAT___FACILNAME____)"
+										v-bind="controls.LOCAT___FACILNAME____"
 										v-on="controls.LOCAT___FACILNAME____.handlers"
 										:loading="controls.LOCAT___FACILNAME____.props.loading"
 										:reporting-mode-on="reportingModeCAV"
@@ -147,69 +138,60 @@
 										<q-lookup
 											v-if="controls.LOCAT___FACILNAME____.isVisible"
 											v-bind="controls.LOCAT___FACILNAME____.props"
-											:id="getControlId(controls.LOCAT___FACILNAME____)"
 											v-on="controls.LOCAT___FACILNAME____.handlers" />
 										<q-see-more-locat-facilname
 											v-if="controls.LOCAT___FACILNAME____.seeMoreIsVisible"
 											v-bind="controls.LOCAT___FACILNAME____.seeMoreParams"
 											v-on="controls.LOCAT___FACILNAME____.handlers" />
 									</base-input-structure>
-								</q-col>
-							</q-row>
-							<q-row v-if="controls.LOCAT___LOCATGLN_____.isVisible">
-								<q-col
-									v-if="controls.LOCAT___LOCATGLN_____.isVisible"
-									cols="auto">
+								</q-control-wrapper>
+							</q-row-container>
+							<q-row-container v-show="controls.LOCAT___LOCATGLN_____.isVisible">
+								<q-control-wrapper
+									v-show="controls.LOCAT___LOCATGLN_____.isVisible"
+									class="${Vue.GetControlWrapperClass($controlsColumn)}">
 									<base-input-structure
-										v-if="controls.LOCAT___LOCATGLN_____.isVisible"
 										class="i-text"
-										v-bind="controls.LOCAT___LOCATGLN_____.wrapperProps"
-										:id="getControlId(controls.LOCAT___LOCATGLN_____)"
+										v-bind="controls.LOCAT___LOCATGLN_____"
 										v-on="controls.LOCAT___LOCATGLN_____.handlers"
 										:loading="controls.LOCAT___LOCATGLN_____.props.loading"
 										:reporting-mode-on="reportingModeCAV"
 										:suggestion-mode-on="suggestionModeOn">
 										<q-text-field
 											v-bind="controls.LOCAT___LOCATGLN_____.props"
-											:id="getControlId(controls.LOCAT___LOCATGLN_____)"
 											@blur="onBlur(controls.LOCAT___LOCATGLN_____, model.ValGln.value)"
 											@change="model.ValGln.fnUpdateValueOnChange" />
 									</base-input-structure>
-								</q-col>
-							</q-row>
-							<q-row v-if="controls.LOCAT___PSEUDLOCALEXT.isVisible">
-								<q-col
-									v-if="controls.LOCAT___PSEUDLOCALEXT.isVisible"
-									cols="auto">
+								</q-control-wrapper>
+							</q-row-container>
+							<q-row-container v-show="controls.LOCAT___PSEUDLOCALEXT.isVisible">
+								<q-control-wrapper
+									v-show="controls.LOCAT___PSEUDLOCALEXT.isVisible"
+									class="${Vue.GetControlWrapperClass($controlsColumn)}">
 									<q-table
-										v-if="controls.LOCAT___PSEUDLOCALEXT.isVisible"
+										v-show="controls.LOCAT___PSEUDLOCALEXT.isVisible"
 										v-bind="controls.LOCAT___PSEUDLOCALEXT"
-										:id="getControlId(controls.LOCAT___PSEUDLOCALEXT)"
-										v-on="controls.LOCAT___PSEUDLOCALEXT.handlers">
-										<template #header>
-											<q-table-config
-												:table-ctrl="controls.LOCAT___PSEUDLOCALEXT"
-												v-on="controls.LOCAT___PSEUDLOCALEXT.handlers" />
-										</template>
-										<!-- USE /[MANUAL GQT CUSTOM_TABLE LOCAT___PSEUDLOCALEXT]/ -->
-									</q-table>
-								</q-col>
-							</q-row>
+										v-on="controls.LOCAT___PSEUDLOCALEXT.handlers" />
+									<q-table-extra-extension
+										:list-ctrl="controls.LOCAT___PSEUDLOCALEXT"
+										v-on="controls.LOCAT___PSEUDLOCALEXT.handlers" />
+								</q-control-wrapper>
+							</q-row-container>
 							<!-- End LOCAT___PSEUDNOVOGR01 -->
 						</q-group-box-container>
-					</q-col>
-				</q-row>
+					</q-control-wrapper>
+				</q-row-container>
 			</template>
-		</q-container>
+		</div>
 	</teleport>
 
-	<q-divider v-if="!isPopup && showFormFooter" />
+	<hr v-if="!isPopup && showFormFooter" />
 
 	<teleport
 		v-if="formModalIsReady && showFormFooter"
 		:to="`#${uiContainersId.footer}`"
 		:disabled="!isPopup || isNested">
-		<q-row v-if="showFormFooter">
+		<q-row-container v-if="showFormFooter">
 			<div id="footer-action-btns">
 				<template
 					v-for="btn in formButtons"
@@ -218,7 +200,6 @@
 						v-if="btn.isActive && btn.isVisible && btn.showInFooter"
 						:id="`bottom-${btn.id}`"
 						:label="btn.text"
-						:color="btn.color"
 						:variant="btn.variant"
 						:disabled="btn.disabled"
 						:icon-pos="btn.iconPos"
@@ -230,12 +211,12 @@
 					</q-button>
 				</template>
 			</div>
-		</q-row>
+		</q-row-container>
 	</teleport>
 </template>
 
 <script>
-	/* eslint-disable @typescript-eslint/no-unused-vars */
+	/* eslint-disable no-unused-vars */
 	import { computed, defineAsyncComponent, readonly } from 'vue'
 	import { useRoute } from 'vue-router'
 
@@ -255,7 +236,7 @@
 	import qApi from '@/api/genio/quidgestFunctions.js'
 	import qFunctions from '@/api/genio/projectFunctions.js'
 	import qProjArrays from '@/api/genio/projectArrays.js'
-	/* eslint-enable @typescript-eslint/no-unused-vars */
+	/* eslint-enable no-unused-vars */
 
 	import FormViewModel from './QFormLocatViewModel.js'
 
@@ -334,8 +315,7 @@
 					primaryKey: 'ValCodlocat',
 					designation: computed(() => this.Resources.LOCATION54790),
 					identifier: '', // Unique identifier received by route (when it's nested).
-					mode: '',
-					availableAgents: [],
+					mode: ''
 				},
 
 				formButtons: {
@@ -443,11 +423,7 @@
 						showInFooter: true,
 						isActive: true,
 						isVisible: computed(() => vm.authData.isAllowed && vm.isEditable),
-						action: vm.saveForm,
-						badge: {
-							isVisible: computed(() => vm.model?.isDirty === true),
-							color: 'highlight'
-						}
+						action: vm.saveForm
 					},
 					confirmBtn: {
 						id: 'confirm-btn',
@@ -554,7 +530,6 @@
 						label: computed(() => this.Resources.LOCATION54790),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						borderless: false,
 						isCollapsible: false,
 						anchored: false,
 						directChildren: ['LOCAT___ENTITNAME____', 'LOCAT___FACILNAME____', 'LOCAT___LOCATGLN_____', 'LOCAT___PSEUDLOCALEXT'],
@@ -617,12 +592,6 @@
 							set 'facil.name'(value) { vm.model.TableFacilName.updateValue(value) },
 						}),
 						controlLimits: [
-							{
-								identifier: ['entit', 'locat.codentit'],
-								dependencyEvents: ['fieldChange:locat.codentit'],
-								dependencyField: 'LOCAT.CODENTIT',
-								fnValueSelector: (model) => model.ValCodentit.value
-							},
 						],
 					}, this),
 					LOCAT___LOCATGLN_____: new fieldControlClass.StringControl({
@@ -636,18 +605,18 @@
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'LOCAT___PSEUDNOVOGR01',
 						maxLength: 50,
+						labelId: 'label_LOCAT___LOCATGLN_____',
 						controlLimits: [
 						],
 					}, this),
 					LOCAT___PSEUDLOCALEXT: new fieldControlClass.TableListControl({
 						id: 'LOCAT___PSEUDLOCALEXT',
 						name: 'LOCALEXT',
-						size: 'xxlarge',
+						size: '',
 						label: computed(() => this.Resources.LOCATION_EXTENSION_C33560),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'LOCAT___PSEUDNOVOGR01',
-						headerLevel: computed(() => this.baseHeadingLevel + 1),
 						controller: 'LOCAT',
 						action: 'Locat_ValLocalext',
 						hasDependencies: false,
@@ -661,7 +630,6 @@
 								label: computed(() => this.Resources.GLN_EXTENSION_COMPON55869),
 								dataLength: 50,
 								scrollData: 30,
-								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.ArrayColumn({
 								order: 2,
@@ -671,8 +639,8 @@
 								label: computed(() => this.Resources.SPACE_TYPE42493),
 								dataLength: 1,
 								scrollData: 1,
-								export: 1,
-								array: computed(() => new qProjArrays.QArraySpacetyp(vm.$getResource).elements),
+								array: computed(() => qProjArrays.QArraySpacetyp.setResources(vm.$getResource).elements),
+								arrayType: qProjArrays.QArraySpacetyp.type,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 3,
@@ -682,7 +650,6 @@
 								label: computed(() => this.Resources.SPACE62433),
 								dataLength: 50,
 								scrollData: 30,
-								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 						],
 						config: {
@@ -698,8 +665,10 @@
 							permissions: {
 							},
 							searchBarConfig: {
-								visibility: false
+								visibility: false,
+								searchOnPressEnter: true
 							},
+							filtersVisible: false,
 							allowColumnFilters: false,
 							allowColumnSort: true,
 							crudActions: [
@@ -773,7 +742,9 @@
 									id: 'insert',
 									name: 'insert',
 									title: computed(() => this.Resources.INSERIR43365),
-									icon: { icon: 'add' },
+									icon: {
+										icon: 'add'
+									},
 									isInReadOnly: false,
 									params: {
 										action: vm.openFormAction,
@@ -923,23 +894,17 @@
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 		},
 
-		beforeUnmount()
-		{
-/* eslint-disable indent, vue/html-indent, vue/script-indent */
-// USE /[MANUAL GQT COMPONENT_BEFORE_UNMOUNT LOCAT]/
-// eslint-disable-next-line
-/* eslint-enable indent, vue/html-indent, vue/script-indent */
-		},
-
 		methods: {
 			/**
 			 * Called before form init.
 			 */
 			async beforeLoad()
 			{
+				let loadForm = true
+
 				// Execute the "Before init" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.beforeInit)
-				for (const trigger of triggers)
+				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
 				this.emitEvent('before-load-form')
@@ -949,7 +914,7 @@
 // eslint-disable-next-line
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 
-				return true
+				return loadForm
 			},
 
 			/**
@@ -959,7 +924,7 @@
 			{
 				// Execute the "After init" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.afterInit)
-				for (const trigger of triggers)
+				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
 				this.emitEvent('after-load-form')
@@ -979,33 +944,19 @@
 
 				// Execute the "Before apply" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.beforeApply)
-				for (const trigger of triggers)
+				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
-				const ticketsPromise = this.model.updateFilesTickets(true)
-				this.addBusy(ticketsPromise, this.Resources[hardcodedTexts.processing])
-				const canSetDocums = await ticketsPromise
+				const canSetDocums = await this.model.updateFilesTickets(true)
 
 				if (canSetDocums)
 				{
-					let results
-					const changesPromise = this.model.setDocumentChanges()
-					this.addBusy(changesPromise, this.Resources[hardcodedTexts.processing])
-					applyForm = await changesPromise
+					applyForm = await this.model.setDocumentChanges()
 
 					if (applyForm)
 					{
-						const insertsPromise = this.model.saveDocuments()
-						this.addBusy(insertsPromise, this.Resources[hardcodedTexts.processing])
-						results = await insertsPromise
+						const results = await this.model.saveDocuments()
 						applyForm = results.every((e) => e === true)
-					}
-
-					if (!changesPromise || (results && !results.every((e) => e === true)))
-					{
-						this.validationErrors = {
-							Erro: this.Resources.OCORREU_UM_ERRO_AO_T51884
-						}
 					}
 				}
 
@@ -1026,7 +977,7 @@
 			{
 				// Execute the "After apply" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.afterApply)
-				for (const trigger of triggers)
+				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
 				this.emitEvent('after-apply-form')
@@ -1046,33 +997,19 @@
 
 				// Execute the "Before save" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.beforeSave)
-				for (const trigger of triggers)
+				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
-				const ticketsPromise = this.model.updateFilesTickets()
-				this.addBusy(ticketsPromise, this.Resources[hardcodedTexts.processing])
-				const canSetDocums = await ticketsPromise
+				const canSetDocums = await this.model.updateFilesTickets()
 
 				if (canSetDocums)
 				{
-					let results
-					const changesPromise = this.model.setDocumentChanges()
-					this.addBusy(changesPromise, this.Resources[hardcodedTexts.processing])
-					saveForm = await changesPromise
+					saveForm = await this.model.setDocumentChanges()
 
 					if (saveForm)
 					{
-						const insertsPromise = this.model.saveDocuments()
-						this.addBusy(insertsPromise, this.Resources[hardcodedTexts.processing])
-						results = await insertsPromise
+						const results = await this.model.saveDocuments()
 						saveForm = results.every((e) => e === true)
-					}
-
-					if (!changesPromise || (results && !results.every((e) => e === true)))
-					{
-						this.validationErrors = {
-							Erro: this.Resources.OCORREU_UM_ERRO_AO_T51884
-						}
 					}
 				}
 
@@ -1091,9 +1028,11 @@
 			 */
 			async afterSave()
 			{
+				let redirectPage = true // Set to 'false' to cancel page redirect.
+
 				// Execute the "After save" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.afterSave)
-				for (const trigger of triggers)
+				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
 				this.emitEvent('after-save-form')
@@ -1103,7 +1042,7 @@
 // eslint-disable-next-line
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 
-				return true
+				return redirectPage
 			},
 
 			/**
@@ -1111,6 +1050,8 @@
 			 */
 			async beforeDel()
 			{
+				let deleteForm = true // Set to 'false' to cancel form delete.
+
 				this.emitEvent('before-delete-form')
 
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
@@ -1118,7 +1059,7 @@
 // eslint-disable-next-line
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 
-				return true
+				return deleteForm
 			},
 
 			/**
@@ -1126,6 +1067,8 @@
 			 */
 			async afterDel()
 			{
+				let redirectPage = true // Set to 'false' to cancel page redirect.
+
 				this.emitEvent('after-delete-form')
 
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
@@ -1133,7 +1076,7 @@
 // eslint-disable-next-line
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 
-				return true
+				return redirectPage
 			},
 
 			/**
@@ -1141,9 +1084,11 @@
 			 */
 			async beforeExit()
 			{
+				let leaveForm = true // Set to 'false' to cancel page redirect.
+
 				// Execute the "Before exit" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.beforeExit)
-				for (const trigger of triggers)
+				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
 				this.emitEvent('before-exit-form')
@@ -1153,7 +1098,7 @@
 // eslint-disable-next-line
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 
-				return true
+				return leaveForm
 			},
 
 			/**
@@ -1163,7 +1108,7 @@
 			{
 				// Execute the "After exit" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.afterExit)
-				for (const trigger of triggers)
+				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
 				this.emitEvent('after-exit-form')

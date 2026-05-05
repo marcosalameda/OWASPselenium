@@ -6,59 +6,16 @@
 				:title="resources.integrationSettingsAI"
 				width="block">
 				<q-row-container>
-					<row>
-						<q-text-field v-model="model.UrlAPIBackend"
-									  :label="resources.urlAPIBackendLabel"
-									  size="xxlarge">
-							<template #extras>
-								<div class="q-field__extras">
-									<q-icon icon="information-outline" />
-									{{ resources.urlAPIBackendInfo }}
-								</div>
-							</template>
-						</q-text-field>
-					</row>
-					<row>
-						<q-text-field v-model="model.UrlMCP"
-									:label="resources.urlMCPLabel"
-									size="xxlarge">
-							<template #extras>
-								<div class="q-field__extras">
-									<q-icon icon="information-outline" />
-									{{ resources.urlMCPInfo }}
-								</div>
-							</template>
-						</q-text-field>
-					</row>
-					<row>
-						<q-select v-model="model.MCPSecurityMode"
-								  :label="resources.mcpSecurityMode"
-								  :items="mcpSecurityModeOptions"
-								  item-value="value"
-								  item-label="label"
-								  size="small">
-						</q-select>
-					</row>
-					<div v-if="Number(model.MCPSecurityMode) === 0">
-						<row>
-							<q-input-group :label="resources.jwtEncryptionKey" >
-								<q-password-field v-if="Number(model.MCPSecurityMode) === 0"
-												  v-model="model.JWTEncryptionKey"
-												  toggle
-												  size="xxlarge"												  
-												  :disabled="!model.JWTEncryptionKey"
-												  :readonly="!!model.JWTEncryptionKey">
-								</q-password-field>
-								<template #append>
-									<q-button @click="regenerateJWTKey">
-									<q-icon icon="restore"/>
-									{{ model.JWTEncryptionKey ? hardcodedTexts.regenerate : hardcodedTexts.generate }}
-									</q-button>
-								</template>
-									
-							</q-input-group>
-						</row>
-					</div>
+					<q-text-field
+						v-model="model.UrlAPIBackend"
+						:label="resources.urlAPIBackendLabel">
+						<template #extras>
+							<div class="q-field__extras">
+								<q-icon icon="information-outline" />
+								{{ resources.urlAPIBackendInfo }}
+							</div>
+						</template>
+					</q-text-field>
 				</q-row-container>
 			</q-card>
 		</row>
@@ -114,18 +71,9 @@
 
 		computed: {
 
-			mcpSecurityModeOptions() {
-				return [
-					{ value: 0, label: 'JWT' },
-					{ value: 1, label: 'None' }
-				]
-			},
-
 			hardcodedTexts() {
 				return {
-					changesSavedSuccess: this.Resources[texts.changesSavedSuccess],
-					generate: this.Resources[texts.generate],
-					regenerate: this.Resources[texts.regenerate]
+					changesSavedSuccess: this.Resources[texts.changesSavedSuccess]
 				}
 			}
 		},
@@ -140,15 +88,6 @@
 						AlertType: data.Success ? 'success' : 'danger'
 					});
 				});
-			},
-
-			regenerateJWTKey() {
-				// Generate a secure random key for JWT encryption (256-bit / 32 bytes)
-				const array = new Uint8Array(32);
-				crypto.getRandomValues(array);
-				const base64Key = btoa(String.fromCharCode.apply(null, array));
-				// Update the model with the new key
-				this.model.JWTEncryptionKey = base64Key;
 			},
 		}
 	};

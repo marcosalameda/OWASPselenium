@@ -7,7 +7,7 @@
 						<img
 							:src="`${$app.resourcesPath}f-login__brand.png?v=${$app.genio.buildVersion}`"
 							alt="" />
-						<h1>{{ texts.appName }}</h1>
+						<p>{{ texts.appName }}</p>
 
 						<h5 class="q-logon-text">{{ texts.accountCreated }}</h5>
 					</div>

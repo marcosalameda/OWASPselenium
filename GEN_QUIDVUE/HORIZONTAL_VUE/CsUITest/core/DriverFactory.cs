@@ -51,11 +51,6 @@ public class DriverFactory {
 				chromeOptions.AddUserProfilePreference("profile.password_manager_enabled", false);
 				chromeOptions.AddUserProfilePreference("profile.password_manager_leak_detection", false);
 
-				// Setting the logging level allows to obtain much more information than by default level. 
-				// This becomes very useful in debugging the applications and e2e tests.
-				// TODO: It should be possible to configure it via JSON.
-				// chromeOptions.SetLoggingPreference(LogType.Browser, LogLevel.All);
-
 				driver = new ChromeDriver(chromeOptions);
 				break;
 		}

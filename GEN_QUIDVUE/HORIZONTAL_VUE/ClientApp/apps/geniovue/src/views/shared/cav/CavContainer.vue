@@ -22,12 +22,29 @@
 						<cav-open-records @load-query="loadQuery" />
 					</li>
 
-					<li class="nav-item">
-						<cav-save-query
-							v-if="cavDataOnLoadProc.loaded"
-							:query-id="currentQueryId"
-							:title="model.Query.Title"
-							@save-query="saveQuery" />
+					<li class="nav-item c-dropdown--save">
+						<div class="dropdown_logi c-dropdown">
+							<q-toggle-dropdown
+								borderless
+								:title="texts.saveQuery"
+								:disabled="inMaintenance"
+								@click="onOpenSaveModal">
+								<q-icon icon="save" />
+							</q-toggle-dropdown>
+
+							<div class="dropdown-menu">
+								<div class="c-card">
+									<div class="c-card__title">{{ texts.saveQuery }}</div>
+									<div class="c-card__body">
+										<cav-save-query
+											v-if="cavDataOnLoadProc.loaded"
+											:query-id="currentQueryId"
+											:title="model.Query.Title"
+											@save-query="saveQuery" />
+									</div>
+								</div>
+							</div>
+						</div>
 					</li>
 				</ul>
 			</nav>
@@ -373,6 +390,9 @@
 	import { postData, fetchData } from '@quidgest/clientapp/network'
 	import hardcodedTexts from '@/hardcodedTexts.js'
 	import asyncProcM from '@quidgest/clientapp/composables/async'
+	import { useGenericDataStore } from '@quidgest/clientapp/stores'
+
+	import QToggleDropdown from '@/components/QToggleDropdown.vue'
 
 	export default {
 		name: 'QCavContainer',
@@ -385,7 +405,8 @@
 			Groups: defineAsyncComponent(() => import('./GroupBySelected.vue')),
 			Ordering: defineAsyncComponent(() => import('./OrderBySelected.vue')),
 			Totals: defineAsyncComponent(() => import('./Totals.vue')),
-			Execute: defineAsyncComponent(() => import('./Execute.vue'))
+			Execute: defineAsyncComponent(() => import('./Execute.vue')),
+			QToggleDropdown
 		},
 
 		provide()
@@ -397,7 +418,7 @@
 
 		setup()
 		{
-			const route = useRoute()
+			let route = useRoute()
 			return {
 				routeMetadata: computed(() => route.meta || null)
 			}
@@ -437,6 +458,7 @@
 
 				texts: {
 					newReport: computed(() => this.Resources[hardcodedTexts.newReport]),
+					saveQuery: computed(() => this.Resources[hardcodedTexts.saveQuery]),
 					fields: computed(() => this.Resources[hardcodedTexts.fields]),
 					conditions: computed(() => this.Resources[hardcodedTexts.conditions]),
 					groups: computed(() => this.Resources[hardcodedTexts.groups]),
@@ -477,6 +499,14 @@
 
 			this.cavContainerOnLoadProc.destroy()
 			this.cavDataOnLoadProc.destroy()
+		},
+
+		computed: {
+			inMaintenance()
+			{
+				const genericDataStore = useGenericDataStore()
+				return genericDataStore.maintenance.isActive
+			}
 		},
 
 		methods: {
@@ -558,7 +588,9 @@
 							area: this.area || null,
 							totals: totals || null
 						},
-						(model) => this.setModel(model, true)
+						model => {
+							this.setModel(model, true)
+						}
 					), true)
 			},
 
@@ -586,7 +618,7 @@
 			 */
 			removeFieldQuery(fieldId)
 			{
-				const idxToRemove = _findIndex(this.model.FieldsSelectedList, (fld) => fld.FieldId === fieldId)
+				let idxToRemove = _findIndex(this.model.FieldsSelectedList, (fld) => fld.FieldId === fieldId)
 				if (idxToRemove !== -1)
 					this.model.FieldsSelectedList.splice(idxToRemove, 1)
 
@@ -649,31 +681,20 @@
 			 */
 			loadQuery(queryId)
 			{
-				this.cavDataOnLoadProc.add(
-					fetchData(
-						'Cav',
-						'LoadQuery',
-						{ queryid: queryId },
-						(data) => {
-							this.setModel(data)
-							this.area = this.model.Query.BaseTable
-							this.currentQueryId = queryId
-							this.showTab('execute')
-						}
-					),
-					true)
+				this.cavDataOnLoadProc.Add(fetchData('Cav', 'LoadQuery', { queryid: queryId }, data => {
+					this.setModel(data)
+					this.area = this.model.Query.BaseTable
+					this.currentQueryId = queryId
+					this.showTab('execute')
+				}), true)
 			},
 
 			saveQuery(data)
 			{
-				postData(
-					'Cav',
-					'SaveQueryData',
-					data,
-					(message) => {
-						displayMessage(message)
-						this.currentQueryId = data.id
-					})
+				postData('Cav', 'SaveQueryData', data, message => {
+					displayMessage(message)
+					this.currentQueryId = data.id
+				})
 			},
 
 			onOpenSaveModal()
@@ -694,7 +715,8 @@
 					return ''
 				else if (typeof res === 'function')
 					return res()
-				return this.$tm(res)
+				else
+					return this.$tm(res)
 			}
 		}
 	}

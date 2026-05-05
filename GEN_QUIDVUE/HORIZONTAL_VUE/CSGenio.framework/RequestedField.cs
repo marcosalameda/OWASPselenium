@@ -68,24 +68,6 @@ namespace CSGenio.framework
         public object Value { get; set; }
 
         /// <summary>
-        /// Last known database value
-        /// </summary>
-        public object OldValue { get; set; } = null;
-
-        /// <summary>
-        /// True if a oldvalue has been collected from the database, false if its unknown
-        /// </summary>
-        public bool IsBookmarked => OldValue is not null;
-
-        /// <summary>
-        /// Determines whether the current state of the object has been modified.
-        /// </summary>
-        /// <remarks>An object is considered "dirty" if it is not bookmarked or if the current value
-        /// differs from the original value.</remarks>
-        /// <returns>True if a value modification is detected, false otherwise</returns>
-        public bool IsDirty() => OldValue is null || !OldValue.Equals(Value);
-
-        /// <summary>
         /// Type of field
         /// </summary>
         public FieldType FieldType { get; set; }

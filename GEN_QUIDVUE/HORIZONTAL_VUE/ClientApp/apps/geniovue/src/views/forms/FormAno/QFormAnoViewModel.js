@@ -1,4 +1,4 @@
-﻿/* eslint-disable @typescript-eslint/no-unused-vars */
+﻿/* eslint-disable no-unused-vars */
 import { computed, reactive, watch } from 'vue'
 import _merge from 'lodash-es/merge'
 
@@ -11,7 +11,7 @@ import netAPI from '@quidgest/clientapp/network'
 import qApi from '@/api/genio/quidgestFunctions.js'
 import qFunctions from '@/api/genio/projectFunctions.js'
 import qProjArrays from '@/api/genio/projectArrays.js'
-/* eslint-enable @typescript-eslint/no-unused-vars */
+/* eslint-enable no-unused-vars */
 
 /**
  * Represents a ViewModel class.
@@ -25,11 +25,11 @@ export default class ViewModel extends FormViewModelBase
 	 * @param {object} options - The options for the ViewModel
 	 * @param {object} values - A ViewModel instance to copy values from
 	 */
-	// eslint-disable-next-line @typescript-eslint/no-unused-vars
+	// eslint-disable-next-line no-unused-vars
 	constructor(vueContext, options, values)
 	{
 		super(vueContext, options)
-		// eslint-disable-next-line @typescript-eslint/no-unused-vars
+		// eslint-disable-next-line no-unused-vars
 		const vm = this.vueContext
 
 		// The view model metadata
@@ -37,9 +37,8 @@ export default class ViewModel extends FormViewModelBase
 			name: 'ANO',
 			area: 'YEAR',
 			actions: {
-				recalculateFormulas: 'RecalculateFormulas_Ano',
-				updateFilesTickets: 'UpdateFilesTicketsAno',
-				setFile: 'SetFileAno'
+				recalculateFormulas: 'RecalculateFormulas_ANO',
+				updateFilesTickets: 'UpdateFilesTicketsANO'
 			}
 		})
 
@@ -51,7 +50,7 @@ export default class ViewModel extends FormViewModelBase
 			field: 'CODYEAR',
 			description: '',
 		}).cloneFrom(values?.ValCodyear))
-		this.stopWatchers.push(watch(() => this.ValCodyear.value, (newValue, oldValue) => this.onUpdate('year.codyear', this.ValCodyear, newValue, oldValue)))
+		watch(() => this.ValCodyear.value, (newValue, oldValue) => this.onUpdate('year.codyear', this.ValCodyear, newValue, oldValue))
 
 		/** The remaining form fields. */
 		this.ValYear = reactive(new modelFieldType.String({
@@ -62,7 +61,7 @@ export default class ViewModel extends FormViewModelBase
 			maxLength: 4,
 			description: computed(() => this.Resources.YEAR61794),
 		}).cloneFrom(values?.ValYear))
-		this.stopWatchers.push(watch(() => this.ValYear.value, (newValue, oldValue) => this.onUpdate('year.year', this.ValYear, newValue, oldValue)))
+		watch(() => this.ValYear.value, (newValue, oldValue) => this.onUpdate('year.year', this.ValYear, newValue, oldValue))
 
 		this.ValYearnum = reactive(new modelFieldType.Number({
 			id: 'ValYearnum',
@@ -73,7 +72,7 @@ export default class ViewModel extends FormViewModelBase
 			decimalDigits: 0,
 			description: computed(() => this.Resources.YEAR__NUMBERS_29394),
 		}).cloneFrom(values?.ValYearnum))
-		this.stopWatchers.push(watch(() => this.ValYearnum.value, (newValue, oldValue) => this.onUpdate('year.yearnum', this.ValYearnum, newValue, oldValue)))
+		watch(() => this.ValYearnum.value, (newValue, oldValue) => this.onUpdate('year.yearnum', this.ValYearnum, newValue, oldValue))
 
 		this.ValValue = reactive(new modelFieldType.Number({
 			id: 'ValValue',
@@ -85,7 +84,7 @@ export default class ViewModel extends FormViewModelBase
 			isFixed: true,
 			description: computed(() => this.Resources.VALUE10285),
 		}).cloneFrom(values?.ValValue))
-		this.stopWatchers.push(watch(() => this.ValValue.value, (newValue, oldValue) => this.onUpdate('year.value', this.ValValue, newValue, oldValue)))
+		watch(() => this.ValValue.value, (newValue, oldValue) => this.onUpdate('year.value', this.ValValue, newValue, oldValue))
 	}
 
 	/**

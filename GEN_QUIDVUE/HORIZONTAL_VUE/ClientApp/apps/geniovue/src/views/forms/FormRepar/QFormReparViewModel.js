@@ -1,4 +1,4 @@
-﻿/* eslint-disable @typescript-eslint/no-unused-vars */
+﻿/* eslint-disable no-unused-vars */
 import { computed, reactive, watch } from 'vue'
 import _merge from 'lodash-es/merge'
 
@@ -11,7 +11,7 @@ import netAPI from '@quidgest/clientapp/network'
 import qApi from '@/api/genio/quidgestFunctions.js'
 import qFunctions from '@/api/genio/projectFunctions.js'
 import qProjArrays from '@/api/genio/projectArrays.js'
-/* eslint-enable @typescript-eslint/no-unused-vars */
+/* eslint-enable no-unused-vars */
 
 /**
  * Represents a ViewModel class.
@@ -25,11 +25,11 @@ export default class ViewModel extends FormViewModelBase
 	 * @param {object} options - The options for the ViewModel
 	 * @param {object} values - A ViewModel instance to copy values from
 	 */
-	// eslint-disable-next-line @typescript-eslint/no-unused-vars
+	// eslint-disable-next-line no-unused-vars
 	constructor(vueContext, options, values)
 	{
 		super(vueContext, options)
-		// eslint-disable-next-line @typescript-eslint/no-unused-vars
+		// eslint-disable-next-line no-unused-vars
 		const vm = this.vueContext
 
 		// The view model metadata
@@ -37,9 +37,8 @@ export default class ViewModel extends FormViewModelBase
 			name: 'REPAR',
 			area: 'REPAR',
 			actions: {
-				recalculateFormulas: 'RecalculateFormulas_Repar',
-				updateFilesTickets: 'UpdateFilesTicketsRepar',
-				setFile: 'SetFileRepar'
+				recalculateFormulas: 'RecalculateFormulas_REPAR',
+				updateFilesTickets: 'UpdateFilesTicketsREPAR'
 			}
 		})
 
@@ -51,7 +50,7 @@ export default class ViewModel extends FormViewModelBase
 			field: 'CODREPAR',
 			description: '',
 		}).cloneFrom(values?.ValCodrepar))
-		this.stopWatchers.push(watch(() => this.ValCodrepar.value, (newValue, oldValue) => this.onUpdate('repar.codrepar', this.ValCodrepar, newValue, oldValue)))
+		watch(() => this.ValCodrepar.value, (newValue, oldValue) => this.onUpdate('repar.codrepar', this.ValCodrepar, newValue, oldValue))
 
 		/** The hidden foreign keys. */
 		this.ValCodcateg = reactive(new modelFieldType.ForeignKey({
@@ -63,7 +62,7 @@ export default class ViewModel extends FormViewModelBase
 			isFixed: true,
 			description: computed(() => this.Resources._CATEGORY37591),
 		}).cloneFrom(values?.ValCodcateg))
-		this.stopWatchers.push(watch(() => this.ValCodcateg.value, (newValue, oldValue) => this.onUpdate('repar.codcateg', this.ValCodcateg, newValue, oldValue)))
+		watch(() => this.ValCodcateg.value, (newValue, oldValue) => this.onUpdate('repar.codcateg', this.ValCodcateg, newValue, oldValue))
 
 		this.ValCodempre = reactive(new modelFieldType.ForeignKey({
 			id: 'ValCodempre',
@@ -74,7 +73,7 @@ export default class ViewModel extends FormViewModelBase
 			isFixed: true,
 			valueFormula: {
 				stopRecalcCondition() { return false },
-				// eslint-disable-next-line @typescript-eslint/no-unused-vars
+				// eslint-disable-next-line no-unused-vars
 				fnFormula(params)
 				{
 					const fieldId = params?.originField?.id
@@ -87,7 +86,7 @@ export default class ViewModel extends FormViewModelBase
 			},
 			description: computed(() => this.Resources._COMPANY02087),
 		}).cloneFrom(values?.ValCodempre))
-		this.stopWatchers.push(watch(() => this.ValCodempre.value, (newValue, oldValue) => this.onUpdate('repar.codempre', this.ValCodempre, newValue, oldValue)))
+		watch(() => this.ValCodempre.value, (newValue, oldValue) => this.onUpdate('repar.codempre', this.ValCodempre, newValue, oldValue))
 
 		/** The used foreign keys. */
 		this.ValCodequip = reactive(new modelFieldType.ForeignKey({
@@ -98,7 +97,7 @@ export default class ViewModel extends FormViewModelBase
 			relatedArea: 'EQUIP',
 			description: computed(() => this.Resources._EQUIPMENT12605),
 		}).cloneFrom(values?.ValCodequip))
-		this.stopWatchers.push(watch(() => this.ValCodequip.value, (newValue, oldValue) => this.onUpdate('repar.codequip', this.ValCodequip, newValue, oldValue)))
+		watch(() => this.ValCodequip.value, (newValue, oldValue) => this.onUpdate('repar.codequip', this.ValCodequip, newValue, oldValue))
 
 		this.ValCodespec = reactive(new modelFieldType.ForeignKey({
 			id: 'ValCodespec',
@@ -108,7 +107,7 @@ export default class ViewModel extends FormViewModelBase
 			relatedArea: 'SPECI',
 			description: computed(() => this.Resources._SPECIALTY24336),
 		}).cloneFrom(values?.ValCodespec))
-		this.stopWatchers.push(watch(() => this.ValCodespec.value, (newValue, oldValue) => this.onUpdate('repar.codespec', this.ValCodespec, newValue, oldValue)))
+		watch(() => this.ValCodespec.value, (newValue, oldValue) => this.onUpdate('repar.codespec', this.ValCodespec, newValue, oldValue))
 
 		this.ValCodpesso = reactive(new modelFieldType.ForeignKey({
 			id: 'ValCodpesso',
@@ -118,7 +117,7 @@ export default class ViewModel extends FormViewModelBase
 			relatedArea: 'PESSO',
 			description: computed(() => this.Resources._REPAIRER36801),
 		}).cloneFrom(values?.ValCodpesso))
-		this.stopWatchers.push(watch(() => this.ValCodpesso.value, (newValue, oldValue) => this.onUpdate('repar.codpesso', this.ValCodpesso, newValue, oldValue)))
+		watch(() => this.ValCodpesso.value, (newValue, oldValue) => this.onUpdate('repar.codpesso', this.ValCodpesso, newValue, oldValue))
 
 		/** The remaining form fields. */
 		this.TableEquipRegistnr = reactive(new modelFieldType.String({
@@ -129,9 +128,8 @@ export default class ViewModel extends FormViewModelBase
 			field: 'REGISTNR',
 			maxLength: 6,
 			description: computed(() => this.Resources.NO__REGISTER04207),
-			ignoreFldSubmit: true,
 		}).cloneFrom(values?.TableEquipRegistnr))
-		this.stopWatchers.push(watch(() => this.TableEquipRegistnr.value, (newValue, oldValue) => this.onUpdate('equip.registnr', this.TableEquipRegistnr, newValue, oldValue)))
+		watch(() => this.TableEquipRegistnr.value, (newValue, oldValue) => this.onUpdate('equip.registnr', this.TableEquipRegistnr, newValue, oldValue))
 
 		this.EquipValDesignat = reactive(new modelFieldType.String({
 			id: 'EquipValDesignat',
@@ -142,7 +140,7 @@ export default class ViewModel extends FormViewModelBase
 			isFixed: true,
 			description: computed(() => this.Resources.DESIGNATION35876),
 		}).cloneFrom(values?.EquipValDesignat))
-		this.stopWatchers.push(watch(() => this.EquipValDesignat.value, (newValue, oldValue) => this.onUpdate('equip.designat', this.EquipValDesignat, newValue, oldValue)))
+		watch(() => this.EquipValDesignat.value, (newValue, oldValue) => this.onUpdate('equip.designat', this.EquipValDesignat, newValue, oldValue))
 
 		this.EquipValPhotogra = reactive(new modelFieldType.Image({
 			id: 'EquipValPhotogra',
@@ -152,7 +150,7 @@ export default class ViewModel extends FormViewModelBase
 			isFixed: true,
 			description: computed(() => this.Resources.PHOTO51874),
 		}).cloneFrom(values?.EquipValPhotogra))
-		this.stopWatchers.push(watch(() => this.EquipValPhotogra.value, (newValue, oldValue) => this.onUpdate('equip.photogra', this.EquipValPhotogra, newValue, oldValue)))
+		watch(() => this.EquipValPhotogra.value, (newValue, oldValue) => this.onUpdate('equip.photogra', this.EquipValPhotogra, newValue, oldValue))
 
 		this.ValDtrepara = reactive(new modelFieldType.DateTime({
 			id: 'ValDtrepara',
@@ -161,7 +159,7 @@ export default class ViewModel extends FormViewModelBase
 			field: 'DTREPARA',
 			description: computed(() => this.Resources.FIXED_IN00179),
 		}).cloneFrom(values?.ValDtrepara))
-		this.stopWatchers.push(watch(() => this.ValDtrepara.value, (newValue, oldValue) => this.onUpdate('repar.dtrepara', this.ValDtrepara, newValue, oldValue)))
+		watch(() => this.ValDtrepara.value, (newValue, oldValue) => this.onUpdate('repar.dtrepara', this.ValDtrepara, newValue, oldValue))
 
 		this.ValNrrepara = reactive(new modelFieldType.Number({
 			id: 'ValNrrepara',
@@ -172,7 +170,7 @@ export default class ViewModel extends FormViewModelBase
 			decimalDigits: 0,
 			description: computed(() => this.Resources.NO_RUMOUR_IN_THE_COM15248),
 		}).cloneFrom(values?.ValNrrepara))
-		this.stopWatchers.push(watch(() => this.ValNrrepara.value, (newValue, oldValue) => this.onUpdate('repar.nrrepara', this.ValNrrepara, newValue, oldValue)))
+		watch(() => this.ValNrrepara.value, (newValue, oldValue) => this.onUpdate('repar.nrrepara', this.ValNrrepara, newValue, oldValue))
 
 		this.ValTipoarea = reactive(new modelFieldType.String({
 			id: 'ValTipoarea',
@@ -180,10 +178,10 @@ export default class ViewModel extends FormViewModelBase
 			area: 'REPAR',
 			field: 'TIPOAREA',
 			maxLength: 1,
-			arrayOptions: computed(() => new qProjArrays.QArrayAreatecn(vm.$getResource).elements),
+			arrayOptions: computed(() => qProjArrays.QArrayAreatecn.setResources(vm.$getResource).elements),
 			description: computed(() => this.Resources.TECHNICAL_AREA50773),
 		}).cloneFrom(values?.ValTipoarea))
-		this.stopWatchers.push(watch(() => this.ValTipoarea.value, (newValue, oldValue) => this.onUpdate('repar.tipoarea', this.ValTipoarea, newValue, oldValue)))
+		watch(() => this.ValTipoarea.value, (newValue, oldValue) => this.onUpdate('repar.tipoarea', this.ValTipoarea, newValue, oldValue))
 
 		this.TableSpeciEspecial = reactive(new modelFieldType.String({
 			type: 'Lookup',
@@ -193,9 +191,8 @@ export default class ViewModel extends FormViewModelBase
 			field: 'ESPECIAL',
 			maxLength: 50,
 			description: computed(() => this.Resources.SPECIALTY09304),
-			ignoreFldSubmit: true,
 		}).cloneFrom(values?.TableSpeciEspecial))
-		this.stopWatchers.push(watch(() => this.TableSpeciEspecial.value, (newValue, oldValue) => this.onUpdate('speci.especial', this.TableSpeciEspecial, newValue, oldValue)))
+		watch(() => this.TableSpeciEspecial.value, (newValue, oldValue) => this.onUpdate('speci.especial', this.TableSpeciEspecial, newValue, oldValue))
 
 		this.TablePessoName = reactive(new modelFieldType.String({
 			type: 'Lookup',
@@ -205,9 +202,8 @@ export default class ViewModel extends FormViewModelBase
 			field: 'NAME',
 			maxLength: 85,
 			description: computed(() => this.Resources.NAME31974),
-			ignoreFldSubmit: true,
 		}).cloneFrom(values?.TablePessoName))
-		this.stopWatchers.push(watch(() => this.TablePessoName.value, (newValue, oldValue) => this.onUpdate('pesso.name', this.TablePessoName, newValue, oldValue)))
+		watch(() => this.TablePessoName.value, (newValue, oldValue) => this.onUpdate('pesso.name', this.TablePessoName, newValue, oldValue))
 
 		this.ValDescript = reactive(new modelFieldType.MultiLineString({
 			id: 'ValDescript',
@@ -216,7 +212,7 @@ export default class ViewModel extends FormViewModelBase
 			field: 'DESCRIPT',
 			description: computed(() => this.Resources.DESCRIPTION_OF_THE_R26085),
 		}).cloneFrom(values?.ValDescript))
-		this.stopWatchers.push(watch(() => this.ValDescript.value, (newValue, oldValue) => this.onUpdate('repar.descript', this.ValDescript, newValue, oldValue)))
+		watch(() => this.ValDescript.value, (newValue, oldValue) => this.onUpdate('repar.descript', this.ValDescript, newValue, oldValue))
 
 		this.ValHours = reactive(new modelFieldType.Number({
 			id: 'ValHours',
@@ -227,7 +223,7 @@ export default class ViewModel extends FormViewModelBase
 			decimalDigits: 0,
 			description: computed(() => this.Resources.SPENT_ON_HOURS19285),
 		}).cloneFrom(values?.ValHours))
-		this.stopWatchers.push(watch(() => this.ValHours.value, (newValue, oldValue) => this.onUpdate('repar.hours', this.ValHours, newValue, oldValue)))
+		watch(() => this.ValHours.value, (newValue, oldValue) => this.onUpdate('repar.hours', this.ValHours, newValue, oldValue))
 
 		/** The form fields used only in formulas. */
 		this.SpeciValAreatecn = reactive(new modelFieldType.String({
@@ -237,10 +233,10 @@ export default class ViewModel extends FormViewModelBase
 			field: 'AREATECN',
 			maxLength: 1,
 			isFixed: true,
-			arrayOptions: computed(() => new qProjArrays.QArrayAreatecn(vm.$getResource).elements),
+			arrayOptions: computed(() => qProjArrays.QArrayAreatecn.setResources(vm.$getResource).elements),
 			description: computed(() => this.Resources.TECHNICAL_AREA50773),
 		}).cloneFrom(values?.SpeciValAreatecn))
-		this.stopWatchers.push(watch(() => this.SpeciValAreatecn.value, (newValue, oldValue) => this.onUpdate('speci.areatecn', this.SpeciValAreatecn, newValue, oldValue)))
+		watch(() => this.SpeciValAreatecn.value, (newValue, oldValue) => this.onUpdate('speci.areatecn', this.SpeciValAreatecn, newValue, oldValue))
 	}
 
 	/**

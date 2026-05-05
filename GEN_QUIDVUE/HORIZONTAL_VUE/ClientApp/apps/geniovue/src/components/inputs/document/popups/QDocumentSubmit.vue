@@ -38,28 +38,25 @@
 		<q-radio-group
 			id="`q-document-submit-options-${controlId}`"
 			v-model="versionSubmitMode"
-			orientation="horizontal"
-			:value="submitModeOptions">
-			<q-radio-button
-				v-for="radio in submitModeOptions"
-				:key="radio.key"
-				:label="radio.value"
-				:value="radio.key" />
-		</q-radio-group>
+			:options-list="submitModeOptions" />
 
 		<div
 			v-if="majorVersionValue !== minorVersionValue"
 			class="q-document__version-options">
 			<q-radio-group
 				:id="`q-document-version-options-${controlId}`"
-				orientation="horizontal"
 				v-model="versionType"
+				:options-list="versionOptions"
 				:disabled="versionSubmitMode === versionSubmitModes.unlock">
-				<q-radio-button
-					v-for="radio in versionOptions"
-					:key="radio.key"
-					:value="radio.key"
-					:label="radio.value" />
+				<template
+					v-for="version in versionNumbers"
+					:key="version.value"
+					#[`${version.key}.append`]>
+					<q-text-field
+						size="small"
+						readonly
+						:model-value="version.value" />
+				</template>
 			</q-radio-group>
 		</div>
 	</teleport>

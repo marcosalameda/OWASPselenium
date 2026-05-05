@@ -1,59 +1,38 @@
-﻿using CSGenio.business;
-using CSGenio.framework;
-using CSGenio.persistence;
-using GenioMVC.Helpers;
-using GenioMVC.Models.Exception;
-using GenioMVC.Models.Navigation;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using Quidgest.Persistence;
-using Quidgest.Persistence.GenericQuery;
+﻿using JsonIgnoreAttribute = System.Text.Json.Serialization.JsonIgnoreAttribute;
+using SelectList = Microsoft.AspNetCore.Mvc.Rendering.SelectList;
 using System;
-using System.Collections;
-using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
-using System.Text.Json.Serialization;
+
+using CSGenio.business;
+using CSGenio.framework;
+using GenioMVC.Helpers;
+using GenioMVC.Models.Exception;
+using GenioMVC.Models.Navigation;
+using Quidgest.Persistence.GenericQuery;
 
 namespace GenioMVC.ViewModels
 {
 	public class Lendexpl_ViewModel(UserContext userContext, bool nestedForm = false) : EmptyFormViewModel(userContext, nestedForm)
 	{
 		/// <summary>
+		/// Title: "Lender: Gender" | Type: "AC"
+		/// </summary>
+		public List<string> Pess1ValGender { get; set; }
+		/// <summary>
+		/// Title: "Equipment: Loan frequency" | Type: "AN"
+		/// </summary>
+		public List<decimal> EquipValFrequenc { get; set; }
+		/// <summary>
 		/// Title: "Equipment: Bought" | Type: "L"
 		/// </summary>
-		[ValidateSetAccess]
-		public bool ValBought 
-		{
-			get
-			{
-				return funcValBought != null ? funcValBought() : _auxValBought;
-			}
-			set { funcValBought = () => value; }
-		}
-
-		[JsonIgnore]
-		public Func<bool> funcValBought { get; set; }
-
-		private bool _auxValBought { get; set; }
+		public bool EquipValBought { get; set; }
 		/// <summary>
 		/// Title: "Lending: Returned" | Type: "L"
 		/// </summary>
-		[ValidateSetAccess]
-		public bool ValReturned 
-		{
-			get
-			{
-				return funcValReturned != null ? funcValReturned() : _auxValReturned;
-			}
-			set { funcValReturned = () => value; }
-		}
-
-		[JsonIgnore]
-		public Func<bool> funcValReturned { get; set; }
-
-		private bool _auxValReturned { get; set; }
+		public bool LendiValReturned { get; set; }
 		#region DatabaseFields used in title buttons
 
 
@@ -75,10 +54,6 @@ namespace GenioMVC.ViewModels
 
 
 		#endregion
-
-		#region Global filters fields
-		#endregion
-
 
 		#region ViewModel Lendexpl (Explore lendings)
 

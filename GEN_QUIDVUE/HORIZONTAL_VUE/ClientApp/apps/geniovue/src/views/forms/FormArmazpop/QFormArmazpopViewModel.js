@@ -1,4 +1,4 @@
-﻿/* eslint-disable @typescript-eslint/no-unused-vars */
+﻿/* eslint-disable no-unused-vars */
 import { computed, reactive, watch } from 'vue'
 import _merge from 'lodash-es/merge'
 
@@ -11,7 +11,7 @@ import netAPI from '@quidgest/clientapp/network'
 import qApi from '@/api/genio/quidgestFunctions.js'
 import qFunctions from '@/api/genio/projectFunctions.js'
 import qProjArrays from '@/api/genio/projectArrays.js'
-/* eslint-enable @typescript-eslint/no-unused-vars */
+/* eslint-enable no-unused-vars */
 
 /**
  * Represents a ViewModel class.
@@ -25,11 +25,11 @@ export default class ViewModel extends FormViewModelBase
 	 * @param {object} options - The options for the ViewModel
 	 * @param {object} values - A ViewModel instance to copy values from
 	 */
-	// eslint-disable-next-line @typescript-eslint/no-unused-vars
+	// eslint-disable-next-line no-unused-vars
 	constructor(vueContext, options, values)
 	{
 		super(vueContext, options)
-		// eslint-disable-next-line @typescript-eslint/no-unused-vars
+		// eslint-disable-next-line no-unused-vars
 		const vm = this.vueContext
 
 		// The view model metadata
@@ -37,9 +37,8 @@ export default class ViewModel extends FormViewModelBase
 			name: 'ARMAZPOP',
 			area: 'WAREH',
 			actions: {
-				recalculateFormulas: 'RecalculateFormulas_Armazpop',
-				updateFilesTickets: 'UpdateFilesTicketsArmazpop',
-				setFile: 'SetFileArmazpop'
+				recalculateFormulas: 'RecalculateFormulas_ARMAZPOP',
+				updateFilesTickets: 'UpdateFilesTicketsARMAZPOP'
 			}
 		})
 
@@ -51,7 +50,7 @@ export default class ViewModel extends FormViewModelBase
 			field: 'CODWAREH',
 			description: '',
 		}).cloneFrom(values?.ValCodwareh))
-		this.stopWatchers.push(watch(() => this.ValCodwareh.value, (newValue, oldValue) => this.onUpdate('wareh.codwareh', this.ValCodwareh, newValue, oldValue)))
+		watch(() => this.ValCodwareh.value, (newValue, oldValue) => this.onUpdate('wareh.codwareh', this.ValCodwareh, newValue, oldValue))
 
 		/** The remaining form fields. */
 		this.ValWarehcod = reactive(new modelFieldType.String({
@@ -62,7 +61,7 @@ export default class ViewModel extends FormViewModelBase
 			maxLength: 10,
 			description: computed(() => this.Resources.ACRONYM00872),
 		}).cloneFrom(values?.ValWarehcod))
-		this.stopWatchers.push(watch(() => this.ValWarehcod.value, (newValue, oldValue) => this.onUpdate('wareh.warehcod', this.ValWarehcod, newValue, oldValue)))
+		watch(() => this.ValWarehcod.value, (newValue, oldValue) => this.onUpdate('wareh.warehcod', this.ValWarehcod, newValue, oldValue))
 
 		this.ValActivity = reactive(new modelFieldType.Number({
 			id: 'ValActivity',
@@ -73,7 +72,7 @@ export default class ViewModel extends FormViewModelBase
 			decimalDigits: 0,
 			description: computed(() => this.Resources.ACTIVITY02681),
 		}).cloneFrom(values?.ValActivity))
-		this.stopWatchers.push(watch(() => this.ValActivity.value, (newValue, oldValue) => this.onUpdate('wareh.activity', this.ValActivity, newValue, oldValue)))
+		watch(() => this.ValActivity.value, (newValue, oldValue) => this.onUpdate('wareh.activity', this.ValActivity, newValue, oldValue))
 
 		this.ValWarehdes = reactive(new modelFieldType.String({
 			id: 'ValWarehdes',
@@ -83,7 +82,7 @@ export default class ViewModel extends FormViewModelBase
 			maxLength: 85,
 			description: computed(() => this.Resources.WAREHOUSE51864),
 		}).cloneFrom(values?.ValWarehdes))
-		this.stopWatchers.push(watch(() => this.ValWarehdes.value, (newValue, oldValue) => this.onUpdate('wareh.warehdes', this.ValWarehdes, newValue, oldValue)))
+		watch(() => this.ValWarehdes.value, (newValue, oldValue) => this.onUpdate('wareh.warehdes', this.ValWarehdes, newValue, oldValue))
 	}
 
 	/**

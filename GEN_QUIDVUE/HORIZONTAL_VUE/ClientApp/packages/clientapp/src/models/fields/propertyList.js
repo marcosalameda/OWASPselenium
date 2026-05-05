@@ -106,7 +106,7 @@ export class PropertyList extends Base {
 	 * @override
 	 */
 	hydrate(listControl, viewModel) {
-		const properties = viewModel?.elements
+		const properties = viewModel?.Elements
 
 		if (!properties || properties.length === 0) {
 			if (listControl !== undefined && listControl !== null)

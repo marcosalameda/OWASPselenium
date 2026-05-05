@@ -28,100 +28,103 @@ namespace GenioMVC.Controllers
 {
 	public partial class DispaController : ControllerBase
 	{
-		private static readonly NavigationLocation ACTION_WMS_MENU_2111 = new NavigationLocation("DISPATCHES13773", "WMS_Menu_2111", "Dispa") { vueRouteName = "menu-WMS_2111" };
+		private static readonly NavigationLocation ACTION_WMS_MENU_211 = new NavigationLocation("DISPATCHES13773", "WMS_Menu_211", "Dispa") { vueRouteName = "menu-WMS_211" };
 		private static readonly NavigationLocation ACTION_WMS_MENU_2211 = new NavigationLocation("DISPATCHES13773", "WMS_Menu_2211", "Dispa") { vueRouteName = "menu-WMS_2211" };
-		private static readonly NavigationLocation ACTION_WMS_MENU_231 = new NavigationLocation("DISPATCHES13773", "WMS_Menu_231", "Dispa") { vueRouteName = "menu-WMS_231" };
+		private static readonly NavigationLocation ACTION_WMS_MENU_2311 = new NavigationLocation("DISPATCHES13773", "WMS_Menu_2311", "Dispa") { vueRouteName = "menu-WMS_2311" };
+		private static readonly NavigationLocation ACTION_WMS_MENU_241 = new NavigationLocation("DISPATCHES13773", "WMS_Menu_241", "Dispa") { vueRouteName = "menu-WMS_241" };
 
 
 		//
-		// GET: /Dispa/WMS_Menu_2111
-		[ActionName("WMS_Menu_2111")]
+		// GET: /Dispa/WMS_Menu_211
+		[ActionName("WMS_Menu_211")]
 		[HttpPost]
-		public ActionResult WMS_Menu_2111([FromBody] RequestMenuModel requestModel)
+		public ActionResult WMS_Menu_211([FromBody]RequestMenuModel requestModel)
 		{
-			var queryParams = requestModel.QueryParams;
+			WMS_Menu_211_ViewModel model = new(UserContext.Current);
 
-			WMS_Menu_2111_ViewModel model = new(m_userContext);
-
-			CSGenio.core.framework.table.TableConfiguration tableConfig = model.GetTableConfig(
-				requestModel.TableConfiguration,
-				requestModel.UserTableConfigName,
-				requestModel.LoadDefaultView);
-
-			// Determine rows per page
-			tableConfig.RowsPerPage = tableConfig.DetermineRowsPerPage(CSGenio.framework.Configuration.NrRegDBedit, "");
-
-			bool isHomePage = RouteData.Values.ContainsKey("isHomePage") ? (bool)RouteData.Values["isHomePage"] : false;
-			if (isHomePage)
-				Navigation.SetValue("HomePage", "WMS_Menu_2111");
-
-			// If there was a recent operation on this table then force the primary persistence server to be called and ignore the read only feature
-			if (string.IsNullOrEmpty(Navigation.GetStrValue("ForcePrimaryRead_dispa")))
-				UserContext.Current.SetPersistenceReadOnly(true);
-			else
-			{
-				Navigation.DestroyEntry("ForcePrimaryRead_dispa");
-				UserContext.Current.SetPersistenceReadOnly(false);
-			}
 			CSGenio.framework.StatusMessage result = model.CheckPermissions(FormMode.List);
 			if (result.Status.Equals(CSGenio.framework.Status.E))
 				return PermissionError(result.Message);
 
-			NameValueCollection querystring = [];
-			if (queryParams != null && queryParams.Count > 0)
-				querystring.AddRange(queryParams);
+			CSGenio.framework.Audit.registAction(UserContext.Current.User, Resources.Resources.MENU01948 + " " + ACTION_WMS_MENU_211.ShortDescription());
 
-			if (!isHomePage &&
-				(Navigation.CurrentLevel == null || !ACTION_WMS_MENU_2111.IsSameAction(Navigation.CurrentLevel.Location)) &&
-				Navigation.CurrentLevel.Location.Action != ACTION_WMS_MENU_2111.Action)
-				CSGenio.framework.Audit.registAction(UserContext.Current.User, Resources.Resources.MENU01948 + " " + Navigation.CurrentLevel.Location.ShortDescription());
-			else if (isHomePage)
-			{
-				CSGenio.framework.Audit.registAction(UserContext.Current.User, Resources.Resources.MENU01948 + " " + ACTION_WMS_MENU_2111.ShortDescription());
-				Navigation.SetValue("HomePageContainsList", true);
-			}
+// USE /[MANUAL WMS MENU_GET 211]/
 
+			model.Load();
 
-			Navigation.SetValue("dispa.isprepar", "0");
+			return JsonOK(model);
+		}
 
-// USE /[MANUAL WMS MENU_GET 2111]/
+		[ActionName("WMS_Menu_211_EventHandler")]
+		[HttpPost]
+		public ActionResult WMS_Menu_211_EventHandler([FromBody]RequestKanbanModel requestModel)
+		{
+			WMS_Menu_211_ViewModel model = new(UserContext.Current);
+
+			CSGenio.framework.StatusMessage permissionResult = model.CheckPermissions(FormMode.Edit);
+			if (permissionResult.Status.Equals(CSGenio.framework.Status.E))
+				return PermissionError(permissionResult.Message);
+
+			CSGenio.framework.Audit.registAction(UserContext.Current.User, Resources.Resources.MENU01948 + " " + ACTION_WMS_MENU_211.ShortDescription() + " Event Handler");
 
 			try
 			{
-				model.Load(tableConfig, querystring, Request.IsAjaxRequest());
+				var result = model.EventHandler(requestModel);
+				return JsonOK(result);
 			}
-			catch (Exception e)
+			catch(Exception e)
 			{
-				return JsonERROR(HandleException(e), model);
+				var exceptionUserMessage = Resources.Resources.PEDIMOS_DESCULPA__OC63848;
+				if (e is GenioException && (e as GenioException).UserMessage != null)
+					exceptionUserMessage = Translations.Get((e as GenioException).UserMessage, UserContext.Current.User.Language);
+				return JsonERROR(exceptionUserMessage);
 			}
-
-
-			return JsonOK(model);
 		}
 
 		//
 		// GET: /Dispa/WMS_Menu_2211
 		[ActionName("WMS_Menu_2211")]
 		[HttpPost]
-		public ActionResult WMS_Menu_2211([FromBody] RequestMenuModel requestModel)
+		public ActionResult WMS_Menu_2211([FromBody]RequestMenuModel requestModel)
 		{
 			var queryParams = requestModel.QueryParams;
 
-			WMS_Menu_2211_ViewModel model = new(m_userContext);
+			int perPage = CSGenio.framework.Configuration.NrRegDBedit;
+			string rowsPerPageOptionsString = "";
 
-			CSGenio.core.framework.table.TableConfiguration tableConfig = model.GetTableConfig(
-				requestModel.TableConfiguration,
-				requestModel.UserTableConfigName,
-				requestModel.LoadDefaultView);
+			WMS_Menu_2211_ViewModel model = new WMS_Menu_2211_ViewModel(UserContext.Current);
+
+			// Table configuration load options
+			CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions tableConfigOptions = new CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions();
+
+
+			// Determine which table configuration to use and load it
+			CSGenio.framework.TableConfiguration.TableConfiguration tableConfig = TableUiSettings.Load(
+				UserContext.Current.PersistentSupport,
+				model.Uuid,
+				UserContext.Current.User,
+				tableConfigOptions
+			).DetermineTableConfig(
+				requestModel?.TableConfiguration,
+				requestModel?.UserTableConfigName,
+				(bool)requestModel?.LoadDefaultView,
+				tableConfigOptions
+			);
 
 			// Determine rows per page
-			tableConfig.RowsPerPage = tableConfig.DetermineRowsPerPage(CSGenio.framework.Configuration.NrRegDBedit, "");
+			tableConfig.RowsPerPage = CSGenio.framework.TableConfiguration.TableConfigurationHelpers.DetermineRowsPerPage(tableConfig.RowsPerPage, perPage, rowsPerPageOptionsString);
+
+			// Determine what columns have totalizers
+			tableConfig.TotalizerColumns = requestModel.TotalizerColumns;
+
+			// For tables with multiple selection enabled, determine currently selected rows
+			tableConfig.SelectedRows = requestModel.SelectedRows;
 
 			bool isHomePage = RouteData.Values.ContainsKey("isHomePage") ? (bool)RouteData.Values["isHomePage"] : false;
 			if (isHomePage)
 				Navigation.SetValue("HomePage", "WMS_Menu_2211");
 
-			// If there was a recent operation on this table then force the primary persistence server to be called and ignore the read only feature
+			//If there was a recent operation on this table then force the primary persistence server to be called and ignore the read only feature
 			if (string.IsNullOrEmpty(Navigation.GetStrValue("ForcePrimaryRead_dispa")))
 				UserContext.Current.SetPersistenceReadOnly(true);
 			else
@@ -133,7 +136,7 @@ namespace GenioMVC.Controllers
 			if (result.Status.Equals(CSGenio.framework.Status.E))
 				return PermissionError(result.Message);
 
-			NameValueCollection querystring = [];
+			NameValueCollection querystring = new NameValueCollection();
 			if (queryParams != null && queryParams.Count > 0)
 				querystring.AddRange(queryParams);
 
@@ -148,46 +151,68 @@ namespace GenioMVC.Controllers
 			}
 
 
-			Navigation.SetValue("dispa.isprepar", "1");
+			Navigation.SetValue("dispa.isprepar", "0");
 
 // USE /[MANUAL WMS MENU_GET 2211]/
 
-			try
-			{
-				model.Load(tableConfig, querystring, Request.IsAjaxRequest());
-			}
-			catch (Exception e)
-			{
-				return JsonERROR(HandleException(e), model);
-			}
+
+            try
+            {
+			    model.Load(tableConfig, querystring, Request.IsAjaxRequest());
+            }
+            catch(Exception e)
+            {
+                return JsonERROR(HandleException(e), model);
+            }
 
 
 			return JsonOK(model);
 		}
 
 		//
-		// GET: /Dispa/WMS_Menu_231
-		[ActionName("WMS_Menu_231")]
+		// GET: /Dispa/WMS_Menu_2311
+		[ActionName("WMS_Menu_2311")]
 		[HttpPost]
-		public ActionResult WMS_Menu_231([FromBody] RequestMenuModel requestModel)
+		public ActionResult WMS_Menu_2311([FromBody]RequestMenuModel requestModel)
 		{
 			var queryParams = requestModel.QueryParams;
 
-			WMS_Menu_231_ViewModel model = new(m_userContext);
+			int perPage = CSGenio.framework.Configuration.NrRegDBedit;
+			string rowsPerPageOptionsString = "";
 
-			CSGenio.core.framework.table.TableConfiguration tableConfig = model.GetTableConfig(
-				requestModel.TableConfiguration,
-				requestModel.UserTableConfigName,
-				requestModel.LoadDefaultView);
+			WMS_Menu_2311_ViewModel model = new WMS_Menu_2311_ViewModel(UserContext.Current);
+
+			// Table configuration load options
+			CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions tableConfigOptions = new CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions();
+
+
+			// Determine which table configuration to use and load it
+			CSGenio.framework.TableConfiguration.TableConfiguration tableConfig = TableUiSettings.Load(
+				UserContext.Current.PersistentSupport,
+				model.Uuid,
+				UserContext.Current.User,
+				tableConfigOptions
+			).DetermineTableConfig(
+				requestModel?.TableConfiguration,
+				requestModel?.UserTableConfigName,
+				(bool)requestModel?.LoadDefaultView,
+				tableConfigOptions
+			);
 
 			// Determine rows per page
-			tableConfig.RowsPerPage = tableConfig.DetermineRowsPerPage(CSGenio.framework.Configuration.NrRegDBedit, "");
+			tableConfig.RowsPerPage = CSGenio.framework.TableConfiguration.TableConfigurationHelpers.DetermineRowsPerPage(tableConfig.RowsPerPage, perPage, rowsPerPageOptionsString);
+
+			// Determine what columns have totalizers
+			tableConfig.TotalizerColumns = requestModel.TotalizerColumns;
+
+			// For tables with multiple selection enabled, determine currently selected rows
+			tableConfig.SelectedRows = requestModel.SelectedRows;
 
 			bool isHomePage = RouteData.Values.ContainsKey("isHomePage") ? (bool)RouteData.Values["isHomePage"] : false;
 			if (isHomePage)
-				Navigation.SetValue("HomePage", "WMS_Menu_231");
+				Navigation.SetValue("HomePage", "WMS_Menu_2311");
 
-			// If there was a recent operation on this table then force the primary persistence server to be called and ignore the read only feature
+			//If there was a recent operation on this table then force the primary persistence server to be called and ignore the read only feature
 			if (string.IsNullOrEmpty(Navigation.GetStrValue("ForcePrimaryRead_dispa")))
 				UserContext.Current.SetPersistenceReadOnly(true);
 			else
@@ -199,32 +224,121 @@ namespace GenioMVC.Controllers
 			if (result.Status.Equals(CSGenio.framework.Status.E))
 				return PermissionError(result.Message);
 
-			NameValueCollection querystring = [];
+			NameValueCollection querystring = new NameValueCollection();
 			if (queryParams != null && queryParams.Count > 0)
 				querystring.AddRange(queryParams);
 
 			if (!isHomePage &&
-				(Navigation.CurrentLevel == null || !ACTION_WMS_MENU_231.IsSameAction(Navigation.CurrentLevel.Location)) &&
-				Navigation.CurrentLevel.Location.Action != ACTION_WMS_MENU_231.Action)
+				(Navigation.CurrentLevel == null || !ACTION_WMS_MENU_2311.IsSameAction(Navigation.CurrentLevel.Location)) &&
+				Navigation.CurrentLevel.Location.Action != ACTION_WMS_MENU_2311.Action)
 				CSGenio.framework.Audit.registAction(UserContext.Current.User, Resources.Resources.MENU01948 + " " + Navigation.CurrentLevel.Location.ShortDescription());
 			else if (isHomePage)
 			{
-				CSGenio.framework.Audit.registAction(UserContext.Current.User, Resources.Resources.MENU01948 + " " + ACTION_WMS_MENU_231.ShortDescription());
+				CSGenio.framework.Audit.registAction(UserContext.Current.User, Resources.Resources.MENU01948 + " " + ACTION_WMS_MENU_2311.ShortDescription());
+				Navigation.SetValue("HomePageContainsList", true);
+			}
+
+
+			Navigation.SetValue("dispa.isprepar", "1");
+
+// USE /[MANUAL WMS MENU_GET 2311]/
+
+
+            try
+            {
+			    model.Load(tableConfig, querystring, Request.IsAjaxRequest());
+            }
+            catch(Exception e)
+            {
+                return JsonERROR(HandleException(e), model);
+            }
+
+
+			return JsonOK(model);
+		}
+
+		//
+		// GET: /Dispa/WMS_Menu_241
+		[ActionName("WMS_Menu_241")]
+		[HttpPost]
+		public ActionResult WMS_Menu_241([FromBody]RequestMenuModel requestModel)
+		{
+			var queryParams = requestModel.QueryParams;
+
+			int perPage = CSGenio.framework.Configuration.NrRegDBedit;
+			string rowsPerPageOptionsString = "";
+
+			WMS_Menu_241_ViewModel model = new WMS_Menu_241_ViewModel(UserContext.Current);
+
+			// Table configuration load options
+			CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions tableConfigOptions = new CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions();
+
+
+			// Determine which table configuration to use and load it
+			CSGenio.framework.TableConfiguration.TableConfiguration tableConfig = TableUiSettings.Load(
+				UserContext.Current.PersistentSupport,
+				model.Uuid,
+				UserContext.Current.User,
+				tableConfigOptions
+			).DetermineTableConfig(
+				requestModel?.TableConfiguration,
+				requestModel?.UserTableConfigName,
+				(bool)requestModel?.LoadDefaultView,
+				tableConfigOptions
+			);
+
+			// Determine rows per page
+			tableConfig.RowsPerPage = CSGenio.framework.TableConfiguration.TableConfigurationHelpers.DetermineRowsPerPage(tableConfig.RowsPerPage, perPage, rowsPerPageOptionsString);
+
+			// Determine what columns have totalizers
+			tableConfig.TotalizerColumns = requestModel.TotalizerColumns;
+
+			// For tables with multiple selection enabled, determine currently selected rows
+			tableConfig.SelectedRows = requestModel.SelectedRows;
+
+			bool isHomePage = RouteData.Values.ContainsKey("isHomePage") ? (bool)RouteData.Values["isHomePage"] : false;
+			if (isHomePage)
+				Navigation.SetValue("HomePage", "WMS_Menu_241");
+
+			//If there was a recent operation on this table then force the primary persistence server to be called and ignore the read only feature
+			if (string.IsNullOrEmpty(Navigation.GetStrValue("ForcePrimaryRead_dispa")))
+				UserContext.Current.SetPersistenceReadOnly(true);
+			else
+			{
+				Navigation.DestroyEntry("ForcePrimaryRead_dispa");
+				UserContext.Current.SetPersistenceReadOnly(false);
+			}
+			CSGenio.framework.StatusMessage result = model.CheckPermissions(FormMode.List);
+			if (result.Status.Equals(CSGenio.framework.Status.E))
+				return PermissionError(result.Message);
+
+			NameValueCollection querystring = new NameValueCollection();
+			if (queryParams != null && queryParams.Count > 0)
+				querystring.AddRange(queryParams);
+
+			if (!isHomePage &&
+				(Navigation.CurrentLevel == null || !ACTION_WMS_MENU_241.IsSameAction(Navigation.CurrentLevel.Location)) &&
+				Navigation.CurrentLevel.Location.Action != ACTION_WMS_MENU_241.Action)
+				CSGenio.framework.Audit.registAction(UserContext.Current.User, Resources.Resources.MENU01948 + " " + Navigation.CurrentLevel.Location.ShortDescription());
+			else if (isHomePage)
+			{
+				CSGenio.framework.Audit.registAction(UserContext.Current.User, Resources.Resources.MENU01948 + " " + ACTION_WMS_MENU_241.ShortDescription());
 				Navigation.SetValue("HomePageContainsList", true);
 			}
 
 
 
-// USE /[MANUAL WMS MENU_GET 231]/
+// USE /[MANUAL WMS MENU_GET 241]/
 
-			try
-			{
-				model.Load(tableConfig, querystring, Request.IsAjaxRequest());
-			}
-			catch (Exception e)
-			{
-				return JsonERROR(HandleException(e), model);
-			}
+
+            try
+            {
+			    model.Load(tableConfig, querystring, Request.IsAjaxRequest());
+            }
+            catch(Exception e)
+            {
+                return JsonERROR(HandleException(e), model);
+            }
 
 
 			return JsonOK(model);

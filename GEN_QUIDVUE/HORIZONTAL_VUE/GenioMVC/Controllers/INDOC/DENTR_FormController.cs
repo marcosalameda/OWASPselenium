@@ -9,7 +9,6 @@ using System.Data;
 using System.Data.Entity;
 using System.Linq;
 using System.Reflection;
-using System.Dynamic;
 
 using CSGenio.business;
 using CSGenio.core.persistence;
@@ -56,11 +55,11 @@ namespace GenioMVC.Controllers
 // USE /[MANUAL GQT CONTROLLER_SHOW DENTR]/
 
 		[HttpPost]
-		public ActionResult Dentr_Show_GET([FromBody] RequestIdModel requestModel)
+		public ActionResult Dentr_Show_GET([FromBody]RequestIdModel requestModel)
 		{
-			string id = requestModel.Id;
-			Dentr_ViewModel model = new(UserContext.Current);
-			EventSink eventSink = new()
+			var id = requestModel.Id;
+			var model = new Dentr_ViewModel(UserContext.Current);
+			var eventSink = new EventSink()
 			{
 				MethodName = "Dentr_Show_GET",
 				AreaName = "indoc",
@@ -76,7 +75,13 @@ namespace GenioMVC.Controllers
 				}
 			};
 
-			return GenericHandleGetFormShow(eventSink, model, id);
+			using (CSGenio.core.di.GenioDI.MetricsOtlp.RecordTime("page_load_time", new System.Diagnostics.TagList([
+				new("PageId", "DENTR.SHOW"),
+				new("PageType", "form")
+			]), "ms", "Time to load the page."))
+			{
+				return GenericHandleGetFormShow(eventSink, model, id);
+			}
 		}
 
 		#endregion
@@ -85,14 +90,14 @@ namespace GenioMVC.Controllers
 
 // USE /[MANUAL GQT CONTROLLER_NEW_GET DENTR]/
 		[HttpPost]
-		public ActionResult Dentr_New_GET([FromBody] RequestNewGetModel requestModel)
+		public ActionResult Dentr_New_GET([FromBody]RequestNewGetModel requestModel)
 		{
-			string id = requestModel.Id;
-			bool isNewLocation = requestModel.IsNewLocation;
+			var id = requestModel.Id;
+			var isNewLocation = requestModel.IsNewLocation;
 			var prefillValues = requestModel.PrefillValues;
 
-			Dentr_ViewModel model = new(UserContext.Current);
-			EventSink eventSink = new()
+			var model = new Dentr_ViewModel(UserContext.Current);
+			var eventSink = new EventSink()
 			{
 				MethodName = "Dentr_New_GET",
 				AreaName = "indoc",
@@ -112,7 +117,13 @@ namespace GenioMVC.Controllers
 				}
 			};
 
-			return GenericHandleGetFormNew(eventSink, model, id, isNewLocation, prefillValues);
+			using (CSGenio.core.di.GenioDI.MetricsOtlp.RecordTime("page_load_time", new System.Diagnostics.TagList([
+				new("PageId", "DENTR.SHOW"),
+				new("PageType", "form")
+			]), "ms", "Time to load the page."))
+			{
+				return GenericHandleGetFormNew(eventSink, model, id, isNewLocation, prefillValues);
+			}
 		}
 
 		//
@@ -121,7 +132,7 @@ namespace GenioMVC.Controllers
 		[HttpPost]
 		public ActionResult Dentr_New([FromBody]Dentr_ViewModel model, [FromQuery]bool redirect = true)
 		{
-			EventSink eventSink = new()
+			var eventSink = new EventSink()
 			{
 				MethodName = "Dentr_New",
 				ViewName = "Dentr",
@@ -146,7 +157,13 @@ namespace GenioMVC.Controllers
 				}
 			};
 
-			return GenericHandlePostFormNew(eventSink, model);
+			using (CSGenio.core.di.GenioDI.MetricsOtlp.RecordTime("page_load_time", new System.Diagnostics.TagList([
+				new("PageId", "DENTR.NEW"),
+				new("PageType", "form")
+			]), "ms", "Time to load the page."))
+			{
+				return GenericHandlePostFormNew(eventSink, model);
+			}
 		}
 
 		#endregion
@@ -155,11 +172,11 @@ namespace GenioMVC.Controllers
 
 // USE /[MANUAL GQT CONTROLLER_EDIT_GET DENTR]/
 		[HttpPost]
-		public ActionResult Dentr_Edit_GET([FromBody] RequestIdModel requestModel)
+		public ActionResult Dentr_Edit_GET([FromBody]RequestIdModel requestModel)
 		{
-			string id = requestModel.Id;
-			Dentr_ViewModel model = new(UserContext.Current);
-			EventSink eventSink = new()
+			var id = requestModel.Id;
+			var model = new Dentr_ViewModel(UserContext.Current);
+			var eventSink = new EventSink()
 			{
 				MethodName = "Dentr_Edit_GET",
 				AreaName = "indoc",
@@ -176,7 +193,13 @@ namespace GenioMVC.Controllers
 				}
 			};
 
-			return GenericHandleGetFormEdit(eventSink, model, id);
+			using (CSGenio.core.di.GenioDI.MetricsOtlp.RecordTime("page_load_time", new System.Diagnostics.TagList([
+				new("PageId", "DENTR.SHOW"),
+				new("PageType", "form")
+			]), "ms", "Time to load the page."))
+			{
+				return GenericHandleGetFormEdit(eventSink, model, id);
+			}
 		}
 
 		//
@@ -185,7 +208,7 @@ namespace GenioMVC.Controllers
 		[HttpPost]
 		public ActionResult Dentr_Edit([FromBody]Dentr_ViewModel model, [FromQuery]bool redirect)
 		{
-			EventSink eventSink = new()
+			var eventSink = new EventSink()
 			{
 				MethodName = "Dentr_Edit",
 				ViewName = "Dentr",
@@ -210,7 +233,13 @@ namespace GenioMVC.Controllers
 				}
 			};
 
-			return GenericHandlePostFormEdit(eventSink, model);
+			using (CSGenio.core.di.GenioDI.MetricsOtlp.RecordTime("page_load_time", new System.Diagnostics.TagList([
+				new("PageId", "DENTR.EDIT"),
+				new("PageType", "form")
+			]), "ms", "Time to load the page."))
+			{
+				return GenericHandlePostFormEdit(eventSink, model);
+			}
 		}
 
 		#endregion
@@ -219,11 +248,11 @@ namespace GenioMVC.Controllers
 
 // USE /[MANUAL GQT CONTROLLER_DELETE_GET DENTR]/
 		[HttpPost]
-		public ActionResult Dentr_Delete_GET([FromBody] RequestIdModel requestModel)
+		public ActionResult Dentr_Delete_GET([FromBody]RequestIdModel requestModel)
 		{
-			string id = requestModel.Id;
-			Dentr_ViewModel model = new(UserContext.Current);
-			EventSink eventSink = new()
+			var id = requestModel.Id;
+			var model = new Dentr_ViewModel(UserContext.Current);
+			var eventSink = new EventSink()
 			{
 				MethodName = "Dentr_Delete_GET",
 				AreaName = "indoc",
@@ -240,20 +269,26 @@ namespace GenioMVC.Controllers
 				}
 			};
 
-			return GenericHandleGetFormDelete(eventSink, model, id);
+			using (CSGenio.core.di.GenioDI.MetricsOtlp.RecordTime("page_load_time", new System.Diagnostics.TagList([
+				new("PageId", "DENTR.SHOW"),
+				new("PageType", "form")
+			]), "ms", "Time to load the page."))
+			{
+				return GenericHandleGetFormDelete(eventSink, model, id);
+			}
 		}
 
 		//
 		// POST: /Indoc/Dentr_Delete
 // USE /[MANUAL GQT CONTROLLER_DELETE_POST DENTR]/
 		[HttpPost]
-		public ActionResult Dentr_Delete([FromBody] RequestIdModel requestModel)
+		public ActionResult Dentr_Delete([FromBody]RequestIdModel requestModel)
 		{
-			string id = requestModel.Id;
-			Dentr_ViewModel model = new(UserContext.Current, id);
+			var id = requestModel.Id;
+			var model = new Dentr_ViewModel (UserContext.Current, id);
 			model.MapFromModel();
 
-			EventSink eventSink = new()
+			var eventSink = new EventSink()
 			{
 				MethodName = "Dentr_Delete",
 				ViewName = "Dentr",
@@ -269,7 +304,13 @@ namespace GenioMVC.Controllers
 				}
 			};
 
-			return GenericHandlePostFormDelete(eventSink, model);
+			using (CSGenio.core.di.GenioDI.MetricsOtlp.RecordTime("page_load_time", new System.Diagnostics.TagList([
+				new("PageId", "DENTR.DELETE"),
+				new("PageType", "form")
+			]), "ms", "Time to load the page."))
+			{
+				return GenericHandlePostFormDelete(eventSink, model);
+			}
 		}
 
 		public ActionResult Dentr_Delete_Redirect()
@@ -285,13 +326,13 @@ namespace GenioMVC.Controllers
 // USE /[MANUAL GQT CONTROLLER_DUPLICATE_GET DENTR]/
 
 		[HttpPost]
-		public ActionResult Dentr_Duplicate_GET([FromBody] RequestNewGetModel requestModel)
+		public ActionResult Dentr_Duplicate_GET([FromBody]RequestNewGetModel requestModel)
 		{
-			string id = requestModel.Id;
-			bool isNewLocation = requestModel.IsNewLocation;
+			var id = requestModel.Id;
+			var isNewLocation = requestModel.IsNewLocation;
 
-			Dentr_ViewModel model = new(UserContext.Current);
-			EventSink eventSink = new()
+			var model = new Dentr_ViewModel(UserContext.Current);
+			var eventSink = new EventSink()
 			{
 				MethodName = "Dentr_Duplicate_GET",
 				AreaName = "indoc",
@@ -307,7 +348,13 @@ namespace GenioMVC.Controllers
 				}
 			};
 
-			return GenericHandleGetFormDuplicate(eventSink, model, id, isNewLocation);
+			using (CSGenio.core.di.GenioDI.MetricsOtlp.RecordTime("page_load_time", new System.Diagnostics.TagList([
+				new("PageId", "DENTR.SHOW"),
+				new("PageType", "form")
+			]), "ms", "Time to load the page."))
+			{
+				return GenericHandleGetFormDuplicate(eventSink, model, id, isNewLocation);
+			}
 		}
 
 		//
@@ -316,7 +363,7 @@ namespace GenioMVC.Controllers
 		[HttpPost]
 		public ActionResult Dentr_Duplicate([FromBody]Dentr_ViewModel model, [FromQuery]bool redirect = true)
 		{
-			EventSink eventSink = new()
+			var eventSink = new EventSink()
 			{
 				MethodName = "Dentr_Duplicate",
 				ViewName = "Dentr",
@@ -341,7 +388,13 @@ namespace GenioMVC.Controllers
 				}
 			};
 
-			return GenericHandlePostFormDuplicate(eventSink, model);
+			using (CSGenio.core.di.GenioDI.MetricsOtlp.RecordTime("page_load_time", new System.Diagnostics.TagList([
+				new("PageId", "DENTR.DUPLICATE"),
+				new("PageType", "form")
+			]), "ms", "Time to load the page."))
+			{
+				return GenericHandlePostFormDuplicate(eventSink, model);
+			}
 		}
 
 		#endregion
@@ -358,15 +411,8 @@ namespace GenioMVC.Controllers
 				PersistentSupport sp = UserContext.Current.PersistentSupport;
 				try
 				{
-					var recordKey = Navigation.GetStrValue("indoc");
-					var model = GenioMVC.Models.Indoc.Find(recordKey, UserContext.Current);
-					if (model.ValZzstate == 0)
-					{
-						Navigation.ClearValue("indoc");
-						string errorMessage = Resources.Resources.ESTE_REGISTO_JA_FOI_02595;
-						Log.Error($"${errorMessage} ID: ${recordKey}");
-						return JsonOK(new { Success = true, currentNavigationLevel = Navigation.CurrentLevel.Level, Warning = errorMessage });
-					}
+					var model = new GenioMVC.Models.Indoc(UserContext.Current);
+					model.klass.QPrimaryKey = Navigation.GetStrValue("indoc");
 
 // USE /[MANUAL GQT BEFORE_CANCEL DENTR]/
 
@@ -412,6 +458,9 @@ namespace GenioMVC.Controllers
 		{
 			var queryParams = requestModel.QueryParams;
 
+			int perPage = CSGenio.framework.Configuration.NrRegDBedit;
+			string rowsPerPageOptionsString = "";
+
 			// If there was a recent operation on this table then force the primary persistence server to be called and ignore the read only feature
 			if (string.IsNullOrEmpty(Navigation.GetStrValue("ForcePrimaryRead_cntry")))
 				UserContext.Current.SetPersistenceReadOnly(true);
@@ -421,7 +470,7 @@ namespace GenioMVC.Controllers
 				UserContext.Current.SetPersistenceReadOnly(false);
 			}
 
-			NameValueCollection requestValues = [];
+			var requestValues = new NameValueCollection();
 			if (queryParams != null)
 			{
 				// Add to request values
@@ -431,12 +480,35 @@ namespace GenioMVC.Controllers
 
 			IsStateReadonly = true;
 
-			Models.Indoc parentCtx = requestModel.Model == null ? null : new(m_userContext);
-			requestModel.Model?.Init(m_userContext);
+			Models.Indoc parentCtx = requestModel.Model == null ? null : new(UserContext.Current);
+			requestModel.Model?.Init(UserContext.Current);
 			requestModel.Model?.MapToModel(parentCtx);
-			Dentr_CntryValCountry_ViewModel model = new(m_userContext, parentCtx);
+			Dentr_CntryValCountry_ViewModel model = new(UserContext.Current, parentCtx);
 
-			CSGenio.core.framework.table.TableConfiguration tableConfig = model.GetTableConfig(requestModel.TableConfiguration);
+			// Table configuration load options
+			CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions tableConfigOptions = new CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions();
+
+			// Determine which table configuration to use and load it
+			CSGenio.framework.TableConfiguration.TableConfiguration tableConfig = TableUiSettings.Load(
+				UserContext.Current.PersistentSupport,
+				model.Uuid,
+				UserContext.Current.User,
+				tableConfigOptions
+			).DetermineTableConfig(
+				requestModel?.TableConfiguration,
+				requestModel?.UserTableConfigName,
+				(bool)requestModel?.LoadDefaultView,
+				tableConfigOptions
+			);
+
+			// Determine rows per page
+			tableConfig.RowsPerPage = CSGenio.framework.TableConfiguration.TableConfigurationHelpers.DetermineRowsPerPage(tableConfig.RowsPerPage, perPage, rowsPerPageOptionsString);
+
+			// Determine which columns have totalizers
+			tableConfig.TotalizerColumns = requestModel.TotalizerColumns;
+
+			// For tables with multiple selection enabled, determine currently selected rows
+			tableConfig.SelectedRows = requestModel.SelectedRows;
 
 			model.setModes(Request.Query["m"].ToString());
 			model.Load(tableConfig, requestValues, Request.IsAjaxRequest());
@@ -457,6 +529,9 @@ namespace GenioMVC.Controllers
 		{
 			var queryParams = requestModel.QueryParams;
 
+			int perPage = CSGenio.framework.Configuration.NrRegDBedit;
+			string rowsPerPageOptionsString = "";
+
 			// If there was a recent operation on this table then force the primary persistence server to be called and ignore the read only feature
 			if (string.IsNullOrEmpty(Navigation.GetStrValue("ForcePrimaryRead_cmpny")))
 				UserContext.Current.SetPersistenceReadOnly(true);
@@ -466,7 +541,7 @@ namespace GenioMVC.Controllers
 				UserContext.Current.SetPersistenceReadOnly(false);
 			}
 
-			NameValueCollection requestValues = [];
+			var requestValues = new NameValueCollection();
 			if (queryParams != null)
 			{
 				// Add to request values
@@ -476,12 +551,35 @@ namespace GenioMVC.Controllers
 
 			IsStateReadonly = true;
 
-			Models.Indoc parentCtx = requestModel.Model == null ? null : new(m_userContext);
-			requestModel.Model?.Init(m_userContext);
+			Models.Indoc parentCtx = requestModel.Model == null ? null : new(UserContext.Current);
+			requestModel.Model?.Init(UserContext.Current);
 			requestModel.Model?.MapToModel(parentCtx);
-			Dentr_CmpnyValDesignat_ViewModel model = new(m_userContext, parentCtx);
+			Dentr_CmpnyValDesignat_ViewModel model = new(UserContext.Current, parentCtx);
 
-			CSGenio.core.framework.table.TableConfiguration tableConfig = model.GetTableConfig(requestModel.TableConfiguration);
+			// Table configuration load options
+			CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions tableConfigOptions = new CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions();
+
+			// Determine which table configuration to use and load it
+			CSGenio.framework.TableConfiguration.TableConfiguration tableConfig = TableUiSettings.Load(
+				UserContext.Current.PersistentSupport,
+				model.Uuid,
+				UserContext.Current.User,
+				tableConfigOptions
+			).DetermineTableConfig(
+				requestModel?.TableConfiguration,
+				requestModel?.UserTableConfigName,
+				(bool)requestModel?.LoadDefaultView,
+				tableConfigOptions
+			);
+
+			// Determine rows per page
+			tableConfig.RowsPerPage = CSGenio.framework.TableConfiguration.TableConfigurationHelpers.DetermineRowsPerPage(tableConfig.RowsPerPage, perPage, rowsPerPageOptionsString);
+
+			// Determine which columns have totalizers
+			tableConfig.TotalizerColumns = requestModel.TotalizerColumns;
+
+			// For tables with multiple selection enabled, determine currently selected rows
+			tableConfig.SelectedRows = requestModel.SelectedRows;
 
 			model.setModes(Request.Query["m"].ToString());
 			model.Load(tableConfig, requestValues, Request.IsAjaxRequest());
@@ -502,6 +600,9 @@ namespace GenioMVC.Controllers
 		{
 			var queryParams = requestModel.QueryParams;
 
+			int perPage = CSGenio.framework.Configuration.NrRegDBedit;
+			string rowsPerPageOptionsString = "";
+
 			// If there was a recent operation on this table then force the primary persistence server to be called and ignore the read only feature
 			if (string.IsNullOrEmpty(Navigation.GetStrValue("ForcePrimaryRead_pesso")))
 				UserContext.Current.SetPersistenceReadOnly(true);
@@ -511,7 +612,7 @@ namespace GenioMVC.Controllers
 				UserContext.Current.SetPersistenceReadOnly(false);
 			}
 
-			NameValueCollection requestValues = [];
+			var requestValues = new NameValueCollection();
 			if (queryParams != null)
 			{
 				// Add to request values
@@ -521,12 +622,35 @@ namespace GenioMVC.Controllers
 
 			IsStateReadonly = true;
 
-			Models.Indoc parentCtx = requestModel.Model == null ? null : new(m_userContext);
-			requestModel.Model?.Init(m_userContext);
+			Models.Indoc parentCtx = requestModel.Model == null ? null : new(UserContext.Current);
+			requestModel.Model?.Init(UserContext.Current);
 			requestModel.Model?.MapToModel(parentCtx);
-			Dentr_PessoValName_ViewModel model = new(m_userContext, parentCtx);
+			Dentr_PessoValName_ViewModel model = new(UserContext.Current, parentCtx);
 
-			CSGenio.core.framework.table.TableConfiguration tableConfig = model.GetTableConfig(requestModel.TableConfiguration);
+			// Table configuration load options
+			CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions tableConfigOptions = new CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions();
+
+			// Determine which table configuration to use and load it
+			CSGenio.framework.TableConfiguration.TableConfiguration tableConfig = TableUiSettings.Load(
+				UserContext.Current.PersistentSupport,
+				model.Uuid,
+				UserContext.Current.User,
+				tableConfigOptions
+			).DetermineTableConfig(
+				requestModel?.TableConfiguration,
+				requestModel?.UserTableConfigName,
+				(bool)requestModel?.LoadDefaultView,
+				tableConfigOptions
+			);
+
+			// Determine rows per page
+			tableConfig.RowsPerPage = CSGenio.framework.TableConfiguration.TableConfigurationHelpers.DetermineRowsPerPage(tableConfig.RowsPerPage, perPage, rowsPerPageOptionsString);
+
+			// Determine which columns have totalizers
+			tableConfig.TotalizerColumns = requestModel.TotalizerColumns;
+
+			// For tables with multiple selection enabled, determine currently selected rows
+			tableConfig.SelectedRows = requestModel.SelectedRows;
 
 			model.setModes(Request.Query["m"].ToString());
 			model.Load(tableConfig, requestValues, Request.IsAjaxRequest());
@@ -547,6 +671,9 @@ namespace GenioMVC.Controllers
 		{
 			var queryParams = requestModel.QueryParams;
 
+			int perPage = CSGenio.framework.Configuration.NrRegDBedit;
+			string rowsPerPageOptionsString = "";
+
 			// If there was a recent operation on this table then force the primary persistence server to be called and ignore the read only feature
 			if (string.IsNullOrEmpty(Navigation.GetStrValue("ForcePrimaryRead_ware1")))
 				UserContext.Current.SetPersistenceReadOnly(true);
@@ -556,7 +683,7 @@ namespace GenioMVC.Controllers
 				UserContext.Current.SetPersistenceReadOnly(false);
 			}
 
-			NameValueCollection requestValues = [];
+			var requestValues = new NameValueCollection();
 			if (queryParams != null)
 			{
 				// Add to request values
@@ -566,12 +693,35 @@ namespace GenioMVC.Controllers
 
 			IsStateReadonly = true;
 
-			Models.Indoc parentCtx = requestModel.Model == null ? null : new(m_userContext);
-			requestModel.Model?.Init(m_userContext);
+			Models.Indoc parentCtx = requestModel.Model == null ? null : new(UserContext.Current);
+			requestModel.Model?.Init(UserContext.Current);
 			requestModel.Model?.MapToModel(parentCtx);
-			Dentr_Ware1ValWarehdes_ViewModel model = new(m_userContext, parentCtx);
+			Dentr_Ware1ValWarehdes_ViewModel model = new(UserContext.Current, parentCtx);
 
-			CSGenio.core.framework.table.TableConfiguration tableConfig = model.GetTableConfig(requestModel.TableConfiguration);
+			// Table configuration load options
+			CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions tableConfigOptions = new CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions();
+
+			// Determine which table configuration to use and load it
+			CSGenio.framework.TableConfiguration.TableConfiguration tableConfig = TableUiSettings.Load(
+				UserContext.Current.PersistentSupport,
+				model.Uuid,
+				UserContext.Current.User,
+				tableConfigOptions
+			).DetermineTableConfig(
+				requestModel?.TableConfiguration,
+				requestModel?.UserTableConfigName,
+				(bool)requestModel?.LoadDefaultView,
+				tableConfigOptions
+			);
+
+			// Determine rows per page
+			tableConfig.RowsPerPage = CSGenio.framework.TableConfiguration.TableConfigurationHelpers.DetermineRowsPerPage(tableConfig.RowsPerPage, perPage, rowsPerPageOptionsString);
+
+			// Determine which columns have totalizers
+			tableConfig.TotalizerColumns = requestModel.TotalizerColumns;
+
+			// For tables with multiple selection enabled, determine currently selected rows
+			tableConfig.SelectedRows = requestModel.SelectedRows;
 
 			model.setModes(Request.Query["m"].ToString());
 			model.Load(tableConfig, requestValues, Request.IsAjaxRequest());
@@ -592,6 +742,9 @@ namespace GenioMVC.Controllers
 		{
 			var queryParams = requestModel.QueryParams;
 
+			int perPage = -1;
+			string rowsPerPageOptionsString = "";
+
 			// If there was a recent operation on this table then force the primary persistence server to be called and ignore the read only feature
 			if (string.IsNullOrEmpty(Navigation.GetStrValue("ForcePrimaryRead_ldent")))
 				UserContext.Current.SetPersistenceReadOnly(true);
@@ -601,7 +754,7 @@ namespace GenioMVC.Controllers
 				UserContext.Current.SetPersistenceReadOnly(false);
 			}
 
-			NameValueCollection requestValues = [];
+			var requestValues = new NameValueCollection();
 			if (queryParams != null)
 			{
 				// Add to request values
@@ -609,18 +762,35 @@ namespace GenioMVC.Controllers
 					requestValues.Add(kv.Key, kv.Value);
 			}
 
-			Models.Indoc parentCtx = requestModel.Model == null ? null : new(m_userContext);
-			requestModel.Model?.Init(m_userContext);
+			Models.Indoc parentCtx = requestModel.Model == null ? null : new(UserContext.Current);
+			requestModel.Model?.Init(UserContext.Current);
 			requestModel.Model?.MapToModel(parentCtx);
-			Dentr_ValEntradas_ViewModel model = new(m_userContext, parentCtx);
+			Dentr_ValEntradas_ViewModel model = new(UserContext.Current, parentCtx);
 
-			CSGenio.core.framework.table.TableConfiguration tableConfig = model.GetTableConfig(
-				requestModel.TableConfiguration,
-				requestModel.UserTableConfigName,
-				requestModel.LoadDefaultView);
+			// Table configuration load options
+			CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions tableConfigOptions = new CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions();
+
+			// Determine which table configuration to use and load it
+			CSGenio.framework.TableConfiguration.TableConfiguration tableConfig = TableUiSettings.Load(
+				UserContext.Current.PersistentSupport,
+				model.Uuid,
+				UserContext.Current.User,
+				tableConfigOptions
+			).DetermineTableConfig(
+				requestModel?.TableConfiguration,
+				requestModel?.UserTableConfigName,
+				(bool)requestModel?.LoadDefaultView,
+				tableConfigOptions
+			);
 
 			// Determine rows per page
-			tableConfig.RowsPerPage = tableConfig.DetermineRowsPerPage(-1, "");
+			tableConfig.RowsPerPage = CSGenio.framework.TableConfiguration.TableConfigurationHelpers.DetermineRowsPerPage(tableConfig.RowsPerPage, perPage, rowsPerPageOptionsString);
+
+			// Determine which columns have totalizers
+			tableConfig.TotalizerColumns = requestModel.TotalizerColumns;
+
+			// For tables with multiple selection enabled, determine currently selected rows
+			tableConfig.SelectedRows = requestModel.SelectedRows;
 
 			model.setModes(Request.Query["m"].ToString());
 			// Verificar se o user clicou to exportar os dados da Qlisting
@@ -634,9 +804,6 @@ namespace GenioMVC.Controllers
 				byte[] fileBytes = null;
 
 // USE /[MANUAL GQT OVERRQEXPORT DENTR_PSEUDENTRADAS]/
-				// Protected against cases where it receive zero columns. Otherwise, it will select all columns in the area.
-				if (listing.RequestFields.Length == 0)
-					return JsonERROR(Resources.Resources.A_EXPORTACAO_NAO_POD03671);
 				fileBytes = new CSGenio.framework.Exports(UserContext.Current.User).ExportList(listing, conditions, columns, requestValues["ExportType"], Resources.Resources.ENTRIES32319);
 
 				QCache.Instance.ExportFiles.Put(file, fileBytes);
@@ -651,8 +818,8 @@ namespace GenioMVC.Controllers
 		[ActionName("ReorderDentr_ValEntradas")]
 		public ActionResult ReorderDentr_ValEntradas([FromBody] RequestReorderModel requestModel)
 		{
-			string id = requestModel.Id;
-			string position = requestModel.Position.ToString();
+			var id = requestModel.Id;
+			var position = requestModel.Position.ToString();
 
 			Dentr_ValEntradas_ViewModel model = new(UserContext.Current);
 			model.setModes(Request.Query["m"].ToString());

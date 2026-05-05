@@ -38,16 +38,9 @@
 									:label="btn.label"
 									:disabled="btn.disabled"
 									@click="btn.action">
-									<template v-if="btn.icon">
-										<q-badge-indicator
-											v-if="btn.badge && btn.badge.isVisible"
-											:color="btn.badge.color">
-											<q-icon v-bind="btn.icon" />
-										</q-badge-indicator>
-										<q-icon
-											v-else
-											v-bind="btn.icon" />
-									</template>
+									<q-icon
+										v-if="btn.icon"
+										v-bind="btn.icon" />
 								</q-toggle-group-item>
 							</template>
 						</q-toggle-group>
@@ -59,7 +52,7 @@
 				v-if="$app.layout.FormAnchorsPosition === 'form-header' && visibleGroups.length > 0"
 				:anchors="anchorGroups"
 				:controls="visibleControls"
-				@focus-control="focusControl" />
+				@focus-control="(...args) => focusControl(...args)" />
 		</div>
 	</teleport>
 
@@ -80,7 +73,6 @@
 						v-if="btn.isActive && btn.isVisible && btn.showInHeading"
 						:id="`heading-${btn.id}`"
 						:label="btn.text"
-						:color="btn.color"
 						:variant="btn.variant"
 						:disabled="btn.disabled"
 						:icon-pos="btn.iconPos"
@@ -94,26 +86,28 @@
 			</q-button-group>
 		</div>
 
-		<q-container
-			fluid
+		<div
+			class="form-flow"
 			data-key="COMPTYPE"
-			:data-loading="!formInitialDataLoaded || !isActiveForm">
+			:data-loading="!formInitialDataLoaded">
 			<template v-if="formControl.initialized && showFormBody">
-				<q-row v-if="controls.COMPTYPEPSEUDNEWGRP01.isVisible">
-					<q-col v-if="controls.COMPTYPEPSEUDNEWGRP01.isVisible">
+				<q-row-container
+					v-show="controls.COMPTYPEPSEUDNEWGRP01.isVisible"
+					is-large>
+					<q-control-wrapper
+						v-show="controls.COMPTYPEPSEUDNEWGRP01.isVisible"
+						class="${Vue.GetControlWrapperClass($controlsColumn)}">
 						<q-group-box-container
-							v-if="controls.COMPTYPEPSEUDNEWGRP01.isVisible"
 							id="COMPTYPEPSEUDNEWGRP01"
 							class="c-groupbox--background"
 							v-bind="controls.COMPTYPEPSEUDNEWGRP01"
 							:is-visible="controls.COMPTYPEPSEUDNEWGRP01.isVisible">
 							<!-- Start COMPTYPEPSEUDNEWGRP01 -->
-							<q-row v-if="controls.COMPTYPECOMPOCOMPTYPE.isVisible">
-								<q-col
-									v-if="controls.COMPTYPECOMPOCOMPTYPE.isVisible"
-									cols="auto">
+							<q-row-container v-show="controls.COMPTYPECOMPOCOMPTYPE.isVisible">
+								<q-control-wrapper
+									v-show="controls.COMPTYPECOMPOCOMPTYPE.isVisible"
+									class="${Vue.GetControlWrapperClass($controlsColumn)}">
 									<base-input-structure
-										v-if="controls.COMPTYPECOMPOCOMPTYPE.isVisible"
 										class="i-text"
 										v-bind="controls.COMPTYPECOMPOCOMPTYPE"
 										v-on="controls.COMPTYPECOMPOCOMPTYPE.handlers"
@@ -125,14 +119,13 @@
 											@blur="onBlur(controls.COMPTYPECOMPOCOMPTYPE, model.ValComptype.value)"
 											@change="model.ValComptype.fnUpdateValueOnChange" />
 									</base-input-structure>
-								</q-col>
-							</q-row>
-							<q-row v-if="controls.COMPTYPECOMPOCOMPICON.isVisible">
-								<q-col
-									v-if="controls.COMPTYPECOMPOCOMPICON.isVisible"
-									cols="auto">
+								</q-control-wrapper>
+							</q-row-container>
+							<q-row-container v-show="controls.COMPTYPECOMPOCOMPICON.isVisible">
+								<q-control-wrapper
+									v-show="controls.COMPTYPECOMPOCOMPICON.isVisible"
+									class="${Vue.GetControlWrapperClass($controlsColumn)}">
 									<base-input-structure
-										v-if="controls.COMPTYPECOMPOCOMPICON.isVisible"
 										class="i-text"
 										v-bind="controls.COMPTYPECOMPOCOMPICON"
 										v-on="controls.COMPTYPECOMPOCOMPICON.handlers"
@@ -143,14 +136,13 @@
 											v-if="controls.COMPTYPECOMPOCOMPICON.isVisible"
 											v-bind="controls.COMPTYPECOMPOCOMPICON.props" />
 									</base-input-structure>
-								</q-col>
-							</q-row>
-							<q-row v-if="controls.COMPTYPECOMPOCOMPDESC.isVisible">
-								<q-col
-									v-if="controls.COMPTYPECOMPOCOMPDESC.isVisible"
-									cols="auto">
+								</q-control-wrapper>
+							</q-row-container>
+							<q-row-container v-show="controls.COMPTYPECOMPOCOMPDESC.isVisible">
+								<q-control-wrapper
+									v-show="controls.COMPTYPECOMPOCOMPDESC.isVisible"
+									class="${Vue.GetControlWrapperClass($controlsColumn)}">
 									<base-input-structure
-										v-if="controls.COMPTYPECOMPOCOMPDESC.isVisible"
 										class="i-textarea"
 										v-bind="controls.COMPTYPECOMPOCOMPDESC"
 										v-on="controls.COMPTYPECOMPOCOMPDESC.handlers"
@@ -162,16 +154,19 @@
 											v-bind="controls.COMPTYPECOMPOCOMPDESC.props"
 											v-on="controls.COMPTYPECOMPOCOMPDESC.handlers" />
 									</base-input-structure>
-								</q-col>
-							</q-row>
+								</q-control-wrapper>
+							</q-row-container>
 							<!-- End COMPTYPEPSEUDNEWGRP01 -->
 						</q-group-box-container>
-					</q-col>
-				</q-row>
-				<q-row v-if="controls.COMPTYPEPSEUDCOMPTAB_.isVisible || controls.COMPTYPEPSEUDTAB_____.isVisible || controls.COMPTYPEPSEUDC_USAGE_.isVisible || controls.COMPTYPEPSEUDCACESSI_.isVisible">
-					<q-col v-if="controls.COMPTYPEPSEUDCOMPTAB_.isVisible || controls.COMPTYPEPSEUDTAB_____.isVisible || controls.COMPTYPEPSEUDC_USAGE_.isVisible || controls.COMPTYPEPSEUDCACESSI_.isVisible">
+					</q-control-wrapper>
+				</q-row-container>
+				<q-row-container
+					v-show="controls.COMPTYPEPSEUDCOMPTAB_.isVisible || controls.COMPTYPEPSEUDTAB_____.isVisible || controls.COMPTYPEPSEUDC_USAGE_.isVisible || controls.COMPTYPEPSEUDCACESSI_.isVisible || controls.COMPTYPE__PSEUD__CONFIGCOMP.isVisible"
+					is-large>
+					<q-control-wrapper
+						v-show="controls.COMPTYPEPSEUDCOMPTAB_.isVisible || controls.COMPTYPEPSEUDTAB_____.isVisible || controls.COMPTYPEPSEUDC_USAGE_.isVisible || controls.COMPTYPEPSEUDCACESSI_.isVisible || controls.COMPTYPE__PSEUD__CONFIGCOMP.isVisible"
+						class="${Vue.GetControlWrapperClass($controlsColumn)}">
 						<q-tab-container
-							v-if="controls.formTabs.isVisible"
 							id="q-tabs-COMPTYPE"
 							v-bind="controls.formTabs.props"
 							@tab-changed="controls.formTabs.selectTab($event)">
@@ -183,12 +178,11 @@
 										id="COMPTYPEPSEUDCOMPTAB_"
 										role="tabpanel"
 										aria-labelledby="tab-container-COMPTYPEPSEUDCOMPTAB_">
-										<q-row v-if="controls.COMPTAB_COMPCCOMPCLAS.isVisible">
-											<q-col
-												v-if="controls.COMPTAB_COMPCCOMPCLAS.isVisible"
-												cols="auto">
+										<q-row-container v-show="controls.COMPTAB_COMPCCOMPCLAS.isVisible">
+											<q-control-wrapper
+												v-show="controls.COMPTAB_COMPCCOMPCLAS.isVisible"
+												class="${Vue.GetControlWrapperClass($controlsColumn)}">
 												<base-input-structure
-													v-if="controls.COMPTAB_COMPCCOMPCLAS.isVisible"
 													class="i-text"
 													v-bind="controls.COMPTAB_COMPCCOMPCLAS"
 													v-on="controls.COMPTAB_COMPCCOMPCLAS.handlers"
@@ -204,14 +198,13 @@
 														v-bind="controls.COMPTAB_COMPCCOMPCLAS.seeMoreParams"
 														v-on="controls.COMPTAB_COMPCCOMPCLAS.handlers" />
 												</base-input-structure>
-											</q-col>
-										</q-row>
-										<q-row v-if="controls.COMPTAB_COMPOCOMPTYPE.isVisible">
-											<q-col
-												v-if="controls.COMPTAB_COMPOCOMPTYPE.isVisible"
-												cols="auto">
+											</q-control-wrapper>
+										</q-row-container>
+										<q-row-container v-show="controls.COMPTAB_COMPOCOMPTYPE.isVisible">
+											<q-control-wrapper
+												v-show="controls.COMPTAB_COMPOCOMPTYPE.isVisible"
+												class="${Vue.GetControlWrapperClass($controlsColumn)}">
 												<base-input-structure
-													v-if="controls.COMPTAB_COMPOCOMPTYPE.isVisible"
 													class="i-text"
 													v-bind="controls.COMPTAB_COMPOCOMPTYPE"
 													v-on="controls.COMPTAB_COMPOCOMPTYPE.handlers"
@@ -223,14 +216,13 @@
 														@blur="onBlur(controls.COMPTAB_COMPOCOMPTYPE, model.ValComptype.value)"
 														@change="model.ValComptype.fnUpdateValueOnChange" />
 												</base-input-structure>
-											</q-col>
-										</q-row>
-										<q-row v-if="controls.COMPTAB_COMPOCDATATYP.isVisible">
-											<q-col
-												v-if="controls.COMPTAB_COMPOCDATATYP.isVisible"
-												cols="auto">
+											</q-control-wrapper>
+										</q-row-container>
+										<q-row-container v-show="controls.COMPTAB_COMPOCDATATYP.isVisible">
+											<q-control-wrapper
+												v-show="controls.COMPTAB_COMPOCDATATYP.isVisible"
+												class="${Vue.GetControlWrapperClass($controlsColumn)}">
 												<base-input-structure
-													v-if="controls.COMPTAB_COMPOCDATATYP.isVisible"
 													class="i-text"
 													v-bind="controls.COMPTAB_COMPOCDATATYP"
 													v-on="controls.COMPTAB_COMPOCDATATYP.handlers"
@@ -242,32 +234,29 @@
 														@blur="onBlur(controls.COMPTAB_COMPOCDATATYP, model.ValCdatatyp.value)"
 														@change="model.ValCdatatyp.fnUpdateValueOnChange" />
 												</base-input-structure>
-											</q-col>
-										</q-row>
-										<q-row v-if="controls.COMPTAB_COMPORELEASE_.isVisible || controls.COMPTAB_COMPOMVC_____.isVisible || controls.COMPTAB_COMPOVUEMVC__.isVisible">
-											<q-col
-												v-if="controls.COMPTAB_COMPORELEASE_.isVisible"
-												cols="auto">
+											</q-control-wrapper>
+										</q-row-container>
+										<q-row-container v-show="controls.COMPTAB_COMPORELEASE_.isVisible || controls.COMPTAB_COMPOMVC_____.isVisible || controls.COMPTAB_COMPOVUEMVC__.isVisible">
+											<q-control-wrapper
+												v-show="controls.COMPTAB_COMPORELEASE_.isVisible"
+												class="${Vue.GetControlWrapperClass($controlsColumn)}">
 												<base-input-structure
-													v-if="controls.COMPTAB_COMPORELEASE_.isVisible"
 													class="i-text"
 													v-bind="controls.COMPTAB_COMPORELEASE_"
 													v-on="controls.COMPTAB_COMPORELEASE_.handlers"
 													:loading="controls.COMPTAB_COMPORELEASE_.props.loading"
 													:reporting-mode-on="reportingModeCAV"
 													:suggestion-mode-on="suggestionModeOn">
-													<q-mask
-														v-if="controls.COMPTAB_COMPORELEASE_.isVisible"
-														v-bind="controls.COMPTAB_COMPORELEASE_"
-														:model-value="model.ValRelease.value"
+													<q-text-field
+														v-bind="controls.COMPTAB_COMPORELEASE_.props"
+														@blur="onBlur(controls.COMPTAB_COMPORELEASE_, model.ValRelease.value)"
 														@change="model.ValRelease.fnUpdateValueOnChange" />
 												</base-input-structure>
-											</q-col>
-											<q-col
-												v-if="controls.COMPTAB_COMPOMVC_____.isVisible"
-												cols="auto">
+											</q-control-wrapper>
+											<q-control-wrapper
+												v-show="controls.COMPTAB_COMPOMVC_____.isVisible"
+												class="${Vue.GetControlWrapperClass($controlsColumn)}">
 												<base-input-structure
-													v-if="controls.COMPTAB_COMPOMVC_____.isVisible"
 													class="i-checkbox"
 													v-bind="controls.COMPTAB_COMPOMVC_____"
 													v-on="controls.COMPTAB_COMPOMVC_____.handlers"
@@ -275,18 +264,17 @@
 													:reporting-mode-on="reportingModeCAV"
 													:suggestion-mode-on="suggestionModeOn">
 													<template #label>
-														<q-checkbox
+														<q-checkbox-input
 															v-if="controls.COMPTAB_COMPOMVC_____.isVisible"
 															v-bind="controls.COMPTAB_COMPOMVC_____.props"
 															v-on="controls.COMPTAB_COMPOMVC_____.handlers" />
 													</template>
 												</base-input-structure>
-											</q-col>
-											<q-col
-												v-if="controls.COMPTAB_COMPOVUEMVC__.isVisible"
-												cols="auto">
+											</q-control-wrapper>
+											<q-control-wrapper
+												v-show="controls.COMPTAB_COMPOVUEMVC__.isVisible"
+												class="${Vue.GetControlWrapperClass($controlsColumn)}">
 												<base-input-structure
-													v-if="controls.COMPTAB_COMPOVUEMVC__.isVisible"
 													class="i-checkbox"
 													v-bind="controls.COMPTAB_COMPOVUEMVC__"
 													v-on="controls.COMPTAB_COMPOVUEMVC__.handlers"
@@ -294,18 +282,21 @@
 													:reporting-mode-on="reportingModeCAV"
 													:suggestion-mode-on="suggestionModeOn">
 													<template #label>
-														<q-checkbox
+														<q-checkbox-input
 															v-if="controls.COMPTAB_COMPOVUEMVC__.isVisible"
 															v-bind="controls.COMPTAB_COMPOVUEMVC__.props"
 															v-on="controls.COMPTAB_COMPOVUEMVC__.handlers" />
 													</template>
 												</base-input-structure>
-											</q-col>
-										</q-row>
-										<q-row v-if="controls.COMPTAB_COMPOPREVIEW_.isVisible">
-											<q-col v-if="controls.COMPTAB_COMPOPREVIEW_.isVisible">
+											</q-control-wrapper>
+										</q-row-container>
+										<q-row-container
+											v-show="controls.COMPTAB_COMPOPREVIEW_.isVisible"
+											is-large>
+											<q-control-wrapper
+												v-show="controls.COMPTAB_COMPOPREVIEW_.isVisible"
+												class="${Vue.GetControlWrapperClass($controlsColumn)}">
 												<base-input-structure
-													v-if="controls.COMPTAB_COMPOPREVIEW_.isVisible"
 													class="q-image"
 													v-bind="controls.COMPTAB_COMPOPREVIEW_"
 													v-on="controls.COMPTAB_COMPOPREVIEW_.handlers"
@@ -317,14 +308,13 @@
 														v-bind="controls.COMPTAB_COMPOPREVIEW_.props"
 														v-on="controls.COMPTAB_COMPOPREVIEW_.handlers" />
 												</base-input-structure>
-											</q-col>
-										</q-row>
-										<q-row v-if="controls.COMPTAB__PSEUD__STORYBOOK.isVisible">
-											<q-col
-												v-if="controls.COMPTAB__PSEUD__STORYBOOK.isVisible"
-												cols="auto">
+											</q-control-wrapper>
+										</q-row-container>
+										<q-row-container v-show="controls.COMPTAB__PSEUD__STORYBOOK.isVisible">
+											<q-control-wrapper
+												v-show="controls.COMPTAB__PSEUD__STORYBOOK.isVisible"
+												class="${Vue.GetControlWrapperClass($controlsColumn)}">
 												<base-input-structure
-													v-if="controls.COMPTAB__PSEUD__STORYBOOK.isVisible"
 													class="i-button"
 													v-bind="controls.COMPTAB__PSEUD__STORYBOOK"
 													v-on="controls.COMPTAB__PSEUD__STORYBOOK.handlers"
@@ -333,30 +323,28 @@
 													:suggestion-mode-on="suggestionModeOn">
 													<q-button
 														v-if="controls.COMPTAB__PSEUD__STORYBOOK.isVisible"
-														v-bind="controls.COMPTAB__PSEUD__STORYBOOK.props"
+														id="COMPTAB__PSEUD__STORYBOOK"
+														:label="controls.COMPTAB__PSEUD__STORYBOOK.label"
+														:disabled="controls.COMPTAB__PSEUD__STORYBOOK.isBlocked"
 														@click="controls.COMPTAB__PSEUD__STORYBOOK.action($event)">
 														<q-icon v-bind="controls.COMPTAB__PSEUD__STORYBOOK.icon" />
 													</q-button>
 												</base-input-structure>
-											</q-col>
-										</q-row>
-										<q-row v-if="controls.COMPTAB_PSEUDBEHAVIOR.isVisible">
-											<q-col
-												v-if="controls.COMPTAB_PSEUDBEHAVIOR.isVisible"
-												cols="auto">
+											</q-control-wrapper>
+										</q-row-container>
+										<q-row-container v-show="controls.COMPTAB_PSEUDBEHAVIOR.isVisible">
+											<q-control-wrapper
+												v-show="controls.COMPTAB_PSEUDBEHAVIOR.isVisible"
+												class="${Vue.GetControlWrapperClass($controlsColumn)}">
 												<q-table
-													v-if="controls.COMPTAB_PSEUDBEHAVIOR.isVisible"
+													v-show="controls.COMPTAB_PSEUDBEHAVIOR.isVisible"
 													v-bind="controls.COMPTAB_PSEUDBEHAVIOR"
-													v-on="controls.COMPTAB_PSEUDBEHAVIOR.handlers">
-													<!-- USE /[MANUAL GQT CUSTOM_TABLE COMPTAB_PSEUDBEHAVIOR]/ -->
-												</q-table>
-												<q-table-extra-extension
-													v-if="controls.COMPTAB_PSEUDBEHAVIOR.isVisible"
-													:list-ctrl="controls.COMPTAB_PSEUDBEHAVIOR"
-													:filter-operators="controls.COMPTAB_PSEUDBEHAVIOR.filterOperators"
 													v-on="controls.COMPTAB_PSEUDBEHAVIOR.handlers" />
-											</q-col>
-										</q-row>
+												<q-table-extra-extension
+													:list-ctrl="controls.COMPTAB_PSEUDBEHAVIOR"
+													v-on="controls.COMPTAB_PSEUDBEHAVIOR.handlers" />
+											</q-control-wrapper>
+										</q-row-container>
 									</div>
 								</section>
 								<section
@@ -366,23 +354,19 @@
 										id="COMPTYPEPSEUDTAB_____"
 										role="tabpanel"
 										aria-labelledby="tab-container-COMPTYPEPSEUDTAB_____">
-										<q-row v-if="controls.TAB_____PSEUDVARIANTS.isVisible">
-											<q-col
-												v-if="controls.TAB_____PSEUDVARIANTS.isVisible"
-												cols="auto">
+										<q-row-container v-show="controls.TAB_____PSEUDVARIANTS.isVisible">
+											<q-control-wrapper
+												v-show="controls.TAB_____PSEUDVARIANTS.isVisible"
+												class="${Vue.GetControlWrapperClass($controlsColumn)}">
 												<q-table
-													v-if="controls.TAB_____PSEUDVARIANTS.isVisible"
+													v-show="controls.TAB_____PSEUDVARIANTS.isVisible"
 													v-bind="controls.TAB_____PSEUDVARIANTS"
-													v-on="controls.TAB_____PSEUDVARIANTS.handlers">
-													<!-- USE /[MANUAL GQT CUSTOM_TABLE TAB_____PSEUDVARIANTS]/ -->
-												</q-table>
-												<q-table-extra-extension
-													v-if="controls.TAB_____PSEUDVARIANTS.isVisible"
-													:list-ctrl="controls.TAB_____PSEUDVARIANTS"
-													:filter-operators="controls.TAB_____PSEUDVARIANTS.filterOperators"
 													v-on="controls.TAB_____PSEUDVARIANTS.handlers" />
-											</q-col>
-										</q-row>
+												<q-table-extra-extension
+													:list-ctrl="controls.TAB_____PSEUDVARIANTS"
+													v-on="controls.TAB_____PSEUDVARIANTS.handlers" />
+											</q-control-wrapper>
+										</q-row-container>
 									</div>
 								</section>
 								<section
@@ -392,12 +376,11 @@
 										id="COMPTYPEPSEUDC_USAGE_"
 										role="tabpanel"
 										aria-labelledby="tab-container-COMPTYPEPSEUDC_USAGE_">
-										<q-row v-if="controls.C_USAGE_COMPOWUSE____.isVisible">
-											<q-col
-												v-if="controls.C_USAGE_COMPOWUSE____.isVisible"
-												cols="auto">
+										<q-row-container v-show="controls.C_USAGE_COMPOWUSE____.isVisible">
+											<q-control-wrapper
+												v-show="controls.C_USAGE_COMPOWUSE____.isVisible"
+												class="${Vue.GetControlWrapperClass($controlsColumn)}">
 												<base-input-structure
-													v-if="controls.C_USAGE_COMPOWUSE____.isVisible"
 													class="i-textarea"
 													v-bind="controls.C_USAGE_COMPOWUSE____"
 													v-on="controls.C_USAGE_COMPOWUSE____.handlers"
@@ -409,14 +392,13 @@
 														v-bind="controls.C_USAGE_COMPOWUSE____.props"
 														v-on="controls.C_USAGE_COMPOWUSE____.handlers" />
 												</base-input-structure>
-											</q-col>
-										</q-row>
-										<q-row v-if="controls.C_USAGE_COMPOWNUSE___.isVisible">
-											<q-col
-												v-if="controls.C_USAGE_COMPOWNUSE___.isVisible"
-												cols="auto">
+											</q-control-wrapper>
+										</q-row-container>
+										<q-row-container v-show="controls.C_USAGE_COMPOWNUSE___.isVisible">
+											<q-control-wrapper
+												v-show="controls.C_USAGE_COMPOWNUSE___.isVisible"
+												class="${Vue.GetControlWrapperClass($controlsColumn)}">
 												<base-input-structure
-													v-if="controls.C_USAGE_COMPOWNUSE___.isVisible"
 													class="i-textarea"
 													v-bind="controls.C_USAGE_COMPOWNUSE___"
 													v-on="controls.C_USAGE_COMPOWNUSE___.handlers"
@@ -428,41 +410,24 @@
 														v-bind="controls.C_USAGE_COMPOWNUSE___.props"
 														v-on="controls.C_USAGE_COMPOWNUSE___.handlers" />
 												</base-input-structure>
-											</q-col>
-										</q-row>
-										<q-row v-if="controls.C_USAGE_PSEUDNEWGRP01.isVisible">
-											<q-col v-if="controls.C_USAGE_PSEUDNEWGRP01.isVisible">
+											</q-control-wrapper>
+										</q-row-container>
+										<q-row-container
+											v-show="controls.C_USAGE_PSEUDNEWGRP01.isVisible"
+											is-large>
+											<q-control-wrapper
+												v-show="controls.C_USAGE_PSEUDNEWGRP01.isVisible"
+												class="${Vue.GetControlWrapperClass($controlsColumn)}">
 												<q-group-box-container
-													v-if="controls.C_USAGE_PSEUDNEWGRP01.isVisible"
 													id="C_USAGE_PSEUDNEWGRP01"
 													v-bind="controls.C_USAGE_PSEUDNEWGRP01"
 													:is-visible="controls.C_USAGE_PSEUDNEWGRP01.isVisible">
 													<!-- Start C_USAGE_PSEUDNEWGRP01 -->
-													<q-row v-if="controls.C_USAGE__PSEUD__STORYBOOKUSA.isVisible || controls.C_USAGE_PSEUDDEMOCOMP.isVisible">
-														<q-col
-															v-if="controls.C_USAGE__PSEUD__STORYBOOKUSA.isVisible"
-															cols="auto">
+													<q-row-container v-show="controls.C_USAGE_PSEUDDEMOCOMP.isVisible">
+														<q-control-wrapper
+															v-show="controls.C_USAGE_PSEUDDEMOCOMP.isVisible"
+															class="${Vue.GetControlWrapperClass($controlsColumn)}">
 															<base-input-structure
-																v-if="controls.C_USAGE__PSEUD__STORYBOOKUSA.isVisible"
-																class="i-button"
-																v-bind="controls.C_USAGE__PSEUD__STORYBOOKUSA"
-																v-on="controls.C_USAGE__PSEUD__STORYBOOKUSA.handlers"
-																:loading="controls.C_USAGE__PSEUD__STORYBOOKUSA.props.loading"
-																:reporting-mode-on="reportingModeCAV"
-																:suggestion-mode-on="suggestionModeOn">
-																<q-button
-																	v-if="controls.C_USAGE__PSEUD__STORYBOOKUSA.isVisible"
-																	v-bind="controls.C_USAGE__PSEUD__STORYBOOKUSA.props"
-																	@click="controls.C_USAGE__PSEUD__STORYBOOKUSA.action($event)">
-																	<q-icon v-bind="controls.C_USAGE__PSEUD__STORYBOOKUSA.icon" />
-																</q-button>
-															</base-input-structure>
-														</q-col>
-														<q-col
-															v-if="controls.C_USAGE_PSEUDDEMOCOMP.isVisible"
-															cols="auto">
-															<base-input-structure
-																v-if="controls.C_USAGE_PSEUDDEMOCOMP.isVisible"
 																class="i-button"
 																v-bind="controls.C_USAGE_PSEUDDEMOCOMP"
 																v-on="controls.C_USAGE_PSEUDDEMOCOMP.handlers"
@@ -471,17 +436,19 @@
 																:suggestion-mode-on="suggestionModeOn">
 																<q-button
 																	v-if="controls.C_USAGE_PSEUDDEMOCOMP.isVisible"
-																	v-bind="controls.C_USAGE_PSEUDDEMOCOMP.props"
+																	id="C_USAGE_PSEUDDEMOCOMP"
+																	:label="controls.C_USAGE_PSEUDDEMOCOMP.label"
+																	:disabled="controls.C_USAGE_PSEUDDEMOCOMP.isBlocked"
 																	@click="controls.C_USAGE_PSEUDDEMOCOMP.action($event)">
 																	<q-icon v-bind="controls.C_USAGE_PSEUDDEMOCOMP.icon" />
 																</q-button>
 															</base-input-structure>
-														</q-col>
-													</q-row>
+														</q-control-wrapper>
+													</q-row-container>
 													<!-- End C_USAGE_PSEUDNEWGRP01 -->
 												</q-group-box-container>
-											</q-col>
-										</q-row>
+											</q-control-wrapper>
+										</q-row-container>
 									</div>
 								</section>
 								<section
@@ -491,12 +458,11 @@
 										id="COMPTYPEPSEUDCACESSI_"
 										role="tabpanel"
 										aria-labelledby="tab-container-COMPTYPEPSEUDCACESSI_">
-										<q-row v-if="controls.CACESSI_COMPOACCESSIB.isVisible">
-											<q-col
-												v-if="controls.CACESSI_COMPOACCESSIB.isVisible"
-												cols="auto">
+										<q-row-container v-show="controls.CACESSI_COMPOACCESSIB.isVisible">
+											<q-control-wrapper
+												v-show="controls.CACESSI_COMPOACCESSIB.isVisible"
+												class="${Vue.GetControlWrapperClass($controlsColumn)}">
 												<base-input-structure
-													v-if="controls.CACESSI_COMPOACCESSIB.isVisible"
 													class="i-textarea"
 													v-bind="controls.CACESSI_COMPOACCESSIB"
 													v-on="controls.CACESSI_COMPOACCESSIB.handlers"
@@ -508,16 +474,63 @@
 														v-bind="controls.CACESSI_COMPOACCESSIB.props"
 														v-on="controls.CACESSI_COMPOACCESSIB.handlers" />
 												</base-input-structure>
-											</q-col>
-										</q-row>
+											</q-control-wrapper>
+										</q-row-container>
+									</div>
+								</section>
+								<section
+									v-if="controls.COMPTYPE__PSEUD__CONFIGCOMP.isVisible"
+									v-show="controls.formTabs.selectedTab === 'COMPTYPE__PSEUD__CONFIGCOMP'">
+									<div
+										id="COMPTYPE__PSEUD__CONFIGCOMP"
+										role="tabpanel"
+										aria-labelledby="tab-container-COMPTYPE__PSEUD__CONFIGCOMP">
+										<q-row-container v-show="controls.CONFIGCOMP__COMPO__RELEASELOGIC.isVisible">
+											<q-control-wrapper
+												v-show="controls.CONFIGCOMP__COMPO__RELEASELOGIC.isVisible"
+												class="${Vue.GetControlWrapperClass($controlsColumn)}">
+												<base-input-structure
+													class="i-checkbox"
+													v-bind="controls.CONFIGCOMP__COMPO__RELEASELOGIC"
+													v-on="controls.CONFIGCOMP__COMPO__RELEASELOGIC.handlers"
+													:loading="controls.CONFIGCOMP__COMPO__RELEASELOGIC.props.loading"
+													:reporting-mode-on="reportingModeCAV"
+													:suggestion-mode-on="suggestionModeOn">
+													<template #label>
+														<q-checkbox-input
+															v-if="controls.CONFIGCOMP__COMPO__RELEASELOGIC.isVisible"
+															v-bind="controls.CONFIGCOMP__COMPO__RELEASELOGIC.props"
+															v-on="controls.CONFIGCOMP__COMPO__RELEASELOGIC.handlers" />
+													</template>
+												</base-input-structure>
+											</q-control-wrapper>
+										</q-row-container>
+										<q-row-container v-show="controls.CONFIGCOMP__COMPO__WEBLINK.isVisible">
+											<q-control-wrapper
+												v-show="controls.CONFIGCOMP__COMPO__WEBLINK.isVisible"
+												class="${Vue.GetControlWrapperClass($controlsColumn)}">
+												<base-input-structure
+													class="i-text"
+													v-bind="controls.CONFIGCOMP__COMPO__WEBLINK"
+													v-on="controls.CONFIGCOMP__COMPO__WEBLINK.handlers"
+													:loading="controls.CONFIGCOMP__COMPO__WEBLINK.props.loading"
+													:reporting-mode-on="reportingModeCAV"
+													:suggestion-mode-on="suggestionModeOn">
+													<q-text-field
+														v-bind="controls.CONFIGCOMP__COMPO__WEBLINK.props"
+														@blur="onBlur(controls.CONFIGCOMP__COMPO__WEBLINK, model.ValWeblink.value)"
+														@change="model.ValWeblink.fnUpdateValueOnChange" />
+												</base-input-structure>
+											</q-control-wrapper>
+										</q-row-container>
 									</div>
 								</section>
 							</template>
 						</q-tab-container>
-					</q-col>
-				</q-row>
+					</q-control-wrapper>
+				</q-row-container>
 			</template>
-		</q-container>
+		</div>
 	</teleport>
 
 	<hr v-if="!isPopup && showFormFooter" />
@@ -526,7 +539,7 @@
 		v-if="formModalIsReady && showFormFooter"
 		:to="`#${uiContainersId.footer}`"
 		:disabled="!isPopup || isNested">
-		<q-row v-if="showFormFooter">
+		<q-row-container v-if="showFormFooter">
 			<div id="footer-action-btns">
 				<template
 					v-for="btn in formButtons"
@@ -535,7 +548,6 @@
 						v-if="btn.isActive && btn.isVisible && btn.showInFooter"
 						:id="`bottom-${btn.id}`"
 						:label="btn.text"
-						:color="btn.color"
 						:variant="btn.variant"
 						:disabled="btn.disabled"
 						:icon-pos="btn.iconPos"
@@ -547,12 +559,12 @@
 					</q-button>
 				</template>
 			</div>
-		</q-row>
+		</q-row-container>
 	</teleport>
 </template>
 
 <script>
-	/* eslint-disable @typescript-eslint/no-unused-vars */
+	/* eslint-disable no-unused-vars */
 	import { computed, defineAsyncComponent, readonly } from 'vue'
 	import { useRoute } from 'vue-router'
 
@@ -572,7 +584,7 @@
 	import qApi from '@/api/genio/quidgestFunctions.js'
 	import qFunctions from '@/api/genio/projectFunctions.js'
 	import qProjArrays from '@/api/genio/projectArrays.js'
-	/* eslint-enable @typescript-eslint/no-unused-vars */
+	/* eslint-enable no-unused-vars */
 
 	import FormViewModel from './QFormComptypeViewModel.js'
 
@@ -650,8 +662,7 @@
 					primaryKey: 'ValCodcompo',
 					designation: computed(() => genericFunctions.formatString(this.Resources._COMPO__COMPTYPE_37230, vm.model.ValComptype.displayValue)),
 					identifier: '', // Unique identifier received by route (when it's nested).
-					mode: '',
-					availableAgents: [],
+					mode: ''
 				},
 
 				formButtons: {
@@ -759,11 +770,7 @@
 						showInFooter: true,
 						isActive: true,
 						isVisible: computed(() => vm.authData.isAllowed && vm.isEditable),
-						action: vm.saveForm,
-						badge: {
-							isVisible: computed(() => vm.model?.isDirty === true),
-							color: 'highlight'
-						}
+						action: vm.saveForm
 					},
 					confirmBtn: {
 						id: 'confirm-btn',
@@ -887,6 +894,7 @@
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'COMPTYPEPSEUDNEWGRP01',
 						maxLength: 50,
+						labelId: 'label_COMPTYPECOMPOCOMPTYPE',
 						controlLimits: [
 						],
 					}, this),
@@ -904,8 +912,8 @@
 						maxIntegers: 1,
 						maxDecimals: 0,
 						arrayName: 'componenticons',
-						helpShortItem: '',
-						helpDetailedItem: '',
+						helpShortItem: 'None',
+						helpDetailedItem: 'None',
 						controlLimits: [
 						],
 					}, this),
@@ -968,6 +976,33 @@
 						controlLimits: [
 						],
 					}, this),
+					COMPTYPE__PSEUD__CONFIGCOMP: new fieldControlClass.TabControl({
+						id: 'COMPTYPE__PSEUD__CONFIGCOMP',
+						name: 'CONFIGCOMP',
+						size: 'medium',
+						label: computed(() => this.Resources.CONFIGURATIONS33663),
+						placeholder: '',
+						labelPosition: computed(() => this.labelAlignment.topleft),
+						directChildren: ['CONFIGCOMP__COMPO__RELEASELOGIC', 'CONFIGCOMP__COMPO__WEBLINK'],
+						controlLimits: [
+						],
+						showWhen: {
+							// eslint-disable-next-line no-unused-vars
+							fnFormula(params)
+							{
+								return netAPI.postData(
+									'Compo',
+									'COMPTYPE_COMPTYPE__PSEUD__CONFIGCOMP_ShowWhen',
+									this.serverObjModel,
+									undefined,
+									undefined,
+									undefined,
+									this.navigationId)
+							},
+							dependencyEvents: [],
+							isServerRecalc: false,
+						},
+					}, this),
 					COMPTAB_COMPCCOMPCLAS: new fieldControlClass.LookupControl({
 						modelField: 'TableCompcCompclas',
 						valueChangeEvent: 'fieldChange:compc.compclas',
@@ -1008,6 +1043,7 @@
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						tab: 'COMPTYPEPSEUDCOMPTAB_',
 						maxLength: 50,
+						labelId: 'label_COMPTAB_COMPOCOMPTYPE',
 						controlLimits: [
 						],
 					}, this),
@@ -1022,10 +1058,11 @@
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						tab: 'COMPTYPEPSEUDCOMPTAB_',
 						maxLength: 50,
+						labelId: 'label_COMPTAB_COMPOCDATATYP',
 						controlLimits: [
 						],
 					}, this),
-					COMPTAB_COMPORELEASE_: new fieldControlClass.MaskControl({
+					COMPTAB_COMPORELEASE_: new fieldControlClass.StringControl({
 						modelField: 'ValRelease',
 						valueChangeEvent: 'fieldChange:compo.release',
 						id: 'COMPTAB_COMPORELEASE_',
@@ -1035,16 +1072,27 @@
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						tab: 'COMPTYPEPSEUDCOMPTAB_',
-						maxLength: 6,
+						maxLength: 50,
+						labelId: 'label_COMPTAB_COMPORELEASE_',
 						controlLimits: [
 						],
+						showWhen: {
+							// eslint-disable-next-line no-unused-vars
+							fnFormula(params)
+							{
+								// Formula: [COMPO->RELEASELOGIC]== 1
+								return (this.ValReleaselogic.value ? 1 : 0)===1
+							},
+							dependencyEvents: ['fieldChange:compo.releaselogic'],
+							isServerRecalc: false,
+						},
 					}, this),
 					COMPTAB_COMPOMVC_____: new fieldControlClass.BooleanControl({
 						modelField: 'ValMvc',
 						valueChangeEvent: 'fieldChange:compo.mvc',
 						id: 'COMPTAB_COMPOMVC_____',
 						name: 'MVC',
-						size: 'mini',
+						size: 'xxlarge',
 						label: computed(() => this.Resources.MVC48022),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.right),
@@ -1057,7 +1105,7 @@
 						valueChangeEvent: 'fieldChange:compo.vuemvc',
 						id: 'COMPTAB_COMPOVUEMVC__',
 						name: 'VUEMVC',
-						size: 'mini',
+						size: 'xxlarge',
 						label: computed(() => this.Resources.VUE05393),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.right),
@@ -1076,7 +1124,7 @@
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						tab: 'COMPTYPEPSEUDCOMPTAB_',
 						height: 400,
-						width: 450,
+						width: 600,
 						dataTitle: computed(() => genericFunctions.formatString(vm.Resources.IMAGEM_UTILIZADA_PAR17299, vm.Resources.PREVIEW45357)),
 						maxFileSize: 10485760, // In bytes.
 						maxFileSizeLabel: '10 MB',
@@ -1086,22 +1134,27 @@
 					COMPTAB__PSEUD__STORYBOOK: new fieldControlClass.ButtonControl({
 						id: 'COMPTAB__PSEUD__STORYBOOK',
 						name: 'STORYBOOK',
+						size: 'small',
 						hasLabel: false,
 						label: computed(() => this.Resources.STORYBOOK40103),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						tab: 'COMPTYPEPSEUDCOMPTAB_',
 						icon: {
-							icon: computed(() => `${this.$app.resourcesPath}Storybook-icon.png?v=3096`),
+							icon: computed(() => `${this.$app.resourcesPath}Storybook-icon.png?v=3637`),
 							type: 'img',
 							role: 'presentation',
 						},
 						// eslint-disable-next-line
 						action: (event) => {
-							const btnAction = () => {
-								window.open('https://ui.quidgest.pt/?path=/docs/introduction-welcome--docs', '_blank')
+							let btnAction = () => {
+								vm.Comptab_ValOpenurl_BR_OPENURL(vm.primaryKeyValue)
 							}
-							btnAction()
+							let options = {
+								form: 'COMPTYPE',
+								callback: btnAction
+							}
+							vm.$eventHub.emit('form-apply', options)
 						},
 						controlLimits: [
 						],
@@ -1128,7 +1181,6 @@
 								dataLength: 8,
 								scrollData: 8,
 								isVisible: false,
-								export: 1,
 								pkColumn: 'ValCodcompo',
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
@@ -1139,7 +1191,6 @@
 								label: computed(() => this.Resources.INTERACTION46097),
 								dataLength: 50,
 								scrollData: 30,
-								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 3,
@@ -1148,7 +1199,6 @@
 								field: 'CMPBEHAV',
 								label: computed(() => this.Resources.BEHAVIOR47966),
 								scrollData: 30,
-								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 						],
 						config: {
@@ -1164,7 +1214,8 @@
 							permissions: {
 							},
 							searchBarConfig: {
-								visibility: false
+								visibility: false,
+								searchOnPressEnter: true
 							},
 							filtersVisible: false,
 							allowColumnFilters: false,
@@ -1322,7 +1373,6 @@
 								label: computed(() => this.Resources.VARIANT06375),
 								dataLength: 50,
 								scrollData: 30,
-								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 2,
@@ -1331,7 +1381,6 @@
 								field: 'VARIDESC',
 								label: computed(() => this.Resources.DESCRIPTION07383),
 								scrollData: 30,
-								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 						],
 						config: {
@@ -1347,7 +1396,8 @@
 							permissions: {
 							},
 							searchBarConfig: {
-								visibility: false
+								visibility: false,
+								searchOnPressEnter: true
 							},
 							filtersVisible: false,
 							allowColumnFilters: false,
@@ -1524,37 +1574,14 @@
 						tab: 'COMPTYPEPSEUDC_USAGE_',
 						isCollapsible: false,
 						anchored: false,
-						directChildren: ['C_USAGE__PSEUD__STORYBOOKUSA', 'C_USAGE_PSEUDDEMOCOMP'],
-						controlLimits: [
-						],
-					}, this),
-					C_USAGE__PSEUD__STORYBOOKUSA: new fieldControlClass.ButtonControl({
-						id: 'C_USAGE__PSEUD__STORYBOOKUSA',
-						name: 'STORYBOOKUSA',
-						hasLabel: false,
-						label: computed(() => this.Resources.STORYBOOK40103),
-						placeholder: '',
-						labelPosition: computed(() => this.labelAlignment.topleft),
-						container: 'C_USAGE_PSEUDNEWGRP01',
-						tab: 'COMPTYPEPSEUDC_USAGE_',
-						icon: {
-							icon: computed(() => `${this.$app.resourcesPath}Storybook-icon.png?v=3096`),
-							type: 'img',
-							role: 'presentation',
-						},
-						// eslint-disable-next-line
-						action: (event) => {
-							const btnAction = () => {
-								window.open('https://ui.quidgest.pt/?path=/docs/introduction-welcome--docs', '_blank')
-							}
-							btnAction()
-						},
+						directChildren: ['C_USAGE_PSEUDDEMOCOMP'],
 						controlLimits: [
 						],
 					}, this),
 					C_USAGE_PSEUDDEMOCOMP: new fieldControlClass.ButtonControl({
 						id: 'C_USAGE_PSEUDDEMOCOMP',
 						name: 'DEMOCOMP',
+						size: 'mini',
 						hasLabel: false,
 						label: computed(() => this.Resources.DEMO_107013),
 						placeholder: '',
@@ -1568,8 +1595,8 @@
 						},
 						// eslint-disable-next-line
 						action: (event) => {
-							const btnAction = () => {
-								window.open('https://geniodoc.quidgest.net/more/interface/ui-elements', '_blank')
+							let btnAction = () => {
+								window.open('https://ui.quidgest.pt/?path=/docs/components-accordion--docs', '_blank')
 							}
 							btnAction()
 						},
@@ -1591,13 +1618,41 @@
 						controlLimits: [
 						],
 					}, this),
+					CONFIGCOMP__COMPO__RELEASELOGIC: new fieldControlClass.BooleanControl({
+						modelField: 'ValReleaselogic',
+						valueChangeEvent: 'fieldChange:compo.releaselogic',
+						id: 'CONFIGCOMP__COMPO__RELEASELOGIC',
+						name: 'RELEASELOGIC',
+						size: 'xxlarge',
+						label: computed(() => this.Resources.SHOW_RELEASE_FIELD40778),
+						placeholder: '',
+						labelPosition: computed(() => this.$app.layout.CheckboxLabelAlignment),
+						tab: 'COMPTYPE__PSEUD__CONFIGCOMP',
+						controlLimits: [
+						],
+					}, this),
+					CONFIGCOMP__COMPO__WEBLINK: new fieldControlClass.StringControl({
+						modelField: 'ValWeblink',
+						valueChangeEvent: 'fieldChange:compo.weblink',
+						id: 'CONFIGCOMP__COMPO__WEBLINK',
+						name: 'WEBLINK',
+						size: 'xxlarge',
+						label: computed(() => this.Resources.STORYBOOK_LINK23554),
+						placeholder: '',
+						labelPosition: computed(() => this.labelAlignment.topleft),
+						tab: 'COMPTYPE__PSEUD__CONFIGCOMP',
+						maxLength: 100,
+						labelId: 'label_CONFIGCOMP__COMPO__WEBLINK',
+						controlLimits: [
+						],
+					}, this),
 					formTabs: new fieldControlClass.TabsControl({
-						id: 'formTabs',
 						tabControlsIds: readonly([
 							'COMPTYPEPSEUDCOMPTAB_',
 							'COMPTYPEPSEUDTAB_____',
 							'COMPTYPEPSEUDC_USAGE_',
 							'COMPTYPEPSEUDCACESSI_',
+							'COMPTYPE__PSEUD__CONFIGCOMP',
 						])
 					}, this),
 				},
@@ -1616,6 +1671,7 @@
 					'COMPTYPEPSEUDC_USAGE_',
 					'C_USAGE_PSEUDNEWGRP01',
 					'COMPTYPEPSEUDCACESSI_',
+					'COMPTYPE__PSEUD__CONFIGCOMP',
 				]),
 
 				tableFields: readonly([
@@ -1653,8 +1709,12 @@
 						set ValPreview(value) { vm.model.ValPreview.updateValue(value) },
 						get ValRelease() { return vm.model.ValRelease.value },
 						set ValRelease(value) { vm.model.ValRelease.updateValue(value) },
+						get ValReleaselogic() { return vm.model.ValReleaselogic.value },
+						set ValReleaselogic(value) { vm.model.ValReleaselogic.updateValue(value) },
 						get ValVuemvc() { return vm.model.ValVuemvc.value },
 						set ValVuemvc(value) { vm.model.ValVuemvc.updateValue(value) },
+						get ValWeblink() { return vm.model.ValWeblink.value },
+						set ValWeblink(value) { vm.model.ValWeblink.updateValue(value) },
 						get ValWnuse() { return vm.model.ValWnuse.value },
 						set ValWnuse(value) { vm.model.ValWnuse.updateValue(value) },
 						get ValWuse() { return vm.model.ValWuse.value },
@@ -1709,23 +1769,17 @@
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 		},
 
-		beforeUnmount()
-		{
-/* eslint-disable indent, vue/html-indent, vue/script-indent */
-// USE /[MANUAL GQT COMPONENT_BEFORE_UNMOUNT COMPTYPE]/
-// eslint-disable-next-line
-/* eslint-enable indent, vue/html-indent, vue/script-indent */
-		},
-
 		methods: {
 			/**
 			 * Called before form init.
 			 */
 			async beforeLoad()
 			{
+				let loadForm = true
+
 				// Execute the "Before init" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.beforeInit)
-				for (const trigger of triggers)
+				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
 				this.emitEvent('before-load-form')
@@ -1735,7 +1789,7 @@
 // eslint-disable-next-line
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 
-				return true
+				return loadForm
 			},
 
 			/**
@@ -1745,7 +1799,7 @@
 			{
 				// Execute the "After init" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.afterInit)
-				for (const trigger of triggers)
+				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
 				this.emitEvent('after-load-form')
@@ -1765,33 +1819,19 @@
 
 				// Execute the "Before apply" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.beforeApply)
-				for (const trigger of triggers)
+				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
-				const ticketsPromise = this.model.updateFilesTickets(true)
-				this.addBusy(ticketsPromise, this.Resources[hardcodedTexts.processing])
-				const canSetDocums = await ticketsPromise
+				const canSetDocums = await this.model.updateFilesTickets(true)
 
 				if (canSetDocums)
 				{
-					let results
-					const changesPromise = this.model.setDocumentChanges()
-					this.addBusy(changesPromise, this.Resources[hardcodedTexts.processing])
-					applyForm = await changesPromise
+					applyForm = await this.model.setDocumentChanges()
 
 					if (applyForm)
 					{
-						const insertsPromise = this.model.saveDocuments()
-						this.addBusy(insertsPromise, this.Resources[hardcodedTexts.processing])
-						results = await insertsPromise
+						const results = await this.model.saveDocuments()
 						applyForm = results.every((e) => e === true)
-					}
-
-					if (!changesPromise || (results && !results.every((e) => e === true)))
-					{
-						this.validationErrors = {
-							Erro: this.Resources.OCORREU_UM_ERRO_AO_T51884
-						}
 					}
 				}
 
@@ -1812,7 +1852,7 @@
 			{
 				// Execute the "After apply" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.afterApply)
-				for (const trigger of triggers)
+				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
 				this.emitEvent('after-apply-form')
@@ -1832,33 +1872,19 @@
 
 				// Execute the "Before save" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.beforeSave)
-				for (const trigger of triggers)
+				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
-				const ticketsPromise = this.model.updateFilesTickets()
-				this.addBusy(ticketsPromise, this.Resources[hardcodedTexts.processing])
-				const canSetDocums = await ticketsPromise
+				const canSetDocums = await this.model.updateFilesTickets()
 
 				if (canSetDocums)
 				{
-					let results
-					const changesPromise = this.model.setDocumentChanges()
-					this.addBusy(changesPromise, this.Resources[hardcodedTexts.processing])
-					saveForm = await changesPromise
+					saveForm = await this.model.setDocumentChanges()
 
 					if (saveForm)
 					{
-						const insertsPromise = this.model.saveDocuments()
-						this.addBusy(insertsPromise, this.Resources[hardcodedTexts.processing])
-						results = await insertsPromise
+						const results = await this.model.saveDocuments()
 						saveForm = results.every((e) => e === true)
-					}
-
-					if (!changesPromise || (results && !results.every((e) => e === true)))
-					{
-						this.validationErrors = {
-							Erro: this.Resources.OCORREU_UM_ERRO_AO_T51884
-						}
 					}
 				}
 
@@ -1877,9 +1903,11 @@
 			 */
 			async afterSave()
 			{
+				let redirectPage = true // Set to 'false' to cancel page redirect.
+
 				// Execute the "After save" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.afterSave)
-				for (const trigger of triggers)
+				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
 				this.emitEvent('after-save-form')
@@ -1889,7 +1917,7 @@
 // eslint-disable-next-line
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 
-				return true
+				return redirectPage
 			},
 
 			/**
@@ -1897,6 +1925,8 @@
 			 */
 			async beforeDel()
 			{
+				let deleteForm = true // Set to 'false' to cancel form delete.
+
 				this.emitEvent('before-delete-form')
 
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
@@ -1904,7 +1934,7 @@
 // eslint-disable-next-line
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 
-				return true
+				return deleteForm
 			},
 
 			/**
@@ -1912,6 +1942,8 @@
 			 */
 			async afterDel()
 			{
+				let redirectPage = true // Set to 'false' to cancel page redirect.
+
 				this.emitEvent('after-delete-form')
 
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
@@ -1919,7 +1951,7 @@
 // eslint-disable-next-line
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 
-				return true
+				return redirectPage
 			},
 
 			/**
@@ -1927,9 +1959,11 @@
 			 */
 			async beforeExit()
 			{
+				let leaveForm = true // Set to 'false' to cancel page redirect.
+
 				// Execute the "Before exit" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.beforeExit)
-				for (const trigger of triggers)
+				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
 				this.emitEvent('before-exit-form')
@@ -1939,7 +1973,7 @@
 // eslint-disable-next-line
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 
-				return true
+				return leaveForm
 			},
 
 			/**
@@ -1949,7 +1983,7 @@
 			{
 				// Execute the "After exit" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.afterExit)
-				for (const trigger of triggers)
+				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
 				this.emitEvent('after-exit-form')
@@ -2011,6 +2045,30 @@
 				this.afterControlUpdate(controlField, fieldValue)
 			},
 
+			// eslint-disable-next-line
+			Comptab_BR_OPENURL(jsonRouteValues)
+			{
+				this.$eventTracker.addTrace({
+					origin: 'Routine OPENURL',
+					message: 'Start of execution of the manual routine'
+				})
+
+/* eslint-disable indent, vue/html-indent, vue/script-indent */
+//Platform: VUE | Type: VIEW_MANUAL_ROUTINE | Module: GQT | Parameter: OPENURL | File:  | Order: 0
+//BEGIN_MANUALCODE_CODMANUA:4b177ef1-c7c6-4351-bc8d-0eb171177896
+                    if (qApi.emptyC(this.model.ValWeblink.value) === 0)
+                        window.open(this.model.ValWeblink.value, '_blank')
+//END_MANUALCODE
+// eslint-disable-next-line
+/* eslint-enable indent, vue/html-indent, vue/script-indent */
+			},
+
+			Comptab_ValOpenurl_BR_OPENURL(id, fnAfterConfirm)
+			{
+				const jsonRouteValues = { id }
+				jsonRouteValues.action = 'Comptab_ValOpenurl_BR_OPENURL'
+				this.Comptab_BR_OPENURL(jsonRouteValues, fnAfterConfirm)
+			},
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
 // USE /[MANUAL GQT FUNCTIONS_JS COMPTYPE]/
 // eslint-disable-next-line
@@ -2018,6 +2076,18 @@
 		},
 
 		watch: {
+			// Watchers for changes in the state of tabs.
+			'controls.formTabs.selectedTab'(newVal)
+			{
+				const data = {
+					navigationId: this.navigationId,
+					key: this.storeKey,
+					formInfo: this.formInfo,
+					fieldId: 'formTabs',
+					containerState: newVal
+				}
+				this.storeContainerState(data)
+			},
 		}
 	}
 </script>

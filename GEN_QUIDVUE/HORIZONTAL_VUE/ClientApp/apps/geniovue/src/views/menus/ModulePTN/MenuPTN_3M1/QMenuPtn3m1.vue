@@ -10,12 +10,10 @@
 				<q-table
 					v-bind="controls.menu"
 					v-on="controls.menu.handlers">
-					<!-- USE /[MANUAL GQT CUSTOM_TABLE PTN_Menu_3M1]/ -->
 				</q-table>
 
 				<q-table-extra-extension
 					:list-ctrl="controls.menu"
-					:filter-operators="controls.menu.filterOperators"
 					v-on="controls.menu.handlers" />
 			</q-row-container>
 		</form>
@@ -50,7 +48,7 @@
 </template>
 
 <script>
-	/* eslint-disable @typescript-eslint/no-unused-vars */
+	/* eslint-disable no-unused-vars */
 	import asyncProcM from '@quidgest/clientapp/composables/async'
 	import qEnums from '@quidgest/clientapp/constants/enums'
 	import netAPI from '@quidgest/clientapp/network'
@@ -70,7 +68,7 @@
 	import qApi from '@/api/genio/quidgestFunctions.js'
 	import qFunctions from '@/api/genio/projectFunctions.js'
 	import qProjArrays from '@/api/genio/projectArrays.js'
-	/* eslint-enable @typescript-eslint/no-unused-vars */
+	/* eslint-enable no-unused-vars */
 
 	import MenuViewModel from './QMenuPTN_3M1ViewModel.js'
 
@@ -154,7 +152,6 @@
 								label: computed(() => this.Resources.NAME31974),
 								dataLength: 50,
 								scrollData: 30,
-								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.BooleanColumn({
 								order: 2,
@@ -165,7 +162,6 @@
 								label: computed(() => this.Resources.BOOLEAN45002),
 								scrollData: 1,
 								sortable: false,
-								export: 1,
 								pkColumn: 'ValCodtblb',
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.CurrencyColumn({
@@ -179,7 +175,6 @@
 								maxDigits: 5,
 								decimalPlaces: 4,
 								sortable: false,
-								export: 1,
 								pkColumn: 'ValCodtblb',
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.CurrencyColumn({
@@ -193,7 +188,6 @@
 								maxDigits: 7,
 								decimalPlaces: 2,
 								sortable: false,
-								export: 1,
 								pkColumn: 'ValCodtblb',
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.DateColumn({
@@ -206,7 +200,6 @@
 								scrollData: 8,
 								dateTimeType: 'date',
 								sortable: false,
-								export: 1,
 								pkColumn: 'ValCodtblb',
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.DateColumn({
@@ -219,7 +212,6 @@
 								scrollData: 16,
 								dateTimeType: 'dateTime',
 								sortable: false,
-								export: 1,
 								pkColumn: 'ValCodtblb',
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.DateColumn({
@@ -232,7 +224,6 @@
 								scrollData: 19,
 								dateTimeType: 'dateTimeSeconds',
 								sortable: false,
-								export: 1,
 								pkColumn: 'ValCodtblb',
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.ArrayColumn({
@@ -246,8 +237,7 @@
 								maxDigits: 1,
 								decimalPlaces: 0,
 								sortable: false,
-								export: 1,
-								array: computed(() => new qProjArrays.QArrayTypen(vm.$getResource).elements),
+								array: computed(() => qProjArrays.QArrayTypen.setResources(vm.$getResource).elements),
 								arrayType: qProjArrays.QArrayTypen.type,
 								pkColumn: 'ValCodtblb',
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
@@ -261,8 +251,7 @@
 								dataLength: 1,
 								scrollData: 1,
 								sortable: false,
-								export: 1,
-								array: computed(() => new qProjArrays.QArrayTypet(vm.$getResource).elements),
+								array: computed(() => qProjArrays.QArrayTypet.setResources(vm.$getResource).elements),
 								arrayType: qProjArrays.QArrayTypet.type,
 								pkColumn: 'ValCodtblb',
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
@@ -277,7 +266,6 @@
 								maxDigits: 6,
 								decimalPlaces: 3,
 								sortable: false,
-								export: 1,
 								pkColumn: 'ValCodtblb',
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.NumericColumn({
@@ -291,7 +279,6 @@
 								maxDigits: 10,
 								decimalPlaces: 0,
 								sortable: false,
-								export: 1,
 								pkColumn: 'ValCodtblb',
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
@@ -304,7 +291,6 @@
 								dataLength: 50,
 								scrollData: 30,
 								sortable: false,
-								export: 1,
 								pkColumn: 'ValCodtblb',
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
@@ -316,7 +302,6 @@
 								label: computed(() => this.Resources.MULTILINE_TEXT38013),
 								scrollData: 30,
 								sortable: false,
-								export: 1,
 								pkColumn: 'ValCodtblb',
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
@@ -330,7 +315,6 @@
 								scrollData: 5,
 								dateTimeType: 'time',
 								sortable: false,
-								export: 1,
 								pkColumn: 'ValCodtblb',
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 						],
@@ -348,7 +332,8 @@
 							permissions: {
 							},
 							searchBarConfig: {
-								visibility: true
+								visibility: true,
+								searchOnPressEnter: true
 							},
 							filtersVisible: true,
 							allowColumnFilters: true,
@@ -465,7 +450,6 @@
 						uuid: 'fa354599-4a30-4174-adb2-39d65e17489c',
 						allSelectedRows: 'false',
 						headerLevel: 1,
-						isActiveControl: computed(() => this.isActiveMenu)
 					}, this),
 				}
 			}
@@ -489,14 +473,6 @@
 		{
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
 // USE /[MANUAL GQT FORM_CODEJS PTN_MENU_3M1]/
-// eslint-disable-next-line
-/* eslint-enable indent, vue/html-indent, vue/script-indent */
-		},
-
-		beforeUnmount()
-		{
-/* eslint-disable indent, vue/html-indent, vue/script-indent */
-// USE /[MANUAL GQT COMPONENT_BEFORE_UNMOUNT PTN_MENU_3M1]/
 // eslint-disable-next-line
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 		},

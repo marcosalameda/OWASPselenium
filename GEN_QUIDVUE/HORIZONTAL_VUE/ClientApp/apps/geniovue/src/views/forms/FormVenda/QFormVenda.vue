@@ -9,13 +9,12 @@
 			<div
 				v-if="showFormHeader"
 				class="c-action-bar">
-				<component
+				<h1
 					v-if="formControl.uiComponents.header && formInfo.designation"
-					:is="topHeadingTag"
 					:id="formTitleId"
 					class="form-header">
 					{{ formInfo.designation }}
-				</component>
+				</h1>
 
 				<div class="c-action-bar__menu">
 					<template
@@ -39,13 +38,9 @@
 									:label="btn.label"
 									:disabled="btn.disabled"
 									@click="btn.action">
-									<template v-if="btn.icon">
-										<q-badge-indicator
-											:enabled="btn.badge?.isVisible ?? false"
-											:color="btn.badge?.color">
-											<q-icon v-bind="btn.icon" />
-										</q-badge-indicator>
-									</template>
+									<q-icon
+										v-if="btn.icon"
+										v-bind="btn.icon" />
 								</q-toggle-group-item>
 							</template>
 						</q-toggle-group>
@@ -57,7 +52,7 @@
 				v-if="$app.layout.FormAnchorsPosition === 'form-header' && visibleGroups.length > 0"
 				:anchors="anchorGroups"
 				:controls="visibleControls"
-				@focus-control="focusControl" />
+				@focus-control="(...args) => focusControl(...args)" />
 		</div>
 	</teleport>
 
@@ -78,7 +73,6 @@
 						v-if="btn.isActive && btn.isVisible && btn.showInHeading"
 						:id="`heading-${btn.id}`"
 						:label="btn.text"
-						:color="btn.color"
 						:variant="btn.variant"
 						:disabled="btn.disabled"
 						:icon-pos="btn.iconPos"
@@ -92,21 +86,18 @@
 			</q-button-group>
 		</div>
 
-		<q-container
-			fluid
+		<div
+			class="form-flow"
 			data-key="VENDA"
-			:data-identifier="primaryKeyValue"
-			:data-loading="!formInitialDataLoaded || !isActiveForm">
+			:data-loading="!formInitialDataLoaded">
 			<template v-if="formControl.initialized && showFormBody">
-				<q-row v-if="controls.VENDA___ORGANORGANIZA.isVisible">
-					<q-col
-						v-if="controls.VENDA___ORGANORGANIZA.isVisible"
-						cols="auto">
+				<q-row-container v-show="controls.VENDA___ORGANORGANIZA.isVisible">
+					<q-control-wrapper
+						v-show="controls.VENDA___ORGANORGANIZA.isVisible"
+						class="${Vue.GetControlWrapperClass($controlsColumn)}">
 						<base-input-structure
-							v-if="controls.VENDA___ORGANORGANIZA.isVisible"
 							class="i-text"
-							v-bind="controls.VENDA___ORGANORGANIZA.wrapperProps"
-							:id="getControlId(controls.VENDA___ORGANORGANIZA)"
+							v-bind="controls.VENDA___ORGANORGANIZA"
 							v-on="controls.VENDA___ORGANORGANIZA.handlers"
 							:loading="controls.VENDA___ORGANORGANIZA.props.loading"
 							:reporting-mode-on="reportingModeCAV"
@@ -114,24 +105,21 @@
 							<q-lookup
 								v-if="controls.VENDA___ORGANORGANIZA.isVisible"
 								v-bind="controls.VENDA___ORGANORGANIZA.props"
-								:id="getControlId(controls.VENDA___ORGANORGANIZA)"
 								v-on="controls.VENDA___ORGANORGANIZA.handlers" />
 							<q-see-more-venda-organorganiza
 								v-if="controls.VENDA___ORGANORGANIZA.seeMoreIsVisible"
 								v-bind="controls.VENDA___ORGANORGANIZA.seeMoreParams"
 								v-on="controls.VENDA___ORGANORGANIZA.handlers" />
 						</base-input-structure>
-					</q-col>
-				</q-row>
-				<q-row v-if="controls.VENDA___SALE_NRLIDE__.isVisible || controls.VENDA___SALE_STARTDT_.isVisible">
-					<q-col
-						v-if="controls.VENDA___SALE_NRLIDE__.isVisible"
-						cols="auto">
+					</q-control-wrapper>
+				</q-row-container>
+				<q-row-container v-show="controls.VENDA___SALE_NRLIDE__.isVisible || controls.VENDA___SALE_STARTDT_.isVisible">
+					<q-control-wrapper
+						v-show="controls.VENDA___SALE_NRLIDE__.isVisible"
+						class="${Vue.GetControlWrapperClass($controlsColumn)}">
 						<base-input-structure
-							v-if="controls.VENDA___SALE_NRLIDE__.isVisible"
 							class="i-text"
-							v-bind="controls.VENDA___SALE_NRLIDE__.wrapperProps"
-							:id="getControlId(controls.VENDA___SALE_NRLIDE__)"
+							v-bind="controls.VENDA___SALE_NRLIDE__"
 							v-on="controls.VENDA___SALE_NRLIDE__.handlers"
 							:loading="controls.VENDA___SALE_NRLIDE__.props.loading"
 							:reporting-mode-on="reportingModeCAV"
@@ -139,18 +127,15 @@
 							<q-numeric-input
 								v-if="controls.VENDA___SALE_NRLIDE__.isVisible"
 								v-bind="controls.VENDA___SALE_NRLIDE__.props"
-								:id="getControlId(controls.VENDA___SALE_NRLIDE__)"
 								@update:model-value="model.ValNrlide.fnUpdateValue" />
 						</base-input-structure>
-					</q-col>
-					<q-col
-						v-if="controls.VENDA___SALE_STARTDT_.isVisible"
-						cols="auto">
+					</q-control-wrapper>
+					<q-control-wrapper
+						v-show="controls.VENDA___SALE_STARTDT_.isVisible"
+						class="${Vue.GetControlWrapperClass($controlsColumn)}">
 						<base-input-structure
-							v-if="controls.VENDA___SALE_STARTDT_.isVisible"
 							class="i-text"
-							v-bind="controls.VENDA___SALE_STARTDT_.wrapperProps"
-							:id="getControlId(controls.VENDA___SALE_STARTDT_)"
+							v-bind="controls.VENDA___SALE_STARTDT_"
 							v-on="controls.VENDA___SALE_STARTDT_.handlers"
 							:loading="controls.VENDA___SALE_STARTDT_.props.loading"
 							:reporting-mode-on="reportingModeCAV"
@@ -158,166 +143,151 @@
 							<q-date-time-picker
 								v-if="controls.VENDA___SALE_STARTDT_.isVisible"
 								v-bind="controls.VENDA___SALE_STARTDT_.props"
-								:id="getControlId(controls.VENDA___SALE_STARTDT_)"
 								:model-value="model.ValStartdt.value"
 								@reset-icon-click="model.ValStartdt.fnUpdateValue(model.ValStartdt.originalValue ?? new Date())"
 								@update:model-value="model.ValStartdt.fnUpdateValue($event ?? '')" />
 						</base-input-structure>
-					</q-col>
-				</q-row>
-				<q-row v-if="controls.VENDA___PSEUDNOVOGR01.isVisible">
-					<q-col v-if="controls.VENDA___PSEUDNOVOGR01.isVisible">
+					</q-control-wrapper>
+				</q-row-container>
+				<q-row-container
+					v-show="controls.VENDA___PSEUDNOVOGR01.isVisible"
+					is-large>
+					<q-control-wrapper
+						v-show="controls.VENDA___PSEUDNOVOGR01.isVisible"
+						class="${Vue.GetControlWrapperClass($controlsColumn)}">
 						<q-group-box-container
-							v-if="controls.VENDA___PSEUDNOVOGR01.isVisible"
+							id="VENDA___PSEUDNOVOGR01"
 							v-bind="controls.VENDA___PSEUDNOVOGR01"
-							:id="getControlId(controls.VENDA___PSEUDNOVOGR01)"
-							:no-border="controls.VENDA___PSEUDNOVOGR01.borderless">
+							:is-visible="controls.VENDA___PSEUDNOVOGR01.isVisible">
 							<!-- Start VENDA___PSEUDNOVOGR01 -->
-							<q-row v-if="controls.VENDA___SALE_IDENTIFI.isVisible || controls.VENDA___SALE_POTCOMPR.isVisible || controls.VENDA___SALE_PROSPECC.isVisible">
-								<q-col
-									v-if="controls.VENDA___SALE_IDENTIFI.isVisible"
-									cols="auto">
+							<q-row-container v-show="controls.VENDA___SALE_IDENTIFI.isVisible || controls.VENDA___SALE_POTCOMPR.isVisible || controls.VENDA___SALE_PROSPECC.isVisible">
+								<q-control-wrapper
+									v-show="controls.VENDA___SALE_IDENTIFI.isVisible"
+									class="${Vue.GetControlWrapperClass($controlsColumn)}">
 									<base-input-structure
-										v-if="controls.VENDA___SALE_IDENTIFI.isVisible"
 										class="i-text"
-										v-bind="controls.VENDA___SALE_IDENTIFI.wrapperProps"
-										:id="getControlId(controls.VENDA___SALE_IDENTIFI)"
+										v-bind="controls.VENDA___SALE_IDENTIFI"
 										v-on="controls.VENDA___SALE_IDENTIFI.handlers"
 										:loading="controls.VENDA___SALE_IDENTIFI.props.loading"
 										:reporting-mode-on="reportingModeCAV"
 										:suggestion-mode-on="suggestionModeOn">
 										<q-text-field
 											v-bind="controls.VENDA___SALE_IDENTIFI.props"
-											:id="getControlId(controls.VENDA___SALE_IDENTIFI)"
 											@blur="onBlur(controls.VENDA___SALE_IDENTIFI, model.ValIdentifi.value)"
 											@change="model.ValIdentifi.fnUpdateValueOnChange" />
 									</base-input-structure>
-								</q-col>
-								<q-col
-									v-if="controls.VENDA___SALE_POTCOMPR.isVisible"
-									cols="auto">
+								</q-control-wrapper>
+								<q-control-wrapper
+									v-show="controls.VENDA___SALE_POTCOMPR.isVisible"
+									class="${Vue.GetControlWrapperClass($controlsColumn)}">
 									<base-input-structure
-										v-if="controls.VENDA___SALE_POTCOMPR.isVisible"
 										class="i-text"
-										v-bind="controls.VENDA___SALE_POTCOMPR.wrapperProps"
-										:id="getControlId(controls.VENDA___SALE_POTCOMPR)"
+										v-bind="controls.VENDA___SALE_POTCOMPR"
 										v-on="controls.VENDA___SALE_POTCOMPR.handlers"
 										:loading="controls.VENDA___SALE_POTCOMPR.props.loading"
 										:reporting-mode-on="reportingModeCAV"
 										:suggestion-mode-on="suggestionModeOn">
 										<q-text-field
 											v-bind="controls.VENDA___SALE_POTCOMPR.props"
-											:id="getControlId(controls.VENDA___SALE_POTCOMPR)"
 											@blur="onBlur(controls.VENDA___SALE_POTCOMPR, model.ValPotcompr.value)"
 											@change="model.ValPotcompr.fnUpdateValueOnChange" />
 									</base-input-structure>
-								</q-col>
-								<q-col
-									v-if="controls.VENDA___SALE_PROSPECC.isVisible"
-									cols="auto">
+								</q-control-wrapper>
+								<q-control-wrapper
+									v-show="controls.VENDA___SALE_PROSPECC.isVisible"
+									class="${Vue.GetControlWrapperClass($controlsColumn)}">
 									<base-input-structure
-										v-if="controls.VENDA___SALE_PROSPECC.isVisible"
-										class="i-text"
-										v-bind="controls.VENDA___SALE_PROSPECC.wrapperProps"
-										:id="getControlId(controls.VENDA___SALE_PROSPECC)"
+										class="i-checkbox"
+										v-bind="controls.VENDA___SALE_PROSPECC"
 										v-on="controls.VENDA___SALE_PROSPECC.handlers"
 										:loading="controls.VENDA___SALE_PROSPECC.props.loading"
 										:reporting-mode-on="reportingModeCAV"
 										:suggestion-mode-on="suggestionModeOn">
 										<template #label>
-											<q-checkbox
+											<q-checkbox-input
 												v-if="controls.VENDA___SALE_PROSPECC.isVisible"
 												v-bind="controls.VENDA___SALE_PROSPECC.props"
-												:id="getControlId(controls.VENDA___SALE_PROSPECC)"
 												v-on="controls.VENDA___SALE_PROSPECC.handlers" />
 										</template>
 									</base-input-structure>
-								</q-col>
-							</q-row>
+								</q-control-wrapper>
+							</q-row-container>
 							<!-- End VENDA___PSEUDNOVOGR01 -->
 						</q-group-box-container>
-					</q-col>
-				</q-row>
-				<q-row v-if="controls.VENDA___PSEUDNOVOGR02.isVisible">
-					<q-col v-if="controls.VENDA___PSEUDNOVOGR02.isVisible">
+					</q-control-wrapper>
+				</q-row-container>
+				<q-row-container
+					v-show="controls.VENDA___PSEUDNOVOGR02.isVisible"
+					is-large>
+					<q-control-wrapper
+						v-show="controls.VENDA___PSEUDNOVOGR02.isVisible"
+						class="${Vue.GetControlWrapperClass($controlsColumn)}">
 						<q-group-box-container
-							v-if="controls.VENDA___PSEUDNOVOGR02.isVisible"
+							id="VENDA___PSEUDNOVOGR02"
 							v-bind="controls.VENDA___PSEUDNOVOGR02"
-							:id="getControlId(controls.VENDA___PSEUDNOVOGR02)"
-							:no-border="controls.VENDA___PSEUDNOVOGR02.borderless">
+							:is-visible="controls.VENDA___PSEUDNOVOGR02.isVisible">
 							<!-- Start VENDA___PSEUDNOVOGR02 -->
-							<q-row v-if="controls.VENDA___SALE_INTERESS.isVisible || controls.VENDA___SALE_SEMRFINA.isVisible || controls.VENDA___SALE_SEMCAPAC.isVisible || controls.VENDA___SALE_DTQUALIF.isVisible || controls.VENDA___SALE_QUALIFIC.isVisible">
-								<q-col
-									v-if="controls.VENDA___SALE_INTERESS.isVisible"
-									cols="auto">
+							<q-row-container v-show="controls.VENDA___SALE_INTERESS.isVisible || controls.VENDA___SALE_SEMRFINA.isVisible || controls.VENDA___SALE_SEMCAPAC.isVisible || controls.VENDA___SALE_DTQUALIF.isVisible || controls.VENDA___SALE_QUALIFIC.isVisible">
+								<q-control-wrapper
+									v-show="controls.VENDA___SALE_INTERESS.isVisible"
+									class="${Vue.GetControlWrapperClass($controlsColumn)}">
 									<base-input-structure
-										v-if="controls.VENDA___SALE_INTERESS.isVisible"
-										class="i-text"
-										v-bind="controls.VENDA___SALE_INTERESS.wrapperProps"
-										:id="getControlId(controls.VENDA___SALE_INTERESS)"
+										class="i-checkbox"
+										v-bind="controls.VENDA___SALE_INTERESS"
 										v-on="controls.VENDA___SALE_INTERESS.handlers"
 										:loading="controls.VENDA___SALE_INTERESS.props.loading"
 										:reporting-mode-on="reportingModeCAV"
 										:suggestion-mode-on="suggestionModeOn">
 										<template #label>
-											<q-checkbox
+											<q-checkbox-input
 												v-if="controls.VENDA___SALE_INTERESS.isVisible"
 												v-bind="controls.VENDA___SALE_INTERESS.props"
-												:id="getControlId(controls.VENDA___SALE_INTERESS)"
 												v-on="controls.VENDA___SALE_INTERESS.handlers" />
 										</template>
 									</base-input-structure>
-								</q-col>
-								<q-col
-									v-if="controls.VENDA___SALE_SEMRFINA.isVisible"
-									cols="auto">
+								</q-control-wrapper>
+								<q-control-wrapper
+									v-show="controls.VENDA___SALE_SEMRFINA.isVisible"
+									class="${Vue.GetControlWrapperClass($controlsColumn)}">
 									<base-input-structure
-										v-if="controls.VENDA___SALE_SEMRFINA.isVisible"
-										class="i-text"
-										v-bind="controls.VENDA___SALE_SEMRFINA.wrapperProps"
-										:id="getControlId(controls.VENDA___SALE_SEMRFINA)"
+										class="i-checkbox"
+										v-bind="controls.VENDA___SALE_SEMRFINA"
 										v-on="controls.VENDA___SALE_SEMRFINA.handlers"
 										:loading="controls.VENDA___SALE_SEMRFINA.props.loading"
 										:reporting-mode-on="reportingModeCAV"
 										:suggestion-mode-on="suggestionModeOn">
 										<template #label>
-											<q-checkbox
+											<q-checkbox-input
 												v-if="controls.VENDA___SALE_SEMRFINA.isVisible"
 												v-bind="controls.VENDA___SALE_SEMRFINA.props"
-												:id="getControlId(controls.VENDA___SALE_SEMRFINA)"
 												v-on="controls.VENDA___SALE_SEMRFINA.handlers" />
 										</template>
 									</base-input-structure>
-								</q-col>
-								<q-col
-									v-if="controls.VENDA___SALE_SEMCAPAC.isVisible"
-									cols="auto">
+								</q-control-wrapper>
+								<q-control-wrapper
+									v-show="controls.VENDA___SALE_SEMCAPAC.isVisible"
+									class="${Vue.GetControlWrapperClass($controlsColumn)}">
 									<base-input-structure
-										v-if="controls.VENDA___SALE_SEMCAPAC.isVisible"
-										class="i-text"
-										v-bind="controls.VENDA___SALE_SEMCAPAC.wrapperProps"
-										:id="getControlId(controls.VENDA___SALE_SEMCAPAC)"
+										class="i-checkbox"
+										v-bind="controls.VENDA___SALE_SEMCAPAC"
 										v-on="controls.VENDA___SALE_SEMCAPAC.handlers"
 										:loading="controls.VENDA___SALE_SEMCAPAC.props.loading"
 										:reporting-mode-on="reportingModeCAV"
 										:suggestion-mode-on="suggestionModeOn">
 										<template #label>
-											<q-checkbox
+											<q-checkbox-input
 												v-if="controls.VENDA___SALE_SEMCAPAC.isVisible"
 												v-bind="controls.VENDA___SALE_SEMCAPAC.props"
-												:id="getControlId(controls.VENDA___SALE_SEMCAPAC)"
 												v-on="controls.VENDA___SALE_SEMCAPAC.handlers" />
 										</template>
 									</base-input-structure>
-								</q-col>
-								<q-col
-									v-if="controls.VENDA___SALE_DTQUALIF.isVisible"
-									cols="auto">
+								</q-control-wrapper>
+								<q-control-wrapper
+									v-show="controls.VENDA___SALE_DTQUALIF.isVisible"
+									class="${Vue.GetControlWrapperClass($controlsColumn)}">
 									<base-input-structure
-										v-if="controls.VENDA___SALE_DTQUALIF.isVisible"
 										class="i-text"
-										v-bind="controls.VENDA___SALE_DTQUALIF.wrapperProps"
-										:id="getControlId(controls.VENDA___SALE_DTQUALIF)"
+										v-bind="controls.VENDA___SALE_DTQUALIF"
 										v-on="controls.VENDA___SALE_DTQUALIF.handlers"
 										:loading="controls.VENDA___SALE_DTQUALIF.props.loading"
 										:reporting-mode-on="reportingModeCAV"
@@ -325,55 +295,52 @@
 										<q-date-time-picker
 											v-if="controls.VENDA___SALE_DTQUALIF.isVisible"
 											v-bind="controls.VENDA___SALE_DTQUALIF.props"
-											:id="getControlId(controls.VENDA___SALE_DTQUALIF)"
 											:model-value="model.ValDtqualif.value"
 											@reset-icon-click="model.ValDtqualif.fnUpdateValue(model.ValDtqualif.originalValue ?? new Date())"
 											@update:model-value="model.ValDtqualif.fnUpdateValue($event ?? '')" />
 									</base-input-structure>
-								</q-col>
-								<q-col
-									v-if="controls.VENDA___SALE_QUALIFIC.isVisible"
-									cols="auto">
+								</q-control-wrapper>
+								<q-control-wrapper
+									v-show="controls.VENDA___SALE_QUALIFIC.isVisible"
+									class="${Vue.GetControlWrapperClass($controlsColumn)}">
 									<base-input-structure
-										v-if="controls.VENDA___SALE_QUALIFIC.isVisible"
-										class="i-text"
-										v-bind="controls.VENDA___SALE_QUALIFIC.wrapperProps"
-										:id="getControlId(controls.VENDA___SALE_QUALIFIC)"
+										class="i-checkbox"
+										v-bind="controls.VENDA___SALE_QUALIFIC"
 										v-on="controls.VENDA___SALE_QUALIFIC.handlers"
 										:loading="controls.VENDA___SALE_QUALIFIC.props.loading"
 										:reporting-mode-on="reportingModeCAV"
 										:suggestion-mode-on="suggestionModeOn">
 										<template #label>
-											<q-checkbox
+											<q-checkbox-input
 												v-if="controls.VENDA___SALE_QUALIFIC.isVisible"
 												v-bind="controls.VENDA___SALE_QUALIFIC.props"
-												:id="getControlId(controls.VENDA___SALE_QUALIFIC)"
 												v-on="controls.VENDA___SALE_QUALIFIC.handlers" />
 										</template>
 									</base-input-structure>
-								</q-col>
-							</q-row>
+								</q-control-wrapper>
+							</q-row-container>
 							<!-- End VENDA___PSEUDNOVOGR02 -->
 						</q-group-box-container>
-					</q-col>
-				</q-row>
-				<q-row v-if="controls.VENDA___PSEUDNOVOGR03.isVisible">
-					<q-col v-if="controls.VENDA___PSEUDNOVOGR03.isVisible">
+					</q-control-wrapper>
+				</q-row-container>
+				<q-row-container
+					v-show="controls.VENDA___PSEUDNOVOGR03.isVisible"
+					is-large>
+					<q-control-wrapper
+						v-show="controls.VENDA___PSEUDNOVOGR03.isVisible"
+						class="${Vue.GetControlWrapperClass($controlsColumn)}">
 						<q-group-box-container
-							v-if="controls.VENDA___PSEUDNOVOGR03.isVisible"
+							id="VENDA___PSEUDNOVOGR03"
 							v-bind="controls.VENDA___PSEUDNOVOGR03"
-							:id="getControlId(controls.VENDA___PSEUDNOVOGR03)"
-							:no-border="controls.VENDA___PSEUDNOVOGR03.borderless">
+							:is-visible="controls.VENDA___PSEUDNOVOGR03.isVisible">
 							<!-- Start VENDA___PSEUDNOVOGR03 -->
-							<q-row v-if="controls.VENDA___SALE_PREABORD.isVisible || controls.VENDA___SALE_HOMEWORK.isVisible">
-								<q-col
-									v-if="controls.VENDA___SALE_PREABORD.isVisible"
-									cols="auto">
+							<q-row-container v-show="controls.VENDA___SALE_PREABORD.isVisible || controls.VENDA___SALE_HOMEWORK.isVisible">
+								<q-control-wrapper
+									v-show="controls.VENDA___SALE_PREABORD.isVisible"
+									class="${Vue.GetControlWrapperClass($controlsColumn)}">
 									<base-input-structure
-										v-if="controls.VENDA___SALE_PREABORD.isVisible"
 										class="i-text"
-										v-bind="controls.VENDA___SALE_PREABORD.wrapperProps"
-										:id="getControlId(controls.VENDA___SALE_PREABORD)"
+										v-bind="controls.VENDA___SALE_PREABORD"
 										v-on="controls.VENDA___SALE_PREABORD.handlers"
 										:loading="controls.VENDA___SALE_PREABORD.props.loading"
 										:reporting-mode-on="reportingModeCAV"
@@ -381,55 +348,52 @@
 										<q-date-time-picker
 											v-if="controls.VENDA___SALE_PREABORD.isVisible"
 											v-bind="controls.VENDA___SALE_PREABORD.props"
-											:id="getControlId(controls.VENDA___SALE_PREABORD)"
 											:model-value="model.ValPreabord.value"
 											@reset-icon-click="model.ValPreabord.fnUpdateValue(model.ValPreabord.originalValue ?? new Date())"
 											@update:model-value="model.ValPreabord.fnUpdateValue($event ?? '')" />
 									</base-input-structure>
-								</q-col>
-								<q-col
-									v-if="controls.VENDA___SALE_HOMEWORK.isVisible"
-									cols="auto">
+								</q-control-wrapper>
+								<q-control-wrapper
+									v-show="controls.VENDA___SALE_HOMEWORK.isVisible"
+									class="${Vue.GetControlWrapperClass($controlsColumn)}">
 									<base-input-structure
-										v-if="controls.VENDA___SALE_HOMEWORK.isVisible"
-										class="i-text"
-										v-bind="controls.VENDA___SALE_HOMEWORK.wrapperProps"
-										:id="getControlId(controls.VENDA___SALE_HOMEWORK)"
+										class="i-checkbox"
+										v-bind="controls.VENDA___SALE_HOMEWORK"
 										v-on="controls.VENDA___SALE_HOMEWORK.handlers"
 										:loading="controls.VENDA___SALE_HOMEWORK.props.loading"
 										:reporting-mode-on="reportingModeCAV"
 										:suggestion-mode-on="suggestionModeOn">
 										<template #label>
-											<q-checkbox
+											<q-checkbox-input
 												v-if="controls.VENDA___SALE_HOMEWORK.isVisible"
 												v-bind="controls.VENDA___SALE_HOMEWORK.props"
-												:id="getControlId(controls.VENDA___SALE_HOMEWORK)"
 												v-on="controls.VENDA___SALE_HOMEWORK.handlers" />
 										</template>
 									</base-input-structure>
-								</q-col>
-							</q-row>
+								</q-control-wrapper>
+							</q-row-container>
 							<!-- End VENDA___PSEUDNOVOGR03 -->
 						</q-group-box-container>
-					</q-col>
-				</q-row>
-				<q-row v-if="controls.VENDA___PSEUDNOVOGR04.isVisible">
-					<q-col v-if="controls.VENDA___PSEUDNOVOGR04.isVisible">
+					</q-control-wrapper>
+				</q-row-container>
+				<q-row-container
+					v-show="controls.VENDA___PSEUDNOVOGR04.isVisible"
+					is-large>
+					<q-control-wrapper
+						v-show="controls.VENDA___PSEUDNOVOGR04.isVisible"
+						class="${Vue.GetControlWrapperClass($controlsColumn)}">
 						<q-group-box-container
-							v-if="controls.VENDA___PSEUDNOVOGR04.isVisible"
+							id="VENDA___PSEUDNOVOGR04"
 							v-bind="controls.VENDA___PSEUDNOVOGR04"
-							:id="getControlId(controls.VENDA___PSEUDNOVOGR04)"
-							:no-border="controls.VENDA___PSEUDNOVOGR04.borderless">
+							:is-visible="controls.VENDA___PSEUDNOVOGR04.isVisible">
 							<!-- Start VENDA___PSEUDNOVOGR04 -->
-							<q-row v-if="controls.VENDA___SALE_DTABORDA.isVisible || controls.VENDA___SALE_APPROACH.isVisible">
-								<q-col
-									v-if="controls.VENDA___SALE_DTABORDA.isVisible"
-									cols="auto">
+							<q-row-container v-show="controls.VENDA___SALE_DTABORDA.isVisible || controls.VENDA___SALE_APPROACH.isVisible">
+								<q-control-wrapper
+									v-show="controls.VENDA___SALE_DTABORDA.isVisible"
+									class="${Vue.GetControlWrapperClass($controlsColumn)}">
 									<base-input-structure
-										v-if="controls.VENDA___SALE_DTABORDA.isVisible"
 										class="i-text"
-										v-bind="controls.VENDA___SALE_DTABORDA.wrapperProps"
-										:id="getControlId(controls.VENDA___SALE_DTABORDA)"
+										v-bind="controls.VENDA___SALE_DTABORDA"
 										v-on="controls.VENDA___SALE_DTABORDA.handlers"
 										:loading="controls.VENDA___SALE_DTABORDA.props.loading"
 										:reporting-mode-on="reportingModeCAV"
@@ -437,55 +401,52 @@
 										<q-date-time-picker
 											v-if="controls.VENDA___SALE_DTABORDA.isVisible"
 											v-bind="controls.VENDA___SALE_DTABORDA.props"
-											:id="getControlId(controls.VENDA___SALE_DTABORDA)"
 											:model-value="model.ValDtaborda.value"
 											@reset-icon-click="model.ValDtaborda.fnUpdateValue(model.ValDtaborda.originalValue ?? new Date())"
 											@update:model-value="model.ValDtaborda.fnUpdateValue($event ?? '')" />
 									</base-input-structure>
-								</q-col>
-								<q-col
-									v-if="controls.VENDA___SALE_APPROACH.isVisible"
-									cols="auto">
+								</q-control-wrapper>
+								<q-control-wrapper
+									v-show="controls.VENDA___SALE_APPROACH.isVisible"
+									class="${Vue.GetControlWrapperClass($controlsColumn)}">
 									<base-input-structure
-										v-if="controls.VENDA___SALE_APPROACH.isVisible"
-										class="i-text"
-										v-bind="controls.VENDA___SALE_APPROACH.wrapperProps"
-										:id="getControlId(controls.VENDA___SALE_APPROACH)"
+										class="i-checkbox"
+										v-bind="controls.VENDA___SALE_APPROACH"
 										v-on="controls.VENDA___SALE_APPROACH.handlers"
 										:loading="controls.VENDA___SALE_APPROACH.props.loading"
 										:reporting-mode-on="reportingModeCAV"
 										:suggestion-mode-on="suggestionModeOn">
 										<template #label>
-											<q-checkbox
+											<q-checkbox-input
 												v-if="controls.VENDA___SALE_APPROACH.isVisible"
 												v-bind="controls.VENDA___SALE_APPROACH.props"
-												:id="getControlId(controls.VENDA___SALE_APPROACH)"
 												v-on="controls.VENDA___SALE_APPROACH.handlers" />
 										</template>
 									</base-input-structure>
-								</q-col>
-							</q-row>
+								</q-control-wrapper>
+							</q-row-container>
 							<!-- End VENDA___PSEUDNOVOGR04 -->
 						</q-group-box-container>
-					</q-col>
-				</q-row>
-				<q-row v-if="controls.VENDA___PSEUDNOVOGR05.isVisible">
-					<q-col v-if="controls.VENDA___PSEUDNOVOGR05.isVisible">
+					</q-control-wrapper>
+				</q-row-container>
+				<q-row-container
+					v-show="controls.VENDA___PSEUDNOVOGR05.isVisible"
+					is-large>
+					<q-control-wrapper
+						v-show="controls.VENDA___PSEUDNOVOGR05.isVisible"
+						class="${Vue.GetControlWrapperClass($controlsColumn)}">
 						<q-group-box-container
-							v-if="controls.VENDA___PSEUDNOVOGR05.isVisible"
+							id="VENDA___PSEUDNOVOGR05"
 							v-bind="controls.VENDA___PSEUDNOVOGR05"
-							:id="getControlId(controls.VENDA___PSEUDNOVOGR05)"
-							:no-border="controls.VENDA___PSEUDNOVOGR05.borderless">
+							:is-visible="controls.VENDA___PSEUDNOVOGR05.isVisible">
 							<!-- Start VENDA___PSEUDNOVOGR05 -->
-							<q-row v-if="controls.VENDA___SALE_DTAPRESE.isVisible || controls.VENDA___SALE_APRESENT.isVisible">
-								<q-col
-									v-if="controls.VENDA___SALE_DTAPRESE.isVisible"
-									cols="auto">
+							<q-row-container v-show="controls.VENDA___SALE_DTAPRESE.isVisible || controls.VENDA___SALE_APRESENT.isVisible">
+								<q-control-wrapper
+									v-show="controls.VENDA___SALE_DTAPRESE.isVisible"
+									class="${Vue.GetControlWrapperClass($controlsColumn)}">
 									<base-input-structure
-										v-if="controls.VENDA___SALE_DTAPRESE.isVisible"
 										class="i-text"
-										v-bind="controls.VENDA___SALE_DTAPRESE.wrapperProps"
-										:id="getControlId(controls.VENDA___SALE_DTAPRESE)"
+										v-bind="controls.VENDA___SALE_DTAPRESE"
 										v-on="controls.VENDA___SALE_DTAPRESE.handlers"
 										:loading="controls.VENDA___SALE_DTAPRESE.props.loading"
 										:reporting-mode-on="reportingModeCAV"
@@ -493,55 +454,52 @@
 										<q-date-time-picker
 											v-if="controls.VENDA___SALE_DTAPRESE.isVisible"
 											v-bind="controls.VENDA___SALE_DTAPRESE.props"
-											:id="getControlId(controls.VENDA___SALE_DTAPRESE)"
 											:model-value="model.ValDtaprese.value"
 											@reset-icon-click="model.ValDtaprese.fnUpdateValue(model.ValDtaprese.originalValue ?? new Date())"
 											@update:model-value="model.ValDtaprese.fnUpdateValue($event ?? '')" />
 									</base-input-structure>
-								</q-col>
-								<q-col
-									v-if="controls.VENDA___SALE_APRESENT.isVisible"
-									cols="auto">
+								</q-control-wrapper>
+								<q-control-wrapper
+									v-show="controls.VENDA___SALE_APRESENT.isVisible"
+									class="${Vue.GetControlWrapperClass($controlsColumn)}">
 									<base-input-structure
-										v-if="controls.VENDA___SALE_APRESENT.isVisible"
-										class="i-text"
-										v-bind="controls.VENDA___SALE_APRESENT.wrapperProps"
-										:id="getControlId(controls.VENDA___SALE_APRESENT)"
+										class="i-checkbox"
+										v-bind="controls.VENDA___SALE_APRESENT"
 										v-on="controls.VENDA___SALE_APRESENT.handlers"
 										:loading="controls.VENDA___SALE_APRESENT.props.loading"
 										:reporting-mode-on="reportingModeCAV"
 										:suggestion-mode-on="suggestionModeOn">
 										<template #label>
-											<q-checkbox
+											<q-checkbox-input
 												v-if="controls.VENDA___SALE_APRESENT.isVisible"
 												v-bind="controls.VENDA___SALE_APRESENT.props"
-												:id="getControlId(controls.VENDA___SALE_APRESENT)"
 												v-on="controls.VENDA___SALE_APRESENT.handlers" />
 										</template>
 									</base-input-structure>
-								</q-col>
-							</q-row>
+								</q-control-wrapper>
+							</q-row-container>
 							<!-- End VENDA___PSEUDNOVOGR05 -->
 						</q-group-box-container>
-					</q-col>
-				</q-row>
-				<q-row v-if="controls.VENDA___PSEUDNOVOGR06.isVisible">
-					<q-col v-if="controls.VENDA___PSEUDNOVOGR06.isVisible">
+					</q-control-wrapper>
+				</q-row-container>
+				<q-row-container
+					v-show="controls.VENDA___PSEUDNOVOGR06.isVisible"
+					is-large>
+					<q-control-wrapper
+						v-show="controls.VENDA___PSEUDNOVOGR06.isVisible"
+						class="${Vue.GetControlWrapperClass($controlsColumn)}">
 						<q-group-box-container
-							v-if="controls.VENDA___PSEUDNOVOGR06.isVisible"
+							id="VENDA___PSEUDNOVOGR06"
 							v-bind="controls.VENDA___PSEUDNOVOGR06"
-							:id="getControlId(controls.VENDA___PSEUDNOVOGR06)"
-							:no-border="controls.VENDA___PSEUDNOVOGR06.borderless">
+							:is-visible="controls.VENDA___PSEUDNOVOGR06.isVisible">
 							<!-- Start VENDA___PSEUDNOVOGR06 -->
-							<q-row v-if="controls.VENDA___SALE_DTSUPERA.isVisible">
-								<q-col
-									v-if="controls.VENDA___SALE_DTSUPERA.isVisible"
-									cols="auto">
+							<q-row-container v-show="controls.VENDA___SALE_DTSUPERA.isVisible">
+								<q-control-wrapper
+									v-show="controls.VENDA___SALE_DTSUPERA.isVisible"
+									class="${Vue.GetControlWrapperClass($controlsColumn)}">
 									<base-input-structure
-										v-if="controls.VENDA___SALE_DTSUPERA.isVisible"
 										class="i-text"
-										v-bind="controls.VENDA___SALE_DTSUPERA.wrapperProps"
-										:id="getControlId(controls.VENDA___SALE_DTSUPERA)"
+										v-bind="controls.VENDA___SALE_DTSUPERA"
 										v-on="controls.VENDA___SALE_DTSUPERA.handlers"
 										:loading="controls.VENDA___SALE_DTSUPERA.props.loading"
 										:reporting-mode-on="reportingModeCAV"
@@ -549,34 +507,34 @@
 										<q-date-time-picker
 											v-if="controls.VENDA___SALE_DTSUPERA.isVisible"
 											v-bind="controls.VENDA___SALE_DTSUPERA.props"
-											:id="getControlId(controls.VENDA___SALE_DTSUPERA)"
 											:model-value="model.ValDtsupera.value"
 											@reset-icon-click="model.ValDtsupera.fnUpdateValue(model.ValDtsupera.originalValue ?? new Date())"
 											@update:model-value="model.ValDtsupera.fnUpdateValue($event ?? '')" />
 									</base-input-structure>
-								</q-col>
-							</q-row>
+								</q-control-wrapper>
+							</q-row-container>
 							<!-- End VENDA___PSEUDNOVOGR06 -->
 						</q-group-box-container>
-					</q-col>
-				</q-row>
-				<q-row v-if="controls.VENDA___PSEUDNOVOGR07.isVisible">
-					<q-col v-if="controls.VENDA___PSEUDNOVOGR07.isVisible">
+					</q-control-wrapper>
+				</q-row-container>
+				<q-row-container
+					v-show="controls.VENDA___PSEUDNOVOGR07.isVisible"
+					is-large>
+					<q-control-wrapper
+						v-show="controls.VENDA___PSEUDNOVOGR07.isVisible"
+						class="${Vue.GetControlWrapperClass($controlsColumn)}">
 						<q-group-box-container
-							v-if="controls.VENDA___PSEUDNOVOGR07.isVisible"
+							id="VENDA___PSEUDNOVOGR07"
 							v-bind="controls.VENDA___PSEUDNOVOGR07"
-							:id="getControlId(controls.VENDA___PSEUDNOVOGR07)"
-							:no-border="controls.VENDA___PSEUDNOVOGR07.borderless">
+							:is-visible="controls.VENDA___PSEUDNOVOGR07.isVisible">
 							<!-- Start VENDA___PSEUDNOVOGR07 -->
-							<q-row v-if="controls.VENDA___SALE_TENTFECH.isVisible || controls.VENDA___SALE_DTVENDA_.isVisible">
-								<q-col
-									v-if="controls.VENDA___SALE_TENTFECH.isVisible"
-									cols="auto">
+							<q-row-container v-show="controls.VENDA___SALE_TENTFECH.isVisible || controls.VENDA___SALE_DTVENDA_.isVisible">
+								<q-control-wrapper
+									v-show="controls.VENDA___SALE_TENTFECH.isVisible"
+									class="${Vue.GetControlWrapperClass($controlsColumn)}">
 									<base-input-structure
-										v-if="controls.VENDA___SALE_TENTFECH.isVisible"
 										class="i-text"
-										v-bind="controls.VENDA___SALE_TENTFECH.wrapperProps"
-										:id="getControlId(controls.VENDA___SALE_TENTFECH)"
+										v-bind="controls.VENDA___SALE_TENTFECH"
 										v-on="controls.VENDA___SALE_TENTFECH.handlers"
 										:loading="controls.VENDA___SALE_TENTFECH.props.loading"
 										:reporting-mode-on="reportingModeCAV"
@@ -584,20 +542,17 @@
 										<q-date-time-picker
 											v-if="controls.VENDA___SALE_TENTFECH.isVisible"
 											v-bind="controls.VENDA___SALE_TENTFECH.props"
-											:id="getControlId(controls.VENDA___SALE_TENTFECH)"
 											:model-value="model.ValTentfech.value"
 											@reset-icon-click="model.ValTentfech.fnUpdateValue(model.ValTentfech.originalValue ?? new Date())"
 											@update:model-value="model.ValTentfech.fnUpdateValue($event ?? '')" />
 									</base-input-structure>
-								</q-col>
-								<q-col
-									v-if="controls.VENDA___SALE_DTVENDA_.isVisible"
-									cols="auto">
+								</q-control-wrapper>
+								<q-control-wrapper
+									v-show="controls.VENDA___SALE_DTVENDA_.isVisible"
+									class="${Vue.GetControlWrapperClass($controlsColumn)}">
 									<base-input-structure
-										v-if="controls.VENDA___SALE_DTVENDA_.isVisible"
 										class="i-text"
-										v-bind="controls.VENDA___SALE_DTVENDA_.wrapperProps"
-										:id="getControlId(controls.VENDA___SALE_DTVENDA_)"
+										v-bind="controls.VENDA___SALE_DTVENDA_"
 										v-on="controls.VENDA___SALE_DTVENDA_.handlers"
 										:loading="controls.VENDA___SALE_DTVENDA_.props.loading"
 										:reporting-mode-on="reportingModeCAV"
@@ -605,34 +560,34 @@
 										<q-date-time-picker
 											v-if="controls.VENDA___SALE_DTVENDA_.isVisible"
 											v-bind="controls.VENDA___SALE_DTVENDA_.props"
-											:id="getControlId(controls.VENDA___SALE_DTVENDA_)"
 											:model-value="model.ValDtvenda.value"
 											@reset-icon-click="model.ValDtvenda.fnUpdateValue(model.ValDtvenda.originalValue ?? new Date())"
 											@update:model-value="model.ValDtvenda.fnUpdateValue($event ?? '')" />
 									</base-input-structure>
-								</q-col>
-							</q-row>
+								</q-control-wrapper>
+							</q-row-container>
 							<!-- End VENDA___PSEUDNOVOGR07 -->
 						</q-group-box-container>
-					</q-col>
-				</q-row>
-				<q-row v-if="controls.VENDA___PSEUDNOVOGR08.isVisible">
-					<q-col v-if="controls.VENDA___PSEUDNOVOGR08.isVisible">
+					</q-control-wrapper>
+				</q-row-container>
+				<q-row-container
+					v-show="controls.VENDA___PSEUDNOVOGR08.isVisible"
+					is-large>
+					<q-control-wrapper
+						v-show="controls.VENDA___PSEUDNOVOGR08.isVisible"
+						class="${Vue.GetControlWrapperClass($controlsColumn)}">
 						<q-group-box-container
-							v-if="controls.VENDA___PSEUDNOVOGR08.isVisible"
+							id="VENDA___PSEUDNOVOGR08"
 							v-bind="controls.VENDA___PSEUDNOVOGR08"
-							:id="getControlId(controls.VENDA___PSEUDNOVOGR08)"
-							:no-border="controls.VENDA___PSEUDNOVOGR08.borderless">
+							:is-visible="controls.VENDA___PSEUDNOVOGR08.isVisible">
 							<!-- Start VENDA___PSEUDNOVOGR08 -->
-							<q-row v-if="controls.VENDA___SALE_DTACOMPA.isVisible">
-								<q-col
-									v-if="controls.VENDA___SALE_DTACOMPA.isVisible"
-									cols="auto">
+							<q-row-container v-show="controls.VENDA___SALE_DTACOMPA.isVisible">
+								<q-control-wrapper
+									v-show="controls.VENDA___SALE_DTACOMPA.isVisible"
+									class="${Vue.GetControlWrapperClass($controlsColumn)}">
 									<base-input-structure
-										v-if="controls.VENDA___SALE_DTACOMPA.isVisible"
 										class="i-text"
-										v-bind="controls.VENDA___SALE_DTACOMPA.wrapperProps"
-										:id="getControlId(controls.VENDA___SALE_DTACOMPA)"
+										v-bind="controls.VENDA___SALE_DTACOMPA"
 										v-on="controls.VENDA___SALE_DTACOMPA.handlers"
 										:loading="controls.VENDA___SALE_DTACOMPA.props.loading"
 										:reporting-mode-on="reportingModeCAV"
@@ -640,28 +595,27 @@
 										<q-date-time-picker
 											v-if="controls.VENDA___SALE_DTACOMPA.isVisible"
 											v-bind="controls.VENDA___SALE_DTACOMPA.props"
-											:id="getControlId(controls.VENDA___SALE_DTACOMPA)"
 											:model-value="model.ValDtacompa.value"
 											@reset-icon-click="model.ValDtacompa.fnUpdateValue(model.ValDtacompa.originalValue ?? new Date())"
 											@update:model-value="model.ValDtacompa.fnUpdateValue($event ?? '')" />
 									</base-input-structure>
-								</q-col>
-							</q-row>
+								</q-control-wrapper>
+							</q-row-container>
 							<!-- End VENDA___PSEUDNOVOGR08 -->
 						</q-group-box-container>
-					</q-col>
-				</q-row>
+					</q-control-wrapper>
+				</q-row-container>
 			</template>
-		</q-container>
+		</div>
 	</teleport>
 
-	<q-divider v-if="!isPopup && showFormFooter" />
+	<hr v-if="!isPopup && showFormFooter" />
 
 	<teleport
 		v-if="formModalIsReady && showFormFooter"
 		:to="`#${uiContainersId.footer}`"
 		:disabled="!isPopup || isNested">
-		<q-row v-if="showFormFooter">
+		<q-row-container v-if="showFormFooter">
 			<div id="footer-action-btns">
 				<template
 					v-for="btn in formButtons"
@@ -670,7 +624,6 @@
 						v-if="btn.isActive && btn.isVisible && btn.showInFooter"
 						:id="`bottom-${btn.id}`"
 						:label="btn.text"
-						:color="btn.color"
 						:variant="btn.variant"
 						:disabled="btn.disabled"
 						:icon-pos="btn.iconPos"
@@ -682,12 +635,12 @@
 					</q-button>
 				</template>
 			</div>
-		</q-row>
+		</q-row-container>
 	</teleport>
 </template>
 
 <script>
-	/* eslint-disable @typescript-eslint/no-unused-vars */
+	/* eslint-disable no-unused-vars */
 	import { computed, defineAsyncComponent, readonly } from 'vue'
 	import { useRoute } from 'vue-router'
 
@@ -707,7 +660,7 @@
 	import qApi from '@/api/genio/quidgestFunctions.js'
 	import qFunctions from '@/api/genio/projectFunctions.js'
 	import qProjArrays from '@/api/genio/projectArrays.js'
-	/* eslint-enable @typescript-eslint/no-unused-vars */
+	/* eslint-enable no-unused-vars */
 
 	import FormViewModel from './QFormVendaViewModel.js'
 
@@ -785,8 +738,7 @@
 					primaryKey: 'ValCodvenda',
 					designation: computed(() => this.Resources.SALE02786),
 					identifier: '', // Unique identifier received by route (when it's nested).
-					mode: '',
-					availableAgents: [],
+					mode: ''
 				},
 
 				formButtons: {
@@ -894,11 +846,7 @@
 						showInFooter: true,
 						isActive: true,
 						isVisible: computed(() => vm.authData.isAllowed && vm.isEditable),
-						action: vm.saveForm,
-						badge: {
-							isVisible: computed(() => vm.model?.isDirty === true),
-							color: 'highlight'
-						}
+						action: vm.saveForm
 					},
 					confirmBtn: {
 						id: 'confirm-btn',
@@ -1049,7 +997,7 @@
 						label: computed(() => this.Resources.START00919),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						dateTimeType: 'dateTime',
+						format: 'dateTime',
 						controlLimits: [
 						],
 					}, this),
@@ -1060,7 +1008,6 @@
 						label: computed(() => this.Resources.PROSPECTION06755),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						borderless: false,
 						isCollapsible: false,
 						anchored: false,
 						directChildren: ['VENDA___SALE_IDENTIFI', 'VENDA___SALE_POTCOMPR', 'VENDA___SALE_PROSPECC'],
@@ -1078,6 +1025,7 @@
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'VENDA___PSEUDNOVOGR01',
 						maxLength: 85,
+						labelId: 'label_VENDA___SALE_IDENTIFI',
 						controlLimits: [
 						],
 					}, this),
@@ -1092,6 +1040,7 @@
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'VENDA___PSEUDNOVOGR01',
 						maxLength: 50,
+						labelId: 'label_VENDA___SALE_POTCOMPR',
 						controlLimits: [
 						],
 					}, this),
@@ -1115,7 +1064,6 @@
 						label: computed(() => this.Resources.QUALIFICATION64257),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						borderless: false,
 						isCollapsible: false,
 						anchored: false,
 						directChildren: ['VENDA___SALE_INTERESS', 'VENDA___SALE_SEMRFINA', 'VENDA___SALE_SEMCAPAC', 'VENDA___SALE_DTQUALIF', 'VENDA___SALE_QUALIFIC'],
@@ -1171,7 +1119,7 @@
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'VENDA___PSEUDNOVOGR02',
-						dateTimeType: 'dateTime',
+						format: 'dateTime',
 						controlLimits: [
 						],
 					}, this),
@@ -1195,7 +1143,6 @@
 						label: computed(() => this.Resources.PRE_APPROACH58979),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						borderless: false,
 						isCollapsible: false,
 						anchored: false,
 						directChildren: ['VENDA___SALE_PREABORD', 'VENDA___SALE_HOMEWORK'],
@@ -1212,7 +1159,7 @@
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'VENDA___PSEUDNOVOGR03',
-						dateTimeType: 'dateTime',
+						format: 'dateTime',
 						controlLimits: [
 						],
 					}, this),
@@ -1236,7 +1183,6 @@
 						label: computed(() => this.Resources.APPROACH06577),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						borderless: false,
 						isCollapsible: false,
 						anchored: false,
 						directChildren: ['VENDA___SALE_DTABORDA', 'VENDA___SALE_APPROACH'],
@@ -1253,7 +1199,7 @@
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'VENDA___PSEUDNOVOGR04',
-						dateTimeType: 'dateTime',
+						format: 'dateTime',
 						controlLimits: [
 						],
 					}, this),
@@ -1277,7 +1223,6 @@
 						label: computed(() => this.Resources.PRESENTATION64246),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						borderless: false,
 						isCollapsible: false,
 						anchored: false,
 						directChildren: ['VENDA___SALE_DTAPRESE', 'VENDA___SALE_APRESENT'],
@@ -1294,7 +1239,7 @@
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'VENDA___PSEUDNOVOGR05',
-						dateTimeType: 'dateTime',
+						format: 'dateTime',
 						controlLimits: [
 						],
 					}, this),
@@ -1318,7 +1263,6 @@
 						label: computed(() => this.Resources.OVERCOMING_OBJECTION04521),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						borderless: false,
 						isCollapsible: false,
 						anchored: false,
 						directChildren: ['VENDA___SALE_DTSUPERA'],
@@ -1335,7 +1279,7 @@
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'VENDA___PSEUDNOVOGR06',
-						dateTimeType: 'dateTime',
+						format: 'dateTime',
 						controlLimits: [
 						],
 					}, this),
@@ -1346,7 +1290,6 @@
 						label: computed(() => this.Resources.CLOSING_OF_THE_SALE05493),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						borderless: false,
 						isCollapsible: false,
 						anchored: false,
 						directChildren: ['VENDA___SALE_TENTFECH', 'VENDA___SALE_DTVENDA_'],
@@ -1363,7 +1306,7 @@
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'VENDA___PSEUDNOVOGR07',
-						dateTimeType: 'dateTime',
+						format: 'dateTime',
 						controlLimits: [
 						],
 					}, this),
@@ -1377,7 +1320,7 @@
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'VENDA___PSEUDNOVOGR07',
-						dateTimeType: 'dateTime',
+						format: 'dateTime',
 						controlLimits: [
 						],
 					}, this),
@@ -1388,7 +1331,6 @@
 						label: computed(() => this.Resources.FOLLOW_UP22119),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						borderless: false,
 						isCollapsible: false,
 						anchored: false,
 						directChildren: ['VENDA___SALE_DTACOMPA'],
@@ -1405,7 +1347,7 @@
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'VENDA___PSEUDNOVOGR08',
-						dateTimeType: 'dateTime',
+						format: 'dateTime',
 						controlLimits: [
 						],
 					}, this),
@@ -1536,23 +1478,17 @@
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 		},
 
-		beforeUnmount()
-		{
-/* eslint-disable indent, vue/html-indent, vue/script-indent */
-// USE /[MANUAL GQT COMPONENT_BEFORE_UNMOUNT VENDA]/
-// eslint-disable-next-line
-/* eslint-enable indent, vue/html-indent, vue/script-indent */
-		},
-
 		methods: {
 			/**
 			 * Called before form init.
 			 */
 			async beforeLoad()
 			{
+				let loadForm = true
+
 				// Execute the "Before init" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.beforeInit)
-				for (const trigger of triggers)
+				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
 				this.emitEvent('before-load-form')
@@ -1562,7 +1498,7 @@
 // eslint-disable-next-line
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 
-				return true
+				return loadForm
 			},
 
 			/**
@@ -1572,7 +1508,7 @@
 			{
 				// Execute the "After init" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.afterInit)
-				for (const trigger of triggers)
+				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
 				this.emitEvent('after-load-form')
@@ -1592,33 +1528,19 @@
 
 				// Execute the "Before apply" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.beforeApply)
-				for (const trigger of triggers)
+				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
-				const ticketsPromise = this.model.updateFilesTickets(true)
-				this.addBusy(ticketsPromise, this.Resources[hardcodedTexts.processing])
-				const canSetDocums = await ticketsPromise
+				const canSetDocums = await this.model.updateFilesTickets(true)
 
 				if (canSetDocums)
 				{
-					let results
-					const changesPromise = this.model.setDocumentChanges()
-					this.addBusy(changesPromise, this.Resources[hardcodedTexts.processing])
-					applyForm = await changesPromise
+					applyForm = await this.model.setDocumentChanges()
 
 					if (applyForm)
 					{
-						const insertsPromise = this.model.saveDocuments()
-						this.addBusy(insertsPromise, this.Resources[hardcodedTexts.processing])
-						results = await insertsPromise
+						const results = await this.model.saveDocuments()
 						applyForm = results.every((e) => e === true)
-					}
-
-					if (!changesPromise || (results && !results.every((e) => e === true)))
-					{
-						this.validationErrors = {
-							Erro: this.Resources.OCORREU_UM_ERRO_AO_T51884
-						}
 					}
 				}
 
@@ -1639,7 +1561,7 @@
 			{
 				// Execute the "After apply" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.afterApply)
-				for (const trigger of triggers)
+				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
 				this.emitEvent('after-apply-form')
@@ -1659,33 +1581,19 @@
 
 				// Execute the "Before save" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.beforeSave)
-				for (const trigger of triggers)
+				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
-				const ticketsPromise = this.model.updateFilesTickets()
-				this.addBusy(ticketsPromise, this.Resources[hardcodedTexts.processing])
-				const canSetDocums = await ticketsPromise
+				const canSetDocums = await this.model.updateFilesTickets()
 
 				if (canSetDocums)
 				{
-					let results
-					const changesPromise = this.model.setDocumentChanges()
-					this.addBusy(changesPromise, this.Resources[hardcodedTexts.processing])
-					saveForm = await changesPromise
+					saveForm = await this.model.setDocumentChanges()
 
 					if (saveForm)
 					{
-						const insertsPromise = this.model.saveDocuments()
-						this.addBusy(insertsPromise, this.Resources[hardcodedTexts.processing])
-						results = await insertsPromise
+						const results = await this.model.saveDocuments()
 						saveForm = results.every((e) => e === true)
-					}
-
-					if (!changesPromise || (results && !results.every((e) => e === true)))
-					{
-						this.validationErrors = {
-							Erro: this.Resources.OCORREU_UM_ERRO_AO_T51884
-						}
 					}
 				}
 
@@ -1704,9 +1612,11 @@
 			 */
 			async afterSave()
 			{
+				let redirectPage = true // Set to 'false' to cancel page redirect.
+
 				// Execute the "After save" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.afterSave)
-				for (const trigger of triggers)
+				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
 				this.emitEvent('after-save-form')
@@ -1716,7 +1626,7 @@
 // eslint-disable-next-line
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 
-				return true
+				return redirectPage
 			},
 
 			/**
@@ -1724,6 +1634,8 @@
 			 */
 			async beforeDel()
 			{
+				let deleteForm = true // Set to 'false' to cancel form delete.
+
 				this.emitEvent('before-delete-form')
 
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
@@ -1731,7 +1643,7 @@
 // eslint-disable-next-line
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 
-				return true
+				return deleteForm
 			},
 
 			/**
@@ -1739,6 +1651,8 @@
 			 */
 			async afterDel()
 			{
+				let redirectPage = true // Set to 'false' to cancel page redirect.
+
 				this.emitEvent('after-delete-form')
 
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
@@ -1746,7 +1660,7 @@
 // eslint-disable-next-line
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 
-				return true
+				return redirectPage
 			},
 
 			/**
@@ -1754,9 +1668,11 @@
 			 */
 			async beforeExit()
 			{
+				let leaveForm = true // Set to 'false' to cancel page redirect.
+
 				// Execute the "Before exit" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.beforeExit)
-				for (const trigger of triggers)
+				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
 				this.emitEvent('before-exit-form')
@@ -1766,7 +1682,7 @@
 // eslint-disable-next-line
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 
-				return true
+				return leaveForm
 			},
 
 			/**
@@ -1776,7 +1692,7 @@
 			{
 				// Execute the "After exit" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.afterExit)
-				for (const trigger of triggers)
+				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
 				this.emitEvent('after-exit-form')

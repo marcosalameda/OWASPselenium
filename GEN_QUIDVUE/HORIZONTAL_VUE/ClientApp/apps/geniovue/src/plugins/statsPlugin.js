@@ -17,7 +17,7 @@ class StatsPlugin
 				// eslint-disable-next-line no-console
 				console.log(`Done - ${stats.endTime - stats.startTime} ms`)
 
-				const statsJson = stats.toJson()
+				let statsJson = stats.toJson()
 				return this.saveStats(statsJson)
 			})
 		}
@@ -33,12 +33,12 @@ class StatsPlugin
 	saveStats(data)
 	{
 		return new Promise((resolve) => {
-			const profilingFolder = path.resolve('./profiling')
+			let profilingFolder = path.resolve('./profiling')
 
 			if (!fs.existsSync(profilingFolder))
 				fs.mkdirSync(profilingFolder)
 
-			const writeStream = fs.createWriteStream(path.resolve(`./profiling/stats_${Date.now()}.json`), { flag: 'w+' })
+			let writeStream = fs.createWriteStream(path.resolve(`./profiling/stats_${Date.now()}.json`), { flag: 'w+' })
 			json.createStringifyStream({ body: data }).pipe(writeStream)
 			writeStream.on('close', () => {
 				resolve()

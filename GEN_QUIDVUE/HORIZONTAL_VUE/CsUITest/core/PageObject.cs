@@ -1,4 +1,3 @@
-using AngleSharp.Dom;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Support.UI;
 using System.Collections.ObjectModel;
@@ -29,11 +28,11 @@ public class PageObject {
 	}
 
     /// <summary>
-    /// Get a DOM element within an element if it exists. Otherwise return null.
+    /// Get a DOM element if it exists. Otherwise return null.
     /// </summary>
 	/// <param name="element">The DOM element to search within.</param>
     /// <param name="by">The locating mechanism to use.</param>
-    public IWebElement GetElement(ISearchContext element, By by)
+    public IWebElement GetElement(IWebElement element, By by)
     {
 		if (element == null)
 			return null;
@@ -49,17 +48,6 @@ public class PageObject {
 
 		// Element found
 		return elementList[0];
-    }
-
-    /// <summary>
-    /// Get a DOM element if it exists. Otherwise return null.
-    /// </summary>
-    /// <param name="by">The locating mechanism to use.</param>
-    public IWebElement GetElement(By by)
-    {
-        IWebElement document = driver.FindElement(By.TagName("HTML"));
-
-		return GetElement(document, by);
     }
 
 

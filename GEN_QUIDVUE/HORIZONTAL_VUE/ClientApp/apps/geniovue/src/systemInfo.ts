@@ -1,16 +1,23 @@
-﻿// @ts-expect-error -- types still WIP
+﻿// @ts-expect-error genericFunctions does not export type definitions yet
 import { getLayoutVariables } from '@quidgest/clientapp/utils/genericFunctions'
-import { useSystemDataStore } from '@quidgest/clientapp/stores'
 
 import layoutConfigJson from './assets/config/Layoutconfig.json'
 
 export const systemInfo = {
 	applicationName: 'Horizontal Layout - Vue',
 
-	get genio() {
-		// Access the store inside the getter to ensure Pinia is initialized
-		const systemDataStore = useSystemDataStore()
-		return systemDataStore.versionInfo
+	genio: {
+		buildVersion: 3637,
+		dbIdxVersion: 2144,
+		dbVersion: '4461',
+		genioVersion: '378,82',
+		trackChangesVersion: '0',
+		assemblyVersion: '378,82.4461.0.3637',
+		generationDate: {
+			year: 2026,
+			month: 5,
+			day: 5
+		}
 	},
 
 	system: {
@@ -56,11 +63,9 @@ export const systemInfo = {
 
 	isCavAvailable: true,
 
-	isChatBotAvailable: false,
+	isChatBotAvailable: true,
 
 	isSuggestionsAvailable: true,
-
-	isNotesAvailable: false,
 
 	appAlerts: [
 		{
@@ -94,6 +99,16 @@ export const systemInfo = {
 			disableIfLowerThan: 0,
 		},
 		{
+			id: 'NOTUSEDITEMS',
+			module: 'GQT',
+			tag: '{GQT_UNUSED_ITEMS_Count}',
+			title: '_GQT_UNUSED_ITEMS_CO34020',
+			description: '_GQT_UNUSED_ITEMS_CO35460',
+			isResource: true,
+			isDismissible: true,
+			disableIfLowerThan: 0,
+		},
+		{
 			id: 'DEVOLUCAO',
 			module: 'GQT',
 			tag: '{GQT_DEVOL_Count}',
@@ -118,6 +133,14 @@ export const systemInfo = {
 	userRegistration: {
 		allowRegistration: true,
 		registrationTypes: [
+			{
+				id: '38736086-6c5c-4d7c-868b-99965d00f117',
+				designation: 'REGISTO48087',
+				component: 'QFormRegis',
+				form: 'Regis',
+				pswForm: 'Defaultpsw',
+				PswComponent: 'QFormAccountInfo'
+			},
 		]
 	},
 

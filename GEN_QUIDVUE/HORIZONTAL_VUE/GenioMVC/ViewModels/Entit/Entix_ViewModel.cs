@@ -1,20 +1,20 @@
-﻿using CSGenio.business;
-using CSGenio.framework;
-using CSGenio.persistence;
-using GenioMVC.Helpers;
-using GenioMVC.Models.Exception;
-using GenioMVC.Models.Navigation;
+﻿using JsonIgnoreAttribute = System.Text.Json.Serialization.JsonIgnoreAttribute;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Quidgest.Persistence;
-using Quidgest.Persistence.GenericQuery;
-
 using System.Collections;
 using System.Collections.Concurrent;
 using System.Collections.Specialized;
 using System.ComponentModel.DataAnnotations;
 using System.Data;
 using System.Globalization;
-using System.Text.Json.Serialization;
+
+using CSGenio.business;
+using CSGenio.framework;
+using CSGenio.persistence;
+using GenioMVC.Helpers;
+using GenioMVC.Models.Exception;
+using GenioMVC.Models.Navigation;
+using Quidgest.Persistence;
+using Quidgest.Persistence.GenericQuery;
 
 namespace GenioMVC.ViewModels.Entit
 {
@@ -42,7 +42,6 @@ namespace GenioMVC.ViewModels.Entit
 		public string ValLastfacilitie { get; set; }
 
 		#endregion
-
 		/// <summary>
 		/// Title: "Legal name" | Type: "C"
 		/// </summary>
@@ -72,9 +71,9 @@ namespace GenioMVC.ViewModels.Entit
 		/// </summary>
 		public string ValPhonenum { get; set; }
 		/// <summary>
-		/// Title: "Owner" | Type: "L"
+		/// Title: "Owner" | Type: "C"
 		/// </summary>
-		public bool ValOwner { get; set; }
+		public string ValOwner { get; set; }
 		/// <summary>
 		/// Title: "Carrier" | Type: "L"
 		/// </summary>
@@ -297,7 +296,7 @@ namespace GenioMVC.ViewModels.Entit
 				ValTaxnumbe = ViewModelConversion.ToString(m.ValTaxnumbe);
 				ValIban = ViewModelConversion.ToString(m.ValIban);
 				ValPhonenum = ViewModelConversion.ToString(m.ValPhonenum);
-				ValOwner = ViewModelConversion.ToLogic(m.ValOwner);
+				ValOwner = ViewModelConversion.ToString(m.ValOwner);
 				ValCarrier = ViewModelConversion.ToLogic(m.ValCarrier);
 				ValSupplier = ViewModelConversion.ToLogic(m.ValSupplier);
 				ValManufact = ViewModelConversion.ToLogic(m.ValManufact);
@@ -349,7 +348,7 @@ namespace GenioMVC.ViewModels.Entit
 				m.ValTaxnumbe = ViewModelConversion.ToString(ValTaxnumbe);
 				m.ValIban = ViewModelConversion.ToString(ValIban);
 				m.ValPhonenum = ViewModelConversion.ToString(ValPhonenum);
-				m.ValOwner = ViewModelConversion.ToLogic(ValOwner);
+				m.ValOwner = ViewModelConversion.ToString(ValOwner);
 				m.ValCarrier = ViewModelConversion.ToLogic(ValCarrier);
 				m.ValSupplier = ViewModelConversion.ToLogic(ValSupplier);
 				m.ValManufact = ViewModelConversion.ToLogic(ValManufact);
@@ -387,7 +386,12 @@ namespace GenioMVC.ViewModels.Entit
 			}
 		}
 
-		/// <inheritdoc />
+		/// <summary>
+		/// Sets the value of a single property of the view model based on the provided table and field names.
+		/// </summary>
+		/// <param name="fullFieldName">The full field name in the format "table.field".</param>
+		/// <param name="value">The field value.</param>
+		/// <exception cref="ArgumentNullException">Thrown if <paramref name="fullFieldName"/> is null.</exception>
 		public override void SetViewModelValue(string fullFieldName, object value)
 		{
 			try
@@ -420,7 +424,7 @@ namespace GenioMVC.ViewModels.Entit
 						this.ValPhonenum = ViewModelConversion.ToString(_value);
 						break;
 					case "entit.owner":
-						this.ValOwner = ViewModelConversion.ToLogic(_value);
+						this.ValOwner = ViewModelConversion.ToString(_value);
 						break;
 					case "entit.carrier":
 						this.ValCarrier = ViewModelConversion.ToLogic(_value);
@@ -534,17 +538,6 @@ namespace GenioMVC.ViewModels.Entit
 				// Conexão deve estar aberta de fora. Podem haver formulas que utilizam funções "manuais".
 				// TODO: It needs to be analyzed whether we should disable the security of field filling here. If there is any case where the field with the block condition can only be calculated after the double calculation of the formulas.
 				MapToModel(Model);
-
-				// If it's inserting or duplicating, needs to fill the default values.
-				if (Navigation.CurrentLevel.FormMode == FormMode.New || Navigation.CurrentLevel.FormMode == FormMode.Duplicate)
-				{
-					FunctionType funcType = Navigation.CurrentLevel.FormMode == FormMode.New
-						? FunctionType.INS
-						: FunctionType.DUP;
-
-					Model.baseklass.fillValuesDefault(m_userContext.PersistentSupport, funcType);
-				}
-
 				// Preencher operações internas
 				Model.klass.fillInternalOperations(m_userContext.PersistentSupport, oldvalues);
 				MapFromModel(Model);
@@ -588,7 +581,6 @@ namespace GenioMVC.ViewModels.Entit
 
 			Load_Entix___faci1name____(qs, lazyLoad);
 			Load_Entix___faci2name____(qs, lazyLoad);
-
 // USE /[MANUAL GQT VIEWMODEL_LOADPARTIAL ENTIX]/
 		}
 
@@ -607,25 +599,26 @@ namespace GenioMVC.ViewModels.Entit
 
 			validator.Required("ValName", Resources.Resources.LEGAL_NAME42902, ViewModelConversion.ToString(ValName), FieldType.TEXT.GetFormatting());
 			validator.StringLength("ValInitials", Resources.Resources.COMPANY_INITIALS56204, ValInitials, 10);
-			validator.StringLength("ValRegistra", Resources.Resources.LEGAL_REGISTRATION04413, ValRegistra, 20);
-			validator.StringLength("ValTaxnumbe", Resources.Resources.VAT_NUMBER24236, ValTaxnumbe, 20);
-			validator.StringLength("ValIban", Resources.Resources.IBAN__INTERNATIONAL_45066, ValIban, 25);
+			validator.StringLength("ValRegistra", Resources.Resources.LEGAL_REGISTRATION04413, ValRegistra, 30);
+			validator.StringLength("ValTaxnumbe", Resources.Resources.VAT_NUMBER24236, ValTaxnumbe, 30);
+			validator.StringLength("ValIban", Resources.Resources.IBAN__INTERNATIONAL_45066, ValIban, 33);
 			validator.StringLength("ValPhonenum", Resources.Resources.PHONE_NUMBER20774, ValPhonenum, 20);
+			validator.StringLength("ValOwner", Resources.Resources.OWNER09558, ValOwner, 50);
 			validator.StringLength("ValTelephon", Resources.Resources.TELEPHONE28697, ValTelephon, 20);
 			validator.StringLength("ValFax", Resources.Resources.FAX08532, ValFax, 20);
 			validator.StringLength("ValEmail", Resources.Resources.EMAIL25170, ValEmail, 254);
 			validator.StringLength("ValWebsite", Resources.Resources.WEB_SITE06263, ValWebsite, 254);
 			validator.Hyperlink(Resources.Resources.WEB_SITE06263, ValWebsite);
 			validator.StringLength("ValPerson", Resources.Resources.PERSON_DEPARTMENT_TO28777, ValPerson, 85);
-			validator.StringLength("ValContact", Resources.Resources.CONTACT_TELEPHONE_NU12694, ValContact, 20);
+			validator.StringLength("ValContact", Resources.Resources.CONTACT_TELEPHONE_NU12694, ValContact, 30);
 			validator.StringLength("ValLanguage", Resources.Resources.LANGUAGE16872, ValLanguage, 2);
 			validator.StringLength("ValCurrency", Resources.Resources.CURRENCY13881, ValCurrency, 3);
-			validator.StringLength("ValBuilding", Resources.Resources.BUILDING_HOUSE_NUMBE20738, ValBuilding, 10);
-			validator.StringLength("ValStreet", Resources.Resources.STREET44324, ValStreet, 85);
-			validator.StringLength("ValTown", Resources.Resources.TOWN_CITY16259, ValTown, 85);
-			validator.StringLength("ValCounty", Resources.Resources.COUNTY_PROVINCE34285, ValCounty, 85);
-			validator.StringLength("ValState", Resources.Resources.STATE_PROVINCE28516, ValState, 85);
-			validator.StringLength("ValPostalco", Resources.Resources.ZIP_POSTAL_CODE55613, ValPostalco, 50);
+			validator.StringLength("ValBuilding", Resources.Resources.BUILDING_HOUSE_NUMBE20738, ValBuilding, 25);
+			validator.StringLength("ValStreet", Resources.Resources.STREET44324, ValStreet, 50);
+			validator.StringLength("ValTown", Resources.Resources.TOWN_CITY16259, ValTown, 50);
+			validator.StringLength("ValCounty", Resources.Resources.COUNTY_PROVINCE34285, ValCounty, 50);
+			validator.StringLength("ValState", Resources.Resources.STATE_PROVINCE28516, ValState, 50);
+			validator.StringLength("ValPostalco", Resources.Resources.ZIP_POSTAL_CODE55613, ValPostalco, 10);
 			validator.StringLength("ValPobox", Resources.Resources.POST_OFFICE_BOX06223, ValPobox, 5);
 
 
@@ -682,7 +675,10 @@ namespace GenioMVC.ViewModels.Entit
 				}
 			}
 
-			TableFaci1Name = new TableDBEdit<Models.Faci1>();
+			TableFaci1Name = new TableDBEdit<Models.Faci1>
+			{
+				IsLazyLoad = lazyLoad
+			};
 
 			if (lazyLoad)
 			{
@@ -697,7 +693,7 @@ namespace GenioMVC.ViewModels.Entit
 
 			if (entix___faci1name____DoLoad)
 			{
-				List<ColumnSort> sorts = [];
+				List<ColumnSort> sorts = new List<ColumnSort>();
 				ColumnSort requestedSort = GetRequestSort(TableFaci1Name, "sTableFaci1Name", "dTableFaci1Name", qs, "faci1");
 				if (requestedSort != null)
 					sorts.Add(requestedSort);
@@ -746,7 +742,7 @@ namespace GenioMVC.ViewModels.Entit
 
 				TableFaci1Name.SetPagination(page, numberItems, listing.HasMore, listing.GetTotal, listing.TotalRecords);
 				TableFaci1Name.Query = query;
-				TableFaci1Name.Elements = listing.RowsForViewModel((r) => new GenioMVC.Models.Faci1(m_userContext, r, true, _fieldsToSerialize_ENTIX___FACI1NAME____));
+				TableFaci1Name.Elements = listing.RowsForViewModel<GenioMVC.Models.Faci1>((r) => new GenioMVC.Models.Faci1(m_userContext, r, true, _fieldsToSerialize_ENTIX___FACI1NAME____));
 
 				//created by [ MH ] at [ 14.04.2016 ] - Foi alterada a forma de retornar a key do novo registo inserido / editado no form de apoio do DBEdit.
 				//last update by [ MH ] at [ 10.05.2016 ] - Validação se key encontra-se no level atual, as chaves dos niveis anteriores devem ser ignorados.
@@ -868,7 +864,10 @@ namespace GenioMVC.ViewModels.Entit
 				}
 			}
 
-			TableFaci2Name = new TableDBEdit<Models.Faci2>();
+			TableFaci2Name = new TableDBEdit<Models.Faci2>
+			{
+				IsLazyLoad = lazyLoad
+			};
 
 			if (lazyLoad)
 			{
@@ -883,7 +882,7 @@ namespace GenioMVC.ViewModels.Entit
 
 			if (entix___faci2name____DoLoad)
 			{
-				List<ColumnSort> sorts = [];
+				List<ColumnSort> sorts = new List<ColumnSort>();
 				ColumnSort requestedSort = GetRequestSort(TableFaci2Name, "sTableFaci2Name", "dTableFaci2Name", qs, "faci2");
 				if (requestedSort != null)
 					sorts.Add(requestedSort);
@@ -932,7 +931,7 @@ namespace GenioMVC.ViewModels.Entit
 
 				TableFaci2Name.SetPagination(page, numberItems, listing.HasMore, listing.GetTotal, listing.TotalRecords);
 				TableFaci2Name.Query = query;
-				TableFaci2Name.Elements = listing.RowsForViewModel((r) => new GenioMVC.Models.Faci2(m_userContext, r, true, _fieldsToSerialize_ENTIX___FACI2NAME____));
+				TableFaci2Name.Elements = listing.RowsForViewModel<GenioMVC.Models.Faci2>((r) => new GenioMVC.Models.Faci2(m_userContext, r, true, _fieldsToSerialize_ENTIX___FACI2NAME____));
 
 				//created by [ MH ] at [ 14.04.2016 ] - Foi alterada a forma de retornar a key do novo registo inserido / editado no form de apoio do DBEdit.
 				//last update by [ MH ] at [ 10.05.2016 ] - Validação se key encontra-se no level atual, as chaves dos niveis anteriores devem ser ignorados.
@@ -1049,7 +1048,7 @@ namespace GenioMVC.ViewModels.Entit
 				"entit.taxnumbe" => ViewModelConversion.ToString(modelValue),
 				"entit.iban" => ViewModelConversion.ToString(modelValue),
 				"entit.phonenum" => ViewModelConversion.ToString(modelValue),
-				"entit.owner" => ViewModelConversion.ToLogic(modelValue),
+				"entit.owner" => ViewModelConversion.ToString(modelValue),
 				"entit.carrier" => ViewModelConversion.ToLogic(modelValue),
 				"entit.supplier" => ViewModelConversion.ToLogic(modelValue),
 				"entit.manufact" => ViewModelConversion.ToLogic(modelValue),

@@ -3,23 +3,20 @@
 		v-if="menuModalIsReady"
 		:to="`#${uiContainersId.body}`"
 		:disabled="!menuInfo.isPopup">
-		<div
+		<form
 			class="form-horizontal"
 			@submit.prevent>
 			<q-row-container>
 				<q-table
 					v-bind="controls.menu"
 					v-on="controls.menu.handlers">
-					<template #header>
-						<q-table-config
-							:table-ctrl="controls.menu"
-							v-on="controls.menu.handlers">
-						</q-table-config>
-					</template>
-					<!-- USE /[MANUAL GQT CUSTOM_TABLE IMO_Menu_211]/ -->
 				</q-table>
+
+				<q-table-extra-extension
+					:list-ctrl="controls.menu"
+					v-on="controls.menu.handlers" />
 			</q-row-container>
-		</div>
+		</form>
 	</teleport>
 
 	<teleport
@@ -51,7 +48,7 @@
 </template>
 
 <script>
-	/* eslint-disable @typescript-eslint/no-unused-vars */
+	/* eslint-disable no-unused-vars */
 	import asyncProcM from '@quidgest/clientapp/composables/async'
 	import qEnums from '@quidgest/clientapp/constants/enums'
 	import netAPI from '@quidgest/clientapp/network'
@@ -71,7 +68,7 @@
 	import qApi from '@/api/genio/quidgestFunctions.js'
 	import qFunctions from '@/api/genio/projectFunctions.js'
 	import qProjArrays from '@/api/genio/projectArrays.js'
-	/* eslint-enable @typescript-eslint/no-unused-vars */
+	/* eslint-enable no-unused-vars */
 
 	import MenuViewModel from './QMenuIMO_211ViewModel.js'
 
@@ -155,7 +152,6 @@
 								label: computed(() => this.Resources.COUNTRY64133),
 								dataLength: 90,
 								scrollData: 30,
-								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.BooleanColumn({
 								order: 2,
@@ -164,7 +160,6 @@
 								field: 'ACTIVE',
 								label: computed(() => this.Resources.ACTIVE03270),
 								scrollData: 1,
-								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 3,
@@ -174,7 +169,6 @@
 								label: computed(() => this.Resources.NUMERIC19292),
 								dataLength: 3,
 								scrollData: 3,
-								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 4,
@@ -184,7 +178,6 @@
 								label: computed(() => this.Resources.ALPHABETIC_232435),
 								dataLength: 2,
 								scrollData: 2,
-								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 5,
@@ -194,7 +187,6 @@
 								label: computed(() => this.Resources.ALPHABETIC_316640),
 								dataLength: 3,
 								scrollData: 3,
-								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.ImageColumn({
 								order: 6,
@@ -206,7 +198,6 @@
 								scrollData: 3,
 								sortable: false,
 								searchable: false,
-								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 						],
 						config: {
@@ -222,8 +213,10 @@
 							permissions: {
 							},
 							searchBarConfig: {
-								visibility: true
+								visibility: true,
+								searchOnPressEnter: true
 							},
+							filtersVisible: true,
 							allowColumnFilters: true,
 							allowColumnSort: true,
 							crudActions: [
@@ -297,7 +290,9 @@
 									id: 'insert',
 									name: 'insert',
 									title: computed(() => this.Resources.INSERIR43365),
-									icon: { icon: 'add' },
+									icon: {
+										icon: 'add'
+									},
 									isInReadOnly: true,
 									params: {
 										action: vm.openFormAction,
@@ -320,7 +315,6 @@
 							rowClickAction: {
 								id: 'RCA_IMO_2111',
 								name: 'form-PAIS',
-								isVisible: true,
 								params: {
 									isRoute: true,
 									limits: [
@@ -352,33 +346,34 @@
 							{
 								id: 'filter_IMO_Menu_211_ACTIVO',
 								isMultiple: false,
-								items: [
+								filters: [
+									{
+										id: 'filter_IMO_Menu_211_ACTIVO_1',
+										key: '1',
+										value: computed(() => this.Resources.ASSETS12081),
+										selected: true
+									},
+									{
+										id: 'filter_IMO_Menu_211_ACTIVO_2',
+										key: '2',
+										value: computed(() => this.Resources.INACTIVE23138),
+										selected: false
+									},
+									{
+										id: 'filter_IMO_Menu_211_ACTIVO_3',
+										key: '3',
+										value: computed(() => this.Resources.ALL38603),
+										selected: false
+									},
 								],
-								selected: undefined,
-								default: undefined
-							},
-							{
-								id: 'filter_IMO_Menu_211_ACTIVO',
-								isMultiple: false,
-								items: [
-								],
-								selected: undefined,
-								default: undefined
-							},
-							{
-								id: 'filter_IMO_Menu_211_ACTIVO',
-								isMultiple: false,
-								items: [
-								],
-								selected: undefined,
-								default: undefined
+								value: '1',
+								defaultValue: '1'
 							},
 						],
 						globalEvents: ['changed-CNTRY'],
 						uuid: 'a1f95b79-43d9-4afa-90b0-1c6f2d9334b1',
 						allSelectedRows: 'false',
 						headerLevel: 1,
-						isActiveControl: computed(() => this.isActiveMenu)
 					}, this),
 				}
 			}
@@ -402,14 +397,6 @@
 		{
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
 // USE /[MANUAL GQT FORM_CODEJS IMO_MENU_211]/
-// eslint-disable-next-line
-/* eslint-enable indent, vue/html-indent, vue/script-indent */
-		},
-
-		beforeUnmount()
-		{
-/* eslint-disable indent, vue/html-indent, vue/script-indent */
-// USE /[MANUAL GQT COMPONENT_BEFORE_UNMOUNT IMO_MENU_211]/
 // eslint-disable-next-line
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 		},

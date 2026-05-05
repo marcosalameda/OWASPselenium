@@ -38,16 +38,9 @@
 									:label="btn.label"
 									:disabled="btn.disabled"
 									@click="btn.action">
-									<template v-if="btn.icon">
-										<q-badge-indicator
-											v-if="btn.badge && btn.badge.isVisible"
-											:color="btn.badge.color">
-											<q-icon v-bind="btn.icon" />
-										</q-badge-indicator>
-										<q-icon
-											v-else
-											v-bind="btn.icon" />
-									</template>
+									<q-icon
+										v-if="btn.icon"
+										v-bind="btn.icon" />
 								</q-toggle-group-item>
 							</template>
 						</q-toggle-group>
@@ -59,7 +52,7 @@
 				v-if="$app.layout.FormAnchorsPosition === 'form-header' && visibleGroups.length > 0"
 				:anchors="anchorGroups"
 				:controls="visibleControls"
-				@focus-control="focusControl" />
+				@focus-control="(...args) => focusControl(...args)" />
 		</div>
 	</teleport>
 
@@ -80,7 +73,6 @@
 						v-if="btn.isActive && btn.isVisible && btn.showInHeading"
 						:id="`heading-${btn.id}`"
 						:label="btn.text"
-						:color="btn.color"
 						:variant="btn.variant"
 						:disabled="btn.disabled"
 						:icon-pos="btn.iconPos"
@@ -94,17 +86,16 @@
 			</q-button-group>
 		</div>
 
-		<q-container
-			fluid
+		<div
+			class="form-flow"
 			data-key="FLDSCOND"
-			:data-loading="!formInitialDataLoaded || !isActiveForm">
+			:data-loading="!formInitialDataLoaded">
 			<template v-if="formControl.initialized && showFormBody">
-				<q-row v-if="controls.FLDSCONDFLDS_COND____.isVisible || controls.FLDSCONDPSEUDGROUP4__.isVisible">
-					<q-col
-						v-if="controls.FLDSCONDFLDS_COND____.isVisible || controls.FLDSCONDPSEUDGROUP4__.isVisible"
-						cols="auto">
+				<q-row-container v-show="controls.FLDSCONDFLDS_COND____.isVisible || controls.FLDSCONDPSEUDGROUP4__.isVisible">
+					<q-control-wrapper
+						v-show="controls.FLDSCONDFLDS_COND____.isVisible || controls.FLDSCONDPSEUDGROUP4__.isVisible"
+						class="${Vue.GetControlWrapperClass($controlsColumn)}">
 						<base-input-structure
-							v-if="controls.FLDSCONDFLDS_COND____.isVisible"
 							class="i-radio-container"
 							v-bind="controls.FLDSCONDFLDS_COND____"
 							v-on="controls.FLDSCONDFLDS_COND____.handlers"
@@ -114,28 +105,26 @@
 							:suggestion-mode-on="suggestionModeOn">
 							<q-radio-group
 								v-if="controls.FLDSCONDFLDS_COND____.isVisible"
-								v-bind="controls.FLDSCONDFLDS_COND____.props"
-								v-on="controls.FLDSCONDFLDS_COND____.handlers">
-								<q-radio-button
-									v-for="radio in controls.FLDSCONDFLDS_COND____.items"
-									:key="radio.key"
-									:label="radio.value"
-									:value="radio.key" />
-							</q-radio-group>
+								id="FLDSCONDFLDS_COND____"
+								:model-value="model.ValCond.value"
+								deselect-radio
+								:label-left-side="controls.FLDSCONDFLDS_COND____.labelPosition === labelAlignment.left"
+								:number-of-columns="controls.FLDSCONDFLDS_COND____.columnNumber"
+								:is-required="controls.FLDSCONDFLDS_COND____.isRequired"
+								:readonly="controls.FLDSCONDFLDS_COND____.readonly"
+								:options-list="controls.FLDSCONDFLDS_COND____.items"
+								@update:model-value="model.ValCond.fnUpdateValue" />
 						</base-input-structure>
 						<q-group-box-container
-							v-if="controls.FLDSCONDPSEUDGROUP4__.isVisible"
 							id="FLDSCONDPSEUDGROUP4__"
 							v-bind="controls.FLDSCONDPSEUDGROUP4__"
-							no-border
 							:is-visible="controls.FLDSCONDPSEUDGROUP4__.isVisible">
 							<!-- Start FLDSCONDPSEUDGROUP4__ -->
-							<q-row v-if="controls.FLDSCONDFLDS_TBLCOND_.isVisible">
-								<q-col
-									v-if="controls.FLDSCONDFLDS_TBLCOND_.isVisible"
-									cols="auto">
+							<q-row-container v-show="controls.FLDSCONDFLDS_TBLCOND_.isVisible">
+								<q-control-wrapper
+									v-show="controls.FLDSCONDFLDS_TBLCOND_.isVisible"
+									class="${Vue.GetControlWrapperClass($controlsColumn)}">
 									<base-input-structure
-										v-if="controls.FLDSCONDFLDS_TBLCOND_.isVisible"
 										class="i-checkbox"
 										v-bind="controls.FLDSCONDFLDS_TBLCOND_"
 										v-on="controls.FLDSCONDFLDS_TBLCOND_.handlers"
@@ -143,20 +132,19 @@
 										:reporting-mode-on="reportingModeCAV"
 										:suggestion-mode-on="suggestionModeOn">
 										<template #label>
-											<q-checkbox
+											<q-checkbox-input
 												v-if="controls.FLDSCONDFLDS_TBLCOND_.isVisible"
 												v-bind="controls.FLDSCONDFLDS_TBLCOND_.props"
 												v-on="controls.FLDSCONDFLDS_TBLCOND_.handlers" />
 										</template>
 									</base-input-structure>
-								</q-col>
-							</q-row>
-							<q-row v-if="controls.FLDSCONDFLDS_FORMCOND.isVisible">
-								<q-col
-									v-if="controls.FLDSCONDFLDS_FORMCOND.isVisible"
-									cols="auto">
+								</q-control-wrapper>
+							</q-row-container>
+							<q-row-container v-show="controls.FLDSCONDFLDS_FORMCOND.isVisible">
+								<q-control-wrapper
+									v-show="controls.FLDSCONDFLDS_FORMCOND.isVisible"
+									class="${Vue.GetControlWrapperClass($controlsColumn)}">
 									<base-input-structure
-										v-if="controls.FLDSCONDFLDS_FORMCOND.isVisible"
 										class="i-checkbox"
 										v-bind="controls.FLDSCONDFLDS_FORMCOND"
 										v-on="controls.FLDSCONDFLDS_FORMCOND.handlers"
@@ -164,32 +152,34 @@
 										:reporting-mode-on="reportingModeCAV"
 										:suggestion-mode-on="suggestionModeOn">
 										<template #label>
-											<q-checkbox
+											<q-checkbox-input
 												v-if="controls.FLDSCONDFLDS_FORMCOND.isVisible"
 												v-bind="controls.FLDSCONDFLDS_FORMCOND.props"
 												v-on="controls.FLDSCONDFLDS_FORMCOND.handlers" />
 										</template>
 									</base-input-structure>
-								</q-col>
-							</q-row>
+								</q-control-wrapper>
+							</q-row-container>
 							<!-- End FLDSCONDPSEUDGROUP4__ -->
 						</q-group-box-container>
-					</q-col>
-				</q-row>
-				<q-row v-if="controls.FLDSCONDPSEUDGROUP1__.isVisible">
-					<q-col v-if="controls.FLDSCONDPSEUDGROUP1__.isVisible">
+					</q-control-wrapper>
+				</q-row-container>
+				<q-row-container
+					v-show="controls.FLDSCONDPSEUDGROUP1__.isVisible"
+					is-large>
+					<q-control-wrapper
+						v-show="controls.FLDSCONDPSEUDGROUP1__.isVisible"
+						class="${Vue.GetControlWrapperClass($controlsColumn)}">
 						<q-group-box-container
-							v-if="controls.FLDSCONDPSEUDGROUP1__.isVisible"
 							id="FLDSCONDPSEUDGROUP1__"
 							v-bind="controls.FLDSCONDPSEUDGROUP1__"
 							:is-visible="controls.FLDSCONDPSEUDGROUP1__.isVisible">
 							<!-- Start FLDSCONDPSEUDGROUP1__ -->
-							<q-row v-if="controls.FLDSCONDFLDS_FCLIENT1.isVisible">
-								<q-col
-									v-if="controls.FLDSCONDFLDS_FCLIENT1.isVisible"
-									cols="auto">
+							<q-row-container v-show="controls.FLDSCONDFLDS_FCLIENT1.isVisible">
+								<q-control-wrapper
+									v-show="controls.FLDSCONDFLDS_FCLIENT1.isVisible"
+									class="${Vue.GetControlWrapperClass($controlsColumn)}">
 									<base-input-structure
-										v-if="controls.FLDSCONDFLDS_FCLIENT1.isVisible"
 										class="i-text"
 										v-bind="controls.FLDSCONDFLDS_FCLIENT1"
 										v-on="controls.FLDSCONDFLDS_FCLIENT1.handlers"
@@ -201,14 +191,13 @@
 											@blur="onBlur(controls.FLDSCONDFLDS_FCLIENT1, model.ValFclient1.value)"
 											@change="model.ValFclient1.fnUpdateValueOnChange" />
 									</base-input-structure>
-								</q-col>
-							</q-row>
-							<q-row v-if="controls.FLDSCONDFLDS_FFILLWHN.isVisible">
-								<q-col
-									v-if="controls.FLDSCONDFLDS_FFILLWHN.isVisible"
-									cols="auto">
+								</q-control-wrapper>
+							</q-row-container>
+							<q-row-container v-show="controls.FLDSCONDFLDS_FFILLWHN.isVisible">
+								<q-control-wrapper
+									v-show="controls.FLDSCONDFLDS_FFILLWHN.isVisible"
+									class="${Vue.GetControlWrapperClass($controlsColumn)}">
 									<base-input-structure
-										v-if="controls.FLDSCONDFLDS_FFILLWHN.isVisible"
 										class="i-text"
 										v-bind="controls.FLDSCONDFLDS_FFILLWHN"
 										v-on="controls.FLDSCONDFLDS_FFILLWHN.handlers"
@@ -220,14 +209,13 @@
 											@blur="onBlur(controls.FLDSCONDFLDS_FFILLWHN, model.ValFfillwhn.value)"
 											@change="model.ValFfillwhn.fnUpdateValueOnChange" />
 									</base-input-structure>
-								</q-col>
-							</q-row>
-							<q-row v-if="controls.FLDSCONDFLDS_FSERVER1.isVisible">
-								<q-col
-									v-if="controls.FLDSCONDFLDS_FSERVER1.isVisible"
-									cols="auto">
+								</q-control-wrapper>
+							</q-row-container>
+							<q-row-container v-show="controls.FLDSCONDFLDS_FSERVER1.isVisible">
+								<q-control-wrapper
+									v-show="controls.FLDSCONDFLDS_FSERVER1.isVisible"
+									class="${Vue.GetControlWrapperClass($controlsColumn)}">
 									<base-input-structure
-										v-if="controls.FLDSCONDFLDS_FSERVER1.isVisible"
 										class="i-text"
 										v-bind="controls.FLDSCONDFLDS_FSERVER1"
 										v-on="controls.FLDSCONDFLDS_FSERVER1.handlers"
@@ -241,26 +229,28 @@
 											@reset-icon-click="model.ValFserver1.fnUpdateValue(model.ValFserver1.originalValue ?? new Date())"
 											@update:model-value="model.ValFserver1.fnUpdateValue($event ?? '')" />
 									</base-input-structure>
-								</q-col>
-							</q-row>
+								</q-control-wrapper>
+							</q-row-container>
 							<!-- End FLDSCONDPSEUDGROUP1__ -->
 						</q-group-box-container>
-					</q-col>
-				</q-row>
-				<q-row v-if="controls.FLDSCONDPSEUDGROUP2__.isVisible">
-					<q-col v-if="controls.FLDSCONDPSEUDGROUP2__.isVisible">
+					</q-control-wrapper>
+				</q-row-container>
+				<q-row-container
+					v-show="controls.FLDSCONDPSEUDGROUP2__.isVisible"
+					is-large>
+					<q-control-wrapper
+						v-show="controls.FLDSCONDPSEUDGROUP2__.isVisible"
+						class="${Vue.GetControlWrapperClass($controlsColumn)}">
 						<q-group-box-container
-							v-if="controls.FLDSCONDPSEUDGROUP2__.isVisible"
 							id="FLDSCONDPSEUDGROUP2__"
 							v-bind="controls.FLDSCONDPSEUDGROUP2__"
 							:is-visible="controls.FLDSCONDPSEUDGROUP2__.isVisible">
 							<!-- Start FLDSCONDPSEUDGROUP2__ -->
-							<q-row v-if="controls.FLDSCONDFLDS_FCLIENT2.isVisible">
-								<q-col
-									v-if="controls.FLDSCONDFLDS_FCLIENT2.isVisible"
-									cols="auto">
+							<q-row-container v-show="controls.FLDSCONDFLDS_FCLIENT2.isVisible">
+								<q-control-wrapper
+									v-show="controls.FLDSCONDFLDS_FCLIENT2.isVisible"
+									class="${Vue.GetControlWrapperClass($controlsColumn)}">
 									<base-input-structure
-										v-if="controls.FLDSCONDFLDS_FCLIENT2.isVisible"
 										class="i-checkbox"
 										v-bind="controls.FLDSCONDFLDS_FCLIENT2"
 										v-on="controls.FLDSCONDFLDS_FCLIENT2.handlers"
@@ -268,20 +258,19 @@
 										:reporting-mode-on="reportingModeCAV"
 										:suggestion-mode-on="suggestionModeOn">
 										<template #label>
-											<q-checkbox
+											<q-checkbox-input
 												v-if="controls.FLDSCONDFLDS_FCLIENT2.isVisible"
 												v-bind="controls.FLDSCONDFLDS_FCLIENT2.props"
 												v-on="controls.FLDSCONDFLDS_FCLIENT2.handlers" />
 										</template>
 									</base-input-structure>
-								</q-col>
-							</q-row>
-							<q-row v-if="controls.FLDSCONDFLDS_FSERVER2.isVisible">
-								<q-col
-									v-if="controls.FLDSCONDFLDS_FSERVER2.isVisible"
-									cols="auto">
+								</q-control-wrapper>
+							</q-row-container>
+							<q-row-container v-show="controls.FLDSCONDFLDS_FSERVER2.isVisible">
+								<q-control-wrapper
+									v-show="controls.FLDSCONDFLDS_FSERVER2.isVisible"
+									class="${Vue.GetControlWrapperClass($controlsColumn)}">
 									<base-input-structure
-										v-if="controls.FLDSCONDFLDS_FSERVER2.isVisible"
 										class="i-text"
 										v-bind="controls.FLDSCONDFLDS_FSERVER2"
 										v-on="controls.FLDSCONDFLDS_FSERVER2.handlers"
@@ -293,26 +282,28 @@
 											v-bind="controls.FLDSCONDFLDS_FSERVER2.props"
 											@update:model-value="model.ValFserver2.fnUpdateValue" />
 									</base-input-structure>
-								</q-col>
-							</q-row>
+								</q-control-wrapper>
+							</q-row-container>
 							<!-- End FLDSCONDPSEUDGROUP2__ -->
 						</q-group-box-container>
-					</q-col>
-				</q-row>
-				<q-row v-if="controls.FLDSCONDPSEUDGROUP3__.isVisible">
-					<q-col v-if="controls.FLDSCONDPSEUDGROUP3__.isVisible">
+					</q-control-wrapper>
+				</q-row-container>
+				<q-row-container
+					v-show="controls.FLDSCONDPSEUDGROUP3__.isVisible"
+					is-large>
+					<q-control-wrapper
+						v-show="controls.FLDSCONDPSEUDGROUP3__.isVisible"
+						class="${Vue.GetControlWrapperClass($controlsColumn)}">
 						<q-group-box-container
-							v-if="controls.FLDSCONDPSEUDGROUP3__.isVisible"
 							id="FLDSCONDPSEUDGROUP3__"
 							v-bind="controls.FLDSCONDPSEUDGROUP3__"
 							:is-visible="controls.FLDSCONDPSEUDGROUP3__.isVisible">
 							<!-- Start FLDSCONDPSEUDGROUP3__ -->
-							<q-row v-if="controls.FLDSCONDFLDS_FCLIENT3.isVisible">
-								<q-col
-									v-if="controls.FLDSCONDFLDS_FCLIENT3.isVisible"
-									cols="auto">
+							<q-row-container v-show="controls.FLDSCONDFLDS_FCLIENT3.isVisible">
+								<q-control-wrapper
+									v-show="controls.FLDSCONDFLDS_FCLIENT3.isVisible"
+									class="${Vue.GetControlWrapperClass($controlsColumn)}">
 									<base-input-structure
-										v-if="controls.FLDSCONDFLDS_FCLIENT3.isVisible"
 										class="i-text"
 										v-bind="controls.FLDSCONDFLDS_FCLIENT3"
 										v-on="controls.FLDSCONDFLDS_FCLIENT3.handlers"
@@ -324,14 +315,13 @@
 											v-bind="controls.FLDSCONDFLDS_FCLIENT3.props"
 											v-on="controls.FLDSCONDFLDS_FCLIENT3.handlers" />
 									</base-input-structure>
-								</q-col>
-							</q-row>
-							<q-row v-if="controls.FLDSCONDFLDS_FSERVER3.isVisible">
-								<q-col
-									v-if="controls.FLDSCONDFLDS_FSERVER3.isVisible"
-									cols="auto">
+								</q-control-wrapper>
+							</q-row-container>
+							<q-row-container v-show="controls.FLDSCONDFLDS_FSERVER3.isVisible">
+								<q-control-wrapper
+									v-show="controls.FLDSCONDFLDS_FSERVER3.isVisible"
+									class="${Vue.GetControlWrapperClass($controlsColumn)}">
 									<base-input-structure
-										v-if="controls.FLDSCONDFLDS_FSERVER3.isVisible"
 										class="q-image"
 										v-bind="controls.FLDSCONDFLDS_FSERVER3"
 										v-on="controls.FLDSCONDFLDS_FSERVER3.handlers"
@@ -343,26 +333,28 @@
 											v-bind="controls.FLDSCONDFLDS_FSERVER3.props"
 											v-on="controls.FLDSCONDFLDS_FSERVER3.handlers" />
 									</base-input-structure>
-								</q-col>
-							</q-row>
+								</q-control-wrapper>
+							</q-row-container>
 							<!-- End FLDSCONDPSEUDGROUP3__ -->
 						</q-group-box-container>
-					</q-col>
-				</q-row>
-				<q-row v-if="controls.FLDSCONDPSEUDGROUP5__.isVisible">
-					<q-col v-if="controls.FLDSCONDPSEUDGROUP5__.isVisible">
+					</q-control-wrapper>
+				</q-row-container>
+				<q-row-container
+					v-show="controls.FLDSCONDPSEUDGROUP5__.isVisible"
+					is-large>
+					<q-control-wrapper
+						v-show="controls.FLDSCONDPSEUDGROUP5__.isVisible"
+						class="${Vue.GetControlWrapperClass($controlsColumn)}">
 						<q-group-box-container
-							v-if="controls.FLDSCONDPSEUDGROUP5__.isVisible"
 							id="FLDSCONDPSEUDGROUP5__"
 							v-bind="controls.FLDSCONDPSEUDGROUP5__"
 							:is-visible="controls.FLDSCONDPSEUDGROUP5__.isVisible">
 							<!-- Start FLDSCONDPSEUDGROUP5__ -->
-							<q-row v-if="controls.FLDSCONDPSEUDSTATICTX.isVisible">
-								<q-col
-									v-if="controls.FLDSCONDPSEUDSTATICTX.isVisible"
-									cols="auto">
+							<q-row-container v-show="controls.FLDSCONDPSEUDSTATICTX.isVisible">
+								<q-control-wrapper
+									v-show="controls.FLDSCONDPSEUDSTATICTX.isVisible"
+									class="${Vue.GetControlWrapperClass($controlsColumn)}">
 									<base-input-structure
-										v-if="controls.FLDSCONDPSEUDSTATICTX.isVisible"
 										class="i-static-text"
 										v-bind="controls.FLDSCONDPSEUDSTATICTX"
 										v-on="controls.FLDSCONDPSEUDSTATICTX.handlers"
@@ -375,35 +367,31 @@
 											:size="controls.FLDSCONDPSEUDSTATICTX.size"
 											:text="controls.FLDSCONDPSEUDSTATICTX.label" />
 									</base-input-structure>
-								</q-col>
-							</q-row>
-							<q-row v-if="controls.FLDSCONDPSEUDGRIDTBL_.isVisible || controls.FLDSCONDPSEUDLISTTBL_.isVisible">
-								<q-col
-									v-if="controls.FLDSCONDPSEUDGRIDTBL_.isVisible || controls.FLDSCONDPSEUDLISTTBL_.isVisible"
-									cols="auto">
+								</q-control-wrapper>
+							</q-row-container>
+							<q-row-container v-show="controls.FLDSCONDPSEUDGRIDTBL_.isVisible || controls.FLDSCONDPSEUDLISTTBL_.isVisible">
+								<q-control-wrapper
+									v-show="controls.FLDSCONDPSEUDGRIDTBL_.isVisible || controls.FLDSCONDPSEUDLISTTBL_.isVisible"
+									class="${Vue.GetControlWrapperClass($controlsColumn)}">
 									<q-grid-table-list
-										v-if="controls.FLDSCONDPSEUDGRIDTBL_.isVisible"
+										v-show="controls.FLDSCONDPSEUDGRIDTBL_.isVisible"
 										v-bind="controls.FLDSCONDPSEUDGRIDTBL_"
 										v-on="controls.FLDSCONDPSEUDGRIDTBL_.handlers" />
 									<q-table
-										v-if="controls.FLDSCONDPSEUDLISTTBL_.isVisible"
+										v-show="controls.FLDSCONDPSEUDLISTTBL_.isVisible"
 										v-bind="controls.FLDSCONDPSEUDLISTTBL_"
-										v-on="controls.FLDSCONDPSEUDLISTTBL_.handlers">
-										<!-- USE /[MANUAL GQT CUSTOM_TABLE FLDSCONDPSEUDLISTTBL_]/ -->
-									</q-table>
-									<q-table-extra-extension
-										v-if="controls.FLDSCONDPSEUDLISTTBL_.isVisible"
-										:list-ctrl="controls.FLDSCONDPSEUDLISTTBL_"
-										:filter-operators="controls.FLDSCONDPSEUDLISTTBL_.filterOperators"
 										v-on="controls.FLDSCONDPSEUDLISTTBL_.handlers" />
-								</q-col>
-							</q-row>
+									<q-table-extra-extension
+										:list-ctrl="controls.FLDSCONDPSEUDLISTTBL_"
+										v-on="controls.FLDSCONDPSEUDLISTTBL_.handlers" />
+								</q-control-wrapper>
+							</q-row-container>
 							<!-- End FLDSCONDPSEUDGROUP5__ -->
 						</q-group-box-container>
-					</q-col>
-				</q-row>
+					</q-control-wrapper>
+				</q-row-container>
 			</template>
-		</q-container>
+		</div>
 	</teleport>
 
 	<hr v-if="!isPopup && showFormFooter" />
@@ -412,7 +400,7 @@
 		v-if="formModalIsReady && showFormFooter"
 		:to="`#${uiContainersId.footer}`"
 		:disabled="!isPopup || isNested">
-		<q-row v-if="showFormFooter">
+		<q-row-container v-if="showFormFooter">
 			<div id="footer-action-btns">
 				<template
 					v-for="btn in formButtons"
@@ -421,7 +409,6 @@
 						v-if="btn.isActive && btn.isVisible && btn.showInFooter"
 						:id="`bottom-${btn.id}`"
 						:label="btn.text"
-						:color="btn.color"
 						:variant="btn.variant"
 						:disabled="btn.disabled"
 						:icon-pos="btn.iconPos"
@@ -433,12 +420,12 @@
 					</q-button>
 				</template>
 			</div>
-		</q-row>
+		</q-row-container>
 	</teleport>
 </template>
 
 <script>
-	/* eslint-disable @typescript-eslint/no-unused-vars */
+	/* eslint-disable no-unused-vars */
 	import { computed, defineAsyncComponent, readonly } from 'vue'
 	import { useRoute } from 'vue-router'
 
@@ -458,7 +445,7 @@
 	import qApi from '@/api/genio/quidgestFunctions.js'
 	import qFunctions from '@/api/genio/projectFunctions.js'
 	import qProjArrays from '@/api/genio/projectArrays.js'
-	/* eslint-enable @typescript-eslint/no-unused-vars */
+	/* eslint-enable no-unused-vars */
 
 	import FormViewModel from './QFormFldscondViewModel.js'
 
@@ -535,8 +522,7 @@
 					primaryKey: 'ValCodflds',
 					designation: computed(() => this.Resources.CONDICOES_DE_MOSTRA_10663),
 					identifier: '', // Unique identifier received by route (when it's nested).
-					mode: '',
-					availableAgents: [],
+					mode: ''
 				},
 
 				formButtons: {
@@ -660,11 +646,7 @@
 						showInFooter: true,
 						isActive: true,
 						isVisible: computed(() => vm.authData.isAllowed && vm.isEditable),
-						action: vm.saveForm,
-						badge: {
-							isVisible: computed(() => vm.model?.isDirty === true),
-							color: 'highlight'
-						}
+						action: vm.saveForm
 					},
 					confirmBtn: {
 						id: 'confirm-btn',
@@ -764,17 +746,19 @@
 				},
 
 				controls: {
-					FLDSCONDFLDS_COND____: new fieldControlClass.RadioGroupControl({
+					FLDSCONDFLDS_COND____: new fieldControlClass.ArrayStringControl({
 						modelField: 'ValCond',
 						valueChangeEvent: 'fieldChange:flds.cond',
 						id: 'FLDSCONDFLDS_COND____',
 						name: 'COND',
+						size: 'medium',
 						label: computed(() => this.Resources.FIELD_STATE03599),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						maxLength: 8,
+						labelId: 'label_FLDSCONDFLDS_COND____',
 						arrayName: 'aCondTst',
-						columns: 1,
+						columnNumber: 1,
 						controlLimits: [
 						],
 					}, this),
@@ -841,10 +825,11 @@
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'FLDSCONDPSEUDGROUP1__',
 						maxLength: 50,
+						labelId: 'label_FLDSCONDFLDS_FCLIENT1',
 						controlLimits: [
 						],
 						requiredConditions: {
-							// eslint-disable-next-line @typescript-eslint/no-unused-vars
+							// eslint-disable-next-line no-unused-vars
 							fnFormula(params)
 							{
 								// Formula: !isEmptyL([FLDS->TBLCOND]) && [FLDS->COND] == "REQUIRE"
@@ -867,6 +852,7 @@
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'FLDSCONDPSEUDGROUP1__',
 						maxLength: 50,
+						labelId: 'label_FLDSCONDFLDS_FFILLWHN',
 						controlLimits: [
 						],
 					}, this),
@@ -880,11 +866,11 @@
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'FLDSCONDPSEUDGROUP1__',
-						dateTimeType: 'dateTime',
+						format: 'dateTime',
 						controlLimits: [
 						],
 						requiredConditions: {
-							// eslint-disable-next-line @typescript-eslint/no-unused-vars
+							// eslint-disable-next-line no-unused-vars
 							fnFormula(params)
 							{
 								return netAPI.postData(
@@ -926,7 +912,7 @@
 						controlLimits: [
 						],
 						blockWhen: {
-							// eslint-disable-next-line @typescript-eslint/no-unused-vars
+							// eslint-disable-next-line no-unused-vars
 							fnFormula(params)
 							{
 								// Formula: !isEmptyL([FLDS->FORMCOND]) && [FLDS->COND] == "BLOCK"
@@ -936,7 +922,7 @@
 							isServerRecalc: false,
 						},
 						showWhen: {
-							// eslint-disable-next-line @typescript-eslint/no-unused-vars
+							// eslint-disable-next-line no-unused-vars
 							fnFormula(params)
 							{
 								// Formula: !(!isEmptyL([FLDS->FORMCOND]) && [FLDS->COND] == "HIDE")
@@ -946,7 +932,7 @@
 							isServerRecalc: false,
 						},
 						requiredConditions: {
-							// eslint-disable-next-line @typescript-eslint/no-unused-vars
+							// eslint-disable-next-line no-unused-vars
 							fnFormula(params)
 							{
 								// Formula: !isEmptyL([FLDS->FORMCOND]) && [FLDS->COND] == "REQUIRE"
@@ -973,7 +959,7 @@
 						controlLimits: [
 						],
 						blockWhen: {
-							// eslint-disable-next-line @typescript-eslint/no-unused-vars
+							// eslint-disable-next-line no-unused-vars
 							fnFormula(params)
 							{
 								return netAPI.postData(
@@ -989,7 +975,7 @@
 							isServerRecalc: false,
 						},
 						showWhen: {
-							// eslint-disable-next-line @typescript-eslint/no-unused-vars
+							// eslint-disable-next-line no-unused-vars
 							fnFormula(params)
 							{
 								return netAPI.postData(
@@ -1005,7 +991,7 @@
 							isServerRecalc: false,
 						},
 						requiredConditions: {
-							// eslint-disable-next-line @typescript-eslint/no-unused-vars
+							// eslint-disable-next-line no-unused-vars
 							fnFormula(params)
 							{
 								return netAPI.postData(
@@ -1050,7 +1036,7 @@
 						controlLimits: [
 						],
 						blockWhen: {
-							// eslint-disable-next-line @typescript-eslint/no-unused-vars
+							// eslint-disable-next-line no-unused-vars
 							fnFormula(params)
 							{
 								// Formula: !isEmptyL([FLDS->FORMCOND]) && [FLDS->COND] == "BLOCK"
@@ -1060,7 +1046,7 @@
 							isServerRecalc: false,
 						},
 						showWhen: {
-							// eslint-disable-next-line @typescript-eslint/no-unused-vars
+							// eslint-disable-next-line no-unused-vars
 							fnFormula(params)
 							{
 								// Formula: !(!isEmptyL([FLDS->FORMCOND]) && [FLDS->COND] == "HIDE")
@@ -1070,7 +1056,7 @@
 							isServerRecalc: false,
 						},
 						requiredConditions: {
-							// eslint-disable-next-line @typescript-eslint/no-unused-vars
+							// eslint-disable-next-line no-unused-vars
 							fnFormula(params)
 							{
 								// Formula: !isEmptyL([FLDS->TBLCOND]) && [FLDS->COND] == "REQUIRE"
@@ -1103,7 +1089,7 @@
 						controlLimits: [
 						],
 						blockWhen: {
-							// eslint-disable-next-line @typescript-eslint/no-unused-vars
+							// eslint-disable-next-line no-unused-vars
 							fnFormula(params)
 							{
 								return netAPI.postData(
@@ -1119,7 +1105,7 @@
 							isServerRecalc: false,
 						},
 						showWhen: {
-							// eslint-disable-next-line @typescript-eslint/no-unused-vars
+							// eslint-disable-next-line no-unused-vars
 							fnFormula(params)
 							{
 								return netAPI.postData(
@@ -1135,7 +1121,7 @@
 							isServerRecalc: false,
 						},
 						requiredConditions: {
-							// eslint-disable-next-line @typescript-eslint/no-unused-vars
+							// eslint-disable-next-line no-unused-vars
 							fnFormula(params)
 							{
 								return netAPI.postData(
@@ -1176,7 +1162,7 @@
 						controlLimits: [
 						],
 						blockWhen: {
-							// eslint-disable-next-line @typescript-eslint/no-unused-vars
+							// eslint-disable-next-line no-unused-vars
 							fnFormula(params)
 							{
 								return netAPI.postData(
@@ -1192,7 +1178,7 @@
 							isServerRecalc: false,
 						},
 						showWhen: {
-							// eslint-disable-next-line @typescript-eslint/no-unused-vars
+							// eslint-disable-next-line no-unused-vars
 							fnFormula(params)
 							{
 								return netAPI.postData(
@@ -1231,7 +1217,6 @@
 								label: computed(() => this.Resources.FEEDBACK52855),
 								dataLength: 50,
 								scrollData: 30,
-								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 						],
 						controlLimits: [
@@ -1243,7 +1228,7 @@
 							},
 						],
 						blockWhen: {
-							// eslint-disable-next-line @typescript-eslint/no-unused-vars
+							// eslint-disable-next-line no-unused-vars
 							fnFormula(params)
 							{
 								// Formula: !isEmptyL([FLDS->FORMCOND]) && [FLDS->COND] == "BLOCK"
@@ -1253,7 +1238,7 @@
 							isServerRecalc: false,
 						},
 						showWhen: {
-							// eslint-disable-next-line @typescript-eslint/no-unused-vars
+							// eslint-disable-next-line no-unused-vars
 							fnFormula(params)
 							{
 								// Formula: !(!isEmptyL([FLDS->FORMCOND]) && [FLDS->COND] == "HIDE")
@@ -1284,7 +1269,6 @@
 								label: computed(() => this.Resources.FEEDBACK52855),
 								dataLength: 50,
 								scrollData: 30,
-								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 						],
 						config: {
@@ -1299,7 +1283,8 @@
 							permissions: {
 							},
 							searchBarConfig: {
-								visibility: false
+								visibility: false,
+								searchOnPressEnter: true
 							},
 							filtersVisible: false,
 							allowColumnFilters: false,
@@ -1452,10 +1437,6 @@
 								sortOrder: 'asc'
 							}
 						},
-						actionIDs: [
-							'FLDSCONDPSEUDLISTBTN_',
-							'FLDSCONDPSEUDLISTBTN2',
-						],
 						globalEvents: ['changed-FLDS', 'changed-FEECA'],
 						uuid: 'Fldscond_ValListtbl',
 						allSelectedRows: 'false',
@@ -1468,7 +1449,7 @@
 							},
 						],
 						blockWhen: {
-							// eslint-disable-next-line @typescript-eslint/no-unused-vars
+							// eslint-disable-next-line no-unused-vars
 							fnFormula(params)
 							{
 								// Formula: !isEmptyL([FLDS->FORMCOND]) && [FLDS->COND] == "BLOCK"
@@ -1478,7 +1459,7 @@
 							isServerRecalc: false,
 						},
 						showWhen: {
-							// eslint-disable-next-line @typescript-eslint/no-unused-vars
+							// eslint-disable-next-line no-unused-vars
 							fnFormula(params)
 							{
 								// Formula: !(!isEmptyL([FLDS->FORMCOND]) && [FLDS->COND] == "HIDE")
@@ -1491,6 +1472,7 @@
 					FLDSCONDPSEUDLISTBTN_: new fieldControlClass.ButtonControl({
 						id: 'FLDSCONDPSEUDLISTBTN_',
 						name: 'LISTBTN',
+						size: 'mini',
 						hasLabel: false,
 						label: computed(() => this.Resources.TEST37369),
 						placeholder: '',
@@ -1498,7 +1480,7 @@
 						container: 'FLDSCONDPSEUDGROUP5__',
 						// eslint-disable-next-line
 						action: (event) => {
-							const btnAction = () => {
+							let btnAction = () => {
 								const params = {
 									id: event?.rowKey,
 									mode: vm.formModes.edit,
@@ -1514,7 +1496,7 @@
 						controlLimits: [
 						],
 						blockWhen: {
-							// eslint-disable-next-line @typescript-eslint/no-unused-vars
+							// eslint-disable-next-line no-unused-vars
 							fnFormula(params)
 							{
 								return netAPI.postData(
@@ -1530,7 +1512,7 @@
 							isServerRecalc: false,
 						},
 						showWhen: {
-							// eslint-disable-next-line @typescript-eslint/no-unused-vars
+							// eslint-disable-next-line no-unused-vars
 							fnFormula(params)
 							{
 								return netAPI.postData(
@@ -1549,6 +1531,7 @@
 					FLDSCONDPSEUDLISTBTN2: new fieldControlClass.ButtonControl({
 						id: 'FLDSCONDPSEUDLISTBTN2',
 						name: 'LISTBTN2',
+						size: 'mini',
 						hasLabel: false,
 						label: computed(() => this.Resources.FORM54242),
 						placeholder: '',
@@ -1556,7 +1539,7 @@
 						container: 'FLDSCONDPSEUDGROUP5__',
 						// eslint-disable-next-line
 						action: (event) => {
-							const btnAction = () => {
+							let btnAction = () => {
 								const params = {
 									id: event?.rowKey,
 									mode: vm.formModes.edit,
@@ -1680,23 +1663,17 @@
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 		},
 
-		beforeUnmount()
-		{
-/* eslint-disable indent, vue/html-indent, vue/script-indent */
-// USE /[MANUAL GQT COMPONENT_BEFORE_UNMOUNT FLDSCOND]/
-// eslint-disable-next-line
-/* eslint-enable indent, vue/html-indent, vue/script-indent */
-		},
-
 		methods: {
 			/**
 			 * Called before form init.
 			 */
 			async beforeLoad()
 			{
+				let loadForm = true
+
 				// Execute the "Before init" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.beforeInit)
-				for (const trigger of triggers)
+				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
 				this.emitEvent('before-load-form')
@@ -1706,7 +1683,7 @@
 // eslint-disable-next-line
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 
-				return true
+				return loadForm
 			},
 
 			/**
@@ -1716,7 +1693,7 @@
 			{
 				// Execute the "After init" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.afterInit)
-				for (const trigger of triggers)
+				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
 				this.emitEvent('after-load-form')
@@ -1736,33 +1713,19 @@
 
 				// Execute the "Before apply" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.beforeApply)
-				for (const trigger of triggers)
+				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
-				const ticketsPromise = this.model.updateFilesTickets(true)
-				this.addBusy(ticketsPromise, this.Resources[hardcodedTexts.processing])
-				const canSetDocums = await ticketsPromise
+				const canSetDocums = await this.model.updateFilesTickets(true)
 
 				if (canSetDocums)
 				{
-					let results
-					const changesPromise = this.model.setDocumentChanges()
-					this.addBusy(changesPromise, this.Resources[hardcodedTexts.processing])
-					applyForm = await changesPromise
+					applyForm = await this.model.setDocumentChanges()
 
 					if (applyForm)
 					{
-						const insertsPromise = this.model.saveDocuments()
-						this.addBusy(insertsPromise, this.Resources[hardcodedTexts.processing])
-						results = await insertsPromise
+						const results = await this.model.saveDocuments()
 						applyForm = results.every((e) => e === true)
-					}
-
-					if (!changesPromise || (results && !results.every((e) => e === true)))
-					{
-						this.validationErrors = {
-							Erro: this.Resources.OCORREU_UM_ERRO_AO_T51884
-						}
 					}
 				}
 
@@ -1783,7 +1746,7 @@
 			{
 				// Execute the "After apply" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.afterApply)
-				for (const trigger of triggers)
+				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
 				this.emitEvent('after-apply-form')
@@ -1803,33 +1766,19 @@
 
 				// Execute the "Before save" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.beforeSave)
-				for (const trigger of triggers)
+				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
-				const ticketsPromise = this.model.updateFilesTickets()
-				this.addBusy(ticketsPromise, this.Resources[hardcodedTexts.processing])
-				const canSetDocums = await ticketsPromise
+				const canSetDocums = await this.model.updateFilesTickets()
 
 				if (canSetDocums)
 				{
-					let results
-					const changesPromise = this.model.setDocumentChanges()
-					this.addBusy(changesPromise, this.Resources[hardcodedTexts.processing])
-					saveForm = await changesPromise
+					saveForm = await this.model.setDocumentChanges()
 
 					if (saveForm)
 					{
-						const insertsPromise = this.model.saveDocuments()
-						this.addBusy(insertsPromise, this.Resources[hardcodedTexts.processing])
-						results = await insertsPromise
+						const results = await this.model.saveDocuments()
 						saveForm = results.every((e) => e === true)
-					}
-
-					if (!changesPromise || (results && !results.every((e) => e === true)))
-					{
-						this.validationErrors = {
-							Erro: this.Resources.OCORREU_UM_ERRO_AO_T51884
-						}
 					}
 				}
 
@@ -1848,9 +1797,11 @@
 			 */
 			async afterSave()
 			{
+				let redirectPage = true // Set to 'false' to cancel page redirect.
+
 				// Execute the "After save" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.afterSave)
-				for (const trigger of triggers)
+				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
 				this.emitEvent('after-save-form')
@@ -1860,7 +1811,7 @@
 // eslint-disable-next-line
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 
-				return true
+				return redirectPage
 			},
 
 			/**
@@ -1868,6 +1819,8 @@
 			 */
 			async beforeDel()
 			{
+				let deleteForm = true // Set to 'false' to cancel form delete.
+
 				this.emitEvent('before-delete-form')
 
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
@@ -1875,7 +1828,7 @@
 // eslint-disable-next-line
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 
-				return true
+				return deleteForm
 			},
 
 			/**
@@ -1883,6 +1836,8 @@
 			 */
 			async afterDel()
 			{
+				let redirectPage = true // Set to 'false' to cancel page redirect.
+
 				this.emitEvent('after-delete-form')
 
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
@@ -1890,7 +1845,7 @@
 // eslint-disable-next-line
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 
-				return true
+				return redirectPage
 			},
 
 			/**
@@ -1898,9 +1853,11 @@
 			 */
 			async beforeExit()
 			{
+				let leaveForm = true // Set to 'false' to cancel page redirect.
+
 				// Execute the "Before exit" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.beforeExit)
-				for (const trigger of triggers)
+				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
 				this.emitEvent('before-exit-form')
@@ -1910,7 +1867,7 @@
 // eslint-disable-next-line
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 
-				return true
+				return leaveForm
 			},
 
 			/**
@@ -1920,7 +1877,7 @@
 			{
 				// Execute the "After exit" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.afterExit)
-				for (const trigger of triggers)
+				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
 				this.emitEvent('after-exit-form')
@@ -1981,7 +1938,6 @@
 
 				this.afterControlUpdate(controlField, fieldValue)
 			},
-
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
 // USE /[MANUAL GQT FUNCTIONS_JS FLDSCOND]/
 // eslint-disable-next-line

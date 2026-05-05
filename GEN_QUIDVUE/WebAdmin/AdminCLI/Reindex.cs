@@ -18,7 +18,7 @@ namespace AdminCLI
         public string Password { get; set; }
 
         [Option('f', "full", HelpText = "Make a full reindexation")]
-        public bool Full { get; set; }
+        public bool Full {  get; set; }
 
         [Option("category", HelpText = "Reindex per category")]
         public string Category { get; set; }
@@ -28,9 +28,7 @@ namespace AdminCLI
 
         [Option("multi-script", HelpText = "Specify multiple scripts to reindex")]
         public IEnumerable<string> MultiScript { get; set; }
-        
-        [Option('y',"year", HelpText = "Specify the DataSystem (if not specified the default is used)")]
-        public string Year { get; set; }
+
     }
 
     [Verb("list-reindex-scripts", HelpText = "Lists all the reindexation scripts")]
@@ -84,17 +82,8 @@ namespace AdminCLI
                 Wait.Set();
             };
 
-            RdxItem = dBMaintenance.StartReindexation(
-                options.Username,
-                options.Password, 
-                options.SingleScript,
-                options.MultiScript.ToList(),
-                options.Category,
-                options.Full,
-                rdxEvent,
-                new CancellationToken(),
-                options.Year
-            );
+            RdxItem = dBMaintenance.StartReindexation(options.Username, options.Password, 
+                options.SingleScript, options.MultiScript.ToList(), options.Category, options.Full, rdxEvent);
 
             Wait.WaitOne(); //Wait for the reindexation to finish
             //In case there was an error

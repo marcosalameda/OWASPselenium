@@ -21,8 +21,12 @@ namespace GenioMVC.Controllers
 	public class HomeController(UserContextService userContext) : ControllerBase(userContext)
 	{
 		private static readonly NavigationLocation ACTION_LSTUSR_EDIT = new("LISTA_DE_UTILIZADORE37232", "ChangeListProperties", "Home");
+		private static readonly NavigationLocation ACTION_LENDEXPL_SHOW = new("CONSULTA40695", "Lendexpl_Show", "Home")  { vueRouteName = "form-LENDEXPL", mode = "SHOW" };
+		private static readonly NavigationLocation ACTION_LENDEXPL_EDIT = new("EDITAR11616", "Lendexpl_Edit", "Home")  { vueRouteName = "form-LENDEXPL", mode = "EDIT" };
 		private static readonly NavigationLocation ACTION_PEOPLE_SHOW = new("CONSULTA40695", "People_Show", "Home")  { vueRouteName = "form-PEOPLE", mode = "SHOW" };
 		private static readonly NavigationLocation ACTION_PEOPLE_EDIT = new("EDITAR11616", "People_Edit", "Home")  { vueRouteName = "form-PEOPLE", mode = "EDIT" };
+		private static readonly NavigationLocation ACTION_WID_EQUI_SHOW = new("CONSULTA40695", "Wid_equi_Show", "Home")  { vueRouteName = "form-WID_EQUI", mode = "SHOW" };
+		private static readonly NavigationLocation ACTION_WID_EQUI_EDIT = new("EDITAR11616", "Wid_equi_Edit", "Home")  { vueRouteName = "form-WID_EQUI", mode = "EDIT" };
 		private static readonly NavigationLocation ACTION_WID_GRAP_SHOW = new("CONSULTA40695", "Wid_grap_Show", "Home")  { vueRouteName = "form-WID_GRAP", mode = "SHOW" };
 		private static readonly NavigationLocation ACTION_WID_GRAP_EDIT = new("EDITAR11616", "Wid_grap_Edit", "Home")  { vueRouteName = "form-WID_GRAP", mode = "EDIT" };
 		private static readonly NavigationLocation ACTION_WID_PESS_SHOW = new("CONSULTA40695", "Wid_pess_Show", "Home")  { vueRouteName = "form-WID_PESS", mode = "SHOW" };
@@ -36,8 +40,8 @@ namespace GenioMVC.Controllers
 		[AllowAnonymous]
 		public ActionResult IndexAuthenticated()
 		{
-			Home_ViewModel model = new(UserContext.Current);
-			bool isGuestUser = UserContext.Current.User.IsGuest();
+			var model = new Home_ViewModel(UserContext.Current);
+			var isGuestUser = UserContext.Current.User.IsGuest();
 
 			// Load the ViewModel of the Home Page
 			model.HomePage_model = new ViewModels.Home.HomePage_ViewModel(UserContext.Current, isGuestUser);
@@ -57,9 +61,9 @@ namespace GenioMVC.Controllers
 		[HttpGet]
 		public JsonResult GetHomePages()
 		{
-			bool isGuestUser = UserContext.Current.User.IsGuest();
+			var isGuestUser = UserContext.Current.User.IsGuest();
 
-			ViewModels.Home.HomePage_ViewModel model = new(UserContext.Current, isGuestUser);
+			var model = new ViewModels.Home.HomePage_ViewModel(UserContext.Current, isGuestUser);
 			model.Load();
 
 			return JsonOK(model);
@@ -141,7 +145,7 @@ namespace GenioMVC.Controllers
 
 			try
 			{
-				ViewModels.Bookmarks.Bookmarks_ViewModel model = new();
+				var model = new ViewModels.Bookmarks.Bookmarks_ViewModel();
 				model.LoadMenus(UserContext.Current);
 
 				var cacheKey = string.Format("bookmarks.{0}.{1}", UserContext.Current.User.Name, UserContext.Current.User.Codpsw);
@@ -190,12 +194,234 @@ namespace GenioMVC.Controllers
 			}
 		}
 
+		#region Form Methods -> Lendexpl (Explore lendings)
+
+		// GET: /Home/Lendexpl_Show
+		public ActionResult Lendexpl_Show()
+		{
+			var model = new Lendexpl_ViewModel(UserContext.Current);
+			CSGenio.framework.StatusMessage permission = model.CheckPermissions(FormMode.Show);
+			bool isHomePage = RouteData.Values.ContainsKey("isHomePage") && (bool)RouteData.Values["isHomePage"];
+			ViewBag.isHomePage = isHomePage;
+			if (isHomePage)
+				Navigation.SetValue("HomePage", "Lendexpl");
+			if (permission.Status.Equals(CSGenio.framework.Status.E))
+				return PermissionError(permission.Message);
+
+			// Audit
+			CSGenio.framework.Audit.registAction(UserContext.Current.User, Resources.Resources.FORM54242 + " " + ACTION_LENDEXPL_SHOW.ShortDescription());
+
+// USE /[MANUAL GQT BEFORE_LOAD_SHOW LENDEXPL]/
+
+			model.Load(new NameValueCollection());
+
+// USE /[MANUAL GQT AFTER_LOAD_SHOW LENDEXPL]/
+
+			return JsonOK(model);
+		}
+
+		[HttpPost]
+		public ActionResult Lendexpl_Show_GET()
+		{
+			return Lendexpl_Show();
+		}
+
+		// GET: /Home/Lendexpl_Edit
+		public ActionResult Lendexpl_Edit()
+		{
+			var model = new Lendexpl_ViewModel(UserContext.Current);
+			CSGenio.framework.StatusMessage permission = model.CheckPermissions(FormMode.Edit);
+			bool isHomePage = RouteData.Values.ContainsKey("isHomePage") && (bool)RouteData.Values["isHomePage"];
+			ViewBag.isHomePage = isHomePage;
+			if (isHomePage)
+				Navigation.SetValue("HomePage", "Lendexpl");
+			if (permission.Status.Equals(CSGenio.framework.Status.E))
+				return PermissionError(permission.Message);
+
+			// Audit
+			CSGenio.framework.Audit.registAction(UserContext.Current.User, Resources.Resources.FORM54242 + " " + ACTION_LENDEXPL_EDIT.ShortDescription());
+
+// USE /[MANUAL GQT BEFORE_LOAD_EDIT LENDEXPL]/
+
+			model.Load(new NameValueCollection());
+
+// USE /[MANUAL GQT AFTER_LOAD_EDIT LENDEXPL]/
+
+			return JsonOK(model);
+		}
+
+		[HttpPost]
+		public ActionResult Lendexpl_Edit_GET()
+		{
+			return Lendexpl_Edit();
+		}
+
+		//
+		// GET: /Home/Lendexpl_Cancel
+// USE /[MANUAL GQT CONTROLLER_CANCEL_GET LENDEXPL]/
+		public ActionResult Lendexpl_Cancel()
+		{
+			return JsonOK(new { Success = true });
+		}
+
+		//
+		// GET: /Home/Lendexpl_ValLenders
+		// POST: /Home/Lendexpl_ValLenders
+		[ActionName("Lendexpl_ValLenders")]
+		public ActionResult Lendexpl_ValLenders([FromBody]RequestLookupModel requestModel)
+		{
+			var queryParams = requestModel.QueryParams;
+
+			int perPage = CSGenio.framework.Configuration.NrRegDBedit;
+			string rowsPerPageOptionsString = "";
+
+			NameValueCollection requestValues = [];
+			// Add to request values
+			foreach (var kv in queryParams ?? [])
+				requestValues.Add(kv.Key, kv.Value);
+
+			Lendexpl_ValLenders_ViewModel model = new(UserContext.Current);
+
+			// Table configuration load options
+			CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions tableConfigOptions = new CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions();
+
+
+			// Determine which table configuration to use and load it
+			CSGenio.framework.TableConfiguration.TableConfiguration tableConfig = TableUiSettings.Load(
+				UserContext.Current.PersistentSupport,
+				model.Uuid,
+				UserContext.Current.User,
+				tableConfigOptions
+			).DetermineTableConfig(
+				requestModel?.TableConfiguration,
+				requestModel?.UserTableConfigName,
+				(bool)requestModel?.LoadDefaultView,
+				tableConfigOptions
+			);
+
+			// Determine rows per page
+			tableConfig.RowsPerPage = CSGenio.framework.TableConfiguration.TableConfigurationHelpers.DetermineRowsPerPage(tableConfig.RowsPerPage, perPage, rowsPerPageOptionsString);
+
+			// Determine what columns have totalizers
+			tableConfig.TotalizerColumns = requestModel.TotalizerColumns;
+
+			// For tables with multiple selection enabled, determine currently selected rows
+			tableConfig.SelectedRows = requestModel.SelectedRows;
+
+
+			model.Load(tableConfig, requestValues, Request.IsAjaxRequest());
+
+			return JsonOK(model);
+		}
+
+		//
+		// GET: /Home/Lendexpl_ValEquips
+		// POST: /Home/Lendexpl_ValEquips
+		[ActionName("Lendexpl_ValEquips")]
+		public ActionResult Lendexpl_ValEquips([FromBody]RequestLookupModel requestModel)
+		{
+			var queryParams = requestModel.QueryParams;
+
+			int perPage = CSGenio.framework.Configuration.NrRegDBedit;
+			string rowsPerPageOptionsString = "";
+
+			NameValueCollection requestValues = [];
+			// Add to request values
+			foreach (var kv in queryParams ?? [])
+				requestValues.Add(kv.Key, kv.Value);
+
+			Lendexpl_ValEquips_ViewModel model = new(UserContext.Current);
+
+			// Table configuration load options
+			CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions tableConfigOptions = new CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions();
+
+
+			// Determine which table configuration to use and load it
+			CSGenio.framework.TableConfiguration.TableConfiguration tableConfig = TableUiSettings.Load(
+				UserContext.Current.PersistentSupport,
+				model.Uuid,
+				UserContext.Current.User,
+				tableConfigOptions
+			).DetermineTableConfig(
+				requestModel?.TableConfiguration,
+				requestModel?.UserTableConfigName,
+				(bool)requestModel?.LoadDefaultView,
+				tableConfigOptions
+			);
+
+			// Determine rows per page
+			tableConfig.RowsPerPage = CSGenio.framework.TableConfiguration.TableConfigurationHelpers.DetermineRowsPerPage(tableConfig.RowsPerPage, perPage, rowsPerPageOptionsString);
+
+			// Determine what columns have totalizers
+			tableConfig.TotalizerColumns = requestModel.TotalizerColumns;
+
+			// For tables with multiple selection enabled, determine currently selected rows
+			tableConfig.SelectedRows = requestModel.SelectedRows;
+
+
+			model.Load(tableConfig, requestValues, Request.IsAjaxRequest());
+
+			return JsonOK(model);
+		}
+
+		//
+		// GET: /Home/Lendexpl_ValLendings
+		// POST: /Home/Lendexpl_ValLendings
+		[ActionName("Lendexpl_ValLendings")]
+		public ActionResult Lendexpl_ValLendings([FromBody]RequestLookupModel requestModel)
+		{
+			var queryParams = requestModel.QueryParams;
+
+			int perPage = CSGenio.framework.Configuration.NrRegDBedit;
+			string rowsPerPageOptionsString = "";
+
+			NameValueCollection requestValues = [];
+			// Add to request values
+			foreach (var kv in queryParams ?? [])
+				requestValues.Add(kv.Key, kv.Value);
+
+			Lendexpl_ValLendings_ViewModel model = new(UserContext.Current);
+
+			// Table configuration load options
+			CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions tableConfigOptions = new CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions();
+
+
+			// Determine which table configuration to use and load it
+			CSGenio.framework.TableConfiguration.TableConfiguration tableConfig = TableUiSettings.Load(
+				UserContext.Current.PersistentSupport,
+				model.Uuid,
+				UserContext.Current.User,
+				tableConfigOptions
+			).DetermineTableConfig(
+				requestModel?.TableConfiguration,
+				requestModel?.UserTableConfigName,
+				(bool)requestModel?.LoadDefaultView,
+				tableConfigOptions
+			);
+
+			// Determine rows per page
+			tableConfig.RowsPerPage = CSGenio.framework.TableConfiguration.TableConfigurationHelpers.DetermineRowsPerPage(tableConfig.RowsPerPage, perPage, rowsPerPageOptionsString);
+
+			// Determine what columns have totalizers
+			tableConfig.TotalizerColumns = requestModel.TotalizerColumns;
+
+			// For tables with multiple selection enabled, determine currently selected rows
+			tableConfig.SelectedRows = requestModel.SelectedRows;
+
+
+			model.Load(tableConfig, requestValues, Request.IsAjaxRequest());
+
+			return JsonOK(model);
+		}
+
+		#endregion
+
 		#region Form Methods -> People ()
 
 		// GET: /Home/People_Show
 		public ActionResult People_Show()
 		{
-			People_ViewModel model = new(UserContext.Current);
+			var model = new People_ViewModel(UserContext.Current);
 			CSGenio.framework.StatusMessage permission = model.CheckPermissions(FormMode.Show);
 			bool isHomePage = RouteData.Values.ContainsKey("isHomePage") && (bool)RouteData.Values["isHomePage"];
 			ViewBag.isHomePage = isHomePage;
@@ -209,7 +435,7 @@ namespace GenioMVC.Controllers
 
 // USE /[MANUAL GQT BEFORE_LOAD_SHOW PEOPLE]/
 
-			model.Load([], true);
+			model.Load(new NameValueCollection());
 
 // USE /[MANUAL GQT AFTER_LOAD_SHOW PEOPLE]/
 
@@ -225,7 +451,7 @@ namespace GenioMVC.Controllers
 		// GET: /Home/People_Edit
 		public ActionResult People_Edit()
 		{
-			People_ViewModel model = new(UserContext.Current);
+			var model = new People_ViewModel(UserContext.Current);
 			CSGenio.framework.StatusMessage permission = model.CheckPermissions(FormMode.Edit);
 			bool isHomePage = RouteData.Values.ContainsKey("isHomePage") && (bool)RouteData.Values["isHomePage"];
 			ViewBag.isHomePage = isHomePage;
@@ -239,7 +465,7 @@ namespace GenioMVC.Controllers
 
 // USE /[MANUAL GQT BEFORE_LOAD_EDIT PEOPLE]/
 
-			model.Load([], true);
+			model.Load(new NameValueCollection());
 
 // USE /[MANUAL GQT AFTER_LOAD_EDIT PEOPLE]/
 
@@ -264,24 +490,168 @@ namespace GenioMVC.Controllers
 		// GET: /Home/People_ValPeoplels
 		// POST: /Home/People_ValPeoplels
 		[ActionName("People_ValPeoplels")]
-		public ActionResult People_ValPeoplels([FromBody] RequestLookupModel requestModel)
+		public ActionResult People_ValPeoplels([FromBody]RequestLookupModel requestModel)
 		{
 			var queryParams = requestModel.QueryParams;
+
+			int perPage = 2;
+			string rowsPerPageOptionsString = "";
 
 			NameValueCollection requestValues = [];
 			// Add to request values
 			foreach (var kv in queryParams ?? [])
 				requestValues.Add(kv.Key, kv.Value);
 
-			People_ValPeoplels_ViewModel model = new(m_userContext);
+			People_ValPeoplels_ViewModel model = new(UserContext.Current);
 
-			CSGenio.core.framework.table.TableConfiguration tableConfig = model.GetTableConfig(
-				requestModel.TableConfiguration,
-				requestModel.UserTableConfigName,
-				requestModel.LoadDefaultView);
+			// Table configuration load options
+			CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions tableConfigOptions = new CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions();
+
+
+			// Determine which table configuration to use and load it
+			CSGenio.framework.TableConfiguration.TableConfiguration tableConfig = TableUiSettings.Load(
+				UserContext.Current.PersistentSupport,
+				model.Uuid,
+				UserContext.Current.User,
+				tableConfigOptions
+			).DetermineTableConfig(
+				requestModel?.TableConfiguration,
+				requestModel?.UserTableConfigName,
+				(bool)requestModel?.LoadDefaultView,
+				tableConfigOptions
+			);
 
 			// Determine rows per page
-			tableConfig.RowsPerPage = tableConfig.DetermineRowsPerPage(2, "");
+			tableConfig.RowsPerPage = CSGenio.framework.TableConfiguration.TableConfigurationHelpers.DetermineRowsPerPage(tableConfig.RowsPerPage, perPage, rowsPerPageOptionsString);
+
+			// Determine what columns have totalizers
+			tableConfig.TotalizerColumns = requestModel.TotalizerColumns;
+
+			// For tables with multiple selection enabled, determine currently selected rows
+			tableConfig.SelectedRows = requestModel.SelectedRows;
+
+
+			model.Load(tableConfig, requestValues, Request.IsAjaxRequest());
+
+			return JsonOK(model);
+		}
+
+		#endregion
+
+		#region Form Methods -> Wid_equi (Equip)
+
+		// GET: /Home/Wid_equi_Show
+		public ActionResult Wid_equi_Show()
+		{
+			var model = new Wid_equi_ViewModel(UserContext.Current);
+			CSGenio.framework.StatusMessage permission = model.CheckPermissions(FormMode.Show);
+			bool isHomePage = RouteData.Values.ContainsKey("isHomePage") && (bool)RouteData.Values["isHomePage"];
+			ViewBag.isHomePage = isHomePage;
+			if (isHomePage)
+				Navigation.SetValue("HomePage", "Wid_equi");
+			if (permission.Status.Equals(CSGenio.framework.Status.E))
+				return PermissionError(permission.Message);
+
+			// Audit
+			CSGenio.framework.Audit.registAction(UserContext.Current.User, Resources.Resources.FORM54242 + " " + ACTION_WID_EQUI_SHOW.ShortDescription());
+
+// USE /[MANUAL GQT BEFORE_LOAD_SHOW WID_EQUI]/
+
+			model.Load(new NameValueCollection());
+
+// USE /[MANUAL GQT AFTER_LOAD_SHOW WID_EQUI]/
+
+			return JsonOK(model);
+		}
+
+		[HttpPost]
+		public ActionResult Wid_equi_Show_GET()
+		{
+			return Wid_equi_Show();
+		}
+
+		// GET: /Home/Wid_equi_Edit
+		public ActionResult Wid_equi_Edit()
+		{
+			var model = new Wid_equi_ViewModel(UserContext.Current);
+			CSGenio.framework.StatusMessage permission = model.CheckPermissions(FormMode.Edit);
+			bool isHomePage = RouteData.Values.ContainsKey("isHomePage") && (bool)RouteData.Values["isHomePage"];
+			ViewBag.isHomePage = isHomePage;
+			if (isHomePage)
+				Navigation.SetValue("HomePage", "Wid_equi");
+			if (permission.Status.Equals(CSGenio.framework.Status.E))
+				return PermissionError(permission.Message);
+
+			// Audit
+			CSGenio.framework.Audit.registAction(UserContext.Current.User, Resources.Resources.FORM54242 + " " + ACTION_WID_EQUI_EDIT.ShortDescription());
+
+// USE /[MANUAL GQT BEFORE_LOAD_EDIT WID_EQUI]/
+
+			model.Load(new NameValueCollection());
+
+// USE /[MANUAL GQT AFTER_LOAD_EDIT WID_EQUI]/
+
+			return JsonOK(model);
+		}
+
+		[HttpPost]
+		public ActionResult Wid_equi_Edit_GET()
+		{
+			return Wid_equi_Edit();
+		}
+
+		//
+		// GET: /Home/Wid_equi_Cancel
+// USE /[MANUAL GQT CONTROLLER_CANCEL_GET WID_EQUI]/
+		public ActionResult Wid_equi_Cancel()
+		{
+			return JsonOK(new { Success = true });
+		}
+
+		//
+		// GET: /Home/Wid_equi_ValWidequi
+		// POST: /Home/Wid_equi_ValWidequi
+		[ActionName("Wid_equi_ValWidequi")]
+		public ActionResult Wid_equi_ValWidequi([FromBody]RequestLookupModel requestModel)
+		{
+			var queryParams = requestModel.QueryParams;
+
+			int perPage = 5;
+			string rowsPerPageOptionsString = "";
+
+			NameValueCollection requestValues = [];
+			// Add to request values
+			foreach (var kv in queryParams ?? [])
+				requestValues.Add(kv.Key, kv.Value);
+
+			Wid_equi_ValWidequi_ViewModel model = new(UserContext.Current);
+
+			// Table configuration load options
+			CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions tableConfigOptions = new CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions();
+
+
+			// Determine which table configuration to use and load it
+			CSGenio.framework.TableConfiguration.TableConfiguration tableConfig = TableUiSettings.Load(
+				UserContext.Current.PersistentSupport,
+				model.Uuid,
+				UserContext.Current.User,
+				tableConfigOptions
+			).DetermineTableConfig(
+				requestModel?.TableConfiguration,
+				requestModel?.UserTableConfigName,
+				(bool)requestModel?.LoadDefaultView,
+				tableConfigOptions
+			);
+
+			// Determine rows per page
+			tableConfig.RowsPerPage = CSGenio.framework.TableConfiguration.TableConfigurationHelpers.DetermineRowsPerPage(tableConfig.RowsPerPage, perPage, rowsPerPageOptionsString);
+
+			// Determine what columns have totalizers
+			tableConfig.TotalizerColumns = requestModel.TotalizerColumns;
+
+			// For tables with multiple selection enabled, determine currently selected rows
+			tableConfig.SelectedRows = requestModel.SelectedRows;
+
 
 			model.Load(tableConfig, requestValues, Request.IsAjaxRequest());
 
@@ -295,7 +665,7 @@ namespace GenioMVC.Controllers
 		// GET: /Home/Wid_grap_Show
 		public ActionResult Wid_grap_Show()
 		{
-			Wid_grap_ViewModel model = new(UserContext.Current);
+			var model = new Wid_grap_ViewModel(UserContext.Current);
 			CSGenio.framework.StatusMessage permission = model.CheckPermissions(FormMode.Show);
 			bool isHomePage = RouteData.Values.ContainsKey("isHomePage") && (bool)RouteData.Values["isHomePage"];
 			ViewBag.isHomePage = isHomePage;
@@ -309,7 +679,7 @@ namespace GenioMVC.Controllers
 
 // USE /[MANUAL GQT BEFORE_LOAD_SHOW WID_GRAP]/
 
-			model.Load([], true);
+			model.Load(new NameValueCollection());
 
 // USE /[MANUAL GQT AFTER_LOAD_SHOW WID_GRAP]/
 
@@ -325,7 +695,7 @@ namespace GenioMVC.Controllers
 		// GET: /Home/Wid_grap_Edit
 		public ActionResult Wid_grap_Edit()
 		{
-			Wid_grap_ViewModel model = new(UserContext.Current);
+			var model = new Wid_grap_ViewModel(UserContext.Current);
 			CSGenio.framework.StatusMessage permission = model.CheckPermissions(FormMode.Edit);
 			bool isHomePage = RouteData.Values.ContainsKey("isHomePage") && (bool)RouteData.Values["isHomePage"];
 			ViewBag.isHomePage = isHomePage;
@@ -339,7 +709,7 @@ namespace GenioMVC.Controllers
 
 // USE /[MANUAL GQT BEFORE_LOAD_EDIT WID_GRAP]/
 
-			model.Load([], true);
+			model.Load(new NameValueCollection());
 
 // USE /[MANUAL GQT AFTER_LOAD_EDIT WID_GRAP]/
 
@@ -364,24 +734,46 @@ namespace GenioMVC.Controllers
 		// GET: /Home/Wid_grap_ValField001
 		// POST: /Home/Wid_grap_ValField001
 		[ActionName("Wid_grap_ValField001")]
-		public ActionResult Wid_grap_ValField001([FromBody] RequestLookupModel requestModel)
+		public ActionResult Wid_grap_ValField001([FromBody]RequestLookupModel requestModel)
 		{
 			var queryParams = requestModel.QueryParams;
+
+			int perPage = CSGenio.framework.Configuration.NrRegDBedit;
+			string rowsPerPageOptionsString = "";
 
 			NameValueCollection requestValues = [];
 			// Add to request values
 			foreach (var kv in queryParams ?? [])
 				requestValues.Add(kv.Key, kv.Value);
 
-			Wid_grap_ValField001_ViewModel model = new(m_userContext);
+			Wid_grap_ValField001_ViewModel model = new(UserContext.Current);
 
-			CSGenio.core.framework.table.TableConfiguration tableConfig = model.GetTableConfig(
-				requestModel.TableConfiguration,
-				requestModel.UserTableConfigName,
-				requestModel.LoadDefaultView);
+			// Table configuration load options
+			CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions tableConfigOptions = new CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions();
+
+
+			// Determine which table configuration to use and load it
+			CSGenio.framework.TableConfiguration.TableConfiguration tableConfig = TableUiSettings.Load(
+				UserContext.Current.PersistentSupport,
+				model.Uuid,
+				UserContext.Current.User,
+				tableConfigOptions
+			).DetermineTableConfig(
+				requestModel?.TableConfiguration,
+				requestModel?.UserTableConfigName,
+				(bool)requestModel?.LoadDefaultView,
+				tableConfigOptions
+			);
 
 			// Determine rows per page
-			tableConfig.RowsPerPage = tableConfig.DetermineRowsPerPage(CSGenio.framework.Configuration.NrRegDBedit, "");
+			tableConfig.RowsPerPage = CSGenio.framework.TableConfiguration.TableConfigurationHelpers.DetermineRowsPerPage(tableConfig.RowsPerPage, perPage, rowsPerPageOptionsString);
+
+			// Determine what columns have totalizers
+			tableConfig.TotalizerColumns = requestModel.TotalizerColumns;
+
+			// For tables with multiple selection enabled, determine currently selected rows
+			tableConfig.SelectedRows = requestModel.SelectedRows;
+
 
 			model.Load(tableConfig, requestValues, Request.IsAjaxRequest());
 
@@ -395,7 +787,7 @@ namespace GenioMVC.Controllers
 		// GET: /Home/Wid_pess_Show
 		public ActionResult Wid_pess_Show()
 		{
-			Wid_pess_ViewModel model = new(UserContext.Current);
+			var model = new Wid_pess_ViewModel(UserContext.Current);
 			CSGenio.framework.StatusMessage permission = model.CheckPermissions(FormMode.Show);
 			bool isHomePage = RouteData.Values.ContainsKey("isHomePage") && (bool)RouteData.Values["isHomePage"];
 			ViewBag.isHomePage = isHomePage;
@@ -409,7 +801,7 @@ namespace GenioMVC.Controllers
 
 // USE /[MANUAL GQT BEFORE_LOAD_SHOW WID_PESS]/
 
-			model.Load([], true);
+			model.Load(new NameValueCollection());
 
 // USE /[MANUAL GQT AFTER_LOAD_SHOW WID_PESS]/
 
@@ -425,7 +817,7 @@ namespace GenioMVC.Controllers
 		// GET: /Home/Wid_pess_Edit
 		public ActionResult Wid_pess_Edit()
 		{
-			Wid_pess_ViewModel model = new(UserContext.Current);
+			var model = new Wid_pess_ViewModel(UserContext.Current);
 			CSGenio.framework.StatusMessage permission = model.CheckPermissions(FormMode.Edit);
 			bool isHomePage = RouteData.Values.ContainsKey("isHomePage") && (bool)RouteData.Values["isHomePage"];
 			ViewBag.isHomePage = isHomePage;
@@ -439,7 +831,7 @@ namespace GenioMVC.Controllers
 
 // USE /[MANUAL GQT BEFORE_LOAD_EDIT WID_PESS]/
 
-			model.Load([], true);
+			model.Load(new NameValueCollection());
 
 // USE /[MANUAL GQT AFTER_LOAD_EDIT WID_PESS]/
 
@@ -464,24 +856,46 @@ namespace GenioMVC.Controllers
 		// GET: /Home/Wid_pess_ValPesslist
 		// POST: /Home/Wid_pess_ValPesslist
 		[ActionName("Wid_pess_ValPesslist")]
-		public ActionResult Wid_pess_ValPesslist([FromBody] RequestLookupModel requestModel)
+		public ActionResult Wid_pess_ValPesslist([FromBody]RequestLookupModel requestModel)
 		{
 			var queryParams = requestModel.QueryParams;
+
+			int perPage = CSGenio.framework.Configuration.NrRegDBedit;
+			string rowsPerPageOptionsString = "";
 
 			NameValueCollection requestValues = [];
 			// Add to request values
 			foreach (var kv in queryParams ?? [])
 				requestValues.Add(kv.Key, kv.Value);
 
-			Wid_pess_ValPesslist_ViewModel model = new(m_userContext);
+			Wid_pess_ValPesslist_ViewModel model = new(UserContext.Current);
 
-			CSGenio.core.framework.table.TableConfiguration tableConfig = model.GetTableConfig(
-				requestModel.TableConfiguration,
-				requestModel.UserTableConfigName,
-				requestModel.LoadDefaultView);
+			// Table configuration load options
+			CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions tableConfigOptions = new CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions();
+
+
+			// Determine which table configuration to use and load it
+			CSGenio.framework.TableConfiguration.TableConfiguration tableConfig = TableUiSettings.Load(
+				UserContext.Current.PersistentSupport,
+				model.Uuid,
+				UserContext.Current.User,
+				tableConfigOptions
+			).DetermineTableConfig(
+				requestModel?.TableConfiguration,
+				requestModel?.UserTableConfigName,
+				(bool)requestModel?.LoadDefaultView,
+				tableConfigOptions
+			);
 
 			// Determine rows per page
-			tableConfig.RowsPerPage = tableConfig.DetermineRowsPerPage(CSGenio.framework.Configuration.NrRegDBedit, "");
+			tableConfig.RowsPerPage = CSGenio.framework.TableConfiguration.TableConfigurationHelpers.DetermineRowsPerPage(tableConfig.RowsPerPage, perPage, rowsPerPageOptionsString);
+
+			// Determine what columns have totalizers
+			tableConfig.TotalizerColumns = requestModel.TotalizerColumns;
+
+			// For tables with multiple selection enabled, determine currently selected rows
+			tableConfig.SelectedRows = requestModel.SelectedRows;
+
 
 			model.Load(tableConfig, requestValues, Request.IsAjaxRequest());
 
@@ -492,7 +906,7 @@ namespace GenioMVC.Controllers
 
 		public JsonResult GetAvailableMenus()
 		{
-			Menu_ViewModel model = new(UserContext.Current);
+			var model = new Menu_ViewModel(UserContext.Current);
 			return JsonOK(model);
 		}
 
@@ -528,10 +942,24 @@ namespace GenioMVC.Controllers
 			var user = UserContext.Current.User;
 
 			var profile = new ProfileModel();
-			profile.Enable2FAOptions = SecurityFactory.IdentityProviderList.Any(p => p.Is2FA);
-			profile.Current2FA = user.Auth2FATp;
-			profile.ValCodpsw = user.Codpsw;
-			profile.ValNome = user.Name;
+			profile.Enable2FAOptions = Configuration.Security.Activate2FA != Auth2FAModes.None;
+
+			try
+			{
+				sp.openConnection();
+				var userValues = CSGenioApsw.search(sp, user.Codpsw, user, new string[] { CSGenioApsw.FldCodpsw.Field, CSGenioApsw.FldNome.Field });
+
+				profile.ValCodpsw = userValues.ValCodpsw;
+				profile.ValNome = userValues.ValNome;
+			}
+			catch
+			{
+				ModelState.AddModelError("Erro", Resources.Resources.PEDIMOS_DESCULPA__OC63848);
+			}
+			finally
+			{
+				sp.closeConnection();
+			}
 
 			var status = user.Status;
 			if (status == 1)
@@ -560,6 +988,7 @@ namespace GenioMVC.Controllers
 		public ActionResult Profile([FromBody]ProfileModel model)
 		{
 			var user = UserContext.Current.User;
+			var sp = UserContext.Current.PersistentSupport;
 
 			try
 			{
@@ -577,14 +1006,21 @@ namespace GenioMVC.Controllers
 					ModelState.AddModelError(errorMessage, errorMessage);
 				}
 
-                // Change the user's password
-				foreach (var identityProvider in SecurityFactory.IdentityProviderList)
-					if (identityProvider.HasUsernameAuth())
-						SecurityFactory.StoreCredential(identityProvider.Id, user, model.OldPassword, model.NewPassword);
+				sp.openConnection();
+				var uf = new UserFactory(sp, user);
+				var psw = uf.GetUser(user.Name);
+				uf.ChangePassword(psw, model.NewPassword, model.ConfirmPassword, model.OldPassword);
+				sp.closeConnection();
+
+				sp.openTransaction();
+				model.Save(UserContext.Current);
+				sp.closeTransaction();
 
 				// Otherwise, recreate logged user.
 				if (UserContext.Current.User.Status == 1)
 					RecreateUser();
+
+				return JsonOK(new { Message = Resources.Resources.A_SUA_PASSWORD_FOI_A50177 });
 			}
 			catch (Exception e)
 			{
@@ -596,34 +1032,154 @@ namespace GenioMVC.Controllers
 				model.OldPassword = "";
 				model.NewPassword = "";
 				model.ConfirmPassword = "";
-			}
 
-			return JsonOK(new { Message = Resources.Resources.A_SUA_PASSWORD_FOI_A50177 });
+				sp.closeConnection();
+			}
 		}
 
-		[HttpGet]
 		public ActionResult Change2FA()
 		{
-			var user2F = m_userContext.User.Auth2FATp;
-			TwoFAViewModel model = new()
-			{
-				User2FATp = user2F,
-				Providers = SecurityFactory.IdentityProviderList
-					.Where(ip => ip.Is2FA)
-					.Select(ip => new AuthRedirectMethodModel()
-					{
-						Id = ip.Id,
-						Description = ip.Description,
-						CredentialType = SecurityFactory.GetCredentialType(ip)
-					})
-					.ToList()
-			};
+			var model = new TwoFAViewModel();
+
+			var userPsw = Models.Psw.Find(UserContext.Current.User.Codpsw, UserContext.Current);
+			model.HasTotp = userPsw.ValPsw2fatp == Auth2FAModes.TOTP.ToString() ? 1 : 0;
+			model.HasWebAuthN = userPsw.ValPsw2fatp == Auth2FAModes.WebAuth.ToString() ? 1 : 0;
+			model.ShowTotp = false;
 
 			// Give to user a message if is mandatory to create 2FA
 			if (Configuration.Security.Mandatory2FA && !UserContext.Current.User.Auth2FA)
 				ModelState.AddModelError("Erro", Resources.Resources.A_2ND_AUTHENTICATION36972);
 
 			return JsonOK(model);
+		}
+
+		[HttpPost]
+		public ActionResult Change2FA([FromBody]TwoFAViewModel model)
+		{
+			if (model.HasTotp == 1)
+			{
+				var secret = model.TotpDisplayCode;
+				//Only save if the user has correctly inserted the 6 code, otherwise they may be locked out of the system
+				if (new TOTPIdentityProvider().IsOk(secret, model.Totp6Code))
+				{
+					var sp = UserContext.Current.PersistentSupport;
+					try
+					{
+						sp.openConnection();
+						var userPsw = Models.Psw.Find(UserContext.Current.User.Codpsw, UserContext.Current);
+						userPsw.ValPsw2fatp = Auth2FAModes.TOTP.ToString();
+						userPsw.ValPsw2favl = secret;
+						userPsw.Save(sp);
+						sp.closeConnection();
+					}
+					catch (Exception ex)
+					{
+						sp.closeConnection();
+						Log.Error(ex.Message);
+
+						ModelState.AddModelError("user", Resources.Resources.PEDIMOS_DESCULPA__OC63848);
+						CreateTOTPModel(ref model, secret);
+						return JsonERROR(Resources.Resources.PEDIMOS_DESCULPA__OC63848, model);
+					}
+
+					RecreateUser();
+				}
+				else
+				{
+					ModelState.AddModelError(Resources.Resources.THE_CODE_YOU_ENTERED21835, Resources.Resources.THE_CODE_YOU_ENTERED21835);
+					CreateTOTPModel(ref model, secret);
+					return JsonERROR(Resources.Resources.THE_CODE_YOU_ENTERED21835, model);
+				}
+			}
+
+			return JsonOK();
+		}
+
+		private string getUrlQrCodeTOTP (string secret)
+		{
+			return TOTPIdentityProvider.GetUrlQrCode(UserContext.Current.User.Name, secret);
+		}
+
+		private void CreateTOTPModel(ref TwoFAViewModel model, string secret)
+		{
+			model.HasTotp = 1;
+			model.HasWebAuthN = 0;
+			model.ShowTotp = true;
+
+			var qrUrl = getUrlQrCodeTOTP(secret);
+			model.TotpUrl = qrUrl;
+			model.TotpDisplayCode = secret;
+		}
+
+		[HttpGet]
+		public ActionResult CreateTOTP()
+		{
+			var model = new TwoFAViewModel();
+
+			// Creation 2FA based on TOTP
+			string secret = PasswordFactory.StringRandom(20, true);
+
+			// Save the 2FA secret
+			UserContext.Current.User.Code = secret;
+
+			CreateTOTPModel(ref model, secret);
+
+			return JsonOK(model);
+		}
+
+		[HttpGet]
+		public ActionResult CreateWebAuthN()
+		{
+			var model = new TwoFAViewModel();
+
+			model.HasTotp = 0;
+			model.HasWebAuthN = 1;
+			model.ShowWebAuthN = true;
+
+			return JsonOK(model);
+		}
+
+		public ActionResult WebAuthn2FAMakeCredentialOptions()
+		{
+			WebAuthIdentityProvider credWebAuth = new WebAuthIdentityProvider(new WebAuthValues()
+			{
+				MDSAccessKey = ModelState.GetValueOrDefault("fido2:MDSAccessKey")?.AttemptedValue,
+				MDSCacheDirPath = ModelState.GetValueOrDefault("fido2:MDSCacheDirPath")?.AttemptedValue,
+				TimestampDriftTolerance = ModelState.GetValueOrDefault("fido2:TimestampDriftTolerance")?.AttemptedValue,
+
+				Fido2Options = new WebAuthFido2Options() { Origin = $"{Request.Scheme}://{Request.Host}{Request.PathBase}" }
+			});
+
+			var returnWebAuth = credWebAuth.MakeCredentialOptions(UserContext.Current.User.Name);
+
+			if (returnWebAuth.Success)
+			{
+				// Temporarily store options, session/in-memory cache/redis/db
+				HttpContext.Session.SetString("fido2.attestationOptions", returnWebAuth.Options);
+				return Json(new { Success = true, options = returnWebAuth.Options });
+			}
+			else
+				return Json(new { Success = false, ErrorMessage = returnWebAuth.ErrorMessage });
+		}
+
+		public async Task<ActionResult> WebAuthn2FAMakeCredentialOptions2(string data)
+		{
+			WebAuthIdentityProvider credWebAuth = new WebAuthIdentityProvider(new WebAuthValues()
+			{
+				MDSAccessKey = ModelState.GetValueOrDefault("fido2:MDSAccessKey")?.AttemptedValue,
+				MDSCacheDirPath = ModelState.GetValueOrDefault("fido2:MDSCacheDirPath")?.AttemptedValue,
+				TimestampDriftTolerance = ModelState.GetValueOrDefault("fido2:TimestampDriftTolerance")?.AttemptedValue,
+
+				Fido2Options = new WebAuthFido2Options() { Origin = $"{Request.Scheme}://{Request.Host}{Request.PathBase}" }
+			});
+
+			User u = UserContext.Current.User;
+			PersistentSupport sp = PersistentSupport.getPersistentSupport(u.Year, u.Name);
+			var returnWebAuth = await credWebAuth.MakeCredential(data, HttpContext.Session.GetString("fido2.attestationOptions"), UserContext.Current.User.Codpsw, sp);
+
+			if (returnWebAuth.Success)
+				return Json(new { Success = returnWebAuth.Success, options = returnWebAuth.Options });
+			return Json(new { Success = returnWebAuth.Success, ErrorMessage = returnWebAuth.ErrorMessage });
 		}
 
 

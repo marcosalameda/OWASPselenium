@@ -63,13 +63,19 @@ namespace GenioMVC.Models
 	{
 		[JsonConverter(typeof(VariantToStringDictionaryConverter))]
 		public Dictionary<string, string> QueryParams { get; set; } = [];
-		public CSGenio.core.framework.table.TableConfiguration TableConfiguration { get; set; }
+		public CSGenio.framework.TableConfiguration.TableConfiguration TableConfiguration { get; set; }
 		public string UserTableConfigName { get; set; }
 		public bool LoadDefaultView { get; set; } = false;
 		public bool IsFirstLoad { get; set; } = false;
-		public bool NoRedirect { get; set; } = false;
+		public bool noRedirect { get; set; } = false;
 		[JsonIgnore]
 		public bool AllSelected { get; set; } = false;
+
+		// Column Totalizers: Props that are only defined if
+		// The table has columns with totalizers enabled.
+		public List<string> TotalizerColumns { get; set; } = [];
+		// The table has multiple selection enabled.
+		public List<string> SelectedRows { get; set; } = [];
 	}
 
 	public class RequestInitialEPH
@@ -224,7 +230,7 @@ namespace GenioMVC.Models
 		[JsonConverter(typeof(VariantToStringDictionaryConverter))]
 		public Dictionary<string, string> QueryParams { get; set; }
 		public bool AllSelected { get; set; } = false;
-		public CSGenio.core.framework.table.TableConfiguration TableConfiguration { get; set; }
+		public CSGenio.framework.TableConfiguration.TableConfiguration TableConfiguration { get; set; }
 		public string UserTableConfigName { get; set; }
 		public bool LoadDefaultView { get; set; } = false;
 	}

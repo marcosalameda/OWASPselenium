@@ -1,4 +1,4 @@
-﻿/* eslint-disable @typescript-eslint/no-unused-vars */
+﻿/* eslint-disable no-unused-vars */
 import { computed, reactive, watch } from 'vue'
 import _merge from 'lodash-es/merge'
 
@@ -11,7 +11,7 @@ import netAPI from '@quidgest/clientapp/network'
 import qApi from '@/api/genio/quidgestFunctions.js'
 import qFunctions from '@/api/genio/projectFunctions.js'
 import qProjArrays from '@/api/genio/projectArrays.js'
-/* eslint-enable @typescript-eslint/no-unused-vars */
+/* eslint-enable no-unused-vars */
 
 /**
  * Represents a ViewModel class.
@@ -25,11 +25,11 @@ export default class ViewModel extends FormViewModelBase
 	 * @param {object} options - The options for the ViewModel
 	 * @param {object} values - A ViewModel instance to copy values from
 	 */
-	// eslint-disable-next-line @typescript-eslint/no-unused-vars
+	// eslint-disable-next-line no-unused-vars
 	constructor(vueContext, options, values)
 	{
 		super(vueContext, options)
-		// eslint-disable-next-line @typescript-eslint/no-unused-vars
+		// eslint-disable-next-line no-unused-vars
 		const vm = this.vueContext
 
 		// The view model metadata
@@ -37,9 +37,8 @@ export default class ViewModel extends FormViewModelBase
 			name: 'FEECA',
 			area: 'FEECA',
 			actions: {
-				recalculateFormulas: 'RecalculateFormulas_Feeca',
-				updateFilesTickets: 'UpdateFilesTicketsFeeca',
-				setFile: 'SetFileFeeca'
+				recalculateFormulas: 'RecalculateFormulas_FEECA',
+				updateFilesTickets: 'UpdateFilesTicketsFEECA'
 			}
 		})
 
@@ -51,7 +50,7 @@ export default class ViewModel extends FormViewModelBase
 			field: 'CODFEECA',
 			description: '',
 		}).cloneFrom(values?.ValCodfeeca))
-		this.stopWatchers.push(watch(() => this.ValCodfeeca.value, (newValue, oldValue) => this.onUpdate('feeca.codfeeca', this.ValCodfeeca, newValue, oldValue)))
+		watch(() => this.ValCodfeeca.value, (newValue, oldValue) => this.onUpdate('feeca.codfeeca', this.ValCodfeeca, newValue, oldValue))
 
 		/** The used foreign keys. */
 		this.ValCodflds = reactive(new modelFieldType.ForeignKey({
@@ -62,7 +61,7 @@ export default class ViewModel extends FormViewModelBase
 			relatedArea: 'FLDS',
 			description: '',
 		}).cloneFrom(values?.ValCodflds))
-		this.stopWatchers.push(watch(() => this.ValCodflds.value, (newValue, oldValue) => this.onUpdate('feeca.codflds', this.ValCodflds, newValue, oldValue)))
+		watch(() => this.ValCodflds.value, (newValue, oldValue) => this.onUpdate('feeca.codflds', this.ValCodflds, newValue, oldValue))
 
 		/** The remaining form fields. */
 		this.TableFldsDescrip = reactive(new modelFieldType.MultiLineString({
@@ -72,9 +71,8 @@ export default class ViewModel extends FormViewModelBase
 			area: 'FLDS',
 			field: 'DESCRIP',
 			description: computed(() => this.Resources.DESCRIPTION07383),
-			ignoreFldSubmit: true,
 		}).cloneFrom(values?.TableFldsDescrip))
-		this.stopWatchers.push(watch(() => this.TableFldsDescrip.value, (newValue, oldValue) => this.onUpdate('flds.descrip', this.TableFldsDescrip, newValue, oldValue)))
+		watch(() => this.TableFldsDescrip.value, (newValue, oldValue) => this.onUpdate('flds.descrip', this.TableFldsDescrip, newValue, oldValue))
 
 		this.ValFeedback = reactive(new modelFieldType.String({
 			id: 'ValFeedback',
@@ -84,7 +82,7 @@ export default class ViewModel extends FormViewModelBase
 			maxLength: 50,
 			description: computed(() => this.Resources.FEEDBACK52855),
 		}).cloneFrom(values?.ValFeedback))
-		this.stopWatchers.push(watch(() => this.ValFeedback.value, (newValue, oldValue) => this.onUpdate('feeca.feedback', this.ValFeedback, newValue, oldValue)))
+		watch(() => this.ValFeedback.value, (newValue, oldValue) => this.onUpdate('feeca.feedback', this.ValFeedback, newValue, oldValue))
 
 		this.FldsValAttach = reactive(new modelFieldType.Document({
 			id: 'FldsValAttach',
@@ -97,7 +95,7 @@ export default class ViewModel extends FormViewModelBase
 			isFixed: true,
 			description: computed(() => this.Resources.DOCUMENT00695),
 		}).cloneFrom(values?.FldsValAttach))
-		this.stopWatchers.push(watch(() => this.FldsValAttach.value, (newValue, oldValue) => this.onUpdate('flds.attach', this.FldsValAttach, newValue, oldValue)))
+		watch(() => this.FldsValAttach.value, (newValue, oldValue) => this.onUpdate('flds.attach', this.FldsValAttach, newValue, oldValue))
 
 		this.FldsValAttachPropertiesVM = reactive(new modelFieldType.Base({
 			id: 'FldsValAttachPropertiesVM',
@@ -112,8 +110,7 @@ export default class ViewModel extends FormViewModelBase
 			area: 'FLDS',
 			field: 'ATTACHFK'
 		}).cloneFrom(values?.FldsValAttachfk))
-		this.stopWatchers.push(watch(() => this.FldsValAttachfk.value, (newValue, oldValue) => this.onUpdate('flds.attachfk', this.FldsValAttachfk, newValue, oldValue)))
-
+		watch(() => this.FldsValAttachfk.value, (newValue, oldValue) => this.onUpdate('flds.attachfk', this.FldsValAttachfk, newValue, oldValue))
 		this.FldsValAttachData = reactive(new modelFieldType.DocumentData({
 			id: 'FldsValAttachData',
 			isFixed: true,
@@ -121,7 +118,7 @@ export default class ViewModel extends FormViewModelBase
 			field: 'ATTACHDATA',
 			ignoreFldSubmit: true
 		}).cloneFrom(values?.FldsValAttachData))
-		this.stopWatchers.push(watch(() => this.FldsValAttachData.value, (newValue, oldValue) => this.onUpdate('flds.attachdata', this.FldsValAttachData, newValue, oldValue), { deep: true }))
+		watch(() => this.FldsValAttachData.value, (newValue, oldValue) => this.onUpdate('flds.attachdata', this.FldsValAttachData, newValue, oldValue), { deep: true })
 
 		this.FldsValNpassage = reactive(new modelFieldType.Number({
 			id: 'FldsValNpassage',
@@ -133,7 +130,7 @@ export default class ViewModel extends FormViewModelBase
 			isFixed: true,
 			description: computed(() => this.Resources.NUMERIC19292),
 		}).cloneFrom(values?.FldsValNpassage))
-		this.stopWatchers.push(watch(() => this.FldsValNpassage.value, (newValue, oldValue) => this.onUpdate('flds.npassage', this.FldsValNpassage, newValue, oldValue)))
+		watch(() => this.FldsValNpassage.value, (newValue, oldValue) => this.onUpdate('flds.npassage', this.FldsValNpassage, newValue, oldValue))
 	}
 
 	/**

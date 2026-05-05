@@ -51,6 +51,7 @@ namespace CSGenio.business
 		{
 			return new Dictionary<string, ArrayElement>()
 			{
+				{ E_A_1, new ArrayElement() { ResourceId = "UTILIZACAO_DE_DADOS_26961", HelpId = "", Group = "" } },
 				{ E_D_2, new ArrayElement() { ResourceId = "RECOLHA_DIRETA_DOS_D20088", HelpId = "", Group = "" } },
 				{ E_C_3, new ArrayElement() { ResourceId = "CONJUNTO_DE_DADOS_ES36750", HelpId = "", Group = "" } },
 			};

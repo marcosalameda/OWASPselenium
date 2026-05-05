@@ -13,8 +13,7 @@
 		:aria-label="label"
 		:aria-labelledby="labelId"
 		:placeholder="placeholder"
-		:data-testid="dataTestid"
-		@change="$emit('change', $event)" />
+		:data-testid="dataTestid" />
 </template>
 
 <script>
@@ -28,10 +27,7 @@
 	export default {
 		name: 'QMask',
 
-		emits: [
-			'change',
-			'update:modelValue'
-		],
+		emits: ['update:modelValue'],
 
 		inheritAttrs: false,
 
@@ -142,13 +138,6 @@
 
 		expose: [],
 
-		setup()
-		{
-			return {
-				maskaInstance: null
-			}
-		},
-
 		data()
 		{
 			return {
@@ -158,27 +147,7 @@
 
 		mounted()
 		{
-			const input = this.$refs.field?.inputRef
-
-			this.maskaInstance = create(input, this.getTokens())
-
-			if (this.maskType === 'UP' || this.maskType === 'LO') {
-				input.addEventListener('input', this.handleTransformInput)
-			}
-		},
-
-		beforeUnmount()
-		{
-			const input = this.$refs.field?.inputRef
-
-			if (this.maskType === 'UP' || this.maskType === 'LO') {
-				input?.removeEventListener('input', this.handleTransformInput)
-			}
-
-			if (typeof this.maskaInstance?.destroy === 'function')
-				this.maskaInstance.destroy()
-
-			this.maskaInstance = null
+			create(this.$refs.field?.inputRef, this.getTokens())
 		},
 
 		computed: {
@@ -199,51 +168,24 @@
 
 		methods: {
 			/**
-			 * Transforms input value to upper/lower case based on maskType ('UP' | 'LO'),
-			 * preserving cursor position and syncing the value via v-model.
-			 *
-			 * @param {InputEvent} e
-			 * @emits update:modelValue
- 			*/
-			handleTransformInput(e) {
-				const el = e.target
-				const start = el.selectionStart
-				const end = el.selectionEnd
-
-				let val = el.value
-
-				if (this.maskType === 'UP') val = val.toUpperCase()
-				if (this.maskType === 'LO') val = val.toLowerCase()
-
-				if (el.value !== val) {
-					el.value = val
-					el.setSelectionRange(start, end)
-				}
-
-				if (this.modelValue !== val) {
-					this.$emit('update:modelValue', val)
-				}
-			},
-
-			/**
 			 * Determines the configuration for input masking based on the maskType.
 			 * @returns {Object} Configuration object for 'maska' input mask.
 			 */
 			getTokens()
 			{
-				const defaultConfig = {
-					mask: '',
-					tokens: {
-						0: { pattern: /[0-9]/ },
-						X: { pattern: /[0-9a-zA-Z]/ },
-						S: { pattern: /[a-zA-Z]/ },
-						A: { pattern: /[a-zA-Z]/, uppercase: true },
-						a: { pattern: /[a-zA-Z]/, lowercase: true },
-						'!': { escape: true },
-						'*': { repeat: true }
-					}
-				}
-				let customConfig = {}
+				let defaultConfig = {
+						mask: '',
+						tokens: {
+							0: { pattern: /[0-9]/ },
+							X: { pattern: /[0-9a-zA-Z]/ },
+							S: { pattern: /[a-zA-Z]/ },
+							A: { pattern: /[a-zA-Z]/, uppercase: true },
+							a: { pattern: /[a-zA-Z]/, lowercase: true },
+							'!': { escape: true },
+							'*': { repeat: true }
+						}
+					},
+					customConfig = {}
 
 				switch (this.maskType)
 				{
@@ -307,7 +249,7 @@
 						customConfig = {
 							mask: 'A*',
 							tokens: {
-								A: { pattern: /.*/},
+								A: { pattern: /.*/, uppercase: true },
 								'*': { repeat: true }
 							}
 						}
@@ -316,7 +258,7 @@
 						customConfig = {
 							mask: 'a*',
 							tokens: {
-								a: { pattern: /.*/},
+								a: { pattern: /.*/, lowercase: true },
 								'*': { repeat: true }
 							}
 						}

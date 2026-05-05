@@ -13,9 +13,5 @@
 			get: () => this._fnGetResource('PROXIMO29858'),
 			enumerable: true
 		})
-		Object.defineProperty(this, 'goToSlide', {
-			get: () => this._fnGetResource('IR_PARA_A_DIAPOSITIV34370'),
-			enumerable: true
-		})
 	}
 }

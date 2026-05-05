@@ -1,19 +1,14 @@
 ﻿<template>
 	<q-action-list
-		borderless
-		placement="bottom-start"
-		:items="exportActions"
-		:groups="exportActionGroups"
-		:label="texts.exportButtonTitle"
-		:title="texts.exportButtonTitle"
-		@click="$emit('export-data', $event)">
-		<q-icon icon="file-export" />
-	</q-action-list>
+		:actions="exportActions"
+		:action-groups="exportActionGroups"
+		:dropdown-options="dropdownOptions"
+		:texts="texts"
+		@click:action="$emit('export-data', $event.id)" />
 </template>
 
 <script>
 	import { validateTexts } from '@quidgest/clientapp/utils/genericFunctions'
-	import { QActionList } from '@quidgest/clientapp/components'
 
 	// The texts needed by the component.
 	const DEFAULT_TEXTS = {
@@ -25,10 +20,6 @@
 		name: 'QTableExport',
 
 		emits: ['export-data'],
-
-		components: {
-			QActionList
-		},
 
 		props: {
 			/**
@@ -53,12 +44,26 @@
 
 		computed: {
 			/**
+			 * Computes the default options for the dropdown
+			 */
+			dropdownOptions() {
+				return {
+					size: 'normal',
+					label: this.texts.exportButtonTitle,
+					icon: 'file-export',
+					borderless: true,
+					placement: 'bottom-start',
+					class: 'q-dropdown-toggle'
+				}
+			},
+
+			/**
 			 * Computes the options to the dropdown
 			 */
 			exportActions() {
 				return this.options.map((act) => ({
-					key: act.id,
-					label: act.text,
+					id: act.id,
+					title: act.text,
 					group: 'export'
 				}))
 			},
@@ -69,7 +74,7 @@
 			exportActionGroups() {
 				return [{
 					id: 'export',
-					display: 'dropdown'
+					display: 'dropdown',
 				}]
 			}
 		}

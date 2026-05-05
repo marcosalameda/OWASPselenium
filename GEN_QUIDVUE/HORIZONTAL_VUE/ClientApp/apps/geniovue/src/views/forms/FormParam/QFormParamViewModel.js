@@ -1,4 +1,4 @@
-﻿/* eslint-disable @typescript-eslint/no-unused-vars */
+﻿/* eslint-disable no-unused-vars */
 import { computed, reactive, watch } from 'vue'
 import _merge from 'lodash-es/merge'
 
@@ -11,7 +11,7 @@ import netAPI from '@quidgest/clientapp/network'
 import qApi from '@/api/genio/quidgestFunctions.js'
 import qFunctions from '@/api/genio/projectFunctions.js'
 import qProjArrays from '@/api/genio/projectArrays.js'
-/* eslint-enable @typescript-eslint/no-unused-vars */
+/* eslint-enable no-unused-vars */
 
 /**
  * Represents a ViewModel class.
@@ -25,11 +25,11 @@ export default class ViewModel extends FormViewModelBase
 	 * @param {object} options - The options for the ViewModel
 	 * @param {object} values - A ViewModel instance to copy values from
 	 */
-	// eslint-disable-next-line @typescript-eslint/no-unused-vars
+	// eslint-disable-next-line no-unused-vars
 	constructor(vueContext, options, values)
 	{
 		super(vueContext, options)
-		// eslint-disable-next-line @typescript-eslint/no-unused-vars
+		// eslint-disable-next-line no-unused-vars
 		const vm = this.vueContext
 
 		// The view model metadata
@@ -37,9 +37,8 @@ export default class ViewModel extends FormViewModelBase
 			name: 'PARAM',
 			area: 'PARAM',
 			actions: {
-				recalculateFormulas: 'RecalculateFormulas_Param',
-				updateFilesTickets: 'UpdateFilesTicketsParam',
-				setFile: 'SetFileParam'
+				recalculateFormulas: 'RecalculateFormulas_PARAM',
+				updateFilesTickets: 'UpdateFilesTicketsPARAM'
 			}
 		})
 
@@ -51,7 +50,7 @@ export default class ViewModel extends FormViewModelBase
 			field: 'CODPARAM',
 			description: '',
 		}).cloneFrom(values?.ValCodparam))
-		this.stopWatchers.push(watch(() => this.ValCodparam.value, (newValue, oldValue) => this.onUpdate('param.codparam', this.ValCodparam, newValue, oldValue)))
+		watch(() => this.ValCodparam.value, (newValue, oldValue) => this.onUpdate('param.codparam', this.ValCodparam, newValue, oldValue))
 
 		/** The used foreign keys. */
 		this.ValCodkinde = reactive(new modelFieldType.ForeignKey({
@@ -62,7 +61,7 @@ export default class ViewModel extends FormViewModelBase
 			relatedArea: 'KINDE',
 			description: '',
 		}).cloneFrom(values?.ValCodkinde))
-		this.stopWatchers.push(watch(() => this.ValCodkinde.value, (newValue, oldValue) => this.onUpdate('param.codkinde', this.ValCodkinde, newValue, oldValue)))
+		watch(() => this.ValCodkinde.value, (newValue, oldValue) => this.onUpdate('param.codkinde', this.ValCodkinde, newValue, oldValue))
 
 		/** The remaining form fields. */
 		this.TableKindeDesignat = reactive(new modelFieldType.String({
@@ -73,9 +72,8 @@ export default class ViewModel extends FormViewModelBase
 			field: 'DESIGNAT',
 			maxLength: 85,
 			description: computed(() => this.Resources.KIND_OF_EQUIPMENT22928),
-			ignoreFldSubmit: true,
 		}).cloneFrom(values?.TableKindeDesignat))
-		this.stopWatchers.push(watch(() => this.TableKindeDesignat.value, (newValue, oldValue) => this.onUpdate('kinde.designat', this.TableKindeDesignat, newValue, oldValue)))
+		watch(() => this.TableKindeDesignat.value, (newValue, oldValue) => this.onUpdate('kinde.designat', this.TableKindeDesignat, newValue, oldValue))
 
 		this.ValParameter = reactive(new modelFieldType.String({
 			id: 'ValParameter',
@@ -85,7 +83,7 @@ export default class ViewModel extends FormViewModelBase
 			maxLength: 50,
 			description: computed(() => this.Resources.PARAMETER41976),
 		}).cloneFrom(values?.ValParameter))
-		this.stopWatchers.push(watch(() => this.ValParameter.value, (newValue, oldValue) => this.onUpdate('param.parameter', this.ValParameter, newValue, oldValue)))
+		watch(() => this.ValParameter.value, (newValue, oldValue) => this.onUpdate('param.parameter', this.ValParameter, newValue, oldValue))
 
 		this.ValDatatype = reactive(new modelFieldType.String({
 			id: 'ValDatatype',
@@ -93,10 +91,10 @@ export default class ViewModel extends FormViewModelBase
 			area: 'PARAM',
 			field: 'DATATYPE',
 			maxLength: 1,
-			arrayOptions: computed(() => new qProjArrays.QArrayDatatype(vm.$getResource).elements),
+			arrayOptions: computed(() => qProjArrays.QArrayDatatype.setResources(vm.$getResource).elements),
 			description: computed(() => this.Resources.DATA_TYPE47159),
 		}).cloneFrom(values?.ValDatatype))
-		this.stopWatchers.push(watch(() => this.ValDatatype.value, (newValue, oldValue) => this.onUpdate('param.datatype', this.ValDatatype, newValue, oldValue)))
+		watch(() => this.ValDatatype.value, (newValue, oldValue) => this.onUpdate('param.datatype', this.ValDatatype, newValue, oldValue))
 
 		this.ValDecimalplaces = reactive(new modelFieldType.Number({
 			id: 'ValDecimalplaces',
@@ -105,10 +103,10 @@ export default class ViewModel extends FormViewModelBase
 			field: 'DECPLACE',
 			maxDigits: 1,
 			decimalDigits: 0,
-			arrayOptions: computed(() => new qProjArrays.QArrayDecplace(vm.$getResource).elements),
+			arrayOptions: computed(() => qProjArrays.QArrayDecplace.setResources(vm.$getResource).elements),
 			description: computed(() => this.Resources.DECIMAL_PLACES62575),
 		}).cloneFrom(values?.ValDecimalplaces))
-		this.stopWatchers.push(watch(() => this.ValDecimalplaces.value, (newValue, oldValue) => this.onUpdate('param.decimalplaces', this.ValDecimalplaces, newValue, oldValue)))
+		watch(() => this.ValDecimalplaces.value, (newValue, oldValue) => this.onUpdate('param.decimalplaces', this.ValDecimalplaces, newValue, oldValue))
 	}
 
 	/**

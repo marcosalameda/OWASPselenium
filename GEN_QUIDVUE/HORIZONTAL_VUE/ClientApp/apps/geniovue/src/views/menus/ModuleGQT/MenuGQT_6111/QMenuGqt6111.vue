@@ -3,23 +3,20 @@
 		v-if="menuModalIsReady"
 		:to="`#${uiContainersId.body}`"
 		:disabled="!menuInfo.isPopup">
-		<div
+		<form
 			class="form-horizontal"
 			@submit.prevent>
 			<q-row-container>
 				<q-table
 					v-bind="controls.menu"
 					v-on="controls.menu.handlers">
-					<template #header>
-						<q-table-config
-							:table-ctrl="controls.menu"
-							v-on="controls.menu.handlers">
-						</q-table-config>
-					</template>
-					<!-- USE /[MANUAL GQT CUSTOM_TABLE GQT_Menu_6111]/ -->
 				</q-table>
+
+				<q-table-extra-extension
+					:list-ctrl="controls.menu"
+					v-on="controls.menu.handlers" />
 			</q-row-container>
-		</div>
+		</form>
 	</teleport>
 
 	<teleport
@@ -51,7 +48,7 @@
 </template>
 
 <script>
-	/* eslint-disable @typescript-eslint/no-unused-vars */
+	/* eslint-disable no-unused-vars */
 	import asyncProcM from '@quidgest/clientapp/composables/async'
 	import qEnums from '@quidgest/clientapp/constants/enums'
 	import netAPI from '@quidgest/clientapp/network'
@@ -71,7 +68,7 @@
 	import qApi from '@/api/genio/quidgestFunctions.js'
 	import qFunctions from '@/api/genio/projectFunctions.js'
 	import qProjArrays from '@/api/genio/projectArrays.js'
-	/* eslint-enable @typescript-eslint/no-unused-vars */
+	/* eslint-enable no-unused-vars */
 
 	import MenuViewModel from './QMenuGQT_6111ViewModel.js'
 
@@ -155,7 +152,6 @@
 								label: computed(() => this.Resources.DESIGNATION35876),
 								dataLength: 85,
 								scrollData: 30,
-								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 2,
@@ -165,7 +161,6 @@
 								label: computed(() => this.Resources.ACRONYM00872),
 								dataLength: 15,
 								scrollData: 15,
-								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 3,
@@ -175,7 +170,6 @@
 								label: computed(() => this.Resources.TAX_IDENTIFICATION51190),
 								dataLength: 15,
 								scrollData: 15,
-								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 4,
@@ -185,7 +179,6 @@
 								label: computed(() => this.Resources.PHONE56703),
 								dataLength: 20,
 								scrollData: 30,
-								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 5,
@@ -195,7 +188,6 @@
 								label: computed(() => this.Resources.EMAIL25170),
 								dataLength: 254,
 								scrollData: 30,
-								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.ImageColumn({
 								order: 6,
@@ -207,7 +199,6 @@
 								scrollData: 3,
 								sortable: false,
 								searchable: false,
-								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 7,
@@ -217,7 +208,6 @@
 								label: computed(() => this.Resources.COUNTRY64133),
 								dataLength: 90,
 								scrollData: 30,
-								export: 1,
 								pkColumn: 'ValCodcntry',
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.NumericColumn({
@@ -229,7 +219,6 @@
 								scrollData: 10,
 								maxDigits: 10,
 								decimalPlaces: 0,
-								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 						],
 						config: {
@@ -245,8 +234,10 @@
 							permissions: {
 							},
 							searchBarConfig: {
-								visibility: true
+								visibility: true,
+								searchOnPressEnter: true
 							},
+							filtersVisible: true,
 							allowColumnFilters: true,
 							allowColumnSort: true,
 							crudActions: [
@@ -320,7 +311,9 @@
 									id: 'insert',
 									name: 'insert',
 									title: computed(() => this.Resources.INSERIR43365),
-									icon: { icon: 'add' },
+									icon: {
+										icon: 'add'
+									},
 									isInReadOnly: true,
 									params: {
 										action: vm.openFormAction,
@@ -391,7 +384,6 @@
 							rowClickAction: {
 								id: 'RCA_GQT_611111',
 								name: 'menu-GQT_611111',
-								isVisible: true,
 								params: {
 									isRoute: true,
 									limits: [
@@ -417,25 +409,10 @@
 								sortOrder: 'asc'
 							}
 						},
-						actionIDs: [
-							'GQT_61111',
-							'GQT_61112',
-							'GQT_61113',
-						],
-						globalEvents: ['changed-CMPNY', 'changed-CNTRY'],
+						globalEvents: ['changed-CNTRY', 'changed-CMPNY'],
 						uuid: 'a276a8c7-3344-4461-b524-47a2f8c9ef0a',
 						allSelectedRows: 'false',
 						headerLevel: 1,
-						isActiveControl: computed(() => this.isActiveMenu)
-					}, this),
-					GQT_61111: new controlClass.ButtonControl({
-						id: 'GQT_61111',
-					}, this),
-					GQT_61112: new controlClass.ButtonControl({
-						id: 'GQT_61112',
-					}, this),
-					GQT_61113: new controlClass.ButtonControl({
-						id: 'GQT_61113',
 					}, this),
 				}
 			}
@@ -459,14 +436,6 @@
 		{
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
 // USE /[MANUAL GQT FORM_CODEJS GQT_MENU_6111]/
-// eslint-disable-next-line
-/* eslint-enable indent, vue/html-indent, vue/script-indent */
-		},
-
-		beforeUnmount()
-		{
-/* eslint-disable indent, vue/html-indent, vue/script-indent */
-// USE /[MANUAL GQT COMPONENT_BEFORE_UNMOUNT GQT_MENU_6111]/
 // eslint-disable-next-line
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 		},

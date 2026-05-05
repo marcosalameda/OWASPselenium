@@ -1,5 +1,5 @@
 ﻿
- 
+
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -476,6 +476,128 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
+			Qfield = new Field(info.Alias, "nrcntry", FieldType.NUMERIC);
+			Qfield.FieldDescription = "Numeric";
+			Qfield.FieldSize =  3;
+			Qfield.MQueue = false;
+			Qfield.IntegerDigits = 3;
+			Qfield.CavDesignation = "NUMERIC19292";
+
+			Qfield.Dupmsg = "";
+			info.RegisterFieldDB(Qfield);
+
+			//- - - - - - - - - - - - - - - - - - -
+			Qfield = new Field(info.Alias, "cond", FieldType.ARRAY_TEXT);
+			Qfield.FieldDescription = "Field state";
+			Qfield.FieldSize =  8;
+			Qfield.MQueue = false;
+			Qfield.CavDesignation = "FIELD_STATE03599";
+
+			Qfield.Dupmsg = "";
+            Qfield.ArrayName = "dbo.GetValArrayCacondtst";
+            Qfield.ArrayClassName = "Acondtst";
+			info.RegisterFieldDB(Qfield);
+
+			//- - - - - - - - - - - - - - - - - - -
+			Qfield = new Field(info.Alias, "fclient1", FieldType.TEXT);
+			Qfield.FieldDescription = "Field with client-side conditions";
+			Qfield.FieldSize =  50;
+			Qfield.MQueue = false;
+			Qfield.CavDesignation = "FIELD_WITH_CLIENT_SI60452";
+
+			Qfield.Dupmsg = "";
+			info.RegisterFieldDB(Qfield);
+
+			//- - - - - - - - - - - - - - - - - - -
+			Qfield = new Field(info.Alias, "fserver1", FieldType.DATETIME);
+			Qfield.FieldDescription = "Field with server-side conditions";
+			Qfield.FieldSize =  16;
+			Qfield.MQueue = false;
+			Qfield.CavDesignation = "FIELD_WITH_SERVER_SI13554";
+
+			Qfield.Dupmsg = "";
+			info.RegisterFieldDB(Qfield);
+
+			//- - - - - - - - - - - - - - - - - - -
+			Qfield = new Field(info.Alias, "fclient2", FieldType.LOGIC);
+			Qfield.FieldDescription = "Field with client-side conditions";
+			Qfield.FieldSize =  1;
+			Qfield.MQueue = false;
+			Qfield.CavDesignation = "FIELD_WITH_CLIENT_SI60452";
+
+			Qfield.Dupmsg = "";
+			info.RegisterFieldDB(Qfield);
+
+			//- - - - - - - - - - - - - - - - - - -
+			Qfield = new Field(info.Alias, "fserver2", FieldType.NUMERIC);
+			Qfield.FieldDescription = "Field with server-side conditions";
+			Qfield.FieldSize =  8;
+			Qfield.MQueue = false;
+			Qfield.IntegerDigits = 5;
+			Qfield.Decimals = 2;
+			Qfield.CavDesignation = "FIELD_WITH_SERVER_SI13554";
+
+			Qfield.Dupmsg = "";
+			info.RegisterFieldDB(Qfield);
+
+			//- - - - - - - - - - - - - - - - - - -
+			Qfield = new Field(info.Alias, "fclient3", FieldType.DOCUMENT);
+			Qfield.FieldDescription = "Field with client-side conditions";
+			Qfield.FieldSize =  50;
+			Qfield.MQueue = false;
+			Qfield.CavDesignation = "FIELD_WITH_CLIENT_SI60452";
+
+			Qfield.Dupmsg = "";
+			info.RegisterFieldDB(Qfield);
+ 			Qfield = new Field(info.Alias, "fclient3fk", FieldType.KEY_GUID);
+			Qfield.FieldSize = 16;
+			Qfield.FieldDescription = "Chave estrangeira para o documento";
+			info.RegisterFieldDB(Qfield);
+
+			//- - - - - - - - - - - - - - - - - - -
+			Qfield = new Field(info.Alias, "fserver3", FieldType.IMAGE);
+			Qfield.FieldDescription = "Field with server-side conditions";
+			Qfield.FieldSize =  3;
+			Qfield.MQueue = false;
+			Qfield.Decimals = 1;
+			Qfield.VisivelCav = CavVisibilityType.Nunca;
+
+			Qfield.Dupmsg = "";
+			info.RegisterFieldDB(Qfield);
+
+			//- - - - - - - - - - - - - - - - - - -
+			Qfield = new Field(info.Alias, "tblcond", FieldType.LOGIC);
+			Qfield.FieldDescription = "Enforce table conditions";
+			Qfield.FieldSize =  1;
+			Qfield.MQueue = false;
+			Qfield.CavDesignation = "ENFORCE_TABLE_CONDIT17491";
+
+			Qfield.Dupmsg = "";
+			Qfield.DefaultValue = new DefaultValue(1);
+			info.RegisterFieldDB(Qfield);
+
+			//- - - - - - - - - - - - - - - - - - -
+			Qfield = new Field(info.Alias, "formcond", FieldType.LOGIC);
+			Qfield.FieldDescription = "Enforce form conditions";
+			Qfield.FieldSize =  1;
+			Qfield.MQueue = false;
+			Qfield.CavDesignation = "ENFORCE_FORM_CONDITI41813";
+
+			Qfield.Dupmsg = "";
+			Qfield.DefaultValue = new DefaultValue(1);
+			info.RegisterFieldDB(Qfield);
+
+			//- - - - - - - - - - - - - - - - - - -
+			Qfield = new Field(info.Alias, "ffillwhn", FieldType.TEXT);
+			Qfield.FieldDescription = "Field with Fill when condition";
+			Qfield.FieldSize =  50;
+			Qfield.MQueue = false;
+			Qfield.CavDesignation = "FIELD_WITH_FILL_WHEN40052";
+
+			Qfield.Dupmsg = "";
+			info.RegisterFieldDB(Qfield);
+
+			//- - - - - - - - - - - - - - - - - - -
 			Qfield = new Field(info.Alias, "zzstate", FieldType.INTEGER);
 			Qfield.FieldDescription = "Estado da ficha";
 			info.RegisterFieldDB(Qfield);
@@ -509,16 +631,16 @@ namespace CSGenio.business
 			info.Pathways = new Dictionary<string, string>(14);
 			info.Pathways.Add("aero","aero");
 			info.Pathways.Add("equip","equip");
-			info.Pathways.Add("decom","equip");
 			info.Pathways.Add("wareh","equip");
+			info.Pathways.Add("decom","equip");
 			info.Pathways.Add("tpequ","equip");
 			info.Pathways.Add("room1","equip");
-			info.Pathways.Add("item","equip");
 			info.Pathways.Add("cmpny","equip");
+			info.Pathways.Add("item","equip");
 			info.Pathways.Add("pess1","equip");
 			info.Pathways.Add("famil","equip");
-			info.Pathways.Add("gitem","equip");
 			info.Pathways.Add("cntry","equip");
+			info.Pathways.Add("gitem","equip");
 			info.Pathways.Add("stake","equip");
 			info.Pathways.Add("cate2","equip");
 		}
@@ -533,6 +655,10 @@ namespace CSGenio.business
 
 
 
+			info.DefaultValues = new string[] {
+			 "tblcond","formcond"
+			};
+
 
 
 
@@ -540,6 +666,66 @@ namespace CSGenio.business
 
 			//Write conditions
 			List<ConditionFormula> conditions = new List<ConditionFormula>();
+
+			// !isEmptyL([FLDS->TBLCOND]) && [FLDS->COND] == "REQUIRE"
+			{
+			List<ByAreaArguments> argumentsListByArea = new List<ByAreaArguments>();
+			argumentsListByArea= new List<ByAreaArguments>();
+			argumentsListByArea.Add(new ByAreaArguments(new string[] {"tblcond","cond"},new int[] {0,1},"flds","codflds"));
+			ConditionFormula writeCondition = new ConditionFormula(argumentsListByArea, 2, delegate(object []args,User user,string module,PersistentSupport sp) {
+				return !(((int)args[0]) == 0)&&((string)args[1])=="REQUIRE";
+			});
+			writeCondition.ErrorWarning = "";
+            writeCondition.Type =  ConditionType.MANDATORY;
+            writeCondition.Validate = true;
+			writeCondition.Field = info.DBFields["fclient3"];
+			conditions.Add(writeCondition);
+			}
+
+			// !isEmptyL([FLDS->TBLCOND]) && [FLDS->COND] == "REQUIRE" && HasRole("A")
+			{
+			List<ByAreaArguments> argumentsListByArea = new List<ByAreaArguments>();
+			argumentsListByArea= new List<ByAreaArguments>();
+			argumentsListByArea.Add(new ByAreaArguments(new string[] {"tblcond","cond"},new int[] {0,1},"flds","codflds"));
+			ConditionFormula writeCondition = new ConditionFormula(argumentsListByArea, 2, delegate(object []args,User user,string module,PersistentSupport sp) {
+				return !(((int)args[0]) == 0)&&((string)args[1])=="REQUIRE"&&GlobalFunctions.HasRole(user,"A");
+			});
+			writeCondition.ErrorWarning = "";
+            writeCondition.Type =  ConditionType.MANDATORY;
+            writeCondition.Validate = true;
+			writeCondition.Field = info.DBFields["fserver1"];
+			conditions.Add(writeCondition);
+			}
+
+			// !isEmptyL([FLDS->TBLCOND]) && [FLDS->COND] == "REQUIRE" && HasRole("A")
+			{
+			List<ByAreaArguments> argumentsListByArea = new List<ByAreaArguments>();
+			argumentsListByArea= new List<ByAreaArguments>();
+			argumentsListByArea.Add(new ByAreaArguments(new string[] {"tblcond","cond"},new int[] {0,1},"flds","codflds"));
+			ConditionFormula writeCondition = new ConditionFormula(argumentsListByArea, 2, delegate(object []args,User user,string module,PersistentSupport sp) {
+				return !(((int)args[0]) == 0)&&((string)args[1])=="REQUIRE"&&GlobalFunctions.HasRole(user,"A");
+			});
+			writeCondition.ErrorWarning = "";
+            writeCondition.Type =  ConditionType.MANDATORY;
+            writeCondition.Validate = true;
+			writeCondition.Field = info.DBFields["fserver3"];
+			conditions.Add(writeCondition);
+			}
+
+			// !isEmptyL([FLDS->TBLCOND]) && [FLDS->COND] == "REQUIRE"
+			{
+			List<ByAreaArguments> argumentsListByArea = new List<ByAreaArguments>();
+			argumentsListByArea= new List<ByAreaArguments>();
+			argumentsListByArea.Add(new ByAreaArguments(new string[] {"tblcond","cond"},new int[] {0,1},"flds","codflds"));
+			ConditionFormula writeCondition = new ConditionFormula(argumentsListByArea, 2, delegate(object []args,User user,string module,PersistentSupport sp) {
+				return !(((int)args[0]) == 0)&&((string)args[1])=="REQUIRE";
+			});
+			writeCondition.ErrorWarning = "";
+            writeCondition.Type =  ConditionType.MANDATORY;
+            writeCondition.Validate = true;
+			writeCondition.Field = info.DBFields["fclient1"];
+			conditions.Add(writeCondition);
+			}
 			info.WriteConditions = conditions.Where(c=> c.IsWriteCondition()).ToList();
 			info.CrudConditions = conditions.Where(c=> c.IsCrudCondition()).ToList();
 
@@ -607,7 +793,7 @@ namespace CSGenio.business
             // Documents in DB
             //------------------------------
 			info.DocumsForeignKeys = new List<String> {
-			 "attachfk"
+			 "attachfk","fclient3fk"
 			};
 			info.HasVersionManagment = true; //a true por omissão, quando o Qfield no genio tiver criado preencher por esse Qvalue
 
@@ -1076,6 +1262,138 @@ namespace CSGenio.business
 			set { insertNameValueField(FldRadiob, value); }
 		}
 
+		/// <summary>Field : "Numeric" Tipo: "N" Formula:  ""</summary>
+		public static FieldRef FldNrcntry { get { return m_fldNrcntry; } }
+		private static FieldRef m_fldNrcntry = new FieldRef("flds", "nrcntry");
+
+		/// <summary>Field : "Numeric" Tipo: "N" Formula:  ""</summary>
+		public decimal ValNrcntry
+		{
+			get { return (decimal)returnValueField(FldNrcntry); }
+			set { insertNameValueField(FldNrcntry, value); }
+		}
+
+		/// <summary>Field : "Field state" Tipo: "AC" Formula:  ""</summary>
+		public static FieldRef FldCond { get { return m_fldCond; } }
+		private static FieldRef m_fldCond = new FieldRef("flds", "cond");
+
+		/// <summary>Field : "Field state" Tipo: "AC" Formula:  ""</summary>
+		public string ValCond
+		{
+			get { return (string)returnValueField(FldCond); }
+			set { insertNameValueField(FldCond, value); }
+		}
+
+		/// <summary>Field : "Field with client-side conditions" Tipo: "C" Formula:  ""</summary>
+		public static FieldRef FldFclient1 { get { return m_fldFclient1; } }
+		private static FieldRef m_fldFclient1 = new FieldRef("flds", "fclient1");
+
+		/// <summary>Field : "Field with client-side conditions" Tipo: "C" Formula:  ""</summary>
+		public string ValFclient1
+		{
+			get { return (string)returnValueField(FldFclient1); }
+			set { insertNameValueField(FldFclient1, value); }
+		}
+
+		/// <summary>Field : "Field with server-side conditions" Tipo: "DT" Formula:  ""</summary>
+		public static FieldRef FldFserver1 { get { return m_fldFserver1; } }
+		private static FieldRef m_fldFserver1 = new FieldRef("flds", "fserver1");
+
+		/// <summary>Field : "Field with server-side conditions" Tipo: "DT" Formula:  ""</summary>
+		public DateTime ValFserver1
+		{
+			get { return (DateTime)returnValueField(FldFserver1); }
+			set { insertNameValueField(FldFserver1, value); }
+		}
+
+		/// <summary>Field : "Field with client-side conditions" Tipo: "L" Formula:  ""</summary>
+		public static FieldRef FldFclient2 { get { return m_fldFclient2; } }
+		private static FieldRef m_fldFclient2 = new FieldRef("flds", "fclient2");
+
+		/// <summary>Field : "Field with client-side conditions" Tipo: "L" Formula:  ""</summary>
+		public int ValFclient2
+		{
+			get { return (int)returnValueField(FldFclient2); }
+			set { insertNameValueField(FldFclient2, value); }
+		}
+
+		/// <summary>Field : "Field with server-side conditions" Tipo: "N" Formula:  ""</summary>
+		public static FieldRef FldFserver2 { get { return m_fldFserver2; } }
+		private static FieldRef m_fldFserver2 = new FieldRef("flds", "fserver2");
+
+		/// <summary>Field : "Field with server-side conditions" Tipo: "N" Formula:  ""</summary>
+		public decimal ValFserver2
+		{
+			get { return (decimal)returnValueField(FldFserver2); }
+			set { insertNameValueField(FldFserver2, value); }
+		}
+
+		/// <summary>Field : "Field with client-side conditions" Tipo: "IB" Formula:  ""</summary>
+		public static FieldRef FldFclient3 { get { return m_fldFclient3; } }
+		private static FieldRef m_fldFclient3 = new FieldRef("flds", "fclient3");
+
+		/// <summary>Field : "Field with client-side conditions" Tipo: "IB" Formula:  ""</summary>
+		public string ValFclient3
+		{
+			get { return (string)returnValueField(FldFclient3); }
+			set { insertNameValueField(FldFclient3, value); }
+		}
+
+		/// <summary>Field : "Field with client-side conditions FK" Tipo: "CE" Formula:  ""</summary>
+		public static FieldRef FldFclient3fk { get { return m_fldFclient3fk; } }
+		private static FieldRef m_fldFclient3fk = new FieldRef("flds", "fclient3fk");
+
+		/// <summary>Field : "Field with client-side conditions FK" Tipo: "CE" Formula:  ""</summary>
+		public string ValFclient3fk
+		{
+			get { return (string)returnValueField(FldFclient3fk); }
+			set { insertNameValueField(FldFclient3fk, value); }
+		}
+
+		/// <summary>Field : "Field with server-side conditions" Tipo: "IJ" Formula:  ""</summary>
+		public static FieldRef FldFserver3 { get { return m_fldFserver3; } }
+		private static FieldRef m_fldFserver3 = new FieldRef("flds", "fserver3");
+
+		/// <summary>Field : "Field with server-side conditions" Tipo: "IJ" Formula:  ""</summary>
+		public byte[] ValFserver3
+		{
+			get { return (byte[])returnValueField(FldFserver3); }
+			set { insertNameValueField(FldFserver3, value); }
+		}
+
+		/// <summary>Field : "Enforce table conditions" Tipo: "L" Formula:  ""</summary>
+		public static FieldRef FldTblcond { get { return m_fldTblcond; } }
+		private static FieldRef m_fldTblcond = new FieldRef("flds", "tblcond");
+
+		/// <summary>Field : "Enforce table conditions" Tipo: "L" Formula:  ""</summary>
+		public int ValTblcond
+		{
+			get { return (int)returnValueField(FldTblcond); }
+			set { insertNameValueField(FldTblcond, value); }
+		}
+
+		/// <summary>Field : "Enforce form conditions" Tipo: "L" Formula:  ""</summary>
+		public static FieldRef FldFormcond { get { return m_fldFormcond; } }
+		private static FieldRef m_fldFormcond = new FieldRef("flds", "formcond");
+
+		/// <summary>Field : "Enforce form conditions" Tipo: "L" Formula:  ""</summary>
+		public int ValFormcond
+		{
+			get { return (int)returnValueField(FldFormcond); }
+			set { insertNameValueField(FldFormcond, value); }
+		}
+
+		/// <summary>Field : "Field with Fill when condition" Tipo: "C" Formula:  ""</summary>
+		public static FieldRef FldFfillwhn { get { return m_fldFfillwhn; } }
+		private static FieldRef m_fldFfillwhn = new FieldRef("flds", "ffillwhn");
+
+		/// <summary>Field : "Field with Fill when condition" Tipo: "C" Formula:  ""</summary>
+		public string ValFfillwhn
+		{
+			get { return (string)returnValueField(FldFfillwhn); }
+			set { insertNameValueField(FldFfillwhn, value); }
+		}
+
 		/// <summary>Field : "ZZSTATE" Type: "INT" Formula:  ""</summary>
 		public static FieldRef FldZzstate { get { return m_fldZzstate; } }
 		private static FieldRef m_fldZzstate = new FieldRef("flds", "zzstate");
@@ -1096,17 +1414,16 @@ namespace CSGenio.business
         /// <param name="key">The value of the primary key</param>
         /// <param name="user">The context of the user</param>
         /// <param name="fields">The fields to be filled in the area</param>
-		/// <param name="forUpdate">True if you are preparing to update this record, false otherwise</param>
         /// <returns>An area with the fields requests of the record read or null if the key does not exist</returns>
         /// <remarks>Persistence operations should not be used on a partially positioned register</remarks>
-        public static CSGenioAflds search(PersistentSupport sp, string key, User user, string[] fields = null, bool forUpdate = false)
+        public static CSGenioAflds search(PersistentSupport sp, string key, User user, string[] fields = null)
         {
 			if (string.IsNullOrEmpty(key))
 				return null;
 
 		    CSGenioAflds area = new CSGenioAflds(user, user.CurrentModule);
 
-            if (sp.getRecord(area, key, fields, forUpdate))
+            if (sp.getRecord(area, key, fields))
                 return area;
 			return null;
         }
@@ -1166,14 +1483,14 @@ namespace CSGenio.business
 
 
 
-
-
+ 
 
 
 		// USE /[MANUAL GQT TABAUX FLDS]/
 
      
-                                       
+
+                                                  
 
 	}
 }

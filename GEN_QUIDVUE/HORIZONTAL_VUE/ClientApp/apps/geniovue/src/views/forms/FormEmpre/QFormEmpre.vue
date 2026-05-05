@@ -9,13 +9,12 @@
 			<div
 				v-if="showFormHeader"
 				class="c-action-bar">
-				<component
+				<h1
 					v-if="formControl.uiComponents.header && formInfo.designation"
-					:is="topHeadingTag"
 					:id="formTitleId"
 					class="form-header">
 					{{ formInfo.designation }}
-				</component>
+				</h1>
 
 				<div class="c-action-bar__menu">
 					<template
@@ -39,13 +38,9 @@
 									:label="btn.label"
 									:disabled="btn.disabled"
 									@click="btn.action">
-									<template v-if="btn.icon">
-										<q-badge-indicator
-											:enabled="btn.badge?.isVisible ?? false"
-											:color="btn.badge?.color">
-											<q-icon v-bind="btn.icon" />
-										</q-badge-indicator>
-									</template>
+									<q-icon
+										v-if="btn.icon"
+										v-bind="btn.icon" />
 								</q-toggle-group-item>
 							</template>
 						</q-toggle-group>
@@ -57,7 +52,7 @@
 				v-if="$app.layout.FormAnchorsPosition === 'form-header' && visibleGroups.length > 0"
 				:anchors="anchorGroups"
 				:controls="visibleControls"
-				@focus-control="focusControl" />
+				@focus-control="(...args) => focusControl(...args)" />
 		</div>
 	</teleport>
 
@@ -78,7 +73,6 @@
 						v-if="btn.isActive && btn.isVisible && btn.showInHeading"
 						:id="`heading-${btn.id}`"
 						:label="btn.text"
-						:color="btn.color"
 						:variant="btn.variant"
 						:disabled="btn.disabled"
 						:icon-pos="btn.iconPos"
@@ -92,31 +86,27 @@
 			</q-button-group>
 		</div>
 
-		<q-container
-			fluid
+		<div
+			class="form-flow"
 			data-key="EMPRE"
-			:data-identifier="primaryKeyValue"
-			:data-loading="!formInitialDataLoaded || !isActiveForm">
+			:data-loading="!formInitialDataLoaded">
 			<template v-if="formControl.initialized && showFormBody">
-				<q-row v-if="controls.EMPRE___PSEUDNOVOGR02.isVisible">
-					<q-col
-						v-if="controls.EMPRE___PSEUDNOVOGR02.isVisible"
-						cols="auto">
+				<q-row-container v-show="controls.EMPRE___PSEUDNOVOGR02.isVisible">
+					<q-control-wrapper
+						v-show="controls.EMPRE___PSEUDNOVOGR02.isVisible"
+						class="${Vue.GetControlWrapperClass($controlsColumn)}">
 						<q-group-box-container
-							v-if="controls.EMPRE___PSEUDNOVOGR02.isVisible"
+							id="EMPRE___PSEUDNOVOGR02"
 							v-bind="controls.EMPRE___PSEUDNOVOGR02"
-							:id="getControlId(controls.EMPRE___PSEUDNOVOGR02)"
-							:no-border="controls.EMPRE___PSEUDNOVOGR02.borderless">
+							:is-visible="controls.EMPRE___PSEUDNOVOGR02.isVisible">
 							<!-- Start EMPRE___PSEUDNOVOGR02 -->
-							<q-row v-if="controls.EMPRE___CMPNYLOGO____.isVisible">
-								<q-col
-									v-if="controls.EMPRE___CMPNYLOGO____.isVisible"
-									cols="auto">
+							<q-row-container v-show="controls.EMPRE___CMPNYLOGO____.isVisible">
+								<q-control-wrapper
+									v-show="controls.EMPRE___CMPNYLOGO____.isVisible"
+									class="${Vue.GetControlWrapperClass($controlsColumn)}">
 									<base-input-structure
-										v-if="controls.EMPRE___CMPNYLOGO____.isVisible"
 										class="q-image"
-										v-bind="controls.EMPRE___CMPNYLOGO____.wrapperProps"
-										:id="getControlId(controls.EMPRE___CMPNYLOGO____)"
+										v-bind="controls.EMPRE___CMPNYLOGO____"
 										v-on="controls.EMPRE___CMPNYLOGO____.handlers"
 										:loading="controls.EMPRE___CMPNYLOGO____.props.loading"
 										:reporting-mode-on="reportingModeCAV"
@@ -124,151 +114,135 @@
 										<q-image
 											v-if="controls.EMPRE___CMPNYLOGO____.isVisible"
 											v-bind="controls.EMPRE___CMPNYLOGO____.props"
-											:id="getControlId(controls.EMPRE___CMPNYLOGO____)"
 											v-on="controls.EMPRE___CMPNYLOGO____.handlers" />
 									</base-input-structure>
-								</q-col>
-							</q-row>
+								</q-control-wrapper>
+							</q-row-container>
 							<!-- End EMPRE___PSEUDNOVOGR02 -->
 						</q-group-box-container>
-					</q-col>
-				</q-row>
-				<q-row v-if="controls.EMPRE___PSEUDNOVOGR01.isVisible">
-					<q-col
-						v-if="controls.EMPRE___PSEUDNOVOGR01.isVisible"
-						cols="auto">
+					</q-control-wrapper>
+				</q-row-container>
+				<q-row-container v-show="controls.EMPRE___PSEUDNOVOGR01.isVisible">
+					<q-control-wrapper
+						v-show="controls.EMPRE___PSEUDNOVOGR01.isVisible"
+						class="${Vue.GetControlWrapperClass($controlsColumn)}">
 						<q-group-box-container
-							v-if="controls.EMPRE___PSEUDNOVOGR01.isVisible"
+							id="EMPRE___PSEUDNOVOGR01"
 							v-bind="controls.EMPRE___PSEUDNOVOGR01"
-							:id="getControlId(controls.EMPRE___PSEUDNOVOGR01)"
-							:no-border="controls.EMPRE___PSEUDNOVOGR01.borderless">
+							:is-visible="controls.EMPRE___PSEUDNOVOGR01.isVisible">
 							<!-- Start EMPRE___PSEUDNOVOGR01 -->
-							<q-row v-if="controls.EMPRE___CMPNYACRONYM_.isVisible">
-								<q-col
-									v-if="controls.EMPRE___CMPNYACRONYM_.isVisible"
-									cols="auto">
+							<q-row-container v-show="controls.EMPRE___CMPNYACRONYM_.isVisible">
+								<q-control-wrapper
+									v-show="controls.EMPRE___CMPNYACRONYM_.isVisible"
+									class="${Vue.GetControlWrapperClass($controlsColumn)}">
 									<base-input-structure
-										v-if="controls.EMPRE___CMPNYACRONYM_.isVisible"
 										class="i-text"
-										v-bind="controls.EMPRE___CMPNYACRONYM_.wrapperProps"
-										:id="getControlId(controls.EMPRE___CMPNYACRONYM_)"
+										v-bind="controls.EMPRE___CMPNYACRONYM_"
 										v-on="controls.EMPRE___CMPNYACRONYM_.handlers"
 										:loading="controls.EMPRE___CMPNYACRONYM_.props.loading"
 										:reporting-mode-on="reportingModeCAV"
 										:suggestion-mode-on="suggestionModeOn">
 										<q-text-field
 											v-bind="controls.EMPRE___CMPNYACRONYM_.props"
-											:id="getControlId(controls.EMPRE___CMPNYACRONYM_)"
 											@blur="onBlur(controls.EMPRE___CMPNYACRONYM_, model.ValAcronym.value)"
 											@change="model.ValAcronym.fnUpdateValueOnChange" />
 									</base-input-structure>
-								</q-col>
-							</q-row>
-							<q-row v-if="controls.EMPRE___CMPNYNIF_____.isVisible">
-								<q-col
-									v-if="controls.EMPRE___CMPNYNIF_____.isVisible"
-									cols="auto">
+								</q-control-wrapper>
+							</q-row-container>
+							<q-row-container v-show="controls.EMPRE___CMPNYNIF_____.isVisible">
+								<q-control-wrapper
+									v-show="controls.EMPRE___CMPNYNIF_____.isVisible"
+									class="${Vue.GetControlWrapperClass($controlsColumn)}">
 									<base-input-structure
-										v-if="controls.EMPRE___CMPNYNIF_____.isVisible"
 										class="i-text"
-										v-bind="controls.EMPRE___CMPNYNIF_____.wrapperProps"
-										:id="getControlId(controls.EMPRE___CMPNYNIF_____)"
+										v-bind="controls.EMPRE___CMPNYNIF_____"
 										v-on="controls.EMPRE___CMPNYNIF_____.handlers"
 										:loading="controls.EMPRE___CMPNYNIF_____.props.loading"
 										:reporting-mode-on="reportingModeCAV"
 										:suggestion-mode-on="suggestionModeOn">
 										<q-text-field
 											v-bind="controls.EMPRE___CMPNYNIF_____.props"
-											:id="getControlId(controls.EMPRE___CMPNYNIF_____)"
 											@blur="onBlur(controls.EMPRE___CMPNYNIF_____, model.ValNif.value)"
 											@change="model.ValNif.fnUpdateValueOnChange" />
 									</base-input-structure>
-								</q-col>
-							</q-row>
-							<q-row v-if="controls.EMPRE___CMPNYTELEPHON.isVisible">
-								<q-col
-									v-if="controls.EMPRE___CMPNYTELEPHON.isVisible"
-									cols="auto">
+								</q-control-wrapper>
+							</q-row-container>
+							<q-row-container v-show="controls.EMPRE___CMPNYTELEPHON.isVisible">
+								<q-control-wrapper
+									v-show="controls.EMPRE___CMPNYTELEPHON.isVisible"
+									class="${Vue.GetControlWrapperClass($controlsColumn)}">
 									<base-input-structure
-										v-if="controls.EMPRE___CMPNYTELEPHON.isVisible"
 										class="i-text"
-										v-bind="controls.EMPRE___CMPNYTELEPHON.wrapperProps"
-										:id="getControlId(controls.EMPRE___CMPNYTELEPHON)"
+										v-bind="controls.EMPRE___CMPNYTELEPHON"
 										v-on="controls.EMPRE___CMPNYTELEPHON.handlers"
 										:loading="controls.EMPRE___CMPNYTELEPHON.props.loading"
 										:reporting-mode-on="reportingModeCAV"
 										:suggestion-mode-on="suggestionModeOn">
 										<q-text-field
 											v-bind="controls.EMPRE___CMPNYTELEPHON.props"
-											:id="getControlId(controls.EMPRE___CMPNYTELEPHON)"
 											@blur="onBlur(controls.EMPRE___CMPNYTELEPHON, model.ValTelephon.value)"
 											@change="model.ValTelephon.fnUpdateValueOnChange" />
 									</base-input-structure>
-								</q-col>
-							</q-row>
-							<q-row v-if="controls.EMPRE___CMPNYEMAIL___.isVisible">
-								<q-col
-									v-if="controls.EMPRE___CMPNYEMAIL___.isVisible"
-									cols="auto">
+								</q-control-wrapper>
+							</q-row-container>
+							<q-row-container v-show="controls.EMPRE___CMPNYEMAIL___.isVisible">
+								<q-control-wrapper
+									v-show="controls.EMPRE___CMPNYEMAIL___.isVisible"
+									class="${Vue.GetControlWrapperClass($controlsColumn)}">
 									<base-input-structure
-										v-if="controls.EMPRE___CMPNYEMAIL___.isVisible"
 										class="i-text"
-										v-bind="controls.EMPRE___CMPNYEMAIL___.wrapperProps"
-										:id="getControlId(controls.EMPRE___CMPNYEMAIL___)"
+										v-bind="controls.EMPRE___CMPNYEMAIL___"
 										v-on="controls.EMPRE___CMPNYEMAIL___.handlers"
 										:loading="controls.EMPRE___CMPNYEMAIL___.props.loading"
 										:reporting-mode-on="reportingModeCAV"
 										:suggestion-mode-on="suggestionModeOn">
 										<q-text-field
 											v-bind="controls.EMPRE___CMPNYEMAIL___.props"
-											:id="getControlId(controls.EMPRE___CMPNYEMAIL___)"
 											@blur="onBlur(controls.EMPRE___CMPNYEMAIL___, model.ValEmail.value)"
 											@change="model.ValEmail.fnUpdateValueOnChange" />
 									</base-input-structure>
-								</q-col>
-							</q-row>
+								</q-control-wrapper>
+							</q-row-container>
 							<!-- End EMPRE___PSEUDNOVOGR01 -->
 						</q-group-box-container>
-					</q-col>
-				</q-row>
-				<q-row v-if="controls.EMPRE___CMPNYDESIGNAT.isVisible">
-					<q-col
-						v-if="controls.EMPRE___CMPNYDESIGNAT.isVisible"
-						cols="auto">
+					</q-control-wrapper>
+				</q-row-container>
+				<q-row-container v-show="controls.EMPRE___CMPNYDESIGNAT.isVisible">
+					<q-control-wrapper
+						v-show="controls.EMPRE___CMPNYDESIGNAT.isVisible"
+						class="${Vue.GetControlWrapperClass($controlsColumn)}">
 						<base-input-structure
-							v-if="controls.EMPRE___CMPNYDESIGNAT.isVisible"
 							class="i-text"
-							v-bind="controls.EMPRE___CMPNYDESIGNAT.wrapperProps"
-							:id="getControlId(controls.EMPRE___CMPNYDESIGNAT)"
+							v-bind="controls.EMPRE___CMPNYDESIGNAT"
 							v-on="controls.EMPRE___CMPNYDESIGNAT.handlers"
 							:loading="controls.EMPRE___CMPNYDESIGNAT.props.loading"
 							:reporting-mode-on="reportingModeCAV"
 							:suggestion-mode-on="suggestionModeOn">
 							<q-text-field
 								v-bind="controls.EMPRE___CMPNYDESIGNAT.props"
-								:id="getControlId(controls.EMPRE___CMPNYDESIGNAT)"
 								@blur="onBlur(controls.EMPRE___CMPNYDESIGNAT, model.ValDesignat.value)"
 								@change="model.ValDesignat.fnUpdateValueOnChange" />
 						</base-input-structure>
-					</q-col>
-				</q-row>
-				<q-row v-if="controls.EMPRE___PSEUDNOVOGR03.isVisible">
-					<q-col v-if="controls.EMPRE___PSEUDNOVOGR03.isVisible">
+					</q-control-wrapper>
+				</q-row-container>
+				<q-row-container
+					v-show="controls.EMPRE___PSEUDNOVOGR03.isVisible"
+					is-large>
+					<q-control-wrapper
+						v-show="controls.EMPRE___PSEUDNOVOGR03.isVisible"
+						class="${Vue.GetControlWrapperClass($controlsColumn)}">
 						<q-group-box-container
-							v-if="controls.EMPRE___PSEUDNOVOGR03.isVisible"
+							id="EMPRE___PSEUDNOVOGR03"
 							v-bind="controls.EMPRE___PSEUDNOVOGR03"
-							:id="getControlId(controls.EMPRE___PSEUDNOVOGR03)"
-							:no-border="controls.EMPRE___PSEUDNOVOGR03.borderless">
+							:is-visible="controls.EMPRE___PSEUDNOVOGR03.isVisible">
 							<!-- Start EMPRE___PSEUDNOVOGR03 -->
-							<q-row v-if="controls.EMPRE___CNTRYCOUNTRY_.isVisible">
-								<q-col
-									v-if="controls.EMPRE___CNTRYCOUNTRY_.isVisible"
-									cols="auto">
+							<q-row-container v-show="controls.EMPRE___CNTRYCOUNTRY_.isVisible">
+								<q-control-wrapper
+									v-show="controls.EMPRE___CNTRYCOUNTRY_.isVisible"
+									class="${Vue.GetControlWrapperClass($controlsColumn)}">
 									<base-input-structure
-										v-if="controls.EMPRE___CNTRYCOUNTRY_.isVisible"
 										class="i-text"
-										v-bind="controls.EMPRE___CNTRYCOUNTRY_.wrapperProps"
-										:id="getControlId(controls.EMPRE___CNTRYCOUNTRY_)"
+										v-bind="controls.EMPRE___CNTRYCOUNTRY_"
 										v-on="controls.EMPRE___CNTRYCOUNTRY_.handlers"
 										:loading="controls.EMPRE___CNTRYCOUNTRY_.props.loading"
 										:reporting-mode-on="reportingModeCAV"
@@ -276,28 +250,25 @@
 										<q-lookup
 											v-if="controls.EMPRE___CNTRYCOUNTRY_.isVisible"
 											v-bind="controls.EMPRE___CNTRYCOUNTRY_.props"
-											:id="getControlId(controls.EMPRE___CNTRYCOUNTRY_)"
 											v-on="controls.EMPRE___CNTRYCOUNTRY_.handlers" />
 										<q-see-more-empre-cntrycountry
 											v-if="controls.EMPRE___CNTRYCOUNTRY_.seeMoreIsVisible"
 											v-bind="controls.EMPRE___CNTRYCOUNTRY_.seeMoreParams"
 											v-on="controls.EMPRE___CNTRYCOUNTRY_.handlers" />
 									</base-input-structure>
-								</q-col>
-							</q-row>
+								</q-control-wrapper>
+							</q-row-container>
 							<!-- End EMPRE___PSEUDNOVOGR03 -->
 						</q-group-box-container>
-					</q-col>
-				</q-row>
-				<q-row v-if="controls.EMPRE___CMPNYQTDPESSO.isVisible">
-					<q-col
-						v-if="controls.EMPRE___CMPNYQTDPESSO.isVisible"
-						cols="auto">
+					</q-control-wrapper>
+				</q-row-container>
+				<q-row-container v-show="controls.EMPRE___CMPNYQTDPESSO.isVisible">
+					<q-control-wrapper
+						v-show="controls.EMPRE___CMPNYQTDPESSO.isVisible"
+						class="${Vue.GetControlWrapperClass($controlsColumn)}">
 						<base-input-structure
-							v-if="controls.EMPRE___CMPNYQTDPESSO.isVisible"
 							class="i-text"
-							v-bind="controls.EMPRE___CMPNYQTDPESSO.wrapperProps"
-							:id="getControlId(controls.EMPRE___CMPNYQTDPESSO)"
+							v-bind="controls.EMPRE___CMPNYQTDPESSO"
 							v-on="controls.EMPRE___CMPNYQTDPESSO.handlers"
 							:loading="controls.EMPRE___CMPNYQTDPESSO.props.loading"
 							:reporting-mode-on="reportingModeCAV"
@@ -305,41 +276,41 @@
 							<q-numeric-input
 								v-if="controls.EMPRE___CMPNYQTDPESSO.isVisible"
 								v-bind="controls.EMPRE___CMPNYQTDPESSO.props"
-								:id="getControlId(controls.EMPRE___CMPNYQTDPESSO)"
 								@update:model-value="model.ValQtdpesso.fnUpdateValue" />
 						</base-input-structure>
-					</q-col>
-				</q-row>
-				<q-row v-if="controls.EMPRE___CMPNYHEADLOC_.isVisible">
-					<q-col v-if="controls.EMPRE___CMPNYHEADLOC_.isVisible">
+					</q-control-wrapper>
+				</q-row-container>
+				<q-row-container
+					v-show="controls.EMPRE___CMPNYHEADLOC_.isVisible"
+					is-large>
+					<q-control-wrapper
+						v-show="controls.EMPRE___CMPNYHEADLOC_.isVisible"
+						class="${Vue.GetControlWrapperClass($controlsColumn)}">
 						<base-input-structure
-							v-if="controls.EMPRE___CMPNYHEADLOC_.isVisible"
 							class="i-text"
-							v-bind="controls.EMPRE___CMPNYHEADLOC_.wrapperProps"
-							:id="getControlId(controls.EMPRE___CMPNYHEADLOC_)"
+							v-bind="controls.EMPRE___CMPNYHEADLOC_"
 							v-on="controls.EMPRE___CMPNYHEADLOC_.handlers"
 							:loading="controls.EMPRE___CMPNYHEADLOC_.props.loading"
 							:reporting-mode-on="reportingModeCAV"
 							:suggestion-mode-on="suggestionModeOn">
 							<q-text-field
 								v-bind="controls.EMPRE___CMPNYHEADLOC_.props"
-								:id="getControlId(controls.EMPRE___CMPNYHEADLOC_)"
 								@blur="onBlur(controls.EMPRE___CMPNYHEADLOC_, model.ValHeadloc.value)"
 								@change="model.ValHeadloc.fnUpdateValueOnChange" />
 						</base-input-structure>
-					</q-col>
-				</q-row>
+					</q-control-wrapper>
+				</q-row-container>
 			</template>
-		</q-container>
+		</div>
 	</teleport>
 
-	<q-divider v-if="!isPopup && showFormFooter" />
+	<hr v-if="!isPopup && showFormFooter" />
 
 	<teleport
 		v-if="formModalIsReady && showFormFooter"
 		:to="`#${uiContainersId.footer}`"
 		:disabled="!isPopup || isNested">
-		<q-row v-if="showFormFooter">
+		<q-row-container v-if="showFormFooter">
 			<div id="footer-action-btns">
 				<template
 					v-for="btn in formButtons"
@@ -348,7 +319,6 @@
 						v-if="btn.isActive && btn.isVisible && btn.showInFooter"
 						:id="`bottom-${btn.id}`"
 						:label="btn.text"
-						:color="btn.color"
 						:variant="btn.variant"
 						:disabled="btn.disabled"
 						:icon-pos="btn.iconPos"
@@ -360,12 +330,12 @@
 					</q-button>
 				</template>
 			</div>
-		</q-row>
+		</q-row-container>
 	</teleport>
 </template>
 
 <script>
-	/* eslint-disable @typescript-eslint/no-unused-vars */
+	/* eslint-disable no-unused-vars */
 	import { computed, defineAsyncComponent, readonly } from 'vue'
 	import { useRoute } from 'vue-router'
 
@@ -385,7 +355,7 @@
 	import qApi from '@/api/genio/quidgestFunctions.js'
 	import qFunctions from '@/api/genio/projectFunctions.js'
 	import qProjArrays from '@/api/genio/projectArrays.js'
-	/* eslint-enable @typescript-eslint/no-unused-vars */
+	/* eslint-enable no-unused-vars */
 
 	import FormViewModel from './QFormEmpreViewModel.js'
 
@@ -463,8 +433,7 @@
 					primaryKey: 'ValCodempre',
 					designation: computed(() => this.Resources.COMPANY52963),
 					identifier: '', // Unique identifier received by route (when it's nested).
-					mode: '',
-					availableAgents: [],
+					mode: ''
 				},
 
 				formButtons: {
@@ -572,11 +541,7 @@
 						showInFooter: true,
 						isActive: true,
 						isVisible: computed(() => vm.authData.isAllowed && vm.isEditable),
-						action: vm.saveForm,
-						badge: {
-							isVisible: computed(() => vm.model?.isDirty === true),
-							color: 'highlight'
-						}
+						action: vm.saveForm
 					},
 					confirmBtn: {
 						id: 'confirm-btn',
@@ -683,7 +648,6 @@
 						label: computed(() => this.Resources.LOGO62483),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						borderless: false,
 						isCollapsible: false,
 						anchored: false,
 						directChildren: ['EMPRE___CMPNYLOGO____'],
@@ -713,7 +677,6 @@
 						label: computed(() => this.Resources.COMPANY52963),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						borderless: false,
 						isCollapsible: false,
 						anchored: false,
 						directChildren: ['EMPRE___CMPNYACRONYM_', 'EMPRE___CMPNYNIF_____', 'EMPRE___CMPNYTELEPHON', 'EMPRE___CMPNYEMAIL___'],
@@ -730,6 +693,7 @@
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						maxLength: 85,
+						labelId: 'label_EMPRE___CMPNYDESIGNAT',
 						mustBeFilled: true,
 						controlLimits: [
 						],
@@ -745,6 +709,7 @@
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'EMPRE___PSEUDNOVOGR01',
 						maxLength: 15,
+						labelId: 'label_EMPRE___CMPNYACRONYM_',
 						controlLimits: [
 						],
 					}, this),
@@ -759,6 +724,7 @@
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'EMPRE___PSEUDNOVOGR01',
 						maxLength: 15,
+						labelId: 'label_EMPRE___CMPNYNIF_____',
 						controlLimits: [
 						],
 					}, this),
@@ -773,6 +739,7 @@
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'EMPRE___PSEUDNOVOGR01',
 						maxLength: 20,
+						labelId: 'label_EMPRE___CMPNYTELEPHON',
 						controlLimits: [
 						],
 					}, this),
@@ -787,6 +754,7 @@
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'EMPRE___PSEUDNOVOGR01',
 						maxLength: 254,
+						labelId: 'label_EMPRE___CMPNYEMAIL___',
 						controlLimits: [
 						],
 					}, this),
@@ -797,7 +765,6 @@
 						label: computed(() => this.Resources.ORIGIN03068),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						borderless: false,
 						isCollapsible: false,
 						anchored: false,
 						directChildren: ['EMPRE___CNTRYCOUNTRY_'],
@@ -871,10 +838,6 @@
 								mappingVariables: readonly({
 								}),
 								styleVariables: {
-									allowLegend: {
-										rawValue: false,
-										isMapped: false
-									},
 									zoomLevel: {
 										rawValue: -1,
 										isMapped: false
@@ -991,10 +954,6 @@
 										rawValue: true,
 										isMapped: false
 									},
-									allowCenterControl: {
-										rawValue: true,
-										isMapped: false
-									},
 									backgroundOverlay: {
 										rawValue: 'OpenStreetMap',
 										isMapped: false
@@ -1079,6 +1038,8 @@
 			// Does NOT have access to `this` component instance, because
 			// it has not been created yet when this guard is called!
 
+			to.params.isPopup = 'true'
+
 			next((vm) => {
 				vm.initFormProperties(to)
 			})
@@ -1111,23 +1072,17 @@
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 		},
 
-		beforeUnmount()
-		{
-/* eslint-disable indent, vue/html-indent, vue/script-indent */
-// USE /[MANUAL GQT COMPONENT_BEFORE_UNMOUNT EMPRE]/
-// eslint-disable-next-line
-/* eslint-enable indent, vue/html-indent, vue/script-indent */
-		},
-
 		methods: {
 			/**
 			 * Called before form init.
 			 */
 			async beforeLoad()
 			{
+				let loadForm = true
+
 				// Execute the "Before init" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.beforeInit)
-				for (const trigger of triggers)
+				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
 				this.emitEvent('before-load-form')
@@ -1137,7 +1092,7 @@
 // eslint-disable-next-line
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 
-				return true
+				return loadForm
 			},
 
 			/**
@@ -1147,7 +1102,7 @@
 			{
 				// Execute the "After init" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.afterInit)
-				for (const trigger of triggers)
+				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
 				this.emitEvent('after-load-form')
@@ -1167,33 +1122,19 @@
 
 				// Execute the "Before apply" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.beforeApply)
-				for (const trigger of triggers)
+				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
-				const ticketsPromise = this.model.updateFilesTickets(true)
-				this.addBusy(ticketsPromise, this.Resources[hardcodedTexts.processing])
-				const canSetDocums = await ticketsPromise
+				const canSetDocums = await this.model.updateFilesTickets(true)
 
 				if (canSetDocums)
 				{
-					let results
-					const changesPromise = this.model.setDocumentChanges()
-					this.addBusy(changesPromise, this.Resources[hardcodedTexts.processing])
-					applyForm = await changesPromise
+					applyForm = await this.model.setDocumentChanges()
 
 					if (applyForm)
 					{
-						const insertsPromise = this.model.saveDocuments()
-						this.addBusy(insertsPromise, this.Resources[hardcodedTexts.processing])
-						results = await insertsPromise
+						const results = await this.model.saveDocuments()
 						applyForm = results.every((e) => e === true)
-					}
-
-					if (!changesPromise || (results && !results.every((e) => e === true)))
-					{
-						this.validationErrors = {
-							Erro: this.Resources.OCORREU_UM_ERRO_AO_T51884
-						}
 					}
 				}
 
@@ -1214,7 +1155,7 @@
 			{
 				// Execute the "After apply" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.afterApply)
-				for (const trigger of triggers)
+				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
 				this.emitEvent('after-apply-form')
@@ -1234,33 +1175,19 @@
 
 				// Execute the "Before save" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.beforeSave)
-				for (const trigger of triggers)
+				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
-				const ticketsPromise = this.model.updateFilesTickets()
-				this.addBusy(ticketsPromise, this.Resources[hardcodedTexts.processing])
-				const canSetDocums = await ticketsPromise
+				const canSetDocums = await this.model.updateFilesTickets()
 
 				if (canSetDocums)
 				{
-					let results
-					const changesPromise = this.model.setDocumentChanges()
-					this.addBusy(changesPromise, this.Resources[hardcodedTexts.processing])
-					saveForm = await changesPromise
+					saveForm = await this.model.setDocumentChanges()
 
 					if (saveForm)
 					{
-						const insertsPromise = this.model.saveDocuments()
-						this.addBusy(insertsPromise, this.Resources[hardcodedTexts.processing])
-						results = await insertsPromise
+						const results = await this.model.saveDocuments()
 						saveForm = results.every((e) => e === true)
-					}
-
-					if (!changesPromise || (results && !results.every((e) => e === true)))
-					{
-						this.validationErrors = {
-							Erro: this.Resources.OCORREU_UM_ERRO_AO_T51884
-						}
 					}
 				}
 
@@ -1279,9 +1206,11 @@
 			 */
 			async afterSave()
 			{
+				let redirectPage = true // Set to 'false' to cancel page redirect.
+
 				// Execute the "After save" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.afterSave)
-				for (const trigger of triggers)
+				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
 				this.emitEvent('after-save-form')
@@ -1291,7 +1220,7 @@
 // eslint-disable-next-line
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 
-				return true
+				return redirectPage
 			},
 
 			/**
@@ -1299,6 +1228,8 @@
 			 */
 			async beforeDel()
 			{
+				let deleteForm = true // Set to 'false' to cancel form delete.
+
 				this.emitEvent('before-delete-form')
 
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
@@ -1306,7 +1237,7 @@
 // eslint-disable-next-line
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 
-				return true
+				return deleteForm
 			},
 
 			/**
@@ -1314,6 +1245,8 @@
 			 */
 			async afterDel()
 			{
+				let redirectPage = true // Set to 'false' to cancel page redirect.
+
 				this.emitEvent('after-delete-form')
 
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
@@ -1321,7 +1254,7 @@
 // eslint-disable-next-line
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 
-				return true
+				return redirectPage
 			},
 
 			/**
@@ -1329,9 +1262,11 @@
 			 */
 			async beforeExit()
 			{
+				let leaveForm = true // Set to 'false' to cancel page redirect.
+
 				// Execute the "Before exit" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.beforeExit)
-				for (const trigger of triggers)
+				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
 				this.emitEvent('before-exit-form')
@@ -1341,7 +1276,7 @@
 // eslint-disable-next-line
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 
-				return true
+				return leaveForm
 			},
 
 			/**
@@ -1351,7 +1286,7 @@
 			{
 				// Execute the "After exit" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.afterExit)
-				for (const trigger of triggers)
+				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
 				this.emitEvent('after-exit-form')

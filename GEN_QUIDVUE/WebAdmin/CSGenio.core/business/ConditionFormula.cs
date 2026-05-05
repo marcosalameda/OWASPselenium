@@ -89,19 +89,6 @@ namespace CSGenio.business
 				throw new BusinessException(null, "ConditionFormula.calculaFormulaCondicao", "Error computing conditional formula: " + ex.Message, ex);
 			}            
         }
-		
-		/// <summary>
-        /// Execute the condition formula
-        /// </summary>
-        /// <param name="area">An area with the necessary values</param>
-        /// <param name="sp">The persistent support to get the data</param>
-        /// <param name="tpFunction">Function type</param>
-		/// <param name="fdc">Formula DB Context</param>
-        public bool ExecuteCondition(Area area, PersistentSupport sp, FunctionType tpFunction, FormulaDbContext fdc)
-        {
-            object[] fieldsValue = returnValueFieldsInternalFormula(area, ByAreaArguments, sp, fdc, ParameterCount, tpFunction);
-            return calculateFormulaCondition(fieldsValue, area.User, area.Module, sp);
-		}
 
         /// <summary>
         /// Execute the condition formula
@@ -109,7 +96,6 @@ namespace CSGenio.business
         /// <param name="area">An area with the necessary values</param>
         /// <param name="sp">The persistent support to get the data</param>
         /// <param name="tpFunction">Function type</param>
-		//[Obsolete("Please use the overload that uses FormulaDbContext for a more efficient calculation")]
         public bool ExecuteCondition(Area area, PersistentSupport sp, FunctionType tpFunction)
         {
             object[] fieldsValue = returnValueFieldsInternalFormula(area, ByAreaArguments, sp, ParameterCount, tpFunction);

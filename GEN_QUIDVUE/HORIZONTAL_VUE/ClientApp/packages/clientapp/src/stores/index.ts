@@ -1,14 +1,12 @@
 export * from './authData'
-// @ts-expect-error -- types still WIP
+//@ts-expect-error
 export * from './genericData'
-// @ts-expect-error -- types still WIP
+//@ts-expect-error
 export * from './genericLayoutData'
-// @ts-expect-error -- types still WIP
+//@ts-expect-error
 export * from './navData'
 export * from './systemData'
-// @ts-expect-error -- types still WIP
+//@ts-expect-error
 export * from './tracingData'
-// @ts-expect-error -- types still WIP
+//@ts-expect-error
 export * from './userData'
-export * from './aiData'
-export * from './notesData'

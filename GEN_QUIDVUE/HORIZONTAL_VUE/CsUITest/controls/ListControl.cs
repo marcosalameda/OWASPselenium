@@ -1,3 +1,4 @@
+using quidgest.uitests.pages.common;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -18,17 +19,28 @@ public class ListControl : ControlObject
     /// <summary>
     /// Column elements
     /// </summary>
-    private IList<IWebElement> columns => m_control.FindElements(By.CssSelector("thead th"));
+	private IList<IWebElement> columns => m_control.FindElements(By.CssSelector("thead th"));
 
+    /// <summary>
+    /// Ordering column name
+    /// </summary>
+    private string orderingColumnName => m_control.FindElement(By.CssSelector(".thead-order"))?.GetAttribute("data-column-name");
+
+    /// <summary>
+    /// Ad advanced filter button
+    /// </summary>
+    private IWebElement addAdvancedFilterBtn => GetElement(m_control, By.CssSelector("[data-action-key='add-advanced-filter']"));
+
+    //TODO - Instead of using title to identify the insert button we should create a specific attribute (Ex: data-key) for testing purpose
     /// <summary>
     /// Insert button
     /// </summary>
-    private IWebElement insertBtn => GetElement(m_control, By.CssSelector("[data-key='insert']"));
+    private IWebElement insertBtn => m_control.FindElement(By.CssSelector("[data-testid=table-action][data-action-key='insert']"));
 
     /// <summary>
     /// Loading state
     /// </summary>
-    private bool loading => m_control.GetAttribute("data-loading") == "true";
+    private bool loading => m_control.FindElements(By.CssSelector("tbody.c-table__body--loading")).Any();
 
     /// <summary>
     /// Search bar
@@ -38,22 +50,17 @@ public class ListControl : ControlObject
     /// <summary>
     /// Table configuration menu button and items
     /// </summary>
-    private IWebElement configBtn => GetElement(m_control, ByData.Testid("table-config-details"));
+    private IWebElement configBtn => GetElement(m_control, By.CssSelector("button[id$='config-menu-btn']"));
 
     /// <summary>
     /// Column config button
     /// </summary>
-    private IWebElement columnConfigBtn => GetElement(driver, By.CssSelector("li[data-key='columns']"));
+    private IWebElement columnConfigBtn => GetElement(m_control, By.CssSelector("button[id$='config-menu-btn-column-config']"));
 
-    /// <summary>
-    /// Column config button
-    /// </summary>
-    private IWebElement filtersBtn => GetElement(driver, By.CssSelector("li[data-key='filters']"));
-
-    /// <summary>
-    /// Table row reorder mode toggle button
-    /// </summary>
-    private IWebElement rowReorderBtn => GetElement(m_control, By.CssSelector("button[id$='row-reorder-btn']"));
+	/// <summary>
+	/// Table row reorder mode toggle button
+	/// </summary>
+	private IWebElement rowReorderBtn => GetElement(m_control, By.CssSelector("button[id$='row-reorder-btn']"));
 
     /// <summary>
     /// Total record counter
@@ -66,8 +73,8 @@ public class ListControl : ControlObject
     public bool CanInsert => insertBtn.Enabled;
 
     /// <summary>
-    /// Row count
-    /// </summary>
+	/// Row count
+	/// </summary>
     public int RowCount
     {
         get
@@ -124,6 +131,8 @@ public class ListControl : ControlObject
     /// <returns>Column index</returns>
     private int GetRawColumnIndex(string fieldRef)
     {
+        WaitForLoading();
+
         string column_locator;
 
         var parts = fieldRef.Split('.', 2);
@@ -139,12 +148,30 @@ public class ListControl : ControlObject
     }
 
     /// <summary>
+    /// Get a column's header element from it's name
+    /// </summary>
+    /// <param name="fieldRef">Column's name</param>
+    /// <returns>Column element</returns>
+    private IWebElement GetColumnHeader(string fieldRef)
+    {
+        int index = GetRawColumnIndex(fieldRef);
+
+        // Bounds checking
+        if (index < 0 || index >= columns.Count)
+            return null;
+
+        return columns[index];
+    }
+
+    /// <summary>
     /// Get a column's name from it's index
     /// </summary>
     /// <param name="index">Column's index</param>
     /// <returns>Column name</returns>
     private string GetRawColumnNameByIndex(int index)
     {
+        WaitForLoading();
+
         // Bounds checking
         if (index < 0 || index >= columns.Count)
             return null;
@@ -158,6 +185,8 @@ public class ListControl : ControlObject
     /// <returns>Number of non-data columns</returns>
     private int NonDataColumnAtBeginningCount()
     {
+        WaitForLoading();
+
         // Find the first column that is not one of the special types of columns
         int firstNonDataColumnIndex = columns.FindIndex(col =>
         {
@@ -226,21 +255,12 @@ public class ListControl : ControlObject
     /// <returns>Cell value</returns>
     public string GetValue(int row, string fieldRef)
     {
-        // RowCount waits for loading
+        WaitForLoading();
         if (row < 0 || (row + 1) > RowCount) return null;
 
         int cix = GetRawColumnIndex(fieldRef);
+
         var cell = rows[row].FindElements(By.TagName("td"))[cix];
-
-        // If the column is a boolean, get the value from the icon
-        var boolIcons = cell.FindElements(By.CssSelector("[component='q-render-boolean']"));
-        // Find elements avoids NotFound exceptions - if an icon is not found, the column value is assumed to be text
-        if (boolIcons.Count > 0)
-        {
-            var iconClass = boolIcons[0].GetAttribute("class");
-            return iconClass.Contains("true-icon").ToString();
-        }
-
         return cell.Text;
     }
 
@@ -272,8 +292,8 @@ public class ListControl : ControlObject
     /// <param name="orderIndex">Index to move row to (only used with row reordering)</param>
     public void ExecuteAction(int index, String action, int orderIndex = 0)
     {
-        // RowCount waits for loading
-        if (index >= RowCount || index < 0)
+        WaitForLoading();
+        if (index >= rows.Count || index < 0)
             throw new ArgumentException($"Invalid row index: {index}");
 
         var row = rows[index];
@@ -295,39 +315,30 @@ public class ListControl : ControlObject
             if (dropdownButton.Count() > 0)
                 dropdownButton[0].Click();
 
-            var actionButton = GetElement(driver, By.CssSelector("[role=listbox] [role=option][data-key='" + action + "']"));
+            var actionButton = driver.FindElement(By.CssSelector("[role=listbox] [role=option][data-key='" + action + "']"));
 
             actionButton.Click();
         }
     }
 
-    private void OpenDropdown(int rowIndex)
-    {
-        // RowCount waits for loading
-        if (rowIndex < 0 || rowIndex >= RowCount)
-            throw new ArgumentException($"Invalid row index: {rowIndex}");
+	private void OpenDropdown(int rowIndex)
+	{
+		if (rowIndex < 0 || rowIndex >= rows.Count)
+			throw new ArgumentException($"Invalid row index: {rowIndex}");
 
-        IWebElement row = rows[rowIndex];
+		IWebElement row = rows[rowIndex];
+		IWebElement cell = row.FindElement(By.CssSelector("td.row-actions"));
 
-        // Close any dropdown that may already be open.
-        var dropdownUnderlay = driver.FindElements(By.CssSelector(".q-overlay__underlay"));
-        if (dropdownUnderlay.Count() > 0)
-            dropdownUnderlay[0].Click();
+		// Close any dropdown that may already be open.
+		var dropdownUnderlay = driver.FindElements(By.CssSelector(".q-overlay__underlay"));
+		if (dropdownUnderlay.Count() > 0)
+			dropdownUnderlay[0].Click();
 
-        // Used to clear any current overlays inline
-        row.SendKeys(Keys.Escape);
-
-        // Set row again because DOM changes can cause the reference to become stale
-        row = rows[rowIndex];
-        IWebElement cell = row.FindElement(By.CssSelector("td.row-actions"));
-
-        // If it's a dropdown menu, click the button to open the dropdown. If the dropdown doesn't exist, the buttons are inlined.
-        var dropdownButton = cell.FindElements(By.CssSelector("[data-type=options-button]"));
-        if (dropdownButton.Count() > 0)
-            dropdownButton[0].Click();
-
-        WaitForLoading();
-    }
+		// If it's a dropdown menu, click the button to open the dropdown. If the dropdown doesn't exist, the buttons are inlined.
+		var dropdownButton = cell.FindElements(By.CssSelector("[data-type=options-button]"));
+		if (dropdownButton.Count() > 0)
+			dropdownButton[0].Click();
+	}
 
     /// <summary>
     /// Checks if a row's action exists from it's row index and action name
@@ -336,27 +347,29 @@ public class ListControl : ControlObject
     /// <param name="action">Action name</param>
     public bool IsActionAvailable(int index, string action)
     {
-        // OpenDropdown waits for loading
+        WaitForLoading();
+
         OpenDropdown(index);
         var actionButton = driver.FindElements(By.CssSelector("[role=listbox] [role=option][data-key='" + action + "']"));
 
         return actionButton.Count != 0;
     }
 
-    /// <summary>
-    /// Gets the number of actions that exist for the specified row
-    /// </summary>
-    /// <param name="rowIndex">The index of the row</param>
-    /// <returns>The number of available actions</returns>
-    /// <exception cref="ArgumentException"></exception>
-    public int GetActionCount(int rowIndex)
-    {
-        // OpenDropdown waits for loading
-        OpenDropdown(rowIndex);
-        var actionButtons = GetElement(driver, ByData.Testid("dropdown-content")).FindElements(By.CssSelector("[role=listbox] [role=option]"));
+	/// <summary>
+	/// Gets the number of actions that exist for the specified row
+	/// </summary>
+	/// <param name="rowIndex">The index of the row</param>
+	/// <returns>The number of available actions</returns>
+	/// <exception cref="ArgumentException"></exception>
+	public int GetActionCount(int rowIndex)
+	{
+		WaitForLoading();
 
-        return actionButtons.Count;
-    }
+		OpenDropdown(rowIndex);
+		var actionButtons = driver.FindElement(By.CssSelector("[data-testid='dropdown-content']")).FindElements(By.CssSelector("[role=listbox] [role=option]"));
+
+		return actionButtons.Count;
+	}
 
     /// <summary>
     /// Move the row at the given index to a new index
@@ -367,10 +380,10 @@ public class ListControl : ControlObject
     {
         // The element index starts at 0, it's always 1 less than the column order value
         int newOrderValue = newIndex + 1;
-        // Get the row identifier
-        string rowId = $"{id}_row-{currentIndex}";
 
-        BaseInputControl rowOrderInput = new BaseInputControl(driver, By.Id(rowId), rowId, "[data-testid='column-config-order']");
+        // Get the input for the column order field and change it's value
+        string inputId = $"{id}_{currentIndex}_{orderingColumnName}";
+        BaseInputControl rowOrderInput = new BaseInputControl(driver, By.Id($"container-{inputId}"), $"container-{inputId}", $"#{inputId}");
         rowOrderInput.SetValue(newOrderValue.ToString());
 
         // Confirm the value
@@ -398,7 +411,7 @@ public class ListControl : ControlObject
     public void SortTable(int index)
     {
         WaitForLoading();
-        var header = GetElement(m_control, By.CssSelector("thead tr"));
+        var header = m_control.FindElement(By.CssSelector("thead tr"));
         var cells = header.FindElements(By.CssSelector("th"));
 
         cells[index].Click();
@@ -416,68 +429,99 @@ public class ListControl : ControlObject
         // If there are multiple table configuration options,
         // the table configuration menu should be open
         // and the column configuration button should be clicked
-        columnConfigBtn?.Click();
+        if (string.Equals(configBtn?.GetDomAttribute("aria-haspopup"), "true"))
+            columnConfigBtn?.Click();
     }
 
+	/// <summary>
+	/// Toggle row reorder mode
+	/// </summary>
+	public void ToggleRowReorderMode()
+	{
+		rowReorderBtn.Click();
+	}
+
     /// <summary>
-    /// Toggle row reorder mode
-    /// </summary>
-    public void ToggleRowReorderMode()
+	/// Toggle column dropdown
+	/// </summary>
+    /// <param name="columnName">Column's name</param>
+	public void ToggleColumnDropdown(string columnName)
     {
-        rowReorderBtn.Click();
+        var toggleButton = m_control.FindElement(By.Id(id + "_" + columnName + "_column_drop_toggle"));
+        toggleButton.Click();
     }
 
     /// <summary>
-    /// Add a filter
-    /// </summary>
+	/// Toggle whether to sort by a column in ascending order
+	/// </summary>
+    /// <param name="columnName">Column's name</param>
+	public void ToggleSortAscending(string columnName)
+    {
+        ToggleColumnDropdown(columnName);
+
+        var dropdown = new TableColumnDropdown(driver, id, columnName);
+        dropdown.SortAscending.Click();
+    }
+
+    /// <summary>
+	/// Toggle whether to sort by a column in descending order
+	/// </summary>
+    /// <param name="columnName">Column's name</param>
+	public void ToggleSortDescending(string columnName)
+    {
+        ToggleColumnDropdown(columnName);
+
+        var dropdown = new TableColumnDropdown(driver, id, columnName);
+        dropdown.SortDescending.Click();
+    }
+
+    /// <summary>
+	/// Create a filter
+	/// </summary>
     /// <param name="columnName">Column's name</param>
     /// <param name="operation">Operator</param>
     /// <param name="value">Value</param>
-    public void AddFilter(string columnName, string operation, string value)
+	public void FilterByColumn(string columnName, string operation, string value)
     {
-        configBtn?.Click();
+        // Open dropdown
+        ToggleColumnDropdown(columnName);
 
-        if (filtersBtn == null)
-            return;
+        var dropdown = new TableColumnDropdown(driver, id, columnName);
 
-        // Open filters popup
-        filtersBtn.Click();
+        //Set operation
+        dropdown.Operation.SetValue(operation);
 
-        TableFilterPage filterPopup = new(driver, id);
+        // Set value
+        // Must be clicked first or the dropdown will close
+        // because of some issue with the framework
+        dropdown.Value.Click();
+        dropdown.Value.SetValue(value);
 
-        filterPopup.Create.Click();
-
-        filterPopup.Field.SetValue(columnName);
-        filterPopup.Operation.SetValue(operation);
-        filterPopup.Value.SetValue(value);
-
-        try
-        {
-            // For certain field types (like dates), SetValue triggers an implicit Enter key
-            // press, which immediately submits the filters. When that happens, the Save button
-            // is no longer present in the DOM, so attempting to click it would throw an exception.
-            // We safely ignore that case because the filter has already been submitted.
-            filterPopup.Save.Click();
-        }
-        catch { }
-
-        // Wait until the configuration popup closes.
-        wait.Until(driver => GetElement(driver, By.CssSelector(".q-table-config")) == null);
+        // Apply
+        dropdown.Save.Click();
     }
 
     /// <summary>
-    /// Clears all the filters in the list
-    /// </summary>
-    public void ClearFilters()
+	/// Add an advanced filter
+	/// </summary>
+    /// <param name="columnName">Column's name</param>
+    /// <param name="operation">Operator</param>
+    /// <param name="value">Value</param>
+	public void AddAdvancedFilter(string columnName, string operation, string value)
     {
-        WaitForLoading();
-        var clearFilters = m_container.FindElements(ByData.Testid("clear-filters"));
-        if (clearFilters.Count > 0)
-        {
-            TestContext.WriteLine($"Clearing filters in list {id}");
-            clearFilters[0].Click();
-            WaitForLoading();
-        }
+        if (addAdvancedFilterBtn == null)
+            return;
+
+        // Open advanced filter popup
+        addAdvancedFilterBtn.Click();
+
+        var advancedFilterPopup = new TableAdvancedFilterNewPage(driver, id);
+
+        advancedFilterPopup.Field.SetValue(columnName);
+        advancedFilterPopup.Operation.SetValue(operation);
+        advancedFilterPopup.Value.SetValue(value);
+
+        advancedFilterPopup.Save.Click();
     }
 
     /// <summary>
@@ -497,7 +541,8 @@ public class ListControl : ControlObject
     /// <param name="columnName">Name of the column whose cell is being retrieved.</param>
     public IWebElement GetCellElement(int rowIndex, string columnName)
     {
-        // RowCount waits for loading
+        WaitForLoading();
+
         if (rowIndex < 0 || rowIndex >= RowCount)
             throw new ArgumentOutOfRangeException($"Invalid row index: {rowIndex}");
 
@@ -518,7 +563,6 @@ public class ListControl : ControlObject
     /// <returns>The checkbox element.</returns>
     private IWebElement GetCellCheckbox(int rowIndex, string columnName)
     {
-        // GetCellElement waits for loading
         var cell = GetCellElement(rowIndex, columnName);
         return cell.FindElement(By.CssSelector(".checklist-col-base"));
     }
@@ -532,7 +576,8 @@ public class ListControl : ControlObject
     /// <returns>True if the column is visible; otherwise, false.</returns>
     public bool GetCellCheckboxState(int rowIndex, string columnName)
     {
-        // RowCount waits for loading
+        WaitForLoading();
+
         if (rowIndex < 0 || rowIndex >= RowCount)
             throw new ArgumentOutOfRangeException(nameof(rowIndex), $"Invalid row index: {rowIndex}");
 
@@ -550,7 +595,8 @@ public class ListControl : ControlObject
     /// <param name="visible">Desired visibility state (true for visible, false for hidden).</param>
     public void SetCellCheckboxState(int rowIndex, string columnName, bool visible)
     {
-        // RowCount waits for loading
+        WaitForLoading();
+
         if (rowIndex < 0 || rowIndex >= RowCount)
             throw new ArgumentOutOfRangeException(nameof(rowIndex), $"Invalid row index: {rowIndex}");
 
@@ -558,7 +604,7 @@ public class ListControl : ControlObject
 
         bool currentState = GetCellCheckboxState(rowIndex, columnName);
 
-        if (checkbox != null)
+        if(checkbox != null)
         {
             // Check if the current state differs from the desired state.
             if (currentState != visible)
@@ -569,16 +615,5 @@ public class ListControl : ControlObject
                 wait.Until(driver => GetCellCheckboxState(rowIndex, columnName) == visible);
             }
         }
-    }
-
-    /// <summary>
-    /// Get all values of a specific table column
-    /// </summary>
-    /// <param name="columnName">The name of the column. Corresponds to `data-column-name` in the HTML.</param>
-    /// <returns>A list of the column values, in row order.</returns>
-    public List<string> GetAllColumnValues(string columnName)
-    {
-        // GetValue waits for loading
-        return [.. rows.Select((_, idx) => GetValue(idx, columnName))];
     }
 }

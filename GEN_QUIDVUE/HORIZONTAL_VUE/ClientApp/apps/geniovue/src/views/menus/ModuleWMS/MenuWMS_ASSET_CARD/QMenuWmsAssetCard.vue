@@ -3,23 +3,20 @@
 		v-if="menuModalIsReady"
 		:to="`#${uiContainersId.body}`"
 		:disabled="!menuInfo.isPopup">
-		<div
+		<form
 			class="form-horizontal"
 			@submit.prevent>
 			<q-row-container>
 				<q-table
 					v-bind="controls.menu"
 					v-on="controls.menu.handlers">
-					<template #header>
-						<q-table-config
-							:table-ctrl="controls.menu"
-							v-on="controls.menu.handlers">
-						</q-table-config>
-					</template>
-					<!-- USE /[MANUAL GQT CUSTOM_TABLE WMS_Menu_ASSET_CARD]/ -->
 				</q-table>
+
+				<q-table-extra-extension
+					:list-ctrl="controls.menu"
+					v-on="controls.menu.handlers" />
 			</q-row-container>
-		</div>
+		</form>
 	</teleport>
 
 	<teleport
@@ -51,7 +48,7 @@
 </template>
 
 <script>
-	/* eslint-disable @typescript-eslint/no-unused-vars */
+	/* eslint-disable no-unused-vars */
 	import asyncProcM from '@quidgest/clientapp/composables/async'
 	import qEnums from '@quidgest/clientapp/constants/enums'
 	import netAPI from '@quidgest/clientapp/network'
@@ -71,7 +68,7 @@
 	import qApi from '@/api/genio/quidgestFunctions.js'
 	import qFunctions from '@/api/genio/projectFunctions.js'
 	import qProjArrays from '@/api/genio/projectArrays.js'
-	/* eslint-enable @typescript-eslint/no-unused-vars */
+	/* eslint-enable no-unused-vars */
 
 	import MenuViewModel from './QMenuWMS_ASSET_CARDViewModel.js'
 
@@ -156,7 +153,6 @@
 								scrollData: 10,
 								maxDigits: 10,
 								decimalPlaces: 0,
-								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 2,
@@ -166,7 +162,6 @@
 								label: computed(() => this.Resources.IDENTIFICATION_NAME16317),
 								dataLength: 85,
 								scrollData: 30,
-								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 3,
@@ -177,7 +172,6 @@
 								dataLength: 85,
 								scrollData: 30,
 								isVisible: false,
-								export: 1,
 								pkColumn: 'ValCodkinde',
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.ArrayColumn({
@@ -188,8 +182,8 @@
 								label: computed(() => this.Resources.IDENTIFIER_TYPE60623),
 								dataLength: 1,
 								scrollData: 1,
-								export: 1,
-								array: computed(() => new qProjArrays.QArrayIdenttyp(vm.$getResource).elements),
+								array: computed(() => qProjArrays.QArrayIdenttyp.setResources(vm.$getResource).elements),
+								arrayType: qProjArrays.QArrayIdenttyp.type,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 5,
@@ -199,7 +193,6 @@
 								label: computed(() => this.Resources.GRAI10374),
 								dataLength: 50,
 								scrollData: 30,
-								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 6,
@@ -209,7 +202,6 @@
 								label: computed(() => this.Resources.GIAI50592),
 								dataLength: 50,
 								scrollData: 30,
-								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.ImageColumn({
 								order: 7,
@@ -221,7 +213,6 @@
 								scrollData: 3,
 								sortable: false,
 								searchable: false,
-								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 8,
@@ -231,7 +222,6 @@
 								label: computed(() => this.Resources.MANUFACTURER50759),
 								dataLength: 85,
 								scrollData: 30,
-								export: 1,
 								pkColumn: 'ValCodentit',
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.HyperLinkColumn({
@@ -242,8 +232,41 @@
 								label: computed(() => this.Resources.WEB_SITE06263),
 								dataLength: 254,
 								scrollData: 30,
-								export: 1,
 								pkColumn: 'ValCodentit',
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
+							new listColumnTypes.MarkdownColumn({
+								order: 10,
+								name: 'ValDescription',
+								area: 'ASSET',
+								field: 'DESCRIPTION',
+								label: computed(() => this.Resources.DESCRIPTION07383),
+								scrollData: 30,
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
+							new listColumnTypes.MarkdownColumn({
+								order: 11,
+								name: 'ValLongdesc',
+								area: 'ASSET',
+								field: 'LONGDESC',
+								label: computed(() => this.Resources.DETAILED_DESCRIPTION36560),
+								scrollData: 30,
+								isVisible: false,
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
+							new listColumnTypes.ArrayColumn({
+								order: 12,
+								multipleValues: true,
+								name: 'AtagsValIcon',
+								area: 'ATAGS',
+								field: 'ICON',
+								label: computed(() => this.Resources.TAGS54909),
+								scrollData: 1,
+								maxDigits: 1,
+								decimalPlaces: 0,
+								sortable: false,
+								searchable: false,
+								array: computed(() => qProjArrays.QArrayAssettags.setResources(vm.$getResource).elements),
+								arrayType: qProjArrays.QArrayAssettags.type,
+								arrayDisplayMode: 'ID',
+								pkColumn: 'ValCodtags',
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 						],
 						config: {
@@ -253,14 +276,17 @@
 							tableAlias: 'ASSET',
 							tableNamePlural: computed(() => this.Resources.ASSETS12081),
 							viewManagement: 'U',
+							hasTextWrap: true,
 							showLimitsInfo: true,
 							tableTitle: computed(() => this.Resources.EQUIPMENTS06276),
 							showAlternatePagination: true,
 							permissions: {
 							},
 							searchBarConfig: {
-								visibility: true
+								visibility: true,
+								searchOnPressEnter: true
 							},
+							filtersVisible: true,
 							allowColumnFilters: true,
 							allowColumnSort: true,
 							crudActions: [
@@ -334,7 +360,9 @@
 									id: 'insert',
 									name: 'insert',
 									title: computed(() => this.Resources.INSERIR43365),
-									icon: { icon: 'add' },
+									icon: {
+										icon: 'add'
+									},
 									isInReadOnly: true,
 									params: {
 										action: vm.openFormAction,
@@ -357,7 +385,6 @@
 							rowClickAction: {
 								id: 'RCA_WMS_411111',
 								name: 'form-EQUIPM',
-								isVisible: true,
 								params: {
 									isRoute: true,
 									limits: [
@@ -383,7 +410,7 @@
 								sortOrder: 'asc'
 							}
 						},
-						globalEvents: ['changed-MANUF', 'changed-KINDE', 'changed-ASSET'],
+						globalEvents: ['changed-ASSET', 'changed-MANUF', 'changed-KINDE'],
 						uuid: 'cbba1257-006c-407c-bff6-cb87a80d6f4e',
 						allSelectedRows: 'false',
 						viewModes: [
@@ -422,8 +449,10 @@
 									text: {
 										allowsMultiple: true,
 										sources: [
-											'ASSET.GIAI',
 											'ASSET.GRAI',
+											'ASSET.GIAI',
+											'ASSET.DESCRIPTION',
+											'ATAGS.ICON',
 										]
 									},
 									image: {
@@ -472,16 +501,12 @@
 										rawValue: 'grid',
 										isMapped: false
 									},
-									gridMode: {
-										rawValue: 'fixed',
-										isMapped: false
-									},
 									containerAlignment: {
 										rawValue: 'left',
 										isMapped: false
 									},
 									hoverScaleAmount: {
-										rawValue: 1.05,
+										rawValue: '1.05',
 										isMapped: false
 									},
 									imageShape: {
@@ -568,8 +593,7 @@
 						/** Menu limits */
 						controlLimits: [
 							/** SC */
-						],
-						isActiveControl: computed(() => this.isActiveMenu)
+						]
 					}, this),
 				}
 			}
@@ -593,14 +617,6 @@
 		{
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
 // USE /[MANUAL GQT FORM_CODEJS WMS_MENU_ASSET_CARD]/
-// eslint-disable-next-line
-/* eslint-enable indent, vue/html-indent, vue/script-indent */
-		},
-
-		beforeUnmount()
-		{
-/* eslint-disable indent, vue/html-indent, vue/script-indent */
-// USE /[MANUAL GQT COMPONENT_BEFORE_UNMOUNT WMS_MENU_ASSET_CARD]/
 // eslint-disable-next-line
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 		},

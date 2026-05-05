@@ -1,20 +1,20 @@
-﻿using CSGenio.business;
-using CSGenio.framework;
-using CSGenio.persistence;
-using GenioMVC.Helpers;
-using GenioMVC.Models.Exception;
-using GenioMVC.Models.Navigation;
+﻿using JsonIgnoreAttribute = System.Text.Json.Serialization.JsonIgnoreAttribute;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Quidgest.Persistence;
-using Quidgest.Persistence.GenericQuery;
-
 using System.Collections;
 using System.Collections.Concurrent;
 using System.Collections.Specialized;
 using System.ComponentModel.DataAnnotations;
 using System.Data;
 using System.Globalization;
-using System.Text.Json.Serialization;
+
+using CSGenio.business;
+using CSGenio.framework;
+using CSGenio.persistence;
+using GenioMVC.Helpers;
+using GenioMVC.Models.Exception;
+using GenioMVC.Models.Navigation;
+using Quidgest.Persistence;
+using Quidgest.Persistence.GenericQuery;
 
 namespace GenioMVC.ViewModels.Tpequ
 {
@@ -36,7 +36,6 @@ namespace GenioMVC.ViewModels.Tpequ
 		public string ValCodfamil { get; set; }
 
 		#endregion
-
 		/// <summary>
 		/// Title: "Equipment family" | Type: "C"
 		/// </summary>
@@ -288,7 +287,12 @@ namespace GenioMVC.ViewModels.Tpequ
 			}
 		}
 
-		/// <inheritdoc />
+		/// <summary>
+		/// Sets the value of a single property of the view model based on the provided table and field names.
+		/// </summary>
+		/// <param name="fullFieldName">The full field name in the format "table.field".</param>
+		/// <param name="value">The field value.</param>
+		/// <exception cref="ArgumentNullException">Thrown if <paramref name="fullFieldName"/> is null.</exception>
 		public override void SetViewModelValue(string fullFieldName, object value)
 		{
 			try
@@ -381,17 +385,6 @@ namespace GenioMVC.ViewModels.Tpequ
 				// Conexão deve estar aberta de fora. Podem haver formulas que utilizam funções "manuais".
 				// TODO: It needs to be analyzed whether we should disable the security of field filling here. If there is any case where the field with the block condition can only be calculated after the double calculation of the formulas.
 				MapToModel(Model);
-
-				// If it's inserting or duplicating, needs to fill the default values.
-				if (Navigation.CurrentLevel.FormMode == FormMode.New || Navigation.CurrentLevel.FormMode == FormMode.Duplicate)
-				{
-					FunctionType funcType = Navigation.CurrentLevel.FormMode == FormMode.New
-						? FunctionType.INS
-						: FunctionType.DUP;
-
-					Model.baseklass.fillValuesDefault(m_userContext.PersistentSupport, funcType);
-				}
-
 				// Preencher operações internas
 				Model.klass.fillInternalOperations(m_userContext.PersistentSupport, oldvalues);
 				MapFromModel(Model);
@@ -434,7 +427,6 @@ namespace GenioMVC.ViewModels.Tpequ
 			Characs = new List<string>();
 
 			Load_Tpequ___familfamily__(qs, lazyLoad);
-
 // USE /[MANUAL GQT VIEWMODEL_LOADPARTIAL TPEQU]/
 		}
 
@@ -511,7 +503,10 @@ namespace GenioMVC.ViewModels.Tpequ
 				}
 			}
 
-			TableFamilFamily = new TableDBEdit<Models.Famil>();
+			TableFamilFamily = new TableDBEdit<Models.Famil>
+			{
+				IsLazyLoad = lazyLoad
+			};
 
 			if (lazyLoad)
 			{
@@ -526,7 +521,7 @@ namespace GenioMVC.ViewModels.Tpequ
 
 			if (tpequ___familfamily__DoLoad)
 			{
-				List<ColumnSort> sorts = [];
+				List<ColumnSort> sorts = new List<ColumnSort>();
 				ColumnSort requestedSort = GetRequestSort(TableFamilFamily, "sTableFamilFamily", "dTableFamilFamily", qs, "famil");
 				if (requestedSort != null)
 					sorts.Add(requestedSort);
@@ -576,7 +571,7 @@ namespace GenioMVC.ViewModels.Tpequ
 
 				TableFamilFamily.SetPagination(page, numberItems, listing.HasMore, listing.GetTotal, listing.TotalRecords);
 				TableFamilFamily.Query = query;
-				TableFamilFamily.Elements = listing.RowsForViewModel((r) => new GenioMVC.Models.Famil(m_userContext, r, true, _fieldsToSerialize_TPEQU___FAMILFAMILY__));
+				TableFamilFamily.Elements = listing.RowsForViewModel<GenioMVC.Models.Famil>((r) => new GenioMVC.Models.Famil(m_userContext, r, true, _fieldsToSerialize_TPEQU___FAMILFAMILY__));
 
 				//created by [ MH ] at [ 14.04.2016 ] - Foi alterada a forma de retornar a key do novo registo inserido / editado no form de apoio do DBEdit.
 				//last update by [ MH ] at [ 10.05.2016 ] - Validação se key encontra-se no level atual, as chaves dos niveis anteriores devem ser ignorados.

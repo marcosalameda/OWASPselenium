@@ -38,7 +38,7 @@ export async function createRegisterWebAuth()
 		}
 		catch
 		{
-			const msg =
+			let msg =
 				'Could not create credentials in browser. Probably because the username is already registered with your authenticator. Please change username or authenticator.'
 			displayMessage(msg, 'error')
 		}
@@ -58,9 +58,9 @@ export async function createRegisterWebAuth()
 export async function registerNewCredential(newCredential)
 {
 	// Move data into Arrays incase it is super long
-	const attestationObject = new Uint8Array(newCredential.response.attestationObject)
-	const clientDataJSON = new Uint8Array(newCredential.response.clientDataJSON)
-	const rawId = new Uint8Array(newCredential.rawId)
+	let attestationObject = new Uint8Array(newCredential.response.attestationObject)
+	let clientDataJSON = new Uint8Array(newCredential.response.clientDataJSON)
+	let rawId = new Uint8Array(newCredential.rawId)
 
 	const data = {
 		id: newCredential.id,
@@ -110,7 +110,7 @@ export async function handleSignInWebAuth(returnData)
 
 			// fix escaping. Change this to coerce
 			makeAssertionOptions.allowCredentials.forEach((listItem) => {
-				const fixedId = listItem.id.replace(/_/g, '/').replace(/-/g, '+')
+				let fixedId = listItem.id.replace(/_/g, '/').replace(/-/g, '+')
 				listItem.id = Uint8Array.from(atob(fixedId), (c) => c.charCodeAt(0))
 			})
 
@@ -127,10 +127,10 @@ export async function handleSignInWebAuth(returnData)
 
 			try
 			{
-				const authData = new Uint8Array(credential.response.authenticatorData)
-				const clientDataJSON = new Uint8Array(credential.response.clientDataJSON)
-				const rawId = new Uint8Array(credential.rawId)
-				const sig = new Uint8Array(credential.response.signature)
+				let authData = new Uint8Array(credential.response.authenticatorData)
+				let clientDataJSON = new Uint8Array(credential.response.clientDataJSON)
+				let rawId = new Uint8Array(credential.rawId)
+				let sig = new Uint8Array(credential.response.signature)
 				const data = {
 					id: credential.id,
 					rawId: coerceToBase64Url(rawId),
@@ -177,8 +177,8 @@ function coerceToArrayBuffer(thing, name)
 		thing = thing.replace(/-/g, '+').replace(/_/g, '/')
 
 		// base64 to Uint8Array
-		const str = window.atob(thing)
-		const bytes = new Uint8Array(str.length)
+		let str = window.atob(thing)
+		let bytes = new Uint8Array(str.length)
 		for (let i = 0; i < str.length; i++)
 			bytes[i] = str.charCodeAt(i)
 		thing = bytes
@@ -212,7 +212,7 @@ function coerceToBase64Url(thing)
 	if (thing instanceof Uint8Array)
 	{
 		let str = ''
-		const len = thing.byteLength
+		let len = thing.byteLength
 
 		for (let i = 0; i < len; i++)
 			str += String.fromCharCode(thing[i])

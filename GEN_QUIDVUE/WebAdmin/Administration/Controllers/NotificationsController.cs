@@ -136,26 +136,26 @@ namespace Administration.Controllers
             //Email properties list fill:
             var emailProps = CSGenio.framework.Configuration.EmailProperties;
 
-            viewmodel.TableEmailProperties = new SelectList(emailProps.Select(ep => new SelectListItem() { Text = ep.Id, Value = ep.Codpmail.ToUpper(), Selected = (ep.Codpmail == viewmodel.ValCodpmail) }),
+            viewmodel.TableEmailProperties = new SelectList(emailProps.Select(ep => new SelectListItem() { Text = ep.Id, Value = ep.Codpmail, Selected = (ep.Codpmail == viewmodel.ValCodpmail) }),
                 "Value", "Text",
                 viewmodel.ValCodpmail);
 
             //Allowed Destinations list fill:
             var allowedDestinations = viewModel.AllowedDestinations;
 
-            viewmodel.TableAllowedDestinations = new SelectList(allowedDestinations.Select(destn => new SelectListItem() { Text = destn.Destination.DestinationName, Value = destn.Destination.DestinationKey.ToString().ToUpper(), Selected = (destn.Destination.DestinationKey == viewmodel.ValCoddestn) }),
+            viewmodel.TableAllowedDestinations = new SelectList(allowedDestinations.Select(destn => new SelectListItem() { Text = destn.Destination.DestinationName, Value = destn.Destination.DestinationKey.ToString(), Selected = (destn.Destination.DestinationKey == viewmodel.ValCoddestn) }),
                 "Value", "Text",
                 viewmodel.ValCoddestn);
 
             //Allowed Tags list fill:
-            viewmodel.TableAllowedTags = new SelectList(viewModel.TagsFieldMapping.Select(tag => new SelectListItem() { Text = tag.FieldMap.FieldnameApp, Value = tag.FieldMap.FieldnameApp.ToUpper(), Selected = (tag.FieldMap.FieldnameApp == viewmodel.ValSelectedTag) }),
+            viewmodel.TableAllowedTags = new SelectList(viewModel.TagsFieldMapping.Select(tag => new SelectListItem() { Text = tag.FieldMap.FieldnameApp, Value = tag.FieldMap.FieldnameApp, Selected = (tag.FieldMap.FieldnameApp == viewmodel.ValSelectedTag) }),
                 "Value", "Text",
                 viewmodel.ValSelectedTag);
 
             //Email signatures list fill:
             var emailSignatures = CSGenioAnotificationemailsignature.searchList(sp, user, CriteriaSet.And().Equal(new FieldRef("notificationemailsignature", "zzstate"), 0));
 
-            viewmodel.TableEmailSignatures = new SelectList(emailSignatures.Select(ep => new SelectListItem() { Text = (string)ep.returnValueField("notificationemailsignature.name"), Value = ((string)ep.returnValueField("notificationemailsignature.codsigna")).ToUpper(), Selected = ((string)ep.returnValueField("notificationemailsignature.codsigna") == viewmodel.ValCodsigna) }),
+            viewmodel.TableEmailSignatures = new SelectList(emailSignatures.Select(ep => new SelectListItem() { Text = (string)ep.returnValueField("notificationemailsignature.name"), Value = (string)ep.returnValueField("notificationemailsignature.codsigna"), Selected = ((string)ep.returnValueField("notificationemailsignature.codsigna") == viewmodel.ValCodsigna) }),
                 "Value", "Text",
                 viewmodel.ValCodsigna);
 
@@ -184,7 +184,7 @@ namespace Administration.Controllers
                 //Email properties
                 if (!String.IsNullOrEmpty(model.ValCodpmail))
                 {
-                    EmailServer emailProps = CSGenio.framework.Configuration.EmailProperties.Find(x => x.Codpmail.ToUpper() == model.ValCodpmail.ToUpper());
+                    EmailServer emailProps = CSGenio.framework.Configuration.EmailProperties.Find(x => x.Codpmail == model.ValCodpmail);
                     //formula + manual
                     model.ValFrom = emailProps.From;
                 }

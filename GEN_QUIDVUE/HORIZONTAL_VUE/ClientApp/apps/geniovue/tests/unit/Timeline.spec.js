@@ -13,8 +13,8 @@ describe('QTimeline.vue', () => {
 			props: fakeData.simpleUsage().yearlyTimeline
 		})
 
-		const horizontalSummary = await wrapper.findComponent(QTimelineSummary)
-		const bubbleGroup = horizontalSummary.findAll('div')[3]
+		let horizontalSummary = await wrapper.findComponent(QTimelineSummary)
+		let bubbleGroup = horizontalSummary.findAll('div')[3]
 		await bubbleGroup.trigger('click')
 		expect(horizontalSummary.emitted()['selected-group']).toBeTruthy()
 	})
@@ -24,8 +24,8 @@ describe('QTimeline.vue', () => {
 			props: fakeData.simpleUsage().yearlyTimeline
 		})
 
-		const horizontalSummary = await wrapper.findComponent(QTimelineSummary)
-		const bubbleGroup = horizontalSummary.findAll('div')[3]
+		let horizontalSummary = await wrapper.findComponent(QTimelineSummary)
+		let bubbleGroup = horizontalSummary.findAll('div')[3]
 		await bubbleGroup.trigger('click')
 		await bubbleGroup.trigger('click')
 		expect(horizontalSummary.emitted()['selected-group'][1][0]).toBeFalsy()
@@ -36,10 +36,10 @@ describe('QTimeline.vue', () => {
 			props: fakeData.simpleUsage().yearlyTimeline
 		})
 
-		const resetButton = await wrapper.getByTestId('refresh-btn')
+		let resetButton = await wrapper.getByTestId('refresh-btn')
 		await fireEvent.click(resetButton)
 		await nextTick()
-		const verticalTimeline = await wrapper.findAllByTestId(
+		let verticalTimeline = await wrapper.findAllByTestId(
 			'vertical-timeline'
 		)
 
@@ -51,7 +51,7 @@ describe('QTimeline.vue', () => {
 			props: fakeData.simpleUsage().yearlyTimeline
 		})
 
-		const bubbleGroups = await wrapper.findAllByTestId('bubble-group')
+		let bubbleGroups = await wrapper.findAllByTestId('bubble-group')
 		expect(bubbleGroups.length).toEqual(4)
 	})
 
@@ -60,10 +60,10 @@ describe('QTimeline.vue', () => {
 			props: fakeData.simpleUsage().yearlyTimeline
 		})
 
-		const circleBtns = await wrapper.findAllByTestId('bubble-group')
+		let circleBtns = await wrapper.findAllByTestId('bubble-group')
 		// open timeline
 		await fireEvent.click(circleBtns[0])
-		const linkbtns = await wrapper.findAllByTestId('popup-btn')
+		let linkbtns = await wrapper.findAllByTestId('popup-btn')
 		// click popup btn
 		await fireEvent.click(linkbtns[0])
 		expect(wrapper.emitted()['show-popup']).toBeTruthy()
@@ -75,7 +75,7 @@ describe('QTimeline.vue', () => {
 		})
 
 		// get all horizontal bubbles
-		const bubbleGroups = await wrapper.findAllByTestId('bubble-group')
+		let bubbleGroups = await wrapper.findAllByTestId('bubble-group')
 		await fireEvent.click(bubbleGroups[0])
 		let cards = wrapper.getAllByTestId('item-card')
 
@@ -94,7 +94,7 @@ describe('QTimeline.vue', () => {
 			props: fakeData.simpleUsage().monthlyTimeline
 		})
 
-		const bubbleGroups = await wrapper.findAllByTestId('bubble-group')
+		let bubbleGroups = await wrapper.findAllByTestId('bubble-group')
 		expect(bubbleGroups.length).toEqual(6)
 	})
 })

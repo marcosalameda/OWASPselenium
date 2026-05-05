@@ -49,23 +49,17 @@ public class UIS_Menu_1111_RowViewModel : Models.Compo
 			{
 				Order = 3,
 				Area = "COMPO",
-				Field = "RELEASE",
+				Field = "MVC",
 			},
 			new ListColumn()
 			{
 				Order = 4,
 				Area = "COMPO",
-				Field = "MVC",
-			},
-			new ListColumn()
-			{
-				Order = 5,
-				Area = "COMPO",
 				Field = "VUEMVC",
 			},
 			new ListColumn()
 			{
-				Order = 6,
+				Order = 5,
 				Area = "COMPO",
 				Field = "COMPDESC",
 			},

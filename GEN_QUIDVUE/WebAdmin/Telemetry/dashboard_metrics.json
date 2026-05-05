@@ -19,13 +19,13 @@
     "editable": true,
     "fiscalYearStartMonth": 0,
     "graphTooltip": 0,
-    "id": null,
+    "id": 1,
     "links": [],
     "panels": [
       {
         "datasource": {
           "type": "prometheus",
-          "uid": "quidgest-prom-v2-12843"
+          "uid": "be4mqtsjhooowd"
         },
         "fieldConfig": {
           "defaults": {
@@ -154,7 +154,7 @@
             "disableTextWrap": false,
             "editorMode": "code",
             "exemplar": false,
-            "expr": "sum by(Failed) (increase(login_counter_total{exported_job=\"$solution\", exported_instance=~\"$instance\"}[$__interval]))",
+            "expr": "increase(login_counter_total{exported_job=\"$solution\", exported_instance=~\"$instance\"}[$__interval])",
             "fullMetaSearch": false,
             "includeNullMetadata": false,
             "instant": false,
@@ -171,7 +171,7 @@
       {
         "datasource": {
           "type": "prometheus",
-          "uid": "quidgest-prom-v2-12843"
+          "uid": "be4mqtsjhooowd"
         },
         "fieldConfig": {
           "defaults": {
@@ -239,7 +239,7 @@
             "calcs": [],
             "displayMode": "list",
             "placement": "bottom",
-            "showLegend": true
+            "showLegend": false
           },
           "tooltip": {
             "hideZeros": false,
@@ -252,31 +252,13 @@
           {
             "disableTextWrap": false,
             "editorMode": "code",
-            "expr": "sum(rate(page_load_time_milliseconds_count{exported_job=\"$solution\", exported_instance=~\"$instance\"}[$__rate_interval]))",
+            "expr": "sum(rate(request_counter_total{exported_job=\"$solution\", exported_instance=~\"$instance\"}[$__rate_interval]))",
             "fullMetaSearch": false,
             "includeNullMetadata": true,
             "interval": "1m",
-            "legendFormat": "App",
+            "legendFormat": "__auto",
             "range": true,
-            "refId": "App",
-            "useBackend": false
-          },
-          {
-            "datasource": {
-              "type": "prometheus",
-              "uid": "quidgest-prom-v2-12843"
-            },
-            "disableTextWrap": false,
-            "editorMode": "code",
-            "expr": "sum(rate(http_server_request_duration_seconds_count{exported_job=\"$solution\", exported_instance=~\"$instance\"}[$__rate_interval]))",
-            "fullMetaSearch": false,
-            "hide": false,
-            "includeNullMetadata": true,
-            "instant": false,
-            "interval": "1m",
-            "legendFormat": "Http",
-            "range": true,
-            "refId": "Http",
+            "refId": "A",
             "useBackend": false
           }
         ],
@@ -286,7 +268,7 @@
       {
         "datasource": {
           "type": "prometheus",
-          "uid": "quidgest-prom-v2-12843"
+          "uid": "be4mqtsjhooowd"
         },
         "fieldConfig": {
           "defaults": {
@@ -357,7 +339,7 @@
             "disableTextWrap": false,
             "editorMode": "code",
             "exemplar": false,
-            "expr": "sum by (le) (increase(page_load_time_milliseconds_bucket{exported_job=\"$solution\", exported_instance=~\"$instance\"} [10m]))",
+            "expr": "sum by (le) (increase(page_load_time_milliseconds_bucket{exported_job=\"$solution\", exported_instance=~\"$instance\"} [$__interval]))",
             "format": "heatmap",
             "fullMetaSearch": false,
             "includeNullMetadata": false,
@@ -375,7 +357,7 @@
       {
         "datasource": {
           "type": "prometheus",
-          "uid": "quidgest-prom-v2-12843"
+          "uid": "be4mqtsjhooowd"
         },
         "fieldConfig": {
           "defaults": {
@@ -459,7 +441,7 @@
           {
             "disableTextWrap": false,
             "editorMode": "builder",
-            "expr": "sum(process_memory_usage_bytes{exported_job=\"$solution\", exported_instance=~\"$instance\"})",
+            "expr": "process_memory_usage_bytes{exported_job=\"$solution\", exported_instance=~\"$instance\"}",
             "fullMetaSearch": false,
             "includeNullMetadata": true,
             "legendFormat": "Memory",
@@ -474,7 +456,7 @@
       {
         "datasource": {
           "type": "prometheus",
-          "uid": "quidgest-prom-v2-12843"
+          "uid": "be4mqtsjhooowd"
         },
         "fieldConfig": {
           "defaults": {
@@ -556,7 +538,7 @@
           {
             "disableTextWrap": false,
             "editorMode": "builder",
-            "expr": "sum by(state) (rate(process_cpu_time_seconds_total{exported_job=\"$solution\", exported_instance=~\"$instance\"}[$__rate_interval]))",
+            "expr": "rate(process_cpu_time_seconds_total{exported_job=\"$solution\", exported_instance=~\"$instance\"}[$__rate_interval])",
             "fullMetaSearch": false,
             "includeNullMetadata": true,
             "interval": "",
@@ -572,7 +554,7 @@
       {
         "datasource": {
           "type": "prometheus",
-          "uid": "quidgest-prom-v2-12843"
+          "uid": "be4mqtsjhooowd"
         },
         "fieldConfig": {
           "defaults": {
@@ -634,12 +616,12 @@
             "disableTextWrap": false,
             "editorMode": "code",
             "exemplar": false,
-            "expr": "topk(10, sum by (Controller, Action) (last_over_time(page_load_time_milliseconds_sum{exported_job=\"$solution\", exported_instance=~\"$instance\"} [$__range])))",
+            "expr": "topk(10, sum by (PageId) (last_over_time(page_load_time_milliseconds_sum{exported_job=\"$solution\", exported_instance=~\"$instance\"} [$__range])))",
             "format": "time_series",
             "fullMetaSearch": false,
             "includeNullMetadata": true,
             "instant": true,
-            "legendFormat": "{{Controller}}.{{Action}}",
+            "legendFormat": "{{PageId}}",
             "range": false,
             "refId": "A",
             "useBackend": false
@@ -651,7 +633,7 @@
       {
         "datasource": {
           "type": "prometheus",
-          "uid": "quidgest-prom-v2-12843"
+          "uid": "be4mqtsjhooowd"
         },
         "fieldConfig": {
           "defaults": {
@@ -714,12 +696,12 @@
             "disableTextWrap": false,
             "editorMode": "code",
             "exemplar": false,
-            "expr": "topk(10, avg by(Controller, Action) (last_over_time(page_load_time_milliseconds_sum{exported_job=\"$solution\", exported_instance=~\"$instance\"} [$__range]) /  clamp_min(last_over_time(page_load_time_milliseconds_count{exported_job=\"$solution\", exported_instance=~\"$instance\"} [$__range]),1) ))",
+            "expr": "topk(10, avg by(PageId) (last_over_time(page_load_time_milliseconds_sum{exported_job=\"$solution\", exported_instance=~\"$instance\"} [$__range]) /  clamp_min(last_over_time(page_load_time_milliseconds_count{exported_job=\"$solution\", exported_instance=~\"$instance\"} [$__range]),1) ))",
             "format": "time_series",
             "fullMetaSearch": false,
             "includeNullMetadata": true,
             "instant": true,
-            "legendFormat": "{{Controller}}.{{Action}}",
+            "legendFormat": "{{PageId}}",
             "range": false,
             "refId": "A",
             "useBackend": false
@@ -731,7 +713,7 @@
       {
         "datasource": {
           "type": "prometheus",
-          "uid": "quidgest-prom-v2-12843"
+          "uid": "be4mqtsjhooowd"
         },
         "fieldConfig": {
           "defaults": {
@@ -810,7 +792,7 @@
       {
         "datasource": {
           "type": "prometheus",
-          "uid": "quidgest-prom-v2-12843"
+          "uid": "be4mqtsjhooowd"
         },
         "fieldConfig": {
           "defaults": {
@@ -895,10 +877,6 @@
       "list": [
         {
           "allowCustomValue": false,
-          "datasource": {
-            "type": "prometheus",
-            "uid": "quidgest-prom-v2-12843"
-          },
           "definition": "label_values(exported_job)",
           "description": "The id of the solution or application to monitor",
           "label": "Solution",
@@ -921,7 +899,7 @@
           },
           "datasource": {
             "type": "prometheus",
-            "uid": "quidgest-prom-v2-12843"
+            "uid": "be4mqtsjhooowd"
           },
           "definition": "label_values({exported_job=\"$solution\"},exported_instance)",
           "description": "Service deployment unique Id",
@@ -941,14 +919,14 @@
       ]
     },
     "time": {
-      "from": "now-24h",
+      "from": "now-3h",
       "to": "now"
     },
     "timepicker": {},
     "timezone": "browser",
     "title": "Quidgest Metrics",
-    "uid": "quidgest-metrics-v2-81726",
-    "version": 61
+    "uid": "decqbb83qoa9sd",
+    "version": 56
   },
   "overwrite": true
 }

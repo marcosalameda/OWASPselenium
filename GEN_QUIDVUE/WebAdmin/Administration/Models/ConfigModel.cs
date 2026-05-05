@@ -70,6 +70,15 @@ namespace Administration.Models
         [Display(Name = "UTILIZADOR_DE_DOMINI41043", ResourceType = typeof(Resources.Resources))]
         public bool Log_ConnWithDomainUser { get; set; }
 
+        [Display(Name = "GQP shared tables")]
+        [Required]
+        public string GQP_Schema { get; set; }
+        
+        [Display(Name = "ENCRIPTAR_LIGACAO12834", ResourceType = typeof(Resources.Resources))]
+        public bool GQP_ConnEncrypt { get; set; }
+
+        [Display(Name = "UTILIZADOR_DE_DOMINI41043", ResourceType = typeof(Resources.Resources))]
+        public bool GQP_ConnWithDomainUser { get; set; }
 
 
         [Display(Name = "O_ANO_DEFAULT_NAO_ES52509", ResourceType = typeof(Resources.Resources))]
@@ -142,9 +151,6 @@ namespace Administration.Models
 		[Display(Name = "SEPARADOR_DE_GRUPO26735", ResourceType = typeof(Resources.Resources))]
         public HardCodedLists.DisplayNumberFormatGroup GroupSeparator { get; set; }
 
-		[Display(Name = "FORMATO_DE_NUMERO_NE41581", ResourceType = typeof(Resources.Resources))]
-        public HardCodedLists.DisplayNumberFormatNegative NegativeFormat { get; set; }
-
         [Display(Name = "MOTOR_DE_PESQUISA__E50766", ResourceType = typeof(Resources.Resources))]
         public List<CoreCfg> Cores { get; set; }
 
@@ -168,12 +174,6 @@ namespace Administration.Models
         public Dictionary<string, PathCfg> Paths { get; set; }
 
         public string UrlAPIBackend { get; set; }
-
-        public string UrlMCP { get; set; }
-
-        public MCPSecurityMode MCPSecurityMode { get; set; }
-
-        public string JWTEncryptionKey { get; set; }
 
 		[Display(Name = "AMBIENTE_DE_QA_09940", ResourceType = typeof(Resources.Resources))]
         public bool QAEnvironment { get; set; }
@@ -204,10 +204,9 @@ namespace Administration.Models
                     PasswordAlgorithms = AuxFunctions.ToSelectList<DisplayPasswordAlgorithms>(),
                     DecimalSeparator = AuxFunctions.ToSelectList<HardCodedLists.DisplayNumberFormatDecimal>(),
                     GroupSeparator = AuxFunctions.ToSelectList<HardCodedLists.DisplayNumberFormatGroup>(),
-                    NegativeFormat = AuxFunctions.ToSelectList<HardCodedLists.DisplayNumberFormatNegative>(),
                     DisplayUserType = AuxFunctions.ToSelectList<DisplayUserType>(),
-                    IdentityProviderTypeList = IdentityProviderCfg.TypeList(),
-                    RoleProviderTypeList = RoleProviderCfg.TypeList(),
+                    IdentityProviderTypeList = IdentityProviderCfg.TypeList,
+                    RoleProviderTypeList = RoleProviderCfg.TypeList,
                     PropertyList = MorePropertyCfg.PropertyList,
                     SchedulerTaskList = ScheduleTaskFactory.GetTaskOptions(),
                 };
@@ -253,11 +252,11 @@ namespace Administration.Models
     }
 
     public enum DisplayAuthenticationMode
-    {        
+    {
+        [Display(Name = "REJEITAR_NA_PRIMEIRA49925", ResourceType = typeof(Resources.Resources))]
+        RejectOnFirstFail,
         [Display(Name = "ACEITAR_AO_PRIMEIRO_40557", ResourceType = typeof(Resources.Resources))]
-        AcceptOnFirstSucess,
-        [Display(Name = "UM_BOTAO_POR_PROVIDE48545", ResourceType = typeof(Resources.Resources))]
-        OneButtonPerProvider
+        AcceptOnFirstSucess
     }
 
     public enum DisplayMultisessionMode
@@ -310,9 +309,7 @@ namespace Administration.Models
     {
         [JsonIgnore]
         public Type Type { get; set; }
-        public string TypeFullName => Type.Assembly.GetName().Name == "CSGenio.core"
-            ? Type.FullName
-            : Type.FullName + ", " + Type.Assembly.GetName().Name;
+        public string TypeFullName { get {  return Type.FullName; } }
         public string DisplayName { get; set; }
         public string Description { get; set; }
         public List<SecurityOptionMetainfo> Options { get; set; } = new List<SecurityOptionMetainfo>();
@@ -368,9 +365,8 @@ namespace Administration.Models
     public class IdentityProviderCfg
     {
         private static IEnumerable<SecurityProviderMetainfo> idProviderList = AppDomain.CurrentDomain.GetLoadableTypes()
-            .Where(p => p.GetInterfaces().Contains(typeof(GenioServer.security.IIdentityProvider)) && !p.IsAbstract)
+            .Where(p => p.GetInterfaces().Contains(typeof(GenioServer.security.IIdentityProvider)))
             .Select(x => new SecurityProviderMetainfo(x));
-        public static IEnumerable<SecurityProviderMetainfo> TypeList() => idProviderList;
 
         public IdentityProviderCfg()
         {
@@ -381,6 +377,11 @@ namespace Administration.Models
         {
             obj = o;
         }
+        
+        /// <summary>
+        /// Gets the corresponding metadata info for this type
+        /// </summary>
+        public SecurityProviderMetainfo MetaData => idProviderList.FirstOrDefault(x => x.Type.FullName == this.Type);
 
         [Display(Name = "NOME47814", ResourceType = typeof(Resources.Resources))]
         public string Name
@@ -403,18 +404,20 @@ namespace Administration.Models
             set { obj.Type = value; }
         }
 
-        [Display(Name = "2FA")]
-        public bool Is2FA
+        [Display(Name = "TIPO55111", ResourceType = typeof(Resources.Resources))]
+        public static IEnumerable<SecurityProviderMetainfo> TypeList
         {
-            get { return obj.Is2FA; }
-            set { obj.Is2FA = value; }
+            get
+            {
+				return idProviderList;
+            }
         }
 
         [Display(Name = "CONFIGURACAO10928", ResourceType = typeof(Resources.Resources))]
-        public CSGenio.SerializableDictionary<string, string> Options
+        public string Config
         {
-            get { return obj.Options; }
-            set { obj.Options = value; }
+            get { return obj.Config; }
+            set { obj.Config = value; }
         }
 
         [JsonIgnore]
@@ -428,9 +431,8 @@ namespace Administration.Models
     public class RoleProviderCfg
     {
         private static IEnumerable<SecurityProviderMetainfo> roleProviderList = AppDomain.CurrentDomain.GetLoadableTypes()
-            .Where(p => p.GetInterfaces().Contains(typeof(GenioServer.security.IRoleProvider)) && !p.IsAbstract)
+            .Where(p => p.GetInterfaces().Contains(typeof(GenioServer.security.IRoleProvider)))
             .Select(x => new SecurityProviderMetainfo(x));
-        public static IEnumerable<SecurityProviderMetainfo> TypeList() => roleProviderList;
 
         public RoleProviderCfg()
         {
@@ -442,6 +444,12 @@ namespace Administration.Models
             obj = o;
         }
         
+        /// <summary>
+        /// Gets the corresponding metadata info for this type
+        /// </summary>
+        public SecurityProviderMetainfo MetaData => roleProviderList.FirstOrDefault(x => x.Type.FullName == this.Type);
+
+
         [Display(Name = "NOME47814", ResourceType = typeof(Resources.Resources))]
         public string Name
         {
@@ -456,11 +464,20 @@ namespace Administration.Models
             set { obj.Type = value; }
         }
 
-        [Display(Name = "CONFIGURACAO10928", ResourceType = typeof(Resources.Resources))]
-        public CSGenio.SerializableDictionary<string, string> Options
+        [Display(Name = "TIPO55111", ResourceType = typeof(Resources.Resources))]
+        public static IEnumerable<SecurityProviderMetainfo> TypeList
         {
-            get { return obj.Options; }
-            set { obj.Options = value; }
+            get
+            {
+				return roleProviderList;
+            }
+        }
+
+        [Display(Name = "CONFIGURACAO10928", ResourceType = typeof(Resources.Resources))]
+        public string Config
+        {
+            get { return obj.Config; }
+            set { obj.Config = value; }
         }
 
         [Display(Name = "PRECONDICAO44917", ResourceType = typeof(Resources.Resources))]
@@ -842,6 +859,8 @@ namespace Administration.Models
         public GenioServer.security.MultiSessionMode AllowMultiSessionPerUser { get; set; }
         [Display(Name = "PERMITE_RECUPERACAO_41959", ResourceType = typeof(Resources.Resources))]
         public bool AllowAuthenticationRecovery { get; set; }
+		[Display(Name = "ATIVAR_AUTENTICACAO_40943", ResourceType = typeof(Resources.Resources))]
+        public bool Activate2FA { get; set; }
 		[Display(Name = "OBRIGATORIO_A_UTILIZ32451", ResourceType = typeof(Resources.Resources))]
         public bool Mandatory2FA { get; set; }
 

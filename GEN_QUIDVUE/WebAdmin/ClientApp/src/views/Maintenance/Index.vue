@@ -3,6 +3,7 @@
 		v-if="!isLoaded && !showDialog"
 		width="block"
 		loading />
+		
 	<div v-else>
 		<q-alert
 			v-if="!isEmptyObject(currentModel.ResultMsg)"
@@ -28,6 +29,7 @@
 						size="xlarge"
 						@keyup.enter="Reindex" />
 
+
 					<br />
 
 					<div v-if="isMultiYearApp">
@@ -38,17 +40,17 @@
 							width="block">
 							<q-row-container>
 								<static-text
-									:model-value="currentModel.VersionApp"
+									v-model="currentModel.VersionApp"
 									bold-label
 									orientation="vertical"
 									:label="Resources.VERSAO_DA_APLICACAO45955" />
 								<static-text
-									:model-value="currentModel.VersionReIdx"
+									v-model="currentModel.VersionReIdx"
 									bold-label
 									orientation="vertical"
 									:label="Resources.VERSAO_DOS_SCRIPTS52566" />
 								<static-text
-									:model-value="currentModel.VersionUpgrScripts"
+									v-model="currentModel.VersionUpgrScripts"
 									bold-label
 									orientation="vertical"
 									:label="Resources.VERSAO_DOS_SCRIPTS_D32532" />
@@ -98,12 +100,14 @@
 							width="block">
 							<q-row-container>
 								<static-text
-									:model-value="currentModel.DBSchema"
+									v-model="currentModel.DBSchema"
 									bold-label
+									orientation="vertical"
 									:label="Resources.BASE_DE_DADOS58234" />
 								<static-text
-									:model-value="currentModel.DBSize"
+									v-model="currentModel.DBSize"
 									bold-label
+									orientation="vertical"
 									:label="Resources.TAMANHO_DA_BD56664" />
 							</q-row-container>
 						</q-card>
@@ -114,33 +118,19 @@
 							width="block">
 							<q-row-container>
 								<static-text
-									:model-value="currentModel.VersionDb"
-									:label="Resources.VERSAO_DE_BASE_DE_DA46937"
+									v-model="currentModel.VersionDb"
+									:label="Resources.DATABASE_VERSION15344"
 									bold-label />
 								<static-text
-									:model-value="currentModel.VersionApp"
+									v-model="currentModel.VersionApp"
 									bold-label
+									orientation="vertical"
 									:label="Resources.VERSAO_DA_APLICACAO45955" />
 								<static-text
-									:model-value="currentModel.VersionReIdx"
+									v-model="currentModel.VersionReIdx"
 									bold-label
+									orientation="vertical"
 									:label="Resources.VERSAO_DOS_SCRIPTS52566" />
-							</q-row-container>
-						</q-card>
-						<q-card
-							class="q-card--admin-border-top"
-							:title="Resources.USER_SETTINGS37283"
-							variant="minor"
-							width="block">
-							<q-row-container>
-								<static-text
-									:model-value="currentModel.UserSettingsVersion"
-									bold-label
-									:label="Resources.VERSAO_MAIS_RECENTE_17266" />
-								<static-text
-									:model-value="currentModel.CurrentUserSettingsVersion"
-									bold-label
-									:label="Resources.VERSAO_DAS_CONFIGURA31783" />
 							</q-row-container>
 						</q-card>
 						<q-card
@@ -150,20 +140,22 @@
 							width="block">
 							<q-row-container>
 								<static-text
-									:model-value="currentModel.VersionUpgrIndx"
+									v-model="currentModel.VersionUpgrIndx"
 									bold-label
-									:label="Resources.VERSAO_DE_BASE_DE_DA46937" />
+									orientation="vertical"
+									:label="Resources.DATABASE_VERSION15344" />
 								<static-text
-									:model-value="currentModel.VersionUpgrScripts"
+									v-model="currentModel.VersionUpgrScripts"
 									bold-label
-									:label="Resources.VERSAO_DA_APLICACAO45955" />
+									orientation="vertical"
+									:label="Resources.APPLICATION_VERSION32207" />
 							</q-row-container>
 						</q-card>
 					</div>
 				</q-row-container>
 			</q-card>
 		</row>
-
+		
 		<row>
 			<q-collapsible
 				:title="Resources.OPCOES_AVANCADAS_DE_63606"
@@ -200,8 +192,8 @@
 				</q-card>
 				<br />
 				<div class="database-options">
-					<q-checkbox
-						v-model="currentModel.Zero"
+					<q-checkbox 
+						v-model="currentModel.Zero" 
 						:label="Resources.REINDEXACAO_COMPLETA51519" />
 				</div>
 				<template v-for="group in reindexGroups"
@@ -213,12 +205,12 @@
 							:label="group.Name"
 							@update:model-value="(newVal) => { groupValueUpdate(group, newVal) }" />
 					</div>
-					<div
+					<div 
 						style="text-align:left; margin-left: 20px;">
-						<template
+						<template 
 							v-for="sqlFunc in getGroupFunctions(group)"
 							:key="sqlFunc.Id">
-							<div
+							<div 
 								v-if="sqlFunc.Selectable"
 								class="database-options">
 								<q-checkbox
@@ -282,7 +274,7 @@
 				<div class="modal-body">
 					<static-text
 						v-if="selectedScript.Result != ''"
-						:model-value="selectedScript.Result"
+						v-model="selectedScript.Result"
 						:label="Resources.ERRO38355"
 						bold-label />
 
@@ -300,9 +292,9 @@
 								<div
 									v-for="block in file.ScriptDetails"
 									:key="block.ScriptId"
-									:class="{
-										'script-details__line': true,
-										'script-details__line-error': block.Result
+									:class="{ 
+										'script-details__line': true, 
+										'script-details__line-error': block.Result 
 									}">
 									<span>
 										Line {{ block.ScriptId }}
@@ -417,7 +409,7 @@
 				showScriptOverlay: false,
 
 				/**
-				 * Variables responsible for displaying messages or alerts: includes the message content,
+				 * Variables responsible for displaying messages or alerts: includes the message content, 
 				 * buttons to display in the dialog and whether it should be displayed.
 				 */
 				dialogText: '',
@@ -426,7 +418,7 @@
 				isErrorDialog: false,
 
 				/**
-				 * Variables responsible for displaying the progress bar: includes the current label,
+				 * Variables responsible for displaying the progress bar: includes the current label, 
 				 * the current progress and whether it should be displayed.
 				 */
 				dataPB: {
@@ -532,7 +524,7 @@
 			this.$eventHub.emit('hideDataSystems', true)
 			// Check current maintenance progress
 			this.checkProgress(null, true)
-
+			
 			this.fetchData()
 		},
 
@@ -635,7 +627,7 @@
 				QUtils.log("Request", apiUrl);
 				QUtils.FetchData(apiUrl).done((data) => {
 					QUtils.log("Request - OK (Maintenance - Cancel Reindexation)", data)
-					if(!data.Success) {
+					if(!data.Success) {						
 						const message = this.Resources.THERE_HAS_BEEN_AN_ER33167 + ":<br />"
 						+ data.Message
 						this.setDialog(message, null, true)
@@ -667,7 +659,7 @@
 							this.dataPB.progress = data.Count
 							this.dataPB.show = true
 						}
-
+						
 						setTimeout(() => this.checkProgress(callBack), 500)
 						return
 					}

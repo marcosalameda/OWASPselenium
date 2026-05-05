@@ -1,4 +1,4 @@
-﻿/* eslint-disable @typescript-eslint/no-unused-vars */
+﻿/* eslint-disable no-unused-vars */
 import { computed, reactive, watch } from 'vue'
 import _merge from 'lodash-es/merge'
 
@@ -11,7 +11,7 @@ import netAPI from '@quidgest/clientapp/network'
 import qApi from '@/api/genio/quidgestFunctions.js'
 import qFunctions from '@/api/genio/projectFunctions.js'
 import qProjArrays from '@/api/genio/projectArrays.js'
-/* eslint-enable @typescript-eslint/no-unused-vars */
+/* eslint-enable no-unused-vars */
 
 /**
  * Represents a ViewModel class.
@@ -25,11 +25,11 @@ export default class ViewModel extends FormViewModelBase
 	 * @param {object} options - The options for the ViewModel
 	 * @param {object} values - A ViewModel instance to copy values from
 	 */
-	// eslint-disable-next-line @typescript-eslint/no-unused-vars
+	// eslint-disable-next-line no-unused-vars
 	constructor(vueContext, options, values)
 	{
 		super(vueContext, options)
-		// eslint-disable-next-line @typescript-eslint/no-unused-vars
+		// eslint-disable-next-line no-unused-vars
 		const vm = this.vueContext
 
 		// The view model metadata
@@ -37,9 +37,8 @@ export default class ViewModel extends FormViewModelBase
 			name: 'ARTGL',
 			area: 'GITEM',
 			actions: {
-				recalculateFormulas: 'RecalculateFormulas_Artgl',
-				updateFilesTickets: 'UpdateFilesTicketsArtgl',
-				setFile: 'SetFileArtgl'
+				recalculateFormulas: 'RecalculateFormulas_ARTGL',
+				updateFilesTickets: 'UpdateFilesTicketsARTGL'
 			}
 		})
 
@@ -51,7 +50,7 @@ export default class ViewModel extends FormViewModelBase
 			field: 'CODGITEM',
 			description: '',
 		}).cloneFrom(values?.ValCodgitem))
-		this.stopWatchers.push(watch(() => this.ValCodgitem.value, (newValue, oldValue) => this.onUpdate('gitem.codgitem', this.ValCodgitem, newValue, oldValue)))
+		watch(() => this.ValCodgitem.value, (newValue, oldValue) => this.onUpdate('gitem.codgitem', this.ValCodgitem, newValue, oldValue))
 
 		/** The remaining form fields. */
 		this.ValItemdes = reactive(new modelFieldType.String({
@@ -62,7 +61,7 @@ export default class ViewModel extends FormViewModelBase
 			maxLength: 85,
 			description: computed(() => this.Resources.GLOBAL_ARTICLE63861),
 		}).cloneFrom(values?.ValItemdes))
-		this.stopWatchers.push(watch(() => this.ValItemdes.value, (newValue, oldValue) => this.onUpdate('gitem.itemdes', this.ValItemdes, newValue, oldValue)))
+		watch(() => this.ValItemdes.value, (newValue, oldValue) => this.onUpdate('gitem.itemdes', this.ValItemdes, newValue, oldValue))
 
 		this.ValItemgcod = reactive(new modelFieldType.String({
 			id: 'ValItemgcod',
@@ -72,7 +71,7 @@ export default class ViewModel extends FormViewModelBase
 			maxLength: 15,
 			description: computed(() => this.Resources.CODE49225),
 		}).cloneFrom(values?.ValItemgcod))
-		this.stopWatchers.push(watch(() => this.ValItemgcod.value, (newValue, oldValue) => this.onUpdate('gitem.itemgcod', this.ValItemgcod, newValue, oldValue)))
+		watch(() => this.ValItemgcod.value, (newValue, oldValue) => this.onUpdate('gitem.itemgcod', this.ValItemgcod, newValue, oldValue))
 
 		this.ValDocument = reactive(new modelFieldType.Document({
 			id: 'ValDocument',
@@ -84,7 +83,7 @@ export default class ViewModel extends FormViewModelBase
 			currentDocument: computed(() => this.ValDocumentData),
 			description: computed(() => this.Resources.DOCUMENT00695),
 		}).cloneFrom(values?.ValDocument))
-		this.stopWatchers.push(watch(() => this.ValDocument.value, (newValue, oldValue) => this.onUpdate('gitem.document', this.ValDocument, newValue, oldValue)))
+		watch(() => this.ValDocument.value, (newValue, oldValue) => this.onUpdate('gitem.document', this.ValDocument, newValue, oldValue))
 
 		this.ValDocumentPropertiesVM = reactive(new modelFieldType.Base({
 			id: 'ValDocumentPropertiesVM',
@@ -97,15 +96,14 @@ export default class ViewModel extends FormViewModelBase
 			area: 'GITEM',
 			field: 'DOCUMENTFK'
 		}).cloneFrom(values?.ValDocumentfk))
-		this.stopWatchers.push(watch(() => this.ValDocumentfk.value, (newValue, oldValue) => this.onUpdate('gitem.documentfk', this.ValDocumentfk, newValue, oldValue)))
-
+		watch(() => this.ValDocumentfk.value, (newValue, oldValue) => this.onUpdate('gitem.documentfk', this.ValDocumentfk, newValue, oldValue))
 		this.ValDocumentData = reactive(new modelFieldType.DocumentData({
 			id: 'ValDocumentData',
 			area: 'GITEM',
 			field: 'DOCUMENTDATA',
 			ignoreFldSubmit: true
 		}).cloneFrom(values?.ValDocumentData))
-		this.stopWatchers.push(watch(() => this.ValDocumentData.value, (newValue, oldValue) => this.onUpdate('gitem.documentdata', this.ValDocumentData, newValue, oldValue), { deep: true }))
+		watch(() => this.ValDocumentData.value, (newValue, oldValue) => this.onUpdate('gitem.documentdata', this.ValDocumentData, newValue, oldValue), { deep: true })
 	}
 
 	/**

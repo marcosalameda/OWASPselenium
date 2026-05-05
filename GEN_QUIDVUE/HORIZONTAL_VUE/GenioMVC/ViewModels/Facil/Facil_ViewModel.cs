@@ -1,20 +1,20 @@
-﻿using CSGenio.business;
-using CSGenio.framework;
-using CSGenio.persistence;
-using GenioMVC.Helpers;
-using GenioMVC.Models.Exception;
-using GenioMVC.Models.Navigation;
+﻿using JsonIgnoreAttribute = System.Text.Json.Serialization.JsonIgnoreAttribute;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Quidgest.Persistence;
-using Quidgest.Persistence.GenericQuery;
-
 using System.Collections;
 using System.Collections.Concurrent;
 using System.Collections.Specialized;
 using System.ComponentModel.DataAnnotations;
 using System.Data;
 using System.Globalization;
-using System.Text.Json.Serialization;
+
+using CSGenio.business;
+using CSGenio.framework;
+using CSGenio.persistence;
+using GenioMVC.Helpers;
+using GenioMVC.Models.Exception;
+using GenioMVC.Models.Navigation;
+using Quidgest.Persistence;
+using Quidgest.Persistence.GenericQuery;
 
 namespace GenioMVC.ViewModels.Facil
 {
@@ -31,6 +31,11 @@ namespace GenioMVC.ViewModels.Facil
 
 		#region Foreign keys
 		/// <summary>
+		/// Title: "" | Type: "CE"
+		/// </summary>
+		[ValidateSetAccess]
+		public string ValCodcntry { get; set; }
+		/// <summary>
 		/// Title: "Legal name" | Type: "CE"
 		/// </summary>
 		public string ValCodentit { get; set; }
@@ -40,7 +45,6 @@ namespace GenioMVC.ViewModels.Facil
 		public string ValCodfacty { get; set; }
 
 		#endregion
-
 		/// <summary>
 		/// Title: "Legal name" | Type: "C"
 		/// </summary>
@@ -225,6 +229,7 @@ namespace GenioMVC.ViewModels.Facil
 
 			try
 			{
+				ValCodcntry = ViewModelConversion.ToString(m.ValCodcntry);
 				ValCodentit = ViewModelConversion.ToString(m.ValCodentit);
 				ValCodfacty = ViewModelConversion.ToString(m.ValCodfacty);
 				ValIncorpor = ViewModelConversion.ToDateTime(m.ValIncorpor);
@@ -275,6 +280,15 @@ namespace GenioMVC.ViewModels.Facil
 				m.ValLongitud = ViewModelConversion.ToNumeric(ValLongitud);
 				m.ValGeocoori = ViewModelConversion.ToString(ValGeocoori);
 				m.ValCodfacil = ViewModelConversion.ToString(ValCodfacil);
+
+				/*
+					At this moment, in the case of runtime calculation of server-side formulas, to improve performance and reduce database load,
+						the values coming from the client-side will be accepted as valid, since they will not be saved and are only being used for calculation.
+				*/
+				if (!HasDisabledUserValuesSecurity)
+					return;
+
+				m.ValCodcntry = ViewModelConversion.ToString(ValCodcntry);
 			}
 			catch (Exception)
 			{
@@ -283,7 +297,12 @@ namespace GenioMVC.ViewModels.Facil
 			}
 		}
 
-		/// <inheritdoc />
+		/// <summary>
+		/// Sets the value of a single property of the view model based on the provided table and field names.
+		/// </summary>
+		/// <param name="fullFieldName">The full field name in the format "table.field".</param>
+		/// <param name="value">The field value.</param>
+		/// <exception cref="ArgumentNullException">Thrown if <paramref name="fullFieldName"/> is null.</exception>
 		public override void SetViewModelValue(string fullFieldName, object value)
 		{
 			try
@@ -385,17 +404,6 @@ namespace GenioMVC.ViewModels.Facil
 				// Conexão deve estar aberta de fora. Podem haver formulas que utilizam funções "manuais".
 				// TODO: It needs to be analyzed whether we should disable the security of field filling here. If there is any case where the field with the block condition can only be calculated after the double calculation of the formulas.
 				MapToModel(Model);
-
-				// If it's inserting or duplicating, needs to fill the default values.
-				if (Navigation.CurrentLevel.FormMode == FormMode.New || Navigation.CurrentLevel.FormMode == FormMode.Duplicate)
-				{
-					FunctionType funcType = Navigation.CurrentLevel.FormMode == FormMode.New
-						? FunctionType.INS
-						: FunctionType.DUP;
-
-					Model.baseklass.fillValuesDefault(m_userContext.PersistentSupport, funcType);
-				}
-
 				// Preencher operações internas
 				Model.klass.fillInternalOperations(m_userContext.PersistentSupport, oldvalues);
 				MapFromModel(Model);
@@ -439,7 +447,6 @@ namespace GenioMVC.ViewModels.Facil
 
 			Load_Facil___entitname____(qs, lazyLoad);
 			Load_Facil___factytype____(qs, lazyLoad);
-
 // USE /[MANUAL GQT VIEWMODEL_LOADPARTIAL FACIL]/
 		}
 
@@ -510,7 +517,10 @@ namespace GenioMVC.ViewModels.Facil
 				}
 			}
 
-			TableEntitName = new TableDBEdit<Models.Entit>();
+			TableEntitName = new TableDBEdit<Models.Entit>
+			{
+				IsLazyLoad = lazyLoad
+			};
 
 			if (lazyLoad)
 			{
@@ -525,7 +535,7 @@ namespace GenioMVC.ViewModels.Facil
 
 			if (facil___entitname____DoLoad)
 			{
-				List<ColumnSort> sorts = [];
+				List<ColumnSort> sorts = new List<ColumnSort>();
 				ColumnSort requestedSort = GetRequestSort(TableEntitName, "sTableEntitName", "dTableEntitName", qs, "entit");
 				if (requestedSort != null)
 					sorts.Add(requestedSort);
@@ -575,7 +585,7 @@ namespace GenioMVC.ViewModels.Facil
 
 				TableEntitName.SetPagination(page, numberItems, listing.HasMore, listing.GetTotal, listing.TotalRecords);
 				TableEntitName.Query = query;
-				TableEntitName.Elements = listing.RowsForViewModel((r) => new GenioMVC.Models.Entit(m_userContext, r, true, _fieldsToSerialize_FACIL___ENTITNAME____));
+				TableEntitName.Elements = listing.RowsForViewModel<GenioMVC.Models.Entit>((r) => new GenioMVC.Models.Entit(m_userContext, r, true, _fieldsToSerialize_FACIL___ENTITNAME____));
 
 				//created by [ MH ] at [ 14.04.2016 ] - Foi alterada a forma de retornar a key do novo registo inserido / editado no form de apoio do DBEdit.
 				//last update by [ MH ] at [ 10.05.2016 ] - Validação se key encontra-se no level atual, as chaves dos niveis anteriores devem ser ignorados.
@@ -697,7 +707,10 @@ namespace GenioMVC.ViewModels.Facil
 				}
 			}
 
-			TableFactyType = new TableDBEdit<Models.Facty>();
+			TableFactyType = new TableDBEdit<Models.Facty>
+			{
+				IsLazyLoad = lazyLoad
+			};
 
 			if (lazyLoad)
 			{
@@ -712,7 +725,7 @@ namespace GenioMVC.ViewModels.Facil
 
 			if (facil___factytype____DoLoad)
 			{
-				List<ColumnSort> sorts = [];
+				List<ColumnSort> sorts = new List<ColumnSort>();
 				ColumnSort requestedSort = GetRequestSort(TableFactyType, "sTableFactyType", "dTableFactyType", qs, "facty");
 				if (requestedSort != null)
 					sorts.Add(requestedSort);
@@ -762,7 +775,7 @@ namespace GenioMVC.ViewModels.Facil
 
 				TableFactyType.SetPagination(page, numberItems, listing.HasMore, listing.GetTotal, listing.TotalRecords);
 				TableFactyType.Query = query;
-				TableFactyType.Elements = listing.RowsForViewModel((r) => new GenioMVC.Models.Facty(m_userContext, r, true, _fieldsToSerialize_FACIL___FACTYTYPE____));
+				TableFactyType.Elements = listing.RowsForViewModel<GenioMVC.Models.Facty>((r) => new GenioMVC.Models.Facty(m_userContext, r, true, _fieldsToSerialize_FACIL___FACTYTYPE____));
 
 				//created by [ MH ] at [ 14.04.2016 ] - Foi alterada a forma de retornar a key do novo registo inserido / editado no form de apoio do DBEdit.
 				//last update by [ MH ] at [ 10.05.2016 ] - Validação se key encontra-se no level atual, as chaves dos niveis anteriores devem ser ignorados.
@@ -870,6 +883,7 @@ namespace GenioMVC.ViewModels.Facil
 		{
 			return identifier switch
 			{
+				"facil.codcntry" => ViewModelConversion.ToString(modelValue),
 				"facil.codentit" => ViewModelConversion.ToString(modelValue),
 				"facil.codfacty" => ViewModelConversion.ToString(modelValue),
 				"facil.incorpor" => ViewModelConversion.ToDateTime(modelValue),

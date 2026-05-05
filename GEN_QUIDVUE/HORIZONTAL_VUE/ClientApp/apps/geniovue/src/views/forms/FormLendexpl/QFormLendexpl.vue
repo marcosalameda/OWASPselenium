@@ -38,16 +38,9 @@
 									:label="btn.label"
 									:disabled="btn.disabled"
 									@click="btn.action">
-									<template v-if="btn.icon">
-										<q-badge-indicator
-											v-if="btn.badge && btn.badge.isVisible"
-											:color="btn.badge.color">
-											<q-icon v-bind="btn.icon" />
-										</q-badge-indicator>
-										<q-icon
-											v-else
-											v-bind="btn.icon" />
-									</template>
+									<q-icon
+										v-if="btn.icon"
+										v-bind="btn.icon" />
 								</q-toggle-group-item>
 							</template>
 						</q-toggle-group>
@@ -59,7 +52,7 @@
 				v-if="$app.layout.FormAnchorsPosition === 'form-header' && visibleGroups.length > 0"
 				:anchors="anchorGroups"
 				:controls="visibleControls"
-				@focus-control="focusControl" />
+				@focus-control="(...args) => focusControl(...args)" />
 		</div>
 	</teleport>
 
@@ -80,7 +73,6 @@
 						v-if="btn.isActive && btn.isVisible && btn.showInHeading"
 						:id="`heading-${btn.id}`"
 						:label="btn.text"
-						:color="btn.color"
 						:variant="btn.variant"
 						:disabled="btn.disabled"
 						:icon-pos="btn.iconPos"
@@ -94,108 +86,129 @@
 			</q-button-group>
 		</div>
 
-		<q-container
-			fluid
+		<div
+			class="form-flow"
 			data-key="LENDEXPL"
-			:data-loading="!formInitialDataLoaded || !isActiveForm">
+			:data-loading="!formInitialDataLoaded">
 			<template v-if="formControl.initialized && showFormBody">
-				<q-row v-if="controls.LENDEXPLPSEUDNEWGRP01.isVisible">
-					<q-col v-if="controls.LENDEXPLPSEUDNEWGRP01.isVisible">
+				<q-row-container
+					v-show="controls.LENDEXPLPSEUDNEWGRP01.isVisible"
+					is-large>
+					<q-control-wrapper
+						v-show="controls.LENDEXPLPSEUDNEWGRP01.isVisible"
+						class="${Vue.GetControlWrapperClass($controlsColumn)}">
 						<q-group-collapsible
-							v-if="controls.LENDEXPLPSEUDNEWGRP01.isVisible"
 							id="LENDEXPLPSEUDNEWGRP01"
 							v-bind="controls.LENDEXPLPSEUDNEWGRP01"
 							v-on="controls.LENDEXPLPSEUDNEWGRP01.handlers">
 							<!-- Start LENDEXPLPSEUDNEWGRP01 -->
-							<q-row v-if="controls.LENDEXPLPESS1GENDER___FG.isVisible">
-								<q-col
-									v-if="controls.LENDEXPLPESS1GENDER___FG.isVisible"
-									cols="auto">
+							<q-row-container v-show="controls.LENDEXPLPESS1GENDER___FG.isVisible">
+								<q-control-wrapper
+									v-show="controls.LENDEXPLPESS1GENDER___FG.isVisible"
+									class="${Vue.GetControlWrapperClass($controlsColumn)}">
 									<base-input-structure
-										v-if="controls.LENDEXPLPESS1GENDER___FG.isVisible"
 										class="i-text"
 										v-bind="controls.LENDEXPLPESS1GENDER___FG"
 										v-on="controls.LENDEXPLPESS1GENDER___FG.handlers"
 										:loading="controls.LENDEXPLPESS1GENDER___FG.props.loading"
 										:reporting-mode-on="reportingModeCAV"
 										:suggestion-mode-on="suggestionModeOn">
-										<q-filter
-											v-if="controls.LENDEXPLPESS1GENDER___FG.isVisible"
-											v-bind="controls.LENDEXPLPESS1GENDER___FG.props"
-											v-on="controls.LENDEXPLPESS1GENDER___FG.handlers" />
 									</base-input-structure>
-								</q-col>
-							</q-row>
-							<q-row v-if="controls.LENDEXPLEQUIPFREQUENC_FG.isVisible">
-								<q-col
-									v-if="controls.LENDEXPLEQUIPFREQUENC_FG.isVisible"
-									cols="auto">
+								</q-control-wrapper>
+							</q-row-container>
+							<q-row-container v-show="controls.LENDEXPLEQUIPFREQUENC_FG.isVisible">
+								<q-control-wrapper
+									v-show="controls.LENDEXPLEQUIPFREQUENC_FG.isVisible"
+									class="${Vue.GetControlWrapperClass($controlsColumn)}">
 									<base-input-structure
-										v-if="controls.LENDEXPLEQUIPFREQUENC_FG.isVisible"
 										class="i-text"
 										v-bind="controls.LENDEXPLEQUIPFREQUENC_FG"
 										v-on="controls.LENDEXPLEQUIPFREQUENC_FG.handlers"
 										:loading="controls.LENDEXPLEQUIPFREQUENC_FG.props.loading"
 										:reporting-mode-on="reportingModeCAV"
 										:suggestion-mode-on="suggestionModeOn">
-										<q-filter
-											v-if="controls.LENDEXPLEQUIPFREQUENC_FG.isVisible"
-											v-bind="controls.LENDEXPLEQUIPFREQUENC_FG.props"
-											v-on="controls.LENDEXPLEQUIPFREQUENC_FG.handlers" />
 									</base-input-structure>
-								</q-col>
-							</q-row>
+								</q-control-wrapper>
+							</q-row-container>
+							<q-row-container v-show="controls.LENDEXPLEQUIPBOUGHT___FG.isVisible">
+								<q-control-wrapper
+									v-show="controls.LENDEXPLEQUIPBOUGHT___FG.isVisible"
+									class="${Vue.GetControlWrapperClass($controlsColumn)}">
+									<base-input-structure
+										class="i-text"
+										v-bind="controls.LENDEXPLEQUIPBOUGHT___FG"
+										v-on="controls.LENDEXPLEQUIPBOUGHT___FG.handlers"
+										:loading="controls.LENDEXPLEQUIPBOUGHT___FG.props.loading"
+										:reporting-mode-on="reportingModeCAV"
+										:suggestion-mode-on="suggestionModeOn">
+									</base-input-structure>
+								</q-control-wrapper>
+							</q-row-container>
+							<q-row-container v-show="controls.LENDEXPLLENDIRETURNED_FG.isVisible">
+								<q-control-wrapper
+									v-show="controls.LENDEXPLLENDIRETURNED_FG.isVisible"
+									class="${Vue.GetControlWrapperClass($controlsColumn)}">
+									<base-input-structure
+										class="i-text"
+										v-bind="controls.LENDEXPLLENDIRETURNED_FG"
+										v-on="controls.LENDEXPLLENDIRETURNED_FG.handlers"
+										:loading="controls.LENDEXPLLENDIRETURNED_FG.props.loading"
+										:reporting-mode-on="reportingModeCAV"
+										:suggestion-mode-on="suggestionModeOn">
+									</base-input-structure>
+								</q-control-wrapper>
+							</q-row-container>
 							<!-- End LENDEXPLPSEUDNEWGRP01 -->
 						</q-group-collapsible>
-					</q-col>
-				</q-row>
-				<q-row v-if="controls.LENDEXPLPSEUDLENDERS_.isVisible">
-					<q-col v-if="controls.LENDEXPLPSEUDLENDERS_.isVisible">
+					</q-control-wrapper>
+				</q-row-container>
+				<q-row-container
+					v-show="controls.LENDEXPLPSEUDLENDERS_.isVisible"
+					is-large>
+					<q-control-wrapper
+						v-show="controls.LENDEXPLPSEUDLENDERS_.isVisible"
+						class="${Vue.GetControlWrapperClass($controlsColumn)}">
 						<q-table
-							v-if="controls.LENDEXPLPSEUDLENDERS_.isVisible"
+							v-show="controls.LENDEXPLPSEUDLENDERS_.isVisible"
 							v-bind="controls.LENDEXPLPSEUDLENDERS_"
-							v-on="controls.LENDEXPLPSEUDLENDERS_.handlers">
-							<!-- USE /[MANUAL GQT CUSTOM_TABLE LENDEXPLPSEUDLENDERS_]/ -->
-						</q-table>
-						<q-table-extra-extension
-							v-if="controls.LENDEXPLPSEUDLENDERS_.isVisible"
-							:list-ctrl="controls.LENDEXPLPSEUDLENDERS_"
-							:filter-operators="controls.LENDEXPLPSEUDLENDERS_.filterOperators"
 							v-on="controls.LENDEXPLPSEUDLENDERS_.handlers" />
-					</q-col>
-				</q-row>
-				<q-row v-if="controls.LENDEXPLPSEUDEQUIPS__.isVisible">
-					<q-col v-if="controls.LENDEXPLPSEUDEQUIPS__.isVisible">
+						<q-table-extra-extension
+							:list-ctrl="controls.LENDEXPLPSEUDLENDERS_"
+							v-on="controls.LENDEXPLPSEUDLENDERS_.handlers" />
+					</q-control-wrapper>
+				</q-row-container>
+				<q-row-container
+					v-show="controls.LENDEXPLPSEUDEQUIPS__.isVisible"
+					is-large>
+					<q-control-wrapper
+						v-show="controls.LENDEXPLPSEUDEQUIPS__.isVisible"
+						class="${Vue.GetControlWrapperClass($controlsColumn)}">
 						<q-table
-							v-if="controls.LENDEXPLPSEUDEQUIPS__.isVisible"
+							v-show="controls.LENDEXPLPSEUDEQUIPS__.isVisible"
 							v-bind="controls.LENDEXPLPSEUDEQUIPS__"
-							v-on="controls.LENDEXPLPSEUDEQUIPS__.handlers">
-							<!-- USE /[MANUAL GQT CUSTOM_TABLE LENDEXPLPSEUDEQUIPS__]/ -->
-						</q-table>
-						<q-table-extra-extension
-							v-if="controls.LENDEXPLPSEUDEQUIPS__.isVisible"
-							:list-ctrl="controls.LENDEXPLPSEUDEQUIPS__"
-							:filter-operators="controls.LENDEXPLPSEUDEQUIPS__.filterOperators"
 							v-on="controls.LENDEXPLPSEUDEQUIPS__.handlers" />
-					</q-col>
-				</q-row>
-				<q-row v-if="controls.LENDEXPLPSEUDLENDINGS.isVisible">
-					<q-col v-if="controls.LENDEXPLPSEUDLENDINGS.isVisible">
-						<q-table
-							v-if="controls.LENDEXPLPSEUDLENDINGS.isVisible"
-							v-bind="controls.LENDEXPLPSEUDLENDINGS"
-							v-on="controls.LENDEXPLPSEUDLENDINGS.handlers">
-							<!-- USE /[MANUAL GQT CUSTOM_TABLE LENDEXPLPSEUDLENDINGS]/ -->
-						</q-table>
 						<q-table-extra-extension
-							v-if="controls.LENDEXPLPSEUDLENDINGS.isVisible"
-							:list-ctrl="controls.LENDEXPLPSEUDLENDINGS"
-							:filter-operators="controls.LENDEXPLPSEUDLENDINGS.filterOperators"
+							:list-ctrl="controls.LENDEXPLPSEUDEQUIPS__"
+							v-on="controls.LENDEXPLPSEUDEQUIPS__.handlers" />
+					</q-control-wrapper>
+				</q-row-container>
+				<q-row-container
+					v-show="controls.LENDEXPLPSEUDLENDINGS.isVisible"
+					is-large>
+					<q-control-wrapper
+						v-show="controls.LENDEXPLPSEUDLENDINGS.isVisible"
+						class="${Vue.GetControlWrapperClass($controlsColumn)}">
+						<q-table
+							v-show="controls.LENDEXPLPSEUDLENDINGS.isVisible"
+							v-bind="controls.LENDEXPLPSEUDLENDINGS"
 							v-on="controls.LENDEXPLPSEUDLENDINGS.handlers" />
-					</q-col>
-				</q-row>
+						<q-table-extra-extension
+							:list-ctrl="controls.LENDEXPLPSEUDLENDINGS"
+							v-on="controls.LENDEXPLPSEUDLENDINGS.handlers" />
+					</q-control-wrapper>
+				</q-row-container>
 			</template>
-		</q-container>
+		</div>
 	</teleport>
 
 	<hr v-if="!isPopup && showFormFooter" />
@@ -204,7 +217,7 @@
 		v-if="formModalIsReady && showFormFooter"
 		:to="`#${uiContainersId.footer}`"
 		:disabled="!isPopup || isNested">
-		<q-row v-if="showFormFooter">
+		<q-row-container v-if="showFormFooter">
 			<div id="footer-action-btns">
 				<template
 					v-for="btn in formButtons"
@@ -213,7 +226,6 @@
 						v-if="btn.isActive && btn.isVisible && btn.showInFooter"
 						:id="`bottom-${btn.id}`"
 						:label="btn.text"
-						:color="btn.color"
 						:variant="btn.variant"
 						:disabled="btn.disabled"
 						:icon-pos="btn.iconPos"
@@ -225,12 +237,12 @@
 					</q-button>
 				</template>
 			</div>
-		</q-row>
+		</q-row-container>
 	</teleport>
 </template>
 
 <script>
-	/* eslint-disable @typescript-eslint/no-unused-vars */
+	/* eslint-disable no-unused-vars */
 	import { computed, defineAsyncComponent, readonly } from 'vue'
 	import { useRoute } from 'vue-router'
 
@@ -250,7 +262,7 @@
 	import qApi from '@/api/genio/quidgestFunctions.js'
 	import qFunctions from '@/api/genio/projectFunctions.js'
 	import qProjArrays from '@/api/genio/projectArrays.js'
-	/* eslint-enable @typescript-eslint/no-unused-vars */
+	/* eslint-enable no-unused-vars */
 
 	import FormViewModel from './QFormLendexplViewModel.js'
 
@@ -323,12 +335,10 @@
 					type: 'normal',
 					name: 'LENDEXPL',
 					route: 'form-LENDEXPL',
-					isEmptyForm: true,
 					area: 'Home',
 					designation: computed(() => this.Resources.EXPLORE_LENDINGS62734),
 					identifier: '', // Unique identifier received by route (when it's nested).
-					mode: '',
-					availableAgents: [],
+					mode: ''
 				},
 
 				formButtons: {
@@ -498,15 +508,15 @@
 						label: computed(() => this.Resources.FILTERING18019),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						startsExpanded: false,
 						isCollapsible: true,
 						anchored: false,
-						directChildren: ['LENDEXPLPESS1GENDER___FG', 'LENDEXPLEQUIPFREQUENC_FG', 'LENDEXPLEQUIPBOUGHT__', 'LENDEXPLLENDIRETURNED'],
+						directChildren: ['LENDEXPLPESS1GENDER___FG', 'LENDEXPLEQUIPFREQUENC_FG', 'LENDEXPLEQUIPBOUGHT___FG', 'LENDEXPLLENDIRETURNED_FG'],
 						controlLimits: [
 						],
 					}, this),
-					LENDEXPLPESS1GENDER___FG: new fieldControlClass.FormFilterControl({
-						modelField: 'ValGender',
+					LENDEXPLPESS1GENDER___FG: new fieldControlClass.Control({
+						modelField: 'Pess1ValGender',
+						valueChangeEvent: 'fieldChange:pess1.gender',
 						id: 'LENDEXPLPESS1GENDER___FG',
 						name: 'GENDER',
 						size: 'medium',
@@ -514,16 +524,15 @@
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'LENDEXPLPSEUDNEWGRP01',
-						filterViewMode: 'checkbox',
-						columns: 0,
 						arrayName: 'Genero',
-						helpShortItem: '',
-						helpDetailedItem: '',
+						helpShortItem: 'None',
+						helpDetailedItem: 'None',
 						controlLimits: [
 						],
 					}, this),
-					LENDEXPLEQUIPFREQUENC_FG: new fieldControlClass.FormFilterControl({
-						modelField: 'ValFrequenc',
+					LENDEXPLEQUIPFREQUENC_FG: new fieldControlClass.Control({
+						modelField: 'EquipValFrequenc',
+						valueChangeEvent: 'fieldChange:equip.frequenc',
 						id: 'LENDEXPLEQUIPFREQUENC_FG',
 						name: 'FREQUENC',
 						size: 'large',
@@ -537,38 +546,35 @@
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'LENDEXPLPSEUDNEWGRP01',
-						filterViewMode: 'checkbox',
-						columns: 0,
-						orientation: 'horizontal',
 						arrayName: 'FreqEmpr',
-						helpShortItem: '',
-						helpDetailedItem: '',
+						helpShortItem: 'None',
+						helpDetailedItem: 'None',
 						controlLimits: [
 						],
 					}, this),
-					LENDEXPLEQUIPBOUGHT__: new fieldControlClass.BooleanControl({
-						modelField: 'ValBought',
+					LENDEXPLEQUIPBOUGHT___FG: new fieldControlClass.Control({
+						modelField: 'EquipValBought',
 						valueChangeEvent: 'fieldChange:equip.bought',
-						id: 'LENDEXPLEQUIPBOUGHT__',
+						id: 'LENDEXPLEQUIPBOUGHT___FG',
 						name: 'BOUGHT',
 						size: 'medium',
 						label: computed(() => this.Resources.EQUIPMENT__BOUGHT19410),
 						placeholder: '',
-						labelPosition: computed(() => this.$app.layout.CheckboxLabelAlignment),
+						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'LENDEXPLPSEUDNEWGRP01',
 						isFormulaBlocked: true,
 						controlLimits: [
 						],
 					}, this),
-					LENDEXPLLENDIRETURNED: new fieldControlClass.BooleanControl({
-						modelField: 'ValReturned',
+					LENDEXPLLENDIRETURNED_FG: new fieldControlClass.Control({
+						modelField: 'LendiValReturned',
 						valueChangeEvent: 'fieldChange:lendi.returned',
-						id: 'LENDEXPLLENDIRETURNED',
+						id: 'LENDEXPLLENDIRETURNED_FG',
 						name: 'RETURNED',
 						size: 'medium',
 						label: computed(() => this.Resources.LENDING__RETURNED20063),
 						placeholder: '',
-						labelPosition: computed(() => this.$app.layout.CheckboxLabelAlignment),
+						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'LENDEXPLPSEUDNEWGRP01',
 						isFormulaBlocked: true,
 						controlLimits: [
@@ -596,7 +602,6 @@
 								scrollData: 3,
 								sortable: false,
 								searchable: false,
-								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 2,
@@ -606,7 +611,6 @@
 								label: computed(() => this.Resources.NAME31974),
 								dataLength: 85,
 								scrollData: 30,
-								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.ArrayColumn({
 								order: 3,
@@ -616,8 +620,7 @@
 								label: computed(() => this.Resources.GENRE63303),
 								dataLength: 1,
 								scrollData: 1,
-								export: 1,
-								array: computed(() => new qProjArrays.QArrayGenero(vm.$getResource).elements),
+								array: computed(() => qProjArrays.QArrayGenero.setResources(vm.$getResource).elements),
 								arrayType: qProjArrays.QArrayGenero.type,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 						],
@@ -634,7 +637,8 @@
 							permissions: {
 							},
 							searchBarConfig: {
-								visibility: false
+								visibility: false,
+								searchOnPressEnter: true
 							},
 							filtersVisible: false,
 							allowColumnFilters: false,
@@ -659,13 +663,7 @@
 							}
 						},
 						globalEvents: ['changed-PESS1', 'changed-CATE2', 'changed-STAKE', 'changed-CMPNY'],
-						internalEvents: ['filterChange:pess1.gender'],
-						globalFilters: [
-							{
-								identifier: 'pess1.gender',
-								getValue: () => this.model?.ValGender?.value
-							},
-						],
+						internalEvents: ['fieldChange:pess1.gender'],
 						uuid: 'Lendexpl_ValLenders',
 						allSelectedRows: 'false',
 						controlLimits: [
@@ -691,7 +689,6 @@
 								label: computed(() => this.Resources.DESIGNATION35876),
 								dataLength: 85,
 								scrollData: 30,
-								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.ArrayColumn({
 								order: 2,
@@ -702,8 +699,7 @@
 								scrollData: 2,
 								maxDigits: 2,
 								decimalPlaces: 0,
-								export: 1,
-								array: computed(() => new qProjArrays.QArrayFreqempr(vm.$getResource).elements),
+								array: computed(() => qProjArrays.QArrayFreqempr.setResources(vm.$getResource).elements),
 								arrayType: qProjArrays.QArrayFreqempr.type,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.BooleanColumn({
@@ -713,7 +709,6 @@
 								field: 'BOUGHT',
 								label: computed(() => this.Resources.BOUGHT32044),
 								scrollData: 1,
-								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.ArrayColumn({
 								order: 4,
@@ -723,8 +718,7 @@
 								label: computed(() => this.Resources.LENDER__GENDER58296),
 								dataLength: 1,
 								scrollData: 1,
-								export: 1,
-								array: computed(() => new qProjArrays.QArrayGenero(vm.$getResource).elements),
+								array: computed(() => qProjArrays.QArrayGenero.setResources(vm.$getResource).elements),
 								arrayType: qProjArrays.QArrayGenero.type,
 								arrayDisplayMode: 'D',
 								pkColumn: 'ValCodpesso',
@@ -743,7 +737,8 @@
 							permissions: {
 							},
 							searchBarConfig: {
-								visibility: false
+								visibility: false,
+								searchOnPressEnter: true
 							},
 							filtersVisible: false,
 							allowColumnFilters: false,
@@ -767,18 +762,8 @@
 								sortOrder: 'asc'
 							}
 						},
-						globalEvents: ['changed-PESS1', 'changed-TPEQU', 'changed-ROOM1', 'changed-WAREH', 'changed-EQUIP', 'changed-CMPNY', 'changed-ITEM', 'changed-DECOM'],
-						internalEvents: ['filterChange:pess1.gender', 'filterChange:equip.frequenc'],
-						globalFilters: [
-							{
-								identifier: 'pess1.gender',
-								getValue: () => this.model?.ValGender?.value
-							},
-							{
-								identifier: 'equip.frequenc',
-								getValue: () => this.model?.ValFrequenc?.value
-							},
-						],
+						globalEvents: ['changed-TPEQU', 'changed-ROOM1', 'changed-CMPNY', 'changed-EQUIP', 'changed-WAREH', 'changed-ITEM', 'changed-DECOM', 'changed-PESS1'],
+						internalEvents: ['fieldChange:pess1.gender', 'fieldChange:equip.frequenc', 'fieldChange:equip.bought'],
 						uuid: 'Lendexpl_ValEquips',
 						allSelectedRows: 'false',
 						controlLimits: [
@@ -805,7 +790,6 @@
 								scrollData: 6,
 								maxDigits: 6,
 								decimalPlaces: 0,
-								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.BooleanColumn({
 								order: 2,
@@ -814,7 +798,6 @@
 								field: 'RETURNED',
 								label: computed(() => this.Resources.RETURNED01606),
 								scrollData: 1,
-								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.ArrayColumn({
 								order: 3,
@@ -825,8 +808,7 @@
 								scrollData: 2,
 								maxDigits: 2,
 								decimalPlaces: 0,
-								export: 1,
-								array: computed(() => new qProjArrays.QArrayFreqempr(vm.$getResource).elements),
+								array: computed(() => qProjArrays.QArrayFreqempr.setResources(vm.$getResource).elements),
 								arrayType: qProjArrays.QArrayFreqempr.type,
 								arrayDisplayMode: 'D',
 								pkColumn: 'ValCodequip',
@@ -838,7 +820,6 @@
 								field: 'BOUGHT',
 								label: computed(() => this.Resources.EQUIP__BOUGHT47638),
 								scrollData: 1,
-								export: 1,
 								pkColumn: 'ValCodequip',
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.ArrayColumn({
@@ -849,8 +830,7 @@
 								label: computed(() => this.Resources.LENDER__GENDER58296),
 								dataLength: 1,
 								scrollData: 1,
-								export: 1,
-								array: computed(() => new qProjArrays.QArrayGenero(vm.$getResource).elements),
+								array: computed(() => qProjArrays.QArrayGenero.setResources(vm.$getResource).elements),
 								arrayType: qProjArrays.QArrayGenero.type,
 								arrayDisplayMode: 'D',
 								pkColumn: 'ValCodpesso',
@@ -869,7 +849,8 @@
 							permissions: {
 							},
 							searchBarConfig: {
-								visibility: false
+								visibility: false,
+								searchOnPressEnter: true
 							},
 							filtersVisible: false,
 							allowColumnFilters: false,
@@ -893,18 +874,8 @@
 								sortOrder: 'asc'
 							}
 						},
-						globalEvents: ['changed-PESS2', 'changed-LENDI', 'changed-PESS1', 'changed-EQUIP'],
-						internalEvents: ['filterChange:pess1.gender', 'filterChange:equip.frequenc'],
-						globalFilters: [
-							{
-								identifier: 'pess1.gender',
-								getValue: () => this.model?.ValGender?.value
-							},
-							{
-								identifier: 'equip.frequenc',
-								getValue: () => this.model?.ValFrequenc?.value
-							},
-						],
+						globalEvents: ['changed-LENDI', 'changed-PESS1', 'changed-EQUIP', 'changed-PESS2'],
+						internalEvents: ['fieldChange:pess1.gender', 'fieldChange:equip.frequenc', 'fieldChange:equip.bought', 'fieldChange:lendi.returned'],
 						uuid: 'Lendexpl_ValLendings',
 						allSelectedRows: 'false',
 						controlLimits: [
@@ -937,18 +908,18 @@
 				 */
 				dataApi: {
 					Equip: {
-						get ValBought() { return vm.model.ValBought.value },
-						set ValBought(value) { vm.model.ValBought.updateValue(value) },
-						get ValFrequenc() { return vm.model.ValFrequenc.value },
-						set ValFrequenc(value) { vm.model.ValFrequenc.updateValue(value) },
+						get ValBought() { return vm.model.EquipValBought.value },
+						set ValBought(value) { vm.model.EquipValBought.updateValue(value) },
+						get ValFrequenc() { return vm.model.EquipValFrequenc.value },
+						set ValFrequenc(value) { vm.model.EquipValFrequenc.updateValue(value) },
 					},
 					Lendi: {
-						get ValReturned() { return vm.model.ValReturned.value },
-						set ValReturned(value) { vm.model.ValReturned.updateValue(value) },
+						get ValReturned() { return vm.model.LendiValReturned.value },
+						set ValReturned(value) { vm.model.LendiValReturned.updateValue(value) },
 					},
 					Pess1: {
-						get ValGender() { return vm.model.ValGender.value },
-						set ValGender(value) { vm.model.ValGender.updateValue(value) },
+						get ValGender() { return vm.model.Pess1ValGender.value },
+						set ValGender(value) { vm.model.Pess1ValGender.updateValue(value) },
 					},
 					keys: {
 					},
@@ -995,23 +966,17 @@
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 		},
 
-		beforeUnmount()
-		{
-/* eslint-disable indent, vue/html-indent, vue/script-indent */
-// USE /[MANUAL GQT COMPONENT_BEFORE_UNMOUNT LENDEXPL]/
-// eslint-disable-next-line
-/* eslint-enable indent, vue/html-indent, vue/script-indent */
-		},
-
 		methods: {
 			/**
 			 * Called before form init.
 			 */
 			async beforeLoad()
 			{
+				let loadForm = true
+
 				// Execute the "Before init" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.beforeInit)
-				for (const trigger of triggers)
+				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
 				this.emitEvent('before-load-form')
@@ -1021,7 +986,7 @@
 // eslint-disable-next-line
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 
-				return true
+				return loadForm
 			},
 
 			/**
@@ -1031,7 +996,7 @@
 			{
 				// Execute the "After init" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.afterInit)
-				for (const trigger of triggers)
+				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
 				this.emitEvent('after-load-form')
@@ -1051,33 +1016,19 @@
 
 				// Execute the "Before apply" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.beforeApply)
-				for (const trigger of triggers)
+				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
-				const ticketsPromise = this.model.updateFilesTickets(true)
-				this.addBusy(ticketsPromise, this.Resources[hardcodedTexts.processing])
-				const canSetDocums = await ticketsPromise
+				const canSetDocums = await this.model.updateFilesTickets(true)
 
 				if (canSetDocums)
 				{
-					let results
-					const changesPromise = this.model.setDocumentChanges()
-					this.addBusy(changesPromise, this.Resources[hardcodedTexts.processing])
-					applyForm = await changesPromise
+					applyForm = await this.model.setDocumentChanges()
 
 					if (applyForm)
 					{
-						const insertsPromise = this.model.saveDocuments()
-						this.addBusy(insertsPromise, this.Resources[hardcodedTexts.processing])
-						results = await insertsPromise
+						const results = await this.model.saveDocuments()
 						applyForm = results.every((e) => e === true)
-					}
-
-					if (!changesPromise || (results && !results.every((e) => e === true)))
-					{
-						this.validationErrors = {
-							Erro: this.Resources.OCORREU_UM_ERRO_AO_T51884
-						}
 					}
 				}
 
@@ -1098,7 +1049,7 @@
 			{
 				// Execute the "After apply" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.afterApply)
-				for (const trigger of triggers)
+				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
 				this.emitEvent('after-apply-form')
@@ -1118,33 +1069,19 @@
 
 				// Execute the "Before save" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.beforeSave)
-				for (const trigger of triggers)
+				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
-				const ticketsPromise = this.model.updateFilesTickets()
-				this.addBusy(ticketsPromise, this.Resources[hardcodedTexts.processing])
-				const canSetDocums = await ticketsPromise
+				const canSetDocums = await this.model.updateFilesTickets()
 
 				if (canSetDocums)
 				{
-					let results
-					const changesPromise = this.model.setDocumentChanges()
-					this.addBusy(changesPromise, this.Resources[hardcodedTexts.processing])
-					saveForm = await changesPromise
+					saveForm = await this.model.setDocumentChanges()
 
 					if (saveForm)
 					{
-						const insertsPromise = this.model.saveDocuments()
-						this.addBusy(insertsPromise, this.Resources[hardcodedTexts.processing])
-						results = await insertsPromise
+						const results = await this.model.saveDocuments()
 						saveForm = results.every((e) => e === true)
-					}
-
-					if (!changesPromise || (results && !results.every((e) => e === true)))
-					{
-						this.validationErrors = {
-							Erro: this.Resources.OCORREU_UM_ERRO_AO_T51884
-						}
 					}
 				}
 
@@ -1163,9 +1100,11 @@
 			 */
 			async afterSave()
 			{
+				let redirectPage = true // Set to 'false' to cancel page redirect.
+
 				// Execute the "After save" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.afterSave)
-				for (const trigger of triggers)
+				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
 				this.emitEvent('after-save-form')
@@ -1175,7 +1114,7 @@
 // eslint-disable-next-line
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 
-				return true
+				return redirectPage
 			},
 
 			/**
@@ -1183,6 +1122,8 @@
 			 */
 			async beforeDel()
 			{
+				let deleteForm = true // Set to 'false' to cancel form delete.
+
 				this.emitEvent('before-delete-form')
 
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
@@ -1190,7 +1131,7 @@
 // eslint-disable-next-line
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 
-				return true
+				return deleteForm
 			},
 
 			/**
@@ -1198,6 +1139,8 @@
 			 */
 			async afterDel()
 			{
+				let redirectPage = true // Set to 'false' to cancel page redirect.
+
 				this.emitEvent('after-delete-form')
 
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
@@ -1205,7 +1148,7 @@
 // eslint-disable-next-line
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 
-				return true
+				return redirectPage
 			},
 
 			/**
@@ -1213,9 +1156,11 @@
 			 */
 			async beforeExit()
 			{
+				let leaveForm = true // Set to 'false' to cancel page redirect.
+
 				// Execute the "Before exit" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.beforeExit)
-				for (const trigger of triggers)
+				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
 				this.emitEvent('before-exit-form')
@@ -1225,7 +1170,7 @@
 // eslint-disable-next-line
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 
-				return true
+				return leaveForm
 			},
 
 			/**
@@ -1235,7 +1180,7 @@
 			{
 				// Execute the "After exit" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.afterExit)
-				for (const trigger of triggers)
+				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
 				this.emitEvent('after-exit-form')
@@ -1296,7 +1241,6 @@
 
 				this.afterControlUpdate(controlField, fieldValue)
 			},
-
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
 // USE /[MANUAL GQT FUNCTIONS_JS LENDEXPL]/
 // eslint-disable-next-line

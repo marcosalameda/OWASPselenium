@@ -3,43 +3,15 @@
 		:id="id"
 		:class="['q-table-list', 'q-grid-table-list', { 'q-grid-table-list--readonly': $props.readonly }]"
 		:data-loading="!loaded">
-		<div
-			v-if="config.tableTitle"
-			class="q-table__head row no-gutters justify-content-between">
+		<div class="page-header row no-gutters justify-content-between">
 			<div class="col">
 				<div class="c-action-bar">
-					<div class="c-table__title">
-						<component
-							:is="headerTag"
-							:id="labelId">
-							{{ config.tableTitle }}
-						</component>
+					<div class="table-title c-table__title">
+						<h1>{{ config.tableTitle }}</h1>
 					</div>
-					<q-popover-help
-						v-if="popoverText"
-						:help-control="helpControl"
-						:id="id + 'help-popover-btn'"
-						:label="config.tableTitle"
-						:texts="texts" />
 				</div>
 			</div>
 		</div>
-
-		<q-tooltip-help
-			v-if="tooltipText"
-			:help-control="helpControl"
-			:anchor="anchorId"
-			:label="config.tableTitle" />
-
-		<q-subtitle-help
-			v-if="helpControl"
-			:help-control="helpControl"
-			:id="id + 'help-subtitle'" />
-
-		<q-info-banner-help
-			v-if="hasInfoBanner"
-			:help-control="helpControl"
-			:id="id" />
 
 		<div class="table-responsive-wrapper text-nowrap">
 			<div class="table-responsive">
@@ -86,62 +58,22 @@
 							v-for="model in viewModels"
 							:key="model.uniqueIdentifier">
 							<component
-								v-if="component"
 								:is="component"
 								history-branch-id="main"
 								is-nested
-								:id="model.uniqueIdentifier"
 								:nested-model="model"
+								:id="model.uniqueIdentifier"
 								:mode="rowMode(model)"
 								:initial-state="getRowInitialState(model)"
 								:permissions="permissions"
 								:columns="columns"
 								:is-deleted-state="isRowDeletedState(model)"
-								is-multiple
 								@update:nested-model="rowUpdated(model)"
 								@mark-for-deletion="markForDeletion(model)"
 								@toggle-errors="toggleErrors(model)"
 								@undo-deletion="undoDeletion(model)" />
-							<q-grid-table-row
-								v-else
-								:id="model.uniqueIdentifier"
-								:show-messages="showMessages"
-								:initial-state="getRowInitialState(model)"
-								:is-deleted-state="isRowDeletedState(model)"
-								:mode="rowMode(model)"
-								:nested-model="model"
-								:permissions="permissions"
-								:texts="texts"
-								@mark-for-deletion="markForDeletion(model)"
-								@toggle-errors="toggleErrors(model)"
-								@undo-deletion="undoDeletion(model)">
-								<template #[`actions.prepend`]>
-									<slot
-										name="actions.prepend"
-										:model="model" />
-								</template>
-								<template #actions>
-									<slot
-										name="actions"
-										:model="model" />
-								</template>
-								<template #[`actions.append`]>
-									<slot
-										name="actions.append"
-										:model="model" />
-								</template>
-								<q-grid-table-column
-									v-for="column in visibleColumns"
-									:key="column.order">
-									<slot
-										:name="`column.${column.name}`"
-										:model="model[column.name]"
-										:column="column"
-										:row="model" />
-								</q-grid-table-column>
-							</q-grid-table-row>
 
-							<tr v-if="hasMessages(model) && (showMessages || expandedErrors.includes(model.uniqueIdentifier))">
+							<tr v-if="expandedErrors.includes(model.uniqueIdentifier) && hasMessages(model)">
 								<td
 									class="q-validation-summary-td"
 									:colspan="numVisibleColumns">
@@ -173,7 +105,8 @@
 					</tbody>
 
 					<tfoot v-if="hasColumnTotalizers">
-						<tr class="q-grid-table-list__column-totalizers">
+						<tr
+							class="q-grid-table-list__column-totalizers">
 							<!-- Corresponding to checklist column -->
 							<td>
 								<span>
@@ -196,7 +129,8 @@
 									<q-text-field
 										class="q-grid-table-list__column-totalizers--field"
 										:model-value="column.total"
-										readonly />
+										readonly>
+									</q-text-field>
 								</q-input-group>
 							</td>
 						</tr>
@@ -208,13 +142,7 @@
 </template>
 
 <script>
-	import { defineAsyncComponent } from 'vue'
-
-	import { getHeadingTagNameByLevel } from '@quidgest/clientapp/utils/genericFunctions'
 	import { getColumnTotalValueDisplay, isVisibleColumn } from '@/mixins/listFunctions'
-	import HelpControl from '@/mixins/helpControls.js'
-
-	import QGridTableRow from './QGridTableRow.vue'
 
 	export default {
 		name: 'QGridTableList',
@@ -222,17 +150,6 @@
 		emits: ['row-updated', 'mark-for-deletion', 'undo-deletion'],
 
 		inheritAttrs: false,
-
-		components: {
-			QGridTableRow,
-			QGridTableColumn: defineAsyncComponent(() => import('@/components/inputs/GridBaseInputStructure.vue')),
-			QPopoverHelp: defineAsyncComponent(() => import('@/components/QPopoverHelp.vue')),
-			QTooltipHelp: defineAsyncComponent(() => import('@/components/QTooltipHelp.vue')),
-			QSubtitleHelp: defineAsyncComponent(() => import('@/components/QSubtitleHelp.vue')),
-			QInfoBannerHelp: defineAsyncComponent(() => import('@/components/QInfoBannerHelp.vue'))
-		},
-
-		mixins: [HelpControl],
 
 		props: {
 			/**
@@ -243,14 +160,9 @@
 			/**
 			 * Component name used as a slot to render each row of data within the table.
 			 */
-			component: String,
-
-			/**
-			 * Flag indicating if the label is to be displayed.
-			 */
-			hasLabel: {
-				type: Boolean,
-				default: true
+			component: {
+				type: String,
+				required: true
 			},
 
 			/**
@@ -297,10 +209,7 @@
 			 */
 			permissions: {
 				type: Object,
-				default: () => ({
-					canDelete: true,
-					canInsert: true
-				})
+				default: () => ({})
 			},
 
 			/**
@@ -325,22 +234,6 @@
 			readonly: {
 				type: Boolean,
 				default: false
-			},
-
-			/**
-			 * Whether the error/warning messages should always be visible.
-			 */
-			showMessages: {
-				type: Boolean,
-				default: false
-			},
-
-			/**
-			 * The header level (e.g., h1, h2) used for the table's accessible title region.
-			 */
-			headerLevel: {
-				type: Number,
-				default: 1
 			}
 		},
 
@@ -349,7 +242,6 @@
 		data()
 		{
 			return {
-				controlId: this.id || this.config.name || `q-editable-table-${this._.uid}`,
 				expandedErrors: [],
 				messageTypes: ['error', 'warning', 'info']
 			}
@@ -412,22 +304,6 @@
 			columnsWithTotalizers()
 			{
 				return this.getTotalGridColumnValues()
-			},
-
-			/**
-			 * ID for the table title
-			 */
-			labelId()
-			{
-				return 'label_' + this.id
-			},
-
-			/**
-			 * Define the HTML level tag to be used for the table header.
-			 */
-			headerTag()
-			{
-				return getHeadingTagNameByLevel(this.headerLevel)
 			}
 		},
 
@@ -497,7 +373,7 @@
 			 */
 			toggleErrors(model)
 			{
-				const id = model?.uniqueIdentifier
+				const id = model.uniqueIdentifier
 
 				if (this.expandedErrors.includes(id))
 					this.expandedErrors = this.expandedErrors.filter((errors) => errors !== id)

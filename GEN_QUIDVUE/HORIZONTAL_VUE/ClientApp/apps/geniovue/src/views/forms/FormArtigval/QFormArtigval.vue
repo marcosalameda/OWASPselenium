@@ -9,13 +9,12 @@
 			<div
 				v-if="showFormHeader"
 				class="c-action-bar">
-				<component
+				<h1
 					v-if="formControl.uiComponents.header && formInfo.designation"
-					:is="topHeadingTag"
 					:id="formTitleId"
 					class="form-header">
 					{{ formInfo.designation }}
-				</component>
+				</h1>
 
 				<div class="c-action-bar__menu">
 					<template
@@ -39,13 +38,9 @@
 									:label="btn.label"
 									:disabled="btn.disabled"
 									@click="btn.action">
-									<template v-if="btn.icon">
-										<q-badge-indicator
-											:enabled="btn.badge?.isVisible ?? false"
-											:color="btn.badge?.color">
-											<q-icon v-bind="btn.icon" />
-										</q-badge-indicator>
-									</template>
+									<q-icon
+										v-if="btn.icon"
+										v-bind="btn.icon" />
 								</q-toggle-group-item>
 							</template>
 						</q-toggle-group>
@@ -57,7 +52,7 @@
 				v-if="$app.layout.FormAnchorsPosition === 'form-header' && visibleGroups.length > 0"
 				:anchors="anchorGroups"
 				:controls="visibleControls"
-				@focus-control="focusControl" />
+				@focus-control="(...args) => focusControl(...args)" />
 		</div>
 	</teleport>
 
@@ -78,7 +73,6 @@
 						v-if="btn.isActive && btn.isVisible && btn.showInHeading"
 						:id="`heading-${btn.id}`"
 						:label="btn.text"
-						:color="btn.color"
 						:variant="btn.variant"
 						:disabled="btn.disabled"
 						:icon-pos="btn.iconPos"
@@ -92,21 +86,18 @@
 			</q-button-group>
 		</div>
 
-		<q-container
-			fluid
+		<div
+			class="form-flow"
 			data-key="ARTIGVAL"
-			:data-identifier="primaryKeyValue"
-			:data-loading="!formInitialDataLoaded || !isActiveForm">
+			:data-loading="!formInitialDataLoaded">
 			<template v-if="formControl.initialized && showFormBody">
-				<q-row v-if="controls.ARTIGVALITEM_IMAGE___.isVisible">
-					<q-col
-						v-if="controls.ARTIGVALITEM_IMAGE___.isVisible"
-						cols="auto">
+				<q-row-container v-show="controls.ARTIGVALITEM_IMAGE___.isVisible">
+					<q-control-wrapper
+						v-show="controls.ARTIGVALITEM_IMAGE___.isVisible"
+						class="${Vue.GetControlWrapperClass($controlsColumn)}">
 						<base-input-structure
-							v-if="controls.ARTIGVALITEM_IMAGE___.isVisible"
 							class="q-image"
-							v-bind="controls.ARTIGVALITEM_IMAGE___.wrapperProps"
-							:id="getControlId(controls.ARTIGVALITEM_IMAGE___)"
+							v-bind="controls.ARTIGVALITEM_IMAGE___"
 							v-on="controls.ARTIGVALITEM_IMAGE___.handlers"
 							:loading="controls.ARTIGVALITEM_IMAGE___.props.loading"
 							:reporting-mode-on="reportingModeCAV"
@@ -114,20 +105,17 @@
 							<q-image
 								v-if="controls.ARTIGVALITEM_IMAGE___.isVisible"
 								v-bind="controls.ARTIGVALITEM_IMAGE___.props"
-								:id="getControlId(controls.ARTIGVALITEM_IMAGE___)"
 								v-on="controls.ARTIGVALITEM_IMAGE___.handlers" />
 						</base-input-structure>
-					</q-col>
-				</q-row>
-				<q-row v-if="controls.ARTIGVALGITEMITEMDES_.isVisible">
-					<q-col
-						v-if="controls.ARTIGVALGITEMITEMDES_.isVisible"
-						cols="auto">
+					</q-control-wrapper>
+				</q-row-container>
+				<q-row-container v-show="controls.ARTIGVALGITEMITEMDES_.isVisible">
+					<q-control-wrapper
+						v-show="controls.ARTIGVALGITEMITEMDES_.isVisible"
+						class="${Vue.GetControlWrapperClass($controlsColumn)}">
 						<base-input-structure
-							v-if="controls.ARTIGVALGITEMITEMDES_.isVisible"
 							class="i-text"
-							v-bind="controls.ARTIGVALGITEMITEMDES_.wrapperProps"
-							:id="getControlId(controls.ARTIGVALGITEMITEMDES_)"
+							v-bind="controls.ARTIGVALGITEMITEMDES_"
 							v-on="controls.ARTIGVALGITEMITEMDES_.handlers"
 							:loading="controls.ARTIGVALGITEMITEMDES_.props.loading"
 							:reporting-mode-on="reportingModeCAV"
@@ -135,24 +123,21 @@
 							<q-lookup
 								v-if="controls.ARTIGVALGITEMITEMDES_.isVisible"
 								v-bind="controls.ARTIGVALGITEMITEMDES_.props"
-								:id="getControlId(controls.ARTIGVALGITEMITEMDES_)"
 								v-on="controls.ARTIGVALGITEMITEMDES_.handlers" />
 							<q-see-more-artigvalgitemitemdes
 								v-if="controls.ARTIGVALGITEMITEMDES_.seeMoreIsVisible"
 								v-bind="controls.ARTIGVALGITEMITEMDES_.seeMoreParams"
 								v-on="controls.ARTIGVALGITEMITEMDES_.handlers" />
 						</base-input-structure>
-					</q-col>
-				</q-row>
-				<q-row v-if="controls.ARTIGVALWAREHWAREHDES.isVisible">
-					<q-col
-						v-if="controls.ARTIGVALWAREHWAREHDES.isVisible"
-						cols="auto">
+					</q-control-wrapper>
+				</q-row-container>
+				<q-row-container v-show="controls.ARTIGVALWAREHWAREHDES.isVisible">
+					<q-control-wrapper
+						v-show="controls.ARTIGVALWAREHWAREHDES.isVisible"
+						class="${Vue.GetControlWrapperClass($controlsColumn)}">
 						<base-input-structure
-							v-if="controls.ARTIGVALWAREHWAREHDES.isVisible"
 							class="i-text"
-							v-bind="controls.ARTIGVALWAREHWAREHDES.wrapperProps"
-							:id="getControlId(controls.ARTIGVALWAREHWAREHDES)"
+							v-bind="controls.ARTIGVALWAREHWAREHDES"
 							v-on="controls.ARTIGVALWAREHWAREHDES.handlers"
 							:loading="controls.ARTIGVALWAREHWAREHDES.props.loading"
 							:reporting-mode-on="reportingModeCAV"
@@ -160,24 +145,21 @@
 							<q-lookup
 								v-if="controls.ARTIGVALWAREHWAREHDES.isVisible"
 								v-bind="controls.ARTIGVALWAREHWAREHDES.props"
-								:id="getControlId(controls.ARTIGVALWAREHWAREHDES)"
 								v-on="controls.ARTIGVALWAREHWAREHDES.handlers" />
 							<q-see-more-artigvalwarehwarehdes
 								v-if="controls.ARTIGVALWAREHWAREHDES.seeMoreIsVisible"
 								v-bind="controls.ARTIGVALWAREHWAREHDES.seeMoreParams"
 								v-on="controls.ARTIGVALWAREHWAREHDES.handlers" />
 						</base-input-structure>
-					</q-col>
-				</q-row>
-				<q-row v-if="controls.ARTIGVALITEM_ITEMTYPE.isVisible || controls.ARTIGVALITEM_ITEMCOD_.isVisible">
-					<q-col
-						v-if="controls.ARTIGVALITEM_ITEMTYPE.isVisible"
-						cols="auto">
+					</q-control-wrapper>
+				</q-row-container>
+				<q-row-container v-show="controls.ARTIGVALITEM_ITEMTYPE.isVisible || controls.ARTIGVALITEM_ITEMCOD_.isVisible">
+					<q-control-wrapper
+						v-show="controls.ARTIGVALITEM_ITEMTYPE.isVisible"
+						class="${Vue.GetControlWrapperClass($controlsColumn)}">
 						<base-input-structure
-							v-if="controls.ARTIGVALITEM_ITEMTYPE.isVisible"
 							class="i-text"
-							v-bind="controls.ARTIGVALITEM_ITEMTYPE.wrapperProps"
-							:id="getControlId(controls.ARTIGVALITEM_ITEMTYPE)"
+							v-bind="controls.ARTIGVALITEM_ITEMTYPE"
 							v-on="controls.ARTIGVALITEM_ITEMTYPE.handlers"
 							:loading="controls.ARTIGVALITEM_ITEMTYPE.props.loading"
 							:reporting-mode-on="reportingModeCAV"
@@ -185,60 +167,51 @@
 							<q-select
 								v-if="controls.ARTIGVALITEM_ITEMTYPE.isVisible"
 								v-bind="controls.ARTIGVALITEM_ITEMTYPE.props"
-								:id="getControlId(controls.ARTIGVALITEM_ITEMTYPE)"
 								@update:model-value="model.ValItemtype.fnUpdateValue" />
 						</base-input-structure>
-					</q-col>
-					<q-col
-						v-if="controls.ARTIGVALITEM_ITEMCOD_.isVisible"
-						cols="auto">
+					</q-control-wrapper>
+					<q-control-wrapper
+						v-show="controls.ARTIGVALITEM_ITEMCOD_.isVisible"
+						class="${Vue.GetControlWrapperClass($controlsColumn)}">
 						<base-input-structure
-							v-if="controls.ARTIGVALITEM_ITEMCOD_.isVisible"
 							class="i-text"
-							v-bind="controls.ARTIGVALITEM_ITEMCOD_.wrapperProps"
-							:id="getControlId(controls.ARTIGVALITEM_ITEMCOD_)"
+							v-bind="controls.ARTIGVALITEM_ITEMCOD_"
 							v-on="controls.ARTIGVALITEM_ITEMCOD_.handlers"
 							:loading="controls.ARTIGVALITEM_ITEMCOD_.props.loading"
 							:reporting-mode-on="reportingModeCAV"
 							:suggestion-mode-on="suggestionModeOn">
 							<q-text-field
 								v-bind="controls.ARTIGVALITEM_ITEMCOD_.props"
-								:id="getControlId(controls.ARTIGVALITEM_ITEMCOD_)"
 								@blur="onBlur(controls.ARTIGVALITEM_ITEMCOD_, model.ValItemcod.value)"
 								@change="model.ValItemcod.fnUpdateValueOnChange" />
 						</base-input-structure>
-					</q-col>
-				</q-row>
-				<q-row v-if="controls.ARTIGVALITEM_ITEMDES_.isVisible">
-					<q-col
-						v-if="controls.ARTIGVALITEM_ITEMDES_.isVisible"
-						cols="auto">
+					</q-control-wrapper>
+				</q-row-container>
+				<q-row-container v-show="controls.ARTIGVALITEM_ITEMDES_.isVisible">
+					<q-control-wrapper
+						v-show="controls.ARTIGVALITEM_ITEMDES_.isVisible"
+						class="${Vue.GetControlWrapperClass($controlsColumn)}">
 						<base-input-structure
-							v-if="controls.ARTIGVALITEM_ITEMDES_.isVisible"
 							class="i-text"
-							v-bind="controls.ARTIGVALITEM_ITEMDES_.wrapperProps"
-							:id="getControlId(controls.ARTIGVALITEM_ITEMDES_)"
+							v-bind="controls.ARTIGVALITEM_ITEMDES_"
 							v-on="controls.ARTIGVALITEM_ITEMDES_.handlers"
 							:loading="controls.ARTIGVALITEM_ITEMDES_.props.loading"
 							:reporting-mode-on="reportingModeCAV"
 							:suggestion-mode-on="suggestionModeOn">
 							<q-text-field
 								v-bind="controls.ARTIGVALITEM_ITEMDES_.props"
-								:id="getControlId(controls.ARTIGVALITEM_ITEMDES_)"
 								@blur="onBlur(controls.ARTIGVALITEM_ITEMDES_, model.ValItemdes.value)"
 								@change="model.ValItemdes.fnUpdateValueOnChange" />
 						</base-input-structure>
-					</q-col>
-				</q-row>
-				<q-row v-if="controls.ARTIGVALITEM_DATE____.isVisible || controls.ARTIGVALITEM_ENTRIES_.isVisible || controls.ARTIGVALITEM_EXITS___.isVisible || controls.ARTIGVALITEM_EXISTENC.isVisible">
-					<q-col
-						v-if="controls.ARTIGVALITEM_DATE____.isVisible"
-						cols="auto">
+					</q-control-wrapper>
+				</q-row-container>
+				<q-row-container v-show="controls.ARTIGVALITEM_DATE____.isVisible || controls.ARTIGVALITEM_ENTRIES_.isVisible || controls.ARTIGVALITEM_EXITS___.isVisible || controls.ARTIGVALITEM_EXISTENC.isVisible">
+					<q-control-wrapper
+						v-show="controls.ARTIGVALITEM_DATE____.isVisible"
+						class="${Vue.GetControlWrapperClass($controlsColumn)}">
 						<base-input-structure
-							v-if="controls.ARTIGVALITEM_DATE____.isVisible"
 							class="i-text"
-							v-bind="controls.ARTIGVALITEM_DATE____.wrapperProps"
-							:id="getControlId(controls.ARTIGVALITEM_DATE____)"
+							v-bind="controls.ARTIGVALITEM_DATE____"
 							v-on="controls.ARTIGVALITEM_DATE____.handlers"
 							:loading="controls.ARTIGVALITEM_DATE____.props.loading"
 							:reporting-mode-on="reportingModeCAV"
@@ -246,20 +219,17 @@
 							<q-date-time-picker
 								v-if="controls.ARTIGVALITEM_DATE____.isVisible"
 								v-bind="controls.ARTIGVALITEM_DATE____.props"
-								:id="getControlId(controls.ARTIGVALITEM_DATE____)"
 								:model-value="model.ValDate.value"
 								@reset-icon-click="model.ValDate.fnUpdateValue(model.ValDate.originalValue ?? new Date())"
 								@update:model-value="model.ValDate.fnUpdateValue($event ?? '')" />
 						</base-input-structure>
-					</q-col>
-					<q-col
-						v-if="controls.ARTIGVALITEM_ENTRIES_.isVisible"
-						cols="auto">
+					</q-control-wrapper>
+					<q-control-wrapper
+						v-show="controls.ARTIGVALITEM_ENTRIES_.isVisible"
+						class="${Vue.GetControlWrapperClass($controlsColumn)}">
 						<base-input-structure
-							v-if="controls.ARTIGVALITEM_ENTRIES_.isVisible"
 							class="i-text"
-							v-bind="controls.ARTIGVALITEM_ENTRIES_.wrapperProps"
-							:id="getControlId(controls.ARTIGVALITEM_ENTRIES_)"
+							v-bind="controls.ARTIGVALITEM_ENTRIES_"
 							v-on="controls.ARTIGVALITEM_ENTRIES_.handlers"
 							:loading="controls.ARTIGVALITEM_ENTRIES_.props.loading"
 							:reporting-mode-on="reportingModeCAV"
@@ -267,18 +237,15 @@
 							<q-numeric-input
 								v-if="controls.ARTIGVALITEM_ENTRIES_.isVisible"
 								v-bind="controls.ARTIGVALITEM_ENTRIES_.props"
-								:id="getControlId(controls.ARTIGVALITEM_ENTRIES_)"
 								@update:model-value="model.ValEntries.fnUpdateValue" />
 						</base-input-structure>
-					</q-col>
-					<q-col
-						v-if="controls.ARTIGVALITEM_EXITS___.isVisible"
-						cols="auto">
+					</q-control-wrapper>
+					<q-control-wrapper
+						v-show="controls.ARTIGVALITEM_EXITS___.isVisible"
+						class="${Vue.GetControlWrapperClass($controlsColumn)}">
 						<base-input-structure
-							v-if="controls.ARTIGVALITEM_EXITS___.isVisible"
 							class="i-text"
-							v-bind="controls.ARTIGVALITEM_EXITS___.wrapperProps"
-							:id="getControlId(controls.ARTIGVALITEM_EXITS___)"
+							v-bind="controls.ARTIGVALITEM_EXITS___"
 							v-on="controls.ARTIGVALITEM_EXITS___.handlers"
 							:loading="controls.ARTIGVALITEM_EXITS___.props.loading"
 							:reporting-mode-on="reportingModeCAV"
@@ -286,18 +253,15 @@
 							<q-numeric-input
 								v-if="controls.ARTIGVALITEM_EXITS___.isVisible"
 								v-bind="controls.ARTIGVALITEM_EXITS___.props"
-								:id="getControlId(controls.ARTIGVALITEM_EXITS___)"
 								@update:model-value="model.ValExits.fnUpdateValue" />
 						</base-input-structure>
-					</q-col>
-					<q-col
-						v-if="controls.ARTIGVALITEM_EXISTENC.isVisible"
-						cols="auto">
+					</q-control-wrapper>
+					<q-control-wrapper
+						v-show="controls.ARTIGVALITEM_EXISTENC.isVisible"
+						class="${Vue.GetControlWrapperClass($controlsColumn)}">
 						<base-input-structure
-							v-if="controls.ARTIGVALITEM_EXISTENC.isVisible"
 							class="i-text"
-							v-bind="controls.ARTIGVALITEM_EXISTENC.wrapperProps"
-							:id="getControlId(controls.ARTIGVALITEM_EXISTENC)"
+							v-bind="controls.ARTIGVALITEM_EXISTENC"
 							v-on="controls.ARTIGVALITEM_EXISTENC.handlers"
 							:loading="controls.ARTIGVALITEM_EXISTENC.props.loading"
 							:reporting-mode-on="reportingModeCAV"
@@ -305,20 +269,17 @@
 							<q-numeric-input
 								v-if="controls.ARTIGVALITEM_EXISTENC.isVisible"
 								v-bind="controls.ARTIGVALITEM_EXISTENC.props"
-								:id="getControlId(controls.ARTIGVALITEM_EXISTENC)"
 								@update:model-value="model.ValExistenc.fnUpdateValue" />
 						</base-input-structure>
-					</q-col>
-				</q-row>
-				<q-row v-if="controls.ARTIGVALITEM_CATEGORY.isVisible">
-					<q-col
-						v-if="controls.ARTIGVALITEM_CATEGORY.isVisible"
-						cols="auto">
+					</q-control-wrapper>
+				</q-row-container>
+				<q-row-container v-show="controls.ARTIGVALITEM_CATEGORY.isVisible">
+					<q-control-wrapper
+						v-show="controls.ARTIGVALITEM_CATEGORY.isVisible"
+						class="${Vue.GetControlWrapperClass($controlsColumn)}">
 						<base-input-structure
-							v-if="controls.ARTIGVALITEM_CATEGORY.isVisible"
 							class="i-textarea"
-							v-bind="controls.ARTIGVALITEM_CATEGORY.wrapperProps"
-							:id="getControlId(controls.ARTIGVALITEM_CATEGORY)"
+							v-bind="controls.ARTIGVALITEM_CATEGORY"
 							v-on="controls.ARTIGVALITEM_CATEGORY.handlers"
 							:loading="controls.ARTIGVALITEM_CATEGORY.props.loading"
 							:reporting-mode-on="reportingModeCAV"
@@ -326,42 +287,38 @@
 							<q-text-area
 								v-if="controls.ARTIGVALITEM_CATEGORY.isVisible"
 								v-bind="controls.ARTIGVALITEM_CATEGORY.props"
-								:id="getControlId(controls.ARTIGVALITEM_CATEGORY)"
 								v-on="controls.ARTIGVALITEM_CATEGORY.handlers" />
 						</base-input-structure>
-					</q-col>
-				</q-row>
-				<q-row v-if="controls.ARTIGVALITEM_DISPONIB.isVisible">
-					<q-col
-						v-if="controls.ARTIGVALITEM_DISPONIB.isVisible"
-						cols="auto">
+					</q-control-wrapper>
+				</q-row-container>
+				<q-row-container v-show="controls.ARTIGVALITEM_DISPONIB.isVisible">
+					<q-control-wrapper
+						v-show="controls.ARTIGVALITEM_DISPONIB.isVisible"
+						class="${Vue.GetControlWrapperClass($controlsColumn)}">
 						<base-input-structure
-							v-if="controls.ARTIGVALITEM_DISPONIB.isVisible"
 							class="i-text"
-							v-bind="controls.ARTIGVALITEM_DISPONIB.wrapperProps"
-							:id="getControlId(controls.ARTIGVALITEM_DISPONIB)"
+							v-bind="controls.ARTIGVALITEM_DISPONIB"
 							v-on="controls.ARTIGVALITEM_DISPONIB.handlers"
 							:loading="controls.ARTIGVALITEM_DISPONIB.props.loading"
 							:reporting-mode-on="reportingModeCAV"
 							:suggestion-mode-on="suggestionModeOn">
 							<q-select
 								v-if="controls.ARTIGVALITEM_DISPONIB.isVisible"
-								v-bind="controls.ARTIGVALITEM_DISPONIB.props"
-								:id="getControlId(controls.ARTIGVALITEM_DISPONIB)" />
+								v-bind="controls.ARTIGVALITEM_DISPONIB.props" />
 						</base-input-structure>
-					</q-col>
-				</q-row>
+					</q-control-wrapper>
+				</q-row-container>
 			</template>
-		</q-container>
+		</div>
 	</teleport>
 
-	<q-divider v-if="!isPopup && showFormFooter" />
+	<hr v-if="!isPopup && showFormFooter" />
 
 	<teleport
 		v-if="formModalIsReady && showFormFooter"
 		:to="`#${uiContainersId.footer}`"
 		:disabled="!isPopup || isNested">
-		<q-row v-if="showFormFooter">
+		<q-row-container v-if="showFormFooter">
 			<div id="footer-action-btns">
 				<template
 					v-for="btn in formButtons"
@@ -370,7 +327,6 @@
 						v-if="btn.isActive && btn.isVisible && btn.showInFooter"
 						:id="`bottom-${btn.id}`"
 						:label="btn.text"
-						:color="btn.color"
 						:variant="btn.variant"
 						:disabled="btn.disabled"
 						:icon-pos="btn.iconPos"
@@ -382,12 +338,12 @@
 					</q-button>
 				</template>
 			</div>
-		</q-row>
+		</q-row-container>
 	</teleport>
 </template>
 
 <script>
-	/* eslint-disable @typescript-eslint/no-unused-vars */
+	/* eslint-disable no-unused-vars */
 	import { computed, defineAsyncComponent, readonly } from 'vue'
 	import { useRoute } from 'vue-router'
 
@@ -407,7 +363,7 @@
 	import qApi from '@/api/genio/quidgestFunctions.js'
 	import qFunctions from '@/api/genio/projectFunctions.js'
 	import qProjArrays from '@/api/genio/projectArrays.js'
-	/* eslint-enable @typescript-eslint/no-unused-vars */
+	/* eslint-enable no-unused-vars */
 
 	import FormViewModel from './QFormArtigvalViewModel.js'
 
@@ -486,8 +442,7 @@
 					primaryKey: 'ValCoditem',
 					designation: computed(() => this.Resources.ITEM40802),
 					identifier: '', // Unique identifier received by route (when it's nested).
-					mode: '',
-					availableAgents: [],
+					mode: ''
 				},
 
 				formButtons: {
@@ -595,11 +550,7 @@
 						showInFooter: true,
 						isActive: true,
 						isVisible: computed(() => vm.authData.isAllowed && vm.isEditable),
-						action: vm.saveForm,
-						badge: {
-							isVisible: computed(() => vm.model?.isDirty === true),
-							color: 'highlight'
-						}
+						action: vm.saveForm
 					},
 					confirmBtn: {
 						id: 'confirm-btn',
@@ -782,6 +733,7 @@
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						maxLength: 1,
+						labelId: 'label_ARTIGVALITEM_ITEMTYPE',
 						arrayName: 'TipoArti',
 						helpShortItem: 'None',
 						helpDetailedItem: 'None',
@@ -798,6 +750,7 @@
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						maxLength: 15,
+						labelId: 'label_ARTIGVALITEM_ITEMCOD_',
 						controlLimits: [
 						],
 					}, this),
@@ -811,6 +764,7 @@
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						maxLength: 85,
+						labelId: 'label_ARTIGVALITEM_ITEMDES_',
 						mustBeFilled: true,
 						controlLimits: [
 						],
@@ -824,7 +778,7 @@
 						label: computed(() => this.Resources.DATE18475),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						dateTimeType: 'date',
+						format: 'date',
 						controlLimits: [
 						],
 					}, this),
@@ -899,6 +853,7 @@
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						isFormulaBlocked: true,
 						maxLength: 1,
+						labelId: 'label_ARTIGVALITEM_DISPONIB',
 						arrayName: 'dsiponib',
 						helpShortItem: 'None',
 						helpDetailedItem: 'None',
@@ -982,6 +937,8 @@
 			// Does NOT have access to `this` component instance, because
 			// it has not been created yet when this guard is called!
 
+			to.params.isPopup = 'true'
+
 			next((vm) => {
 				vm.initFormProperties(to)
 			})
@@ -1014,23 +971,17 @@
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 		},
 
-		beforeUnmount()
-		{
-/* eslint-disable indent, vue/html-indent, vue/script-indent */
-// USE /[MANUAL GQT COMPONENT_BEFORE_UNMOUNT ARTIGVAL]/
-// eslint-disable-next-line
-/* eslint-enable indent, vue/html-indent, vue/script-indent */
-		},
-
 		methods: {
 			/**
 			 * Called before form init.
 			 */
 			async beforeLoad()
 			{
+				let loadForm = true
+
 				// Execute the "Before init" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.beforeInit)
-				for (const trigger of triggers)
+				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
 				this.emitEvent('before-load-form')
@@ -1040,7 +991,7 @@
 // eslint-disable-next-line
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 
-				return true
+				return loadForm
 			},
 
 			/**
@@ -1050,7 +1001,7 @@
 			{
 				// Execute the "After init" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.afterInit)
-				for (const trigger of triggers)
+				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
 				this.emitEvent('after-load-form')
@@ -1070,33 +1021,19 @@
 
 				// Execute the "Before apply" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.beforeApply)
-				for (const trigger of triggers)
+				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
-				const ticketsPromise = this.model.updateFilesTickets(true)
-				this.addBusy(ticketsPromise, this.Resources[hardcodedTexts.processing])
-				const canSetDocums = await ticketsPromise
+				const canSetDocums = await this.model.updateFilesTickets(true)
 
 				if (canSetDocums)
 				{
-					let results
-					const changesPromise = this.model.setDocumentChanges()
-					this.addBusy(changesPromise, this.Resources[hardcodedTexts.processing])
-					applyForm = await changesPromise
+					applyForm = await this.model.setDocumentChanges()
 
 					if (applyForm)
 					{
-						const insertsPromise = this.model.saveDocuments()
-						this.addBusy(insertsPromise, this.Resources[hardcodedTexts.processing])
-						results = await insertsPromise
+						const results = await this.model.saveDocuments()
 						applyForm = results.every((e) => e === true)
-					}
-
-					if (!changesPromise || (results && !results.every((e) => e === true)))
-					{
-						this.validationErrors = {
-							Erro: this.Resources.OCORREU_UM_ERRO_AO_T51884
-						}
 					}
 				}
 
@@ -1117,7 +1054,7 @@
 			{
 				// Execute the "After apply" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.afterApply)
-				for (const trigger of triggers)
+				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
 				this.emitEvent('after-apply-form')
@@ -1137,33 +1074,19 @@
 
 				// Execute the "Before save" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.beforeSave)
-				for (const trigger of triggers)
+				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
-				const ticketsPromise = this.model.updateFilesTickets()
-				this.addBusy(ticketsPromise, this.Resources[hardcodedTexts.processing])
-				const canSetDocums = await ticketsPromise
+				const canSetDocums = await this.model.updateFilesTickets()
 
 				if (canSetDocums)
 				{
-					let results
-					const changesPromise = this.model.setDocumentChanges()
-					this.addBusy(changesPromise, this.Resources[hardcodedTexts.processing])
-					saveForm = await changesPromise
+					saveForm = await this.model.setDocumentChanges()
 
 					if (saveForm)
 					{
-						const insertsPromise = this.model.saveDocuments()
-						this.addBusy(insertsPromise, this.Resources[hardcodedTexts.processing])
-						results = await insertsPromise
+						const results = await this.model.saveDocuments()
 						saveForm = results.every((e) => e === true)
-					}
-
-					if (!changesPromise || (results && !results.every((e) => e === true)))
-					{
-						this.validationErrors = {
-							Erro: this.Resources.OCORREU_UM_ERRO_AO_T51884
-						}
 					}
 				}
 
@@ -1182,9 +1105,11 @@
 			 */
 			async afterSave()
 			{
+				let redirectPage = true // Set to 'false' to cancel page redirect.
+
 				// Execute the "After save" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.afterSave)
-				for (const trigger of triggers)
+				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
 				this.emitEvent('after-save-form')
@@ -1194,7 +1119,7 @@
 // eslint-disable-next-line
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 
-				return true
+				return redirectPage
 			},
 
 			/**
@@ -1202,6 +1127,8 @@
 			 */
 			async beforeDel()
 			{
+				let deleteForm = true // Set to 'false' to cancel form delete.
+
 				this.emitEvent('before-delete-form')
 
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
@@ -1209,7 +1136,7 @@
 // eslint-disable-next-line
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 
-				return true
+				return deleteForm
 			},
 
 			/**
@@ -1217,6 +1144,8 @@
 			 */
 			async afterDel()
 			{
+				let redirectPage = true // Set to 'false' to cancel page redirect.
+
 				this.emitEvent('after-delete-form')
 
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
@@ -1224,7 +1153,7 @@
 // eslint-disable-next-line
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 
-				return true
+				return redirectPage
 			},
 
 			/**
@@ -1232,9 +1161,11 @@
 			 */
 			async beforeExit()
 			{
+				let leaveForm = true // Set to 'false' to cancel page redirect.
+
 				// Execute the "Before exit" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.beforeExit)
-				for (const trigger of triggers)
+				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
 				this.emitEvent('before-exit-form')
@@ -1244,7 +1175,7 @@
 // eslint-disable-next-line
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 
-				return true
+				return leaveForm
 			},
 
 			/**
@@ -1254,7 +1185,7 @@
 			{
 				// Execute the "After exit" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.afterExit)
-				for (const trigger of triggers)
+				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
 				this.emitEvent('after-exit-form')

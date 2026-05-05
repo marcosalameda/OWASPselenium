@@ -9,13 +9,12 @@
 			<div
 				v-if="showFormHeader"
 				class="c-action-bar">
-				<component
+				<h1
 					v-if="formControl.uiComponents.header && formInfo.designation"
-					:is="topHeadingTag"
 					:id="formTitleId"
 					class="form-header">
 					{{ formInfo.designation }}
-				</component>
+				</h1>
 
 				<div class="c-action-bar__menu">
 					<template
@@ -39,13 +38,9 @@
 									:label="btn.label"
 									:disabled="btn.disabled"
 									@click="btn.action">
-									<template v-if="btn.icon">
-										<q-badge-indicator
-											:enabled="btn.badge?.isVisible ?? false"
-											:color="btn.badge?.color">
-											<q-icon v-bind="btn.icon" />
-										</q-badge-indicator>
-									</template>
+									<q-icon
+										v-if="btn.icon"
+										v-bind="btn.icon" />
 								</q-toggle-group-item>
 							</template>
 						</q-toggle-group>
@@ -57,7 +52,7 @@
 				v-if="$app.layout.FormAnchorsPosition === 'form-header' && visibleGroups.length > 0"
 				:anchors="anchorGroups"
 				:controls="visibleControls"
-				@focus-control="focusControl" />
+				@focus-control="(...args) => focusControl(...args)" />
 		</div>
 	</teleport>
 
@@ -78,7 +73,6 @@
 						v-if="btn.isActive && btn.isVisible && btn.showInHeading"
 						:id="`heading-${btn.id}`"
 						:label="btn.text"
-						:color="btn.color"
 						:variant="btn.variant"
 						:disabled="btn.disabled"
 						:icon-pos="btn.iconPos"
@@ -92,97 +86,82 @@
 			</q-button-group>
 		</div>
 
-		<q-container
-			fluid
+		<div
+			class="form-flow"
 			data-key="FACTY"
-			:data-identifier="primaryKeyValue"
-			:data-loading="!formInitialDataLoaded || !isActiveForm">
+			:data-loading="!formInitialDataLoaded">
 			<template v-if="formControl.initialized && showFormBody">
-				<q-row v-if="controls.FACTY___FACTYTYPE____.isVisible || controls.FACTY___FACTYLAYRNAME.isVisible || controls.FACTY___FACTYICONURL_.isVisible || controls.FACTY___FACTYSHADOWUR.isVisible || controls.FACTY___FACTYICONANCX.isVisible || controls.FACTY___FACTYICONANCY.isVisible || controls.FACTY___FACTYICONHEIG.isVisible || controls.FACTY___FACTYICONWID_.isVisible || controls.FACTY___FACTYPOPUPANX.isVisible || controls.FACTY___FACTYPOPUPANY.isVisible || controls.FACTY___FACTYSHADOWAX.isVisible || controls.FACTY___FACTYSHADOWAY.isVisible || controls.FACTY___FACTYSHADOWHE.isVisible || controls.FACTY___FACTYSHADOWWI.isVisible">
-					<q-col
-						v-if="controls.FACTY___FACTYTYPE____.isVisible"
-						cols="auto">
+				<q-row-container v-show="controls.FACTY___FACTYTYPE____.isVisible || controls.FACTY___FACTYLAYRNAME.isVisible || controls.FACTY___FACTYICONURL_.isVisible || controls.FACTY___FACTYSHADOWUR.isVisible || controls.FACTY___FACTYICONANCX.isVisible || controls.FACTY___FACTYICONANCY.isVisible || controls.FACTY___FACTYICONHEIG.isVisible || controls.FACTY___FACTYICONWID_.isVisible || controls.FACTY___FACTYPOPUPANX.isVisible || controls.FACTY___FACTYPOPUPANY.isVisible || controls.FACTY___FACTYSHADOWAX.isVisible || controls.FACTY___FACTYSHADOWAY.isVisible || controls.FACTY___FACTYSHADOWHE.isVisible || controls.FACTY___FACTYSHADOWWI.isVisible">
+					<q-control-wrapper
+						v-show="controls.FACTY___FACTYTYPE____.isVisible"
+						class="${Vue.GetControlWrapperClass($controlsColumn)}">
 						<base-input-structure
-							v-if="controls.FACTY___FACTYTYPE____.isVisible"
 							class="i-text"
-							v-bind="controls.FACTY___FACTYTYPE____.wrapperProps"
-							:id="getControlId(controls.FACTY___FACTYTYPE____)"
+							v-bind="controls.FACTY___FACTYTYPE____"
 							v-on="controls.FACTY___FACTYTYPE____.handlers"
 							:loading="controls.FACTY___FACTYTYPE____.props.loading"
 							:reporting-mode-on="reportingModeCAV"
 							:suggestion-mode-on="suggestionModeOn">
 							<q-text-field
 								v-bind="controls.FACTY___FACTYTYPE____.props"
-								:id="getControlId(controls.FACTY___FACTYTYPE____)"
 								@blur="onBlur(controls.FACTY___FACTYTYPE____, model.ValType.value)"
 								@change="model.ValType.fnUpdateValueOnChange" />
 						</base-input-structure>
-					</q-col>
-					<q-col
-						v-if="controls.FACTY___FACTYLAYRNAME.isVisible"
-						cols="auto">
+					</q-control-wrapper>
+					<q-control-wrapper
+						v-show="controls.FACTY___FACTYLAYRNAME.isVisible"
+						class="${Vue.GetControlWrapperClass($controlsColumn)}">
 						<base-input-structure
-							v-if="controls.FACTY___FACTYLAYRNAME.isVisible"
 							class="i-text"
-							v-bind="controls.FACTY___FACTYLAYRNAME.wrapperProps"
-							:id="getControlId(controls.FACTY___FACTYLAYRNAME)"
+							v-bind="controls.FACTY___FACTYLAYRNAME"
 							v-on="controls.FACTY___FACTYLAYRNAME.handlers"
 							:loading="controls.FACTY___FACTYLAYRNAME.props.loading"
 							:reporting-mode-on="reportingModeCAV"
 							:suggestion-mode-on="suggestionModeOn">
 							<q-text-field
 								v-bind="controls.FACTY___FACTYLAYRNAME.props"
-								:id="getControlId(controls.FACTY___FACTYLAYRNAME)"
 								@blur="onBlur(controls.FACTY___FACTYLAYRNAME, model.ValLayrname.value)"
 								@change="model.ValLayrname.fnUpdateValueOnChange" />
 						</base-input-structure>
-					</q-col>
-					<q-col
-						v-if="controls.FACTY___FACTYICONURL_.isVisible"
-						cols="auto">
+					</q-control-wrapper>
+					<q-control-wrapper
+						v-show="controls.FACTY___FACTYICONURL_.isVisible"
+						class="${Vue.GetControlWrapperClass($controlsColumn)}">
 						<base-input-structure
-							v-if="controls.FACTY___FACTYICONURL_.isVisible"
 							class="i-text"
-							v-bind="controls.FACTY___FACTYICONURL_.wrapperProps"
-							:id="getControlId(controls.FACTY___FACTYICONURL_)"
+							v-bind="controls.FACTY___FACTYICONURL_"
 							v-on="controls.FACTY___FACTYICONURL_.handlers"
 							:loading="controls.FACTY___FACTYICONURL_.props.loading"
 							:reporting-mode-on="reportingModeCAV"
 							:suggestion-mode-on="suggestionModeOn">
 							<q-text-field
 								v-bind="controls.FACTY___FACTYICONURL_.props"
-								:id="getControlId(controls.FACTY___FACTYICONURL_)"
 								@blur="onBlur(controls.FACTY___FACTYICONURL_, model.ValIconurl.value)"
 								@change="model.ValIconurl.fnUpdateValueOnChange" />
 						</base-input-structure>
-					</q-col>
-					<q-col
-						v-if="controls.FACTY___FACTYSHADOWUR.isVisible"
-						cols="auto">
+					</q-control-wrapper>
+					<q-control-wrapper
+						v-show="controls.FACTY___FACTYSHADOWUR.isVisible"
+						class="${Vue.GetControlWrapperClass($controlsColumn)}">
 						<base-input-structure
-							v-if="controls.FACTY___FACTYSHADOWUR.isVisible"
 							class="i-text"
-							v-bind="controls.FACTY___FACTYSHADOWUR.wrapperProps"
-							:id="getControlId(controls.FACTY___FACTYSHADOWUR)"
+							v-bind="controls.FACTY___FACTYSHADOWUR"
 							v-on="controls.FACTY___FACTYSHADOWUR.handlers"
 							:loading="controls.FACTY___FACTYSHADOWUR.props.loading"
 							:reporting-mode-on="reportingModeCAV"
 							:suggestion-mode-on="suggestionModeOn">
 							<q-text-field
 								v-bind="controls.FACTY___FACTYSHADOWUR.props"
-								:id="getControlId(controls.FACTY___FACTYSHADOWUR)"
 								@blur="onBlur(controls.FACTY___FACTYSHADOWUR, model.ValShadowur.value)"
 								@change="model.ValShadowur.fnUpdateValueOnChange" />
 						</base-input-structure>
-					</q-col>
-					<q-col
-						v-if="controls.FACTY___FACTYICONANCX.isVisible"
-						cols="auto">
+					</q-control-wrapper>
+					<q-control-wrapper
+						v-show="controls.FACTY___FACTYICONANCX.isVisible"
+						class="${Vue.GetControlWrapperClass($controlsColumn)}">
 						<base-input-structure
-							v-if="controls.FACTY___FACTYICONANCX.isVisible"
 							class="i-text"
-							v-bind="controls.FACTY___FACTYICONANCX.wrapperProps"
-							:id="getControlId(controls.FACTY___FACTYICONANCX)"
+							v-bind="controls.FACTY___FACTYICONANCX"
 							v-on="controls.FACTY___FACTYICONANCX.handlers"
 							:loading="controls.FACTY___FACTYICONANCX.props.loading"
 							:reporting-mode-on="reportingModeCAV"
@@ -190,18 +169,15 @@
 							<q-numeric-input
 								v-if="controls.FACTY___FACTYICONANCX.isVisible"
 								v-bind="controls.FACTY___FACTYICONANCX.props"
-								:id="getControlId(controls.FACTY___FACTYICONANCX)"
 								@update:model-value="model.ValIconancx.fnUpdateValue" />
 						</base-input-structure>
-					</q-col>
-					<q-col
-						v-if="controls.FACTY___FACTYICONANCY.isVisible"
-						cols="auto">
+					</q-control-wrapper>
+					<q-control-wrapper
+						v-show="controls.FACTY___FACTYICONANCY.isVisible"
+						class="${Vue.GetControlWrapperClass($controlsColumn)}">
 						<base-input-structure
-							v-if="controls.FACTY___FACTYICONANCY.isVisible"
 							class="i-text"
-							v-bind="controls.FACTY___FACTYICONANCY.wrapperProps"
-							:id="getControlId(controls.FACTY___FACTYICONANCY)"
+							v-bind="controls.FACTY___FACTYICONANCY"
 							v-on="controls.FACTY___FACTYICONANCY.handlers"
 							:loading="controls.FACTY___FACTYICONANCY.props.loading"
 							:reporting-mode-on="reportingModeCAV"
@@ -209,18 +185,15 @@
 							<q-numeric-input
 								v-if="controls.FACTY___FACTYICONANCY.isVisible"
 								v-bind="controls.FACTY___FACTYICONANCY.props"
-								:id="getControlId(controls.FACTY___FACTYICONANCY)"
 								@update:model-value="model.ValIconancy.fnUpdateValue" />
 						</base-input-structure>
-					</q-col>
-					<q-col
-						v-if="controls.FACTY___FACTYICONHEIG.isVisible"
-						cols="auto">
+					</q-control-wrapper>
+					<q-control-wrapper
+						v-show="controls.FACTY___FACTYICONHEIG.isVisible"
+						class="${Vue.GetControlWrapperClass($controlsColumn)}">
 						<base-input-structure
-							v-if="controls.FACTY___FACTYICONHEIG.isVisible"
 							class="i-text"
-							v-bind="controls.FACTY___FACTYICONHEIG.wrapperProps"
-							:id="getControlId(controls.FACTY___FACTYICONHEIG)"
+							v-bind="controls.FACTY___FACTYICONHEIG"
 							v-on="controls.FACTY___FACTYICONHEIG.handlers"
 							:loading="controls.FACTY___FACTYICONHEIG.props.loading"
 							:reporting-mode-on="reportingModeCAV"
@@ -228,18 +201,15 @@
 							<q-numeric-input
 								v-if="controls.FACTY___FACTYICONHEIG.isVisible"
 								v-bind="controls.FACTY___FACTYICONHEIG.props"
-								:id="getControlId(controls.FACTY___FACTYICONHEIG)"
 								@update:model-value="model.ValIconheig.fnUpdateValue" />
 						</base-input-structure>
-					</q-col>
-					<q-col
-						v-if="controls.FACTY___FACTYICONWID_.isVisible"
-						cols="auto">
+					</q-control-wrapper>
+					<q-control-wrapper
+						v-show="controls.FACTY___FACTYICONWID_.isVisible"
+						class="${Vue.GetControlWrapperClass($controlsColumn)}">
 						<base-input-structure
-							v-if="controls.FACTY___FACTYICONWID_.isVisible"
 							class="i-text"
-							v-bind="controls.FACTY___FACTYICONWID_.wrapperProps"
-							:id="getControlId(controls.FACTY___FACTYICONWID_)"
+							v-bind="controls.FACTY___FACTYICONWID_"
 							v-on="controls.FACTY___FACTYICONWID_.handlers"
 							:loading="controls.FACTY___FACTYICONWID_.props.loading"
 							:reporting-mode-on="reportingModeCAV"
@@ -247,18 +217,15 @@
 							<q-numeric-input
 								v-if="controls.FACTY___FACTYICONWID_.isVisible"
 								v-bind="controls.FACTY___FACTYICONWID_.props"
-								:id="getControlId(controls.FACTY___FACTYICONWID_)"
 								@update:model-value="model.ValIconwid.fnUpdateValue" />
 						</base-input-structure>
-					</q-col>
-					<q-col
-						v-if="controls.FACTY___FACTYPOPUPANX.isVisible"
-						cols="auto">
+					</q-control-wrapper>
+					<q-control-wrapper
+						v-show="controls.FACTY___FACTYPOPUPANX.isVisible"
+						class="${Vue.GetControlWrapperClass($controlsColumn)}">
 						<base-input-structure
-							v-if="controls.FACTY___FACTYPOPUPANX.isVisible"
 							class="i-text"
-							v-bind="controls.FACTY___FACTYPOPUPANX.wrapperProps"
-							:id="getControlId(controls.FACTY___FACTYPOPUPANX)"
+							v-bind="controls.FACTY___FACTYPOPUPANX"
 							v-on="controls.FACTY___FACTYPOPUPANX.handlers"
 							:loading="controls.FACTY___FACTYPOPUPANX.props.loading"
 							:reporting-mode-on="reportingModeCAV"
@@ -266,18 +233,15 @@
 							<q-numeric-input
 								v-if="controls.FACTY___FACTYPOPUPANX.isVisible"
 								v-bind="controls.FACTY___FACTYPOPUPANX.props"
-								:id="getControlId(controls.FACTY___FACTYPOPUPANX)"
 								@update:model-value="model.ValPopupanx.fnUpdateValue" />
 						</base-input-structure>
-					</q-col>
-					<q-col
-						v-if="controls.FACTY___FACTYPOPUPANY.isVisible"
-						cols="auto">
+					</q-control-wrapper>
+					<q-control-wrapper
+						v-show="controls.FACTY___FACTYPOPUPANY.isVisible"
+						class="${Vue.GetControlWrapperClass($controlsColumn)}">
 						<base-input-structure
-							v-if="controls.FACTY___FACTYPOPUPANY.isVisible"
 							class="i-text"
-							v-bind="controls.FACTY___FACTYPOPUPANY.wrapperProps"
-							:id="getControlId(controls.FACTY___FACTYPOPUPANY)"
+							v-bind="controls.FACTY___FACTYPOPUPANY"
 							v-on="controls.FACTY___FACTYPOPUPANY.handlers"
 							:loading="controls.FACTY___FACTYPOPUPANY.props.loading"
 							:reporting-mode-on="reportingModeCAV"
@@ -285,18 +249,15 @@
 							<q-numeric-input
 								v-if="controls.FACTY___FACTYPOPUPANY.isVisible"
 								v-bind="controls.FACTY___FACTYPOPUPANY.props"
-								:id="getControlId(controls.FACTY___FACTYPOPUPANY)"
 								@update:model-value="model.ValPopupany.fnUpdateValue" />
 						</base-input-structure>
-					</q-col>
-					<q-col
-						v-if="controls.FACTY___FACTYSHADOWAX.isVisible"
-						cols="auto">
+					</q-control-wrapper>
+					<q-control-wrapper
+						v-show="controls.FACTY___FACTYSHADOWAX.isVisible"
+						class="${Vue.GetControlWrapperClass($controlsColumn)}">
 						<base-input-structure
-							v-if="controls.FACTY___FACTYSHADOWAX.isVisible"
 							class="i-text"
-							v-bind="controls.FACTY___FACTYSHADOWAX.wrapperProps"
-							:id="getControlId(controls.FACTY___FACTYSHADOWAX)"
+							v-bind="controls.FACTY___FACTYSHADOWAX"
 							v-on="controls.FACTY___FACTYSHADOWAX.handlers"
 							:loading="controls.FACTY___FACTYSHADOWAX.props.loading"
 							:reporting-mode-on="reportingModeCAV"
@@ -304,18 +265,15 @@
 							<q-numeric-input
 								v-if="controls.FACTY___FACTYSHADOWAX.isVisible"
 								v-bind="controls.FACTY___FACTYSHADOWAX.props"
-								:id="getControlId(controls.FACTY___FACTYSHADOWAX)"
 								@update:model-value="model.ValShadowax.fnUpdateValue" />
 						</base-input-structure>
-					</q-col>
-					<q-col
-						v-if="controls.FACTY___FACTYSHADOWAY.isVisible"
-						cols="auto">
+					</q-control-wrapper>
+					<q-control-wrapper
+						v-show="controls.FACTY___FACTYSHADOWAY.isVisible"
+						class="${Vue.GetControlWrapperClass($controlsColumn)}">
 						<base-input-structure
-							v-if="controls.FACTY___FACTYSHADOWAY.isVisible"
 							class="i-text"
-							v-bind="controls.FACTY___FACTYSHADOWAY.wrapperProps"
-							:id="getControlId(controls.FACTY___FACTYSHADOWAY)"
+							v-bind="controls.FACTY___FACTYSHADOWAY"
 							v-on="controls.FACTY___FACTYSHADOWAY.handlers"
 							:loading="controls.FACTY___FACTYSHADOWAY.props.loading"
 							:reporting-mode-on="reportingModeCAV"
@@ -323,18 +281,15 @@
 							<q-numeric-input
 								v-if="controls.FACTY___FACTYSHADOWAY.isVisible"
 								v-bind="controls.FACTY___FACTYSHADOWAY.props"
-								:id="getControlId(controls.FACTY___FACTYSHADOWAY)"
 								@update:model-value="model.ValShadoway.fnUpdateValue" />
 						</base-input-structure>
-					</q-col>
-					<q-col
-						v-if="controls.FACTY___FACTYSHADOWHE.isVisible"
-						cols="auto">
+					</q-control-wrapper>
+					<q-control-wrapper
+						v-show="controls.FACTY___FACTYSHADOWHE.isVisible"
+						class="${Vue.GetControlWrapperClass($controlsColumn)}">
 						<base-input-structure
-							v-if="controls.FACTY___FACTYSHADOWHE.isVisible"
 							class="i-text"
-							v-bind="controls.FACTY___FACTYSHADOWHE.wrapperProps"
-							:id="getControlId(controls.FACTY___FACTYSHADOWHE)"
+							v-bind="controls.FACTY___FACTYSHADOWHE"
 							v-on="controls.FACTY___FACTYSHADOWHE.handlers"
 							:loading="controls.FACTY___FACTYSHADOWHE.props.loading"
 							:reporting-mode-on="reportingModeCAV"
@@ -342,18 +297,15 @@
 							<q-numeric-input
 								v-if="controls.FACTY___FACTYSHADOWHE.isVisible"
 								v-bind="controls.FACTY___FACTYSHADOWHE.props"
-								:id="getControlId(controls.FACTY___FACTYSHADOWHE)"
 								@update:model-value="model.ValShadowhe.fnUpdateValue" />
 						</base-input-structure>
-					</q-col>
-					<q-col
-						v-if="controls.FACTY___FACTYSHADOWWI.isVisible"
-						cols="auto">
+					</q-control-wrapper>
+					<q-control-wrapper
+						v-show="controls.FACTY___FACTYSHADOWWI.isVisible"
+						class="${Vue.GetControlWrapperClass($controlsColumn)}">
 						<base-input-structure
-							v-if="controls.FACTY___FACTYSHADOWWI.isVisible"
 							class="i-text"
-							v-bind="controls.FACTY___FACTYSHADOWWI.wrapperProps"
-							:id="getControlId(controls.FACTY___FACTYSHADOWWI)"
+							v-bind="controls.FACTY___FACTYSHADOWWI"
 							v-on="controls.FACTY___FACTYSHADOWWI.handlers"
 							:loading="controls.FACTY___FACTYSHADOWWI.props.loading"
 							:reporting-mode-on="reportingModeCAV"
@@ -361,22 +313,21 @@
 							<q-numeric-input
 								v-if="controls.FACTY___FACTYSHADOWWI.isVisible"
 								v-bind="controls.FACTY___FACTYSHADOWWI.props"
-								:id="getControlId(controls.FACTY___FACTYSHADOWWI)"
 								@update:model-value="model.ValShadowwi.fnUpdateValue" />
 						</base-input-structure>
-					</q-col>
-				</q-row>
+					</q-control-wrapper>
+				</q-row-container>
 			</template>
-		</q-container>
+		</div>
 	</teleport>
 
-	<q-divider v-if="!isPopup && showFormFooter" />
+	<hr v-if="!isPopup && showFormFooter" />
 
 	<teleport
 		v-if="formModalIsReady && showFormFooter"
 		:to="`#${uiContainersId.footer}`"
 		:disabled="!isPopup || isNested">
-		<q-row v-if="showFormFooter">
+		<q-row-container v-if="showFormFooter">
 			<div id="footer-action-btns">
 				<template
 					v-for="btn in formButtons"
@@ -385,7 +336,6 @@
 						v-if="btn.isActive && btn.isVisible && btn.showInFooter"
 						:id="`bottom-${btn.id}`"
 						:label="btn.text"
-						:color="btn.color"
 						:variant="btn.variant"
 						:disabled="btn.disabled"
 						:icon-pos="btn.iconPos"
@@ -397,12 +347,12 @@
 					</q-button>
 				</template>
 			</div>
-		</q-row>
+		</q-row-container>
 	</teleport>
 </template>
 
 <script>
-	/* eslint-disable @typescript-eslint/no-unused-vars */
+	/* eslint-disable no-unused-vars */
 	import { computed, defineAsyncComponent, readonly } from 'vue'
 	import { useRoute } from 'vue-router'
 
@@ -422,7 +372,7 @@
 	import qApi from '@/api/genio/quidgestFunctions.js'
 	import qFunctions from '@/api/genio/projectFunctions.js'
 	import qProjArrays from '@/api/genio/projectArrays.js'
-	/* eslint-enable @typescript-eslint/no-unused-vars */
+	/* eslint-enable no-unused-vars */
 
 	import FormViewModel from './QFormFactyViewModel.js'
 
@@ -499,8 +449,7 @@
 					primaryKey: 'ValCodfacty',
 					designation: computed(() => this.Resources.FACILITY_TYPE44577),
 					identifier: '', // Unique identifier received by route (when it's nested).
-					mode: '',
-					availableAgents: [],
+					mode: ''
 				},
 
 				formButtons: {
@@ -608,11 +557,7 @@
 						showInFooter: true,
 						isActive: true,
 						isVisible: computed(() => vm.authData.isAllowed && vm.isEditable),
-						action: vm.saveForm,
-						badge: {
-							isVisible: computed(() => vm.model?.isDirty === true),
-							color: 'highlight'
-						}
+						action: vm.saveForm
 					},
 					confirmBtn: {
 						id: 'confirm-btn',
@@ -722,6 +667,7 @@
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						maxLength: 25,
+						labelId: 'label_FACTY___FACTYTYPE____',
 						controlLimits: [
 						],
 					}, this),
@@ -735,6 +681,7 @@
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						maxLength: 50,
+						labelId: 'label_FACTY___FACTYLAYRNAME',
 						controlLimits: [
 						],
 					}, this),
@@ -748,6 +695,7 @@
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						maxLength: 50,
+						labelId: 'label_FACTY___FACTYICONURL_',
 						controlLimits: [
 						],
 					}, this),
@@ -761,6 +709,7 @@
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						maxLength: 50,
+						labelId: 'label_FACTY___FACTYSHADOWUR',
 						controlLimits: [
 						],
 					}, this),
@@ -1003,23 +952,17 @@
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 		},
 
-		beforeUnmount()
-		{
-/* eslint-disable indent, vue/html-indent, vue/script-indent */
-// USE /[MANUAL GQT COMPONENT_BEFORE_UNMOUNT FACTY]/
-// eslint-disable-next-line
-/* eslint-enable indent, vue/html-indent, vue/script-indent */
-		},
-
 		methods: {
 			/**
 			 * Called before form init.
 			 */
 			async beforeLoad()
 			{
+				let loadForm = true
+
 				// Execute the "Before init" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.beforeInit)
-				for (const trigger of triggers)
+				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
 				this.emitEvent('before-load-form')
@@ -1029,7 +972,7 @@
 // eslint-disable-next-line
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 
-				return true
+				return loadForm
 			},
 
 			/**
@@ -1039,7 +982,7 @@
 			{
 				// Execute the "After init" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.afterInit)
-				for (const trigger of triggers)
+				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
 				this.emitEvent('after-load-form')
@@ -1059,33 +1002,19 @@
 
 				// Execute the "Before apply" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.beforeApply)
-				for (const trigger of triggers)
+				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
-				const ticketsPromise = this.model.updateFilesTickets(true)
-				this.addBusy(ticketsPromise, this.Resources[hardcodedTexts.processing])
-				const canSetDocums = await ticketsPromise
+				const canSetDocums = await this.model.updateFilesTickets(true)
 
 				if (canSetDocums)
 				{
-					let results
-					const changesPromise = this.model.setDocumentChanges()
-					this.addBusy(changesPromise, this.Resources[hardcodedTexts.processing])
-					applyForm = await changesPromise
+					applyForm = await this.model.setDocumentChanges()
 
 					if (applyForm)
 					{
-						const insertsPromise = this.model.saveDocuments()
-						this.addBusy(insertsPromise, this.Resources[hardcodedTexts.processing])
-						results = await insertsPromise
+						const results = await this.model.saveDocuments()
 						applyForm = results.every((e) => e === true)
-					}
-
-					if (!changesPromise || (results && !results.every((e) => e === true)))
-					{
-						this.validationErrors = {
-							Erro: this.Resources.OCORREU_UM_ERRO_AO_T51884
-						}
 					}
 				}
 
@@ -1106,7 +1035,7 @@
 			{
 				// Execute the "After apply" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.afterApply)
-				for (const trigger of triggers)
+				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
 				this.emitEvent('after-apply-form')
@@ -1126,33 +1055,19 @@
 
 				// Execute the "Before save" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.beforeSave)
-				for (const trigger of triggers)
+				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
-				const ticketsPromise = this.model.updateFilesTickets()
-				this.addBusy(ticketsPromise, this.Resources[hardcodedTexts.processing])
-				const canSetDocums = await ticketsPromise
+				const canSetDocums = await this.model.updateFilesTickets()
 
 				if (canSetDocums)
 				{
-					let results
-					const changesPromise = this.model.setDocumentChanges()
-					this.addBusy(changesPromise, this.Resources[hardcodedTexts.processing])
-					saveForm = await changesPromise
+					saveForm = await this.model.setDocumentChanges()
 
 					if (saveForm)
 					{
-						const insertsPromise = this.model.saveDocuments()
-						this.addBusy(insertsPromise, this.Resources[hardcodedTexts.processing])
-						results = await insertsPromise
+						const results = await this.model.saveDocuments()
 						saveForm = results.every((e) => e === true)
-					}
-
-					if (!changesPromise || (results && !results.every((e) => e === true)))
-					{
-						this.validationErrors = {
-							Erro: this.Resources.OCORREU_UM_ERRO_AO_T51884
-						}
 					}
 				}
 
@@ -1171,9 +1086,11 @@
 			 */
 			async afterSave()
 			{
+				let redirectPage = true // Set to 'false' to cancel page redirect.
+
 				// Execute the "After save" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.afterSave)
-				for (const trigger of triggers)
+				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
 				this.emitEvent('after-save-form')
@@ -1183,7 +1100,7 @@
 // eslint-disable-next-line
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 
-				return true
+				return redirectPage
 			},
 
 			/**
@@ -1191,6 +1108,8 @@
 			 */
 			async beforeDel()
 			{
+				let deleteForm = true // Set to 'false' to cancel form delete.
+
 				this.emitEvent('before-delete-form')
 
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
@@ -1198,7 +1117,7 @@
 // eslint-disable-next-line
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 
-				return true
+				return deleteForm
 			},
 
 			/**
@@ -1206,6 +1125,8 @@
 			 */
 			async afterDel()
 			{
+				let redirectPage = true // Set to 'false' to cancel page redirect.
+
 				this.emitEvent('after-delete-form')
 
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
@@ -1213,7 +1134,7 @@
 // eslint-disable-next-line
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 
-				return true
+				return redirectPage
 			},
 
 			/**
@@ -1221,9 +1142,11 @@
 			 */
 			async beforeExit()
 			{
+				let leaveForm = true // Set to 'false' to cancel page redirect.
+
 				// Execute the "Before exit" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.beforeExit)
-				for (const trigger of triggers)
+				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
 				this.emitEvent('before-exit-form')
@@ -1233,7 +1156,7 @@
 // eslint-disable-next-line
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 
-				return true
+				return leaveForm
 			},
 
 			/**
@@ -1243,7 +1166,7 @@
 			{
 				// Execute the "After exit" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.afterExit)
-				for (const trigger of triggers)
+				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
 				this.emitEvent('after-exit-form')

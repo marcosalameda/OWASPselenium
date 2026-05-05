@@ -43,32 +43,57 @@ public class AiTests : BaseSeleniumTest
         var app = Authenticate();
         app.Menu.ActivateModule("PTN");
         app.Menu.ActivateMenu("PTN", "71");
-
+    
         var list = new MenuListPage(Driver, "PTN", "711").List;
         list.ClickRow(0);
-
+    
         var form = new Pess1Form(Driver, FORM_MODE.SHOW);
-
-        app.Sidebar.ChatbotButton.Click();
-
+    
+        // Click button to create mock person
+        form.PseudField001.Click();
+    
         var chatbot = new ChatbotPage(Driver);
-        chatbot.ChangeChat("MockPersonCreator");
-        chatbot.SendMessage("Sugere me um valor para email e nome");
-
+    
+        chatbot.WaitForResponse();
+    
         var agent = new MockPersonCreatorAgent(Driver);
         var suggestions = agent.GetAllSuggestions();
-        Assert.That(suggestions.Count, Is.EqualTo(2));
-
-        var email = agent.GetSuggestionText(agent.Email);
+        Assert.That(suggestions.Count, Is.EqualTo(4));
+    
+        var employeeNumber = agent.GetSuggestionText(agent.Employee_Number);
         var name = agent.GetSuggestionText(agent.Name);
-
+        var email = agent.GetSuggestionText(agent.Email);
+        var phoneNumber = agent.GetSuggestionText(agent.Telephone);
+    
+        // Apply single suggestion and check that it worked
+        agent.ApplySuggestion(agent.Name);
+    
+        Assert.That(form.Pess1Name.GetValue(), Is.EqualTo(name));
+    
+        // Apply all suggestions and check that it worked
         agent.ApplyLatestSuggestions();
-
+    
+        Assert.That(form.Pess1Idfuncio.GetValue(), Is.EqualTo(employeeNumber));
         Assert.That(form.Pess1Name.GetValue(), Is.EqualTo(name));
         Assert.That(form.Pess1Email.GetValue(), Is.EqualTo(email));
-
+        Assert.That(form.Pess1Telephon.GetValue(), Is.EqualTo(phoneNumber));
+    
         chatbot.ClearChat();
         form.Save();
+    }
+    
+    [Test]
+    public void McpToolsCheck()
+    {
+        var app = Authenticate();
+    
+        app.Sidebar.ChatbotButton.Click();
+    
+        var chatbot = new ChatbotPage(Driver);
+    
+        string resMcpTools = chatbot.SendMessage("Does this application have MCP tools? If so, which ones?");
+    
+        Assert.That(resMcpTools.Contains("Create a country"));
     }
 }
 //END_MANUALCODE

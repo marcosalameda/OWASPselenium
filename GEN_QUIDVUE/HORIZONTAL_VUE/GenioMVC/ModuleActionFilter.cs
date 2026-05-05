@@ -9,8 +9,8 @@ namespace GenioMVC;
 
 public class ModuleActionFilter : IActionFilter
 {
-	private static readonly HashSet<(string action, string controller)> allowedActions =
-	[
+	private static readonly HashSet<(string action, string controller)> allowedActions = new()
+	{
 		("Profile", "Home"),
 		("LogOff", "Account"),
 		("GetIfUserLogged", "Account"),
@@ -18,21 +18,21 @@ public class ModuleActionFilter : IActionFilter
 		("NavigationalBar", "Home"),
 		("GetImage", "Account"),
 		("Change2FA", "Home"),
-		("CreateTOTP", "Home"),
 		("GetConfig", "Config"),
 		("ProfileRedirect", "Home"),
 		("HomeRedirect", "Home"),
 		("Change2FARedirect", "Home")
-	];
+	};
 
-	private readonly UserContext m_userContext;
-	private IDisposable m_loggerScope;
-	private IDisposable m_metricScope;
+	UserContext m_userContext;
+	HttpContext m_httpContext;
+	IDisposable m_loggerScope;
 
-	public ModuleActionFilter(UserContextService userContext)
+	public ModuleActionFilter(UserContextService userContext, IHttpContextAccessor httpContextAccessor)
 	{
 		m_userContext = userContext.Current;
-		m_loggerScope = m_userContext is not null ? setLoggerContext(m_userContext.User) : null;
+		m_httpContext = httpContextAccessor.HttpContext;
+		m_loggerScope = setLoggerContext(userContext.Current.User);
 	}
 
 	/// <summary>
@@ -52,16 +52,11 @@ public class ModuleActionFilter : IActionFilter
 				vmb.Init(m_userContext);
 		}
 
-		//Measure all the controller load times
-		if (m_userContext is not null && context.ActionDescriptor is Microsoft.AspNetCore.Mvc.Controllers.ControllerActionDescriptor action)
-		{
-			m_metricScope = GenioDI.MetricsOtlp.RecordTime("page_load_time", new System.Diagnostics.TagList([
-					new("Controller", action.ControllerName),
-					new("Action", action.ActionName),
-					new("Module", m_userContext.User?.CurrentModule),
-					new("Year", m_userContext.User?.Year)
-				]), "ms", "Time to load the page.");
-		}
+		//Increment request count metric
+		GenioDI.MetricsOtlp.IncrementCounter("request_counter", 1, new List<KeyValuePair<string, object>>() {
+				new("Controller", context.RouteData.Values["controller"]),
+				new("Action", context.RouteData.Values["action"])
+		});
 	}
 
 	/// <summary>
@@ -75,7 +70,7 @@ public class ModuleActionFilter : IActionFilter
 			context.HttpContext.Response.Headers["QAjaxIdentifier"] = qAjaxId;
 
 		// MH (07/09/2017) - Ensure that the transaction was not left open after processing the request. And if transaction is still open it will be closed automatically.
-		if (m_userContext is not null && m_userContext.PersistentSupport != null && !m_userContext.PersistentSupport.TransactionIsClosed)
+		if (m_userContext.PersistentSupport != null && !m_userContext.PersistentSupport.TransactionIsClosed)
 		{
 			CSGenio.framework.Log.Error(string.Format("The transaction still open after the action was executed. The transaction will be closed automatically by the application. (URL: {0})",
 				context.HttpContext.Request.Path));
@@ -91,8 +86,7 @@ public class ModuleActionFilter : IActionFilter
 		}
 
 		// Dispose of the OpenTelemetry logger scope context
-		m_loggerScope?.Dispose();
-		m_metricScope?.Dispose();
+		if (m_loggerScope != null) m_loggerScope.Dispose();
 	}
 
 	private IDisposable setLoggerContext(CSGenio.framework.User user)
@@ -107,8 +101,8 @@ public class ModuleActionFilter : IActionFilter
 
 	private void AuthorizeForUsers(ActionExecutingContext context)
 	{
-		var u = m_userContext?.User;
-		if (u is not null && !u.IsGuest())
+		var u = m_userContext.User;
+		if (!u.IsGuest())
 		{
 			// Check if user has their account disabled
 			if (u.Status == 2)
@@ -137,7 +131,7 @@ public class ModuleActionFilter : IActionFilter
 	private void VerifyInitialPHE(ActionExecutingContext context)
 	{
 		var currentAction = context.RouteData.Values["action"].ToString();
-		if (m_userContext is not null && !m_userContext.User.EphOk && !ActionsAllowed(context) && !ActionsInitialPHEAllowed(context))
+		if (!m_userContext.User.EphOk && !ActionsAllowed(context) && !ActionsInitialPHEAllowed(context))
 			context.Result = new RedirectToRouteResult(new RouteValueDictionary { { "action", "GetEphFormActionByModule" }, { "controller", "Home" }, { "EphModule", m_userContext.User.CurrentModule } });
 	}
 

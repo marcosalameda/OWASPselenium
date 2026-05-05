@@ -1,5 +1,5 @@
 ﻿
- 
+
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -194,6 +194,16 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
+			Qfield = new Field(info.Alias, "codcntry", FieldType.KEY_GUID);
+			Qfield.FieldDescription = ">> Country";
+			Qfield.FieldSize =  36;
+			Qfield.MQueue = false;
+			Qfield.VisivelCav = CavVisibilityType.Nunca;
+
+			Qfield.Dupmsg = "";
+			info.RegisterFieldDB(Qfield);
+
+			//- - - - - - - - - - - - - - - - - - -
 			Qfield = new Field(info.Alias, "zzstate", FieldType.INTEGER);
 			Qfield.FieldDescription = "Estado da ficha";
 			info.RegisterFieldDB(Qfield);
@@ -214,6 +224,7 @@ namespace CSGenio.business
 			// Mother Relations
 			//------------------------------
 			info.ParentTables = new Dictionary<string, Relation>();
+			info.ParentTables.Add("cntry", new Relation("GQT", "gqtfacility", "facil", "codfacil", "codcntry", "GQT", "gqtcntry", "cntry", "codcntry", "codcntry"));
 			info.ParentTables.Add("entit", new Relation("GQT", "gqtfacility", "facil", "codfacil", "codentit", "GQT", "gqtentity", "entit", "codentit", "codentit"));
 			info.ParentTables.Add("facty", new Relation("GQT", "gqtfacility", "facil", "codfacil", "codfacty", "GQT", "gqtfacilitytype", "facty", "codfacty", "codfacty"));
 		}
@@ -225,11 +236,12 @@ namespace CSGenio.business
 		{
 			// Pathways
 			//------------------------------
-			info.Pathways = new Dictionary<string, string>(4);
+			info.Pathways = new Dictionary<string, string>(5);
+			info.Pathways.Add("cntry","cntry");
 			info.Pathways.Add("facty","facty");
 			info.Pathways.Add("entit","entit");
-			info.Pathways.Add("faci2","entit");
 			info.Pathways.Add("faci1","entit");
+			info.Pathways.Add("faci2","entit");
 		}
 
 		/// <summary>
@@ -530,6 +542,17 @@ namespace CSGenio.business
 			set { insertNameValueField(FldGeocoord, value); }
 		}
 
+		/// <summary>Field : ">> Country" Tipo: "CE" Formula:  ""</summary>
+		public static FieldRef FldCodcntry { get { return m_fldCodcntry; } }
+		private static FieldRef m_fldCodcntry = new FieldRef("facil", "codcntry");
+
+		/// <summary>Field : ">> Country" Tipo: "CE" Formula:  ""</summary>
+		public string ValCodcntry
+		{
+			get { return (string)returnValueField(FldCodcntry); }
+			set { insertNameValueField(FldCodcntry, value); }
+		}
+
 		/// <summary>Field : "ZZSTATE" Type: "INT" Formula:  ""</summary>
 		public static FieldRef FldZzstate { get { return m_fldZzstate; } }
 		private static FieldRef m_fldZzstate = new FieldRef("facil", "zzstate");
@@ -550,17 +573,16 @@ namespace CSGenio.business
         /// <param name="key">The value of the primary key</param>
         /// <param name="user">The context of the user</param>
         /// <param name="fields">The fields to be filled in the area</param>
-		/// <param name="forUpdate">True if you are preparing to update this record, false otherwise</param>
         /// <returns>An area with the fields requests of the record read or null if the key does not exist</returns>
         /// <remarks>Persistence operations should not be used on a partially positioned register</remarks>
-        public static CSGenioAfacil search(PersistentSupport sp, string key, User user, string[] fields = null, bool forUpdate = false)
+        public static CSGenioAfacil search(PersistentSupport sp, string key, User user, string[] fields = null)
         {
 			if (string.IsNullOrEmpty(key))
 				return null;
 
 		    CSGenioAfacil area = new CSGenioAfacil(user, user.CurrentModule);
 
-            if (sp.getRecord(area, key, fields, forUpdate))
+            if (sp.getRecord(area, key, fields))
                 return area;
 			return null;
         }
@@ -620,14 +642,14 @@ namespace CSGenio.business
 
 
 
-
-
+ 
 
 
 		// USE /[MANUAL GQT TABAUX FACIL]/
 
      
-              
+
+               
 
 	}
 }

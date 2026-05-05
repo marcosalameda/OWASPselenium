@@ -25,6 +25,7 @@ namespace GenioServer.ai
         private User user;
         private string module; 
 
+
         public void LoadRecords(string key, PersistentSupport sp, User user)
         {
             //Base area
@@ -40,20 +41,9 @@ namespace GenioServer.ai
             this.module = user.CurrentModule;
 
             pess1 = (CSGenioApess1) area;
-			Files = new List<DBFile>();
-			// Documents to load
 
             // Areas dependent on base table
 
-        }
-
-		public void LoadFile(PersistentSupport sp, string valDocFk)
-        {
-            DBFile file = DbArea.getFileDB(valDocFk, sp);
-            if (file != null && file.File != null)
-            {
-                Files.Add(file);
-            }
         }
 
         public override string BuildUserPrompt()
@@ -81,14 +71,11 @@ namespace GenioServer.ai
                 $"- Never use real personal data, everything must be fictional.\n";
         }
 
-        public override void Execute(DbArea area, PersistentSupport sp, User user, AgentContextData context = null)
+        public override void Execute(DbArea area, PersistentSupport sp, User user)
         {
             LoadRecords(area, sp, user);
 
-            if(context == null)
-                context = BuildAgentContext(user, area.QPrimaryKey);
-
-            MockPersonCreatorResponse response = base.GetResponse<MockPersonCreatorResponse>(context);
+            MockPersonCreatorResponse response = base.GetResponse<MockPersonCreatorResponse>(user);
             if (response == null)
                 throw new FrameworkException("Answer from AI service was empty", "MockPersonCreatorAgent.Execute", "Answer from AI service was empty");
             
@@ -110,28 +97,24 @@ namespace GenioServer.ai
                 Employee_Number = new
                 {
                     type = "number",
-                    title = Translations.Get("Official No.", user.Language),
                     description = "The number of the employee, any number from 1 -> 6 characters"
                 }, 
 
                 Telephone = new
                 {
                     type = "string",
-                    title = Translations.Get("Phone", user.Language),
                     description = "The person's telephone number, a portuguese valid. Numbers must follow Portuguese formatting rules"
                 }, 
 
                 Name = new
                 {
                     type = "string",
-                    title = Translations.Get("Name", user.Language),
                     description = "The person first and last name"
                 }, 
 
                 Email = new
                 {
                     type = "string",
-                    title = Translations.Get("Email", user.Language),
                     description = "The person's email should be a combination of their first and last name"
                 }            }
         };

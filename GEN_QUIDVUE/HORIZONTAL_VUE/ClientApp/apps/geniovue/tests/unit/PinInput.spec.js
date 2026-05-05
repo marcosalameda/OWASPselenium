@@ -49,7 +49,7 @@ describe('QPinInput', () => {
 				charNumber: 5,
 			},
 		});
-		const inputFields = await wrapper.getAllByTestId('pin-input-test4');
+		var inputFields = await wrapper.getAllByTestId('pin-input-test4');
     
 		await fireEvent.keyUp(inputFields[0], {key:'1'});
 
@@ -64,7 +64,7 @@ describe('QPinInput', () => {
 				charNumber: 5,
 			},
 		});
-		const inputFields = await wrapper.getAllByTestId('pin-input-test5');
+		var inputFields = await wrapper.getAllByTestId('pin-input-test5');
     
 		await fireEvent.keyUp(inputFields[0], {key:'1'});
 		expect(wrapper).toEmitModelValue("1");
@@ -82,7 +82,7 @@ describe('QPinInput', () => {
 				charNumber: 5,
 			},
 		});
-		const inputFields = await wrapper.getAllByTestId('pin-input-test6');
+		var inputFields = await wrapper.getAllByTestId('pin-input-test6');
     
 		await userEvent.type(inputFields[0], 'ArrowRight');
 		expect(inputFields[0]).toHaveFocus();
@@ -101,7 +101,7 @@ describe('QPinInput', () => {
 				charNumber: 5,
 			},
 		});
-		const inputFields = await wrapper.getAllByTestId('pin-input-test7');
+		var inputFields = await wrapper.getAllByTestId('pin-input-test7');
     
 		await userEvent.type(inputFields[0], '1');
 		expect(wrapper).toEmitModelValue("1");

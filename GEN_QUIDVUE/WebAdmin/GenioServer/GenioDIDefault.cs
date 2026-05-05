@@ -26,6 +26,7 @@ namespace CSGenio
             UseDatabase();
             UseMessaging();
             UseScheduler();
+            UseEph();
             UseElasticSearch();
             UseQueries();
             UseHttpFactory();
@@ -50,6 +51,11 @@ namespace CSGenio
         public static void UseScheduler()
         {
             GenioDI.Scheduler = new SchedulerService();
+        }
+
+        public static void UseEph()
+        {
+            GenioDI.EphManager = new UserBusinessService();
         }
 
         public static void UseQueries()

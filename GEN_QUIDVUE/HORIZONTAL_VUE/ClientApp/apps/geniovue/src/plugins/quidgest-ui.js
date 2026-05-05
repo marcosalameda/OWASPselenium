@@ -14,7 +14,7 @@ const framework = createFramework({
 	},
 	defaults: {
 		QIconSvg: {
-			bundle: 'Content/svgbundle.svg?v=2828'
+			bundle: 'Content/svgbundle.svg?v=3637'
 		},
 		QCollapsible: {
 			icons: {
@@ -64,26 +64,6 @@ const framework = createFramework({
 				},
 				close: {
 					icon: 'square-plus',
-				}
-			}
-		},
-		QCheckbox: {
-			icons: {
-				checked: {
-					icon: 'ok'
-				},
-				indeterminate: {
-					icon: 'minus'
-				}
-			}
-		},
-		QCarousel: {
-			icons: {
-				back: {
-					icon: 'step-back'
-				},
-				forward: {
-					icon: 'step-forward'
 				}
 			}
 		}

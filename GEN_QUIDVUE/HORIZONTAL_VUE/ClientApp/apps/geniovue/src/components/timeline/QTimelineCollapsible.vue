@@ -215,7 +215,7 @@
 			 */
 			forceRepaint(el)
 			{
-				void getComputedStyle(el)['height']
+				getComputedStyle(el)['height']
 			},
 
 			/**

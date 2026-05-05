@@ -12,6 +12,6 @@ public class TmlineForm : Form
 	/// </summary>
 	public IWebElement PseudTmdsaid => throw new NotImplementedException();
 
-	public TmlineForm(IWebDriver driver, FORM_MODE mode, By? containerLocator = null, bool usePkInId = false)
-		: base(driver, mode, "TMLINE", containerLocator: containerLocator, usePkInId: usePkInId) { }
+	public TmlineForm(IWebDriver driver, FORM_MODE mode, By? containerLocator = null)
+		: base(driver, mode, "TMLINE", containerLocator: containerLocator) { }
 }

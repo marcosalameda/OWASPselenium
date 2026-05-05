@@ -10,7 +10,7 @@ namespace Administration;
 public class SchedulerServiceHost : BackgroundService
 {
 
-    private readonly SchedulerService _service = new SchedulerService();
+    private SchedulerService _service = new SchedulerService();
     
     private bool _wasEnabled = false;
     private CancellationTokenSource _childCts = null;
@@ -19,11 +19,10 @@ public class SchedulerServiceHost : BackgroundService
 
         try
         {
-            //we create a child cancelation so we can stop the service without exiting the host
-            _childCts?.Dispose();
-            _childCts = CancellationTokenSource.CreateLinkedTokenSource(stoppingToken);
             while (!stoppingToken.IsCancellationRequested)
             {
+                //we create a child cancelation so we can stop the service without exiting the host
+                _childCts = CancellationTokenSource.CreateLinkedTokenSource(stoppingToken);
                 //memorize the last enabled state to avoid unnecessary restarts during no changes
                 _wasEnabled = Configuration.Scheduler.Enabled;
 
@@ -54,10 +53,6 @@ public class SchedulerServiceHost : BackgroundService
             // recovery options, we need to terminate the process with a non-zero exit code.
             //if(OperatingSystem.IsWindows())
             //    Environment.Exit(1);
-        }
-        finally
-        {
-            _childCts?.Dispose();
         }
     }
 

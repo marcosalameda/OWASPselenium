@@ -10,27 +10,27 @@ public class LendexplForm : Form
 	/// <summary>
 	/// Filtering
 	/// </summary>
-	public CollapsibleZoneControl PseudNewgrp01 => new CollapsibleZoneControl(driver, ContainerLocator, "#LENDEXPLPSEUDNEWGRP01-container");
+	public IWebElement PseudNewgrp01 => throw new NotImplementedException();
 
 	/// <summary>
 	/// Lender: Gender
 	/// </summary>
-    public CheckboxGroupControl Pess1Gender_FG => new CheckboxGroupControl(driver, ContainerLocator, "container-LENDEXPLPESS1GENDER___FG");
+	public IWebElement Pess1Gender => throw new NotImplementedException();
 
 	/// <summary>
 	/// Equipment: Loan frequency
 	/// </summary>
-    public CheckboxGroupControl EquipFrequenc_FG => new CheckboxGroupControl(driver, ContainerLocator, "container-LENDEXPLEQUIPFREQUENC_FG");
+	public IWebElement EquipFrequenc => throw new NotImplementedException();
 
 	/// <summary>
 	/// Equipment: Bought
 	/// </summary>
-	public CheckboxInputControl EquipBought => new CheckboxInputControl(driver, ContainerLocator, "#container-LENDEXPLEQUIPBOUGHT__");
+	public IWebElement EquipBought => throw new NotImplementedException();
 
 	/// <summary>
 	/// Lending: Returned
 	/// </summary>
-	public CheckboxInputControl LendiReturned => new CheckboxInputControl(driver, ContainerLocator, "#container-LENDEXPLLENDIRETURNED");
+	public IWebElement LendiReturned => throw new NotImplementedException();
 
 	/// <summary>
 	/// Lenders

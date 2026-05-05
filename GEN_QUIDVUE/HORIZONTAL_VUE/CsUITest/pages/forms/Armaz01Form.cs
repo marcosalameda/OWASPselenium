@@ -10,18 +10,18 @@ public class Armaz01Form : Subform
 	/// <summary>
 	/// Code:
 	/// </summary>
-	public BaseInputControl WarehWarehcod => new BaseInputControl(driver, ContainerLocator, "container-ARMAZ01_WAREHWAREHCOD" + IdSuffix, "#ARMAZ01_WAREHWAREHCOD" + IdSuffix);
+	public BaseInputControl WarehWarehcod => new BaseInputControl(driver, ContainerLocator, "container-ARMAZ01_WAREHWAREHCOD", "#ARMAZ01_WAREHWAREHCOD");
 
 	/// <summary>
 	/// Activity:
 	/// </summary>
-	public BaseInputControl WarehActivity => new BaseInputControl(driver, ContainerLocator, "container-ARMAZ01_WAREHACTIVITY" + IdSuffix, "#ARMAZ01_WAREHACTIVITY" + IdSuffix);
+	public BaseInputControl WarehActivity => new BaseInputControl(driver, ContainerLocator, "container-ARMAZ01_WAREHACTIVITY", "#ARMAZ01_WAREHACTIVITY");
 
 	/// <summary>
 	/// Warehouse:
 	/// </summary>
-	public BaseInputControl WarehWarehdes => new BaseInputControl(driver, ContainerLocator, "container-ARMAZ01_WAREHWAREHDES" + IdSuffix, "#ARMAZ01_WAREHWAREHDES" + IdSuffix);
+	public BaseInputControl WarehWarehdes => new BaseInputControl(driver, ContainerLocator, "container-ARMAZ01_WAREHWAREHDES", "#ARMAZ01_WAREHWAREHDES");
 
-	public Armaz01Form(IWebDriver driver, FORM_MODE mode, By? containerLocator = null, bool usePkInId = false)
-		: base(driver, mode, "ARMAZ01", "ARMAZPOP", containerLocator: containerLocator, usePkInId: usePkInId) { }
+	public Armaz01Form(IWebDriver driver, FORM_MODE mode, By? containerLocator = null)
+		: base(driver, mode, "ARMAZ01", "ARMAZPOP", containerLocator: containerLocator) { }
 }

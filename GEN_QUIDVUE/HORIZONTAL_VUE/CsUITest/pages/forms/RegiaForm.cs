@@ -10,14 +10,14 @@ public class RegiaForm : Form
 	/// <summary>
 	/// Country
 	/// </summary>
-	public LookupControl CntryCountry => new LookupControl(driver, ContainerLocator, "container-REGIA___CNTRYCOUNTRY_" + IdSuffix);
-	public SeeMorePage CntryCountrySeeMorePage => new SeeMorePage(driver, "REGIA", "REGIA___CNTRYCOUNTRY_" + IdSuffix);
+	public LookupControl CntryCountry => new LookupControl(driver, ContainerLocator, "container-REGIA___CNTRYCOUNTRY_");
+	public SeeMorePage CntryCountrySeeMorePage => new SeeMorePage(driver, "REGIA", "REGIA___CNTRYCOUNTRY_");
 
 	/// <summary>
 	/// Region
 	/// </summary>
-	public BaseInputControl RegioRegiao => new BaseInputControl(driver, ContainerLocator, "container-REGIA___REGIOREGIAO__" + IdSuffix, "#REGIA___REGIOREGIAO__" + IdSuffix);
+	public BaseInputControl RegioRegiao => new BaseInputControl(driver, ContainerLocator, "container-REGIA___REGIOREGIAO__", "#REGIA___REGIOREGIAO__");
 
-	public RegiaForm(IWebDriver driver, FORM_MODE mode, By? containerLocator = null, bool usePkInId = false)
-		: base(driver, mode, "REGIA", containerLocator: containerLocator, usePkInId: usePkInId) { }
+	public RegiaForm(IWebDriver driver, FORM_MODE mode, By? containerLocator = null)
+		: base(driver, mode, "REGIA", containerLocator: containerLocator) { }
 }

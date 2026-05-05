@@ -9,13 +9,12 @@
 			<div
 				v-if="showFormHeader"
 				class="c-action-bar">
-				<component
+				<h1
 					v-if="formControl.uiComponents.header && formInfo.designation"
-					:is="topHeadingTag"
 					:id="formTitleId"
 					class="form-header">
 					{{ formInfo.designation }}
-				</component>
+				</h1>
 
 				<div class="c-action-bar__menu">
 					<template
@@ -39,13 +38,9 @@
 									:label="btn.label"
 									:disabled="btn.disabled"
 									@click="btn.action">
-									<template v-if="btn.icon">
-										<q-badge-indicator
-											:enabled="btn.badge?.isVisible ?? false"
-											:color="btn.badge?.color">
-											<q-icon v-bind="btn.icon" />
-										</q-badge-indicator>
-									</template>
+									<q-icon
+										v-if="btn.icon"
+										v-bind="btn.icon" />
 								</q-toggle-group-item>
 							</template>
 						</q-toggle-group>
@@ -57,7 +52,7 @@
 				v-if="$app.layout.FormAnchorsPosition === 'form-header' && visibleGroups.length > 0"
 				:anchors="anchorGroups"
 				:controls="visibleControls"
-				@focus-control="focusControl" />
+				@focus-control="(...args) => focusControl(...args)" />
 		</div>
 	</teleport>
 
@@ -78,7 +73,6 @@
 						v-if="btn.isActive && btn.isVisible && btn.showInHeading"
 						:id="`heading-${btn.id}`"
 						:label="btn.text"
-						:color="btn.color"
 						:variant="btn.variant"
 						:disabled="btn.disabled"
 						:icon-pos="btn.iconPos"
@@ -92,144 +86,128 @@
 			</q-button-group>
 		</div>
 
-		<q-container
-			fluid
+		<div
+			class="form-flow"
 			data-key="PAIS"
-			:data-identifier="primaryKeyValue"
-			:data-loading="!formInitialDataLoaded || !isActiveForm">
+			:data-loading="!formInitialDataLoaded">
 			<template v-if="formControl.initialized && showFormBody">
-				<q-row v-if="controls.PAIS____PSEUDNOVOGR02.isVisible">
-					<q-col
-						v-if="controls.PAIS____PSEUDNOVOGR02.isVisible"
-						cols="auto">
+				<q-row-container v-show="controls.PAIS____PSEUDNOVOGR02.isVisible">
+					<q-control-wrapper
+						v-show="controls.PAIS____PSEUDNOVOGR02.isVisible"
+						class="${Vue.GetControlWrapperClass($controlsColumn)}">
 						<q-group-box-container
-							v-if="controls.PAIS____PSEUDNOVOGR02.isVisible"
+							id="PAIS____PSEUDNOVOGR02"
 							v-bind="controls.PAIS____PSEUDNOVOGR02"
-							:id="getControlId(controls.PAIS____PSEUDNOVOGR02)"
-							:no-border="controls.PAIS____PSEUDNOVOGR02.borderless">
+							:is-visible="controls.PAIS____PSEUDNOVOGR02.isVisible">
 							<!-- Start PAIS____PSEUDNOVOGR02 -->
-							<q-row v-if="controls.PAIS____CNTRYCOUNTRY_.isVisible || controls.PAIS____CNTRYACTIVE__.isVisible">
-								<q-col
-									v-if="controls.PAIS____CNTRYCOUNTRY_.isVisible"
-									cols="auto">
+							<q-row-container v-show="controls.PAIS____CNTRYCOUNTRY_.isVisible || controls.PAIS____CNTRYACTIVE__.isVisible">
+								<q-control-wrapper
+									v-show="controls.PAIS____CNTRYCOUNTRY_.isVisible"
+									class="${Vue.GetControlWrapperClass($controlsColumn)}">
 									<base-input-structure
-										v-if="controls.PAIS____CNTRYCOUNTRY_.isVisible"
 										class="i-text"
-										v-bind="controls.PAIS____CNTRYCOUNTRY_.wrapperProps"
-										:id="getControlId(controls.PAIS____CNTRYCOUNTRY_)"
+										v-bind="controls.PAIS____CNTRYCOUNTRY_"
 										v-on="controls.PAIS____CNTRYCOUNTRY_.handlers"
 										:loading="controls.PAIS____CNTRYCOUNTRY_.props.loading"
 										:reporting-mode-on="reportingModeCAV"
 										:suggestion-mode-on="suggestionModeOn">
 										<q-text-field
 											v-bind="controls.PAIS____CNTRYCOUNTRY_.props"
-											:id="getControlId(controls.PAIS____CNTRYCOUNTRY_)"
 											@blur="onBlur(controls.PAIS____CNTRYCOUNTRY_, model.ValCountry.value)"
 											@change="model.ValCountry.fnUpdateValueOnChange" />
 									</base-input-structure>
-								</q-col>
-								<q-col
-									v-if="controls.PAIS____CNTRYACTIVE__.isVisible"
-									cols="auto">
+								</q-control-wrapper>
+								<q-control-wrapper
+									v-show="controls.PAIS____CNTRYACTIVE__.isVisible"
+									class="${Vue.GetControlWrapperClass($controlsColumn)}">
 									<base-input-structure
-										v-if="controls.PAIS____CNTRYACTIVE__.isVisible"
-										class="i-text"
-										v-bind="controls.PAIS____CNTRYACTIVE__.wrapperProps"
-										:id="getControlId(controls.PAIS____CNTRYACTIVE__)"
+										class="i-checkbox"
+										v-bind="controls.PAIS____CNTRYACTIVE__"
 										v-on="controls.PAIS____CNTRYACTIVE__.handlers"
 										:loading="controls.PAIS____CNTRYACTIVE__.props.loading"
 										:reporting-mode-on="reportingModeCAV"
 										:suggestion-mode-on="suggestionModeOn">
 										<template #label>
-											<q-checkbox
+											<q-checkbox-input
 												v-if="controls.PAIS____CNTRYACTIVE__.isVisible"
 												v-bind="controls.PAIS____CNTRYACTIVE__.props"
-												:id="getControlId(controls.PAIS____CNTRYACTIVE__)"
 												v-on="controls.PAIS____CNTRYACTIVE__.handlers" />
 										</template>
 									</base-input-structure>
-								</q-col>
-							</q-row>
-							<q-row v-if="controls.PAIS____PSEUDNOVOGR01.isVisible">
-								<q-col v-if="controls.PAIS____PSEUDNOVOGR01.isVisible">
+								</q-control-wrapper>
+							</q-row-container>
+							<q-row-container
+								v-show="controls.PAIS____PSEUDNOVOGR01.isVisible"
+								is-large>
+								<q-control-wrapper
+									v-show="controls.PAIS____PSEUDNOVOGR01.isVisible"
+									class="${Vue.GetControlWrapperClass($controlsColumn)}">
 									<q-group-box-container
-										v-if="controls.PAIS____PSEUDNOVOGR01.isVisible"
+										id="PAIS____PSEUDNOVOGR01"
 										v-bind="controls.PAIS____PSEUDNOVOGR01"
-										:id="getControlId(controls.PAIS____PSEUDNOVOGR01)"
-										:no-border="controls.PAIS____PSEUDNOVOGR01.borderless">
+										:is-visible="controls.PAIS____PSEUDNOVOGR01.isVisible">
 										<!-- Start PAIS____PSEUDNOVOGR01 -->
-										<q-row v-if="controls.PAIS____CNTRYCODIGONR.isVisible || controls.PAIS____CNTRYALFA2___.isVisible || controls.PAIS____CNTRYALFA3___.isVisible">
-											<q-col
-												v-if="controls.PAIS____CNTRYCODIGONR.isVisible"
-												cols="auto">
+										<q-row-container v-show="controls.PAIS____CNTRYCODIGONR.isVisible || controls.PAIS____CNTRYALFA2___.isVisible || controls.PAIS____CNTRYALFA3___.isVisible">
+											<q-control-wrapper
+												v-show="controls.PAIS____CNTRYCODIGONR.isVisible"
+												class="${Vue.GetControlWrapperClass($controlsColumn)}">
 												<base-input-structure
-													v-if="controls.PAIS____CNTRYCODIGONR.isVisible"
 													class="i-text"
-													v-bind="controls.PAIS____CNTRYCODIGONR.wrapperProps"
-													:id="getControlId(controls.PAIS____CNTRYCODIGONR)"
+													v-bind="controls.PAIS____CNTRYCODIGONR"
 													v-on="controls.PAIS____CNTRYCODIGONR.handlers"
 													:loading="controls.PAIS____CNTRYCODIGONR.props.loading"
 													:reporting-mode-on="reportingModeCAV"
 													:suggestion-mode-on="suggestionModeOn">
 													<q-text-field
 														v-bind="controls.PAIS____CNTRYCODIGONR.props"
-														:id="getControlId(controls.PAIS____CNTRYCODIGONR)"
 														@blur="onBlur(controls.PAIS____CNTRYCODIGONR, model.ValCodigonr.value)"
 														@change="model.ValCodigonr.fnUpdateValueOnChange" />
 												</base-input-structure>
-											</q-col>
-											<q-col
-												v-if="controls.PAIS____CNTRYALFA2___.isVisible"
-												cols="auto">
+											</q-control-wrapper>
+											<q-control-wrapper
+												v-show="controls.PAIS____CNTRYALFA2___.isVisible"
+												class="${Vue.GetControlWrapperClass($controlsColumn)}">
 												<base-input-structure
-													v-if="controls.PAIS____CNTRYALFA2___.isVisible"
 													class="i-text"
-													v-bind="controls.PAIS____CNTRYALFA2___.wrapperProps"
-													:id="getControlId(controls.PAIS____CNTRYALFA2___)"
+													v-bind="controls.PAIS____CNTRYALFA2___"
 													v-on="controls.PAIS____CNTRYALFA2___.handlers"
 													:loading="controls.PAIS____CNTRYALFA2___.props.loading"
 													:reporting-mode-on="reportingModeCAV"
 													:suggestion-mode-on="suggestionModeOn">
 													<q-text-field
 														v-bind="controls.PAIS____CNTRYALFA2___.props"
-														:id="getControlId(controls.PAIS____CNTRYALFA2___)"
 														@blur="onBlur(controls.PAIS____CNTRYALFA2___, model.ValAlfa2.value)"
 														@change="model.ValAlfa2.fnUpdateValueOnChange" />
 												</base-input-structure>
-											</q-col>
-											<q-col
-												v-if="controls.PAIS____CNTRYALFA3___.isVisible"
-												cols="auto">
+											</q-control-wrapper>
+											<q-control-wrapper
+												v-show="controls.PAIS____CNTRYALFA3___.isVisible"
+												class="${Vue.GetControlWrapperClass($controlsColumn)}">
 												<base-input-structure
-													v-if="controls.PAIS____CNTRYALFA3___.isVisible"
 													class="i-text"
-													v-bind="controls.PAIS____CNTRYALFA3___.wrapperProps"
-													:id="getControlId(controls.PAIS____CNTRYALFA3___)"
+													v-bind="controls.PAIS____CNTRYALFA3___"
 													v-on="controls.PAIS____CNTRYALFA3___.handlers"
 													:loading="controls.PAIS____CNTRYALFA3___.props.loading"
 													:reporting-mode-on="reportingModeCAV"
 													:suggestion-mode-on="suggestionModeOn">
 													<q-text-field
 														v-bind="controls.PAIS____CNTRYALFA3___.props"
-														:id="getControlId(controls.PAIS____CNTRYALFA3___)"
 														@blur="onBlur(controls.PAIS____CNTRYALFA3___, model.ValAlfa3.value)"
 														@change="model.ValAlfa3.fnUpdateValueOnChange" />
 												</base-input-structure>
-											</q-col>
-										</q-row>
+											</q-control-wrapper>
+										</q-row-container>
 										<!-- End PAIS____PSEUDNOVOGR01 -->
 									</q-group-box-container>
-								</q-col>
-							</q-row>
-							<q-row v-if="controls.PAIS____CNTRYFLAG____.isVisible">
-								<q-col
-									v-if="controls.PAIS____CNTRYFLAG____.isVisible"
-									cols="auto">
+								</q-control-wrapper>
+							</q-row-container>
+							<q-row-container v-show="controls.PAIS____CNTRYFLAG____.isVisible">
+								<q-control-wrapper
+									v-show="controls.PAIS____CNTRYFLAG____.isVisible"
+									class="${Vue.GetControlWrapperClass($controlsColumn)}">
 									<base-input-structure
-										v-if="controls.PAIS____CNTRYFLAG____.isVisible"
 										class="q-image"
-										v-bind="controls.PAIS____CNTRYFLAG____.wrapperProps"
-										:id="getControlId(controls.PAIS____CNTRYFLAG____)"
+										v-bind="controls.PAIS____CNTRYFLAG____"
 										v-on="controls.PAIS____CNTRYFLAG____.handlers"
 										:loading="controls.PAIS____CNTRYFLAG____.props.loading"
 										:reporting-mode-on="reportingModeCAV"
@@ -237,102 +215,87 @@
 										<q-image
 											v-if="controls.PAIS____CNTRYFLAG____.isVisible"
 											v-bind="controls.PAIS____CNTRYFLAG____.props"
-											:id="getControlId(controls.PAIS____CNTRYFLAG____)"
 											v-on="controls.PAIS____CNTRYFLAG____.handlers" />
 									</base-input-structure>
-								</q-col>
-							</q-row>
+								</q-control-wrapper>
+							</q-row-container>
 							<!-- End PAIS____PSEUDNOVOGR02 -->
 						</q-group-box-container>
-					</q-col>
-				</q-row>
-				<q-row v-if="controls.PAIS____PSEUDIMOVEL__.isVisible">
-					<q-col
-						v-if="controls.PAIS____PSEUDIMOVEL__.isVisible"
-						cols="auto">
+					</q-control-wrapper>
+				</q-row-container>
+				<q-row-container v-show="controls.PAIS____PSEUDIMOVEL__.isVisible">
+					<q-control-wrapper
+						v-show="controls.PAIS____PSEUDIMOVEL__.isVisible"
+						class="${Vue.GetControlWrapperClass($controlsColumn)}">
 						<q-form-container
-							v-if="controls.PAIS____PSEUDIMOVEL__.isVisible"
 							:ref="controls.PAIS____PSEUDIMOVEL__.id"
 							v-bind="controls.PAIS____PSEUDIMOVEL__"
-							:id="getControlId(controls.PAIS____PSEUDIMOVEL__)"
 							v-on="controls.PAIS____PSEUDIMOVEL__.handlers" />
-					</q-col>
-				</q-row>
-				<q-row v-if="controls.PAIS____PSEUDNOVOGR04.isVisible">
-					<q-col
-						v-if="controls.PAIS____PSEUDNOVOGR04.isVisible"
-						cols="auto">
+					</q-control-wrapper>
+				</q-row-container>
+				<q-row-container v-show="controls.PAIS____PSEUDNOVOGR04.isVisible">
+					<q-control-wrapper
+						v-show="controls.PAIS____PSEUDNOVOGR04.isVisible"
+						class="${Vue.GetControlWrapperClass($controlsColumn)}">
 						<q-group-box-container
-							v-if="controls.PAIS____PSEUDNOVOGR04.isVisible"
+							id="PAIS____PSEUDNOVOGR04"
 							v-bind="controls.PAIS____PSEUDNOVOGR04"
-							:id="getControlId(controls.PAIS____PSEUDNOVOGR04)"
-							:no-border="controls.PAIS____PSEUDNOVOGR04.borderless">
+							:is-visible="controls.PAIS____PSEUDNOVOGR04.isVisible">
 							<!-- Start PAIS____PSEUDNOVOGR04 -->
-							<q-row v-if="controls.PAIS____PSEUDNOVOGR03.isVisible">
-								<q-col
-									v-if="controls.PAIS____PSEUDNOVOGR03.isVisible"
-									cols="auto">
+							<q-row-container v-show="controls.PAIS____PSEUDNOVOGR03.isVisible">
+								<q-control-wrapper
+									v-show="controls.PAIS____PSEUDNOVOGR03.isVisible"
+									class="${Vue.GetControlWrapperClass($controlsColumn)}">
 									<q-group-box-container
-										v-if="controls.PAIS____PSEUDNOVOGR03.isVisible"
+										id="PAIS____PSEUDNOVOGR03"
 										v-bind="controls.PAIS____PSEUDNOVOGR03"
-										:id="getControlId(controls.PAIS____PSEUDNOVOGR03)"
-										:no-border="controls.PAIS____PSEUDNOVOGR03.borderless">
+										:is-visible="controls.PAIS____PSEUDNOVOGR03.isVisible">
 										<!-- Start PAIS____PSEUDNOVOGR03 -->
-										<q-row v-if="controls.PAIS____PSEUDPROPRIE1.isVisible">
-											<q-col
-												v-if="controls.PAIS____PSEUDPROPRIE1.isVisible"
-												cols="auto">
+										<q-row-container v-show="controls.PAIS____PSEUDPROPRIE1.isVisible">
+											<q-control-wrapper
+												v-show="controls.PAIS____PSEUDPROPRIE1.isVisible"
+												class="${Vue.GetControlWrapperClass($controlsColumn)}">
 												<q-table
-													v-if="controls.PAIS____PSEUDPROPRIE1.isVisible"
+													v-show="controls.PAIS____PSEUDPROPRIE1.isVisible"
 													v-bind="controls.PAIS____PSEUDPROPRIE1"
-													:id="getControlId(controls.PAIS____PSEUDPROPRIE1)"
-													v-on="controls.PAIS____PSEUDPROPRIE1.handlers">
-													<template #header>
-														<q-table-config
-															:table-ctrl="controls.PAIS____PSEUDPROPRIE1"
-															v-on="controls.PAIS____PSEUDPROPRIE1.handlers" />
-													</template>
-													<!-- USE /[MANUAL GQT CUSTOM_TABLE PAIS____PSEUDPROPRIE1]/ -->
-												</q-table>
-											</q-col>
-										</q-row>
+													v-on="controls.PAIS____PSEUDPROPRIE1.handlers" />
+												<q-table-extra-extension
+													:list-ctrl="controls.PAIS____PSEUDPROPRIE1"
+													v-on="controls.PAIS____PSEUDPROPRIE1.handlers" />
+											</q-control-wrapper>
+										</q-row-container>
 										<!-- End PAIS____PSEUDNOVOGR03 -->
 									</q-group-box-container>
-								</q-col>
-							</q-row>
+								</q-control-wrapper>
+							</q-row-container>
 							<!-- End PAIS____PSEUDNOVOGR04 -->
 						</q-group-box-container>
-					</q-col>
-				</q-row>
-				<q-row v-if="controls.PAIS____PSEUDPROPRIED.isVisible">
-					<q-col
-						v-if="controls.PAIS____PSEUDPROPRIED.isVisible"
-						cols="auto">
+					</q-control-wrapper>
+				</q-row-container>
+				<q-row-container v-show="controls.PAIS____PSEUDPROPRIED.isVisible">
+					<q-control-wrapper
+						v-show="controls.PAIS____PSEUDPROPRIED.isVisible"
+						class="${Vue.GetControlWrapperClass($controlsColumn)}">
 						<q-table
-							v-if="controls.PAIS____PSEUDPROPRIED.isVisible"
+							v-show="controls.PAIS____PSEUDPROPRIED.isVisible"
 							v-bind="controls.PAIS____PSEUDPROPRIED"
-							:id="getControlId(controls.PAIS____PSEUDPROPRIED)"
-							v-on="controls.PAIS____PSEUDPROPRIED.handlers">
-							<template #header>
-								<q-table-config
-									:table-ctrl="controls.PAIS____PSEUDPROPRIED"
-									v-on="controls.PAIS____PSEUDPROPRIED.handlers" />
-							</template>
-							<!-- USE /[MANUAL GQT CUSTOM_TABLE PAIS____PSEUDPROPRIED]/ -->
-						</q-table>
-					</q-col>
-				</q-row>
+							v-on="controls.PAIS____PSEUDPROPRIED.handlers" />
+						<q-table-extra-extension
+							:list-ctrl="controls.PAIS____PSEUDPROPRIED"
+							v-on="controls.PAIS____PSEUDPROPRIED.handlers" />
+					</q-control-wrapper>
+				</q-row-container>
 			</template>
-		</q-container>
+		</div>
 	</teleport>
 
-	<q-divider v-if="!isPopup && showFormFooter" />
+	<hr v-if="!isPopup && showFormFooter" />
 
 	<teleport
 		v-if="formModalIsReady && showFormFooter"
 		:to="`#${uiContainersId.footer}`"
 		:disabled="!isPopup || isNested">
-		<q-row v-if="showFormFooter">
+		<q-row-container v-if="showFormFooter">
 			<div id="footer-action-btns">
 				<template
 					v-for="btn in formButtons"
@@ -341,7 +304,6 @@
 						v-if="btn.isActive && btn.isVisible && btn.showInFooter"
 						:id="`bottom-${btn.id}`"
 						:label="btn.text"
-						:color="btn.color"
 						:variant="btn.variant"
 						:disabled="btn.disabled"
 						:icon-pos="btn.iconPos"
@@ -353,12 +315,12 @@
 					</q-button>
 				</template>
 			</div>
-		</q-row>
+		</q-row-container>
 	</teleport>
 </template>
 
 <script>
-	/* eslint-disable @typescript-eslint/no-unused-vars */
+	/* eslint-disable no-unused-vars */
 	import { computed, defineAsyncComponent, readonly } from 'vue'
 	import { useRoute } from 'vue-router'
 
@@ -378,7 +340,7 @@
 	import qApi from '@/api/genio/quidgestFunctions.js'
 	import qFunctions from '@/api/genio/projectFunctions.js'
 	import qProjArrays from '@/api/genio/projectArrays.js'
-	/* eslint-enable @typescript-eslint/no-unused-vars */
+	/* eslint-enable no-unused-vars */
 
 	import FormViewModel from './QFormPaisViewModel.js'
 
@@ -455,8 +417,7 @@
 					primaryKey: 'ValCodcntry',
 					designation: computed(() => this.Resources.COUNTRY64133),
 					identifier: '', // Unique identifier received by route (when it's nested).
-					mode: '',
-					availableAgents: [],
+					mode: ''
 				},
 
 				formButtons: {
@@ -564,11 +525,7 @@
 						showInFooter: true,
 						isActive: true,
 						isVisible: computed(() => vm.authData.isAllowed && vm.isEditable),
-						action: vm.saveForm,
-						badge: {
-							isVisible: computed(() => vm.model?.isDirty === true),
-							color: 'highlight'
-						}
+						action: vm.saveForm
 					},
 					confirmBtn: {
 						id: 'confirm-btn',
@@ -675,7 +632,6 @@
 						label: computed(() => this.Resources.COUNTRY64133),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						borderless: false,
 						isCollapsible: false,
 						anchored: false,
 						directChildren: ['PAIS____CNTRYCOUNTRY_', 'PAIS____CNTRYACTIVE__', 'PAIS____PSEUDNOVOGR01', 'PAIS____CNTRYFLAG____'],
@@ -693,6 +649,7 @@
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'PAIS____PSEUDNOVOGR02',
 						maxLength: 90,
+						labelId: 'label_PAIS____CNTRYCOUNTRY_',
 						controlLimits: [
 						],
 					}, this),
@@ -717,7 +674,6 @@
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'PAIS____PSEUDNOVOGR02',
-						borderless: false,
 						isCollapsible: false,
 						anchored: false,
 						directChildren: ['PAIS____CNTRYCODIGONR', 'PAIS____CNTRYALFA2___', 'PAIS____CNTRYALFA3___'],
@@ -735,6 +691,7 @@
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'PAIS____PSEUDNOVOGR01',
 						maxLength: 3,
+						labelId: 'label_PAIS____CNTRYCODIGONR',
 						controlLimits: [
 						],
 					}, this),
@@ -749,6 +706,7 @@
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'PAIS____PSEUDNOVOGR01',
 						maxLength: 2,
+						labelId: 'label_PAIS____CNTRYALFA2___',
 						controlLimits: [
 						],
 					}, this),
@@ -763,6 +721,7 @@
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'PAIS____PSEUDNOVOGR01',
 						maxLength: 3,
+						labelId: 'label_PAIS____CNTRYALFA3___',
 						controlLimits: [
 						],
 					}, this),
@@ -808,7 +767,6 @@
 						label: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						borderless: true,
 						isCollapsible: false,
 						anchored: false,
 						directChildren: ['PAIS____PSEUDNOVOGR03'],
@@ -823,7 +781,6 @@
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'PAIS____PSEUDNOVOGR04',
-						borderless: true,
 						isCollapsible: false,
 						anchored: false,
 						directChildren: ['PAIS____PSEUDPROPRIE1'],
@@ -833,12 +790,11 @@
 					PAIS____PSEUDPROPRIE1: new fieldControlClass.TableListControl({
 						id: 'PAIS____PSEUDPROPRIE1',
 						name: 'PROPRIE1',
-						size: 'xlarge',
+						size: '',
 						label: computed(() => this.Resources.REAL_ESTATE_LIST36497),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'PAIS____PSEUDNOVOGR03',
-						headerLevel: computed(() => this.baseHeadingLevel + 1),
 						controller: 'CNTRY',
 						action: 'Pais_ValProprie1',
 						hasDependencies: false,
@@ -852,7 +808,6 @@
 								label: computed(() => this.Resources.PROPERTY_NAME18934),
 								dataLength: 85,
 								scrollData: 30,
-								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.CurrencyColumn({
 								order: 2,
@@ -863,7 +818,6 @@
 								scrollData: 12,
 								maxDigits: 9,
 								decimalPlaces: 2,
-								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 						],
 						config: {
@@ -880,8 +834,10 @@
 							permissions: {
 							},
 							searchBarConfig: {
-								visibility: false
+								visibility: false,
+								searchOnPressEnter: true
 							},
+							filtersVisible: false,
 							allowColumnFilters: false,
 							allowColumnSort: true,
 							crudActions: [
@@ -955,7 +911,9 @@
 									id: 'insert',
 									name: 'insert',
 									title: computed(() => this.Resources.INSERIR43365),
-									icon: { icon: 'add' },
+									icon: {
+										icon: 'add'
+									},
 									isInReadOnly: false,
 									params: {
 										action: vm.openFormAction,
@@ -1002,7 +960,7 @@
 								sortOrder: 'asc'
 							}
 						},
-						globalEvents: ['changed-CNTRY', 'changed-REGIO', 'changed-PAIS1', 'changed-PROPR', 'changed-TPPRO', 'changed-PESSO'],
+						globalEvents: ['changed-REGIO', 'changed-TPPRO', 'changed-PESSO', 'changed-CNTRY', 'changed-PROPR', 'changed-PAIS1'],
 						uuid: 'Pais_ValProprie1',
 						allSelectedRows: 'false',
 						controlLimits: [
@@ -1017,11 +975,10 @@
 					PAIS____PSEUDPROPRIED: new fieldControlClass.TableListControl({
 						id: 'PAIS____PSEUDPROPRIED',
 						name: 'PROPRIED',
-						size: 'xxlarge',
+						size: '',
 						label: computed(() => this.Resources.REAL_STATE_MAP58776),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						headerLevel: computed(() => this.baseHeadingLevel + 1),
 						controller: 'CNTRY',
 						action: 'Pais_ValPropried',
 						hasDependencies: false,
@@ -1035,7 +992,6 @@
 								label: computed(() => this.Resources.PROPERTY_NAME18934),
 								dataLength: 85,
 								scrollData: 30,
-								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.CurrencyColumn({
 								order: 2,
@@ -1046,7 +1002,6 @@
 								scrollData: 12,
 								maxDigits: 9,
 								decimalPlaces: 2,
-								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 3,
@@ -1055,7 +1010,6 @@
 								field: 'ENDERECO',
 								label: computed(() => this.Resources.ADDRESS04342),
 								scrollData: 30,
-								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 4,
@@ -1065,7 +1019,6 @@
 								label: computed(() => this.Resources.LOCALE34521),
 								dataLength: 50,
 								scrollData: 30,
-								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 5,
@@ -1075,7 +1028,6 @@
 								label: computed(() => this.Resources.ZIP_CODE56964),
 								dataLength: 20,
 								scrollData: 20,
-								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 6,
@@ -1085,7 +1037,6 @@
 								label: computed(() => this.Resources.POSTAL_LOCATION08708),
 								dataLength: 50,
 								scrollData: 30,
-								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.BooleanColumn({
 								order: 7,
@@ -1094,7 +1045,6 @@
 								field: 'MOBILADA',
 								label: computed(() => this.Resources.FURNISHED37431),
 								scrollData: 1,
-								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.NumericColumn({
 								order: 8,
@@ -1105,7 +1055,6 @@
 								scrollData: 6,
 								maxDigits: 6,
 								decimalPlaces: 0,
-								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.NumericColumn({
 								order: 9,
@@ -1116,7 +1065,6 @@
 								scrollData: 6,
 								maxDigits: 6,
 								decimalPlaces: 0,
-								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.NumericColumn({
 								order: 10,
@@ -1127,7 +1075,6 @@
 								scrollData: 6,
 								maxDigits: 6,
 								decimalPlaces: 0,
-								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.DateColumn({
 								order: 11,
@@ -1137,7 +1084,6 @@
 								label: computed(() => this.Resources.AVAILABLE_FROM53703),
 								scrollData: 8,
 								dateTimeType: 'date',
-								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.ImageColumn({
 								order: 12,
@@ -1149,7 +1095,6 @@
 								scrollData: 3,
 								sortable: false,
 								searchable: false,
-								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 13,
@@ -1158,7 +1103,6 @@
 								field: 'DESCRIPT',
 								label: computed(() => this.Resources.DESCRIPTION07383),
 								scrollData: 30,
-								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.GeographicColumn({
 								order: 14,
@@ -1170,7 +1114,6 @@
 								scrollData: 30,
 								sortable: false,
 								searchable: false,
-								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 						],
 						config: {
@@ -1186,8 +1129,10 @@
 							permissions: {
 							},
 							searchBarConfig: {
-								visibility: false
+								visibility: false,
+								searchOnPressEnter: true
 							},
+							filtersVisible: false,
 							allowColumnFilters: false,
 							allowColumnSort: true,
 							crudActions: [
@@ -1261,7 +1206,9 @@
 									id: 'insert',
 									name: 'insert',
 									title: computed(() => this.Resources.INSERIR43365),
-									icon: { icon: 'add' },
+									icon: {
+										icon: 'add'
+									},
 									isInReadOnly: false,
 									params: {
 										action: vm.openFormAction,
@@ -1308,7 +1255,7 @@
 								sortOrder: 'asc'
 							}
 						},
-						globalEvents: ['changed-CNTRY', 'changed-REGIO', 'changed-PAIS1', 'changed-PROPR', 'changed-TPPRO', 'changed-PESSO'],
+						globalEvents: ['changed-REGIO', 'changed-TPPRO', 'changed-PESSO', 'changed-CNTRY', 'changed-PROPR', 'changed-PAIS1'],
 						uuid: 'Pais_ValPropried',
 						allSelectedRows: 'false',
 						controlLimits: [
@@ -1409,23 +1356,17 @@
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 		},
 
-		beforeUnmount()
-		{
-/* eslint-disable indent, vue/html-indent, vue/script-indent */
-// USE /[MANUAL GQT COMPONENT_BEFORE_UNMOUNT PAIS]/
-// eslint-disable-next-line
-/* eslint-enable indent, vue/html-indent, vue/script-indent */
-		},
-
 		methods: {
 			/**
 			 * Called before form init.
 			 */
 			async beforeLoad()
 			{
+				let loadForm = true
+
 				// Execute the "Before init" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.beforeInit)
-				for (const trigger of triggers)
+				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
 				this.emitEvent('before-load-form')
@@ -1435,7 +1376,7 @@
 // eslint-disable-next-line
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 
-				return true
+				return loadForm
 			},
 
 			/**
@@ -1445,7 +1386,7 @@
 			{
 				// Execute the "After init" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.afterInit)
-				for (const trigger of triggers)
+				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
 				this.emitEvent('after-load-form')
@@ -1465,33 +1406,19 @@
 
 				// Execute the "Before apply" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.beforeApply)
-				for (const trigger of triggers)
+				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
-				const ticketsPromise = this.model.updateFilesTickets(true)
-				this.addBusy(ticketsPromise, this.Resources[hardcodedTexts.processing])
-				const canSetDocums = await ticketsPromise
+				const canSetDocums = await this.model.updateFilesTickets(true)
 
 				if (canSetDocums)
 				{
-					let results
-					const changesPromise = this.model.setDocumentChanges()
-					this.addBusy(changesPromise, this.Resources[hardcodedTexts.processing])
-					applyForm = await changesPromise
+					applyForm = await this.model.setDocumentChanges()
 
 					if (applyForm)
 					{
-						const insertsPromise = this.model.saveDocuments()
-						this.addBusy(insertsPromise, this.Resources[hardcodedTexts.processing])
-						results = await insertsPromise
+						const results = await this.model.saveDocuments()
 						applyForm = results.every((e) => e === true)
-					}
-
-					if (!changesPromise || (results && !results.every((e) => e === true)))
-					{
-						this.validationErrors = {
-							Erro: this.Resources.OCORREU_UM_ERRO_AO_T51884
-						}
 					}
 				}
 
@@ -1512,7 +1439,7 @@
 			{
 				// Execute the "After apply" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.afterApply)
-				for (const trigger of triggers)
+				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
 				this.emitEvent('after-apply-form')
@@ -1532,33 +1459,19 @@
 
 				// Execute the "Before save" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.beforeSave)
-				for (const trigger of triggers)
+				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
-				const ticketsPromise = this.model.updateFilesTickets()
-				this.addBusy(ticketsPromise, this.Resources[hardcodedTexts.processing])
-				const canSetDocums = await ticketsPromise
+				const canSetDocums = await this.model.updateFilesTickets()
 
 				if (canSetDocums)
 				{
-					let results
-					const changesPromise = this.model.setDocumentChanges()
-					this.addBusy(changesPromise, this.Resources[hardcodedTexts.processing])
-					saveForm = await changesPromise
+					saveForm = await this.model.setDocumentChanges()
 
 					if (saveForm)
 					{
-						const insertsPromise = this.model.saveDocuments()
-						this.addBusy(insertsPromise, this.Resources[hardcodedTexts.processing])
-						results = await insertsPromise
+						const results = await this.model.saveDocuments()
 						saveForm = results.every((e) => e === true)
-					}
-
-					if (!changesPromise || (results && !results.every((e) => e === true)))
-					{
-						this.validationErrors = {
-							Erro: this.Resources.OCORREU_UM_ERRO_AO_T51884
-						}
 					}
 				}
 
@@ -1577,9 +1490,11 @@
 			 */
 			async afterSave()
 			{
+				let redirectPage = true // Set to 'false' to cancel page redirect.
+
 				// Execute the "After save" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.afterSave)
-				for (const trigger of triggers)
+				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
 				this.emitEvent('after-save-form')
@@ -1589,7 +1504,7 @@
 // eslint-disable-next-line
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 
-				return true
+				return redirectPage
 			},
 
 			/**
@@ -1597,6 +1512,8 @@
 			 */
 			async beforeDel()
 			{
+				let deleteForm = true // Set to 'false' to cancel form delete.
+
 				this.emitEvent('before-delete-form')
 
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
@@ -1604,7 +1521,7 @@
 // eslint-disable-next-line
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 
-				return true
+				return deleteForm
 			},
 
 			/**
@@ -1612,6 +1529,8 @@
 			 */
 			async afterDel()
 			{
+				let redirectPage = true // Set to 'false' to cancel page redirect.
+
 				this.emitEvent('after-delete-form')
 
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
@@ -1619,7 +1538,7 @@
 // eslint-disable-next-line
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 
-				return true
+				return redirectPage
 			},
 
 			/**
@@ -1627,9 +1546,11 @@
 			 */
 			async beforeExit()
 			{
+				let leaveForm = true // Set to 'false' to cancel page redirect.
+
 				// Execute the "Before exit" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.beforeExit)
-				for (const trigger of triggers)
+				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
 				this.emitEvent('before-exit-form')
@@ -1639,7 +1560,7 @@
 // eslint-disable-next-line
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 
-				return true
+				return leaveForm
 			},
 
 			/**
@@ -1649,7 +1570,7 @@
 			{
 				// Execute the "After exit" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.afterExit)
-				for (const trigger of triggers)
+				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
 				this.emitEvent('after-exit-form')

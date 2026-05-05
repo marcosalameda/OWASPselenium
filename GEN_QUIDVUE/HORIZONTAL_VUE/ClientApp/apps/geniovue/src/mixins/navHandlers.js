@@ -30,18 +30,12 @@ function createNavigationLevel(context) {
 
 	const isWizard = context.$route.meta.isWizardStep
 
-	// Route type, including widgets which are not routes but have 'menu' as the route type.
-	// Only forms have the 'mode' property.
-	// Many other properties are undefined at this point so they can't be checked here.
-	const routeType = Object.prototype.hasOwnProperty.call(context, 'mode') ? 'form' : context.$route.meta.routeType
-
 	if (context.isNested || isWizard) {
 		if (!_isEmpty(context.historyBranchId))
 			historyBranchId = context.historyBranchId
 
-		const branchExist = navDataStore.navigation.history.has(historyBranchId),
+		let branchExist = navDataStore.navigation.history.has(historyBranchId),
 			nestedData = _merge({
-				routeType: routeType,
 				isNested: true,
 				params: {
 					id: context.id,
@@ -53,16 +47,15 @@ function createNavigationLevel(context) {
 				}
 			}, context.nestedRouteParams),
 			wizardRoute = {
-				routeType: routeType,
 				location: context.$route.name,
 				params: context.$route.params
 			}
 
 		if (branchExist) {
-			const newId = isWizard && !context.isNested ? historyBranchId : uuidv4()
+			let newId = isWizard && !context.isNested ? historyBranchId : uuidv4()
 			navDataStore.beforeRequestContext(newId)
 
-			const newBranch = navDataStore.navigation.getHistory(newId),
+			let newBranch = navDataStore.navigation.getHistory(newId),
 				parentNavigationContext = navDataStore.navigation.getHistory(historyBranchId),
 				historyLevel = {
 					navigationId: newBranch.navigationId,
@@ -77,7 +70,7 @@ function createNavigationLevel(context) {
 			historyBranchId = uuidv4()
 			navDataStore.beforeRequestContext(historyBranchId)
 
-			const newBranch = navDataStore.navigation.getHistory(historyBranchId),
+			let newBranch = navDataStore.navigation.getHistory(historyBranchId),
 				historyLevel = {
 					navigationId: newBranch.navigationId,
 					options: isWizard ? wizardRoute : nestedData
@@ -103,14 +96,14 @@ function createNavigationLevel(context) {
 		historyBranchId = context.$route.params.historyBranchId || MAIN_HISTORY_BRANCH_ID
 		navDataStore.beforeRequestContext(historyBranchId)
 
-		const menuOrder = ((context.$route || {}).meta || {}).order,
+		let menuOrder = ((context.$route || {}).meta || {}).order,
 			navigation = navDataStore.navigation.getHistory(historyBranchId)
 
 		if (!_isEmpty(menuOrder)) {
 			// If the current menu belongs to a different tree from the ones on the navigation history, we clear the history.
 			let clearNav = false
 
-			for (const historyLevel of navigation.convertToCollection()) {
+			for (let historyLevel of navigation.convertToCollection()) {
 				if (_isEmpty(historyLevel.properties.routeBranch) || menuOrder.startsWith(historyLevel.properties.routeBranch))
 					continue
 
@@ -120,10 +113,10 @@ function createNavigationLevel(context) {
 
 			if (clearNav) {
 				const historyData = {
-					routeType: routeType,
 					location: `home-${systemDataStore.system.currentModule}`,
 					params: {
-						...context.$route.params
+						...context.$route.params,
+						isPopup: 'false'
 					}
 				}
 
@@ -133,7 +126,7 @@ function createNavigationLevel(context) {
 			}
 		}
 
-		const options = normalizeRouteForSaveNavigation(context.$route)
+		let options = normalizeRouteForSaveNavigation(context.$route)
 		navDataStore.addHistoryLevel({ navigationId: historyBranchId, options })
 	}
 

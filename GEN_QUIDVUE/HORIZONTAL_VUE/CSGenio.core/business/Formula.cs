@@ -24,20 +24,18 @@ namespace CSGenio.business
                 {
                     if (argumentosPorArea.AliasName.Equals(areaField.Alias)) //se é a propria area
                     {
+                        //ir buscar a key primária
+                        string codIntValue = areaField.QPrimaryKey;
+                        if (codIntValue == "")
+                            throw new BusinessException(null, "Formula.devolverValorCamposFormulaInterna", "ChavePrimaria is null.");
+
                         //descobrir que fields não estão em memória
                         var selectBD = argumentosPorArea.FieldNames
                             .Where(x => !areaField.Fields.ContainsKey(areaField.Alias + "." + x));
 
                         //ler base de dados
                         if (selectBD.Any() && (tpFunction == FunctionType.INS || tpFunction == FunctionType.DUP))
-						{
-							//ir buscar a key primária
-							string codIntValue = areaField.QPrimaryKey;
-							if (codIntValue == "")
-								throw new BusinessException(null, "Formula.devolverValorCamposFormulaInterna", "ChavePrimaria is null.");
-						
                             sp.getRecord(areaField, codIntValue, selectBD.ToArray()); //<----- Em que situações pode o codigo chegar aqui?
-						}
 
                         //agora já podemos assumir que os fields estão em memoria
                         for (int i = 0; i < argumentosPorArea.FieldNames.Length; i++)
@@ -92,6 +90,10 @@ namespace CSGenio.business
 
                     if (area == null)//se é a propria area
                     {
+                        //ir buscar a key primária
+                        string codIntValue = areaField.QPrimaryKey;
+                        if (codIntValue == "")
+							throw new BusinessException(null, "Formula.devolverValorCamposFormulaInterna", "ChavePrimaria is null.");
 
                         //descobrir que fields não estão em memória
                         var selectBD = argumentosPorArea.FieldNames
@@ -99,14 +101,7 @@ namespace CSGenio.business
 
                         //ler da base de dados
                         if (selectBD.Any() && (tpFunction == FunctionType.INS || tpFunction == FunctionType.DUP))
-						{
-							//ir buscar a key primária
-							string codIntValue = areaField.QPrimaryKey;
-							if (codIntValue == "")
-								throw new BusinessException(null, "Formula.devolverValorCamposFormulaInterna", "ChavePrimaria is null.");
-						
                             sp.getRecord(areaField, codIntValue, selectBD.ToArray());
-						}
 
                         //agora já podemos assumir que os fields estão em memoria
                         for (int i = 0; i < argumentosPorArea.FieldNames.Length; i++)

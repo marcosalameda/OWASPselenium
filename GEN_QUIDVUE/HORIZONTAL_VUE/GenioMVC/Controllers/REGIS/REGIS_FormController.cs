@@ -9,7 +9,6 @@ using System.Data;
 using System.Data.Entity;
 using System.Linq;
 using System.Reflection;
-using System.Dynamic;
 
 using CSGenio.business;
 using CSGenio.core.persistence;
@@ -56,11 +55,12 @@ namespace GenioMVC.Controllers
 // USE /[MANUAL GQT CONTROLLER_SHOW REGIS]/
 
 		[HttpPost]
-		public ActionResult Regis_Show_GET([FromBody] RequestIdModel requestModel)
+		[AllowAnonymous]
+		public ActionResult Regis_Show_GET([FromBody]RequestIdModel requestModel)
 		{
-			string id = requestModel.Id;
-			Regis_ViewModel model = new(UserContext.Current);
-			EventSink eventSink = new()
+			var id = requestModel.Id;
+			var model = new Regis_ViewModel(UserContext.Current);
+			var eventSink = new EventSink()
 			{
 				MethodName = "Regis_Show_GET",
 				AreaName = "regis",
@@ -76,7 +76,13 @@ namespace GenioMVC.Controllers
 				}
 			};
 
-			return GenericHandleGetFormShow(eventSink, model, id);
+			using (CSGenio.core.di.GenioDI.MetricsOtlp.RecordTime("page_load_time", new System.Diagnostics.TagList([
+				new("PageId", "REGIS.SHOW"),
+				new("PageType", "form")
+			]), "ms", "Time to load the page."))
+			{
+				return GenericHandleGetFormShow(eventSink, model, id);
+			}
 		}
 
 		#endregion
@@ -85,14 +91,15 @@ namespace GenioMVC.Controllers
 
 // USE /[MANUAL GQT CONTROLLER_NEW_GET REGIS]/
 		[HttpPost]
-		public ActionResult Regis_New_GET([FromBody] RequestNewGetModel requestModel)
+		[AllowAnonymous]
+		public ActionResult Regis_New_GET([FromBody]RequestNewGetModel requestModel)
 		{
-			string id = requestModel.Id;
-			bool isNewLocation = requestModel.IsNewLocation;
+			var id = requestModel.Id;
+			var isNewLocation = requestModel.IsNewLocation;
 			var prefillValues = requestModel.PrefillValues;
 
-			Regis_ViewModel model = new(UserContext.Current);
-			EventSink eventSink = new()
+			var model = new Regis_ViewModel(UserContext.Current);
+			var eventSink = new EventSink()
 			{
 				MethodName = "Regis_New_GET",
 				AreaName = "regis",
@@ -112,16 +119,23 @@ namespace GenioMVC.Controllers
 				}
 			};
 
-			return GenericHandleGetFormNew(eventSink, model, id, isNewLocation, prefillValues);
+			using (CSGenio.core.di.GenioDI.MetricsOtlp.RecordTime("page_load_time", new System.Diagnostics.TagList([
+				new("PageId", "REGIS.SHOW"),
+				new("PageType", "form")
+			]), "ms", "Time to load the page."))
+			{
+				return GenericHandleGetFormNew(eventSink, model, id, isNewLocation, prefillValues);
+			}
 		}
 
 		//
 		// POST: /Regis/Regis_New
 // USE /[MANUAL GQT CONTROLLER_NEW_POST REGIS]/
+		[AllowAnonymous]
 		[HttpPost]
 		public ActionResult Regis_New([FromBody]Regis_ViewModel model, [FromQuery]bool redirect = true)
 		{
-			EventSink eventSink = new()
+			var eventSink = new EventSink()
 			{
 				MethodName = "Regis_New",
 				ViewName = "Regis",
@@ -146,7 +160,13 @@ namespace GenioMVC.Controllers
 				}
 			};
 
-			return GenericHandlePostFormNew(eventSink, model);
+			using (CSGenio.core.di.GenioDI.MetricsOtlp.RecordTime("page_load_time", new System.Diagnostics.TagList([
+				new("PageId", "REGIS.NEW"),
+				new("PageType", "form")
+			]), "ms", "Time to load the page."))
+			{
+				return GenericHandlePostFormNew(eventSink, model);
+			}
 		}
 
 		#endregion
@@ -155,11 +175,12 @@ namespace GenioMVC.Controllers
 
 // USE /[MANUAL GQT CONTROLLER_EDIT_GET REGIS]/
 		[HttpPost]
-		public ActionResult Regis_Edit_GET([FromBody] RequestIdModel requestModel)
+		[AllowAnonymous]
+		public ActionResult Regis_Edit_GET([FromBody]RequestIdModel requestModel)
 		{
-			string id = requestModel.Id;
-			Regis_ViewModel model = new(UserContext.Current);
-			EventSink eventSink = new()
+			var id = requestModel.Id;
+			var model = new Regis_ViewModel(UserContext.Current);
+			var eventSink = new EventSink()
 			{
 				MethodName = "Regis_Edit_GET",
 				AreaName = "regis",
@@ -176,16 +197,23 @@ namespace GenioMVC.Controllers
 				}
 			};
 
-			return GenericHandleGetFormEdit(eventSink, model, id);
+			using (CSGenio.core.di.GenioDI.MetricsOtlp.RecordTime("page_load_time", new System.Diagnostics.TagList([
+				new("PageId", "REGIS.SHOW"),
+				new("PageType", "form")
+			]), "ms", "Time to load the page."))
+			{
+				return GenericHandleGetFormEdit(eventSink, model, id);
+			}
 		}
 
 		//
 		// POST: /Regis/Regis_Edit
 // USE /[MANUAL GQT CONTROLLER_EDIT_POST REGIS]/
+		[AllowAnonymous]
 		[HttpPost]
 		public ActionResult Regis_Edit([FromBody]Regis_ViewModel model, [FromQuery]bool redirect)
 		{
-			EventSink eventSink = new()
+			var eventSink = new EventSink()
 			{
 				MethodName = "Regis_Edit",
 				ViewName = "Regis",
@@ -210,7 +238,13 @@ namespace GenioMVC.Controllers
 				}
 			};
 
-			return GenericHandlePostFormEdit(eventSink, model);
+			using (CSGenio.core.di.GenioDI.MetricsOtlp.RecordTime("page_load_time", new System.Diagnostics.TagList([
+				new("PageId", "REGIS.EDIT"),
+				new("PageType", "form")
+			]), "ms", "Time to load the page."))
+			{
+				return GenericHandlePostFormEdit(eventSink, model);
+			}
 		}
 
 		#endregion
@@ -219,11 +253,12 @@ namespace GenioMVC.Controllers
 
 // USE /[MANUAL GQT CONTROLLER_DELETE_GET REGIS]/
 		[HttpPost]
-		public ActionResult Regis_Delete_GET([FromBody] RequestIdModel requestModel)
+		[AllowAnonymous]
+		public ActionResult Regis_Delete_GET([FromBody]RequestIdModel requestModel)
 		{
-			string id = requestModel.Id;
-			Regis_ViewModel model = new(UserContext.Current);
-			EventSink eventSink = new()
+			var id = requestModel.Id;
+			var model = new Regis_ViewModel(UserContext.Current);
+			var eventSink = new EventSink()
 			{
 				MethodName = "Regis_Delete_GET",
 				AreaName = "regis",
@@ -240,20 +275,27 @@ namespace GenioMVC.Controllers
 				}
 			};
 
-			return GenericHandleGetFormDelete(eventSink, model, id);
+			using (CSGenio.core.di.GenioDI.MetricsOtlp.RecordTime("page_load_time", new System.Diagnostics.TagList([
+				new("PageId", "REGIS.SHOW"),
+				new("PageType", "form")
+			]), "ms", "Time to load the page."))
+			{
+				return GenericHandleGetFormDelete(eventSink, model, id);
+			}
 		}
 
 		//
 		// POST: /Regis/Regis_Delete
 // USE /[MANUAL GQT CONTROLLER_DELETE_POST REGIS]/
+		[AllowAnonymous]
 		[HttpPost]
-		public ActionResult Regis_Delete([FromBody] RequestIdModel requestModel)
+		public ActionResult Regis_Delete([FromBody]RequestIdModel requestModel)
 		{
-			string id = requestModel.Id;
-			Regis_ViewModel model = new(UserContext.Current, id);
+			var id = requestModel.Id;
+			var model = new Regis_ViewModel (UserContext.Current, id);
 			model.MapFromModel();
 
-			EventSink eventSink = new()
+			var eventSink = new EventSink()
 			{
 				MethodName = "Regis_Delete",
 				ViewName = "Regis",
@@ -269,7 +311,13 @@ namespace GenioMVC.Controllers
 				}
 			};
 
-			return GenericHandlePostFormDelete(eventSink, model);
+			using (CSGenio.core.di.GenioDI.MetricsOtlp.RecordTime("page_load_time", new System.Diagnostics.TagList([
+				new("PageId", "REGIS.DELETE"),
+				new("PageType", "form")
+			]), "ms", "Time to load the page."))
+			{
+				return GenericHandlePostFormDelete(eventSink, model);
+			}
 		}
 
 		public ActionResult Regis_Delete_Redirect()
@@ -285,13 +333,14 @@ namespace GenioMVC.Controllers
 // USE /[MANUAL GQT CONTROLLER_DUPLICATE_GET REGIS]/
 
 		[HttpPost]
-		public ActionResult Regis_Duplicate_GET([FromBody] RequestNewGetModel requestModel)
+		[AllowAnonymous]
+		public ActionResult Regis_Duplicate_GET([FromBody]RequestNewGetModel requestModel)
 		{
-			string id = requestModel.Id;
-			bool isNewLocation = requestModel.IsNewLocation;
+			var id = requestModel.Id;
+			var isNewLocation = requestModel.IsNewLocation;
 
-			Regis_ViewModel model = new(UserContext.Current);
-			EventSink eventSink = new()
+			var model = new Regis_ViewModel(UserContext.Current);
+			var eventSink = new EventSink()
 			{
 				MethodName = "Regis_Duplicate_GET",
 				AreaName = "regis",
@@ -307,16 +356,23 @@ namespace GenioMVC.Controllers
 				}
 			};
 
-			return GenericHandleGetFormDuplicate(eventSink, model, id, isNewLocation);
+			using (CSGenio.core.di.GenioDI.MetricsOtlp.RecordTime("page_load_time", new System.Diagnostics.TagList([
+				new("PageId", "REGIS.SHOW"),
+				new("PageType", "form")
+			]), "ms", "Time to load the page."))
+			{
+				return GenericHandleGetFormDuplicate(eventSink, model, id, isNewLocation);
+			}
 		}
 
 		//
 		// POST: /Regis/Regis_Duplicate
 // USE /[MANUAL GQT CONTROLLER_DUPLICATE_POST REGIS]/
+		[AllowAnonymous]
 		[HttpPost]
 		public ActionResult Regis_Duplicate([FromBody]Regis_ViewModel model, [FromQuery]bool redirect = true)
 		{
-			EventSink eventSink = new()
+			var eventSink = new EventSink()
 			{
 				MethodName = "Regis_Duplicate",
 				ViewName = "Regis",
@@ -341,7 +397,13 @@ namespace GenioMVC.Controllers
 				}
 			};
 
-			return GenericHandlePostFormDuplicate(eventSink, model);
+			using (CSGenio.core.di.GenioDI.MetricsOtlp.RecordTime("page_load_time", new System.Diagnostics.TagList([
+				new("PageId", "REGIS.DUPLICATE"),
+				new("PageType", "form")
+			]), "ms", "Time to load the page."))
+			{
+				return GenericHandlePostFormDuplicate(eventSink, model);
+			}
 		}
 
 		#endregion
@@ -351,6 +413,7 @@ namespace GenioMVC.Controllers
 		//
 		// GET: /Regis/Regis_Cancel
 // USE /[MANUAL GQT CONTROLLER_CANCEL_GET REGIS]/
+		[AllowAnonymous]
 		public ActionResult Regis_Cancel()
 		{
 			if (Navigation.CurrentLevel.FormMode == FormMode.New || Navigation.CurrentLevel.FormMode == FormMode.Duplicate)
@@ -358,15 +421,8 @@ namespace GenioMVC.Controllers
 				PersistentSupport sp = UserContext.Current.PersistentSupport;
 				try
 				{
-					var recordKey = Navigation.GetStrValue("regis");
-					var model = GenioMVC.Models.Regis.Find(recordKey, UserContext.Current);
-					if (model.ValZzstate == 0)
-					{
-						Navigation.ClearValue("regis");
-						string errorMessage = Resources.Resources.ESTE_REGISTO_JA_FOI_02595;
-						Log.Error($"${errorMessage} ID: ${recordKey}");
-						return JsonOK(new { Success = true, currentNavigationLevel = Navigation.CurrentLevel.Level, Warning = errorMessage });
-					}
+					var model = new GenioMVC.Models.Regis(UserContext.Current);
+					model.klass.QPrimaryKey = Navigation.GetStrValue("regis");
 
 // USE /[MANUAL GQT BEFORE_CANCEL REGIS]/
 
@@ -400,6 +456,7 @@ namespace GenioMVC.Controllers
 
 
 		// POST: /Regis/Regis_SaveEdit
+		[AllowAnonymous]
 		[HttpPost]
 		public ActionResult Regis_SaveEdit([FromBody] Regis_ViewModel model)
 		{

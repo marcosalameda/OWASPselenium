@@ -20,6 +20,8 @@ namespace CSGenio.business
     /// </summary>
     public abstract class Area : IArea
     {
+        public static AreaRef AreaCOMPB { get { return m_AreaCOMPB; } }
+        private static AreaRef m_AreaCOMPB = new AreaRef("GQT", "gqtcompb", "compb");
         public static AreaRef AreaPWCOM { get { return m_AreaPWCOM; } }
         private static AreaRef m_AreaPWCOM = new AreaRef("GQT", "gqtpwcom", "pwcom");
         public static AreaRef AreaADDRL { get { return m_AreaADDRL; } }
@@ -32,6 +34,8 @@ namespace CSGenio.business
         private static AreaRef m_AreaFEECA = new AreaRef("GQT", "gqtfeeca", "feeca");
         public static AreaRef AreaNOTIF { get { return m_AreaNOTIF; } }
         private static AreaRef m_AreaNOTIF = new AreaRef("GQT", "gqtnotif", "notif");
+        public static AreaRef AreaDISST { get { return m_AreaDISST; } }
+        private static AreaRef m_AreaDISST = new AreaRef("GQT", "gqtdisst", "disst");
         public static AreaRef AreaASSET { get { return m_AreaASSET; } }
         private static AreaRef m_AreaASSET = new AreaRef("GQT", "gqtasset", "asset");
         public static AreaRef AreaLANG2 { get { return m_AreaLANG2; } }
@@ -63,7 +67,7 @@ namespace CSGenio.business
         public static AreaRef AreaTPEQU { get { return m_AreaTPEQU; } }
         private static AreaRef m_AreaTPEQU = new AreaRef("GQT", "gqttpequ", "tpequ");
         public static AreaRef AreaADDRE { get { return m_AreaADDRE; } }
-        private static AreaRef m_AreaADDRE = new AreaRef("GQT", "gqtaddress", "addre");
+        private static AreaRef m_AreaADDRE = new AreaRef("GQP", "gqpaddress", "addre");
         public static AreaRef AreaLNHPD { get { return m_AreaLNHPD; } }
         private static AreaRef m_AreaLNHPD = new AreaRef("GQT", "gqtlnhpd", "lnhpd");
         public static AreaRef AreaCFAQS { get { return m_AreaCFAQS; } }
@@ -82,8 +86,12 @@ namespace CSGenio.business
         private static AreaRef m_AreaROOM1 = new AreaRef("GQT", "gqtrooms", "room1");
         public static AreaRef AreaPROJE { get { return m_AreaPROJE; } }
         private static AreaRef m_AreaPROJE = new AreaRef("GQT", "gqtproje", "proje");
+        public static AreaRef AreaMENUIT { get { return m_AreaMENUIT; } }
+        private static AreaRef m_AreaMENUIT = new AreaRef("GQT", "gqtmenuit", "menuit");
         public static AreaRef AreaYEAR { get { return m_AreaYEAR; } }
         private static AreaRef m_AreaYEAR = new AreaRef("GQT", "gqtyear", "year");
+        public static AreaRef AreaHERODESCRIP { get { return m_AreaHERODESCRIP; } }
+        private static AreaRef m_AreaHERODESCRIP = new AreaRef("GQT", "gqtherodescrip", "herodescrip");
         public static AreaRef AreaTABPR { get { return m_AreaTABPR; } }
         private static AreaRef m_AreaTABPR = new AreaRef("GQT", "gqttabpr", "tabpr");
         public static AreaRef AreaREGIO { get { return m_AreaREGIO; } }
@@ -98,6 +106,14 @@ namespace CSGenio.business
         private static AreaRef m_AreaTPCON = new AreaRef("GQT", "gqttpcon", "tpcon");
         public static AreaRef AreaS_APR { get { return m_AreaS_APR; } }
         private static AreaRef m_AreaS_APR = new AreaRef("GQT", "asyncprocess", "s_apr");
+        public static AreaRef AreaFEEDBACKTYPE { get { return m_AreaFEEDBACKTYPE; } }
+        private static AreaRef m_AreaFEEDBACKTYPE = new AreaRef("GQT", "gqtfeedbacktype", "feedbacktype");
+        public static AreaRef AreaAUTHENTICATOPT { get { return m_AreaAUTHENTICATOPT; } }
+        private static AreaRef m_AreaAUTHENTICATOPT = new AreaRef("GQT", "gqtauthenticatopt", "authenticatopt");
+        public static AreaRef AreaCOMPV { get { return m_AreaCOMPV; } }
+        private static AreaRef m_AreaCOMPV = new AreaRef("GQT", "gqtcompv", "compv");
+        public static AreaRef AreaMENUC { get { return m_AreaMENUC; } }
+        private static AreaRef m_AreaMENUC = new AreaRef("GQT", "gqtmenuc", "menuc");
         public static AreaRef AreaAIRFR { get { return m_AreaAIRFR; } }
         private static AreaRef m_AreaAIRFR = new AreaRef("GQT", "gqtairpt", "airfr");
         public static AreaRef AreaCTRY { get { return m_AreaCTRY; } }
@@ -114,6 +130,8 @@ namespace CSGenio.business
         private static AreaRef m_AreaSHITY = new AreaRef("GQT", "gqtshity", "shity");
         public static AreaRef AreaCCORR { get { return m_AreaCCORR; } }
         private static AreaRef m_AreaCCORR = new AreaRef("GQT", "ccorr", "ccorr");
+        public static AreaRef AreaATAGS { get { return m_AreaATAGS; } }
+        private static AreaRef m_AreaATAGS = new AreaRef("GQT", "gqtatags", "atags");
         public static AreaRef AreaASSMA { get { return m_AreaASSMA; } }
         private static AreaRef m_AreaASSMA = new AreaRef("GQT", "gqtassetmanual", "assma");
         public static AreaRef AreaWPESS { get { return m_AreaWPESS; } }
@@ -192,12 +210,16 @@ namespace CSGenio.business
         private static AreaRef m_AreaPRODU = new AreaRef("GQT", "gqtproduct", "produ");
         public static AreaRef AreaKINDE { get { return m_AreaKINDE; } }
         private static AreaRef m_AreaKINDE = new AreaRef("GQT", "gqtkindofequipment", "kinde");
+        public static AreaRef AreaITEMP { get { return m_AreaITEMP; } }
+        private static AreaRef m_AreaITEMP = new AreaRef("GQT", "gqtitemp", "itemp");
         public static AreaRef AreaRULES { get { return m_AreaRULES; } }
         private static AreaRef m_AreaRULES = new AreaRef("GQT", "gqtrules", "rules");
         public static AreaRef AreaS_UA { get { return m_AreaS_UA; } }
         private static AreaRef m_AreaS_UA = new AreaRef("GQT", "userauthorization", "s_ua");
         public static AreaRef AreaFTGRI { get { return m_AreaFTGRI; } }
         private static AreaRef m_AreaFTGRI = new AreaRef("GQT", "gqtftgri", "ftgri");
+        public static AreaRef AreaCARDS { get { return m_AreaCARDS; } }
+        private static AreaRef m_AreaCARDS = new AreaRef("GQT", "gqtcards", "cards");
         public static AreaRef AreaCATE1 { get { return m_AreaCATE1; } }
         private static AreaRef m_AreaCATE1 = new AreaRef("GQT", "gqtcategorias", "cate1");
         public static AreaRef AreaPROPR { get { return m_AreaPROPR; } }
@@ -218,8 +240,8 @@ namespace CSGenio.business
         private static AreaRef m_AreaUSERS = new AreaRef("GQT", "gqtusers", "users");
         public static AreaRef AreaPAIS1 { get { return m_AreaPAIS1; } }
         private static AreaRef m_AreaPAIS1 = new AreaRef("GQT", "gqtcntry", "pais1");
-        public static AreaRef AreaCOMPA { get { return m_AreaCOMPA; } }
-        private static AreaRef m_AreaCOMPA = new AreaRef("GQT", "gqtcompany", "compa");
+        public static AreaRef AreaCOMPC { get { return m_AreaCOMPC; } }
+        private static AreaRef m_AreaCOMPC = new AreaRef("GQT", "gqtcompc", "compc");
         public static AreaRef AreaS_NES { get { return m_AreaS_NES; } }
         private static AreaRef m_AreaS_NES = new AreaRef("GQT", "notificationemailsignature", "s_nes");
         public static AreaRef AreaUICOM { get { return m_AreaUICOM; } }
@@ -290,8 +312,6 @@ namespace CSGenio.business
         private static AreaRef m_AreaDESAM = new AreaRef("GQT", "gqtdesam", "desam");
         public static AreaRef AreaTICKT { get { return m_AreaTICKT; } }
         private static AreaRef m_AreaTICKT = new AreaRef("GQT", "gqttickt", "tickt");
-        public static AreaRef AreaPATIE { get { return m_AreaPATIE; } }
-        private static AreaRef m_AreaPATIE = new AreaRef("GQT", "gqtpatient", "patie");
         public static AreaRef AreaTRSB { get { return m_AreaTRSB; } }
         private static AreaRef m_AreaTRSB = new AreaRef("GQT", "gqttrsb", "trsb");
         public static AreaRef AreaATTAC { get { return m_AreaATTAC; } }
@@ -300,6 +320,8 @@ namespace CSGenio.business
         private static AreaRef m_AreaROLE = new AreaRef("GQT", "gqtrole", "role");
         public static AreaRef AreaPWREG { get { return m_AreaPWREG; } }
         private static AreaRef m_AreaPWREG = new AreaRef("GQT", "gqtpwreg", "pwreg");
+        public static AreaRef AreaUFEEDBACK { get { return m_AreaUFEEDBACK; } }
+        private static AreaRef m_AreaUFEEDBACK = new AreaRef("GQT", "gqtufeedback", "ufeedback");
         public static AreaRef AreaANEXD { get { return m_AreaANEXD; } }
         private static AreaRef m_AreaANEXD = new AreaRef("GQT", "gqtanexd", "anexd");
         public static AreaRef AreaPESS1 { get { return m_AreaPESS1; } }
@@ -324,8 +346,12 @@ namespace CSGenio.business
         private static AreaRef m_AreaCATE3 = new AreaRef("GQT", "gqtcategorias", "cate3");
         public static AreaRef AreaGRID { get { return m_AreaGRID; } }
         private static AreaRef m_AreaGRID = new AreaRef("GQT", "gqtgrid", "grid");
+        public static AreaRef AreaRECORDINFO { get { return m_AreaRECORDINFO; } }
+        private static AreaRef m_AreaRECORDINFO = new AreaRef("GQT", "gqtrecordinfo", "recordinfo");
         public static AreaRef AreaTRADU { get { return m_AreaTRADU; } }
         private static AreaRef m_AreaTRADU = new AreaRef("GQT", "gqttradu", "tradu");
+        public static AreaRef AreaCOMPO { get { return m_AreaCOMPO; } }
+        private static AreaRef m_AreaCOMPO = new AreaRef("GQT", "gqtcompo", "compo");
         public static AreaRef AreaPEDID { get { return m_AreaPEDID; } }
         private static AreaRef m_AreaPEDID = new AreaRef("GQT", "gqtpedid", "pedid");
         public static AreaRef AreaFACIL { get { return m_AreaFACIL; } }
@@ -365,8 +391,13 @@ namespace CSGenio.business
         private static AreaRef m_AreaNOTIFICATIONEMAILSIGNATURE = new AreaRef("notificationemailsignature", "notificationemailsignature");
         public static AreaRef AreaNOTIFICATIONMESSAGE { get { return m_AreaNOTIFICATIONMESSAGE; } }
         private static AreaRef m_AreaNOTIFICATIONMESSAGE = new AreaRef("notificationmessage", "notificationmessage");
+		//FOR: USER_TABLE_CONFIG (VueJS)
+		//BEGIN: User table configuration
         public static AreaRef AreaTBLCFG { get { return m_AreaTBLCFG; } }
         private static AreaRef m_AreaTBLCFG = new AreaRef("GQT", "GQTtblcfg", "tblcfg");
+        public static AreaRef AreaTBLCFGSEL { get { return m_AreaTBLCFGSEL; } }
+        private static AreaRef m_AreaTBLCFGSEL = new AreaRef("GQT", "GQTtblcfgsel", "tblcfgsel");
+		//END: User table configuration
         public static AreaRef AreaLSTUSR { get { return m_AreaLSTUSR; } }
         private static AreaRef m_AreaLSTUSR = new AreaRef("GQTlstusr", "lstusr");
         public static AreaRef AreaLSTCOL { get { return m_AreaLSTCOL; } }
@@ -383,12 +414,14 @@ namespace CSGenio.business
         /// </summary>
         public static readonly System.Collections.ObjectModel.ReadOnlyCollection<string> ListaAreas = new System.Collections.ObjectModel.ReadOnlyCollection<string>(
             new List<string>() {
+            "compb",
             "pwcom",
             "addrl",
             "lnhdf",
             "genre",
             "feeca",
             "notif",
+            "disst",
             "asset",
             "lang2",
             "lendi",
@@ -414,7 +447,9 @@ namespace CSGenio.business
             "decom",
             "room1",
             "proje",
+            "menuit",
             "year",
+            "herodescrip",
             "tabpr",
             "regio",
             "tpeq1",
@@ -422,6 +457,10 @@ namespace CSGenio.business
             "faqs",
             "tpcon",
             "s_apr",
+            "feedbacktype",
+            "authenticatopt",
+            "compv",
+            "menuc",
             "airfr",
             "ctry",
             "fami1",
@@ -430,6 +469,7 @@ namespace CSGenio.business
             "sbcat",
             "shity",
             "ccorr",
+            "atags",
             "assma",
             "wpess",
             "cattp",
@@ -469,9 +509,11 @@ namespace CSGenio.business
             "cmpki",
             "produ",
             "kinde",
+            "itemp",
             "rules",
             "s_ua",
             "ftgri",
+            "cards",
             "cate1",
             "propr",
             "ware2",
@@ -482,7 +524,7 @@ namespace CSGenio.business
             "grpb",
             "users",
             "pais1",
-            "compa",
+            "compc",
             "s_nes",
             "uicom",
             "cate2",
@@ -518,11 +560,11 @@ namespace CSGenio.business
             "itemc",
             "desam",
             "tickt",
-            "patie",
             "trsb",
             "attac",
             "role",
             "pwreg",
+            "ufeedback",
             "anexd",
             "pess1",
             "pess3",
@@ -535,7 +577,9 @@ namespace CSGenio.business
             "pworg",
             "cate3",
             "grid",
+            "recordinfo",
             "tradu",
+            "compo",
             "pedid",
             "facil",
             "aero",
@@ -567,7 +611,7 @@ namespace CSGenio.business
 
         //Static class accessed a lot during startup, must have concurrency concerns
         private static ConcurrentDictionary<string, Type> m_areaRegistry = new ConcurrentDictionary<string, Type>();
-
+        
         /// <summary>
         /// Função que dado o identifier da area devolve um objecto da mesma
         /// </summary>
@@ -586,21 +630,6 @@ namespace CSGenio.business
             Type areaType = GetTypeArea(name);
 
             return createArea(areaType, user, module);
-        }
-
-        /// <summary>
-        /// Creates a new record with its current values set to the bookmarked values of another record
-        /// </summary>
-        /// <param name="other">The area to copy values from</param>
-        /// <returns>A new record</returns>
-        public static Area createFromBookmark(Area other)
-        {
-            Area area = createArea(other.GetType(), other.User, other.Module);
-            foreach(var field in other.Fields)
-                area.insertNameValueField(field.Key, field.Value.OldValue, true);
-            area.IsBookmarkLocked = other.IsBookmarkLocked;
-            area.UserRecord = other.UserRecord;
-            return area;
         }
 
         /// <summary>
@@ -625,7 +654,7 @@ namespace CSGenio.business
             //We need to pass an hint for the assembly, or it will only search in CSGenio.core
             string areaName = classPrefix + name + ", GenioServer";
             var type = Type.GetType(areaName);
-            //Since there are much more assemblies in GenioServer, we search for CSGenio.core only after not finding in GenioServer.
+            //Since there are much more assemblies in GenioServer, we search for CSGenio.core only after not finding in GenioServer. 
             if(type == null)
             {
                 areaName = classPrefix + name + ", CSGenio.core";
@@ -686,10 +715,10 @@ namespace CSGenio.business
         /// True if the record is to be validated, false if not
         /// </summary>
         /// <remarks>
-        /// By default, this field will be set as true, to prevent the storage of invalid records.
+        /// By default, this field will be set as true, to prevent the storage of invalid records. 
         /// However, certain situations require the validations to be delayed or even not occur - in these cases,
         /// it is preferable to alter this property instead of the UserRecord flag, since that is used for several
-        /// other cases outside of the validation scope.
+        /// other cases outside of the validation scope. 
         /// </remarks>
         public bool NeedsValidation { get; set; } = true;
 
@@ -730,16 +759,16 @@ namespace CSGenio.business
 
             return GetInfoArea(areaType);
         }
-
+		
 		/// <summary>
         /// Obtem a informação sobre uma area dado o seu tipo
         /// </summary>
         /// <returns></returns>
-		public static AreaInfo GetInfoArea<A>() where A : Area
+		public static AreaInfo GetInfoArea<A>() where A : Area 
         {
             return GetInfoArea(typeof(A));
         }
-
+		
         private static AreaInfo GetInfoArea(Type t)
         {
             return t.InvokeMember("GetInformation"
@@ -913,12 +942,11 @@ namespace CSGenio.business
         /// The name of the field to update. Supports both "area.field" (fully qualified) and "field" formats.
         /// If the field has a database name, it is expected to be provided instead of the field id.
         /// </param>
-        /// <param name="fieldValue">The value to assign to the field.</param>
-        /// <param name="fromDatabase">True if the value is being read directly from the database, so it can be used as a bookmarked value</param>
+        /// <param name="valorCampo">The value to assign to the field.</param>
         /// <exception cref="BusinessException">
         /// Thrown if the specified field does not exist or if an error occurs during the update.
         /// </exception>
-        public void insertNameValueField(string fieldName, object fieldValue, bool fromDatabase = false)
+        public void insertNameValueField(string fieldName, object fieldValue)
         {
             try
             {
@@ -947,9 +975,6 @@ namespace CSGenio.business
                     campoPedido.FieldType = fieldType;
                     campoPedido.Value = Conversion.internal2InternalValid(fieldValue, fieldType.GetFormatting());
                     trimPrecision(campoPedido);
-                    //set the bookmark if the caller indicated the value is coming from the database
-                    if (fromDatabase)
-                        campoPedido.OldValue = campoPedido.Value;
                 }
                 //field belongs to another area
                 else
@@ -1038,7 +1063,7 @@ namespace CSGenio.business
 
                     if (
                         fieldInfo.IsClientSide &&
-                        !primaryKeyField.isEmptyValue(this.QPrimaryKey)
+                        !primaryKeyField.isEmptyValue(this.QPrimaryKey)                       
                     )
                     {
                         //queries inside these calculations are not supported
@@ -1075,7 +1100,7 @@ namespace CSGenio.business
             {
                 //support for non-fully-qualified names
                 var ix = fieldName.IndexOf('.');
-                var dbField = ix == -1
+                var dbField = ix == -1 
                     ? DBFields[fieldName]
                     : DBFields[fieldName.Substring(ix+1)];
 
@@ -1090,7 +1115,7 @@ namespace CSGenio.business
                     // TODO: Decrypt the value if necessary.
 
                     return encData.DecryptedValue;
-                }
+                } 
 
             }
             catch (GenioException ex)
@@ -1229,7 +1254,7 @@ namespace CSGenio.business
                 }
             }
 
-            // Fields with Concatenate rows formulas should not be overwritten by external inputs.
+            // Fields with Concatenate rows formulas should not be overwritten by external inputs. 
             // This type of formula is propagated from bottom to top.
             if (AggregateListFields != null)
             {
@@ -1332,7 +1357,7 @@ namespace CSGenio.business
                     return;
 
                 DateTime now = DateTime.Now;
-                foreach(string stamp in StampFieldsIns)
+                foreach(string stamp in StampFieldsIns) 
                 {
                     Field info = DBFields[stamp];
                     if(info.FieldType == FieldType.DATETIMESECONDS)
@@ -1812,7 +1837,7 @@ namespace CSGenio.business
             // Apply concrete type to method type parameter (searchListWhere<CSGenioA_____>)
             Type type = GetTypeArea(area);
             MethodInfo generic = mInfo.MakeGenericMethod(type);
-
+            
             // Invoke
             object[] args = { where, user, fields, distinct, noLock };
             return ((List<Area>)generic.Invoke(sp, args));
@@ -1878,7 +1903,7 @@ namespace CSGenio.business
             return StatusMessage.OK("Alteração bem sucedida.");
         }
 
-        public virtual void apply(PersistentSupport sp)
+        public virtual void apply(PersistentSupport sp, bool isGoingBack = false)
         {
             try
             {
@@ -2221,11 +2246,6 @@ namespace CSGenio.business
             get => Information.PasswordFields;
         }
 
-        /// <summary>
-        /// True when the last information read was locked so that we can assume the old values wont change,
-        /// false otherwise.
-        /// </summary>
-        public bool IsBookmarkLocked { get; set; } = false;
 
         /// <summary>
         /// Validate all area level conditions
@@ -2266,7 +2286,7 @@ namespace CSGenio.business
                     {
                         status = StatusMessage.Error(Translations.Get(condition.ErrorWarning, user.Language));
                     }
-                }
+                }  
 
                 if(status.Status != Status.OK)
                     result.MergeStatusMessage(status);

@@ -39,7 +39,7 @@
 						v-if="hasSubTable"
 						:columns="columnHierarchy[columnsLevel + 1] ?? null"
 						:table-name="tableName + '_sub_' + row.rowKey"
-						:allow-filters="false"
+						:allow-column-filters="false"
 						:texts="texts" />
 					<component
 						:is="hasSubTable ? 'tbody' : 'v-fragment'"
@@ -268,7 +268,7 @@
 						// If collapsed, focus on parent row
 						if(!this.showChildren)
 						{
-							const index = rowElem.getAttribute('index')
+							let index = rowElem.getAttribute('index')
 							this.$emit('navigate-row', this.getParentMultiIndex(index))
 						}
 					case "-":

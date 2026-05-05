@@ -69,6 +69,12 @@ public class Equip_ValReparaco_RowViewModel : Models.Repar
 				Area = "REPAR",
 				Field = "HOURS",
 			},
+			new ListColumn()
+			{
+				Order = 7,
+				Area = "REPAR",
+				Field = "TIPOAREA",
+			},
 		];
 	}
 

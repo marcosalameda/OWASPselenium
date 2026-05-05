@@ -1,27 +1,26 @@
 ﻿<template>
-	<td>
-		<div
-			ref="mainWrapper"
-			:id="containerId"
-			:class="wrapperClasses">
-			<slot name="label" />
+	<div
+		v-if="isVisible"
+		ref="mainWrapper"
+		:id="containerId"
+		:class="wrapperClasses">
+		<slot name="label" />
 
-			<slot />
+		<slot />
 
-			<template v-if="hasMessages">
-				<template
-					v-for="(type, index) in messageTypes"
-					:key="index">
-					<div
-						v-if="messageDescription[type]"
-						:class="['btn-popover', type]">
-						<q-icon icon="exclamation-sign" />
-						{{ messageDescription[type] }}
-					</div>
-				</template>
+		<template v-if="hasMessages">
+			<template
+				v-for="(type, index) in messageTypes"
+				:key="index">
+				<div
+					v-if="messageDescription[type]"
+					:class="['btn-popover', type]">
+					<q-icon icon="exclamation-sign" />
+					{{ messageDescription[type] }}
+				</div>
 			</template>
-		</div>
-	</td>
+		</template>
+	</div>
 </template>
 
 <script>
@@ -39,7 +38,15 @@
 			/**
 			 * Reference to the model field object which may contain error messages and other context.
 			 */
-			modelFieldRef: Object
+			modelFieldRef: Object,
+
+			/**
+			 * Whether or not the control is currently visible.
+			 */
+			isVisible: {
+				type: Boolean,
+				default: true
+			}
 		},
 
 		expose: [],
@@ -62,8 +69,10 @@
 
 				if (this.hasErrorMessages)
 					classes.push('error')
+
 				else if (this.hasWarningMessages)
 					classes.push('warning')
+
 				else if (this.hasInfoMessages)
 					classes.push('info')
 
@@ -75,7 +84,7 @@
 			 */
 			hasErrorMessages()
 			{
-				return this.modelFieldRef?.hasServerErrorMessages ?? false
+				return this.modelFieldRef?.hasServerErrorMessages
 			},
 
 			/**
@@ -83,7 +92,7 @@
 			 */
 			hasWarningMessages()
 			{
-				return this.modelFieldRef?.hasServerWarningMessages ?? false
+				return this.modelFieldRef?.hasServerWarningMessages
 			},
 
 			/**
@@ -91,7 +100,7 @@
 			 */
 			hasInfoMessages()
 			{
-				return (this.modelFieldRef?.serverInfoMessages?.length ?? 0) > 0
+				return this.modelFieldRef?.serverInfoMessages?.length > 0
 			},
 
 			/**

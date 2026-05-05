@@ -1,4 +1,4 @@
-﻿/* eslint-disable @typescript-eslint/no-unused-vars */
+﻿/* eslint-disable no-unused-vars */
 import { computed, reactive, watch } from 'vue'
 import _merge from 'lodash-es/merge'
 
@@ -11,7 +11,7 @@ import netAPI from '@quidgest/clientapp/network'
 import qApi from '@/api/genio/quidgestFunctions.js'
 import qFunctions from '@/api/genio/projectFunctions.js'
 import qProjArrays from '@/api/genio/projectArrays.js'
-/* eslint-enable @typescript-eslint/no-unused-vars */
+/* eslint-enable no-unused-vars */
 
 /**
  * Represents a ViewModel class.
@@ -25,11 +25,11 @@ export default class ViewModel extends FormViewModelBase
 	 * @param {object} options - The options for the ViewModel
 	 * @param {object} values - A ViewModel instance to copy values from
 	 */
-	// eslint-disable-next-line @typescript-eslint/no-unused-vars
+	// eslint-disable-next-line no-unused-vars
 	constructor(vueContext, options, values)
 	{
 		super(vueContext, options)
-		// eslint-disable-next-line @typescript-eslint/no-unused-vars
+		// eslint-disable-next-line no-unused-vars
 		const vm = this.vueContext
 
 		// The view model metadata
@@ -37,9 +37,8 @@ export default class ViewModel extends FormViewModelBase
 			name: 'ARTIGEXT',
 			area: 'ITEM',
 			actions: {
-				recalculateFormulas: 'RecalculateFormulas_Artigext',
-				updateFilesTickets: 'UpdateFilesTicketsArtigext',
-				setFile: 'SetFileArtigext'
+				recalculateFormulas: 'RecalculateFormulas_ARTIGEXT',
+				updateFilesTickets: 'UpdateFilesTicketsARTIGEXT'
 			}
 		})
 
@@ -51,7 +50,7 @@ export default class ViewModel extends FormViewModelBase
 			field: 'CODITEM',
 			description: '',
 		}).cloneFrom(values?.ValCoditem))
-		this.stopWatchers.push(watch(() => this.ValCoditem.value, (newValue, oldValue) => this.onUpdate('item.coditem', this.ValCoditem, newValue, oldValue)))
+		watch(() => this.ValCoditem.value, (newValue, oldValue) => this.onUpdate('item.coditem', this.ValCoditem, newValue, oldValue))
 
 		/** The used foreign keys. */
 		this.ValCodwareh = reactive(new modelFieldType.ForeignKey({
@@ -62,7 +61,7 @@ export default class ViewModel extends FormViewModelBase
 			relatedArea: 'WAREH',
 			description: computed(() => this.Resources._WAREHOUSE19861),
 		}).cloneFrom(values?.ValCodwareh))
-		this.stopWatchers.push(watch(() => this.ValCodwareh.value, (newValue, oldValue) => this.onUpdate('item.codwareh', this.ValCodwareh, newValue, oldValue)))
+		watch(() => this.ValCodwareh.value, (newValue, oldValue) => this.onUpdate('item.codwareh', this.ValCodwareh, newValue, oldValue))
 
 		this.ValCodgitem = reactive(new modelFieldType.ForeignKey({
 			id: 'ValCodgitem',
@@ -72,7 +71,7 @@ export default class ViewModel extends FormViewModelBase
 			relatedArea: 'GITEM',
 			description: computed(() => this.Resources._GLOBAL_ARTICLE51116),
 		}).cloneFrom(values?.ValCodgitem))
-		this.stopWatchers.push(watch(() => this.ValCodgitem.value, (newValue, oldValue) => this.onUpdate('item.codgitem', this.ValCodgitem, newValue, oldValue)))
+		watch(() => this.ValCodgitem.value, (newValue, oldValue) => this.onUpdate('item.codgitem', this.ValCodgitem, newValue, oldValue))
 
 		/** The remaining form fields. */
 		this.TableWarehWarehdes = reactive(new modelFieldType.String({
@@ -83,9 +82,8 @@ export default class ViewModel extends FormViewModelBase
 			field: 'WAREHDES',
 			maxLength: 85,
 			description: computed(() => this.Resources.WAREHOUSE51864),
-			ignoreFldSubmit: true,
 		}).cloneFrom(values?.TableWarehWarehdes))
-		this.stopWatchers.push(watch(() => this.TableWarehWarehdes.value, (newValue, oldValue) => this.onUpdate('wareh.warehdes', this.TableWarehWarehdes, newValue, oldValue)))
+		watch(() => this.TableWarehWarehdes.value, (newValue, oldValue) => this.onUpdate('wareh.warehdes', this.TableWarehWarehdes, newValue, oldValue))
 
 		this.TableGitemItemdes = reactive(new modelFieldType.String({
 			type: 'Lookup',
@@ -95,9 +93,8 @@ export default class ViewModel extends FormViewModelBase
 			field: 'ITEMDES',
 			maxLength: 85,
 			description: computed(() => this.Resources.GLOBAL_ARTICLE63861),
-			ignoreFldSubmit: true,
 		}).cloneFrom(values?.TableGitemItemdes))
-		this.stopWatchers.push(watch(() => this.TableGitemItemdes.value, (newValue, oldValue) => this.onUpdate('gitem.itemdes', this.TableGitemItemdes, newValue, oldValue)))
+		watch(() => this.TableGitemItemdes.value, (newValue, oldValue) => this.onUpdate('gitem.itemdes', this.TableGitemItemdes, newValue, oldValue))
 
 		this.GitemValItemgcod = reactive(new modelFieldType.String({
 			id: 'GitemValItemgcod',
@@ -108,7 +105,7 @@ export default class ViewModel extends FormViewModelBase
 			isFixed: true,
 			description: computed(() => this.Resources.CODE49225),
 		}).cloneFrom(values?.GitemValItemgcod))
-		this.stopWatchers.push(watch(() => this.GitemValItemgcod.value, (newValue, oldValue) => this.onUpdate('gitem.itemgcod', this.GitemValItemgcod, newValue, oldValue)))
+		watch(() => this.GitemValItemgcod.value, (newValue, oldValue) => this.onUpdate('gitem.itemgcod', this.GitemValItemgcod, newValue, oldValue))
 
 		this.ValItemdes = reactive(new modelFieldType.String({
 			id: 'ValItemdes',
@@ -118,7 +115,7 @@ export default class ViewModel extends FormViewModelBase
 			maxLength: 85,
 			valueFormula: {
 				stopRecalcCondition() { return false },
-				// eslint-disable-next-line @typescript-eslint/no-unused-vars
+				// eslint-disable-next-line no-unused-vars
 				fnFormula(params)
 				{
 					// Formula: [GITEM->ITEMDES]
@@ -130,7 +127,7 @@ export default class ViewModel extends FormViewModelBase
 			},
 			description: computed(() => this.Resources.ARTICLE60065),
 		}).cloneFrom(values?.ValItemdes))
-		this.stopWatchers.push(watch(() => this.ValItemdes.value, (newValue, oldValue) => this.onUpdate('item.itemdes', this.ValItemdes, newValue, oldValue)))
+		watch(() => this.ValItemdes.value, (newValue, oldValue) => this.onUpdate('item.itemdes', this.ValItemdes, newValue, oldValue))
 
 		this.ValItemcod = reactive(new modelFieldType.String({
 			id: 'ValItemcod',
@@ -140,7 +137,7 @@ export default class ViewModel extends FormViewModelBase
 			maxLength: 15,
 			valueFormula: {
 				stopRecalcCondition() { return false },
-				// eslint-disable-next-line @typescript-eslint/no-unused-vars
+				// eslint-disable-next-line no-unused-vars
 				fnFormula(params)
 				{
 					// Formula: [GITEM->ITEMGCOD]
@@ -152,7 +149,7 @@ export default class ViewModel extends FormViewModelBase
 			},
 			description: computed(() => this.Resources.CODE49225),
 		}).cloneFrom(values?.ValItemcod))
-		this.stopWatchers.push(watch(() => this.ValItemcod.value, (newValue, oldValue) => this.onUpdate('item.itemcod', this.ValItemcod, newValue, oldValue)))
+		watch(() => this.ValItemcod.value, (newValue, oldValue) => this.onUpdate('item.itemcod', this.ValItemcod, newValue, oldValue))
 
 		this.ValImage = reactive(new modelFieldType.Image({
 			id: 'ValImage',
@@ -161,19 +158,7 @@ export default class ViewModel extends FormViewModelBase
 			field: 'IMAGE',
 			description: computed(() => this.Resources.IMAGE65174),
 		}).cloneFrom(values?.ValImage))
-		this.stopWatchers.push(watch(() => this.ValImage.value, (newValue, oldValue) => this.onUpdate('item.image', this.ValImage, newValue, oldValue)))
-
-		/** The form fields used only in formulas. */
-		this.GitemValItemdes = reactive(new modelFieldType.String({
-			id: 'GitemValItemdes',
-			originId: 'ValItemdes',
-			area: 'GITEM',
-			field: 'ITEMDES',
-			maxLength: 85,
-			isFixed: true,
-			description: computed(() => this.Resources.GLOBAL_ARTICLE63861),
-		}).cloneFrom(values?.GitemValItemdes))
-		this.stopWatchers.push(watch(() => this.GitemValItemdes.value, (newValue, oldValue) => this.onUpdate('gitem.itemdes', this.GitemValItemdes, newValue, oldValue)))
+		watch(() => this.ValImage.value, (newValue, oldValue) => this.onUpdate('item.image', this.ValImage, newValue, oldValue))
 	}
 
 	/**

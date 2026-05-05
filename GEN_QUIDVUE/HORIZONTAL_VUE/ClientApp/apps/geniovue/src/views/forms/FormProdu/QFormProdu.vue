@@ -9,13 +9,12 @@
 			<div
 				v-if="showFormHeader"
 				class="c-action-bar">
-				<component
+				<h1
 					v-if="formControl.uiComponents.header && formInfo.designation"
-					:is="topHeadingTag"
 					:id="formTitleId"
 					class="form-header">
 					{{ formInfo.designation }}
-				</component>
+				</h1>
 
 				<div class="c-action-bar__menu">
 					<template
@@ -39,13 +38,9 @@
 									:label="btn.label"
 									:disabled="btn.disabled"
 									@click="btn.action">
-									<template v-if="btn.icon">
-										<q-badge-indicator
-											:enabled="btn.badge?.isVisible ?? false"
-											:color="btn.badge?.color">
-											<q-icon v-bind="btn.icon" />
-										</q-badge-indicator>
-									</template>
+									<q-icon
+										v-if="btn.icon"
+										v-bind="btn.icon" />
 								</q-toggle-group-item>
 							</template>
 						</q-toggle-group>
@@ -57,7 +52,7 @@
 				v-if="$app.layout.FormAnchorsPosition === 'form-header' && visibleGroups.length > 0"
 				:anchors="anchorGroups"
 				:controls="visibleControls"
-				@focus-control="focusControl" />
+				@focus-control="(...args) => focusControl(...args)" />
 		</div>
 	</teleport>
 
@@ -78,7 +73,6 @@
 						v-if="btn.isActive && btn.isVisible && btn.showInHeading"
 						:id="`heading-${btn.id}`"
 						:label="btn.text"
-						:color="btn.color"
 						:variant="btn.variant"
 						:disabled="btn.disabled"
 						:icon-pos="btn.iconPos"
@@ -92,71 +86,65 @@
 			</q-button-group>
 		</div>
 
-		<q-container
-			fluid
+		<div
+			class="form-flow"
 			data-key="PRODU"
-			:data-identifier="primaryKeyValue"
-			:data-loading="!formInitialDataLoaded || !isActiveForm">
+			:data-loading="!formInitialDataLoaded">
 			<template v-if="formControl.initialized && showFormBody">
-				<q-row v-if="controls.PRODU___PSEUDNOVOGR01.isVisible">
-					<q-col v-if="controls.PRODU___PSEUDNOVOGR01.isVisible">
+				<q-row-container
+					v-show="controls.PRODU___PSEUDNOVOGR01.isVisible"
+					is-large>
+					<q-control-wrapper
+						v-show="controls.PRODU___PSEUDNOVOGR01.isVisible"
+						class="${Vue.GetControlWrapperClass($controlsColumn)}">
 						<q-group-box-container
-							v-if="controls.PRODU___PSEUDNOVOGR01.isVisible"
+							id="PRODU___PSEUDNOVOGR01"
 							v-bind="controls.PRODU___PSEUDNOVOGR01"
-							:id="getControlId(controls.PRODU___PSEUDNOVOGR01)"
-							:no-border="controls.PRODU___PSEUDNOVOGR01.borderless">
+							:is-visible="controls.PRODU___PSEUDNOVOGR01.isVisible">
 							<!-- Start PRODU___PSEUDNOVOGR01 -->
-							<q-row v-if="controls.PRODU___PRODUPRODUCT_.isVisible">
-								<q-col
-									v-if="controls.PRODU___PRODUPRODUCT_.isVisible"
-									cols="auto">
+							<q-row-container v-show="controls.PRODU___PRODUPRODUCT_.isVisible">
+								<q-control-wrapper
+									v-show="controls.PRODU___PRODUPRODUCT_.isVisible"
+									class="${Vue.GetControlWrapperClass($controlsColumn)}">
 									<base-input-structure
-										v-if="controls.PRODU___PRODUPRODUCT_.isVisible"
 										class="i-text"
-										v-bind="controls.PRODU___PRODUPRODUCT_.wrapperProps"
-										:id="getControlId(controls.PRODU___PRODUPRODUCT_)"
+										v-bind="controls.PRODU___PRODUPRODUCT_"
 										v-on="controls.PRODU___PRODUPRODUCT_.handlers"
 										:loading="controls.PRODU___PRODUPRODUCT_.props.loading"
 										:reporting-mode-on="reportingModeCAV"
 										:suggestion-mode-on="suggestionModeOn">
 										<q-text-field
 											v-bind="controls.PRODU___PRODUPRODUCT_.props"
-											:id="getControlId(controls.PRODU___PRODUPRODUCT_)"
 											@blur="onBlur(controls.PRODU___PRODUPRODUCT_, model.ValProduct.value)"
 											@change="model.ValProduct.fnUpdateValueOnChange" />
 									</base-input-structure>
-								</q-col>
-							</q-row>
-							<q-row v-if="controls.PRODU___PRODUIN_USE__.isVisible">
-								<q-col
-									v-if="controls.PRODU___PRODUIN_USE__.isVisible"
-									cols="auto">
+								</q-control-wrapper>
+							</q-row-container>
+							<q-row-container v-show="controls.PRODU___PRODUIN_USE__.isVisible">
+								<q-control-wrapper
+									v-show="controls.PRODU___PRODUIN_USE__.isVisible"
+									class="${Vue.GetControlWrapperClass($controlsColumn)}">
 									<base-input-structure
-										v-if="controls.PRODU___PRODUIN_USE__.isVisible"
 										class="i-text"
-										v-bind="controls.PRODU___PRODUIN_USE__.wrapperProps"
-										:id="getControlId(controls.PRODU___PRODUIN_USE__)"
+										v-bind="controls.PRODU___PRODUIN_USE__"
 										v-on="controls.PRODU___PRODUIN_USE__.handlers"
 										:loading="controls.PRODU___PRODUIN_USE__.props.loading"
 										:reporting-mode-on="reportingModeCAV"
 										:suggestion-mode-on="suggestionModeOn">
-										<q-switch
+										<q-toggle-input
 											v-if="controls.PRODU___PRODUIN_USE__.isVisible"
 											v-bind="controls.PRODU___PRODUIN_USE__.props"
-											:id="getControlId(controls.PRODU___PRODUIN_USE__)"
 											v-on="controls.PRODU___PRODUIN_USE__.handlers" />
 									</base-input-structure>
-								</q-col>
-							</q-row>
-							<q-row v-if="controls.PRODU___PRODUDESCRIPT.isVisible">
-								<q-col
-									v-if="controls.PRODU___PRODUDESCRIPT.isVisible"
-									cols="auto">
+								</q-control-wrapper>
+							</q-row-container>
+							<q-row-container v-show="controls.PRODU___PRODUDESCRIPT.isVisible">
+								<q-control-wrapper
+									v-show="controls.PRODU___PRODUDESCRIPT.isVisible"
+									class="${Vue.GetControlWrapperClass($controlsColumn)}">
 									<base-input-structure
-										v-if="controls.PRODU___PRODUDESCRIPT.isVisible"
 										class="i-textarea"
-										v-bind="controls.PRODU___PRODUDESCRIPT.wrapperProps"
-										:id="getControlId(controls.PRODU___PRODUDESCRIPT)"
+										v-bind="controls.PRODU___PRODUDESCRIPT"
 										v-on="controls.PRODU___PRODUDESCRIPT.handlers"
 										:loading="controls.PRODU___PRODUDESCRIPT.props.loading"
 										:reporting-mode-on="reportingModeCAV"
@@ -164,79 +152,67 @@
 										<q-text-area
 											v-if="controls.PRODU___PRODUDESCRIPT.isVisible"
 											v-bind="controls.PRODU___PRODUDESCRIPT.props"
-											:id="getControlId(controls.PRODU___PRODUDESCRIPT)"
 											v-on="controls.PRODU___PRODUDESCRIPT.handlers" />
 									</base-input-structure>
-								</q-col>
-							</q-row>
-							<q-row v-if="controls.PRODU___PRODUSKU_____.isVisible || controls.PRODU___PRODUGTIN____.isVisible">
-								<q-col
-									v-if="controls.PRODU___PRODUSKU_____.isVisible"
-									cols="auto">
+								</q-control-wrapper>
+							</q-row-container>
+							<q-row-container v-show="controls.PRODU___PRODUSKU_____.isVisible || controls.PRODU___PRODUGTIN____.isVisible">
+								<q-control-wrapper
+									v-show="controls.PRODU___PRODUSKU_____.isVisible"
+									class="${Vue.GetControlWrapperClass($controlsColumn)}">
 									<base-input-structure
-										v-if="controls.PRODU___PRODUSKU_____.isVisible"
 										class="i-text"
-										v-bind="controls.PRODU___PRODUSKU_____.wrapperProps"
-										:id="getControlId(controls.PRODU___PRODUSKU_____)"
+										v-bind="controls.PRODU___PRODUSKU_____"
 										v-on="controls.PRODU___PRODUSKU_____.handlers"
 										:loading="controls.PRODU___PRODUSKU_____.props.loading"
 										:reporting-mode-on="reportingModeCAV"
 										:suggestion-mode-on="suggestionModeOn">
 										<q-text-field
 											v-bind="controls.PRODU___PRODUSKU_____.props"
-											:id="getControlId(controls.PRODU___PRODUSKU_____)"
 											@blur="onBlur(controls.PRODU___PRODUSKU_____, model.ValSku.value)"
 											@change="model.ValSku.fnUpdateValueOnChange" />
 									</base-input-structure>
-								</q-col>
-								<q-col
-									v-if="controls.PRODU___PRODUGTIN____.isVisible"
-									cols="auto">
+								</q-control-wrapper>
+								<q-control-wrapper
+									v-show="controls.PRODU___PRODUGTIN____.isVisible"
+									class="${Vue.GetControlWrapperClass($controlsColumn)}">
 									<base-input-structure
-										v-if="controls.PRODU___PRODUGTIN____.isVisible"
 										class="i-text"
-										v-bind="controls.PRODU___PRODUGTIN____.wrapperProps"
-										:id="getControlId(controls.PRODU___PRODUGTIN____)"
+										v-bind="controls.PRODU___PRODUGTIN____"
 										v-on="controls.PRODU___PRODUGTIN____.handlers"
 										:loading="controls.PRODU___PRODUGTIN____.props.loading"
 										:reporting-mode-on="reportingModeCAV"
 										:suggestion-mode-on="suggestionModeOn">
 										<q-text-field
 											v-bind="controls.PRODU___PRODUGTIN____.props"
-											:id="getControlId(controls.PRODU___PRODUGTIN____)"
 											@blur="onBlur(controls.PRODU___PRODUGTIN____, model.ValGtin.value)"
 											@change="model.ValGtin.fnUpdateValueOnChange" />
 									</base-input-structure>
-								</q-col>
-							</q-row>
-							<q-row v-if="controls.PRODU___PRODUSIZE____.isVisible || controls.PRODU___PRODUWEIGHT__.isVisible">
-								<q-col
-									v-if="controls.PRODU___PRODUSIZE____.isVisible"
-									cols="auto">
+								</q-control-wrapper>
+							</q-row-container>
+							<q-row-container v-show="controls.PRODU___PRODUSIZE____.isVisible || controls.PRODU___PRODUWEIGHT__.isVisible">
+								<q-control-wrapper
+									v-show="controls.PRODU___PRODUSIZE____.isVisible"
+									class="${Vue.GetControlWrapperClass($controlsColumn)}">
 									<base-input-structure
-										v-if="controls.PRODU___PRODUSIZE____.isVisible"
 										class="i-text"
-										v-bind="controls.PRODU___PRODUSIZE____.wrapperProps"
-										:id="getControlId(controls.PRODU___PRODUSIZE____)"
+										v-bind="controls.PRODU___PRODUSIZE____"
 										v-on="controls.PRODU___PRODUSIZE____.handlers"
 										:loading="controls.PRODU___PRODUSIZE____.props.loading"
 										:reporting-mode-on="reportingModeCAV"
 										:suggestion-mode-on="suggestionModeOn">
 										<q-text-field
 											v-bind="controls.PRODU___PRODUSIZE____.props"
-											:id="getControlId(controls.PRODU___PRODUSIZE____)"
 											@blur="onBlur(controls.PRODU___PRODUSIZE____, model.ValSize.value)"
 											@change="model.ValSize.fnUpdateValueOnChange" />
 									</base-input-structure>
-								</q-col>
-								<q-col
-									v-if="controls.PRODU___PRODUWEIGHT__.isVisible"
-									cols="auto">
+								</q-control-wrapper>
+								<q-control-wrapper
+									v-show="controls.PRODU___PRODUWEIGHT__.isVisible"
+									class="${Vue.GetControlWrapperClass($controlsColumn)}">
 									<base-input-structure
-										v-if="controls.PRODU___PRODUWEIGHT__.isVisible"
 										class="i-text"
-										v-bind="controls.PRODU___PRODUWEIGHT__.wrapperProps"
-										:id="getControlId(controls.PRODU___PRODUWEIGHT__)"
+										v-bind="controls.PRODU___PRODUWEIGHT__"
 										v-on="controls.PRODU___PRODUWEIGHT__.handlers"
 										:loading="controls.PRODU___PRODUWEIGHT__.props.loading"
 										:reporting-mode-on="reportingModeCAV"
@@ -244,20 +220,17 @@
 										<q-numeric-input
 											v-if="controls.PRODU___PRODUWEIGHT__.isVisible"
 											v-bind="controls.PRODU___PRODUWEIGHT__.props"
-											:id="getControlId(controls.PRODU___PRODUWEIGHT__)"
 											@update:model-value="model.ValWeight.fnUpdateValue" />
 									</base-input-structure>
-								</q-col>
-							</q-row>
-							<q-row v-if="controls.PRODU___PRODUPRICE___.isVisible || controls.PRODU___PRODUINPUTS__.isVisible || controls.PRODU___PRODUOUTPUTS_.isVisible || controls.PRODU___PRODUSTOCK___.isVisible">
-								<q-col
-									v-if="controls.PRODU___PRODUPRICE___.isVisible"
-									cols="auto">
+								</q-control-wrapper>
+							</q-row-container>
+							<q-row-container v-show="controls.PRODU___PRODUPRICE___.isVisible || controls.PRODU___PRODUINPUTS__.isVisible || controls.PRODU___PRODUOUTPUTS_.isVisible || controls.PRODU___PRODUSTOCK___.isVisible">
+								<q-control-wrapper
+									v-show="controls.PRODU___PRODUPRICE___.isVisible"
+									class="${Vue.GetControlWrapperClass($controlsColumn)}">
 									<base-input-structure
-										v-if="controls.PRODU___PRODUPRICE___.isVisible"
 										class="i-text"
-										v-bind="controls.PRODU___PRODUPRICE___.wrapperProps"
-										:id="getControlId(controls.PRODU___PRODUPRICE___)"
+										v-bind="controls.PRODU___PRODUPRICE___"
 										v-on="controls.PRODU___PRODUPRICE___.handlers"
 										:loading="controls.PRODU___PRODUPRICE___.props.loading"
 										:reporting-mode-on="reportingModeCAV"
@@ -265,18 +238,15 @@
 										<q-numeric-input
 											v-if="controls.PRODU___PRODUPRICE___.isVisible"
 											v-bind="controls.PRODU___PRODUPRICE___.props"
-											:id="getControlId(controls.PRODU___PRODUPRICE___)"
 											@update:model-value="model.ValPrice.fnUpdateValue" />
 									</base-input-structure>
-								</q-col>
-								<q-col
-									v-if="controls.PRODU___PRODUINPUTS__.isVisible"
-									cols="auto">
+								</q-control-wrapper>
+								<q-control-wrapper
+									v-show="controls.PRODU___PRODUINPUTS__.isVisible"
+									class="${Vue.GetControlWrapperClass($controlsColumn)}">
 									<base-input-structure
-										v-if="controls.PRODU___PRODUINPUTS__.isVisible"
 										class="i-text"
-										v-bind="controls.PRODU___PRODUINPUTS__.wrapperProps"
-										:id="getControlId(controls.PRODU___PRODUINPUTS__)"
+										v-bind="controls.PRODU___PRODUINPUTS__"
 										v-on="controls.PRODU___PRODUINPUTS__.handlers"
 										:loading="controls.PRODU___PRODUINPUTS__.props.loading"
 										:reporting-mode-on="reportingModeCAV"
@@ -284,18 +254,15 @@
 										<q-numeric-input
 											v-if="controls.PRODU___PRODUINPUTS__.isVisible"
 											v-bind="controls.PRODU___PRODUINPUTS__.props"
-											:id="getControlId(controls.PRODU___PRODUINPUTS__)"
 											@update:model-value="model.ValInputs.fnUpdateValue" />
 									</base-input-structure>
-								</q-col>
-								<q-col
-									v-if="controls.PRODU___PRODUOUTPUTS_.isVisible"
-									cols="auto">
+								</q-control-wrapper>
+								<q-control-wrapper
+									v-show="controls.PRODU___PRODUOUTPUTS_.isVisible"
+									class="${Vue.GetControlWrapperClass($controlsColumn)}">
 									<base-input-structure
-										v-if="controls.PRODU___PRODUOUTPUTS_.isVisible"
 										class="i-text"
-										v-bind="controls.PRODU___PRODUOUTPUTS_.wrapperProps"
-										:id="getControlId(controls.PRODU___PRODUOUTPUTS_)"
+										v-bind="controls.PRODU___PRODUOUTPUTS_"
 										v-on="controls.PRODU___PRODUOUTPUTS_.handlers"
 										:loading="controls.PRODU___PRODUOUTPUTS_.props.loading"
 										:reporting-mode-on="reportingModeCAV"
@@ -303,18 +270,15 @@
 										<q-numeric-input
 											v-if="controls.PRODU___PRODUOUTPUTS_.isVisible"
 											v-bind="controls.PRODU___PRODUOUTPUTS_.props"
-											:id="getControlId(controls.PRODU___PRODUOUTPUTS_)"
 											@update:model-value="model.ValOutputs.fnUpdateValue" />
 									</base-input-structure>
-								</q-col>
-								<q-col
-									v-if="controls.PRODU___PRODUSTOCK___.isVisible"
-									cols="auto">
+								</q-control-wrapper>
+								<q-control-wrapper
+									v-show="controls.PRODU___PRODUSTOCK___.isVisible"
+									class="${Vue.GetControlWrapperClass($controlsColumn)}">
 									<base-input-structure
-										v-if="controls.PRODU___PRODUSTOCK___.isVisible"
 										class="i-text"
-										v-bind="controls.PRODU___PRODUSTOCK___.wrapperProps"
-										:id="getControlId(controls.PRODU___PRODUSTOCK___)"
+										v-bind="controls.PRODU___PRODUSTOCK___"
 										v-on="controls.PRODU___PRODUSTOCK___.handlers"
 										:loading="controls.PRODU___PRODUSTOCK___.props.loading"
 										:reporting-mode-on="reportingModeCAV"
@@ -322,32 +286,32 @@
 										<q-numeric-input
 											v-if="controls.PRODU___PRODUSTOCK___.isVisible"
 											v-bind="controls.PRODU___PRODUSTOCK___.props"
-											:id="getControlId(controls.PRODU___PRODUSTOCK___)"
 											@update:model-value="model.ValStock.fnUpdateValue" />
 									</base-input-structure>
-								</q-col>
-							</q-row>
+								</q-control-wrapper>
+							</q-row-container>
 							<!-- End PRODU___PSEUDNOVOGR01 -->
 						</q-group-box-container>
-					</q-col>
-				</q-row>
-				<q-row v-if="controls.PRODU___PSEUDNOVOGR02.isVisible">
-					<q-col v-if="controls.PRODU___PSEUDNOVOGR02.isVisible">
+					</q-control-wrapper>
+				</q-row-container>
+				<q-row-container
+					v-show="controls.PRODU___PSEUDNOVOGR02.isVisible"
+					is-large>
+					<q-control-wrapper
+						v-show="controls.PRODU___PSEUDNOVOGR02.isVisible"
+						class="${Vue.GetControlWrapperClass($controlsColumn)}">
 						<q-group-collapsible
-							v-if="controls.PRODU___PSEUDNOVOGR02.isVisible"
+							id="PRODU___PSEUDNOVOGR02"
 							v-bind="controls.PRODU___PSEUDNOVOGR02"
-							:id="getControlId(controls.PRODU___PSEUDNOVOGR02)"
 							v-on="controls.PRODU___PSEUDNOVOGR02.handlers">
 							<!-- Start PRODU___PSEUDNOVOGR02 -->
-							<q-row v-if="controls.PRODU___PRODUIMAGE___.isVisible">
-								<q-col
-									v-if="controls.PRODU___PRODUIMAGE___.isVisible"
-									cols="auto">
+							<q-row-container v-show="controls.PRODU___PRODUIMAGE___.isVisible">
+								<q-control-wrapper
+									v-show="controls.PRODU___PRODUIMAGE___.isVisible"
+									class="${Vue.GetControlWrapperClass($controlsColumn)}">
 									<base-input-structure
-										v-if="controls.PRODU___PRODUIMAGE___.isVisible"
 										class="q-image"
-										v-bind="controls.PRODU___PRODUIMAGE___.wrapperProps"
-										:id="getControlId(controls.PRODU___PRODUIMAGE___)"
+										v-bind="controls.PRODU___PRODUIMAGE___"
 										v-on="controls.PRODU___PRODUIMAGE___.handlers"
 										:loading="controls.PRODU___PRODUIMAGE___.props.loading"
 										:reporting-mode-on="reportingModeCAV"
@@ -355,45 +319,48 @@
 										<q-image
 											v-if="controls.PRODU___PRODUIMAGE___.isVisible"
 											v-bind="controls.PRODU___PRODUIMAGE___.props"
-											:id="getControlId(controls.PRODU___PRODUIMAGE___)"
 											v-on="controls.PRODU___PRODUIMAGE___.handlers" />
 									</base-input-structure>
-								</q-col>
-							</q-row>
+								</q-control-wrapper>
+							</q-row-container>
 							<!-- End PRODU___PSEUDNOVOGR02 -->
 						</q-group-collapsible>
-					</q-col>
-				</q-row>
-				<q-row v-if="controls.PRODU___PSEUDNOVOGR06.isVisible">
-					<q-col v-if="controls.PRODU___PSEUDNOVOGR06.isVisible">
+					</q-control-wrapper>
+				</q-row-container>
+				<q-row-container
+					v-show="controls.PRODU___PSEUDNOVOGR06.isVisible"
+					is-large>
+					<q-control-wrapper
+						v-show="controls.PRODU___PSEUDNOVOGR06.isVisible"
+						class="${Vue.GetControlWrapperClass($controlsColumn)}">
 						<q-accordion
 							v-if="controls.PRODU___PSEUDNOVOGR06.isVisible"
-							:id="getControlId(controls.PRODU___PSEUDNOVOGR06)"
-							v-model="controls.PRODU___PSEUDNOVOGR06.openChild">
+							id="PRODU___PSEUDNOVOGR06"
+							v-bind="controls.PRODU___PSEUDNOVOGR06">
 							<!-- Start PRODU___PSEUDNOVOGR06 -->
-							<q-accordion-item
-								v-if="controls.PRODU___PSEUDNOVOGR04.isVisible"
-								:id="getControlId(controls.PRODU___PSEUDNOVOGR04) + '-container'"
-								value="PRODU___PSEUDNOVOGR04"
-								:title="controls.PRODU___PSEUDNOVOGR04.label">
+							<q-group-collapsible
+								id="PRODU___PSEUDNOVOGR04"
+								v-bind="controls.PRODU___PSEUDNOVOGR04"
+								v-on="controls.PRODU___PSEUDNOVOGR04.handlers">
 								<!-- Start PRODU___PSEUDNOVOGR04 -->
-								<q-row v-if="controls.PRODU___PSEUDNOVOGR03.isVisible">
-									<q-col v-if="controls.PRODU___PSEUDNOVOGR03.isVisible">
+								<q-row-container
+									v-show="controls.PRODU___PSEUDNOVOGR03.isVisible"
+									is-large>
+									<q-control-wrapper
+										v-show="controls.PRODU___PSEUDNOVOGR03.isVisible"
+										class="${Vue.GetControlWrapperClass($controlsColumn)}">
 										<q-group-box-container
-											v-if="controls.PRODU___PSEUDNOVOGR03.isVisible"
+											id="PRODU___PSEUDNOVOGR03"
 											v-bind="controls.PRODU___PSEUDNOVOGR03"
-											:id="getControlId(controls.PRODU___PSEUDNOVOGR03)"
-											:no-border="controls.PRODU___PSEUDNOVOGR03.borderless">
+											:is-visible="controls.PRODU___PSEUDNOVOGR03.isVisible">
 											<!-- Start PRODU___PSEUDNOVOGR03 -->
-											<q-row v-if="controls.PRODU___LOCATGLN_____.isVisible">
-												<q-col
-													v-if="controls.PRODU___LOCATGLN_____.isVisible"
-													cols="auto">
+											<q-row-container v-show="controls.PRODU___LOCATGLN_____.isVisible">
+												<q-control-wrapper
+													v-show="controls.PRODU___LOCATGLN_____.isVisible"
+													class="${Vue.GetControlWrapperClass($controlsColumn)}">
 													<base-input-structure
-														v-if="controls.PRODU___LOCATGLN_____.isVisible"
 														class="i-text"
-														v-bind="controls.PRODU___LOCATGLN_____.wrapperProps"
-														:id="getControlId(controls.PRODU___LOCATGLN_____)"
+														v-bind="controls.PRODU___LOCATGLN_____"
 														v-on="controls.PRODU___LOCATGLN_____.handlers"
 														:loading="controls.PRODU___LOCATGLN_____.props.loading"
 														:reporting-mode-on="reportingModeCAV"
@@ -401,24 +368,21 @@
 														<q-lookup
 															v-if="controls.PRODU___LOCATGLN_____.isVisible"
 															v-bind="controls.PRODU___LOCATGLN_____.props"
-															:id="getControlId(controls.PRODU___LOCATGLN_____)"
 															v-on="controls.PRODU___LOCATGLN_____.handlers" />
 														<q-see-more-produ-locatgln
 															v-if="controls.PRODU___LOCATGLN_____.seeMoreIsVisible"
 															v-bind="controls.PRODU___LOCATGLN_____.seeMoreParams"
 															v-on="controls.PRODU___LOCATGLN_____.handlers" />
 													</base-input-structure>
-												</q-col>
-											</q-row>
-											<q-row v-if="controls.PRODU___LCEXTGLNEXT__.isVisible">
-												<q-col
-													v-if="controls.PRODU___LCEXTGLNEXT__.isVisible"
-													cols="auto">
+												</q-control-wrapper>
+											</q-row-container>
+											<q-row-container v-show="controls.PRODU___LCEXTGLNEXT__.isVisible">
+												<q-control-wrapper
+													v-show="controls.PRODU___LCEXTGLNEXT__.isVisible"
+													class="${Vue.GetControlWrapperClass($controlsColumn)}">
 													<base-input-structure
-														v-if="controls.PRODU___LCEXTGLNEXT__.isVisible"
 														class="i-text"
-														v-bind="controls.PRODU___LCEXTGLNEXT__.wrapperProps"
-														:id="getControlId(controls.PRODU___LCEXTGLNEXT__)"
+														v-bind="controls.PRODU___LCEXTGLNEXT__"
 														v-on="controls.PRODU___LCEXTGLNEXT__.handlers"
 														:loading="controls.PRODU___LCEXTGLNEXT__.props.loading"
 														:reporting-mode-on="reportingModeCAV"
@@ -426,96 +390,79 @@
 														<q-lookup
 															v-if="controls.PRODU___LCEXTGLNEXT__.isVisible"
 															v-bind="controls.PRODU___LCEXTGLNEXT__.props"
-															:id="getControlId(controls.PRODU___LCEXTGLNEXT__)"
 															v-on="controls.PRODU___LCEXTGLNEXT__.handlers" />
 														<q-see-more-produ-lcextglnext
 															v-if="controls.PRODU___LCEXTGLNEXT__.seeMoreIsVisible"
 															v-bind="controls.PRODU___LCEXTGLNEXT__.seeMoreParams"
 															v-on="controls.PRODU___LCEXTGLNEXT__.handlers" />
 													</base-input-structure>
-												</q-col>
-											</q-row>
+												</q-control-wrapper>
+											</q-row-container>
 											<!-- End PRODU___PSEUDNOVOGR03 -->
 										</q-group-box-container>
-									</q-col>
-								</q-row>
-								<q-row v-if="controls.PRODU___PSEUDSTOCKEVO.isVisible">
-									<q-col
-										v-if="controls.PRODU___PSEUDSTOCKEVO.isVisible"
-										cols="auto">
+									</q-control-wrapper>
+								</q-row-container>
+								<q-row-container v-show="controls.PRODU___PSEUDSTOCKEVO.isVisible">
+									<q-control-wrapper
+										v-show="controls.PRODU___PSEUDSTOCKEVO.isVisible"
+										class="${Vue.GetControlWrapperClass($controlsColumn)}">
 										<q-table
-											v-if="controls.PRODU___PSEUDSTOCKEVO.isVisible"
+											v-show="controls.PRODU___PSEUDSTOCKEVO.isVisible"
 											v-bind="controls.PRODU___PSEUDSTOCKEVO"
-											:id="getControlId(controls.PRODU___PSEUDSTOCKEVO)"
-											v-on="controls.PRODU___PSEUDSTOCKEVO.handlers">
-											<template #header>
-												<q-table-config
-													:table-ctrl="controls.PRODU___PSEUDSTOCKEVO"
-													v-on="controls.PRODU___PSEUDSTOCKEVO.handlers" />
-											</template>
-											<!-- USE /[MANUAL GQT CUSTOM_TABLE PRODU___PSEUDSTOCKEVO]/ -->
-										</q-table>
-									</q-col>
-								</q-row>
+											v-on="controls.PRODU___PSEUDSTOCKEVO.handlers" />
+										<q-table-extra-extension
+											:list-ctrl="controls.PRODU___PSEUDSTOCKEVO"
+											v-on="controls.PRODU___PSEUDSTOCKEVO.handlers" />
+									</q-control-wrapper>
+								</q-row-container>
 								<!-- End PRODU___PSEUDNOVOGR04 -->
-							</q-accordion-item>
-							<q-accordion-item
-								v-if="controls.PRODU___PSEUDNOVOGR05.isVisible"
-								:id="getControlId(controls.PRODU___PSEUDNOVOGR05) + '-container'"
-								value="PRODU___PSEUDNOVOGR05"
-								:title="controls.PRODU___PSEUDNOVOGR05.label">
+							</q-group-collapsible>
+							<q-group-collapsible
+								id="PRODU___PSEUDNOVOGR05"
+								v-bind="controls.PRODU___PSEUDNOVOGR05"
+								v-on="controls.PRODU___PSEUDNOVOGR05.handlers">
 								<!-- Start PRODU___PSEUDNOVOGR05 -->
-								<q-row v-if="controls.PRODU___PSEUDINPUTSRE.isVisible || controls.PRODU___PSEUDOUTPUTSD.isVisible">
-									<q-col
-										v-if="controls.PRODU___PSEUDINPUTSRE.isVisible"
-										cols="auto">
+								<q-row-container v-show="controls.PRODU___PSEUDINPUTSRE.isVisible || controls.PRODU___PSEUDOUTPUTSD.isVisible">
+									<q-control-wrapper
+										v-show="controls.PRODU___PSEUDINPUTSRE.isVisible"
+										class="${Vue.GetControlWrapperClass($controlsColumn)}">
 										<q-table
-											v-if="controls.PRODU___PSEUDINPUTSRE.isVisible"
+											v-show="controls.PRODU___PSEUDINPUTSRE.isVisible"
 											v-bind="controls.PRODU___PSEUDINPUTSRE"
-											:id="getControlId(controls.PRODU___PSEUDINPUTSRE)"
-											v-on="controls.PRODU___PSEUDINPUTSRE.handlers">
-											<template #header>
-												<q-table-config
-													:table-ctrl="controls.PRODU___PSEUDINPUTSRE"
-													v-on="controls.PRODU___PSEUDINPUTSRE.handlers" />
-											</template>
-											<!-- USE /[MANUAL GQT CUSTOM_TABLE PRODU___PSEUDINPUTSRE]/ -->
-										</q-table>
-									</q-col>
-									<q-col
-										v-if="controls.PRODU___PSEUDOUTPUTSD.isVisible"
-										cols="auto">
+											v-on="controls.PRODU___PSEUDINPUTSRE.handlers" />
+										<q-table-extra-extension
+											:list-ctrl="controls.PRODU___PSEUDINPUTSRE"
+											v-on="controls.PRODU___PSEUDINPUTSRE.handlers" />
+									</q-control-wrapper>
+									<q-control-wrapper
+										v-show="controls.PRODU___PSEUDOUTPUTSD.isVisible"
+										class="${Vue.GetControlWrapperClass($controlsColumn)}">
 										<q-table
-											v-if="controls.PRODU___PSEUDOUTPUTSD.isVisible"
+											v-show="controls.PRODU___PSEUDOUTPUTSD.isVisible"
 											v-bind="controls.PRODU___PSEUDOUTPUTSD"
-											:id="getControlId(controls.PRODU___PSEUDOUTPUTSD)"
-											v-on="controls.PRODU___PSEUDOUTPUTSD.handlers">
-											<template #header>
-												<q-table-config
-													:table-ctrl="controls.PRODU___PSEUDOUTPUTSD"
-													v-on="controls.PRODU___PSEUDOUTPUTSD.handlers" />
-											</template>
-											<!-- USE /[MANUAL GQT CUSTOM_TABLE PRODU___PSEUDOUTPUTSD]/ -->
-										</q-table>
-									</q-col>
-								</q-row>
+											v-on="controls.PRODU___PSEUDOUTPUTSD.handlers" />
+										<q-table-extra-extension
+											:list-ctrl="controls.PRODU___PSEUDOUTPUTSD"
+											v-on="controls.PRODU___PSEUDOUTPUTSD.handlers" />
+									</q-control-wrapper>
+								</q-row-container>
 								<!-- End PRODU___PSEUDNOVOGR05 -->
-							</q-accordion-item>
+							</q-group-collapsible>
 							<!-- End PRODU___PSEUDNOVOGR06 -->
 						</q-accordion>
-					</q-col>
-				</q-row>
+					</q-control-wrapper>
+				</q-row-container>
 			</template>
-		</q-container>
+		</div>
 	</teleport>
 
-	<q-divider v-if="!isPopup && showFormFooter" />
+	<hr v-if="!isPopup && showFormFooter" />
 
 	<teleport
 		v-if="formModalIsReady && showFormFooter"
 		:to="`#${uiContainersId.footer}`"
 		:disabled="!isPopup || isNested">
-		<q-row v-if="showFormFooter">
+		<q-row-container v-if="showFormFooter">
 			<div id="footer-action-btns">
 				<template
 					v-for="btn in formButtons"
@@ -524,7 +471,6 @@
 						v-if="btn.isActive && btn.isVisible && btn.showInFooter"
 						:id="`bottom-${btn.id}`"
 						:label="btn.text"
-						:color="btn.color"
 						:variant="btn.variant"
 						:disabled="btn.disabled"
 						:icon-pos="btn.iconPos"
@@ -536,12 +482,12 @@
 					</q-button>
 				</template>
 			</div>
-		</q-row>
+		</q-row-container>
 	</teleport>
 </template>
 
 <script>
-	/* eslint-disable @typescript-eslint/no-unused-vars */
+	/* eslint-disable no-unused-vars */
 	import { computed, defineAsyncComponent, readonly } from 'vue'
 	import { useRoute } from 'vue-router'
 
@@ -561,7 +507,7 @@
 	import qApi from '@/api/genio/quidgestFunctions.js'
 	import qFunctions from '@/api/genio/projectFunctions.js'
 	import qProjArrays from '@/api/genio/projectArrays.js'
-	/* eslint-enable @typescript-eslint/no-unused-vars */
+	/* eslint-enable no-unused-vars */
 
 	import FormViewModel from './QFormProduViewModel.js'
 
@@ -640,8 +586,7 @@
 					primaryKey: 'ValCodprodu',
 					designation: computed(() => this.Resources.PRODUCT12880),
 					identifier: '', // Unique identifier received by route (when it's nested).
-					mode: '',
-					availableAgents: [],
+					mode: ''
 				},
 
 				formButtons: {
@@ -749,11 +694,7 @@
 						showInFooter: true,
 						isActive: true,
 						isVisible: computed(() => vm.authData.isAllowed && vm.isEditable),
-						action: vm.saveForm,
-						badge: {
-							isVisible: computed(() => vm.model?.isDirty === true),
-							color: 'highlight'
-						}
+						action: vm.saveForm
 					},
 					confirmBtn: {
 						id: 'confirm-btn',
@@ -860,7 +801,6 @@
 						label: computed(() => this.Resources.PRODUCT_IDENTIFICATI25169),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						borderless: false,
 						isCollapsible: false,
 						anchored: false,
 						directChildren: ['PRODU___PRODUPRODUCT_', 'PRODU___PRODUIN_USE__', 'PRODU___PRODUDESCRIPT', 'PRODU___PRODUSKU_____', 'PRODU___PRODUGTIN____', 'PRODU___PRODUSIZE____', 'PRODU___PRODUWEIGHT__', 'PRODU___PRODUPRICE___', 'PRODU___PRODUINPUTS__', 'PRODU___PRODUOUTPUTS_', 'PRODU___PRODUSTOCK___'],
@@ -879,6 +819,7 @@
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'PRODU___PSEUDNOVOGR01',
 						maxLength: 85,
+						labelId: 'label_PRODU___PRODUPRODUCT_',
 						mustBeFilled: true,
 						controlLimits: [
 						],
@@ -927,6 +868,7 @@
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'PRODU___PSEUDNOVOGR01',
 						maxLength: 20,
+						labelId: 'label_PRODU___PRODUSKU_____',
 						controlLimits: [
 						],
 					}, this),
@@ -941,6 +883,7 @@
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'PRODU___PSEUDNOVOGR01',
 						maxLength: 14,
+						labelId: 'label_PRODU___PRODUGTIN____',
 						controlLimits: [
 						],
 					}, this),
@@ -955,6 +898,7 @@
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'PRODU___PSEUDNOVOGR01',
 						maxLength: 50,
+						labelId: 'label_PRODU___PRODUSIZE____',
 						controlLimits: [
 						],
 					}, this),
@@ -1043,7 +987,6 @@
 						label: computed(() => this.Resources.IMAGE65174),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						startsExpanded: false,
 						isCollapsible: true,
 						anchored: false,
 						directChildren: ['PRODU___PRODUIMAGE___'],
@@ -1087,8 +1030,6 @@
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'PRODU___PSEUDNOVOGR06',
-						isInAccordion: true,
-						borderless: false,
 						isCollapsible: true,
 						anchored: false,
 						directChildren: ['PRODU___PSEUDNOVOGR03', 'PRODU___PSEUDSTOCKEVO'],
@@ -1103,7 +1044,6 @@
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'PRODU___PSEUDNOVOGR04',
-						borderless: false,
 						isCollapsible: false,
 						anchored: false,
 						directChildren: ['PRODU___LOCATGLN_____', 'PRODU___LCEXTGLNEXT__'],
@@ -1166,23 +1106,16 @@
 							set 'lcext.glnext'(value) { vm.model.TableLcextGlnext.updateValue(value) },
 						}),
 						controlLimits: [
-							{
-								identifier: ['locat', 'produ.codlocat'],
-								dependencyEvents: ['fieldChange:produ.codlocat'],
-								dependencyField: 'PRODU.CODLOCAT',
-								fnValueSelector: (model) => model.ValCodlocat.value
-							},
 						],
 					}, this),
 					PRODU___PSEUDSTOCKEVO: new fieldControlClass.TableListControl({
 						id: 'PRODU___PSEUDSTOCKEVO',
 						name: 'STOCKEVO',
-						size: 'xxlarge',
+						size: '',
 						label: computed(() => this.Resources.STOCK_EVOLUTION61800),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'PRODU___PSEUDNOVOGR04',
-						headerLevel: computed(() => this.baseHeadingLevel + 1),
 						controller: 'PRODU',
 						action: 'Produ_ValStockevo',
 						hasDependencies: false,
@@ -1197,7 +1130,6 @@
 								scrollData: 6,
 								maxDigits: 6,
 								decimalPlaces: 0,
-								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.DateColumn({
 								order: 2,
@@ -1207,7 +1139,6 @@
 								label: computed(() => this.Resources.DATE18475),
 								scrollData: 16,
 								dateTimeType: 'dateTime',
-								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 3,
@@ -1217,7 +1148,6 @@
 								label: computed(() => this.Resources.TYPE00312),
 								dataLength: 8,
 								scrollData: 8,
-								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 4,
@@ -1227,7 +1157,6 @@
 								label: computed(() => this.Resources.REFERENCE28402),
 								dataLength: 10,
 								scrollData: 10,
-								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.NumericColumn({
 								order: 5,
@@ -1238,7 +1167,6 @@
 								scrollData: 10,
 								maxDigits: 10,
 								decimalPlaces: 0,
-								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.NumericColumn({
 								order: 6,
@@ -1249,7 +1177,6 @@
 								scrollData: 10,
 								maxDigits: 10,
 								decimalPlaces: 0,
-								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 						],
 						config: {
@@ -1265,8 +1192,10 @@
 							permissions: {
 							},
 							searchBarConfig: {
-								visibility: false
+								visibility: false,
+								searchOnPressEnter: true
 							},
+							filtersVisible: false,
 							allowColumnFilters: false,
 							allowColumnSort: true,
 							generalCustomActions: [
@@ -1308,8 +1237,6 @@
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'PRODU___PSEUDNOVOGR06',
-						isInAccordion: true,
-						borderless: false,
 						isCollapsible: true,
 						anchored: false,
 						directChildren: ['PRODU___PSEUDINPUTSRE', 'PRODU___PSEUDOUTPUTSD'],
@@ -1319,12 +1246,11 @@
 					PRODU___PSEUDINPUTSRE: new fieldControlClass.TableListControl({
 						id: 'PRODU___PSEUDINPUTSRE',
 						name: 'INPUTSRE',
-						size: 'xxlarge',
+						size: '',
 						label: computed(() => this.Resources.INPUTS19315),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'PRODU___PSEUDNOVOGR05',
-						headerLevel: computed(() => this.baseHeadingLevel + 1),
 						controller: 'PRODU',
 						action: 'Produ_ValInputsre',
 						hasDependencies: true,
@@ -1338,7 +1264,6 @@
 								label: computed(() => this.Resources.INSTANT35907),
 								scrollData: 16,
 								dateTimeType: 'dateTime',
-								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.NumericColumn({
 								order: 2,
@@ -1349,7 +1274,6 @@
 								scrollData: 10,
 								maxDigits: 10,
 								decimalPlaces: 0,
-								export: 1,
 								pkColumn: 'ValCodrecei',
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
@@ -1360,7 +1284,6 @@
 								label: computed(() => this.Resources.ENTITY62049),
 								dataLength: 85,
 								scrollData: 30,
-								export: 1,
 								pkColumn: 'ValCodentit',
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.NumericColumn({
@@ -1372,7 +1295,6 @@
 								scrollData: 6,
 								maxDigits: 6,
 								decimalPlaces: 0,
-								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.NumericColumn({
 								order: 5,
@@ -1383,7 +1305,6 @@
 								scrollData: 10,
 								maxDigits: 10,
 								decimalPlaces: 0,
-								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.NumericColumn({
 								order: 6,
@@ -1394,7 +1315,6 @@
 								scrollData: 10,
 								maxDigits: 10,
 								decimalPlaces: 0,
-								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.NumericColumn({
 								order: 7,
@@ -1405,7 +1325,6 @@
 								scrollData: 10,
 								maxDigits: 10,
 								decimalPlaces: 0,
-								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 						],
 						config: {
@@ -1421,8 +1340,10 @@
 							permissions: {
 							},
 							searchBarConfig: {
-								visibility: false
+								visibility: false,
+								searchOnPressEnter: true
 							},
+							filtersVisible: false,
 							allowColumnFilters: false,
 							allowColumnSort: true,
 							crudActions: [
@@ -1496,7 +1417,9 @@
 									id: 'insert',
 									name: 'insert',
 									title: computed(() => this.Resources.INSERIR43365),
-									icon: { icon: 'add' },
+									icon: {
+										icon: 'add'
+									},
 									isInReadOnly: false,
 									params: {
 										action: vm.openFormAction,
@@ -1558,12 +1481,11 @@
 					PRODU___PSEUDOUTPUTSD: new fieldControlClass.TableListControl({
 						id: 'PRODU___PSEUDOUTPUTSD',
 						name: 'OUTPUTSD',
-						size: 'xxlarge',
+						size: '',
 						label: computed(() => this.Resources.OUTPUTS47833),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'PRODU___PSEUDNOVOGR05',
-						headerLevel: computed(() => this.baseHeadingLevel + 1),
 						controller: 'PRODU',
 						action: 'Produ_ValOutputsd',
 						hasDependencies: true,
@@ -1577,7 +1499,6 @@
 								label: computed(() => this.Resources.INSTANT35907),
 								scrollData: 16,
 								dateTimeType: 'dateTime',
-								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.NumericColumn({
 								order: 2,
@@ -1588,7 +1509,6 @@
 								scrollData: 10,
 								maxDigits: 10,
 								decimalPlaces: 0,
-								export: 1,
 								pkColumn: 'ValCoddispa',
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
@@ -1599,7 +1519,6 @@
 								label: computed(() => this.Resources.ENTITY62049),
 								dataLength: 85,
 								scrollData: 30,
-								export: 1,
 								pkColumn: 'ValCodentit',
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.NumericColumn({
@@ -1611,7 +1530,6 @@
 								scrollData: 6,
 								maxDigits: 6,
 								decimalPlaces: 0,
-								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.NumericColumn({
 								order: 5,
@@ -1622,7 +1540,6 @@
 								scrollData: 10,
 								maxDigits: 10,
 								decimalPlaces: 0,
-								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.NumericColumn({
 								order: 6,
@@ -1633,7 +1550,6 @@
 								scrollData: 10,
 								maxDigits: 10,
 								decimalPlaces: 0,
-								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.NumericColumn({
 								order: 7,
@@ -1644,7 +1560,6 @@
 								scrollData: 10,
 								maxDigits: 10,
 								decimalPlaces: 0,
-								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 						],
 						config: {
@@ -1660,8 +1575,10 @@
 							permissions: {
 							},
 							searchBarConfig: {
-								visibility: false
+								visibility: false,
+								searchOnPressEnter: true
 							},
+							filtersVisible: false,
 							allowColumnFilters: false,
 							allowColumnSort: true,
 							crudActions: [
@@ -1735,7 +1652,9 @@
 									id: 'insert',
 									name: 'insert',
 									title: computed(() => this.Resources.INSERIR43365),
-									icon: { icon: 'add' },
+									icon: {
+										icon: 'add'
+									},
 									isInReadOnly: false,
 									params: {
 										action: vm.openFormAction,
@@ -1782,7 +1701,7 @@
 								sortOrder: 'asc'
 							}
 						},
-						globalEvents: ['changed-PRODU', 'changed-DILIN', 'changed-DISPA'],
+						globalEvents: ['changed-DISPA', 'changed-PRODU', 'changed-DILIN'],
 						uuid: 'Produ_ValOutputsd',
 						allSelectedRows: 'false',
 						controlLimits: [
@@ -1914,23 +1833,17 @@
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 		},
 
-		beforeUnmount()
-		{
-/* eslint-disable indent, vue/html-indent, vue/script-indent */
-// USE /[MANUAL GQT COMPONENT_BEFORE_UNMOUNT PRODU]/
-// eslint-disable-next-line
-/* eslint-enable indent, vue/html-indent, vue/script-indent */
-		},
-
 		methods: {
 			/**
 			 * Called before form init.
 			 */
 			async beforeLoad()
 			{
+				let loadForm = true
+
 				// Execute the "Before init" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.beforeInit)
-				for (const trigger of triggers)
+				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
 				this.emitEvent('before-load-form')
@@ -1940,7 +1853,7 @@
 // eslint-disable-next-line
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 
-				return true
+				return loadForm
 			},
 
 			/**
@@ -1950,7 +1863,7 @@
 			{
 				// Execute the "After init" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.afterInit)
-				for (const trigger of triggers)
+				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
 				this.emitEvent('after-load-form')
@@ -1970,33 +1883,19 @@
 
 				// Execute the "Before apply" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.beforeApply)
-				for (const trigger of triggers)
+				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
-				const ticketsPromise = this.model.updateFilesTickets(true)
-				this.addBusy(ticketsPromise, this.Resources[hardcodedTexts.processing])
-				const canSetDocums = await ticketsPromise
+				const canSetDocums = await this.model.updateFilesTickets(true)
 
 				if (canSetDocums)
 				{
-					let results
-					const changesPromise = this.model.setDocumentChanges()
-					this.addBusy(changesPromise, this.Resources[hardcodedTexts.processing])
-					applyForm = await changesPromise
+					applyForm = await this.model.setDocumentChanges()
 
 					if (applyForm)
 					{
-						const insertsPromise = this.model.saveDocuments()
-						this.addBusy(insertsPromise, this.Resources[hardcodedTexts.processing])
-						results = await insertsPromise
+						const results = await this.model.saveDocuments()
 						applyForm = results.every((e) => e === true)
-					}
-
-					if (!changesPromise || (results && !results.every((e) => e === true)))
-					{
-						this.validationErrors = {
-							Erro: this.Resources.OCORREU_UM_ERRO_AO_T51884
-						}
 					}
 				}
 
@@ -2017,7 +1916,7 @@
 			{
 				// Execute the "After apply" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.afterApply)
-				for (const trigger of triggers)
+				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
 				this.emitEvent('after-apply-form')
@@ -2037,33 +1936,19 @@
 
 				// Execute the "Before save" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.beforeSave)
-				for (const trigger of triggers)
+				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
-				const ticketsPromise = this.model.updateFilesTickets()
-				this.addBusy(ticketsPromise, this.Resources[hardcodedTexts.processing])
-				const canSetDocums = await ticketsPromise
+				const canSetDocums = await this.model.updateFilesTickets()
 
 				if (canSetDocums)
 				{
-					let results
-					const changesPromise = this.model.setDocumentChanges()
-					this.addBusy(changesPromise, this.Resources[hardcodedTexts.processing])
-					saveForm = await changesPromise
+					saveForm = await this.model.setDocumentChanges()
 
 					if (saveForm)
 					{
-						const insertsPromise = this.model.saveDocuments()
-						this.addBusy(insertsPromise, this.Resources[hardcodedTexts.processing])
-						results = await insertsPromise
+						const results = await this.model.saveDocuments()
 						saveForm = results.every((e) => e === true)
-					}
-
-					if (!changesPromise || (results && !results.every((e) => e === true)))
-					{
-						this.validationErrors = {
-							Erro: this.Resources.OCORREU_UM_ERRO_AO_T51884
-						}
 					}
 				}
 
@@ -2082,9 +1967,11 @@
 			 */
 			async afterSave()
 			{
+				let redirectPage = true // Set to 'false' to cancel page redirect.
+
 				// Execute the "After save" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.afterSave)
-				for (const trigger of triggers)
+				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
 				this.emitEvent('after-save-form')
@@ -2094,7 +1981,7 @@
 // eslint-disable-next-line
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 
-				return true
+				return redirectPage
 			},
 
 			/**
@@ -2102,6 +1989,8 @@
 			 */
 			async beforeDel()
 			{
+				let deleteForm = true // Set to 'false' to cancel form delete.
+
 				this.emitEvent('before-delete-form')
 
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
@@ -2109,7 +1998,7 @@
 // eslint-disable-next-line
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 
-				return true
+				return deleteForm
 			},
 
 			/**
@@ -2117,6 +2006,8 @@
 			 */
 			async afterDel()
 			{
+				let redirectPage = true // Set to 'false' to cancel page redirect.
+
 				this.emitEvent('after-delete-form')
 
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
@@ -2124,7 +2015,7 @@
 // eslint-disable-next-line
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 
-				return true
+				return redirectPage
 			},
 
 			/**
@@ -2132,9 +2023,11 @@
 			 */
 			async beforeExit()
 			{
+				let leaveForm = true // Set to 'false' to cancel page redirect.
+
 				// Execute the "Before exit" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.beforeExit)
-				for (const trigger of triggers)
+				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
 				this.emitEvent('before-exit-form')
@@ -2144,7 +2037,7 @@
 // eslint-disable-next-line
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 
-				return true
+				return leaveForm
 			},
 
 			/**
@@ -2154,7 +2047,7 @@
 			{
 				// Execute the "After exit" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.afterExit)
-				for (const trigger of triggers)
+				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
 				this.emitEvent('after-exit-form')

@@ -3,7 +3,7 @@
     <TargetFramework>net8.0</TargetFramework>
     <Nullable>annotations</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
-    <DefineConstants>$(DefineConstants);NOMVC_CARAC;MAL_CARAC;NOGER_CARAC;HORIZONTAL_VUE_MODULE;</DefineConstants>
+    <DefineConstants>$(DefineConstants);NOMVC_CARAC;MAL_CARAC;AI_CARAC;NOGER_CARAC;HORIZONTAL_VUE_MODULE;</DefineConstants>
     
     <!-- When publishing the solution for Linux there are a couple of files that are duplicated for some reason
     This option seems to be the only way to avoid those errors, and they can safly be ignored since the
@@ -11,10 +11,6 @@
     <ErrorOnDuplicatePublishOutputFiles>false</ErrorOnDuplicatePublishOutputFiles>
     <!-- This avoids creating duplicate dlls for other languages and reduces the final solution size-->
     <SatelliteResourceLanguages>en</SatelliteResourceLanguages>
-
-    <AccelerateBuildsInVisualStudio>true</AccelerateBuildsInVisualStudio>
-    <RazorCompileOnBuild>false</RazorCompileOnBuild>
-    <RazorCompileOnPublish>false</RazorCompileOnPublish>
   </PropertyGroup>
 
   <ItemGroup>
@@ -33,7 +29,7 @@
     <PackageReference Include="Microsoft.SqlServer.Types" Version="14.0.1016.290">
       <NoWarn>NU1701</NoWarn>
     </PackageReference>
-    <PackageReference Include="HtmlSanitizer" Version="9.0.892" />
+    <PackageReference Include="HtmlSanitizer" Version="8.1.870" />
   </ItemGroup>
 
   <ItemGroup>
@@ -55,9 +51,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Update="menus.xml" CopyToOutputDirectory="PreserveNewest"/>
-    <None Update="_app_offline.htm" CopyToOutputDirectory="PreserveNewest"/>
-    <None Include="Content/**" CopyToOutputDirectory="PreserveNewest"/>
+    <None Update="menus.xml" CopyToOutputDirectory="Always"/>
+    <None Include="Content/**" CopyToOutputDirectory="Always"/>
   </ItemGroup>
 
   <!-- Without this, Visual studio needs to create a new .csproj.user file, and will hang indefinitly in some instances.

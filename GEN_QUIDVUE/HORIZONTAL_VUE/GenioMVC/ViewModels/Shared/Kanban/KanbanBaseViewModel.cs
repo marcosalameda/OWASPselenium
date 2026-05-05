@@ -209,8 +209,10 @@ public abstract class KanbanBaseViewModel<TColumn, TCard, TViewModelColumn, TVie
 		{
 			sp.openTransaction();
 			var row = GetColumnRecord(sp, id, user);
-			row.insertNameValueField(ColumnOrderField, position);
-			row.update(sp);
+			var condition = GetCardLimits();
+			var relations = GetRelations<TColumn>(condition, user);
+
+			ReorderColumn(sp, row, position, condition, relations);
 		}
 		catch (Exception ex)
 		{
@@ -241,10 +243,33 @@ public abstract class KanbanBaseViewModel<TColumn, TCard, TViewModelColumn, TVie
 			sp.openTransaction();
 			var row = GetCardRecord(sp, id, user);
 
-            row.insertNameValueField(CardGroupIdField, columnId);
+			var currentColumn = row.returnValueField(CardGroupIdField);
+			var isSameColumn = string.Equals(currentColumn, columnId);
+
+			if (!isSameColumn)
+			{
+				row.insertNameValueField(CardGroupIdField, columnId);
+				// If moved to another column, to avoid an error due to a unique index constraint, the record will be placed out of order.
+				if(CanReorderCards)
+					row.insertNameValueField(CardOrderField, -1);
+				row.update(sp);
+			}
+
 			if(CanReorderCards)
-				row.insertNameValueField(CardOrderField, position);
-            row.update(sp);
+			{
+				var condition = GetCardLimits();
+				var relations = GetRelations<TCard>(condition, user);
+
+				if (!isSameColumn)
+				{
+					var oldColumnCondition = (CriteriaSet)condition.Clone();
+					oldColumnCondition.Equal(CardGroupIdField, currentColumn);
+					sp.ReorderSequence(CardsArea, CardOrderField, oldColumnCondition, relations);
+				}
+				condition.Equal(CardGroupIdField, columnId);
+				
+				ReorderCard(sp, row, position, condition, relations);
+			}
 		}
 		catch (Exception ex)
 		{
@@ -256,6 +281,52 @@ public abstract class KanbanBaseViewModel<TColumn, TCard, TViewModelColumn, TVie
 		{
 			sp.closeTransaction();
 		}
+	}
+
+	/// <summary>
+	/// Allows retrieving relationships based on the tables above used in the CriteriaSet for scope limitation.
+	/// TODO: Make this a generic method in QueryUtils.
+	/// </summary>
+	/// <typeparam name="TArea">The base table.</typeparam>
+	/// <param name="condition">Condition to limit the Kanban scope.</param>
+	/// <param name="user">The user to be used when creating the Area instance.</param>
+	/// <returns>The list of relationships with the tables above.</returns>
+	private static List<Relation> GetRelations<TArea>(CriteriaSet condition, User user)
+		where TArea : DbArea
+	{
+		List<string> upperTables = [];
+		var area = CSGenio.business.Area.createArea<TCard>(user, user.CurrentModule);
+		QueryUtils.checkConditionsForForeignTables(condition, area, upperTables);
+		List<Relation> relations = QueryUtils.tablesRelationships(upperTables, area);
+		return relations;
+	}
+
+	/// <summary>
+	/// The method to reorder the specific column.
+	/// </summary>
+	/// <param name="sp">The instance of Persistent Support.</param>
+	/// <param name="row">The column record to be reordered.</param>
+	/// <param name="position">The new position of the record.</param>
+	/// <param name="condition">Condition to limit the scope of the respective Kanban column.</param>
+	/// <param name="relations">Relationships with tables above, in case they were used in the scope condition.</param>
+	/// <exception cref="NotImplementedException"></exception>
+	protected virtual void ReorderColumn(PersistentSupport sp, TColumn row, int position, CriteriaSet condition, List<Relation> relations = null)
+	{
+		throw new NotImplementedException();
+	}
+
+	/// <summary>
+	/// The method to reorder the specific card.
+	/// </summary>
+	/// <param name="sp"></param>
+	/// <param name="row"></param>
+	/// <param name="position"></param>
+	/// <param name="condition">Condition to limit the scope of the respective Kanban card.</param>
+	/// <param name="relations">Relationships with tables above, in case they were used in the scope condition.</param>
+	/// <exception cref="NotImplementedException"></exception>
+	protected virtual void ReorderCard(PersistentSupport sp, TCard row, int position, CriteriaSet condition, List<Relation> relations = null)
+	{
+		throw new NotImplementedException();
 	}
 
 	/// <summary>

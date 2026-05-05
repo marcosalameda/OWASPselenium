@@ -203,7 +203,7 @@
 				if (typeof rowData?.rowKey !== 'string')
 					return
 
-				for (const i in this.versions)
+				for (let i in this.versions)
 				{
 					if (this.versions[i] === rowData.rowKey)
 					{

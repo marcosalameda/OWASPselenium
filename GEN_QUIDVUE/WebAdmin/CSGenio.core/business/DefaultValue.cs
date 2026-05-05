@@ -186,9 +186,9 @@ namespace CSGenio.business
                 string nDupPref = args[4] as string;
                 //Dim nDupPrefValue As String = args [5] as String; AJA-This form only worked when the object was to type string. Further down what it does is pass this string to within a variable type object. If You do not make this double conversion, and keep the variable only as type object, we can use a prefix that is not just string.
 				object nDupPrefValue = args[5];
-                Field prefixField = null;
-                if (args[7] is Field prefixFieldArg)
-                    prefixField = prefixFieldArg;
+                FieldFormatting formPrefNDup = FieldFormatting.CARACTERES;
+                if (args[6] != null)
+                    formPrefNDup = (FieldFormatting)args[6];
 
                 SelectQuery qs;
                 if (fieldType == FieldFormatting.FLOAT)
@@ -217,15 +217,17 @@ namespace CSGenio.business
 				// Which this kind of locks is necessary.
 				qs.updateLock = true;
 
-                if (!string.IsNullOrEmpty(nDupPref))
+                if (nDupPref != null && !nDupPref.Equals(""))
                 {
                     if (nDupPrefValue != null)
                     {
-                        // For key fields, an empty prefix means 'no value', so we normalise it to null
-                        // to generate a WHERE ... IS NULL filter. For non-empty values, we convert the
-                        // prefix to a database-safe value (e.g. Guid) before applying the equality filter.
-                        object prefixRealValue = prefixField.isKey() && prefixField.isEmptyValue(nDupPrefValue) ? null : QueryUtils.ToValidDbValue(nDupPrefValue, prefixField);
-                        qs.WhereCondition.Equal(table, nDupPref, prefixRealValue);
+                        object realValorPrefNDup = nDupPrefValue;
+                        if (formPrefNDup == FieldFormatting.GUID && String.IsNullOrEmpty(Convert.ToString(nDupPrefValue)))
+                        {
+                            realValorPrefNDup = null;
+                        }
+
+                        qs.WhereCondition.Equal(table, nDupPref, realValorPrefNDup);
                     }
                     else
                     {
@@ -377,8 +379,7 @@ namespace CSGenio.business
             try
             {
 
-                Field prefixField = string.IsNullOrEmpty(nDupPref) ? null : area.DBFields[nDupPref];
-                object[] args = [area.QSystem, area.TableName, area.PrimaryKeyName, this.nomeCampoConsultado, nDupPref, nDupPrefValue, formPrefNDup, prefixField];
+                object[] args = new object[7] { area.QSystem, area.TableName, area.PrimaryKeyName, this.nomeCampoConsultado, nDupPref, nDupPrefValue,formPrefNDup };
                 return funcaoPreDefBD(args,sp);
 
             }

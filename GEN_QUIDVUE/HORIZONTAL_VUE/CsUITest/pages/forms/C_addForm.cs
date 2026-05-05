@@ -10,8 +10,8 @@ public class C_addForm : Form
 	/// <summary>
 	/// Country
 	/// </summary>
-	public BaseInputControl C_addCountry => new BaseInputControl(driver, ContainerLocator, "container-C_ADD___C_ADDCOUNTRY_" + IdSuffix, "#C_ADD___C_ADDCOUNTRY_" + IdSuffix);
+	public BaseInputControl C_addCountry => new BaseInputControl(driver, ContainerLocator, "container-C_ADD___C_ADDCOUNTRY_", "#C_ADD___C_ADDCOUNTRY_");
 
-	public C_addForm(IWebDriver driver, FORM_MODE mode, By? containerLocator = null, bool usePkInId = false)
-		: base(driver, mode, "C_ADD", containerLocator: containerLocator, usePkInId: usePkInId) { }
+	public C_addForm(IWebDriver driver, FORM_MODE mode, By? containerLocator = null)
+		: base(driver, mode, "C_ADD", containerLocator: containerLocator) { }
 }

@@ -10,38 +10,38 @@ public class ArmazpopForm : PopupForm
 	/// <summary>
 	/// Identification
 	/// </summary>
-	public TabControl PseudArmaz01 => new TabControl(driver, ContainerLocator, "[data-testid='tab-container-ARMAZPOPPSEUDARMAZ01_']");
+	public TabControl PseudArmaz01 => new TabControl(driver, ContainerLocator, "#tab-container-ARMAZPOPPSEUDARMAZ01_");
 
 	/// <summary>
 	/// Item
 	/// </summary>
-	public TabControl PseudArmaz02 => new TabControl(driver, ContainerLocator, "[data-testid='tab-container-ARMAZPOPPSEUDARMAZ02_']");
+	public TabControl PseudArmaz02 => new TabControl(driver, ContainerLocator, "#tab-container-ARMAZPOPPSEUDARMAZ02_");
 
 	/// <summary>
 	/// Code:
 	/// </summary>
-	public BaseInputControl Armaz01WarehWarehcod => new BaseInputControl(driver, ContainerLocator, "container-ARMAZ01_WAREHWAREHCOD" + IdSuffix, "#ARMAZ01_WAREHWAREHCOD" + IdSuffix);
+	public BaseInputControl Armaz01WarehWarehcod => new BaseInputControl(driver, ContainerLocator, "container-ARMAZ01_WAREHWAREHCOD", "#ARMAZ01_WAREHWAREHCOD");
 
 	/// <summary>
 	/// Activity:
 	/// </summary>
-	public BaseInputControl Armaz01WarehActivity => new BaseInputControl(driver, ContainerLocator, "container-ARMAZ01_WAREHACTIVITY" + IdSuffix, "#ARMAZ01_WAREHACTIVITY" + IdSuffix);
+	public BaseInputControl Armaz01WarehActivity => new BaseInputControl(driver, ContainerLocator, "container-ARMAZ01_WAREHACTIVITY", "#ARMAZ01_WAREHACTIVITY");
 
 	/// <summary>
 	/// Warehouse:
 	/// </summary>
-	public BaseInputControl Armaz01WarehWarehdes => new BaseInputControl(driver, ContainerLocator, "container-ARMAZ01_WAREHWAREHDES" + IdSuffix, "#ARMAZ01_WAREHWAREHDES" + IdSuffix);
+	public BaseInputControl Armaz01WarehWarehdes => new BaseInputControl(driver, ContainerLocator, "container-ARMAZ01_WAREHWAREHDES", "#ARMAZ01_WAREHWAREHDES");
 
 	/// <summary>
 	/// Support
 	/// </summary>
-	public ArtigextForm  Armaz02PseudArtigapo => new ArtigextForm(driver, FORM_MODE.EDIT, By.Id("ARMAZ02_PSEUDARTIGAPO"), usePkInId: true);
+	public ArtigextForm  Armaz02PseudArtigapo => new ArtigextForm(driver, FORM_MODE.EDIT, By.Id("ARMAZ02_PSEUDARTIGAPO"));
 
 	/// <summary>
 	/// Catalog articles
 	/// </summary>
-	public ListControl Armaz02PseudArtigos => new ListControl(driver, ContainerLocator, "#ARMAZ02_PSEUDARTIGOS_" + IdSuffix);
+	public ListControl Armaz02PseudArtigos => new ListControl(driver, ContainerLocator, "#ARMAZ02_PSEUDARTIGOS_");
 
-	public ArmazpopForm(IWebDriver driver, FORM_MODE mode, By? containerLocator = null, bool usePkInId = false)
-		: base(driver, mode, "ARMAZPOP", usePkInId: usePkInId) { }
+	public ArmazpopForm(IWebDriver driver, FORM_MODE mode, By? containerLocator = null)
+		: base(driver, mode, "ARMAZPOP") { }
 }

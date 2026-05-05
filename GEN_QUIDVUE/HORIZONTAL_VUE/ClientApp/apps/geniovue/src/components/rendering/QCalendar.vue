@@ -505,15 +505,15 @@
 			 */
 			mapValues(mappedValues)
 			{
-				const mappedOptions = {
+				let mappedOptions = {
 					events: [],
 					resources: [],
 					groupInfo: {}
 				}
 
-				for (const mappedValue of mappedValues)
+				for (let mappedValue of mappedValues)
 				{
-					const event = new qCalendarObj.EventObject({
+					let event = new qCalendarObj.EventObject({
 						editable: _get(mappedValue, 'eventEditable.rawData', false) && this.readonly !== true,
 						extendedProps: {
 							btnPermission: mappedValue.btnPermission
@@ -522,9 +522,9 @@
 					event.mapValues(mappedValue)
 					mappedOptions.events.push(event.getOnlyDefinedOptions())
 
-					const resource = new qCalendarObj.ResourceObject()
+					let resource = new qCalendarObj.ResourceObject()
 					resource.mapValues(mappedValue)
-					const rIdx = _findIndex(mappedOptions.resources, (r) => r.id === resource.id)
+					let rIdx = _findIndex(mappedOptions.resources, (r) => r.id === resource.id)
 
 					if (rIdx === -1)
 						mappedOptions.resources.push(resource)
@@ -545,7 +545,7 @@
 			 */
 			getViewsAsString(views)
 			{
-				const keys = _keys(_pickBy(views, (viewIsActive) => viewIsActive === true))
+				let keys = _keys(_pickBy(views, (viewIsActive) => viewIsActive === true))
 				return keys.join(',')
 			},
 
@@ -577,10 +577,10 @@
 			 */
 			mapOptions(styleVariables, mappedValues)
 			{
-				const views = this.mapViews(styleVariables)
+				let views = this.mapViews(styleVariables)
 
 				// Merge default option and mapped
-				const options = _mergeWith(
+				let options = _mergeWith(
 					{},
 					DEFAULT_FULL_CALENDAR_OPTIONS,
 					{
@@ -645,7 +645,7 @@
 				*/
 
 				// The slot limits validation
-				const timeMinMaxCheck = /^([01]\d|2[0-3]):([0-5]\d)(:([0-5]\d))?$/
+				let timeMinMaxCheck = /^([01]\d|2[0-3]):([0-5]\d)(:([0-5]\d))?$/
 				if (!timeMinMaxCheck.test(options?.slotMinTime))
 					options.slotMinTime = DEFAULT_FULL_CALENDAR_OPTIONS.slotMinTime
 				if (!timeMinMaxCheck.test(options?.slotMaxTime))
@@ -693,7 +693,7 @@
 			 */
 			getPlugins()
 			{
-				const plugins = [interactionPlugin, themePlugin]
+				let plugins = [interactionPlugin, themePlugin]
 
 				if (this.options.views.dayGridDay || this.options.views.dayGridWeek || this.options.views.dayGridMonth)
 					plugins.push(dayGridPlugin)
@@ -1008,7 +1008,7 @@
 				if (!this.hasRendered && newValue && !oldValue && typeof this.$refs.calendar?.getApi === 'function')
 				{
 					this.hasRendered = true
-					const calendar = this.$refs.calendar?.getApi()
+					let calendar = this.$refs.calendar?.getApi()
 					nextTick().then(() => calendar?.render())
 				}
 			}

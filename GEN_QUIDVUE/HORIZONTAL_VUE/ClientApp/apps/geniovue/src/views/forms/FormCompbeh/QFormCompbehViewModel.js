@@ -1,4 +1,4 @@
-﻿/* eslint-disable @typescript-eslint/no-unused-vars */
+﻿/* eslint-disable no-unused-vars */
 import { computed, reactive, watch } from 'vue'
 import _merge from 'lodash-es/merge'
 
@@ -11,7 +11,7 @@ import netAPI from '@quidgest/clientapp/network'
 import qApi from '@/api/genio/quidgestFunctions.js'
 import qFunctions from '@/api/genio/projectFunctions.js'
 import qProjArrays from '@/api/genio/projectArrays.js'
-/* eslint-enable @typescript-eslint/no-unused-vars */
+/* eslint-enable no-unused-vars */
 
 /**
  * Represents a ViewModel class.
@@ -25,11 +25,11 @@ export default class ViewModel extends FormViewModelBase
 	 * @param {object} options - The options for the ViewModel
 	 * @param {object} values - A ViewModel instance to copy values from
 	 */
-	// eslint-disable-next-line @typescript-eslint/no-unused-vars
+	// eslint-disable-next-line no-unused-vars
 	constructor(vueContext, options, values)
 	{
 		super(vueContext, options)
-		// eslint-disable-next-line @typescript-eslint/no-unused-vars
+		// eslint-disable-next-line no-unused-vars
 		const vm = this.vueContext
 
 		// The view model metadata
@@ -37,9 +37,8 @@ export default class ViewModel extends FormViewModelBase
 			name: 'COMPBEH',
 			area: 'COMPB',
 			actions: {
-				recalculateFormulas: 'RecalculateFormulas_Compbeh',
-				updateFilesTickets: 'UpdateFilesTicketsCompbeh',
-				setFile: 'SetFileCompbeh'
+				recalculateFormulas: 'RecalculateFormulas_COMPBEH',
+				updateFilesTickets: 'UpdateFilesTicketsCOMPBEH'
 			}
 		})
 
@@ -51,7 +50,7 @@ export default class ViewModel extends FormViewModelBase
 			field: 'CODCOMPB',
 			description: '',
 		}).cloneFrom(values?.ValCodcompb))
-		this.stopWatchers.push(watch(() => this.ValCodcompb.value, (newValue, oldValue) => this.onUpdate('compb.codcompb', this.ValCodcompb, newValue, oldValue)))
+		watch(() => this.ValCodcompb.value, (newValue, oldValue) => this.onUpdate('compb.codcompb', this.ValCodcompb, newValue, oldValue))
 
 		/** The hidden foreign keys. */
 		this.ValCodcompo = reactive(new modelFieldType.ForeignKey({
@@ -63,7 +62,7 @@ export default class ViewModel extends FormViewModelBase
 			isFixed: true,
 			description: '',
 		}).cloneFrom(values?.ValCodcompo))
-		this.stopWatchers.push(watch(() => this.ValCodcompo.value, (newValue, oldValue) => this.onUpdate('compb.codcompo', this.ValCodcompo, newValue, oldValue)))
+		watch(() => this.ValCodcompo.value, (newValue, oldValue) => this.onUpdate('compb.codcompo', this.ValCodcompo, newValue, oldValue))
 
 		/** The remaining form fields. */
 		this.ValCompint = reactive(new modelFieldType.String({
@@ -74,7 +73,7 @@ export default class ViewModel extends FormViewModelBase
 			maxLength: 50,
 			description: computed(() => this.Resources.INTERACTION46097),
 		}).cloneFrom(values?.ValCompint))
-		this.stopWatchers.push(watch(() => this.ValCompint.value, (newValue, oldValue) => this.onUpdate('compb.compint', this.ValCompint, newValue, oldValue)))
+		watch(() => this.ValCompint.value, (newValue, oldValue) => this.onUpdate('compb.compint', this.ValCompint, newValue, oldValue))
 
 		this.ValCmpbehav = reactive(new modelFieldType.MultiLineString({
 			id: 'ValCmpbehav',
@@ -83,7 +82,7 @@ export default class ViewModel extends FormViewModelBase
 			field: 'CMPBEHAV',
 			description: computed(() => this.Resources.BEHAVIOR47966),
 		}).cloneFrom(values?.ValCmpbehav))
-		this.stopWatchers.push(watch(() => this.ValCmpbehav.value, (newValue, oldValue) => this.onUpdate('compb.cmpbehav', this.ValCmpbehav, newValue, oldValue)))
+		watch(() => this.ValCmpbehav.value, (newValue, oldValue) => this.onUpdate('compb.cmpbehav', this.ValCmpbehav, newValue, oldValue))
 	}
 
 	/**

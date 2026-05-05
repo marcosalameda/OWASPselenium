@@ -1,12 +1,16 @@
 ﻿using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Primitives;
 using System.Collections;
 using System.Collections.Specialized;
+using System.ComponentModel;
 using System.Globalization;
 using System.Reflection;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 using JsonNetResult = Microsoft.AspNetCore.Mvc.JsonResult;
+using SelectList = Microsoft.AspNetCore.Mvc.Rendering.SelectList;
 
 using CSGenio.business;
 using CSGenio.framework;
@@ -16,6 +20,7 @@ using GenioMVC.Models;
 using GenioMVC.Models.Exception;
 using GenioMVC.Models.Navigation;
 using GenioMVC.ViewModels;
+using GenioServer.business;
 using Quidgest.Persistence.GenericQuery;
 
 namespace GenioMVC.Controllers
@@ -230,11 +235,6 @@ namespace GenioMVC.Controllers
 			return _jsonResult(new { statusCode = System.Net.HttpStatusCode.Redirect, type = "menu-routine", menuId, routineName, routeValues, Data = model, NavigationData = GetHistoryToUpdateClientSide(), eTracker = GetServerErrorsToClientSide() });
 		}
 
-		protected JsonNetResult RedirectToReport(string controller, string reportAction, string skipsPreview, object routeValues = null, object model = null)
-		{
-			return _jsonResult(new { statusCode = System.Net.HttpStatusCode.Redirect, type = "report", controller, reportAction, preview = (skipsPreview=="0"), routeValues, Data = model, NavigationData = GetHistoryToUpdateClientSide(), eTracker = GetServerErrorsToClientSide() });
-		}
-
 		private string _getRedirectUrlToVue(string page, object queryParameters = null, bool includeCulture = true, bool includeSystemAndModule = false, string module = null)
 		{
 			var culture = includeCulture ? string.Format("{0}/", CultureInfo.CurrentCulture.Name) : string.Empty;
@@ -364,9 +364,6 @@ namespace GenioMVC.Controllers
 			string exceptionUserMessage = defaultMsg ?? Resources.Resources.PEDIMOS_DESCULPA__OC63848;
 			if (e is GenioException gExc && gExc.UserMessage != null)
 				exceptionUserMessage = Translations.Get(gExc.UserMessage, UserContext.Current.User.Language);
-
-			if(e is not GenioException)
-				Log.Error(e.Message);
 
 			ModelState.AddModelError("Erro", exceptionUserMessage);
 			return exceptionUserMessage;
@@ -872,15 +869,6 @@ namespace GenioMVC.Controllers
 				model.Save();
 
 				//---------------------------------------------
-				// Allow cancellation of operation if there are any warnings
-				if(!model.CanSaveWithWarnings && model.flashMessage?.HasWarning == true)
-				{
-					sp.rollbackTransaction();
-					sp.closeConnection();
-					return Json(new { Success = false, Operation = "", Warnings = model.flashMessage.WarningMessages, currentNavigationLevel = Navigation.CurrentLevel.Level });
-				}
-
-				//---------------------------------------------
 				// USE /[MANUAL AFTER_SAVE_EDIT]/
 				sink.AfterOp?.Invoke(sink, sp);
 				//---------------------------------------------
@@ -1039,15 +1027,6 @@ namespace GenioMVC.Controllers
 				model.Save();
 
 				//---------------------------------------------
-				// Allow cancellation of operation if there are any warnings
-				if(!model.CanSaveWithWarnings && model.flashMessage?.HasWarning == true)
-				{
-					sp.rollbackTransaction();
-					sp.closeConnection();
-					return Json(new { Success = false, Operation = "Dup", Warnings = model.flashMessage.WarningMessages, currentNavigationLevel = Navigation.CurrentLevel.Level });
-				}
-
-				//---------------------------------------------
 				// USE /[MANUAL AFTER_SAVE_DUPLICATE]/
 				sink.AfterOp?.Invoke(sink, sp);
 				//---------------------------------------------
@@ -1112,15 +1091,6 @@ namespace GenioMVC.Controllers
 				//---------------------------------------------
 
 				model.Save();
-
-				//---------------------------------------------
-				// Allow cancellation of operation if there are any warnings
-				if(!model.CanSaveWithWarnings && model.flashMessage?.HasWarning == true)
-				{
-					sp.rollbackTransaction();
-					sp.closeConnection();
-					return Json(new { Success = false, Operation = "New", Warnings = model.flashMessage.WarningMessages, currentNavigationLevel = Navigation.CurrentLevel.Level });
-				}
 
 				//---------------------------------------------
 				// USE /[MANUAL AFTER_SAVE_NEW]/
@@ -1660,10 +1630,9 @@ namespace GenioMVC.Controllers
 		/// <param name="ticket">Encryted ticket</param>
 		/// <param name="mode">Submit file action mode</param>
 		/// <param name="version">The document version</param>
-		/// <param name="extensions">A collection with the allowed extensions</param>
 		/// <returns>A JSON response with the result of the operation</returns>
 		[NonAction]
-		protected ActionResult SetFile(string ticket, VersionSubmitAction mode = VersionSubmitAction.Insert, string version = "1", ICollection<string> extensions = null)
+		protected ActionResult SetFile(string ticket, VersionSubmitAction mode = VersionSubmitAction.Insert, string version = "1")
 		{
 			try
 			{
@@ -1676,7 +1645,7 @@ namespace GenioMVC.Controllers
 				if (recq == null)
 					return PermissionError(Resources.Resources.O_REGISTO_PEDIDO_NAO63869);
 
-				ModelBase model = ModelBase.FindGeneric(recq.Table, recq.KeyValue, m_userContext, "");
+				var model = ModelBase.FindGeneric(recq.Table, recq.KeyValue, m_userContext, "");
 
 				CSGenio.business.DBFile file = null;
 				string contentRangeHeader = Request.Headers.ContentRange;
@@ -1735,12 +1704,6 @@ namespace GenioMVC.Controllers
 						return JsonOK(new { message = "Chunk processed successfully.", startByte, endByte });
 					}
 				}
-
-				// Ensure the provided file has an allowed extension.
-				if (extensions != null &&
-					extensions.Count > 0 &&
-					!extensions.Select(e => e.ToLower()).Contains(file.Extension.ToLower()))
-					return JsonERROR($"{Resources.Resources.EXTENSAO_INVALIDA__E46375} {string.Join(", ", extensions)}.");
 
 				GenioMVC.ViewModels.DocumsProperties_ViewModel properties = model.GetInfoDoc(recq.KeyData);
 
@@ -2077,8 +2040,8 @@ namespace GenioMVC.Controllers
 
 		public class RequestServerFunctionModel
 		{
-			public string Func { get; set; }
-			public List<object> Args { get; set; }
+			public string func { get; set; }
+			public List<object> args { get; set; }
 		}
 
 		[HttpPost]
@@ -2089,14 +2052,14 @@ namespace GenioMVC.Controllers
 
 			try
 			{
-				if (string.IsNullOrEmpty(json.Func) || json.Args == null)
+				if (string.IsNullOrEmpty(json.func) || json.args == null)
 					throw new BusinessException("Invalid arguments", "ExecuteServerFunction", "Empty argument value");
 				if (!user.IsAuthorized(user.CurrentModule))
 					throw new BusinessException("Permission denied", "ExecuteServerFunction", "Permission denied");
 
-				var func = json.Func;
+				var func = json.func;
 				var args = new List<object>();
-				foreach (var arg in json.Args)
+				foreach (var arg in json.args)
 				{
 					if (arg is JsonElement je)
 					{
@@ -2171,13 +2134,13 @@ namespace GenioMVC.Controllers
 			catch (BusinessException e)
 			{
 				sp.closeConnection();
-				return JsonERROR(e.Message, new { func = json.Func, args = json.Args });
+				return JsonERROR(e.Message, new { func = json.func, args = json.args });
 			}
 			catch (Exception e)
 			{
 				sp.closeConnection();
 				Log.Error(string.Format("Business Exception. [message] Unexpected error [site] ExecuteServerFunction [cause] {0}; Values|{1}", e.Message, Newtonsoft.Json.JsonConvert.SerializeObject(json)));
-				return JsonERROR(Resources.Resources.PEDIMOS_DESCULPA__OC63848, new { func = json.Func, args = json.Args });
+				return JsonERROR(Resources.Resources.PEDIMOS_DESCULPA__OC63848, new { func = json.func, args = json.args });
 			}
 		}
 
@@ -2340,7 +2303,7 @@ namespace GenioMVC.Controllers
 		/// <returns>Redirect to Home</returns>
 		public ActionResult DefineEphForm([FromBody] RequestInitialEPH requestModel)
 		{
-			return DefineEphFormValues(new RequestInitialEPHS { SelectedIds = [requestModel.SelectedId], FormId = requestModel.FormId });
+			return DefineEphFormValues(new RequestInitialEPHS { SelectedIds = new string[] { requestModel.SelectedId }, FormId = requestModel.FormId });
 		}
 
 		/// <summary>
@@ -2372,7 +2335,7 @@ namespace GenioMVC.Controllers
 // USE /[MANUAL GQT BEFORE_FILL_EPH]/
 
 				// Fill in the initial EPH value in the User object and get the values to be cached
-				Dictionary<string, InitialEPHCache> initialEPHCache = GenioServer.security.UserFactory.FillEphRuntime(user, modules, ids, originId);
+				Dictionary<string, InitialEPHCache> initialEPHCache = GenioServer.security.UserFactory.FillEphRuntime(ref user, modules, ids, originId);
 
 				// If the values of the other initial PHE are in the cache, we merge them.
 				var cachedInitialPHE = UserContext.Current.GetInitialEph();
@@ -2474,39 +2437,6 @@ namespace GenioMVC.Controllers
 				qs.Add(elem.Key.ToString(), (elem.Value != null) ? elem.Value.ToString() : null);
 
 			return qs;
-		}
-
-		/// <summary>
-		/// Creates a short-lived cookie to store temporary user state
-		/// </summary>
-		/// <param name="key">The name of the cookie to create</param>
-		/// <param name="payload">The serialized payload to store in the cookie</param>
-		[NonAction]
-		protected void CreateStateCookie(string key, string payload)
-		{
-			var ticket = QResources.CreatePayloadEncryptedBase64(payload);
-			Response.Cookies.Append(Configuration.Program + "_" + key, ticket, new CookieOptions()
-			{
-				HttpOnly = true,
-				Secure = true,
-				SameSite = SameSiteMode.Strict,
-				Expires = DateTimeOffset.UtcNow.AddMinutes(2).UtcDateTime,
-				IsEssential = true,
-				Path = "/"
-			});
-		}
-
-		/// <summary>
-		/// Consumes the short-lived cookie, retrieves its payload, then deletes the cookie
-		/// </summary>
-		/// <param name="key">The cookie to retrieve</param>
-		/// <returns>The contents of the payload or empty string in case there is no coookie</returns>
-		[NonAction]
-		protected string ConsumeStateCookie(string key)
-		{
-			string value = Request.Cookies[Configuration.Program + "_" + key] ?? "";
-			Response.Cookies.Delete(Configuration.Program + "_" + key);
-			return string.IsNullOrEmpty(value) ? "" : QResources.DecryptPayloadBase64(value);
 		}
 	}
 }

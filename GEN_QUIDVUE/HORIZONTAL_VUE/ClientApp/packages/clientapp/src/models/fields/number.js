@@ -1,5 +1,6 @@
 import _assignIn from 'lodash-es/assignIn'
 import _toNumber from 'lodash-es/toNumber'
+import { computed } from 'vue'
 
 import { useGenericDataStore } from '../../stores/genericData'
 import { numericDisplay } from '../../utils/genericFunctions'
@@ -19,8 +20,12 @@ export class Number extends Base {
 					decimalDigits: 0,
 					maxIntegers: -1,
 					maxDecimals: -1,
-					decimalSeparator: genericDataStore.numberFormat.decimalSeparator,
-					groupSeparator: genericDataStore.numberFormat.thousandsSeparator
+					decimalSeparator: computed(
+						() => genericDataStore.numberFormat.decimalSeparator
+					),
+					groupSeparator: computed(
+						() => genericDataStore.numberFormat.thousandsSeparator
+					)
 				},
 				options
 			)

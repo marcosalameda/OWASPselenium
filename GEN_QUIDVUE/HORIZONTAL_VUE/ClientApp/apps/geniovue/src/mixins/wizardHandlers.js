@@ -53,7 +53,7 @@ export default {
 		 */
 		currentStepIndex()
 		{
-			for (const stepData of this.wizardData.stepList)
+			for (let stepData of this.wizardData.stepList)
 				if (stepData.route === this.currentStepRoute)
 					return stepData.order
 			return -1
@@ -147,7 +147,7 @@ export default {
 						{
 							this.$eventTracker.addError({
 								origin: 'stepClicked (wizardHandlers)',
-								message: `Error while changing from step "${this.formInfo.name}" in wizard "${this.wizardData.wizardId}".`
+								message: `Error while going changing from step "${this.formInfo.name}" in wizard "${this.wizardData.wizardId}".`
 							})
 						}
 					})
@@ -260,7 +260,7 @@ export default {
 							return
 						}
 
-						const wizardPath = [...this.wizardPath]
+						let wizardPath = [...this.wizardPath]
 						if (this.isEditable && this.selectedStep.route === this.currentStepRoute)
 							wizardPath.push(data.Route)
 

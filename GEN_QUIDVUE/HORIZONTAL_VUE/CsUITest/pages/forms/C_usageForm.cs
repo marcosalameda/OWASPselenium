@@ -23,11 +23,6 @@ public class C_usageForm : Subform
 	public CollapsibleZoneControl PseudNewgrp01 => new CollapsibleZoneControl(driver, ContainerLocator, "#C_USAGE_PSEUDNEWGRP01-container");
 
 	/// <summary>
-	/// Storybook
-	/// </summary>
-	public ButtonControl PseudStorybookusa => new ButtonControl(driver, ContainerLocator, "#C_USAGE__PSEUD__STORYBOOKUSA");
-
-	/// <summary>
 	/// Demo 1
 	/// </summary>
 	public ButtonControl PseudDemocomp => new ButtonControl(driver, ContainerLocator, "#C_USAGE_PSEUDDEMOCOMP");

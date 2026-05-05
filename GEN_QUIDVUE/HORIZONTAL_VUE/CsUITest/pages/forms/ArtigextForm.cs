@@ -10,14 +10,14 @@ public class ArtigextForm : Form
 	/// <summary>
 	/// Warehouse
 	/// </summary>
-	public LookupControl WarehWarehdes => new LookupControl(driver, ContainerLocator, "container-ARTIGEXTWAREHWAREHDES" + IdSuffix);
-	public SeeMorePage WarehWarehdesSeeMorePage => new SeeMorePage(driver, "ARTIGEXT", "ARTIGEXTWAREHWAREHDES" + IdSuffix);
+	public LookupControl WarehWarehdes => new LookupControl(driver, ContainerLocator, "container-ARTIGEXTWAREHWAREHDES");
+	public SeeMorePage WarehWarehdesSeeMorePage => new SeeMorePage(driver, "ARTIGEXT", "ARTIGEXTWAREHWAREHDES");
 
 	/// <summary>
 	/// Global Item
 	/// </summary>
-	public LookupControl GitemItemdes => new LookupControl(driver, ContainerLocator, "container-ARTIGEXTGITEMITEMDES_" + IdSuffix);
-	public SeeMorePage GitemItemdesSeeMorePage => new SeeMorePage(driver, "ARTIGEXT", "ARTIGEXTGITEMITEMDES_" + IdSuffix);
+	public LookupControl GitemItemdes => new LookupControl(driver, ContainerLocator, "container-ARTIGEXTGITEMITEMDES_");
+	public SeeMorePage GitemItemdesSeeMorePage => new SeeMorePage(driver, "ARTIGEXT", "ARTIGEXTGITEMITEMDES_");
 
 	/// <summary>
 	/// Code
@@ -27,18 +27,18 @@ public class ArtigextForm : Form
 	/// <summary>
 	/// Item
 	/// </summary>
-	public BaseInputControl ItemItemdes => new BaseInputControl(driver, ContainerLocator, "container-ARTIGEXTITEM_ITEMDES_" + IdSuffix, "#ARTIGEXTITEM_ITEMDES_" + IdSuffix);
+	public BaseInputControl ItemItemdes => new BaseInputControl(driver, ContainerLocator, "container-ARTIGEXTITEM_ITEMDES_", "#ARTIGEXTITEM_ITEMDES_");
 
 	/// <summary>
 	/// Code
 	/// </summary>
-	public BaseInputControl ItemItemcod => new BaseInputControl(driver, ContainerLocator, "container-ARTIGEXTITEM_ITEMCOD_" + IdSuffix, "#ARTIGEXTITEM_ITEMCOD_" + IdSuffix);
+	public BaseInputControl ItemItemcod => new BaseInputControl(driver, ContainerLocator, "container-ARTIGEXTITEM_ITEMCOD_", "#ARTIGEXTITEM_ITEMCOD_");
 
 	/// <summary>
 	/// Image
 	/// </summary>
-	public BaseInputControl ItemImage => new BaseInputControl(driver, ContainerLocator, "container-ARTIGEXTITEM_IMAGE___" + IdSuffix, "#ARTIGEXTITEM_IMAGE___" + IdSuffix);
+	public BaseInputControl ItemImage => new BaseInputControl(driver, ContainerLocator, "container-ARTIGEXTITEM_IMAGE___", "#ARTIGEXTITEM_IMAGE___");
 
-	public ArtigextForm(IWebDriver driver, FORM_MODE mode, By? containerLocator = null, bool usePkInId = false)
-		: base(driver, mode, "ARTIGEXT", containerLocator: containerLocator, usePkInId: usePkInId) { }
+	public ArtigextForm(IWebDriver driver, FORM_MODE mode, By? containerLocator = null)
+		: base(driver, mode, "ARTIGEXT", containerLocator: containerLocator) { }
 }

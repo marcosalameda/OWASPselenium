@@ -1,25 +1,38 @@
 ﻿using System.Collections.Concurrent;
 using System.Diagnostics;
+using System.Net.Http;
+using System.Text;
+
 using CSGenio.core.logger;
 using CSGenio.framework;
 using GenioMVC.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.CodeAnalysis.VisualBasic.Syntax;
 
 namespace GenioMVC.Controllers;
 
 public class InternalProcessController : Controller
 {
+	private readonly HttpClient _httpClient;
+	private readonly string _otlpCollectorAddress;
 	private readonly ActivitySource activitySource;
-	//private readonly ConcurrentDictionary<string, Activity> activeTraces;
-	private readonly ILogger _logger;
+	private readonly ConcurrentDictionary<string, Activity> activeTraces;
 
-	public InternalProcessController(ILoggerFactory loggerFactory)
+	public InternalProcessController(IHttpClientFactory httpClientFactory, IConfiguration configuration)
 	{
-		//activeTraces = new ConcurrentDictionary<string, Activity>();
-		activitySource = new ActivitySource("Genio.Frontend");
-		//we create a specialized logger here instead of geniodi so that it can have a different category for the frontend
-		_logger = loggerFactory.CreateLogger("Genio.Frontend");
+		activeTraces = new ConcurrentDictionary<string, Activity>();
+
+		_httpClient = httpClientFactory.CreateClient();
+		activitySource = new ActivitySource("ClientSide.Telemetry");
+
+		var telemetryConfigSection = configuration.GetSection("TelemetryConfig");
+		var telemetryConfig = telemetryConfigSection.Get<TelemetryConfiguration>();
+
+		if (telemetryConfig == null || string.IsNullOrEmpty(telemetryConfig.CollectorAddress))
+			Log.Info("No CollectorAddress has been configured, frontend telemetry will be disabled.");
+		else
+			_otlpCollectorAddress = telemetryConfig.CollectorAddress;
 	}
 
 	/// <summary>
@@ -45,21 +58,25 @@ public class InternalProcessController : Controller
 						HandleTrace(e);
 						break;
 					case "ErrorLog":
-						ctx = BeginLogScope(e);
-						_logger.LogError(e.Message);
+						ctx = Log.SetContext(e);
+						Log.Error(e.Message);
 						break;
 					case "WarningLog":
-						ctx = BeginLogScope(e);
+						ctx = Log.SetContext(e);
 						Log.Warning(e.Message);
 						break;
 					case "InfoLog":
-						ctx = BeginLogScope(e);
+						ctx = Log.SetContext(e);
 						Log.Info(e.Message);
 						break;
 					default:
 						Log.Error("Invalid telemetry type received in InternalProcessController RegisterTelemetry - " + e.TelemetryType);
 						break;
 				}
+
+				// Remove context after being used
+				if (ctx != null)
+					ctx.Dispose();
 			}
 
 			return Json(new { success = true });
@@ -68,22 +85,6 @@ public class InternalProcessController : Controller
 		{
 			Log.Error("[InternalProcessController.RegisterTelemetry] An error ocurred reading client side telemetry: " + e.Message + "\n\n" + e.StackTrace);
 			return Json(new { success = false });
-		}
-		finally
-		{
-			// Remove context after being used
-			ctx?.Dispose();
-		}
-
-		//shared scope initialization for the log events
-		IDisposable BeginLogScope(TelemetryEvent e)
-		{
-			return _logger.BeginScope(new Dictionary<string, object>
-						{
-							{ "ActionName", e.Origin },
-							{ "CallStack", e.CallStack },
-							{ "original_timestamp", e.Timestamp }
-						});
 		}
 	}
 
@@ -97,9 +98,6 @@ public class InternalProcessController : Controller
 	/// <returns></returns>
 	private void HandleTrace(TelemetryEvent telemetryEvent)
 	{
-		//DISABLED this code until refactor of the client side traces
-
-		/*
 		// We need to force null on the curent activity the
 		// method StartActivity assigns the current Activity
 		// as the parent for everything, we don't want client
@@ -160,7 +158,6 @@ public class InternalProcessController : Controller
 				}
 				break;
 		}
-		*/
 	}
 
 	/// <summary>
@@ -213,12 +210,9 @@ public class InternalProcessController : Controller
 
 	~InternalProcessController()
 	{
-        //DISABLED this code until refactor of the client side traces
-		/*
-        foreach (var key in activeTraces.Keys)
+		foreach (var key in activeTraces.Keys)
 		{
 			if (activeTraces.TryRemove(key, out var activity)) activity?.Dispose();
 		}
-		*/
 	}
 }

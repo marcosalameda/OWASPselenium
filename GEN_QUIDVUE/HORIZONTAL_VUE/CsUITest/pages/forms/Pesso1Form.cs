@@ -10,42 +10,42 @@ public class Pesso1Form : Form
 	/// <summary>
 	/// 
 	/// </summary>
-	public CollapsibleZoneControl PseudNovogr08 => new CollapsibleZoneControl(driver, ContainerLocator, "#PESSO1__PSEUDNOVOGR08" + IdSuffix + "-container");
+	public CollapsibleZoneControl PseudNovogr08 => new CollapsibleZoneControl(driver, ContainerLocator, "#PESSO1__PSEUDNOVOGR08-container");
 
 	/// <summary>
 	/// PHOTO
 	/// </summary>
-	public CollapsibleZoneControl PseudNovogr04 => new CollapsibleZoneControl(driver, ContainerLocator, "#PESSO1__PSEUDNOVOGR04" + IdSuffix + "-container");
+	public CollapsibleZoneControl PseudNovogr04 => new CollapsibleZoneControl(driver, ContainerLocator, "#PESSO1__PSEUDNOVOGR04-container");
 
 	/// <summary>
 	/// Photo
 	/// </summary>
-	public BaseInputControl PessoPhotogra => new BaseInputControl(driver, ContainerLocator, "container-PESSO1__PESSOPHOTOGRA" + IdSuffix, "#PESSO1__PESSOPHOTOGRA" + IdSuffix);
+	public BaseInputControl PessoPhotogra => new BaseInputControl(driver, ContainerLocator, "container-PESSO1__PESSOPHOTOGRA", "#PESSO1__PESSOPHOTOGRA");
 
 	/// <summary>
 	/// IDENTIFICATION
 	/// </summary>
-	public CollapsibleZoneControl PseudNovogr02 => new CollapsibleZoneControl(driver, ContainerLocator, "#PESSO1__PSEUDNOVOGR02" + IdSuffix + "-container");
+	public CollapsibleZoneControl PseudNovogr02 => new CollapsibleZoneControl(driver, ContainerLocator, "#PESSO1__PSEUDNOVOGR02-container");
 
 	/// <summary>
 	/// Employee No.
 	/// </summary>
-	public BaseInputControl PessoIdfuncio => new BaseInputControl(driver, ContainerLocator, "container-PESSO1__PESSOIDFUNCIO" + IdSuffix, "#PESSO1__PESSOIDFUNCIO" + IdSuffix);
+	public BaseInputControl PessoIdfuncio => new BaseInputControl(driver, ContainerLocator, "container-PESSO1__PESSOIDFUNCIO", "#PESSO1__PESSOIDFUNCIO");
 
 	/// <summary>
 	/// Name:
 	/// </summary>
-	public BaseInputControl PessoName => new BaseInputControl(driver, ContainerLocator, "container-PESSO1__PESSONAME____" + IdSuffix, "#PESSO1__PESSONAME____" + IdSuffix);
+	public BaseInputControl PessoName => new BaseInputControl(driver, ContainerLocator, "container-PESSO1__PESSONAME____", "#PESSO1__PESSONAME____");
 
 	/// <summary>
 	/// Birth
 	/// </summary>
-	public DateInputControl PessoDtnascim => new DateInputControl(driver, ContainerLocator, "#PESSO1__PESSODTNASCIM" + IdSuffix);
+	public DateInputControl PessoDtnascim => new DateInputControl(driver, ContainerLocator, "#PESSO1__PESSODTNASCIM");
 
 	/// <summary>
 	/// Age
 	/// </summary>
-	public BaseInputControl PessoIdade => new BaseInputControl(driver, ContainerLocator, "container-PESSO1__PESSOIDADE___" + IdSuffix, "#PESSO1__PESSOIDADE___" + IdSuffix);
+	public BaseInputControl PessoIdade => new BaseInputControl(driver, ContainerLocator, "container-PESSO1__PESSOIDADE___", "#PESSO1__PESSOIDADE___");
 
 	/// <summary>
 	/// Gender
@@ -55,74 +55,74 @@ public class Pesso1Form : Form
 	/// <summary>
 	/// Intern
 	/// </summary>
-	public CheckboxInputControl PessoInterna => new CheckboxInputControl(driver, ContainerLocator, "#container-PESSO1__PESSOINTERNA_" + IdSuffix);
+	public CheckboxInputControl PessoInterna => new CheckboxInputControl(driver, ContainerLocator, "#container-PESSO1__PESSOINTERNA_");
 
 	/// <summary>
 	/// External
 	/// </summary>
-	public CheckboxInputControl PessoExterna => new CheckboxInputControl(driver, ContainerLocator, "#container-PESSO1__PESSOEXTERNA_" + IdSuffix);
+	public CheckboxInputControl PessoExterna => new CheckboxInputControl(driver, ContainerLocator, "#container-PESSO1__PESSOEXTERNA_");
 
 	/// <summary>
 	/// Category
 	/// </summary>
-	public LookupControl CategCategory => new LookupControl(driver, ContainerLocator, "container-PESSO1__CATEGCATEGORY" + IdSuffix);
-	public SeeMorePage CategCategorySeeMorePage => new SeeMorePage(driver, "PESSO1", "PESSO1__CATEGCATEGORY" + IdSuffix);
+	public LookupControl CategCategory => new LookupControl(driver, ContainerLocator, "container-PESSO1__CATEGCATEGORY");
+	public SeeMorePage CategCategorySeeMorePage => new SeeMorePage(driver, "PESSO1", "PESSO1__CATEGCATEGORY");
 
 	/// <summary>
 	/// Since
 	/// </summary>
-	public DateInputControl PessoDtultcat => new DateInputControl(driver, ContainerLocator, "#PESSO1__PESSODTULTCAT" + IdSuffix);
+	public DateInputControl PessoDtultcat => new DateInputControl(driver, ContainerLocator, "#PESSO1__PESSODTULTCAT");
 
 	/// <summary>
 	/// ACCORDION
 	/// </summary>
-	public CollapsibleZoneControl PseudNovogr06 => new CollapsibleZoneControl(driver, ContainerLocator, "#PESSO1__PSEUDNOVOGR06" + IdSuffix + "-container");
+	public CollapsibleZoneControl PseudNovogr06 => new CollapsibleZoneControl(driver, ContainerLocator, "#PESSO1__PSEUDNOVOGR06-container");
 
 	/// <summary>
 	/// CONTACT
 	/// </summary>
-	public CollapsibleZoneControl PseudNovogr07 => new CollapsibleZoneControl(driver, ContainerLocator, "#PESSO1__PSEUDNOVOGR07" + IdSuffix + "-container");
+	public CollapsibleZoneControl PseudNovogr07 => new CollapsibleZoneControl(driver, ContainerLocator, "#PESSO1__PSEUDNOVOGR07-container");
 
 	/// <summary>
 	/// MAIN CONTACT
 	/// </summary>
-	public CollapsibleZoneControl PseudNovogr03 => new CollapsibleZoneControl(driver, ContainerLocator, "#PESSO1__PSEUDNOVOGR03" + IdSuffix + "-container");
+	public CollapsibleZoneControl PseudNovogr03 => new CollapsibleZoneControl(driver, ContainerLocator, "#PESSO1__PSEUDNOVOGR03-container");
 
 	/// <summary>
 	/// Telephone
 	/// </summary>
-	public BaseInputControl PessoTelephon => new BaseInputControl(driver, ContainerLocator, "container-PESSO1__PESSOTELEPHON" + IdSuffix, "#PESSO1__PESSOTELEPHON" + IdSuffix);
+	public BaseInputControl PessoTelephon => new BaseInputControl(driver, ContainerLocator, "container-PESSO1__PESSOTELEPHON", "#PESSO1__PESSOTELEPHON");
 
 	/// <summary>
 	/// Email:
 	/// </summary>
-	public BaseInputControl PessoEmail => new BaseInputControl(driver, ContainerLocator, "container-PESSO1__PESSOEMAIL___" + IdSuffix, "#PESSO1__PESSOEMAIL___" + IdSuffix);
+	public BaseInputControl PessoEmail => new BaseInputControl(driver, ContainerLocator, "container-PESSO1__PESSOEMAIL___", "#PESSO1__PESSOEMAIL___");
 
 	/// <summary>
 	/// ALL CONTACTS
 	/// </summary>
-	public CollapsibleZoneControl PseudNovogr09 => new CollapsibleZoneControl(driver, ContainerLocator, "#PESSO1__PSEUDNOVOGR09" + IdSuffix + "-container");
+	public CollapsibleZoneControl PseudNovogr09 => new CollapsibleZoneControl(driver, ContainerLocator, "#PESSO1__PSEUDNOVOGR09-container");
 
 	/// <summary>
 	/// 
 	/// </summary>
-	public ListControl PseudContacto => new ListControl(driver, ContainerLocator, "#PESSO1__PSEUDCONTACTO" + IdSuffix);
+	public ListControl PseudContacto => new ListControl(driver, ContainerLocator, "#PESSO1__PSEUDCONTACTO");
 
 	/// <summary>
 	/// CAREER
 	/// </summary>
-	public CollapsibleZoneControl PseudNovogr05 => new CollapsibleZoneControl(driver, ContainerLocator, "#PESSO1__PSEUDNOVOGR05" + IdSuffix + "-container");
+	public CollapsibleZoneControl PseudNovogr05 => new CollapsibleZoneControl(driver, ContainerLocator, "#PESSO1__PSEUDNOVOGR05-container");
 
 	/// <summary>
 	/// COMPANY
 	/// </summary>
-	public CollapsibleZoneControl PseudNovogr01 => new CollapsibleZoneControl(driver, ContainerLocator, "#PESSO1__PSEUDNOVOGR01" + IdSuffix + "-container");
+	public CollapsibleZoneControl PseudNovogr01 => new CollapsibleZoneControl(driver, ContainerLocator, "#PESSO1__PSEUDNOVOGR01-container");
 
 	/// <summary>
 	/// Company
 	/// </summary>
-	public LookupControl CmpnyDesignat => new LookupControl(driver, ContainerLocator, "container-PESSO1__CMPNYDESIGNAT" + IdSuffix);
-	public SeeMorePage CmpnyDesignatSeeMorePage => new SeeMorePage(driver, "PESSO1", "PESSO1__CMPNYDESIGNAT" + IdSuffix);
+	public LookupControl CmpnyDesignat => new LookupControl(driver, ContainerLocator, "container-PESSO1__CMPNYDESIGNAT");
+	public SeeMorePage CmpnyDesignatSeeMorePage => new SeeMorePage(driver, "PESSO1", "PESSO1__CMPNYDESIGNAT");
 
 	/// <summary>
 	/// Country
@@ -132,12 +132,12 @@ public class Pesso1Form : Form
 	/// <summary>
 	/// EVOLUTION
 	/// </summary>
-	public CollapsibleZoneControl PseudNovogr10 => new CollapsibleZoneControl(driver, ContainerLocator, "#PESSO1__PSEUDNOVOGR10" + IdSuffix + "-container");
+	public CollapsibleZoneControl PseudNovogr10 => new CollapsibleZoneControl(driver, ContainerLocator, "#PESSO1__PSEUDNOVOGR10-container");
 
 	/// <summary>
 	/// 
 	/// </summary>
-	public ListControl PseudEvolucao => new ListControl(driver, ContainerLocator, "#PESSO1__PSEUDEVOLUCAO" + IdSuffix);
+	public ListControl PseudEvolucao => new ListControl(driver, ContainerLocator, "#PESSO1__PSEUDEVOLUCAO");
 
 	/// <summary>
 	/// @required
@@ -147,19 +147,19 @@ public class Pesso1Form : Form
 	/// <summary>
 	/// Place of Birth
 	/// </summary>
-	public CollapsibleZoneControl PseudNovogr11 => new CollapsibleZoneControl(driver, ContainerLocator, "#PESSO1__PSEUDNOVOGR11" + IdSuffix + "-container");
+	public CollapsibleZoneControl PseudNovogr11 => new CollapsibleZoneControl(driver, ContainerLocator, "#PESSO1__PSEUDNOVOGR11-container");
 
 	/// <summary>
 	/// Region
 	/// </summary>
-	public LookupControl Regi1Regiao => new LookupControl(driver, ContainerLocator, "container-PESSO1__REGI1REGIAO__" + IdSuffix);
-	public SeeMorePage Regi1RegiaoSeeMorePage => new SeeMorePage(driver, "PESSO1", "PESSO1__REGI1REGIAO__" + IdSuffix);
+	public LookupControl Regi1Regiao => new LookupControl(driver, ContainerLocator, "container-PESSO1__REGI1REGIAO__");
+	public SeeMorePage Regi1RegiaoSeeMorePage => new SeeMorePage(driver, "PESSO1", "PESSO1__REGI1REGIAO__");
 
 	/// <summary>
 	/// Country
 	/// </summary>
 	public IWebElement Pais1Country => throw new NotImplementedException();
 
-	public Pesso1Form(IWebDriver driver, FORM_MODE mode, By? containerLocator = null, bool usePkInId = false)
-		: base(driver, mode, "PESSO1", containerLocator: containerLocator, usePkInId: usePkInId) { }
+	public Pesso1Form(IWebDriver driver, FORM_MODE mode, By? containerLocator = null)
+		: base(driver, mode, "PESSO1", containerLocator: containerLocator) { }
 }

@@ -71,9 +71,9 @@
 					:src="`${resourcesPath}no-widgets.png`"
 					:alt="texts.noRecordsText" />
 
-				<h2 class="no-widgets__message">
+				<h5 class="no-widgets__message">
 					{{ texts.noDataText }}
-				</h2>
+				</h5>
 
 				<q-button
 					variant="bold"
@@ -215,9 +215,6 @@
 		beforeUnmount()
 		{
 			window.removeEventListener('resize', this.resizeGrid)
-			if(this.grid && typeof this.grid.destroy === 'function')
-				this.grid.destroy()
-			this.grid = null
 		},
 
 		computed: {
@@ -413,7 +410,7 @@
 				this.isDirty = false
 				this.inEditMode = false
 				this.grid.enableMove(false)
-				this.$eventHub?.emit('toggle-sidebar-on-tab', 'widgets-panel')
+				this.$eventHub?.emit('open-sidebar-on-tab', 'widgets-panel')
 			},
 
 			/**

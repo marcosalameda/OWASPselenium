@@ -8,7 +8,7 @@ using Newtonsoft.Json.Linq;
 
 namespace SeleniumWebTest.tests;
 
-public class AccessibilityTest : BaseSeleniumTest
+public class AccessibilityTest : BaseAccessibilityTest
 {
     private AppPage Authenticate()
     {
@@ -20,114 +20,6 @@ public class AccessibilityTest : BaseSeleniumTest
 
         Assert.That(a.IsAuthenticated());
         return a;
-    }
-
-    // Accessibility Tests
-    public void AccessibilityScanAndLog(string pageName, string cssSelector = null, bool violationsAsInfo = false, int maxIssues = 0)
-    {
-        // Accessibility scan
-        AxeBuilder axeBuilder = new AxeBuilder(Driver)
-            //.WithTags("wcag2a", "wcag2aa", "wcag2aaa", "wcag21a", "wcag21aa", "section508", "ACT", "best-practice")
-            .WithTags("wcag2a", "wcag2aa", "wcag21a", "wcag21aa")
-            .DisableRules("color-contrast");
-
-        if(!string.IsNullOrEmpty(cssSelector))
-            axeBuilder.Include(cssSelector);
-
-        AxeResult axeResult = axeBuilder.Analyze();
-
-        string resultJson = "";
-
-        try
-        {
-            // Create formatted JSON string to log
-            resultJson = JsonConvert.SerializeObject(axeResult, Formatting.Indented);
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine(ex.Message);
-            return;
-        }
-
-        // Optional
-        try
-        {
-            //< Set unneeded properties to empty
-            JObject modifiedResult = JsonConvert.DeserializeObject<JObject>(resultJson);
-            modifiedResult["Passes"] = JArray.FromObject(new List<string> { });
-            modifiedResult["Inapplicable"] = JArray.FromObject(new List<string> { });
-            resultJson = JsonConvert.SerializeObject(modifiedResult, Formatting.Indented);
-            //> Set unneeded properties to empty
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine(ex.Message);
-        }
-
-        //< Log results as items
-        string violationMessageType = violationsAsInfo ? "Info" : "Warning";
-
-        // Log violations
-        foreach (AxeResultItem violation in axeResult.Violations)
-        {
-            foreach (AxeResultNode node in violation.Nodes)
-            {
-                Console.WriteLine(violationMessageType + ": " + violation.Help);
-                Console.WriteLine("\t" + violation.Description);
-                Console.WriteLine("\tURL:\t" + axeResult.Url);
-                Console.WriteLine("\tTarget:\t" + node.Target);
-                Console.WriteLine("\tHTML:\t" + node.Html);
-                if (node.Any.Length > 0)
-                    Console.WriteLine("\tChecks:");
-                foreach (AxeResultCheck any in node.Any)
-                    Console.WriteLine("\t\t" + any.Message);
-                Console.WriteLine("");
-            }
-        }
-
-        // Log incompletes (things that could not be determined automatically and need to be reviewed manually)
-        foreach (AxeResultItem incomplete in axeResult.Incomplete)
-        {
-            foreach (AxeResultNode node in incomplete.Nodes)
-            {
-                Console.WriteLine("Info: (Needs manual review) " + incomplete.Help);
-                Console.WriteLine("\t" + incomplete.Description);
-                Console.WriteLine("\tURL:\t" + axeResult.Url);
-                Console.WriteLine("\tTarget:\t" + node.Target);
-                Console.WriteLine("\tHTML:\t" + node.Html);
-                if (node.Any.Length > 0)
-                    Console.WriteLine("\tChecks:");
-                foreach (AxeResultCheck any in node.Any)
-                    Console.WriteLine("\t\t" + any.Message);
-                Console.WriteLine("");
-            }
-        }
-        //> Log results as items
-
-        // Log results as JSON
-        //Console.WriteLine(pageName + ":");
-        //Console.Write(resultJson);
-
-        // Log results to files
-        try
-        {
-            //string dtNoSpecial = DateTime.Now.ToString("yyyyMMddHHmmssff");
-
-            // Get directory for test results and create if it doesn't exist
-            string projectDirectory = Directory.GetParent(Environment.CurrentDirectory).Parent.Parent.FullName;
-            string testSubDirectory = "test_results";
-            string testDirectory = projectDirectory + "\\" + testSubDirectory;
-            Directory.CreateDirectory(testDirectory);
-
-            string fileName = pageName + ".json";
-            File.WriteAllText(testDirectory + "\\" + fileName, resultJson);
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine(ex.Message);
-        }
-
-        Assert.That(axeResult.Violations.Length <= maxIssues, axeResult.Violations.Length + " issues found. Max allowed is " + maxIssues);
     }
 
     [Test]
@@ -299,6 +191,7 @@ public class AccessibilityTest : BaseSeleniumTest
         AccessibilityScanAndLog("FORM_REGIA_ML__TABLE_MULTISELECT", "#REGIA_MLPSEUDIMOVEISL");
     }
 
+    /*
     [Test]
     public void AccessibilityFormTreeTable()
     {
@@ -318,6 +211,7 @@ public class AccessibilityTest : BaseSeleniumTest
         // Accessibility scan
         AccessibilityScanAndLog("FORM_FAMI1__TREE_TABLE", "#FAMI1___PSEUDTIPOSEQ1");
     }
+    */
 
     [Test]
     public void AccessibilityFormEditableTable()
@@ -336,7 +230,7 @@ public class AccessibilityTest : BaseSeleniumTest
         var grpbFormEditableTable = new ListControl(Driver, By.Id("form-container"), ".q-grid-table-list");
 
         // Accessibility scan
-        AccessibilityScanAndLog("FORM_GRPB__EDITABLE_TABLE", ".q-grid-table-list", true, 3);
+        AccessibilityScanAndLog("FORM_GRPB__EDITABLE_TABLE", ".q-grid-table-list");
     }
 
     /*

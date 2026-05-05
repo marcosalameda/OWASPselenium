@@ -73,23 +73,7 @@ export async function* splitFile(file, maxChunkSize) {
  * @returns The name of the file, or null if it couldn't be found.
  */
 export function getFileNameFromRequest(request) {
-	const contentDisposition = request?.headers['content-disposition']
-
-	// Try RFC 5987 / RFC 6266 filename*
-	const filenameStarExp = /filename\*\s*=\s*(?<value>[^;]+)/i
-	const filenameStar = filenameStarExp.exec(contentDisposition)?.groups?.value
-	if (filenameStar) {
-		const parts = filenameStar.split("''", 2)
-		if (parts.length === 2) {
-			try {
-				return decodeURIComponent(parts[1]).replace(/^"|"$/g, '')
-			} catch {
-				// ignore and fall back
-			}
-		}
-	}
-
-	// Fallback: filename="..."
 	const getFileNameExp = /filename="(?<filename>.*)"/
+	const contentDisposition = request?.headers['content-disposition']
 	return getFileNameExp.exec(contentDisposition)?.groups?.filename ?? null
 }

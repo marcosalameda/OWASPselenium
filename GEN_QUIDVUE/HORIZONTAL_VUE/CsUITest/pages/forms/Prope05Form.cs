@@ -10,55 +10,55 @@ public class Prope05Form : Form
 	/// <summary>
 	/// Informações principais
 	/// </summary>
-	public CollapsibleZoneControl PseudMaininf => new CollapsibleZoneControl(driver, ContainerLocator, "#PROPE05_PSEUDMAININF_" + IdSuffix + "-container");
+	public CollapsibleZoneControl PseudMaininf => new CollapsibleZoneControl(driver, ContainerLocator, "#PROPE05_PSEUDMAININF_-container");
 
 	/// <summary>
 	/// Foto principal
 	/// </summary>
-	public BaseInputControl PropePhoto => new BaseInputControl(driver, ContainerLocator, "container-PROPE05_PROPEPHOTO___" + IdSuffix, "#PROPE05_PROPEPHOTO___" + IdSuffix);
+	public BaseInputControl PropePhoto => new BaseInputControl(driver, ContainerLocator, "container-PROPE05_PROPEPHOTO___", "#PROPE05_PROPEPHOTO___");
 
 	/// <summary>
 	/// Title
 	/// </summary>
-	public BaseInputControl PropeTitle => new BaseInputControl(driver, ContainerLocator, "container-PROPE05_PROPETITLE___" + IdSuffix, "#PROPE05_PROPETITLE___" + IdSuffix);
+	public BaseInputControl PropeTitle => new BaseInputControl(driver, ContainerLocator, "container-PROPE05_PROPETITLE___", "#PROPE05_PROPETITLE___");
 
 	/// <summary>
 	/// Price
 	/// </summary>
-	public BaseInputControl PropePrice => new BaseInputControl(driver, ContainerLocator, "container-PROPE05_PROPEPRICE___" + IdSuffix, "#PROPE05_PROPEPRICE___" + IdSuffix);
+	public BaseInputControl PropePrice => new BaseInputControl(driver, ContainerLocator, "container-PROPE05_PROPEPRICE___", "#PROPE05_PROPEPRICE___");
 
 	/// <summary>
 	/// Description
 	/// </summary>
-	public BaseInputControl PropeDescript => new BaseInputControl(driver, ContainerLocator, "container-PROPE05_PROPEDESCRIPT" + IdSuffix, "#PROPE05_PROPEDESCRIPT" + IdSuffix);
+	public BaseInputControl PropeDescript => new BaseInputControl(driver, ContainerLocator, "container-PROPE05_PROPEDESCRIPT", "#PROPE05_PROPEDESCRIPT");
 
 	/// <summary>
 	/// Name
 	/// </summary>
-	public LookupControl AgentName => new LookupControl(driver, ContainerLocator, "container-PROPE05_AGENTNAME____" + IdSuffix);
-	public SeeMorePage AgentNameSeeMorePage => new SeeMorePage(driver, "PROPE05", "PROPE05_AGENTNAME____" + IdSuffix);
+	public LookupControl AgentName => new LookupControl(driver, ContainerLocator, "container-PROPE05_AGENTNAME____");
+	public SeeMorePage AgentNameSeeMorePage => new SeeMorePage(driver, "PROPE05", "PROPE05_AGENTNAME____");
 
 	/// <summary>
 	/// Numero de Casa de banhos
 	/// </summary>
-	public BaseInputControl PropeBathrms => new BaseInputControl(driver, ContainerLocator, "container-PROPE05_PROPEBATHRMS_" + IdSuffix, "#PROPE05_PROPEBATHRMS_" + IdSuffix);
+	public BaseInputControl PropeBathrms => new BaseInputControl(driver, ContainerLocator, "container-PROPE05_PROPEBATHRMS_", "#PROPE05_PROPEBATHRMS_");
 
 	/// <summary>
 	/// Tamanho (m2)
 	/// </summary>
-	public BaseInputControl PropeSize => new BaseInputControl(driver, ContainerLocator, "container-PROPE05_PROPESIZE____" + IdSuffix, "#PROPE05_PROPESIZE____" + IdSuffix);
+	public BaseInputControl PropeSize => new BaseInputControl(driver, ContainerLocator, "container-PROPE05_PROPESIZE____", "#PROPE05_PROPESIZE____");
 
 	/// <summary>
 	/// Ano construído
 	/// </summary>
-	public BaseInputControl PropeYear => new BaseInputControl(driver, ContainerLocator, "container-PROPE05_PROPEYEAR____" + IdSuffix, "#PROPE05_PROPEYEAR____" + IdSuffix);
+	public BaseInputControl PropeYear => new BaseInputControl(driver, ContainerLocator, "container-PROPE05_PROPEYEAR____", "#PROPE05_PROPEYEAR____");
 
 	/// <summary>
 	/// Cidade
 	/// </summary>
-	public LookupControl CityCity => new LookupControl(driver, ContainerLocator, "container-PROPE05_CITY_CITY____" + IdSuffix);
-	public SeeMorePage CityCitySeeMorePage => new SeeMorePage(driver, "PROPE05", "PROPE05_CITY_CITY____" + IdSuffix);
+	public LookupControl CityCity => new LookupControl(driver, ContainerLocator, "container-PROPE05_CITY_CITY____");
+	public SeeMorePage CityCitySeeMorePage => new SeeMorePage(driver, "PROPE05", "PROPE05_CITY_CITY____");
 
-	public Prope05Form(IWebDriver driver, FORM_MODE mode, By? containerLocator = null, bool usePkInId = false)
-		: base(driver, mode, "PROPE05", containerLocator: containerLocator, usePkInId: usePkInId) { }
+	public Prope05Form(IWebDriver driver, FORM_MODE mode, By? containerLocator = null)
+		: base(driver, mode, "PROPE05", containerLocator: containerLocator) { }
 }

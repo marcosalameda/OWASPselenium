@@ -27,9 +27,10 @@
 					:key="index"
 					:model-value="index === page"
 					:label="index"
-					:disabled="disabled || index === page"
+					:disabled="disabled"
 					:class="pageButtonClass(index, page)"
-					@click="pageHandler(index)" />
+					@click="pageHandler(index)">
+				</q-toggle>
 			</template>
 			<!-- END: Visible page number buttons -->
 			<!-- BEGIN: Next page button -->
@@ -51,24 +52,28 @@
 			<!-- END: Page navigation buttons -->
 		</q-button-group>
 	</nav>
-
 	<!-- BEGIN: Number of rows per page -->
-	<template v-if="showPerPageMenu && total > 0">
+	<div
+		v-if="showPerPageMenu && total > 0"
+		class="rows-per-page-menu">
 		<span class="i-text__label">{{ texts.rowsPerPage + ':' }}</span>
-		<q-select
-			:id="`${tableId}-rowspp-menu`"
-			:aria-label="texts.rowsPerPage + ':'"
+		<q-dropdown-menu
+			:id="tableId + '-rowspp-menu'"
+			:texts="{ title: perPageLabel, label: perPageLabel }"
+			:options="perPageOptionsObj"
+			class="pagination-dropdown"
+			:button-classes="['dropdown-toggle']"
+			:button-options="{ borderless: true }"
+			:single-option-button="false"
 			:disabled="disabled"
-			:items="perPageOptionsObj"
-			:model-value="perPage"
-			:texts="texts"
-			size="mini"
-			@update:model-value="perPageHandler" />
-	</template>
+			@selected="perPageHandler($event)">
+		</q-dropdown-menu>
+	</div>
 	<!-- END: Number of rows per page -->
 </template>
 
 <script>
+	import { defineAsyncComponent } from 'vue'
 	import range from 'lodash-es/range'
 
 	import listFunctions from '@/mixins/listFunctions.js'
@@ -77,6 +82,10 @@
 		name: 'QTablePagination',
 
 		emits: ['update:page', 'update:perPage'],
+
+		components: {
+			QDropdownMenu: defineAsyncComponent(() => import('@/components/QDropdownMenu.vue'))
+		},
 
 		props: {
 			/**
@@ -106,7 +115,7 @@
 			/**
 			 * The number of visible page buttons to be displayed in the pagination component at any given time.
 			 */
-			numVisiblePaginationButtons: {
+			numVisibilePaginationButtons: {
 				type: [String, Number],
 				default: 3
 			},
@@ -117,6 +126,14 @@
 			perPageOptions: {
 				type: Array,
 				default: () => []
+			},
+
+			/**
+			 * Flag indicating whether to show the control for navigating to a specific page number directly.
+			 */
+			showGoToPage: {
+				type: Boolean,
+				default: false
 			},
 
 			/**
@@ -187,6 +204,10 @@
 				return range(this.start, this.end + 1)
 			},
 
+			isEmpty() {
+				return this.total === 0
+			},
+
 			prevButtonEnabled() {
 				return this.totalPages > 1 && this.page !== 1 && !this.disabled
 			},
@@ -202,6 +223,18 @@
 
 		methods: {
 			/**
+			 * Go to page set in goToPage property (built-in method)
+			 */
+			onGotoPage() {
+				if (this.disabled || this.goToPage === '' || !this.isPositiveInteger(this.goToPage)) {
+					return
+				}
+
+				//Handle the new page
+				this.pageHandler(this.goToPage)
+			},
+
+			/**
 			 * Emit event to update page number (built-in method)
 			 * @param index {Number}
 			 */
@@ -213,11 +246,10 @@
 
 			/**
 			 * Emit event to update number of rows per page (built-in method)
-			 * @param {number} option
+			 * @param option {Object}
 			 */
 			perPageHandler(option) {
-				if (!this.disabled && typeof option === 'number')
-					this.$emit('update:perPage', option)
+				if (!this.disabled) this.$emit('update:perPage', option)
 			},
 
 			/**
@@ -225,22 +257,31 @@
 			 */
 			calculatePageRange() {
 				//Skip calculating if all pages can be shown
-				if (this.totalPages <= this.numVisiblePaginationButtons) {
+				if (this.totalPages <= this.numVisibilePaginationButtons) {
 					this.start = 1
 					this.end = this.totalPages
 					return
 				}
 
 				//Calculate start of range
-				this.start = this.page - Math.floor(this.numVisiblePaginationButtons / 2)
+				this.start = this.page - Math.floor(this.numVisibilePaginationButtons / 2)
 				this.start = Math.max(this.start, 1)
 
 				//Calculate end of range
-				this.end = this.start + this.numVisiblePaginationButtons - 1
+				this.end = this.start + this.numVisibilePaginationButtons - 1
 				if (this.end > this.totalPages) {
 					this.end = this.totalPages
-					this.start = this.end - this.numVisiblePaginationButtons + 1
+					this.start = this.end - this.numVisibilePaginationButtons + 1
 				}
+			},
+
+			/**
+			 * Determine if string represents positive integer?
+			 * @param str {String}
+			 * @returns Boolean?
+			 */
+			isPositiveInteger(str) {
+				return /^\+?(0|[1-9]\d*)$/.test(str)
 			},
 
 			/**

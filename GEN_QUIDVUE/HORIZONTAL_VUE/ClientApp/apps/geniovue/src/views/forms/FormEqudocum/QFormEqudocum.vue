@@ -9,13 +9,12 @@
 			<div
 				v-if="showFormHeader"
 				class="c-action-bar">
-				<component
+				<h1
 					v-if="formControl.uiComponents.header && formInfo.designation"
-					:is="topHeadingTag"
 					:id="formTitleId"
 					class="form-header">
 					{{ formInfo.designation }}
-				</component>
+				</h1>
 
 				<div class="c-action-bar__menu">
 					<template
@@ -39,13 +38,9 @@
 									:label="btn.label"
 									:disabled="btn.disabled"
 									@click="btn.action">
-									<template v-if="btn.icon">
-										<q-badge-indicator
-											:enabled="btn.badge?.isVisible ?? false"
-											:color="btn.badge?.color">
-											<q-icon v-bind="btn.icon" />
-										</q-badge-indicator>
-									</template>
+									<q-icon
+										v-if="btn.icon"
+										v-bind="btn.icon" />
 								</q-toggle-group-item>
 							</template>
 						</q-toggle-group>
@@ -57,7 +52,7 @@
 				v-if="$app.layout.FormAnchorsPosition === 'form-header' && visibleGroups.length > 0"
 				:anchors="anchorGroups"
 				:controls="visibleControls"
-				@focus-control="focusControl" />
+				@focus-control="(...args) => focusControl(...args)" />
 		</div>
 	</teleport>
 
@@ -78,7 +73,6 @@
 						v-if="btn.isActive && btn.isVisible && btn.showInHeading"
 						:id="`heading-${btn.id}`"
 						:label="btn.text"
-						:color="btn.color"
 						:variant="btn.variant"
 						:disabled="btn.disabled"
 						:icon-pos="btn.iconPos"
@@ -92,83 +86,73 @@
 			</q-button-group>
 		</div>
 
-		<q-container
-			fluid
+		<div
+			class="form-flow"
 			data-key="EQUDOCUM"
-			:data-identifier="primaryKeyValue"
-			:data-loading="!formInitialDataLoaded || !isActiveForm">
+			:data-loading="!formInitialDataLoaded">
 			<template v-if="formControl.initialized && showFormBody">
-				<q-row v-if="controls.EQUDOCUMEQUIPDESIGNAT.isVisible || controls.EQUDOCUMPSEUDBTN_ANEX.isVisible">
-					<q-col
-						v-if="controls.EQUDOCUMEQUIPDESIGNAT.isVisible"
-						cols="auto">
+				<q-row-container v-show="controls.EQUDOCUMEQUIPDESIGNAT.isVisible || controls.EQUDOCUMPSEUDBTN_ANEX.isVisible">
+					<q-control-wrapper
+						v-show="controls.EQUDOCUMEQUIPDESIGNAT.isVisible"
+						class="${Vue.GetControlWrapperClass($controlsColumn)}">
 						<base-input-structure
-							v-if="controls.EQUDOCUMEQUIPDESIGNAT.isVisible"
 							class="i-text"
-							v-bind="controls.EQUDOCUMEQUIPDESIGNAT.wrapperProps"
-							:id="getControlId(controls.EQUDOCUMEQUIPDESIGNAT)"
+							v-bind="controls.EQUDOCUMEQUIPDESIGNAT"
 							v-on="controls.EQUDOCUMEQUIPDESIGNAT.handlers"
 							:loading="controls.EQUDOCUMEQUIPDESIGNAT.props.loading"
 							:reporting-mode-on="reportingModeCAV"
 							:suggestion-mode-on="suggestionModeOn">
 							<q-text-field
 								v-bind="controls.EQUDOCUMEQUIPDESIGNAT.props"
-								:id="getControlId(controls.EQUDOCUMEQUIPDESIGNAT)"
 								@blur="onBlur(controls.EQUDOCUMEQUIPDESIGNAT, model.ValDesignat.value)"
 								@change="model.ValDesignat.fnUpdateValueOnChange" />
 						</base-input-structure>
-					</q-col>
-					<q-col
-						v-if="controls.EQUDOCUMPSEUDBTN_ANEX.isVisible"
-						cols="auto">
+					</q-control-wrapper>
+					<q-control-wrapper
+						v-show="controls.EQUDOCUMPSEUDBTN_ANEX.isVisible"
+						class="${Vue.GetControlWrapperClass($controlsColumn)}">
 						<base-input-structure
-							v-if="controls.EQUDOCUMPSEUDBTN_ANEX.isVisible"
 							class="i-button"
-							v-bind="controls.EQUDOCUMPSEUDBTN_ANEX.wrapperProps"
-							:id="getControlId(controls.EQUDOCUMPSEUDBTN_ANEX)"
+							v-bind="controls.EQUDOCUMPSEUDBTN_ANEX"
 							v-on="controls.EQUDOCUMPSEUDBTN_ANEX.handlers"
 							:loading="controls.EQUDOCUMPSEUDBTN_ANEX.props.loading"
 							:reporting-mode-on="reportingModeCAV"
 							:suggestion-mode-on="suggestionModeOn">
 							<q-button
 								v-if="controls.EQUDOCUMPSEUDBTN_ANEX.isVisible"
-								v-bind="controls.EQUDOCUMPSEUDBTN_ANEX.props"
-								:id="getControlId(controls.EQUDOCUMPSEUDBTN_ANEX)"
+								id="EQUDOCUMPSEUDBTN_ANEX"
+								:label="controls.EQUDOCUMPSEUDBTN_ANEX.label"
+								:disabled="controls.EQUDOCUMPSEUDBTN_ANEX.isBlocked"
 								@click="controls.EQUDOCUMPSEUDBTN_ANEX.action($event)">
 								<q-icon v-bind="controls.EQUDOCUMPSEUDBTN_ANEX.icon" />
 							</q-button>
 						</base-input-structure>
-					</q-col>
-				</q-row>
-				<q-row v-if="controls.EQUDOCUMPSEUDLISANEX_.isVisible">
-					<q-col
-						v-if="controls.EQUDOCUMPSEUDLISANEX_.isVisible"
-						cols="auto">
+					</q-control-wrapper>
+				</q-row-container>
+				<q-row-container v-show="controls.EQUDOCUMPSEUDLISANEX_.isVisible">
+					<q-control-wrapper
+						v-show="controls.EQUDOCUMPSEUDLISANEX_.isVisible"
+						class="${Vue.GetControlWrapperClass($controlsColumn)}">
 						<q-table
-							v-if="controls.EQUDOCUMPSEUDLISANEX_.isVisible"
+							v-show="controls.EQUDOCUMPSEUDLISANEX_.isVisible"
 							v-bind="controls.EQUDOCUMPSEUDLISANEX_"
-							:id="getControlId(controls.EQUDOCUMPSEUDLISANEX_)"
-							v-on="controls.EQUDOCUMPSEUDLISANEX_.handlers">
-							<template #header>
-								<q-table-config
-									:table-ctrl="controls.EQUDOCUMPSEUDLISANEX_"
-									v-on="controls.EQUDOCUMPSEUDLISANEX_.handlers" />
-							</template>
-							<!-- USE /[MANUAL GQT CUSTOM_TABLE EQUDOCUMPSEUDLISANEX_]/ -->
-						</q-table>
-					</q-col>
-				</q-row>
+							v-on="controls.EQUDOCUMPSEUDLISANEX_.handlers" />
+						<q-table-extra-extension
+							:list-ctrl="controls.EQUDOCUMPSEUDLISANEX_"
+							v-on="controls.EQUDOCUMPSEUDLISANEX_.handlers" />
+					</q-control-wrapper>
+				</q-row-container>
 			</template>
-		</q-container>
+		</div>
 	</teleport>
 
-	<q-divider v-if="!isPopup && showFormFooter" />
+	<hr v-if="!isPopup && showFormFooter" />
 
 	<teleport
 		v-if="formModalIsReady && showFormFooter"
 		:to="`#${uiContainersId.footer}`"
 		:disabled="!isPopup || isNested">
-		<q-row v-if="showFormFooter">
+		<q-row-container v-if="showFormFooter">
 			<div id="footer-action-btns">
 				<template
 					v-for="btn in formButtons"
@@ -177,7 +161,6 @@
 						v-if="btn.isActive && btn.isVisible && btn.showInFooter"
 						:id="`bottom-${btn.id}`"
 						:label="btn.text"
-						:color="btn.color"
 						:variant="btn.variant"
 						:disabled="btn.disabled"
 						:icon-pos="btn.iconPos"
@@ -189,12 +172,12 @@
 					</q-button>
 				</template>
 			</div>
-		</q-row>
+		</q-row-container>
 	</teleport>
 </template>
 
 <script>
-	/* eslint-disable @typescript-eslint/no-unused-vars */
+	/* eslint-disable no-unused-vars */
 	import { computed, defineAsyncComponent, readonly } from 'vue'
 	import { useRoute } from 'vue-router'
 
@@ -214,7 +197,7 @@
 	import qApi from '@/api/genio/quidgestFunctions.js'
 	import qFunctions from '@/api/genio/projectFunctions.js'
 	import qProjArrays from '@/api/genio/projectArrays.js'
-	/* eslint-enable @typescript-eslint/no-unused-vars */
+	/* eslint-enable no-unused-vars */
 
 	import FormViewModel from './QFormEqudocumViewModel.js'
 
@@ -291,8 +274,7 @@
 					primaryKey: 'ValCodequip',
 					designation: computed(() => this.Resources.DOCUMENTS_FROM_EQUIP36805),
 					identifier: '', // Unique identifier received by route (when it's nested).
-					mode: '',
-					availableAgents: [],
+					mode: ''
 				},
 
 				formButtons: {
@@ -400,11 +382,7 @@
 						showInFooter: true,
 						isActive: true,
 						isVisible: computed(() => vm.authData.isAllowed && vm.isEditable),
-						action: vm.saveForm,
-						badge: {
-							isVisible: computed(() => vm.model?.isDirty === true),
-							color: 'highlight'
-						}
+						action: vm.saveForm
 					},
 					confirmBtn: {
 						id: 'confirm-btn',
@@ -524,12 +502,14 @@
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						maxLength: 85,
+						labelId: 'label_EQUDOCUMEQUIPDESIGNAT',
 						controlLimits: [
 						],
 					}, this),
 					EQUDOCUMPSEUDBTN_ANEX: new fieldControlClass.ButtonControl({
 						id: 'EQUDOCUMPSEUDBTN_ANEX',
 						name: 'BTN_ANEX',
+						size: 'small',
 						hasLabel: false,
 						helpControl: {
 							shortHelp: {
@@ -545,13 +525,13 @@
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						icon: {
-							icon: computed(() => `${this.$app.resourcesPath}ok.ico?v=2828`),
+							icon: computed(() => `${this.$app.resourcesPath}ok.ico?v=3637`),
 							type: 'img',
 							role: 'presentation',
 						},
 						// eslint-disable-next-line
 						action: (event) => {
-							const btnAction = () => {
+							let btnAction = () => {
 								// Button to open the form "ANEXD" in "INS" mode.
 								const params = {
 									mode: vm.formModes.new,
@@ -562,7 +542,7 @@
 
 								vm.navigateToForm('ANEXD', vm.formModes.new, null, params)
 							}
-							const options = {
+							let options = {
 								form: 'EQUDOCUM',
 								callback: btnAction
 							}
@@ -574,7 +554,7 @@
 					EQUDOCUMPSEUDLISANEX_: new fieldControlClass.TableListControl({
 						id: 'EQUDOCUMPSEUDLISANEX_',
 						name: 'LISANEX',
-						size: 'xxlarge',
+						size: '',
 						helpControl: {
 							shortHelp: {
 								type: 'Subtitle',
@@ -588,7 +568,6 @@
 						label: computed(() => this.Resources.DIGITAL_ATTACHEMENTS44886),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						headerLevel: computed(() => this.baseHeadingLevel + 1),
 						controller: 'EQUIP',
 						action: 'Equdocum_ValLisanex',
 						hasDependencies: false,
@@ -602,7 +581,6 @@
 								label: computed(() => this.Resources.ATTACHED26247),
 								scrollData: 16,
 								dateTimeType: 'dateTime',
-								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 2,
@@ -612,7 +590,6 @@
 								label: computed(() => this.Resources.TITLE21885),
 								dataLength: 85,
 								scrollData: 30,
-								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.DocumentColumn({
 								order: 3,
@@ -623,7 +600,6 @@
 								dataLength: 260,
 								scrollData: 30,
 								sortable: false,
-								export: 1,
 								viewType: qEnums.documentViewTypeMode.print,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
@@ -634,7 +610,6 @@
 								label: computed(() => this.Resources.TRANSLATED_TITLE58577),
 								dataLength: 85,
 								scrollData: 30,
-								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 5,
@@ -644,7 +619,6 @@
 								label: computed(() => this.Resources.REFERENCE28402),
 								dataLength: 50,
 								scrollData: 30,
-								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 						],
 						config: {
@@ -660,8 +634,10 @@
 							permissions: {
 							},
 							searchBarConfig: {
-								visibility: false
+								visibility: false,
+								searchOnPressEnter: true
 							},
+							filtersVisible: false,
 							allowColumnFilters: false,
 							allowColumnSort: true,
 							crudActions: [
@@ -735,7 +711,9 @@
 									id: 'insert',
 									name: 'insert',
 									title: computed(() => this.Resources.INSERIR43365),
-									icon: { icon: 'add' },
+									icon: {
+										icon: 'add'
+									},
 									isInReadOnly: false,
 									params: {
 										action: vm.openFormAction,
@@ -774,6 +752,22 @@
 									fnKeySelector: (row) => row.Fields.ValCodanexd,
 									isPopup: false
 								},
+							},
+							insertCondition: {
+								// eslint-disable-next-line no-unused-vars
+								fnFormula(params)
+								{
+									return netAPI.postData(
+										'Anexd',
+										'ANEXD_InsertCondition',
+										this.serverObjModel,
+										undefined,
+										undefined,
+										undefined,
+										this.navigationId)
+								},
+								dependencyEvents: ['fieldChange:equip.codequip'],
+								isServerRecalc: false,
 							},
 							defaultSearchColumnName: 'ValTitle',
 							defaultSearchColumnNameOriginal: 'ValTitle',
@@ -904,23 +898,17 @@
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 		},
 
-		beforeUnmount()
-		{
-/* eslint-disable indent, vue/html-indent, vue/script-indent */
-// USE /[MANUAL GQT COMPONENT_BEFORE_UNMOUNT EQUDOCUM]/
-// eslint-disable-next-line
-/* eslint-enable indent, vue/html-indent, vue/script-indent */
-		},
-
 		methods: {
 			/**
 			 * Called before form init.
 			 */
 			async beforeLoad()
 			{
+				let loadForm = true
+
 				// Execute the "Before init" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.beforeInit)
-				for (const trigger of triggers)
+				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
 				this.emitEvent('before-load-form')
@@ -930,7 +918,7 @@
 // eslint-disable-next-line
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 
-				return true
+				return loadForm
 			},
 
 			/**
@@ -940,7 +928,7 @@
 			{
 				// Execute the "After init" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.afterInit)
-				for (const trigger of triggers)
+				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
 				this.emitEvent('after-load-form')
@@ -960,33 +948,19 @@
 
 				// Execute the "Before apply" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.beforeApply)
-				for (const trigger of triggers)
+				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
-				const ticketsPromise = this.model.updateFilesTickets(true)
-				this.addBusy(ticketsPromise, this.Resources[hardcodedTexts.processing])
-				const canSetDocums = await ticketsPromise
+				const canSetDocums = await this.model.updateFilesTickets(true)
 
 				if (canSetDocums)
 				{
-					let results
-					const changesPromise = this.model.setDocumentChanges()
-					this.addBusy(changesPromise, this.Resources[hardcodedTexts.processing])
-					applyForm = await changesPromise
+					applyForm = await this.model.setDocumentChanges()
 
 					if (applyForm)
 					{
-						const insertsPromise = this.model.saveDocuments()
-						this.addBusy(insertsPromise, this.Resources[hardcodedTexts.processing])
-						results = await insertsPromise
+						const results = await this.model.saveDocuments()
 						applyForm = results.every((e) => e === true)
-					}
-
-					if (!changesPromise || (results && !results.every((e) => e === true)))
-					{
-						this.validationErrors = {
-							Erro: this.Resources.OCORREU_UM_ERRO_AO_T51884
-						}
 					}
 				}
 
@@ -1007,7 +981,7 @@
 			{
 				// Execute the "After apply" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.afterApply)
-				for (const trigger of triggers)
+				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
 				this.emitEvent('after-apply-form')
@@ -1027,33 +1001,19 @@
 
 				// Execute the "Before save" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.beforeSave)
-				for (const trigger of triggers)
+				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
-				const ticketsPromise = this.model.updateFilesTickets()
-				this.addBusy(ticketsPromise, this.Resources[hardcodedTexts.processing])
-				const canSetDocums = await ticketsPromise
+				const canSetDocums = await this.model.updateFilesTickets()
 
 				if (canSetDocums)
 				{
-					let results
-					const changesPromise = this.model.setDocumentChanges()
-					this.addBusy(changesPromise, this.Resources[hardcodedTexts.processing])
-					saveForm = await changesPromise
+					saveForm = await this.model.setDocumentChanges()
 
 					if (saveForm)
 					{
-						const insertsPromise = this.model.saveDocuments()
-						this.addBusy(insertsPromise, this.Resources[hardcodedTexts.processing])
-						results = await insertsPromise
+						const results = await this.model.saveDocuments()
 						saveForm = results.every((e) => e === true)
-					}
-
-					if (!changesPromise || (results && !results.every((e) => e === true)))
-					{
-						this.validationErrors = {
-							Erro: this.Resources.OCORREU_UM_ERRO_AO_T51884
-						}
 					}
 				}
 
@@ -1072,9 +1032,11 @@
 			 */
 			async afterSave()
 			{
+				let redirectPage = true // Set to 'false' to cancel page redirect.
+
 				// Execute the "After save" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.afterSave)
-				for (const trigger of triggers)
+				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
 				this.emitEvent('after-save-form')
@@ -1084,7 +1046,7 @@
 // eslint-disable-next-line
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 
-				return true
+				return redirectPage
 			},
 
 			/**
@@ -1092,6 +1054,8 @@
 			 */
 			async beforeDel()
 			{
+				let deleteForm = true // Set to 'false' to cancel form delete.
+
 				this.emitEvent('before-delete-form')
 
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
@@ -1099,7 +1063,7 @@
 // eslint-disable-next-line
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 
-				return true
+				return deleteForm
 			},
 
 			/**
@@ -1107,6 +1071,8 @@
 			 */
 			async afterDel()
 			{
+				let redirectPage = true // Set to 'false' to cancel page redirect.
+
 				this.emitEvent('after-delete-form')
 
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
@@ -1114,7 +1080,7 @@
 // eslint-disable-next-line
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 
-				return true
+				return redirectPage
 			},
 
 			/**
@@ -1122,9 +1088,11 @@
 			 */
 			async beforeExit()
 			{
+				let leaveForm = true // Set to 'false' to cancel page redirect.
+
 				// Execute the "Before exit" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.beforeExit)
-				for (const trigger of triggers)
+				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
 				this.emitEvent('before-exit-form')
@@ -1134,7 +1102,7 @@
 // eslint-disable-next-line
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 
-				return true
+				return leaveForm
 			},
 
 			/**
@@ -1144,7 +1112,7 @@
 			{
 				// Execute the "After exit" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.afterExit)
-				for (const trigger of triggers)
+				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
 				this.emitEvent('after-exit-form')

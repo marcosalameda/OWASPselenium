@@ -70,7 +70,7 @@ export function fetchData(
 		return
 	}
 
-	const url = apiActionURL(controller, action),
+	let url = apiActionURL(controller, action),
 		tokenElements = document.getElementsByName('__RequestVerificationToken'),
 		antiForgeryToken = tokenElements.length > 0 ? tokenElements[0].value : null,
 		axiosOptions = {
@@ -87,12 +87,12 @@ export function fetchData(
 
 	_merge(axiosOptions, options, { params: { ...params, nav: navigationId } })
 
-	const promise = new Promise((fnResolve, fnReject) => {
+	const promise = new Promise((fnResolve) => {
 		axiosInstance
 			.get(url, axiosOptions)
 			.then((response) => processRequest(response, _fnCallback, fnResolve))
 			.catch((error) =>
-				handleNonOkResponse(error.response, fnResolve, _fnErrorCallback, fnReject, error)
+				handleNonOkResponse(error.response, fnResolve, _fnErrorCallback)
 			)
 	})
 
@@ -129,7 +129,7 @@ export function postData(
 		return
 	}
 
-	const url = apiActionURL(controller, action),
+	let url = apiActionURL(controller, action),
 		tokenElements = document.getElementsByName('__RequestVerificationToken'),
 		antiForgeryToken = tokenElements.length > 0 ? tokenElements[0].value : null,
 		axiosOptions = {
@@ -156,12 +156,12 @@ export function postData(
 
 	_merge(axiosOptions, options, { params: { nav: navigationId } })
 
-	const promise = new Promise((fnResolve, fnReject) => {
+	const promise = new Promise((fnResolve) => {
 		axiosInstance
 			.post(url, requestData, axiosOptions)
 			.then((response) => processRequest(response, _fnCallback, fnResolve))
 			.catch((error) =>
-				handleNonOkResponse(error.response, fnResolve, _fnErrorCallback, fnReject, error)
+				handleNonOkResponse(error.response, fnResolve, _fnErrorCallback)
 			)
 	})
 
@@ -195,7 +195,7 @@ async function processRequest(response, _fnCallback, fnResolve) {
 			const navDataStore = useNavDataStore()
 			const genericDataStore = useGenericDataStore()
 
-			const responseData = response.data ?? {},
+			let responseData = response.data ?? {},
 				data = responseData.Data ?? null,
 				statusCode = responseData.statusCode ?? 200,
 				srvHistory = responseData.NavigationData ?? {},
@@ -250,12 +250,12 @@ async function uploadChunk({
 		}
 	}
 
-	return new Promise((fnResolve, fnReject) => {
+	return new Promise((fnResolve) => {
 		axiosInstance
 			.post(url, formData, axiosOptions)
 			.then((response) => processRequest(response, _fnCallback, fnResolve))
 			.catch((error) =>
-				handleNonOkResponse(error.response, fnResolve, _fnErrorCallback, fnReject, error)
+				handleNonOkResponse(error.response, fnResolve, _fnErrorCallback)
 			)
 	})
 }
@@ -387,12 +387,10 @@ export function getFile(baseArea, ticket, viewType, navigationId = MAIN_HISTORY_
  * @param {AxiosResponse} response Axios response object (data, status, statusText, headers, config, request?)
  * @param {Function} fnResolve The «promise resolve» function
  * @param {Callback} _fnCallback The request callback
- * @param {Function} fnReject The «promise reject» function
- * @param {Error} error The request error object
  */
-async function handleNonOkResponse(response, fnResolve, _fnCallback, fnReject, error) {
+async function handleNonOkResponse(response, fnResolve, _fnCallback) {
 	if (response) {
-		const responseData = response.data ?? {},
+		let responseData = response.data ?? {},
 			data = responseData.Data ?? null,
 			statusCode = responseData.statusCode ?? response.status
 
@@ -428,14 +426,7 @@ async function handleNonOkResponse(response, fnResolve, _fnCallback, fnReject, e
 
 		fnResolve?.(data)
 	} else {
-		if (error?.name === 'CanceledError') {
-			// Request was aborted; silently ignore.
-			// A practical case: exiting the form before the table lists have finished loading.
-			// To prevent callback from being processed after exiting, the request will be canceled and ignored.
-			fnReject?.(error)
-		} else {
-			fnResolve?.(null)
-		}
+		fnResolve?.(null)
 	}
 
 	// FIXME: Temporary workaround just to avoid infinitely calling "GetIfUserLogged" when itself fails.

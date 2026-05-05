@@ -10,14 +10,13 @@
 			<q-button
 				v-for="action in actionsByGroup[group.id]"
 				:key="action.id"
-				:id="getActionElementId(action.id)"
 				:class="group.customClass"
 				:title="action.title"
 				:label="action.icon ? '' : action.title"
 				:disabled="action.disabled"
 				:size="group.size"
 				v-bind="$attrs"
-				@click="() => selectAction(action.id, getActionElementId(action.id))">
+				@click="() => selectAction(action.id)">
 				<q-icon
 					v-if="action.icon"
 					v-bind="action.icon" />
@@ -33,11 +32,8 @@
 		<template v-if="dropdownGroups.length !== 0">
 			<q-button
 				ref="dropdownActivator"
-				:id="getActionElementId('action_menu')"
 				data-type="options-button"
-				:aria-label="texts.selectOptions"
-				aria-haspopup="true"
-				:aria-expanded="isOpen"
+				:aria-label="texts.actionMenuTitle"
 				v-bind="{ ...dropdownOptions, ...$attrs }">
 				<slot name="customDropdownButton">
 					<q-icon :icon="dropdownOptions.icon" />
@@ -49,8 +45,7 @@
 				:items="dropdownActions"
 				:groups="dropdownGroups"
 				:placement="dropdownOptions.placement"
-				@update:model-value="isOpen = $event"
-				@select="selectAction($event, getActionElementId('action_menu'))" />
+				@select="selectAction" />
 		</template>
 	</div>
 </template>
@@ -84,8 +79,7 @@
 					borderless: true,
 					separator: false,
 					customClass: undefined
-				},
-				isOpen: false
+				}
 			}
 		},
 
@@ -135,13 +129,6 @@
 			texts: {
 				type: Object,
 				required: true
-			},
-
-			/**
-			 * ID of container.
-			 */
-			baseId: {
-				type: String
 			}
 		},
 
@@ -251,25 +238,12 @@
 			/**
 			 * Executes an action predefined behaviour
 			 * @param action - the action to execute
-			 * @param returnElement - the element to focus on when returning from a popup
 			 */
-			selectAction(actionID, returnElement)
+			selectAction(actionID)
 			{
 				const action = this.visibleActions.find((act) => act.id === actionID)
-				if (!action) return
-
-				action.returnElement = returnElement
-				this.$emit('click:action', action)
-			},
-
-			/**
-			 * Get the element ID for the action
-			 * @param id {string} The ID of the action
-			 */
-			getActionElementId(id)
-			{
-				if(!this.baseId) return null
-				return this.baseId + '_' + id
+				if (action)
+					this.$emit('click:action', action)
 			}
 		}
 	}

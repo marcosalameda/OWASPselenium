@@ -5,73 +5,79 @@
 		:readonly="readonly"
 		:disabled="disabled"
 		:placeholder="placeholder"
-		:texts="resolvedTexts"
-		@update:model-value="(value) => emit('update:model-value', value)" />
+		@update:model-value="$emit('update:model-value', $event)" />
 </template>
 
-<script setup lang="ts">
-	import { computed } from 'vue'
-	/**
-	 * This wrapper is needed because custom controls do not support multi-word names.
-	 */
-	const DEFAULT_TEXTS = {
-		selectColor: 'Select a color',
+<script>
+	export default {
+		/**
+		 * This wrapper is needed because custom controls do not support multi-word names.
+		 */
+		name: 'QColorpicker',
+
+		emits: [
+			/**
+			 * Emits when the color value changes.
+			 * @event update:model-value
+			 * @type {string} The updated HEX color value.
+			 */
+			'update:model-value',
+		],
+
+		inheritAttrs: false,
+
+		props: {
+			/**
+			 * Unique identifier for the field.
+			 * @type {string}
+			 * @default undefined
+			 */
+			id: {
+				type: String,
+				default: undefined
+			},
+
+			/**
+			 * The HEX color value bound to the color picker.
+			 * @type {string}
+			 * @default ''
+			 */
+			modelValue: {
+				type: String,
+				default: ''
+			},
+
+			/**
+			 * Specifies whether the text field is read-only.
+			 * @type {boolean}
+			 * @default false
+			 */
+			readonly: {
+				type: Boolean,
+				default: false
+			},
+
+			/**
+			 * Specifies whether the color picker is disabled.
+			 * @type {boolean}
+			 * @default false
+			 */
+			disabled: {
+				type: Boolean,
+				default: false
+			},
+
+			/**
+			 * Placeholder text for the text field.
+			 * @type {string}
+			 * @default '#000000'
+			 */
+			placeholder: {
+				type: String,
+				default: '#000000'
+			}
+		},
+
+		expose: []
 	}
-
-	/** Customizable texts used in color pickers. */
-	type Texts = typeof DEFAULT_TEXTS
-
-	/** Props for the main QCards component. */
-	type QColorPickerProps =  {
-		/**
-		 * Unique identifier for the field.
-		 */
-		id?: string | undefined
-
-		/**
-		 * The HEX color value bound to the color picker.
-		 */
-		modelValue?: string
-
-		/**
-		 * Specifies whether the text field is read-only.
-		 */
-		readonly?: boolean
-
-		/**
-		 * Specifies whether the color picker is disabled.
-		 */
-		disabled?: boolean
-
-		/**
-		 * Placeholder text for the text field.
-		 */
-		placeholder?: string
-
-		/**
-		 * Texts needed by the component.
-		 */
-		texts?: Texts
-	}
-
-	const props = withDefaults(defineProps<QColorPickerProps>(),{
-		id: undefined,
-		modelValue: '',
-		readonly: false,
-		disabled: false,
-		placeholder: '#000000',
-	})
-
-	const emit = defineEmits<{
-		/** Emits when the color value changes. */
-		(e: 'update:model-value', value: string): void
-	}>()
-
-	/**
-	 * Texts have to be appended outside prop definition because withDefaults can't use locally-defined variables.
-	 */
-	const resolvedTexts = computed(() => ({
-		...DEFAULT_TEXTS,
-		...(props.texts),
-	}))
 </script>

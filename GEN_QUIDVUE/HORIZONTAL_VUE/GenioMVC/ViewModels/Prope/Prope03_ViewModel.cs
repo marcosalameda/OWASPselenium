@@ -1,20 +1,20 @@
-﻿using CSGenio.business;
-using CSGenio.framework;
-using CSGenio.persistence;
-using GenioMVC.Helpers;
-using GenioMVC.Models.Exception;
-using GenioMVC.Models.Navigation;
+﻿using JsonIgnoreAttribute = System.Text.Json.Serialization.JsonIgnoreAttribute;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Quidgest.Persistence;
-using Quidgest.Persistence.GenericQuery;
-
 using System.Collections;
 using System.Collections.Concurrent;
 using System.Collections.Specialized;
 using System.ComponentModel.DataAnnotations;
 using System.Data;
 using System.Globalization;
-using System.Text.Json.Serialization;
+
+using CSGenio.business;
+using CSGenio.framework;
+using CSGenio.persistence;
+using GenioMVC.Helpers;
+using GenioMVC.Models.Exception;
+using GenioMVC.Models.Navigation;
+using Quidgest.Persistence;
+using Quidgest.Persistence.GenericQuery;
 
 namespace GenioMVC.ViewModels.Prope
 {
@@ -40,7 +40,6 @@ namespace GenioMVC.ViewModels.Prope
 		public string ValCodcity { get; set; }
 
 		#endregion
-
 		/// <summary>
 		/// Title: "Title" | Type: "C"
 		/// </summary>
@@ -265,7 +264,12 @@ namespace GenioMVC.ViewModels.Prope
 			}
 		}
 
-		/// <inheritdoc />
+		/// <summary>
+		/// Sets the value of a single property of the view model based on the provided table and field names.
+		/// </summary>
+		/// <param name="fullFieldName">The full field name in the format "table.field".</param>
+		/// <param name="value">The field value.</param>
+		/// <exception cref="ArgumentNullException">Thrown if <paramref name="fullFieldName"/> is null.</exception>
 		public override void SetViewModelValue(string fullFieldName, object value)
 		{
 			try
@@ -361,17 +365,6 @@ namespace GenioMVC.ViewModels.Prope
 				// Conexão deve estar aberta de fora. Podem haver formulas que utilizam funções "manuais".
 				// TODO: It needs to be analyzed whether we should disable the security of field filling here. If there is any case where the field with the block condition can only be calculated after the double calculation of the formulas.
 				MapToModel(Model);
-
-				// If it's inserting or duplicating, needs to fill the default values.
-				if (Navigation.CurrentLevel.FormMode == FormMode.New || Navigation.CurrentLevel.FormMode == FormMode.Duplicate)
-				{
-					FunctionType funcType = Navigation.CurrentLevel.FormMode == FormMode.New
-						? FunctionType.INS
-						: FunctionType.DUP;
-
-					Model.baseklass.fillValuesDefault(m_userContext.PersistentSupport, funcType);
-				}
-
 				// Preencher operações internas
 				Model.klass.fillInternalOperations(m_userContext.PersistentSupport, oldvalues);
 				MapFromModel(Model);
@@ -415,7 +408,6 @@ namespace GenioMVC.ViewModels.Prope
 
 			Load_Prope03_agentname____(qs, lazyLoad);
 			Load_Prope03_city_city____(qs, lazyLoad);
-
 // USE /[MANUAL GQT VIEWMODEL_LOADPARTIAL PROPE03]/
 		}
 
@@ -487,7 +479,10 @@ namespace GenioMVC.ViewModels.Prope
 				}
 			}
 
-			TableAgentName = new TableDBEdit<Models.Agent>();
+			TableAgentName = new TableDBEdit<Models.Agent>
+			{
+				IsLazyLoad = lazyLoad
+			};
 
 			if (lazyLoad)
 			{
@@ -502,7 +497,7 @@ namespace GenioMVC.ViewModels.Prope
 
 			if (prope03_agentname____DoLoad)
 			{
-				List<ColumnSort> sorts = [];
+				List<ColumnSort> sorts = new List<ColumnSort>();
 				ColumnSort requestedSort = GetRequestSort(TableAgentName, "sTableAgentName", "dTableAgentName", qs, "agent");
 				if (requestedSort != null)
 					sorts.Add(requestedSort);
@@ -552,7 +547,7 @@ namespace GenioMVC.ViewModels.Prope
 
 				TableAgentName.SetPagination(page, numberItems, listing.HasMore, listing.GetTotal, listing.TotalRecords);
 				TableAgentName.Query = query;
-				TableAgentName.Elements = listing.RowsForViewModel((r) => new GenioMVC.Models.Agent(m_userContext, r, true, _fieldsToSerialize_PROPE03_AGENTNAME____));
+				TableAgentName.Elements = listing.RowsForViewModel<GenioMVC.Models.Agent>((r) => new GenioMVC.Models.Agent(m_userContext, r, true, _fieldsToSerialize_PROPE03_AGENTNAME____));
 
 				//created by [ MH ] at [ 14.04.2016 ] - Foi alterada a forma de retornar a key do novo registo inserido / editado no form de apoio do DBEdit.
 				//last update by [ MH ] at [ 10.05.2016 ] - Validação se key encontra-se no level atual, as chaves dos niveis anteriores devem ser ignorados.
@@ -674,7 +669,10 @@ namespace GenioMVC.ViewModels.Prope
 				}
 			}
 
-			TableCityCity = new TableDBEdit<Models.City>();
+			TableCityCity = new TableDBEdit<Models.City>
+			{
+				IsLazyLoad = lazyLoad
+			};
 
 			if (lazyLoad)
 			{
@@ -689,7 +687,7 @@ namespace GenioMVC.ViewModels.Prope
 
 			if (prope03_city_city____DoLoad)
 			{
-				List<ColumnSort> sorts = [];
+				List<ColumnSort> sorts = new List<ColumnSort>();
 				ColumnSort requestedSort = GetRequestSort(TableCityCity, "sTableCityCity", "dTableCityCity", qs, "city");
 				if (requestedSort != null)
 					sorts.Add(requestedSort);
@@ -739,7 +737,7 @@ namespace GenioMVC.ViewModels.Prope
 
 				TableCityCity.SetPagination(page, numberItems, listing.HasMore, listing.GetTotal, listing.TotalRecords);
 				TableCityCity.Query = query;
-				TableCityCity.Elements = listing.RowsForViewModel((r) => new GenioMVC.Models.City(m_userContext, r, true, _fieldsToSerialize_PROPE03_CITY_CITY____));
+				TableCityCity.Elements = listing.RowsForViewModel<GenioMVC.Models.City>((r) => new GenioMVC.Models.City(m_userContext, r, true, _fieldsToSerialize_PROPE03_CITY_CITY____));
 
 				//created by [ MH ] at [ 14.04.2016 ] - Foi alterada a forma de retornar a key do novo registo inserido / editado no form de apoio do DBEdit.
 				//last update by [ MH ] at [ 10.05.2016 ] - Validação se key encontra-se no level atual, as chaves dos niveis anteriores devem ser ignorados.

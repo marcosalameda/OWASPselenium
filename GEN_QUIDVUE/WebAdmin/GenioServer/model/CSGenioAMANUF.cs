@@ -1,5 +1,5 @@
 ﻿
- 
+
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -75,7 +75,7 @@ namespace CSGenio.business
 			//- - - - - - - - - - - - - - - - - - -
 			Qfield = new Field(info.Alias, "registra", FieldType.TEXT);
 			Qfield.FieldDescription = "Legal registration";
-			Qfield.FieldSize =  20;
+			Qfield.FieldSize =  30;
 			Qfield.MQueue = false;
 			Qfield.CavDesignation = "LEGAL_REGISTRATION04413";
 
@@ -85,7 +85,7 @@ namespace CSGenio.business
 			//- - - - - - - - - - - - - - - - - - -
 			Qfield = new Field(info.Alias, "taxnumbe", FieldType.TEXT);
 			Qfield.FieldDescription = "VAT Number";
-			Qfield.FieldSize =  20;
+			Qfield.FieldSize =  30;
 			Qfield.MQueue = false;
 			Qfield.CavDesignation = "VAT_NUMBER24236";
 
@@ -115,7 +115,7 @@ namespace CSGenio.business
 			//- - - - - - - - - - - - - - - - - - -
 			Qfield = new Field(info.Alias, "iban", FieldType.TEXT);
 			Qfield.FieldDescription = "IBAN (International Bank Account Number)";
-			Qfield.FieldSize =  25;
+			Qfield.FieldSize =  33;
 			Qfield.MQueue = false;
 			Qfield.CavDesignation = "IBAN__INTERNATIONAL_45066";
 
@@ -125,7 +125,7 @@ namespace CSGenio.business
 			//- - - - - - - - - - - - - - - - - - -
 			Qfield = new Field(info.Alias, "building", FieldType.TEXT);
 			Qfield.FieldDescription = "Building/house number";
-			Qfield.FieldSize =  10;
+			Qfield.FieldSize =  25;
 			Qfield.CavDesignation = "BUILDING_HOUSE_NUMBE20738";
 
 			Qfield.Dupmsg = "";
@@ -134,7 +134,7 @@ namespace CSGenio.business
 			//- - - - - - - - - - - - - - - - - - -
 			Qfield = new Field(info.Alias, "street", FieldType.TEXT);
 			Qfield.FieldDescription = "Street";
-			Qfield.FieldSize =  85;
+			Qfield.FieldSize =  50;
 			Qfield.CavDesignation = "STREET44324";
 
 			Qfield.Dupmsg = "";
@@ -143,7 +143,7 @@ namespace CSGenio.business
 			//- - - - - - - - - - - - - - - - - - -
 			Qfield = new Field(info.Alias, "town", FieldType.TEXT);
 			Qfield.FieldDescription = "Town/City";
-			Qfield.FieldSize =  85;
+			Qfield.FieldSize =  50;
 			Qfield.CavDesignation = "TOWN_CITY16259";
 
 			Qfield.Dupmsg = "";
@@ -152,7 +152,7 @@ namespace CSGenio.business
 			//- - - - - - - - - - - - - - - - - - -
 			Qfield = new Field(info.Alias, "county", FieldType.TEXT);
 			Qfield.FieldDescription = "County/Province";
-			Qfield.FieldSize =  85;
+			Qfield.FieldSize =  50;
 			Qfield.CavDesignation = "COUNTY_PROVINCE34285";
 
 			Qfield.Dupmsg = "";
@@ -161,7 +161,7 @@ namespace CSGenio.business
 			//- - - - - - - - - - - - - - - - - - -
 			Qfield = new Field(info.Alias, "state", FieldType.TEXT);
 			Qfield.FieldDescription = "State/Province";
-			Qfield.FieldSize =  85;
+			Qfield.FieldSize =  50;
 			Qfield.CavDesignation = "STATE_PROVINCE28516";
 
 			Qfield.Dupmsg = "";
@@ -179,7 +179,7 @@ namespace CSGenio.business
 			//- - - - - - - - - - - - - - - - - - -
 			Qfield = new Field(info.Alias, "postalco", FieldType.TEXT);
 			Qfield.FieldDescription = "ZIP/Popstal code";
-			Qfield.FieldSize =  50;
+			Qfield.FieldSize =  10;
 			Qfield.CavDesignation = "ZIP_POPSTAL_CODE65164";
 
 			Qfield.Dupmsg = "";
@@ -224,16 +224,16 @@ namespace CSGenio.business
 			//- - - - - - - - - - - - - - - - - - -
 			Qfield = new Field(info.Alias, "contact", FieldType.TEXT);
 			Qfield.FieldDescription = "Contact telephone number";
-			Qfield.FieldSize =  20;
+			Qfield.FieldSize =  30;
 			Qfield.CavDesignation = "CONTACT_TELEPHONE_NU12694";
 
 			Qfield.Dupmsg = "";
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "owner", FieldType.LOGIC);
+			Qfield = new Field(info.Alias, "owner", FieldType.TEXT);
 			Qfield.FieldDescription = "Owner";
-			Qfield.FieldSize =  1;
+			Qfield.FieldSize =  50;
 			Qfield.MQueue = false;
 			Qfield.CavDesignation = "OWNER09558";
 
@@ -690,14 +690,14 @@ namespace CSGenio.business
 			set { insertNameValueField(FldContact, value); }
 		}
 
-		/// <summary>Field : "Owner" Tipo: "L" Formula:  ""</summary>
+		/// <summary>Field : "Owner" Tipo: "C" Formula:  ""</summary>
 		public static FieldRef FldOwner { get { return m_fldOwner; } }
 		private static FieldRef m_fldOwner = new FieldRef("manuf", "owner");
 
-		/// <summary>Field : "Owner" Tipo: "L" Formula:  ""</summary>
-		public int ValOwner
+		/// <summary>Field : "Owner" Tipo: "C" Formula:  ""</summary>
+		public string ValOwner
 		{
-			get { return (int)returnValueField(FldOwner); }
+			get { return (string)returnValueField(FldOwner); }
 			set { insertNameValueField(FldOwner, value); }
 		}
 
@@ -809,17 +809,16 @@ namespace CSGenio.business
         /// <param name="key">The value of the primary key</param>
         /// <param name="user">The context of the user</param>
         /// <param name="fields">The fields to be filled in the area</param>
-		/// <param name="forUpdate">True if you are preparing to update this record, false otherwise</param>
         /// <returns>An area with the fields requests of the record read or null if the key does not exist</returns>
         /// <remarks>Persistence operations should not be used on a partially positioned register</remarks>
-        public static CSGenioAmanuf search(PersistentSupport sp, string key, User user, string[] fields = null, bool forUpdate = false)
+        public static CSGenioAmanuf search(PersistentSupport sp, string key, User user, string[] fields = null)
         {
 			if (string.IsNullOrEmpty(key))
 				return null;
 
 		    CSGenioAmanuf area = new CSGenioAmanuf(user, user.CurrentModule);
 
-            if (sp.getRecord(area, key, fields, forUpdate))
+            if (sp.getRecord(area, key, fields))
                 return area;
 			return null;
         }
@@ -879,13 +878,13 @@ namespace CSGenio.business
 
 
 
-
-
+ 
 
 
 		// USE /[MANUAL GQT TABAUX MANUF]/
 
      
+
                               
 
 	}

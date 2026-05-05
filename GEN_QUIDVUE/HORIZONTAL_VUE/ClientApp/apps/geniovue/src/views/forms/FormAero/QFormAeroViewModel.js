@@ -1,4 +1,4 @@
-﻿/* eslint-disable @typescript-eslint/no-unused-vars */
+﻿/* eslint-disable no-unused-vars */
 import { computed, reactive, watch } from 'vue'
 import _merge from 'lodash-es/merge'
 
@@ -11,7 +11,7 @@ import netAPI from '@quidgest/clientapp/network'
 import qApi from '@/api/genio/quidgestFunctions.js'
 import qFunctions from '@/api/genio/projectFunctions.js'
 import qProjArrays from '@/api/genio/projectArrays.js'
-/* eslint-enable @typescript-eslint/no-unused-vars */
+/* eslint-enable no-unused-vars */
 
 /**
  * Represents a ViewModel class.
@@ -25,11 +25,11 @@ export default class ViewModel extends FormViewModelBase
 	 * @param {object} options - The options for the ViewModel
 	 * @param {object} values - A ViewModel instance to copy values from
 	 */
-	// eslint-disable-next-line @typescript-eslint/no-unused-vars
+	// eslint-disable-next-line no-unused-vars
 	constructor(vueContext, options, values)
 	{
 		super(vueContext, options)
-		// eslint-disable-next-line @typescript-eslint/no-unused-vars
+		// eslint-disable-next-line no-unused-vars
 		const vm = this.vueContext
 
 		// The view model metadata
@@ -37,9 +37,8 @@ export default class ViewModel extends FormViewModelBase
 			name: 'AERO',
 			area: 'AERO',
 			actions: {
-				recalculateFormulas: 'RecalculateFormulas_Aero',
-				updateFilesTickets: 'UpdateFilesTicketsAero',
-				setFile: 'SetFileAero'
+				recalculateFormulas: 'RecalculateFormulas_AERO',
+				updateFilesTickets: 'UpdateFilesTicketsAERO'
 			}
 		})
 
@@ -51,7 +50,7 @@ export default class ViewModel extends FormViewModelBase
 			field: 'CODAERO',
 			description: '',
 		}).cloneFrom(values?.ValCodaero))
-		this.stopWatchers.push(watch(() => this.ValCodaero.value, (newValue, oldValue) => this.onUpdate('aero.codaero', this.ValCodaero, newValue, oldValue)))
+		watch(() => this.ValCodaero.value, (newValue, oldValue) => this.onUpdate('aero.codaero', this.ValCodaero, newValue, oldValue))
 
 		/** The remaining form fields. */
 		this.ValName = reactive(new modelFieldType.String({
@@ -62,7 +61,7 @@ export default class ViewModel extends FormViewModelBase
 			maxLength: 50,
 			description: computed(() => this.Resources.AIRLINE_NAME55130),
 		}).cloneFrom(values?.ValName))
-		this.stopWatchers.push(watch(() => this.ValName.value, (newValue, oldValue) => this.onUpdate('aero.name', this.ValName, newValue, oldValue)))
+		watch(() => this.ValName.value, (newValue, oldValue) => this.onUpdate('aero.name', this.ValName, newValue, oldValue))
 
 		this.ValCodcmaer = reactive(new modelFieldType.Number({
 			id: 'ValCodcmaer',
@@ -73,7 +72,7 @@ export default class ViewModel extends FormViewModelBase
 			decimalDigits: 0,
 			description: computed(() => this.Resources.CODE49225),
 		}).cloneFrom(values?.ValCodcmaer))
-		this.stopWatchers.push(watch(() => this.ValCodcmaer.value, (newValue, oldValue) => this.onUpdate('aero.codcmaer', this.ValCodcmaer, newValue, oldValue)))
+		watch(() => this.ValCodcmaer.value, (newValue, oldValue) => this.onUpdate('aero.codcmaer', this.ValCodcmaer, newValue, oldValue))
 	}
 
 	/**

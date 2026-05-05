@@ -152,7 +152,7 @@ class SystemConfigTexts extends BaseResources
 			return this.resources.NOME_DO_SERVIDOR13641
 		}
 		get databaseVersion() {
-			return this.resources.VERSAO_DE_BASE_DE_DA46937
+			return this.resources.DATABASE_VERSION15344
 		}
 		get dataSystemDeletedSuccess() {
 			return this.resources.O_SISTEMA_DE_DADOS_F39849
@@ -215,7 +215,7 @@ class SystemConfigTexts extends BaseResources
 			return this.resources.LOGIN_DE_ACESSO_A_BA52816
 		}
 		get databaseConnectionTitle() {
-			return this.resources.AUTENTICACAO_NA_BASE39084
+			return this.resources.AUTENTICACAO_DE__BAS42362
 		}
 		get encryptConnectionLabel() {
 			return this.resources.ENCRIPTAR_LIGACAO12834
@@ -256,14 +256,11 @@ class SystemConfigTexts extends BaseResources
 		get groupSeparatorLabel() {
 			return this.resources.SEPARADOR_DE_GRUPO26735
 		}
-		get negativeNumberFormatLabel() {
-			return this.resources.FORMATO_DE_NUMERO_NE41581
-		}
 		get reportLabel() {
 			return this.resources.RELATORIO62426
 		}
 		get reportsByLanguageTitle() {
-			return this.resources.RELATORIOS_POR_LINGU09488
+			return this.resources.RELATORIOS_POR_LINGU35356
 		}
 		get elasticsearchTitle() {
 			return this.resources.ELASTICSEARCH49143
@@ -347,7 +344,7 @@ class SystemConfigTexts extends BaseResources
 			return this.resources.RELATORIO62426
 		}
 		get reportsByLanguage() {
-			return this.resources.RELATORIOS_POR_LINGU09488
+			return this.resources.RELATORIOS_POR_LINGU35356
 		}
 		get configuracaoDoSistema() {
 			return this.resources.CONFIGURACAO_DO_SIST39343
@@ -375,24 +372,6 @@ class SystemConfigTexts extends BaseResources
 		}
 		get connectionFailed() {
 			return this.resources.FALHA_NA_CONEXAO29916
-		}
-		get mcpSecurityMode() {
-			return this.resources.MODO_DE_SEGURANCA_MC18759
-		}
-		get mcpSecurityModeHelp() {
-			return this.resources.DEFINE_O_MODO_DE_SEG18180
-		}
-		get jwtEncryptionKey() {
-			return this.resources.CHAVE_DE_ENCRIPTACAO37781
-		}
-		get jwtEncryptionKeyHelp() {
-			return this.resources.CHAVE_SECRETA_UTILIZ48448
-		}
-		get urlMCPLabel() {
-			return this.resources.URL_DO_SERVIDOR_MCP19003
-		}
-		get urlMCPInfo() {
-			return this.resources.ENDPOINT_DO_SERVIDOR41381
 		}
 }
 
@@ -484,6 +463,9 @@ class AppConfigTexts extends BaseResources
 		}
 		get fixedUsersTitle() {
 			return this.resources.UTILIZADORES_FIXOS00716
+		}
+		get appConfigurationTitle() {
+			return this.resources.CONFIGURACAO_DA_APLI59110
 		}
 		get pathAppLabel() {
 			return this.resources.CAMINHO_PARA_A_APLIC44450

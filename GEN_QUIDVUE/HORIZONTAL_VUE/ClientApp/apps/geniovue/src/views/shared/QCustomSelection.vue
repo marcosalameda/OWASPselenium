@@ -102,12 +102,16 @@
 					config: {
 						name: 'Records',
 						tableTitle: '',
+						serverMode: false,
 						showFooter: true,
 						initialSortColumnName: 'Record',
 						initialSortColumnOrder: 'asc',
 						crudActions: [],
+						globalSearch: {
+							visibility: false
+						},
 						perPage: 15,
-						numVisiblePaginationButtons: 3,
+						numVisibilePaginationButtons: 3,
 						showRecordCount: false,
 						rowBgColorSelected: '#e0e0e0',
 						rowClickActionInternal: 'selectSingle',
@@ -116,9 +120,9 @@
 					rowsSelected: {},
 					rowsChecked: {},
 					handlers: {
-						selectRow: eventData => this.tableManu.onSelectRow(eventData),
-						unselectRow: eventData => this.tableManu.onUnselectRow(eventData),
-						unselectAllRows: () => this.tableManu.onUnselectAllRows()
+						selectRow: eventData => this.onSelectRow(this.tableManu, eventData),
+						unselectRow: eventData => this.onUnselectRow(this.tableManu, eventData),
+						unselectAllRows: () => this.onUnselectAllRows(this.tableManu)
 					}
 				}, this),
 

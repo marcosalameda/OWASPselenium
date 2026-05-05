@@ -10,34 +10,34 @@ public class AccordiForm : Form
 	/// <summary>
 	/// COMPANY
 	/// </summary>
-	public CollapsibleZoneControl PseudNovogr02 => new CollapsibleZoneControl(driver, ContainerLocator, "#ACCORDI_PSEUDNOVOGR02" + IdSuffix + "-container");
+	public IWebElement PseudNovogr02 => throw new NotImplementedException();
 
 	/// <summary>
 	/// Company:
 	/// </summary>
-	public LookupControl CmpnyDesignat => new LookupControl(driver, ContainerLocator, "container-ACCORDI_CMPNYDESIGNAT" + IdSuffix);
-	public SeeMorePage CmpnyDesignatSeeMorePage => new SeeMorePage(driver, "ACCORDI", "ACCORDI_CMPNYDESIGNAT" + IdSuffix);
+	public LookupControl CmpnyDesignat => new LookupControl(driver, ContainerLocator, "container-ACCORDI_CMPNYDESIGNAT");
+	public SeeMorePage CmpnyDesignatSeeMorePage => new SeeMorePage(driver, "ACCORDI", "ACCORDI_CMPNYDESIGNAT");
 
 	/// <summary>
 	/// Person
 	/// </summary>
-	public LookupControl Pess1Name => new LookupControl(driver, ContainerLocator, "container-ACCORDI_PESS1NAME____" + IdSuffix);
-	public SeeMorePage Pess1NameSeeMorePage => new SeeMorePage(driver, "ACCORDI", "ACCORDI_PESS1NAME____" + IdSuffix);
+	public LookupControl Pess1Name => new LookupControl(driver, ContainerLocator, "container-ACCORDI_PESS1NAME____");
+	public SeeMorePage Pess1NameSeeMorePage => new SeeMorePage(driver, "ACCORDI", "ACCORDI_PESS1NAME____");
 
 	/// <summary>
 	/// Sequential no.
 	/// </summary>
-	public BaseInputControl EquipSequennr => new BaseInputControl(driver, ContainerLocator, "container-ACCORDI_EQUIPSEQUENNR" + IdSuffix, "#ACCORDI_EQUIPSEQUENNR" + IdSuffix);
+	public BaseInputControl EquipSequennr => new BaseInputControl(driver, ContainerLocator, "container-ACCORDI_EQUIPSEQUENNR", "#ACCORDI_EQUIPSEQUENNR");
 
 	/// <summary>
 	/// PHOTO
 	/// </summary>
-	public CollapsibleZoneControl PseudNovogr06 => new CollapsibleZoneControl(driver, ContainerLocator, "#ACCORDI_PSEUDNOVOGR06" + IdSuffix + "-container");
+	public IWebElement PseudNovogr06 => throw new NotImplementedException();
 
 	/// <summary>
 	/// Photo
 	/// </summary>
-	public BaseInputControl EquipPhotogra => new BaseInputControl(driver, ContainerLocator, "container-ACCORDI_EQUIPPHOTOGRA" + IdSuffix, "#ACCORDI_EQUIPPHOTOGRA" + IdSuffix);
+	public BaseInputControl EquipPhotogra => new BaseInputControl(driver, ContainerLocator, "container-ACCORDI_EQUIPPHOTOGRA", "#ACCORDI_EQUIPPHOTOGRA");
 
 	/// <summary>
 	/// Accordion
@@ -47,33 +47,33 @@ public class AccordiForm : Form
 	/// <summary>
 	/// Facilities
 	/// </summary>
-	public CollapsibleZoneControl PseudNovogr03 => new CollapsibleZoneControl(driver, ContainerLocator, "#ACCORDI_PSEUDNOVOGR03" + IdSuffix + "-container");
+	public CollapsibleZoneControl PseudNovogr03 => new CollapsibleZoneControl(driver, ContainerLocator, "#ACCORDI_PSEUDNOVOGR03-container");
 
 	/// <summary>
 	/// Facilities:
 	/// </summary>
-	public ListControl PseudInstalag => new ListControl(driver, ContainerLocator, "#ACCORDI_PSEUDINSTALAG" + IdSuffix);
+	public ListControl PseudInstalag => new ListControl(driver, ContainerLocator, "#ACCORDI_PSEUDINSTALAG");
 
 	/// <summary>
 	/// PLACES
 	/// </summary>
-	public CollapsibleZoneControl PseudNovogr04 => new CollapsibleZoneControl(driver, ContainerLocator, "#ACCORDI_PSEUDNOVOGR04" + IdSuffix + "-container");
+	public CollapsibleZoneControl PseudNovogr04 => new CollapsibleZoneControl(driver, ContainerLocator, "#ACCORDI_PSEUDNOVOGR04-container");
 
 	/// <summary>
 	/// Facilities
 	/// </summary>
-	public ListControl PseudInstalac => new ListControl(driver, ContainerLocator, "#ACCORDI_PSEUDINSTALAC" + IdSuffix);
+	public ListControl PseudInstalac => new ListControl(driver, ContainerLocator, "#ACCORDI_PSEUDINSTALAC");
 
 	/// <summary>
 	/// Repairs
 	/// </summary>
-	public CollapsibleZoneControl PseudNovogr11 => new CollapsibleZoneControl(driver, ContainerLocator, "#ACCORDI_PSEUDNOVOGR11" + IdSuffix + "-container");
+	public CollapsibleZoneControl PseudNovogr11 => new CollapsibleZoneControl(driver, ContainerLocator, "#ACCORDI_PSEUDNOVOGR11-container");
 
 	/// <summary>
 	/// Equipment repairs:
 	/// </summary>
-	public ListControl PseudReparaco => new ListControl(driver, ContainerLocator, "#ACCORDI_PSEUDREPARACO" + IdSuffix);
+	public ListControl PseudReparaco => new ListControl(driver, ContainerLocator, "#ACCORDI_PSEUDREPARACO");
 
-	public AccordiForm(IWebDriver driver, FORM_MODE mode, By? containerLocator = null, bool usePkInId = false)
-		: base(driver, mode, "ACCORDI", containerLocator: containerLocator, usePkInId: usePkInId) { }
+	public AccordiForm(IWebDriver driver, FORM_MODE mode, By? containerLocator = null)
+		: base(driver, mode, "ACCORDI", containerLocator: containerLocator) { }
 }

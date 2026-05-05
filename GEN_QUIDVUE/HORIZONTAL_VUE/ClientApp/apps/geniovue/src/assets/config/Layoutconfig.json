@@ -94,29 +94,6 @@
 		],
 		"default": false
 	},
-	"TableHorizontalScrollers": {
-		"values": [
-			true,
-			false
-		],
-		"default": false
-	},
-	"RadioButtonSize": {
-		"values": [
-			"small",
-			"regular",
-			"large"
-		],
-		"default": "regular"
-	},
-	"CheckBoxSize": {
-		"values": [
-			"small",
-			"regular",
-			"large"
-		],
-		"default": "regular"
-	},
 	"BookmarkEnable": {
 		"values": [
 			true,

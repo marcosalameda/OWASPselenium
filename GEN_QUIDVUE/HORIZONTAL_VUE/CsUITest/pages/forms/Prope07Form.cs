@@ -10,38 +10,38 @@ public class Prope07Form : Form
 	/// <summary>
 	/// Informações principais
 	/// </summary>
-	public CollapsibleZoneControl PseudMaininf => new CollapsibleZoneControl(driver, ContainerLocator, "#PROPE07_PSEUDMAININF_" + IdSuffix + "-container");
+	public CollapsibleZoneControl PseudMaininf => new CollapsibleZoneControl(driver, ContainerLocator, "#PROPE07_PSEUDMAININF_-container");
 
 	/// <summary>
 	/// Foto principal
 	/// </summary>
-	public BaseInputControl PropePhoto => new BaseInputControl(driver, ContainerLocator, "container-PROPE07_PROPEPHOTO___" + IdSuffix, "#PROPE07_PROPEPHOTO___" + IdSuffix);
+	public BaseInputControl PropePhoto => new BaseInputControl(driver, ContainerLocator, "container-PROPE07_PROPEPHOTO___", "#PROPE07_PROPEPHOTO___");
 
 	/// <summary>
 	/// Title
 	/// </summary>
-	public BaseInputControl PropeTitle => new BaseInputControl(driver, ContainerLocator, "container-PROPE07_PROPETITLE___" + IdSuffix, "#PROPE07_PROPETITLE___" + IdSuffix);
+	public BaseInputControl PropeTitle => new BaseInputControl(driver, ContainerLocator, "container-PROPE07_PROPETITLE___", "#PROPE07_PROPETITLE___");
 
 	/// <summary>
 	/// Price
 	/// </summary>
-	public BaseInputControl PropePrice => new BaseInputControl(driver, ContainerLocator, "container-PROPE07_PROPEPRICE___" + IdSuffix, "#PROPE07_PROPEPRICE___" + IdSuffix);
+	public BaseInputControl PropePrice => new BaseInputControl(driver, ContainerLocator, "container-PROPE07_PROPEPRICE___", "#PROPE07_PROPEPRICE___");
 
 	/// <summary>
 	/// Description
 	/// </summary>
-	public BaseInputControl PropeDescript => new BaseInputControl(driver, ContainerLocator, "container-PROPE07_PROPEDESCRIPT" + IdSuffix, "#PROPE07_PROPEDESCRIPT" + IdSuffix);
+	public BaseInputControl PropeDescript => new BaseInputControl(driver, ContainerLocator, "container-PROPE07_PROPEDESCRIPT", "#PROPE07_PROPEDESCRIPT");
 
 	/// <summary>
 	/// Localização
 	/// </summary>
-	public CollapsibleZoneControl PseudLocaliza => new CollapsibleZoneControl(driver, ContainerLocator, "#PROPE07_PSEUDLOCALIZA" + IdSuffix + "-container");
+	public CollapsibleZoneControl PseudLocaliza => new CollapsibleZoneControl(driver, ContainerLocator, "#PROPE07_PSEUDLOCALIZA-container");
 
 	/// <summary>
 	/// Cidade
 	/// </summary>
-	public LookupControl CityCity => new LookupControl(driver, ContainerLocator, "container-PROPE07_CITY_CITY____" + IdSuffix);
-	public SeeMorePage CityCitySeeMorePage => new SeeMorePage(driver, "PROPE07", "PROPE07_CITY_CITY____" + IdSuffix);
+	public LookupControl CityCity => new LookupControl(driver, ContainerLocator, "container-PROPE07_CITY_CITY____");
+	public SeeMorePage CityCitySeeMorePage => new SeeMorePage(driver, "PROPE07", "PROPE07_CITY_CITY____");
 
 	/// <summary>
 	/// Country
@@ -51,28 +51,28 @@ public class Prope07Form : Form
 	/// <summary>
 	/// Detalhes
 	/// </summary>
-	public CollapsibleZoneControl PseudDetails => new CollapsibleZoneControl(driver, ContainerLocator, "#PROPE07_PSEUDDETAILS_" + IdSuffix + "-container");
+	public CollapsibleZoneControl PseudDetails => new CollapsibleZoneControl(driver, ContainerLocator, "#PROPE07_PSEUDDETAILS_-container");
 
 	/// <summary>
 	/// Tamanho (m2)
 	/// </summary>
-	public BaseInputControl PropeSize => new BaseInputControl(driver, ContainerLocator, "container-PROPE07_PROPESIZE____" + IdSuffix, "#PROPE07_PROPESIZE____" + IdSuffix);
+	public BaseInputControl PropeSize => new BaseInputControl(driver, ContainerLocator, "container-PROPE07_PROPESIZE____", "#PROPE07_PROPESIZE____");
 
 	/// <summary>
 	/// Numero de Casa de banhos
 	/// </summary>
-	public BaseInputControl PropeBathrms => new BaseInputControl(driver, ContainerLocator, "container-PROPE07_PROPEBATHRMS_" + IdSuffix, "#PROPE07_PROPEBATHRMS_" + IdSuffix);
+	public BaseInputControl PropeBathrms => new BaseInputControl(driver, ContainerLocator, "container-PROPE07_PROPEBATHRMS_", "#PROPE07_PROPEBATHRMS_");
 
 	/// <summary>
 	/// Ano construído
 	/// </summary>
-	public BaseInputControl PropeYear => new BaseInputControl(driver, ContainerLocator, "container-PROPE07_PROPEYEAR____" + IdSuffix, "#PROPE07_PROPEYEAR____" + IdSuffix);
+	public BaseInputControl PropeYear => new BaseInputControl(driver, ContainerLocator, "container-PROPE07_PROPEYEAR____", "#PROPE07_PROPEYEAR____");
 
 	/// <summary>
 	/// Name
 	/// </summary>
-	public LookupControl AgentName => new LookupControl(driver, ContainerLocator, "container-PROPE07_AGENTNAME____" + IdSuffix);
-	public SeeMorePage AgentNameSeeMorePage => new SeeMorePage(driver, "PROPE07", "PROPE07_AGENTNAME____" + IdSuffix);
+	public LookupControl AgentName => new LookupControl(driver, ContainerLocator, "container-PROPE07_AGENTNAME____");
+	public SeeMorePage AgentNameSeeMorePage => new SeeMorePage(driver, "PROPE07", "PROPE07_AGENTNAME____");
 
 	/// <summary>
 	/// Email
@@ -87,8 +87,8 @@ public class Prope07Form : Form
 	/// <summary>
 	/// Contacts
 	/// </summary>
-	public ListControl PseudPropcont => new ListControl(driver, ContainerLocator, "#PROPE07_PSEUDPROPCONT" + IdSuffix);
+	public ListControl PseudPropcont => new ListControl(driver, ContainerLocator, "#PROPE07_PSEUDPROPCONT");
 
-	public Prope07Form(IWebDriver driver, FORM_MODE mode, By? containerLocator = null, bool usePkInId = false)
-		: base(driver, mode, "PROPE07", containerLocator: containerLocator, usePkInId: usePkInId) { }
+	public Prope07Form(IWebDriver driver, FORM_MODE mode, By? containerLocator = null)
+		: base(driver, mode, "PROPE07", containerLocator: containerLocator) { }
 }

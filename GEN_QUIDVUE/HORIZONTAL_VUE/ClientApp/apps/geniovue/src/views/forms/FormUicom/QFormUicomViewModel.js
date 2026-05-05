@@ -1,4 +1,4 @@
-﻿/* eslint-disable @typescript-eslint/no-unused-vars */
+﻿/* eslint-disable no-unused-vars */
 import { computed, reactive, watch } from 'vue'
 import _merge from 'lodash-es/merge'
 
@@ -11,7 +11,7 @@ import netAPI from '@quidgest/clientapp/network'
 import qApi from '@/api/genio/quidgestFunctions.js'
 import qFunctions from '@/api/genio/projectFunctions.js'
 import qProjArrays from '@/api/genio/projectArrays.js'
-/* eslint-enable @typescript-eslint/no-unused-vars */
+/* eslint-enable no-unused-vars */
 
 /**
  * Represents a ViewModel class.
@@ -25,11 +25,11 @@ export default class ViewModel extends FormViewModelBase
 	 * @param {object} options - The options for the ViewModel
 	 * @param {object} values - A ViewModel instance to copy values from
 	 */
-	// eslint-disable-next-line @typescript-eslint/no-unused-vars
+	// eslint-disable-next-line no-unused-vars
 	constructor(vueContext, options, values)
 	{
 		super(vueContext, options)
-		// eslint-disable-next-line @typescript-eslint/no-unused-vars
+		// eslint-disable-next-line no-unused-vars
 		const vm = this.vueContext
 
 		// The view model metadata
@@ -37,9 +37,8 @@ export default class ViewModel extends FormViewModelBase
 			name: 'UICOM',
 			area: 'UICOM',
 			actions: {
-				recalculateFormulas: 'RecalculateFormulas_Uicom',
-				updateFilesTickets: 'UpdateFilesTicketsUicom',
-				setFile: 'SetFileUicom'
+				recalculateFormulas: 'RecalculateFormulas_UICOM',
+				updateFilesTickets: 'UpdateFilesTicketsUICOM'
 			}
 		})
 
@@ -51,7 +50,7 @@ export default class ViewModel extends FormViewModelBase
 			field: 'CODUICOM',
 			description: '',
 		}).cloneFrom(values?.ValCoduicom))
-		this.stopWatchers.push(watch(() => this.ValCoduicom.value, (newValue, oldValue) => this.onUpdate('uicom.coduicom', this.ValCoduicom, newValue, oldValue)))
+		watch(() => this.ValCoduicom.value, (newValue, oldValue) => this.onUpdate('uicom.coduicom', this.ValCoduicom, newValue, oldValue))
 
 		/** The remaining form fields. */
 		this.ValThumbnai = reactive(new modelFieldType.Image({
@@ -61,7 +60,7 @@ export default class ViewModel extends FormViewModelBase
 			field: 'THUMBNAI',
 			description: computed(() => this.Resources.THUMBNAIL30025),
 		}).cloneFrom(values?.ValThumbnai))
-		this.stopWatchers.push(watch(() => this.ValThumbnai.value, (newValue, oldValue) => this.onUpdate('uicom.thumbnai', this.ValThumbnai, newValue, oldValue)))
+		watch(() => this.ValThumbnai.value, (newValue, oldValue) => this.onUpdate('uicom.thumbnai', this.ValThumbnai, newValue, oldValue))
 
 		this.ValName = reactive(new modelFieldType.String({
 			id: 'ValName',
@@ -71,7 +70,7 @@ export default class ViewModel extends FormViewModelBase
 			maxLength: 50,
 			description: computed(() => this.Resources.NAME31974),
 		}).cloneFrom(values?.ValName))
-		this.stopWatchers.push(watch(() => this.ValName.value, (newValue, oldValue) => this.onUpdate('uicom.name', this.ValName, newValue, oldValue)))
+		watch(() => this.ValName.value, (newValue, oldValue) => this.onUpdate('uicom.name', this.ValName, newValue, oldValue))
 
 		this.ValCategory = reactive(new modelFieldType.String({
 			id: 'ValCategory',
@@ -81,7 +80,7 @@ export default class ViewModel extends FormViewModelBase
 			maxLength: 50,
 			description: computed(() => this.Resources.CATEGORY18978),
 		}).cloneFrom(values?.ValCategory))
-		this.stopWatchers.push(watch(() => this.ValCategory.value, (newValue, oldValue) => this.onUpdate('uicom.category', this.ValCategory, newValue, oldValue)))
+		watch(() => this.ValCategory.value, (newValue, oldValue) => this.onUpdate('uicom.category', this.ValCategory, newValue, oldValue))
 
 		this.ValMenuid = reactive(new modelFieldType.String({
 			id: 'ValMenuid',
@@ -91,7 +90,7 @@ export default class ViewModel extends FormViewModelBase
 			maxLength: 30,
 			description: computed(() => this.Resources.FIXED_MENU_NAME38578),
 		}).cloneFrom(values?.ValMenuid))
-		this.stopWatchers.push(watch(() => this.ValMenuid.value, (newValue, oldValue) => this.onUpdate('uicom.menuid', this.ValMenuid, newValue, oldValue)))
+		watch(() => this.ValMenuid.value, (newValue, oldValue) => this.onUpdate('uicom.menuid', this.ValMenuid, newValue, oldValue))
 	}
 
 	/**

@@ -8,7 +8,6 @@ using GenioServer.security;
 using System.Security;
 using GenioServer.framework;
 using CSGenio.config;
-using System.Security.Cryptography;
 
 namespace CSGenio
 {
@@ -94,7 +93,7 @@ namespace CSGenio
                 newElement.Users = new List<UserCfgEl>();
 
                 //Set default values for security configuration
-                newElement.AuthenticationMode = GenioServer.security.AuthenticationMode.OneButtonPerProvider;
+                newElement.AuthenticationMode = GenioServer.security.AuthenticationMode.AcceptOnFirstSucess;
 
                 IdentityProviderCfgEl identProvid = new IdentityProviderCfgEl();
                 identProvid.Name = "quidgest";
@@ -126,7 +125,7 @@ namespace CSGenio
         /// </summary>
         public bool HasAnyApplicationWith2FA()
         {
-            return Security.Any(s => s.IdentityProviders.Any(p => p.Is2FA));
+            return Security.Where(s => s.Activate2FA.Equals(GenioServer.security.Auth2FAModes.None)).Count() != Security.Count();
         }
 
         private List<PathCfgEl> m_path = null;
@@ -272,60 +271,6 @@ namespace CSGenio
             {
                 Messaging = new MessagingXml();
             }
-
-            // Ensure ChatBotConfig has a JWT encryption key when JWT mode is enabled
-            if (ChatBotConfig != null && ChatBotConfig.MCPSecurityMode == MCPSecurityMode.JWT && string.IsNullOrEmpty(ChatBotConfig.JWTEncryptionKey))
-            {
-                ChatBotConfig.JWTEncryptionKey = GenerateRandomJwtKey();
-            }
-        }
-        
-        /// <summary>
-        /// Generates a cryptographically secure random JWT encryption key
-        /// </summary>
-        /// <returns>A base64-encoded 256-bit random key suitable for JWT signing</returns>
-        private static string GenerateRandomJwtKey()
-        {
-            byte[] keyBytes = new byte[32]; // 256 bits
-            using (var rng = RandomNumberGenerator.Create())
-            {
-                rng.GetBytes(keyBytes);
-            }
-            return Convert.ToBase64String(keyBytes);
-        }
-
-        /// <summary>
-        /// Encodes a secret value for secure storage
-        /// </summary>
-        /// <param name="value">The plain text value to encode</param>
-        /// <returns>Encoded string suitable for storage/returns>
-        public static string EncodeSecret(string value)
-        {
-            if (string.IsNullOrEmpty(value))
-                return value;
-
-            return Convert.ToBase64String(Encoding.Unicode.GetBytes(value));
-        }
-
-        /// <summary>
-        /// Decodes a secret value from storage
-        /// </summary>
-        /// <param name="encodedValue">The encoded value from storage</param>
-        /// <returns>Decoded plain text string</returns>
-        public static string DecodeSecret(string encodedValue)
-        {
-            if (string.IsNullOrEmpty(encodedValue))
-                return encodedValue;
-
-            try
-            {
-                return Encoding.Unicode.GetString(Convert.FromBase64String(encodedValue));
-            }
-            catch (FormatException)
-            {
-                // The value is not valid
-                return null;
-            }
         }
 
         public void Init()
@@ -338,7 +283,6 @@ namespace CSGenio
             Elasticsearch.Colours = new List<CoreXml>();
             maisPropriedades = ExtraProperties.GetInitialValues();
             ConfigVersion = ConfigXMLMigration.CurConfigurationVerion.ToString();
-            ChatBotConfig = new ChatBotCfg();
             Messaging = new MessagingXml();
         }
 
@@ -382,49 +326,12 @@ namespace CSGenio
         }
     }
 
-    public enum MCPSecurityMode
-    {
-        JWT,
-        None
-    }
-
     [XmlRoot("ChatBotCfg")]
     public class ChatBotCfg
     {
         [CliProperty("ai-url", "Base URL for the AI service API endpoint. Should end in /api")]
         [XmlElement("apiURL")]
-        public string APIEndpoint { get; set; }
-
-        [CliProperty("mcp-security-mode", "Security mode for MCP (JWT or None)")]
-        [XmlElement("MCPSecurityMode")]
-        public MCPSecurityMode MCPSecurityMode { get; set; } = MCPSecurityMode.JWT;
-
-        [XmlElement("JWTEncryptionKey")]
-        /// <summary>
-        /// Key used for JWT symmetric encription in MCP
-        /// </summary>
-        public string JWTEncryptionKey { get; set; }
-
-        /// <summary>
-        /// Gets or sets the decoded JWT encryption key
-        /// </summary>
-        [CliProperty("jwt-encryption-key", "JWT encryption key for MCP security")]
-        [XmlIgnore]
-        public string JWTEncryptionKeyDecode
-        {
-            get
-            {
-                return ConfigurationXML.DecodeSecret(JWTEncryptionKey);
-            }
-            set
-            {
-                JWTEncryptionKey = ConfigurationXML.EncodeSecret(value);
-            }
-        }
-
-        [CliProperty("mcp-url", "Mcp URL to be used by the AI service. Should end in /mcp")]
-        [XmlElement("mcpURL")]
-        public string AppMCPEndpoint { get; set; }
+        public string apiURL { get; set; }
     }
 
     [XmlRoot("core")]
@@ -457,10 +364,14 @@ namespace CSGenio
                 encodedPassword = value;
                 if (!string.IsNullOrEmpty(encodedPassword))
                 {
-                    var decodedPassword = Encoding.UTF8.GetString(Convert.FromBase64String(encodedPassword));
-                    if (decodedPassword != null)
+                    try
                     {
+                        var decodedPassword = Encoding.UTF8.GetString(Convert.FromBase64String(encodedPassword));
                         PasswordSecured = StringHelper.GetSecureString(decodedPassword);
+                    }
+                    catch (FormatException)
+                    {
+                        // The value is not a valid base64 string
                     }
                 }
             }
@@ -498,11 +409,12 @@ namespace CSGenio
         {
             get
             {
-                return ConfigurationXML.DecodeSecret(Username);
+                if (Password == null) return null;
+                return System.Text.Encoding.Unicode.GetString(Convert.FromBase64String(Username));
             }
             set
             {
-                Username = ConfigurationXML.EncodeSecret(value);
+                Username = Convert.ToBase64String(Encoding.Unicode.GetBytes(value ?? string.Empty));
             }
         }
 
@@ -514,11 +426,12 @@ namespace CSGenio
         {
             get
             {
-                return ConfigurationXML.DecodeSecret(Password);
+                if (Password == null) return null;
+                return System.Text.Encoding.Unicode.GetString(Convert.FromBase64String(Password));
             }
             set
             {
-                Password = ConfigurationXML.EncodeSecret(value);
+                Password = Convert.ToBase64String(Encoding.Unicode.GetBytes(value ?? string.Empty));
             }
         }
 
@@ -553,11 +466,13 @@ namespace CSGenio
 
         public string PasswordDecode()
         {
-            return ConfigurationXML.DecodeSecret(Password);
+            if (Password == null) return null;
+            return System.Text.Encoding.Unicode.GetString(Convert.FromBase64String(Password));
         }
         public string LoginDecode()
         {
-            return ConfigurationXML.DecodeSecret(Login);
+            if (Login == null) return null;
+            return System.Text.Encoding.Unicode.GetString(Convert.FromBase64String(Login));
         }
 
         public framework.DatabaseType GetDatabaseType()
@@ -738,7 +653,7 @@ namespace CSGenio
 
     [XmlRoot("dictionary")]
     public class SerializableDictionary<TKey, TValue>
-        : Dictionary<TKey, TValue>, IXmlSerializable, ICloneable
+        : Dictionary<TKey, TValue>, IXmlSerializable
     {
         #region IXmlSerializable Members
         public System.Xml.Schema.XmlSchema GetSchema()
@@ -766,22 +681,22 @@ namespace CSGenio
                 reader.ReadStartElement("item");
 
                 //no attributes means we are using elements instead
-                if (ak == null)
+                if(ak == null)
                 {
-                    reader.ReadStartElement("key");
+                reader.ReadStartElement("key");
                     ak = keySerializer.Deserialize(reader);
-                    reader.ReadEndElement();
-                }
-                if (av == null)
+                reader.ReadEndElement();
+                }                
+                if(av == null)
                 {
-                    reader.ReadStartElement("value");
+                reader.ReadStartElement("value");
                     av = valueSerializer.Deserialize(reader);
-                    reader.ReadEndElement();
+                reader.ReadEndElement();
                 }
                 this.Add((TKey)ak, (TValue)av);
 
-                if (!isEmpty)
-                    reader.ReadEndElement();
+                if(!isEmpty)
+                reader.ReadEndElement();
                 reader.MoveToContent();
 
             }
@@ -798,7 +713,7 @@ namespace CSGenio
             foreach (TKey key in this.Keys)
             {
                 //string dictionarys can be simplified a single element with attributes
-                if (simplified)
+                if(simplified)
                 {
                     writer.WriteStartElement("item");
                     writer.WriteAttributeString("key", key.ToString());
@@ -807,28 +722,20 @@ namespace CSGenio
                 }
                 else //otherwise do a full key and value serialization
                 {
-                    writer.WriteStartElement("item");
-                    writer.WriteStartElement("key");
-                    keySerializer.Serialize(writer, key);
-                    writer.WriteEndElement();
-                    writer.WriteStartElement("value");
-                    TValue value = this[key];
-                    valueSerializer.Serialize(writer, value);
-                    writer.WriteEndElement();
-                    writer.WriteEndElement();
+	                writer.WriteStartElement("item");
+	                writer.WriteStartElement("key");
+	                keySerializer.Serialize(writer, key);
+	                writer.WriteEndElement();
+	                writer.WriteStartElement("value");
+	                TValue value = this[key];
+	                valueSerializer.Serialize(writer, value);
+	                writer.WriteEndElement();
+	                writer.WriteEndElement();
                 }
             }
         }
 
         #endregion
-        
-        public object Clone()
-        {
-            var res = new SerializableDictionary<TKey, TValue>();
-            foreach (var kvp in this)
-                res.Add(kvp.Key, kvp.Value);
-            return res;
-        }
     }
 
 	[Serializable]
@@ -837,6 +744,7 @@ namespace CSGenio
     {
         private AuthenticationMode m_authenticationMode;
         private MultiSessionMode m_allowMultiSessionPerUser;
+		private Auth2FAModes m_activate2FA = Auth2FAModes.None;
 		private bool m_mandatory2FA = false;
         private bool m_allowAuthenticationRecovery;
         private bool m_expirationDateBool;
@@ -860,6 +768,7 @@ namespace CSGenio
             SecurityCfgEl security = new SecurityCfgEl();
             security.m_authenticationMode = m_authenticationMode;
             security.m_allowMultiSessionPerUser = m_allowMultiSessionPerUser;
+            security.m_activate2FA = m_activate2FA;
             security.m_mandatory2FA = m_mandatory2FA;
             security.m_allowAuthenticationRecovery = m_allowAuthenticationRecovery;
             security.m_expirationDateBool = m_expirationDateBool;
@@ -945,6 +854,13 @@ namespace CSGenio
             set { m_allowMultiSessionPerUser = value; }
         }
 
+		[XmlAttribute("activate2FA")]
+        public Auth2FAModes Activate2FA
+        {
+            get { return m_activate2FA; }
+            set { m_activate2FA = value; }
+        }
+
 		[XmlAttribute("Mandatory2FA")]
         public bool Mandatory2FA
         {
@@ -1016,9 +932,6 @@ namespace CSGenio
 
         [XmlAttribute("groupSeparator")]
         public string GroupSeparator {get; set;} = " ";
-
-        [XmlAttribute("negativeFormat")]
-        public string NegativeFormat { get; set; } = "-";
     }
 
 
@@ -1110,9 +1023,9 @@ namespace CSGenio
         }
     }
 
-    [Serializable]
+	[Serializable]
     [XmlRoot("identityProvider")]
-    public class IdentityProviderCfgEl : ICloneable
+    public class IdentityProviderCfgEl: ICloneable
     {
         public object Clone()
         {
@@ -1121,8 +1034,7 @@ namespace CSGenio
                 Name = Name,
                 Description = Description,
                 Type = Type,
-                Is2FA = Is2FA,
-                Options = Options.Clone() as SerializableDictionary<string, string>
+                Config = Config
             };
 
             return identity;
@@ -1137,41 +1049,57 @@ namespace CSGenio
         [XmlAttribute("type")]
         public string Type { get; set; }
 
-        [XmlAttribute("is2fa")]
-        public bool Is2FA { get; set; } = false;
-        
-        [XmlElement("options")]
-        public SerializableDictionary<string, string> Options { get; set; } = new SerializableDictionary<string, string>();
+        [XmlAttribute("config")]
+        public string Config { get; set; }
     }
 
 	[Serializable]
     [XmlRoot("roleProvider")]
     public class RoleProviderCfgEl: ICloneable
     {
+        private string m_name;
+        private string m_type;
+        private string m_config;
+        private string m_precond;
+
         public object Clone()
         {
-            RoleProviderCfgEl role = new RoleProviderCfgEl()
-            {
-                Name = Name,
-                Type = Type,
-                Options = Options.Clone() as SerializableDictionary<string, string>,
-                Precond = Precond
-            };
+            RoleProviderCfgEl role = new RoleProviderCfgEl();
+            role.m_name = m_name;
+            role.m_type = m_type;
+            role.m_config = m_config;
+            role.m_precond = m_precond;
 
             return role;
         }
 
         [XmlAttribute("name")]
-        public string Name { get; set; }
+        public string Name
+        {
+            get { return m_name; }
+            set { m_name = value; }
+        }
 
         [XmlAttribute("type")]
-        public string Type { get; set; }
+        public string Type
+        {
+            get { return m_type; }
+            set { m_type = value; }
+        }
 
-        [XmlElement("options")]
-        public SerializableDictionary<string, string> Options { get; set; } = new SerializableDictionary<string, string>();
+        [XmlAttribute("config")]
+        public string Config
+        {
+            get { return m_config; }
+            set { m_config = value; }
+        }
 
         [XmlAttribute("precond")]
-        public string Precond { get; set; }
+        public string Precond
+        {
+            get { return m_precond; }
+            set { m_precond = value; }
+        }
     }
 
 	[XmlRoot("moreProperty")]
@@ -1307,11 +1235,13 @@ namespace CSGenio
 
         public string PasswordDecode()
         {
-            return ConfigurationXML.DecodeSecret(Password);
+            if (Password == null) return null;
+            return System.Text.Encoding.Unicode.GetString(Convert.FromBase64String(Password));
         }
         public string UsernameDecode()
         {
-            return ConfigurationXML.DecodeSecret(Username);
+            if (Username == null) return null;
+            return System.Text.Encoding.Unicode.GetString(Convert.FromBase64String(Username));
         }
 
     }

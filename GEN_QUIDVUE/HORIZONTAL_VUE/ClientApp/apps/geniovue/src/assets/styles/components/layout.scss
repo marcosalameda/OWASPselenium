@@ -6,10 +6,6 @@
 #form-container {
 	padding-right: 15px;
 	padding-left: 15px;
-
-	> .q-container {
-		padding: 0;
-	}
 }
 
 .form-flow {
@@ -64,7 +60,7 @@
 	&:not(.control-dynamic-group):not(:has(.c-groupbox)) {
 		align-self: flex-start;
 
-		&:has(.i-button) {
+		&:has(.i-button, .i-checkbox) {
 			align-self: flex-end;
 		}
 
@@ -78,13 +74,14 @@
 		width: 100%;
 	}
 
-	& > .i-text {
+	& > .i-text,
+	& > .i-textarea {
 		display: flex;
 		flex-direction: column;
 		justify-content: flex-end;
 		align-self: flex-end;
 
-		&:has(span.q-help__subtext) {
+		&:not(:has(.i-switch)):has(span.q-help__subtext) {
 			max-width: min-content;
 		}
 	}
@@ -94,6 +91,16 @@
 
 		&--inline {
 			display: inline-flex;
+		}
+	}
+
+	.form-check-inline {
+		white-space: initial !important;
+		display: block;
+
+		.i-radio,
+		.i-checkbox {
+			display: inline-block;
 		}
 	}
 
@@ -130,10 +137,19 @@
 }
 
 .control-row-group:has(.control-join-group .i-text .q-help__subtext) {
+	.control-join-group:not(.control-dynamic-group):not(:has(.c-groupbox)):has(.i-checkbox) {
+		align-self: flex-start;
+		margin-top: calc(1.5 * 0.9rem + 0.9rem);
+	}
+
 	.control-join-group:not(.control-dynamic-group):not(:has(.c-groupbox)):has(.i-button) {
 		align-self: flex-start;
 		margin-top: calc(1.5 * 0.9rem);
 	}
+}
+
+.active-filter-box .i-checkbox {
+	align-self: center;
 }
 
 .heading-button-group {
@@ -155,6 +171,14 @@
 .row-line-group {
 	& > .i-text {
 		width: 100%;
+	}
+
+	.i-textarea {
+		width: 100%;
+
+		&__field {
+			width: 100%;
+		}
 	}
 }
 
@@ -192,48 +216,6 @@
 	border-top: none;
 }
 
-.q-dialog {
-	&__header-title {
-		color: $on-background;
-		font-size: 1.25rem;
-		font-weight: 600;
-		letter-spacing: 0.02rem;
-	}
-
-	&__body {
-		padding: 1rem;
-
-		&-icon {
-			padding: 0.25rem 1rem 0.45rem 1rem;
-		}
-	}
-
-	&:not(.q-dialog-message) {
-		.q-dialog__header {
-			border-bottom: 1px solid $light;
-			padding-bottom: 1rem;
-		}
-
-		.q-dialog__footer {
-			border-top: 1px solid $light;
-			padding-top: 1rem;
-
-			&-buttons {
-				@if $btn-align-right {
-					justify-content: flex-end;
-				} @else {
-					justify-content: flex-start;
-				}
-			}
-
-			.actions {
-				display: flex;
-				gap: 0.5rem;
-			}
-		}
-	}
-}
-
 @media (max-width: 575.98px) {
 	.control-join-group {
 		white-space: normal;
@@ -242,59 +224,5 @@
 	.row {
 		margin-left: -5px;
 		margin-right: -5px;
-	}
-}
-
-.q-row {
-	--q-row-gutter: var(--q-spacing);
-}
-
-.q-col {
-	display: flex;
-	gap: var(--q-spacing);
-	align-items: end;
-
-	&-auto {
-		flex: 0 0 auto;
-		width: auto;
-		max-width: 100%;
-	}
-
-	// Make label content in the same line
-	.label-container {
-		display: flex;
-		align-items: center;
-		gap: var(--q-spacing);
-	}
-
-	// Make containers inside q-cols have the height of the col
-	.container-fluid,
-	.q-table-list {
-		height: 100%;
-	}
-
-	// Make groups ocupy the whole container (if whole line the q-col container has 100% width as well)
-	.c-groupbox {
-		width: 100%;
-		height: 100%;
-
-		> .q-container {
-			height: 100%;
-		}
-	}
-}
-
-// Remove the margins from containers inside groupboxes since they already add spacing
-.q-col > * .q-container {
-	padding-left: 0;
-	padding-right: 0;
-}
-
-// Add padding to groups that have the title background style - these groups remove paddings by default
-.q-col:not(.q-col-auto),
-.q-col {
-	> .c-groupbox--title-background > .q-container {
-		padding-left: 16px;
-		padding-right: 16px;
 	}
 }

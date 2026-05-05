@@ -1,4 +1,4 @@
-﻿/* eslint-disable @typescript-eslint/no-unused-vars */
+﻿/* eslint-disable no-unused-vars */
 import { computed, reactive, watch } from 'vue'
 import _merge from 'lodash-es/merge'
 
@@ -11,7 +11,7 @@ import netAPI from '@quidgest/clientapp/network'
 import qApi from '@/api/genio/quidgestFunctions.js'
 import qFunctions from '@/api/genio/projectFunctions.js'
 import qProjArrays from '@/api/genio/projectArrays.js'
-/* eslint-enable @typescript-eslint/no-unused-vars */
+/* eslint-enable no-unused-vars */
 
 /**
  * Represents a ViewModel class.
@@ -25,11 +25,11 @@ export default class ViewModel extends FormViewModelBase
 	 * @param {object} options - The options for the ViewModel
 	 * @param {object} values - A ViewModel instance to copy values from
 	 */
-	// eslint-disable-next-line @typescript-eslint/no-unused-vars
+	// eslint-disable-next-line no-unused-vars
 	constructor(vueContext, options, values)
 	{
 		super(vueContext, options)
-		// eslint-disable-next-line @typescript-eslint/no-unused-vars
+		// eslint-disable-next-line no-unused-vars
 		const vm = this.vueContext
 
 		// The view model metadata
@@ -37,9 +37,8 @@ export default class ViewModel extends FormViewModelBase
 			name: 'DOCSD',
 			area: 'OUDOC',
 			actions: {
-				recalculateFormulas: 'RecalculateFormulas_Docsd',
-				updateFilesTickets: 'UpdateFilesTicketsDocsd',
-				setFile: 'SetFileDocsd'
+				recalculateFormulas: 'RecalculateFormulas_DOCSD',
+				updateFilesTickets: 'UpdateFilesTicketsDOCSD'
 			}
 		})
 
@@ -51,7 +50,7 @@ export default class ViewModel extends FormViewModelBase
 			field: 'CODDOCSD',
 			description: '',
 		}).cloneFrom(values?.ValCoddocsd))
-		this.stopWatchers.push(watch(() => this.ValCoddocsd.value, (newValue, oldValue) => this.onUpdate('oudoc.coddocsd', this.ValCoddocsd, newValue, oldValue)))
+		watch(() => this.ValCoddocsd.value, (newValue, oldValue) => this.onUpdate('oudoc.coddocsd', this.ValCoddocsd, newValue, oldValue))
 
 		/** The remaining form fields. */
 		this.ValNrdocsda = reactive(new modelFieldType.Number({
@@ -63,7 +62,7 @@ export default class ViewModel extends FormViewModelBase
 			decimalDigits: 0,
 			description: computed(() => this.Resources.NO_14817),
 		}).cloneFrom(values?.ValNrdocsda))
-		this.stopWatchers.push(watch(() => this.ValNrdocsda.value, (newValue, oldValue) => this.onUpdate('oudoc.nrdocsda', this.ValNrdocsda, newValue, oldValue)))
+		watch(() => this.ValNrdocsda.value, (newValue, oldValue) => this.onUpdate('oudoc.nrdocsda', this.ValNrdocsda, newValue, oldValue))
 
 		this.ValDtdocsda = reactive(new modelFieldType.DateTime({
 			id: 'ValDtdocsda',
@@ -72,7 +71,7 @@ export default class ViewModel extends FormViewModelBase
 			field: 'DTDOCSDA',
 			description: computed(() => this.Resources.DATE18475),
 		}).cloneFrom(values?.ValDtdocsda))
-		this.stopWatchers.push(watch(() => this.ValDtdocsda.value, (newValue, oldValue) => this.onUpdate('oudoc.dtdocsda', this.ValDtdocsda, newValue, oldValue)))
+		watch(() => this.ValDtdocsda.value, (newValue, oldValue) => this.onUpdate('oudoc.dtdocsda', this.ValDtdocsda, newValue, oldValue))
 
 		this.ValTitle = reactive(new modelFieldType.String({
 			id: 'ValTitle',
@@ -82,7 +81,7 @@ export default class ViewModel extends FormViewModelBase
 			maxLength: 50,
 			description: computed(() => this.Resources.TITLE21885),
 		}).cloneFrom(values?.ValTitle))
-		this.stopWatchers.push(watch(() => this.ValTitle.value, (newValue, oldValue) => this.onUpdate('oudoc.title', this.ValTitle, newValue, oldValue)))
+		watch(() => this.ValTitle.value, (newValue, oldValue) => this.onUpdate('oudoc.title', this.ValTitle, newValue, oldValue))
 	}
 
 	/**

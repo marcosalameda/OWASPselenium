@@ -9,13 +9,12 @@
 			<div
 				v-if="showFormHeader"
 				class="c-action-bar">
-				<component
+				<h1
 					v-if="formControl.uiComponents.header && formInfo.designation"
-					:is="topHeadingTag"
 					:id="formTitleId"
 					class="form-header">
 					{{ formInfo.designation }}
-				</component>
+				</h1>
 
 				<div class="c-action-bar__menu">
 					<template
@@ -39,13 +38,9 @@
 									:label="btn.label"
 									:disabled="btn.disabled"
 									@click="btn.action">
-									<template v-if="btn.icon">
-										<q-badge-indicator
-											:enabled="btn.badge?.isVisible ?? false"
-											:color="btn.badge?.color">
-											<q-icon v-bind="btn.icon" />
-										</q-badge-indicator>
-									</template>
+									<q-icon
+										v-if="btn.icon"
+										v-bind="btn.icon" />
 								</q-toggle-group-item>
 							</template>
 						</q-toggle-group>
@@ -57,7 +52,7 @@
 				v-if="$app.layout.FormAnchorsPosition === 'form-header' && visibleGroups.length > 0"
 				:anchors="anchorGroups"
 				:controls="visibleControls"
-				@focus-control="focusControl" />
+				@focus-control="(...args) => focusControl(...args)" />
 		</div>
 	</teleport>
 
@@ -78,7 +73,6 @@
 						v-if="btn.isActive && btn.isVisible && btn.showInHeading"
 						:id="`heading-${btn.id}`"
 						:label="btn.text"
-						:color="btn.color"
 						:variant="btn.variant"
 						:disabled="btn.disabled"
 						:icon-pos="btn.iconPos"
@@ -92,21 +86,18 @@
 			</q-button-group>
 		</div>
 
-		<q-container
-			fluid
+		<div
+			class="form-flow"
 			data-key="FACILFEX"
-			:data-identifier="primaryKeyValue"
-			:data-loading="!formInitialDataLoaded || !isActiveForm">
+			:data-loading="!formInitialDataLoaded">
 			<template v-if="formControl.initialized && showFormBody">
-				<q-row v-if="controls.FACILFEXENTITNAME____.isVisible">
-					<q-col
-						v-if="controls.FACILFEXENTITNAME____.isVisible"
-						cols="auto">
+				<q-row-container v-show="controls.FACILFEXENTITNAME____.isVisible">
+					<q-control-wrapper
+						v-show="controls.FACILFEXENTITNAME____.isVisible"
+						class="${Vue.GetControlWrapperClass($controlsColumn)}">
 						<base-input-structure
-							v-if="controls.FACILFEXENTITNAME____.isVisible"
 							class="i-text"
-							v-bind="controls.FACILFEXENTITNAME____.wrapperProps"
-							:id="getControlId(controls.FACILFEXENTITNAME____)"
+							v-bind="controls.FACILFEXENTITNAME____"
 							v-on="controls.FACILFEXENTITNAME____.handlers"
 							:loading="controls.FACILFEXENTITNAME____.props.loading"
 							:reporting-mode-on="reportingModeCAV"
@@ -114,24 +105,21 @@
 							<q-lookup
 								v-if="controls.FACILFEXENTITNAME____.isVisible"
 								v-bind="controls.FACILFEXENTITNAME____.props"
-								:id="getControlId(controls.FACILFEXENTITNAME____)"
 								v-on="controls.FACILFEXENTITNAME____.handlers" />
 							<q-see-more-facilfexentitname
 								v-if="controls.FACILFEXENTITNAME____.seeMoreIsVisible"
 								v-bind="controls.FACILFEXENTITNAME____.seeMoreParams"
 								v-on="controls.FACILFEXENTITNAME____.handlers" />
 						</base-input-structure>
-					</q-col>
-				</q-row>
-				<q-row v-if="controls.FACILFEXFACILINCORPOR.isVisible">
-					<q-col
-						v-if="controls.FACILFEXFACILINCORPOR.isVisible"
-						cols="auto">
+					</q-control-wrapper>
+				</q-row-container>
+				<q-row-container v-show="controls.FACILFEXFACILINCORPOR.isVisible">
+					<q-control-wrapper
+						v-show="controls.FACILFEXFACILINCORPOR.isVisible"
+						class="${Vue.GetControlWrapperClass($controlsColumn)}">
 						<base-input-structure
-							v-if="controls.FACILFEXFACILINCORPOR.isVisible"
 							class="i-text"
-							v-bind="controls.FACILFEXFACILINCORPOR.wrapperProps"
-							:id="getControlId(controls.FACILFEXFACILINCORPOR)"
+							v-bind="controls.FACILFEXFACILINCORPOR"
 							v-on="controls.FACILFEXFACILINCORPOR.handlers"
 							:loading="controls.FACILFEXFACILINCORPOR.props.loading"
 							:reporting-mode-on="reportingModeCAV"
@@ -139,43 +127,37 @@
 							<q-date-time-picker
 								v-if="controls.FACILFEXFACILINCORPOR.isVisible"
 								v-bind="controls.FACILFEXFACILINCORPOR.props"
-								:id="getControlId(controls.FACILFEXFACILINCORPOR)"
 								:model-value="model.ValIncorpor.value"
 								@reset-icon-click="model.ValIncorpor.fnUpdateValue(model.ValIncorpor.originalValue ?? new Date())"
 								@update:model-value="model.ValIncorpor.fnUpdateValue($event ?? '')" />
 						</base-input-structure>
-					</q-col>
-				</q-row>
-				<q-row v-if="controls.FACILFEXFACILNAME____.isVisible">
-					<q-col
-						v-if="controls.FACILFEXFACILNAME____.isVisible"
-						cols="auto">
+					</q-control-wrapper>
+				</q-row-container>
+				<q-row-container v-show="controls.FACILFEXFACILNAME____.isVisible">
+					<q-control-wrapper
+						v-show="controls.FACILFEXFACILNAME____.isVisible"
+						class="${Vue.GetControlWrapperClass($controlsColumn)}">
 						<base-input-structure
-							v-if="controls.FACILFEXFACILNAME____.isVisible"
 							class="i-text"
-							v-bind="controls.FACILFEXFACILNAME____.wrapperProps"
-							:id="getControlId(controls.FACILFEXFACILNAME____)"
+							v-bind="controls.FACILFEXFACILNAME____"
 							v-on="controls.FACILFEXFACILNAME____.handlers"
 							:loading="controls.FACILFEXFACILNAME____.props.loading"
 							:reporting-mode-on="reportingModeCAV"
 							:suggestion-mode-on="suggestionModeOn">
 							<q-text-field
 								v-bind="controls.FACILFEXFACILNAME____.props"
-								:id="getControlId(controls.FACILFEXFACILNAME____)"
 								@blur="onBlur(controls.FACILFEXFACILNAME____, model.ValName.value)"
 								@change="model.ValName.fnUpdateValueOnChange" />
 						</base-input-structure>
-					</q-col>
-				</q-row>
-				<q-row v-if="controls.FACILFEXFACILFACILTYP.isVisible || controls.FACILFEXFACTYTYPE____.isVisible || controls.FACILFEXFACILLATITUDE.isVisible || controls.FACILFEXFACILLONGITUD.isVisible">
-					<q-col
-						v-if="controls.FACILFEXFACILFACILTYP.isVisible"
-						cols="auto">
+					</q-control-wrapper>
+				</q-row-container>
+				<q-row-container v-show="controls.FACILFEXFACILFACILTYP.isVisible || controls.FACILFEXFACTYTYPE____.isVisible || controls.FACILFEXFACILLATITUDE.isVisible || controls.FACILFEXFACILLONGITUD.isVisible">
+					<q-control-wrapper
+						v-show="controls.FACILFEXFACILFACILTYP.isVisible"
+						class="${Vue.GetControlWrapperClass($controlsColumn)}">
 						<base-input-structure
-							v-if="controls.FACILFEXFACILFACILTYP.isVisible"
 							class="i-text"
-							v-bind="controls.FACILFEXFACILFACILTYP.wrapperProps"
-							:id="getControlId(controls.FACILFEXFACILFACILTYP)"
+							v-bind="controls.FACILFEXFACILFACILTYP"
 							v-on="controls.FACILFEXFACILFACILTYP.handlers"
 							:loading="controls.FACILFEXFACILFACILTYP.props.loading"
 							:reporting-mode-on="reportingModeCAV"
@@ -183,18 +165,15 @@
 							<q-select
 								v-if="controls.FACILFEXFACILFACILTYP.isVisible"
 								v-bind="controls.FACILFEXFACILFACILTYP.props"
-								:id="getControlId(controls.FACILFEXFACILFACILTYP)"
 								@update:model-value="model.ValFaciltyp.fnUpdateValue" />
 						</base-input-structure>
-					</q-col>
-					<q-col
-						v-if="controls.FACILFEXFACTYTYPE____.isVisible"
-						cols="auto">
+					</q-control-wrapper>
+					<q-control-wrapper
+						v-show="controls.FACILFEXFACTYTYPE____.isVisible"
+						class="${Vue.GetControlWrapperClass($controlsColumn)}">
 						<base-input-structure
-							v-if="controls.FACILFEXFACTYTYPE____.isVisible"
 							class="i-text"
-							v-bind="controls.FACILFEXFACTYTYPE____.wrapperProps"
-							:id="getControlId(controls.FACILFEXFACTYTYPE____)"
+							v-bind="controls.FACILFEXFACTYTYPE____"
 							v-on="controls.FACILFEXFACTYTYPE____.handlers"
 							:loading="controls.FACILFEXFACTYTYPE____.props.loading"
 							:reporting-mode-on="reportingModeCAV"
@@ -202,22 +181,19 @@
 							<q-lookup
 								v-if="controls.FACILFEXFACTYTYPE____.isVisible"
 								v-bind="controls.FACILFEXFACTYTYPE____.props"
-								:id="getControlId(controls.FACILFEXFACTYTYPE____)"
 								v-on="controls.FACILFEXFACTYTYPE____.handlers" />
 							<q-see-more-facilfexfactytype
 								v-if="controls.FACILFEXFACTYTYPE____.seeMoreIsVisible"
 								v-bind="controls.FACILFEXFACTYTYPE____.seeMoreParams"
 								v-on="controls.FACILFEXFACTYTYPE____.handlers" />
 						</base-input-structure>
-					</q-col>
-					<q-col
-						v-if="controls.FACILFEXFACILLATITUDE.isVisible"
-						cols="auto">
+					</q-control-wrapper>
+					<q-control-wrapper
+						v-show="controls.FACILFEXFACILLATITUDE.isVisible"
+						class="${Vue.GetControlWrapperClass($controlsColumn)}">
 						<base-input-structure
-							v-if="controls.FACILFEXFACILLATITUDE.isVisible"
 							class="i-text"
-							v-bind="controls.FACILFEXFACILLATITUDE.wrapperProps"
-							:id="getControlId(controls.FACILFEXFACILLATITUDE)"
+							v-bind="controls.FACILFEXFACILLATITUDE"
 							v-on="controls.FACILFEXFACILLATITUDE.handlers"
 							:loading="controls.FACILFEXFACILLATITUDE.props.loading"
 							:reporting-mode-on="reportingModeCAV"
@@ -225,18 +201,15 @@
 							<q-numeric-input
 								v-if="controls.FACILFEXFACILLATITUDE.isVisible"
 								v-bind="controls.FACILFEXFACILLATITUDE.props"
-								:id="getControlId(controls.FACILFEXFACILLATITUDE)"
 								@update:model-value="model.ValLatitude.fnUpdateValue" />
 						</base-input-structure>
-					</q-col>
-					<q-col
-						v-if="controls.FACILFEXFACILLONGITUD.isVisible"
-						cols="auto">
+					</q-control-wrapper>
+					<q-control-wrapper
+						v-show="controls.FACILFEXFACILLONGITUD.isVisible"
+						class="${Vue.GetControlWrapperClass($controlsColumn)}">
 						<base-input-structure
-							v-if="controls.FACILFEXFACILLONGITUD.isVisible"
 							class="i-text"
-							v-bind="controls.FACILFEXFACILLONGITUD.wrapperProps"
-							:id="getControlId(controls.FACILFEXFACILLONGITUD)"
+							v-bind="controls.FACILFEXFACILLONGITUD"
 							v-on="controls.FACILFEXFACILLONGITUD.handlers"
 							:loading="controls.FACILFEXFACILLONGITUD.props.loading"
 							:reporting-mode-on="reportingModeCAV"
@@ -244,20 +217,17 @@
 							<q-numeric-input
 								v-if="controls.FACILFEXFACILLONGITUD.isVisible"
 								v-bind="controls.FACILFEXFACILLONGITUD.props"
-								:id="getControlId(controls.FACILFEXFACILLONGITUD)"
 								@update:model-value="model.ValLongitud.fnUpdateValue" />
 						</base-input-structure>
-					</q-col>
-				</q-row>
-				<q-row v-if="controls.FACILFEXFACILADDRESS_.isVisible">
-					<q-col
-						v-if="controls.FACILFEXFACILADDRESS_.isVisible"
-						cols="auto">
+					</q-control-wrapper>
+				</q-row-container>
+				<q-row-container v-show="controls.FACILFEXFACILADDRESS_.isVisible">
+					<q-control-wrapper
+						v-show="controls.FACILFEXFACILADDRESS_.isVisible"
+						class="${Vue.GetControlWrapperClass($controlsColumn)}">
 						<base-input-structure
-							v-if="controls.FACILFEXFACILADDRESS_.isVisible"
 							class="i-textarea"
-							v-bind="controls.FACILFEXFACILADDRESS_.wrapperProps"
-							:id="getControlId(controls.FACILFEXFACILADDRESS_)"
+							v-bind="controls.FACILFEXFACILADDRESS_"
 							v-on="controls.FACILFEXFACILADDRESS_.handlers"
 							:loading="controls.FACILFEXFACILADDRESS_.props.loading"
 							:reporting-mode-on="reportingModeCAV"
@@ -265,22 +235,21 @@
 							<q-text-area
 								v-if="controls.FACILFEXFACILADDRESS_.isVisible"
 								v-bind="controls.FACILFEXFACILADDRESS_.props"
-								:id="getControlId(controls.FACILFEXFACILADDRESS_)"
 								v-on="controls.FACILFEXFACILADDRESS_.handlers" />
 						</base-input-structure>
-					</q-col>
-				</q-row>
+					</q-control-wrapper>
+				</q-row-container>
 			</template>
-		</q-container>
+		</div>
 	</teleport>
 
-	<q-divider v-if="!isPopup && showFormFooter" />
+	<hr v-if="!isPopup && showFormFooter" />
 
 	<teleport
 		v-if="formModalIsReady && showFormFooter"
 		:to="`#${uiContainersId.footer}`"
 		:disabled="!isPopup || isNested">
-		<q-row v-if="showFormFooter">
+		<q-row-container v-if="showFormFooter">
 			<div id="footer-action-btns">
 				<template
 					v-for="btn in formButtons"
@@ -289,7 +258,6 @@
 						v-if="btn.isActive && btn.isVisible && btn.showInFooter"
 						:id="`bottom-${btn.id}`"
 						:label="btn.text"
-						:color="btn.color"
 						:variant="btn.variant"
 						:disabled="btn.disabled"
 						:icon-pos="btn.iconPos"
@@ -301,12 +269,12 @@
 					</q-button>
 				</template>
 			</div>
-		</q-row>
+		</q-row-container>
 	</teleport>
 </template>
 
 <script>
-	/* eslint-disable @typescript-eslint/no-unused-vars */
+	/* eslint-disable no-unused-vars */
 	import { computed, defineAsyncComponent, readonly } from 'vue'
 	import { useRoute } from 'vue-router'
 
@@ -326,7 +294,7 @@
 	import qApi from '@/api/genio/quidgestFunctions.js'
 	import qFunctions from '@/api/genio/projectFunctions.js'
 	import qProjArrays from '@/api/genio/projectArrays.js'
-	/* eslint-enable @typescript-eslint/no-unused-vars */
+	/* eslint-enable no-unused-vars */
 
 	import FormViewModel from './QFormFacilfexViewModel.js'
 
@@ -405,8 +373,7 @@
 					primaryKey: 'ValCodfacil',
 					designation: computed(() => this.Resources.FACILITY55206),
 					identifier: '', // Unique identifier received by route (when it's nested).
-					mode: '',
-					availableAgents: [],
+					mode: ''
 				},
 
 				formButtons: {
@@ -514,11 +481,7 @@
 						showInFooter: true,
 						isActive: true,
 						isVisible: computed(() => vm.authData.isAllowed && vm.isEditable),
-						action: vm.saveForm,
-						badge: {
-							isVisible: computed(() => vm.model?.isDirty === true),
-							color: 'highlight'
-						}
+						action: vm.saveForm
 					},
 					confirmBtn: {
 						id: 'confirm-btn',
@@ -655,7 +618,7 @@
 						label: computed(() => this.Resources.INCORPORATION10135),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						dateTimeType: 'date',
+						format: 'date',
 						controlLimits: [
 						],
 					}, this),
@@ -669,6 +632,7 @@
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						maxLength: 85,
+						labelId: 'label_FACILFEXFACILNAME____',
 						controlLimits: [
 						],
 					}, this),
@@ -682,6 +646,7 @@
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						maxLength: 1,
+						labelId: 'label_FACILFEXFACILFACILTYP',
 						arrayName: 'FacilTyp',
 						helpShortItem: 'None',
 						helpDetailedItem: 'None',
@@ -787,6 +752,8 @@
 					Facil: {
 						get ValAddress() { return vm.model.ValAddress.value },
 						set ValAddress(value) { vm.model.ValAddress.updateValue(value) },
+						get ValCodcntry() { return vm.model.ValCodcntry.value },
+						set ValCodcntry(value) { vm.model.ValCodcntry.updateValue(value) },
 						get ValCodentit() { return vm.model.ValCodentit.value },
 						set ValCodentit(value) { vm.model.ValCodentit.updateValue(value) },
 						get ValCodfacty() { return vm.model.ValCodfacty.value },
@@ -817,6 +784,8 @@
 						get entit() { return vm.model.ValCodentit },
 						/** The foreign key to the FACTY table */
 						get facty() { return vm.model.ValCodfacty },
+						/** The foreign key to the CNTRY table */
+						get cntry() { return vm.model.ValCodcntry },
 					},
 					get extraProperties() { return vm.model.extraProperties },
 				},
@@ -861,23 +830,17 @@
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 		},
 
-		beforeUnmount()
-		{
-/* eslint-disable indent, vue/html-indent, vue/script-indent */
-// USE /[MANUAL GQT COMPONENT_BEFORE_UNMOUNT FACILFEX]/
-// eslint-disable-next-line
-/* eslint-enable indent, vue/html-indent, vue/script-indent */
-		},
-
 		methods: {
 			/**
 			 * Called before form init.
 			 */
 			async beforeLoad()
 			{
+				let loadForm = true
+
 				// Execute the "Before init" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.beforeInit)
-				for (const trigger of triggers)
+				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
 				this.emitEvent('before-load-form')
@@ -887,7 +850,7 @@
 // eslint-disable-next-line
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 
-				return true
+				return loadForm
 			},
 
 			/**
@@ -897,7 +860,7 @@
 			{
 				// Execute the "After init" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.afterInit)
-				for (const trigger of triggers)
+				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
 				this.emitEvent('after-load-form')
@@ -917,33 +880,19 @@
 
 				// Execute the "Before apply" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.beforeApply)
-				for (const trigger of triggers)
+				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
-				const ticketsPromise = this.model.updateFilesTickets(true)
-				this.addBusy(ticketsPromise, this.Resources[hardcodedTexts.processing])
-				const canSetDocums = await ticketsPromise
+				const canSetDocums = await this.model.updateFilesTickets(true)
 
 				if (canSetDocums)
 				{
-					let results
-					const changesPromise = this.model.setDocumentChanges()
-					this.addBusy(changesPromise, this.Resources[hardcodedTexts.processing])
-					applyForm = await changesPromise
+					applyForm = await this.model.setDocumentChanges()
 
 					if (applyForm)
 					{
-						const insertsPromise = this.model.saveDocuments()
-						this.addBusy(insertsPromise, this.Resources[hardcodedTexts.processing])
-						results = await insertsPromise
+						const results = await this.model.saveDocuments()
 						applyForm = results.every((e) => e === true)
-					}
-
-					if (!changesPromise || (results && !results.every((e) => e === true)))
-					{
-						this.validationErrors = {
-							Erro: this.Resources.OCORREU_UM_ERRO_AO_T51884
-						}
 					}
 				}
 
@@ -964,7 +913,7 @@
 			{
 				// Execute the "After apply" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.afterApply)
-				for (const trigger of triggers)
+				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
 				this.emitEvent('after-apply-form')
@@ -984,33 +933,19 @@
 
 				// Execute the "Before save" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.beforeSave)
-				for (const trigger of triggers)
+				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
-				const ticketsPromise = this.model.updateFilesTickets()
-				this.addBusy(ticketsPromise, this.Resources[hardcodedTexts.processing])
-				const canSetDocums = await ticketsPromise
+				const canSetDocums = await this.model.updateFilesTickets()
 
 				if (canSetDocums)
 				{
-					let results
-					const changesPromise = this.model.setDocumentChanges()
-					this.addBusy(changesPromise, this.Resources[hardcodedTexts.processing])
-					saveForm = await changesPromise
+					saveForm = await this.model.setDocumentChanges()
 
 					if (saveForm)
 					{
-						const insertsPromise = this.model.saveDocuments()
-						this.addBusy(insertsPromise, this.Resources[hardcodedTexts.processing])
-						results = await insertsPromise
+						const results = await this.model.saveDocuments()
 						saveForm = results.every((e) => e === true)
-					}
-
-					if (!changesPromise || (results && !results.every((e) => e === true)))
-					{
-						this.validationErrors = {
-							Erro: this.Resources.OCORREU_UM_ERRO_AO_T51884
-						}
 					}
 				}
 
@@ -1029,9 +964,11 @@
 			 */
 			async afterSave()
 			{
+				let redirectPage = true // Set to 'false' to cancel page redirect.
+
 				// Execute the "After save" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.afterSave)
-				for (const trigger of triggers)
+				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
 				this.emitEvent('after-save-form')
@@ -1041,7 +978,7 @@
 // eslint-disable-next-line
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 
-				return true
+				return redirectPage
 			},
 
 			/**
@@ -1049,6 +986,8 @@
 			 */
 			async beforeDel()
 			{
+				let deleteForm = true // Set to 'false' to cancel form delete.
+
 				this.emitEvent('before-delete-form')
 
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
@@ -1056,7 +995,7 @@
 // eslint-disable-next-line
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 
-				return true
+				return deleteForm
 			},
 
 			/**
@@ -1064,6 +1003,8 @@
 			 */
 			async afterDel()
 			{
+				let redirectPage = true // Set to 'false' to cancel page redirect.
+
 				this.emitEvent('after-delete-form')
 
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
@@ -1071,7 +1012,7 @@
 // eslint-disable-next-line
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 
-				return true
+				return redirectPage
 			},
 
 			/**
@@ -1079,9 +1020,11 @@
 			 */
 			async beforeExit()
 			{
+				let leaveForm = true // Set to 'false' to cancel page redirect.
+
 				// Execute the "Before exit" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.beforeExit)
-				for (const trigger of triggers)
+				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
 				this.emitEvent('before-exit-form')
@@ -1091,7 +1034,7 @@
 // eslint-disable-next-line
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 
-				return true
+				return leaveForm
 			},
 
 			/**
@@ -1101,7 +1044,7 @@
 			{
 				// Execute the "After exit" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.afterExit)
-				for (const trigger of triggers)
+				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
 				this.emitEvent('after-exit-form')

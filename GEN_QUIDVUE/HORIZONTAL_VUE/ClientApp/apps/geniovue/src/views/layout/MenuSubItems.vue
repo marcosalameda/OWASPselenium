@@ -3,7 +3,7 @@
 		v-if="menu.Separates && !root"
 		class="dropdown-divider" />
 
-	<li
+	<li 
 		:id="menuId"
 		:class="menuClasses"
 		@click="closeMenu"
@@ -190,7 +190,7 @@
 					this.openSingleMenu(this.menu)
 				else
 					this.showSubMenu = true
-
+				
 				nextTick().then(() => {
 					this.dropdownToLeft = this.isSubmenuOutsideWindow(this.$refs.dropdownMenu)
 				})
@@ -222,9 +222,9 @@
 				})
 
 				//Close all sub-menus
-				for(const key in this.$refs.menuSubItem)
+				for(let key in this.$refs.menuSubItem)
 				{
-					const curMenuComponent = this.$refs?.menuSubItem[key]
+					let curMenuComponent = this.$refs?.menuSubItem[key]
 					curMenuComponent.closeMenu()
 				}
 			},
@@ -264,7 +264,7 @@
 			{
 				//Close parent menu
 				this.closeParentMenu()
-
+				
 				if (this.secondLevelMenu && this.level > 0)
 					this.executeMenuAction(this.menu.Children[0])
 
@@ -286,7 +286,7 @@
 			menuItemKeyup(event)
 			{
 				const key = event?.key
-
+				
 				switch(key)
 				{
 					case 'Escape':
@@ -299,7 +299,7 @@
 						return
 				}
 			},
-
+			
 			/**
 			 * Focusout handler for menu
 			 * @param event {object} Event object
@@ -308,9 +308,9 @@
 			{
 				const focusedElem = event?.relatedTarget
 
-				/**
-				 * If focus went to the dropdown toggle element or an element in the dropdown menu,
-				 * logically the focus is still on this menu
+				/** 
+				 * If focus went to the dropdown toggle element or an element in the dropdown menu, 
+				 * logically the focus is still on this menu 
 				 */
 				if(focusedElem === this.$refs?.menuItem?.$refs?.menuItem?.$refs?.subMenuItem
 					|| this.$refs?.dropdownMenu?.contains(focusedElem))
@@ -326,17 +326,17 @@
 			 */
 			isSubmenuOutsideWindow(container) {
 				if (!container) return false;
-
-				const rect = container.getBoundingClientRect();
-				const windowWidth = window.innerWidth;
-
+				
+				const rect = container.getBoundingClientRect(); 
+				const windowWidth = window.innerWidth; 
+				
 				return rect.right > windowWidth;
 			},
 		},
 
 		watch: {
 			isMenuOpen(newValue)
-			{
+			{	
 				if (newValue && this.level === 0 && this.hasDoubleNavbar)
 					this.$emit('change-menu', this.menu)
 			}

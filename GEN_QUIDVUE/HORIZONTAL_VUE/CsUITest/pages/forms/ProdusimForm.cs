@@ -10,55 +10,55 @@ public class ProdusimForm : Form
 	/// <summary>
 	/// Product identification
 	/// </summary>
-	public CollapsibleZoneControl PseudNovogr01 => new CollapsibleZoneControl(driver, ContainerLocator, "#PRODUSIMPSEUDNOVOGR01" + IdSuffix + "-container");
+	public CollapsibleZoneControl PseudNovogr01 => new CollapsibleZoneControl(driver, ContainerLocator, "#PRODUSIMPSEUDNOVOGR01-container");
 
 	/// <summary>
 	/// Product
 	/// </summary>
-	public BaseInputControl ProduProduct => new BaseInputControl(driver, ContainerLocator, "container-PRODUSIMPRODUPRODUCT_" + IdSuffix, "#PRODUSIMPRODUPRODUCT_" + IdSuffix);
+	public BaseInputControl ProduProduct => new BaseInputControl(driver, ContainerLocator, "container-PRODUSIMPRODUPRODUCT_", "#PRODUSIMPRODUPRODUCT_");
 
 	/// <summary>
 	/// Description
 	/// </summary>
-	public BaseInputControl ProduDescript => new BaseInputControl(driver, ContainerLocator, "container-PRODUSIMPRODUDESCRIPT" + IdSuffix, "#PRODUSIMPRODUDESCRIPT" + IdSuffix);
+	public BaseInputControl ProduDescript => new BaseInputControl(driver, ContainerLocator, "container-PRODUSIMPRODUDESCRIPT", "#PRODUSIMPRODUDESCRIPT");
 
 	/// <summary>
 	/// SKU
 	/// </summary>
-	public BaseInputControl ProduSku => new BaseInputControl(driver, ContainerLocator, "container-PRODUSIMPRODUSKU_____" + IdSuffix, "#PRODUSIMPRODUSKU_____" + IdSuffix);
+	public BaseInputControl ProduSku => new BaseInputControl(driver, ContainerLocator, "container-PRODUSIMPRODUSKU_____", "#PRODUSIMPRODUSKU_____");
 
 	/// <summary>
 	/// GTIN
 	/// </summary>
-	public BaseInputControl ProduGtin => new BaseInputControl(driver, ContainerLocator, "container-PRODUSIMPRODUGTIN____" + IdSuffix, "#PRODUSIMPRODUGTIN____" + IdSuffix);
+	public BaseInputControl ProduGtin => new BaseInputControl(driver, ContainerLocator, "container-PRODUSIMPRODUGTIN____", "#PRODUSIMPRODUGTIN____");
 
 	/// <summary>
 	/// Size
 	/// </summary>
-	public BaseInputControl ProduSize => new BaseInputControl(driver, ContainerLocator, "container-PRODUSIMPRODUSIZE____" + IdSuffix, "#PRODUSIMPRODUSIZE____" + IdSuffix);
+	public BaseInputControl ProduSize => new BaseInputControl(driver, ContainerLocator, "container-PRODUSIMPRODUSIZE____", "#PRODUSIMPRODUSIZE____");
 
 	/// <summary>
 	/// Weight
 	/// </summary>
-	public BaseInputControl ProduWeight => new BaseInputControl(driver, ContainerLocator, "container-PRODUSIMPRODUWEIGHT__" + IdSuffix, "#PRODUSIMPRODUWEIGHT__" + IdSuffix);
+	public BaseInputControl ProduWeight => new BaseInputControl(driver, ContainerLocator, "container-PRODUSIMPRODUWEIGHT__", "#PRODUSIMPRODUWEIGHT__");
 
 	/// <summary>
 	/// Location
 	/// </summary>
-	public CollapsibleZoneControl PseudNovogr02 => new CollapsibleZoneControl(driver, ContainerLocator, "#PRODUSIMPSEUDNOVOGR02" + IdSuffix + "-container");
+	public IWebElement PseudNovogr02 => throw new NotImplementedException();
 
 	/// <summary>
 	/// Global Location Number
 	/// </summary>
-	public LookupControl LocatGln => new LookupControl(driver, ContainerLocator, "container-PRODUSIMLOCATGLN_____" + IdSuffix);
-	public SeeMorePage LocatGlnSeeMorePage => new SeeMorePage(driver, "PRODUSIM", "PRODUSIMLOCATGLN_____" + IdSuffix);
+	public LookupControl LocatGln => new LookupControl(driver, ContainerLocator, "container-PRODUSIMLOCATGLN_____");
+	public SeeMorePage LocatGlnSeeMorePage => new SeeMorePage(driver, "PRODUSIM", "PRODUSIMLOCATGLN_____");
 
 	/// <summary>
 	/// GLN Extension Component
 	/// </summary>
-	public LookupControl LcextGlnext => new LookupControl(driver, ContainerLocator, "container-PRODUSIMLCEXTGLNEXT__" + IdSuffix);
-	public SeeMorePage LcextGlnextSeeMorePage => new SeeMorePage(driver, "PRODUSIM", "PRODUSIMLCEXTGLNEXT__" + IdSuffix);
+	public LookupControl LcextGlnext => new LookupControl(driver, ContainerLocator, "container-PRODUSIMLCEXTGLNEXT__");
+	public SeeMorePage LcextGlnextSeeMorePage => new SeeMorePage(driver, "PRODUSIM", "PRODUSIMLCEXTGLNEXT__");
 
-	public ProdusimForm(IWebDriver driver, FORM_MODE mode, By? containerLocator = null, bool usePkInId = false)
-		: base(driver, mode, "PRODUSIM", containerLocator: containerLocator, usePkInId: usePkInId) { }
+	public ProdusimForm(IWebDriver driver, FORM_MODE mode, By? containerLocator = null)
+		: base(driver, mode, "PRODUSIM", containerLocator: containerLocator) { }
 }

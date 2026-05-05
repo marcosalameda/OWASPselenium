@@ -57,7 +57,6 @@ public class WMS_Menu_211_ViewModel : KanbanBaseViewModel<CSGenioAdisst, CSGenio
 		return args;
 	}
 
-	protected override CSGenioAdispa GetCardRecord(PersistentSupport sp, string id, User user) => CSGenioAdispa.search(sp, id, user);
 }
 
 public class WMS_Menu_211ColumnViewModel(CSGenioAdisst row) : KanbanRowBaseViewModel<CSGenioAdisst>(row)

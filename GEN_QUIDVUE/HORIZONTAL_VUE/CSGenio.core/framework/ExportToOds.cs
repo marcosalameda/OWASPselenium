@@ -8,8 +8,6 @@ using System.Reflection;
 using System.Xml;
 using static CSGenio.framework.Exports;
 
-namespace CSGenio.framework;
-
 public class ExportToODS
 {
     // Namespaces. We need this to initialize XmlNamespaceManager so that we can search XmlDocument.

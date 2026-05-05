@@ -18,15 +18,12 @@ export default class ViewModelBase
 		// The Vue context properties.
 		Object.defineProperty(this, 'vueContext', {
 			value: (vueContext || {}),
-			enumerable: false,
-			writable: true,
-			configurable: true
+			enumerable: false
 		})
 
 		Object.defineProperty(this, 'Resources', {
 			get() { return this.vueContext.Resources },
-			enumerable: false,
-			configurable: true
+			enumerable: false
 		})
 
 		Object.defineProperty(this, 'navigationId', {
@@ -41,18 +38,10 @@ export default class ViewModelBase
 			enumerable: false
 		})
 
-		// The internal version of the view model.
-		Object.defineProperty(this, 'version', {
-			value: 1,
-			enumerable: false,
-			writable: true
-		})
-
 		// Internal events for the formulas.
 		Object.defineProperty(this, 'internalEvents', {
 			value: markRaw(new QEventEmitter()),
-			enumerable: false,
-			configurable: true
+			enumerable: false
 		})
 
 		// External callback for invocation of external methods such as onUpdate of fields.
@@ -61,9 +50,7 @@ export default class ViewModelBase
 				onUpdate: options?.callbacks?.onUpdate,
 				setFormKey: options?.callbacks?.setFormKey
 			}),
-			enumerable: false,
-			writable: true,
-			configurable: true
+			enumerable: false
 		})
 
 		// The extra properties of the form or menu.
@@ -83,18 +70,6 @@ export default class ViewModelBase
 		// List of server warnings associated to the model.
 		Object.defineProperty(this, 'serverWarningMessages', {
 			value: [],
-			enumerable: false,
-			writable: true
-		})
-
-		Object.defineProperty(this, 'stopWatchers', {
-			value: [],
-			enumerable: false,
-			writable: true
-		})
-
-		Object.defineProperty(this, 'canSaveWithWarnings', {
-			value: false,
 			enumerable: false,
 			writable: true
 		})
@@ -121,7 +96,7 @@ export default class ViewModelBase
 		if (this.serverWarningMessages.length > 0)
 			return true
 
-		for (const modelField in this)
+		for (let modelField in this)
 			if (this[modelField].hasServerWarningMessages)
 				return true
 		return false
@@ -136,7 +111,7 @@ export default class ViewModelBase
 		if (this.serverErrorMessages.length > 0)
 			return true
 
-		for (const modelField in this)
+		for (let modelField in this)
 			if (this[modelField].hasServerErrorMessages)
 				return true
 		return false
@@ -147,15 +122,15 @@ export default class ViewModelBase
 	 */
 	get serverObjModel()
 	{
-		const viewModel = {
-			canSaveWithWarnings: this.canSaveWithWarnings
-		}
+		const viewModel = {}
 
-		for (const modelField in this)
+		for (let modelField in this)
 		{
 			const fieldObj = this[modelField]
 
-			if (fieldObj instanceof Base && !fieldObj.ignoreFldSubmit)
+			if (fieldObj instanceof Base &&
+				fieldObj.type !== 'Lookup' &&
+				fieldObj.ignoreFldSubmit !== true)
 			{
 				const value = fieldObj.serverValue
 				viewModel[modelField] = value
@@ -175,7 +150,7 @@ export default class ViewModelBase
 		if (!(otherModel instanceof ViewModelBase))
 			return false
 
-		for (const modelField in this)
+		for (let modelField in this)
 		{
 			const fieldObj = this[modelField]
 
@@ -201,7 +176,7 @@ export default class ViewModelBase
 	 */
 	hydrate(rawData)
 	{
-		for (const modelField in this)
+		for (let modelField in this)
 			if (this[modelField] instanceof Base)
 				this.hydrateField(modelField, rawData)
 
@@ -223,15 +198,13 @@ export default class ViewModelBase
 	{
 		const fieldObj = this[modelField]
 
-		if (!(fieldObj instanceof Base) || !_has(rawData, modelField))
+		if (!(fieldObj instanceof Base) || fieldObj.isReady || !_has(rawData, modelField))
 			return
 
-		const fieldData = rawData[modelField]
+		let rawDataFieldValue = rawData[modelField]
 
-		if (fieldData instanceof Base)
-			fieldObj.cloneFrom(fieldData)
-		else
-			fieldObj.hydrate(fieldData)
+		if (typeof fieldObj.hydrate === 'function')
+			fieldObj.hydrate(rawDataFieldValue)
 	}
 
 	/**
@@ -334,7 +307,7 @@ export default class ViewModelBase
 	clearServerErrorMessages()
 	{
 		this.serverErrorMessages.splice(0)
-		for (const modelField in this)
+		for (let modelField in this)
 			this[modelField].clearServerErrorMessages()
 	}
 
@@ -355,22 +328,12 @@ export default class ViewModelBase
 	}
 
 	/**
-	 * Allows saving even when warnings are present.
-	 *
-	 * @param {boolean} enabled - If true, saving is permitted despite warnings.
-	 * @returns {void}
-	 */
-	allowSavingWithWarnings(enabled) {
-		this.canSaveWithWarnings = enabled ?? false
-	}
-
-	/**
 	 * Clears the server warning messages associated with the field.
 	 */
 	clearServerWarningMessages()
 	{
 		this.serverWarningMessages.splice(0)
-		for (const modelField in this)
+		for (let modelField in this)
 			this[modelField].clearServerErrorMessages()
 	}
 
@@ -379,12 +342,7 @@ export default class ViewModelBase
 	 */
 	unbindEvents()
 	{
-		this.internalEvents?.removeAllListeners()
-
-		this.stopWatchers?.forEach((stopWatcher) => {
-			stopWatcher()
-		})
-		this.stopWatchers?.splice(0)
+		this.internalEvents.removeAllListeners()
 	}
 
 	/**
@@ -393,19 +351,5 @@ export default class ViewModelBase
 	destroy()
 	{
 		this.unbindEvents()
-
-		this.externalCallbacks = null
-		delete this.externalCallbacks
-
-		for (const modelField in this)
-		{
-			if (this[modelField] instanceof Base)
-				this[modelField].destroy()
-		}
-
-		delete this.Resources
-		delete this.navigationId
-		delete this.internalEvents
-		this.vueContext = null
 	}
 }

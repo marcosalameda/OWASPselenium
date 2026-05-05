@@ -1,5 +1,4 @@
-﻿import { toValue } from 'vue'
-import { useSystemDataStore } from '@quidgest/clientapp/stores'
+﻿import { useSystemDataStore } from '@quidgest/clientapp/stores'
 import { useTracingDataStore } from '@quidgest/clientapp/stores'
 import genericFunctions from '@quidgest/clientapp/utils/genericFunctions'
 
@@ -54,7 +53,7 @@ export default {
 		 */
 		executeMenuAction(_menuEntry)
 		{
-			const menuEntry = toValue(getMenu(_menuEntry))
+			const menuEntry = getMenu(_menuEntry)
 
 			// Trigger before executing event
 			this.$eventHub.emit('before-execute-menu-action', { module: this.currentModule, id: menuEntry.Id, menu: menuEntry })
@@ -132,7 +131,7 @@ export default {
 			if (menuEntry.RouteName)
 				href = this.linkToRouteName(menuEntry.RouteName, menuEntry.IsForm ? { mode: menuEntry.Mode } : {})
 
-			return href ?? '#'
+			return href ?? 'javascript:void(0)'
 		}
 	}
 }

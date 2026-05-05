@@ -10,40 +10,40 @@ public class EvcatForm : Form
 	/// <summary>
 	/// Name
 	/// </summary>
-	public LookupControl PessoName => new LookupControl(driver, ContainerLocator, "container-EVCAT___PESSONAME____" + IdSuffix);
-	public SeeMorePage PessoNameSeeMorePage => new SeeMorePage(driver, "EVCAT", "EVCAT___PESSONAME____" + IdSuffix);
+	public LookupControl PessoName => new LookupControl(driver, ContainerLocator, "container-EVCAT___PESSONAME____");
+	public SeeMorePage PessoNameSeeMorePage => new SeeMorePage(driver, "EVCAT", "EVCAT___PESSONAME____");
 
 	/// <summary>
 	/// Category
 	/// </summary>
-	public LookupControl Cate1Category => new LookupControl(driver, ContainerLocator, "container-EVCAT___CATE1CATEGORY" + IdSuffix);
-	public SeeMorePage Cate1CategorySeeMorePage => new SeeMorePage(driver, "EVCAT", "EVCAT___CATE1CATEGORY" + IdSuffix);
+	public LookupControl Cate1Category => new LookupControl(driver, ContainerLocator, "container-EVCAT___CATE1CATEGORY");
+	public SeeMorePage Cate1CategorySeeMorePage => new SeeMorePage(driver, "EVCAT", "EVCAT___CATE1CATEGORY");
 
 	/// <summary>
 	/// Since:
 	/// </summary>
-	public DateInputControl EvcatSince => new DateInputControl(driver, ContainerLocator, "#EVCAT___EVCATSINCE___" + IdSuffix);
+	public DateInputControl EvcatSince => new DateInputControl(driver, ContainerLocator, "#EVCAT___EVCATSINCE___");
 
 	/// <summary>
 	/// Until
 	/// </summary>
-	public DateInputControl EvcatUntil => new DateInputControl(driver, ContainerLocator, "#EVCAT___EVCATUNTIL___" + IdSuffix);
+	public DateInputControl EvcatUntil => new DateInputControl(driver, ContainerLocator, "#EVCAT___EVCATUNTIL___");
 
 	/// <summary>
 	/// End
 	/// </summary>
-	public DateInputControl EvcatUntilman => new DateInputControl(driver, ContainerLocator, "#EVCAT___EVCATUNTILMAN" + IdSuffix);
+	public DateInputControl EvcatUntilman => new DateInputControl(driver, ContainerLocator, "#EVCAT___EVCATUNTILMAN");
 
 	/// <summary>
 	/// End of period
 	/// </summary>
-	public DateInputControl EvcatFimperio => new DateInputControl(driver, ContainerLocator, "#EVCAT___EVCATFIMPERIO" + IdSuffix);
+	public DateInputControl EvcatFimperio => new DateInputControl(driver, ContainerLocator, "#EVCAT___EVCATFIMPERIO");
 
 	/// <summary>
 	/// Observation
 	/// </summary>
-	public BaseInputControl EvcatObservat => new BaseInputControl(driver, ContainerLocator, "container-EVCAT___EVCATOBSERVAT" + IdSuffix, "#EVCAT___EVCATOBSERVAT" + IdSuffix);
+	public BaseInputControl EvcatObservat => new BaseInputControl(driver, ContainerLocator, "container-EVCAT___EVCATOBSERVAT", "#EVCAT___EVCATOBSERVAT");
 
-	public EvcatForm(IWebDriver driver, FORM_MODE mode, By? containerLocator = null, bool usePkInId = false)
-		: base(driver, mode, "EVCAT", containerLocator: containerLocator, usePkInId: usePkInId) { }
+	public EvcatForm(IWebDriver driver, FORM_MODE mode, By? containerLocator = null)
+		: base(driver, mode, "EVCAT", containerLocator: containerLocator) { }
 }

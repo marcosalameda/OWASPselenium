@@ -1,4 +1,4 @@
-﻿/* eslint-disable @typescript-eslint/no-unused-vars */
+﻿/* eslint-disable no-unused-vars */
 import { computed, reactive, watch } from 'vue'
 import _merge from 'lodash-es/merge'
 
@@ -11,7 +11,7 @@ import netAPI from '@quidgest/clientapp/network'
 import qApi from '@/api/genio/quidgestFunctions.js'
 import qFunctions from '@/api/genio/projectFunctions.js'
 import qProjArrays from '@/api/genio/projectArrays.js'
-/* eslint-enable @typescript-eslint/no-unused-vars */
+/* eslint-enable no-unused-vars */
 
 /**
  * Represents a ViewModel class.
@@ -25,11 +25,11 @@ export default class ViewModel extends FormViewModelBase
 	 * @param {object} options - The options for the ViewModel
 	 * @param {object} values - A ViewModel instance to copy values from
 	 */
-	// eslint-disable-next-line @typescript-eslint/no-unused-vars
+	// eslint-disable-next-line no-unused-vars
 	constructor(vueContext, options, values)
 	{
 		super(vueContext, options)
-		// eslint-disable-next-line @typescript-eslint/no-unused-vars
+		// eslint-disable-next-line no-unused-vars
 		const vm = this.vueContext
 
 		// The view model metadata
@@ -37,9 +37,8 @@ export default class ViewModel extends FormViewModelBase
 			name: 'VISIT',
 			area: 'VISIT',
 			actions: {
-				recalculateFormulas: 'RecalculateFormulas_Visit',
-				updateFilesTickets: 'UpdateFilesTicketsVisit',
-				setFile: 'SetFileVisit'
+				recalculateFormulas: 'RecalculateFormulas_VISIT',
+				updateFilesTickets: 'UpdateFilesTicketsVISIT'
 			}
 		})
 
@@ -51,7 +50,7 @@ export default class ViewModel extends FormViewModelBase
 			field: 'CODVISIT',
 			description: '',
 		}).cloneFrom(values?.ValCodvisit))
-		this.stopWatchers.push(watch(() => this.ValCodvisit.value, (newValue, oldValue) => this.onUpdate('visit.codvisit', this.ValCodvisit, newValue, oldValue)))
+		watch(() => this.ValCodvisit.value, (newValue, oldValue) => this.onUpdate('visit.codvisit', this.ValCodvisit, newValue, oldValue))
 
 		/** The used foreign keys. */
 		this.ValCodequip = reactive(new modelFieldType.ForeignKey({
@@ -62,7 +61,7 @@ export default class ViewModel extends FormViewModelBase
 			relatedArea: 'EQUIP',
 			description: '',
 		}).cloneFrom(values?.ValCodequip))
-		this.stopWatchers.push(watch(() => this.ValCodequip.value, (newValue, oldValue) => this.onUpdate('visit.codequip', this.ValCodequip, newValue, oldValue)))
+		watch(() => this.ValCodequip.value, (newValue, oldValue) => this.onUpdate('visit.codequip', this.ValCodequip, newValue, oldValue))
 
 		/** The remaining form fields. */
 		this.TableEquipRegistnr = reactive(new modelFieldType.String({
@@ -73,9 +72,8 @@ export default class ViewModel extends FormViewModelBase
 			field: 'REGISTNR',
 			maxLength: 6,
 			description: computed(() => this.Resources.NO__REGISTER04207),
-			ignoreFldSubmit: true,
 		}).cloneFrom(values?.TableEquipRegistnr))
-		this.stopWatchers.push(watch(() => this.TableEquipRegistnr.value, (newValue, oldValue) => this.onUpdate('equip.registnr', this.TableEquipRegistnr, newValue, oldValue)))
+		watch(() => this.TableEquipRegistnr.value, (newValue, oldValue) => this.onUpdate('equip.registnr', this.TableEquipRegistnr, newValue, oldValue))
 
 		this.ValTitle = reactive(new modelFieldType.String({
 			id: 'ValTitle',
@@ -85,7 +83,7 @@ export default class ViewModel extends FormViewModelBase
 			maxLength: 85,
 			description: computed(() => this.Resources.TITLE21885),
 		}).cloneFrom(values?.ValTitle))
-		this.stopWatchers.push(watch(() => this.ValTitle.value, (newValue, oldValue) => this.onUpdate('visit.title', this.ValTitle, newValue, oldValue)))
+		watch(() => this.ValTitle.value, (newValue, oldValue) => this.onUpdate('visit.title', this.ValTitle, newValue, oldValue))
 
 		this.ValStartdt = reactive(new modelFieldType.DateTime({
 			id: 'ValStartdt',
@@ -94,7 +92,7 @@ export default class ViewModel extends FormViewModelBase
 			field: 'STARTDT',
 			description: computed(() => this.Resources.BEGINNING18124),
 		}).cloneFrom(values?.ValStartdt))
-		this.stopWatchers.push(watch(() => this.ValStartdt.value, (newValue, oldValue) => this.onUpdate('visit.startdt', this.ValStartdt, newValue, oldValue)))
+		watch(() => this.ValStartdt.value, (newValue, oldValue) => this.onUpdate('visit.startdt', this.ValStartdt, newValue, oldValue))
 
 		this.ValDtfim = reactive(new modelFieldType.DateTime({
 			id: 'ValDtfim',
@@ -103,7 +101,7 @@ export default class ViewModel extends FormViewModelBase
 			field: 'DTFIM',
 			description: computed(() => this.Resources.END47577),
 		}).cloneFrom(values?.ValDtfim))
-		this.stopWatchers.push(watch(() => this.ValDtfim.value, (newValue, oldValue) => this.onUpdate('visit.dtfim', this.ValDtfim, newValue, oldValue)))
+		watch(() => this.ValDtfim.value, (newValue, oldValue) => this.onUpdate('visit.dtfim', this.ValDtfim, newValue, oldValue))
 
 		this.ValDescript = reactive(new modelFieldType.MultiLineString({
 			type: 'TextEditor',
@@ -113,7 +111,7 @@ export default class ViewModel extends FormViewModelBase
 			field: 'DESCRIPT',
 			description: computed(() => this.Resources.DESCRIPTION07383),
 		}).cloneFrom(values?.ValDescript))
-		this.stopWatchers.push(watch(() => this.ValDescript.value, (newValue, oldValue) => this.onUpdate('visit.descript', this.ValDescript, newValue, oldValue)))
+		watch(() => this.ValDescript.value, (newValue, oldValue) => this.onUpdate('visit.descript', this.ValDescript, newValue, oldValue))
 
 		this.ValTodoodia = reactive(new modelFieldType.Boolean({
 			id: 'ValTodoodia',
@@ -122,7 +120,7 @@ export default class ViewModel extends FormViewModelBase
 			field: 'TODOODIA',
 			description: computed(() => this.Resources.DAY27593),
 		}).cloneFrom(values?.ValTodoodia))
-		this.stopWatchers.push(watch(() => this.ValTodoodia.value, (newValue, oldValue) => this.onUpdate('visit.todoodia', this.ValTodoodia, newValue, oldValue)))
+		watch(() => this.ValTodoodia.value, (newValue, oldValue) => this.onUpdate('visit.todoodia', this.ValTodoodia, newValue, oldValue))
 
 		this.ValColor = reactive(new modelFieldType.String({
 			id: 'ValColor',
@@ -132,7 +130,7 @@ export default class ViewModel extends FormViewModelBase
 			maxLength: 50,
 			description: computed(() => this.Resources.COLOR55628),
 		}).cloneFrom(values?.ValColor))
-		this.stopWatchers.push(watch(() => this.ValColor.value, (newValue, oldValue) => this.onUpdate('visit.color', this.ValColor, newValue, oldValue)))
+		watch(() => this.ValColor.value, (newValue, oldValue) => this.onUpdate('visit.color', this.ValColor, newValue, oldValue))
 
 		this.ValObservat = reactive(new modelFieldType.String({
 			id: 'ValObservat',
@@ -142,7 +140,7 @@ export default class ViewModel extends FormViewModelBase
 			maxLength: 50,
 			description: computed(() => this.Resources.OBSERVATIONS03729),
 		}).cloneFrom(values?.ValObservat))
-		this.stopWatchers.push(watch(() => this.ValObservat.value, (newValue, oldValue) => this.onUpdate('visit.observat', this.ValObservat, newValue, oldValue)))
+		watch(() => this.ValObservat.value, (newValue, oldValue) => this.onUpdate('visit.observat', this.ValObservat, newValue, oldValue))
 	}
 
 	/**

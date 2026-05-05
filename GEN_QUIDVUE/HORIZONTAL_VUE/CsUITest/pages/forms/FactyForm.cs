@@ -10,73 +10,73 @@ public class FactyForm : Form
 	/// <summary>
 	/// Facility type
 	/// </summary>
-	public BaseInputControl FactyType => new BaseInputControl(driver, ContainerLocator, "container-FACTY___FACTYTYPE____" + IdSuffix, "#FACTY___FACTYTYPE____" + IdSuffix);
+	public BaseInputControl FactyType => new BaseInputControl(driver, ContainerLocator, "container-FACTY___FACTYTYPE____", "#FACTY___FACTYTYPE____");
 
 	/// <summary>
 	/// Layer name
 	/// </summary>
-	public BaseInputControl FactyLayrname => new BaseInputControl(driver, ContainerLocator, "container-FACTY___FACTYLAYRNAME" + IdSuffix, "#FACTY___FACTYLAYRNAME" + IdSuffix);
+	public BaseInputControl FactyLayrname => new BaseInputControl(driver, ContainerLocator, "container-FACTY___FACTYLAYRNAME", "#FACTY___FACTYLAYRNAME");
 
 	/// <summary>
 	/// Icon URL
 	/// </summary>
-	public BaseInputControl FactyIconurl => new BaseInputControl(driver, ContainerLocator, "container-FACTY___FACTYICONURL_" + IdSuffix, "#FACTY___FACTYICONURL_" + IdSuffix);
+	public BaseInputControl FactyIconurl => new BaseInputControl(driver, ContainerLocator, "container-FACTY___FACTYICONURL_", "#FACTY___FACTYICONURL_");
 
 	/// <summary>
 	/// Shadow URL
 	/// </summary>
-	public BaseInputControl FactyShadowur => new BaseInputControl(driver, ContainerLocator, "container-FACTY___FACTYSHADOWUR" + IdSuffix, "#FACTY___FACTYSHADOWUR" + IdSuffix);
+	public BaseInputControl FactyShadowur => new BaseInputControl(driver, ContainerLocator, "container-FACTY___FACTYSHADOWUR", "#FACTY___FACTYSHADOWUR");
 
 	/// <summary>
 	/// Icon anchor (x-axis)
 	/// </summary>
-	public BaseInputControl FactyIconancx => new BaseInputControl(driver, ContainerLocator, "container-FACTY___FACTYICONANCX" + IdSuffix, "#FACTY___FACTYICONANCX" + IdSuffix);
+	public BaseInputControl FactyIconancx => new BaseInputControl(driver, ContainerLocator, "container-FACTY___FACTYICONANCX", "#FACTY___FACTYICONANCX");
 
 	/// <summary>
 	/// Icon anchor (y-axis)
 	/// </summary>
-	public BaseInputControl FactyIconancy => new BaseInputControl(driver, ContainerLocator, "container-FACTY___FACTYICONANCY" + IdSuffix, "#FACTY___FACTYICONANCY" + IdSuffix);
+	public BaseInputControl FactyIconancy => new BaseInputControl(driver, ContainerLocator, "container-FACTY___FACTYICONANCY", "#FACTY___FACTYICONANCY");
 
 	/// <summary>
 	/// Icon height
 	/// </summary>
-	public BaseInputControl FactyIconheig => new BaseInputControl(driver, ContainerLocator, "container-FACTY___FACTYICONHEIG" + IdSuffix, "#FACTY___FACTYICONHEIG" + IdSuffix);
+	public BaseInputControl FactyIconheig => new BaseInputControl(driver, ContainerLocator, "container-FACTY___FACTYICONHEIG", "#FACTY___FACTYICONHEIG");
 
 	/// <summary>
 	/// Icon width
 	/// </summary>
-	public BaseInputControl FactyIconwid => new BaseInputControl(driver, ContainerLocator, "container-FACTY___FACTYICONWID_" + IdSuffix, "#FACTY___FACTYICONWID_" + IdSuffix);
+	public BaseInputControl FactyIconwid => new BaseInputControl(driver, ContainerLocator, "container-FACTY___FACTYICONWID_", "#FACTY___FACTYICONWID_");
 
 	/// <summary>
 	/// Popup anchor (x-axis)
 	/// </summary>
-	public BaseInputControl FactyPopupanx => new BaseInputControl(driver, ContainerLocator, "container-FACTY___FACTYPOPUPANX" + IdSuffix, "#FACTY___FACTYPOPUPANX" + IdSuffix);
+	public BaseInputControl FactyPopupanx => new BaseInputControl(driver, ContainerLocator, "container-FACTY___FACTYPOPUPANX", "#FACTY___FACTYPOPUPANX");
 
 	/// <summary>
 	/// Popup anchor (y-axis)
 	/// </summary>
-	public BaseInputControl FactyPopupany => new BaseInputControl(driver, ContainerLocator, "container-FACTY___FACTYPOPUPANY" + IdSuffix, "#FACTY___FACTYPOPUPANY" + IdSuffix);
+	public BaseInputControl FactyPopupany => new BaseInputControl(driver, ContainerLocator, "container-FACTY___FACTYPOPUPANY", "#FACTY___FACTYPOPUPANY");
 
 	/// <summary>
 	/// Shadow anchor (x-axis)
 	/// </summary>
-	public BaseInputControl FactyShadowax => new BaseInputControl(driver, ContainerLocator, "container-FACTY___FACTYSHADOWAX" + IdSuffix, "#FACTY___FACTYSHADOWAX" + IdSuffix);
+	public BaseInputControl FactyShadowax => new BaseInputControl(driver, ContainerLocator, "container-FACTY___FACTYSHADOWAX", "#FACTY___FACTYSHADOWAX");
 
 	/// <summary>
 	/// Shadow anchor (y-axis)
 	/// </summary>
-	public BaseInputControl FactyShadoway => new BaseInputControl(driver, ContainerLocator, "container-FACTY___FACTYSHADOWAY" + IdSuffix, "#FACTY___FACTYSHADOWAY" + IdSuffix);
+	public BaseInputControl FactyShadoway => new BaseInputControl(driver, ContainerLocator, "container-FACTY___FACTYSHADOWAY", "#FACTY___FACTYSHADOWAY");
 
 	/// <summary>
 	/// Shadow height
 	/// </summary>
-	public BaseInputControl FactyShadowhe => new BaseInputControl(driver, ContainerLocator, "container-FACTY___FACTYSHADOWHE" + IdSuffix, "#FACTY___FACTYSHADOWHE" + IdSuffix);
+	public BaseInputControl FactyShadowhe => new BaseInputControl(driver, ContainerLocator, "container-FACTY___FACTYSHADOWHE", "#FACTY___FACTYSHADOWHE");
 
 	/// <summary>
 	/// Shadow width
 	/// </summary>
-	public BaseInputControl FactyShadowwi => new BaseInputControl(driver, ContainerLocator, "container-FACTY___FACTYSHADOWWI" + IdSuffix, "#FACTY___FACTYSHADOWWI" + IdSuffix);
+	public BaseInputControl FactyShadowwi => new BaseInputControl(driver, ContainerLocator, "container-FACTY___FACTYSHADOWWI", "#FACTY___FACTYSHADOWWI");
 
-	public FactyForm(IWebDriver driver, FORM_MODE mode, By? containerLocator = null, bool usePkInId = false)
-		: base(driver, mode, "FACTY", containerLocator: containerLocator, usePkInId: usePkInId) { }
+	public FactyForm(IWebDriver driver, FORM_MODE mode, By? containerLocator = null)
+		: base(driver, mode, "FACTY", containerLocator: containerLocator) { }
 }

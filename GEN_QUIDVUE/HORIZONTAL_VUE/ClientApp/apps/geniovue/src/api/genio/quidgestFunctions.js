@@ -1,7 +1,7 @@
 ﻿import { v4 as uuidv4 } from 'uuid'
 
 // Set this variable to true in order to enable logging.
-const enableLogCmd = false
+var enableLogCmd = false
 
 //*********************************************
 //*********************************************
@@ -16,7 +16,7 @@ function qapi()
 
 qapi.prototype.LogCmd = function (id, args)
 { //Fazer log da execução dos comandos.  Uso interno.
-	let w = id + "(";
+	var w = id + "(";
 	if (args !== null && args !== undefined)
 	{
 		for (let i = 0; i < args.length; i++)
@@ -57,7 +57,7 @@ qapi.prototype.LogCmd = function (id, args)
 
 qapi.prototype.Today = function ()
 {
-	const now = new Date();
+	var now = new Date();
 	return new Date(Date.UTC(now.getFullYear(), now.getMonth(), now.getDate(), 0, 0, 0, 0));
 }
 
@@ -81,7 +81,7 @@ qapi.prototype.Agora = function ()
 
 qapi.prototype.RGB = function (red, green, blue) //** retorna o hexadecimal
 {
-	let hexa = "#"
+	var hexa = "#"
 
 	hexa += red.toString(16).length < 2 ? "0" + red.toString(16) : red.toString(16)
 	hexa += green.toString(16).length < 2 ? "0" + green.toString(16) : green.toString(16)
@@ -89,31 +89,17 @@ qapi.prototype.RGB = function (red, green, blue) //** retorna o hexadecimal
 	return hexa
 }
 
-qapi.prototype.iif = function (test, v1, v2) {
+qapi.prototype.iif = function (teste, v1, v2)
+{ //** apenas para compatibilidade    o iif será implementado na geração
 	this.LogCmd("iif", arguments);
-
-	//JGF This function used to do eval(test), but that is unsafe, and the implementation was changed
-	if (typeof test === "boolean") {
-		return test ? v1 : v2;
-	}
-
-	if (typeof test === "number") {
-		// maintain legacy: only 1 is true
-		return (test === 1) ? v1 : v2;
-	}
-
-	if (typeof test === "string") {
-		const s = test.trim().toLowerCase();
-		if (s === "true" || s === "1") return v1;
-		if (s === "false" || s === "0" || s === "") return v2;
-
-		this.LogCmd("WARN: qapi.iif - string expressions are no longer supported");
+	if (eval(teste) === true || teste === 1 || teste === true)
+	{
+		return v1;
+	} else
+	{
 		return v2;
 	}
-
-	this.LogCmd("WARN: qapi.iif -  test type not supported");
-	return v2; // default: false
-};
+}
 
 qapi.prototype.emptyD = function (date)
 { //** retorna 1 se data vazia ou zero no caso contrario
@@ -124,12 +110,12 @@ qapi.prototype.emptyD = function (date)
 		return 1;
 	else
 	{
-		const minDate = new Date('0001-01-01').getTime(),
+		let minDate = new Date('0001-01-01').getTime(),
 			minDateTime = new Date('0001-01-01T00:00:00').getTime();
 
 		if (date instanceof Date)
 		{
-			const tDate = date.getTime();
+			let tDate = date.getTime();
 			return tDate === minDate || tDate === minDateTime ? 1 : 0;
 		}
 		else if (typeof date === 'string')
@@ -137,7 +123,7 @@ qapi.prototype.emptyD = function (date)
 			// Date in ISO format
 			if (/(\d{4}-\d{2}-\d{2})[T](\d{2}:\d{2}:\d{2}.?(\d{3})?)[Z]?/.test(date))
 			{
-				const tDate = Date.parse(date);
+				let tDate = Date.parse(date);
 				return !tDate ? 1 : (tDate === minDate || tDate === minDateTime) ? 1 : 0;
 			}
 			// QWeb format  dd/mm/yyyy hh:mm:ss APM | yyyy/mm/dd hh:mm:ss APM
@@ -211,10 +197,15 @@ qapi.prototype.emptyT = function (obj)
 }
 
 qapi.prototype.IsValid = function (data)
-{ 
-	//** retorna 1 se data valida, caso contrario 0
+{ //** retorna 1 se data valida, caso contrario 0
 	this.LogCmd("IsValid (deprecated)", arguments);
-	return this.emptyD(data) === 1 ? 0 : 1;
+	if (data === null || data === undefined || !eval(Date.parse(data)))
+	{
+		return 0;
+	} else
+	{
+		return 1;
+	}
 }
 
 qapi.prototype.KeyToString = function (obj)
@@ -223,8 +214,8 @@ qapi.prototype.KeyToString = function (obj)
 	if (this.emptyG(obj) === 1)
 		return "";
 
-	let re = /\{/g;
-	let res = obj.replace(re, "");
+	var re = /\{/g;
+	var res = obj.replace(re, "");
 	re = /\}/g;
 	res = res.replace(re, "");
 	re = /-/g;
@@ -246,8 +237,8 @@ qapi.prototype.minD = function (obj1, obj2)
 		obj2 = '';
 	}
 
-	const var1 = this.emptyD(obj1) ? '' : Date.parse(obj1);
-	const var2 = this.emptyD(obj2) ? '' : Date.parse(obj2);
+	var var1 = this.emptyD(obj1) ? '' : Date.parse(obj1);
+	var var2 = this.emptyD(obj2) ? '' : Date.parse(obj2);
 
 	return this.min(var1, var2) === var1 ? obj1 : obj2;
 }
@@ -266,8 +257,8 @@ qapi.prototype.minN = function (obj1, obj2)
 		obj2 = 0;
 	}
 
-	const var1 = parseFloat(obj1);
-	const var2 = parseFloat(obj2);
+	var var1 = parseFloat(obj1);
+	var var2 = parseFloat(obj2);
 	return this.min(var1, var2);
 }
 
@@ -285,8 +276,8 @@ qapi.prototype.maxD = function (obj1, obj2)
 		obj2 = '';
 	}
 
-	const var1 = this.emptyD(obj1) ? '' : Date.parse(obj1);
-	const var2 = this.emptyD(obj2) ? '' : Date.parse(obj2);
+	var var1 = this.emptyD(obj1) ? '' : Date.parse(obj1);
+	var var2 = this.emptyD(obj2) ? '' : Date.parse(obj2);
 
 	return this.max(var1, var2) === var1 ? obj1 : obj2;
 }
@@ -304,8 +295,8 @@ qapi.prototype.maxN = function (obj1, obj2)
 		obj2 = 0;
 	}
 
-	const var1 = parseFloat(obj1);
-	const var2 = parseFloat(obj2);
+	var var1 = parseFloat(obj1);
+	var var2 = parseFloat(obj2);
 	return this.max(var1, var2) === var1 ? var1 : var2;
 }
 
@@ -503,13 +494,13 @@ qapi.prototype.Round = function (val, dec)
 	{
 		return Math.round(val);
 	}
-	let mut = 1;
+	var mut = 1;
 	if (val < 0)
 	{
 		val = Math.abs(val)
 		mut = -1;
 	}
-	const ret = Math.round(val * Math.pow(10, dec)) / Math.pow(10, dec);
+	var ret = Math.round(val * Math.pow(10, dec)) / Math.pow(10, dec);
 
 	return ret * mut;
 
@@ -542,7 +533,7 @@ qapi.prototype.NumericToString = function (valor, decimais)
 { //** retorna string com o valor convertido com as decimais e arredondamente se necessario
 	this.LogCmd("NumericToString", arguments);
 
-	let val = this.Round(valor, decimais).toString();
+	var val = this.Round(valor, decimais).toString();
 	if (val.indexOf("."))
 	{
 		val = val.replace(".", ",");
@@ -559,7 +550,7 @@ qapi.prototype.HorasToDouble = function (time)
 		return 0.0;
 	}
 
-	let hour = 0,
+	var hour = 0,
 		minute = 0;
 
 	if (this.emptyC(time) === 0 && time.length === 5)
@@ -587,14 +578,14 @@ qapi.prototype.DoubleToHoras = function (time)
 		return "00:00";
 	}
 
-	const formatOption = {
+	var formatOption = {
 		minimumIntegerDigits: 2,
 		maximumFractionDigits: 0
 	};
 
-	const totalMinutes = Math.round(time * 60.0);
-	const hours = Math.floor(totalMinutes / 60);
-	const minutes = totalMinutes % 60;
+	var totalMinutes = Math.round(time * 60.0);
+	var hours = Math.floor(totalMinutes / 60);
+	var minutes = totalMinutes % 60;
 
 	return (hours).toLocaleString(undefined, formatOption) + ":" + (minutes).toLocaleString(undefined, formatOption)
 }
@@ -615,7 +606,7 @@ qapi.prototype.HorasAdd = function (time, minutes)
 
 	time = time.replace(/_/g, "0");
 
-	const h0 = parseInt(time.substr(0, 2)),
+	var h0 = parseInt(time.substr(0, 2)),
 		m0 = parseInt(time.substr(3, 2)),
 		formatOption = {
 			minimumIntegerDigits: 2,
@@ -625,7 +616,7 @@ qapi.prototype.HorasAdd = function (time, minutes)
 	if (h0 < 0 || h0 > 23 || m0 < 0 || m0 > 59)
 		return "__:__";
 
-	let resInt = h0 * 60 + m0 + Math.floor(minutes);
+	var resInt = h0 * 60 + m0 + Math.floor(minutes);
 	if (resInt < 0) resInt = 0;
 	if (resInt > 23 * 60 + 59) resInt = 23 * 60 + 59;
 
@@ -660,7 +651,7 @@ qapi.prototype.ValidateDateTime = function (year, month, day, hour, minute, seco
 		return false; // "The argument provided as second is invalid."
 	}
 
-	const month30days = [4, 6, 9, 11];
+	var month30days = [4, 6, 9, 11];
 
 	//if the given day is 31 checks if can be created a date with the given month. If the given month only has 30 days return false (empty value)
 	if (day === 31)
@@ -702,7 +693,7 @@ qapi.prototype.DateSetTime = function (date, time)
 		return '';
 	}
 
-	let hour = 0,
+	var hour = 0,
 		minute = 0;
 
 	if (this.emptyT(time) === 0 && time.length === 5)
@@ -785,13 +776,13 @@ qapi.prototype.CreateDuration = function (days, hours, minutes, seconds)
 
 qapi.prototype.DateDiff = function (startDate, endDate)
 {
-	const diff = endDate - startDate;
+	var diff = endDate - startDate;
 	return Math.floor(diff / 1000);
 }
 
 qapi.prototype.DateDiffPart = function (startDate, endDate, unit)
 {
-	const diff = endDate - startDate;
+	var diff = endDate - startDate;
 	if (unit === "D")
 		return Math.floor(diff / 1000 / 3600 / 24);
 	if (unit === "H")
@@ -959,7 +950,7 @@ qapi.prototype.ComparaDatas = function (data1, data2)
 	else if (this.emptyD(data2) === 1)
 		return 1; //The first is biggest
 
-	const res = (data1.getTime() === data2.getTime()) ? 0 : ((data1.getTime() > data2.getTime()) ? 1 : -1);
+	var res = (data1.getTime() === data2.getTime()) ? 0 : ((data1.getTime() > data2.getTime()) ? 1 : -1);
 
 	return res;
 }
@@ -988,8 +979,8 @@ qapi.prototype.RoundQG = function (val, prec)
 	{
 		prec = 0;
 	}
-	const sign = val >= 0 ? 1 : -1;
-	const folga = 0.001 * Math.pow(0.1, prec) * sign;
+	var sign = val >= 0 ? 1 : -1;
+	var folga = 0.001 * Math.pow(0.1, prec) * sign;
 	return this.Round(val + folga, prec);
 }
 
@@ -1056,7 +1047,7 @@ qapi.prototype.Incidenc = function (valoruni, quantida, pdescont, prec)
 	{
 		return 0; // "The argument provided as prec is invalid.";
 	}
-	const valorart = this.RoundQG(valoruni * quantida, prec);
+	var valorart = this.RoundQG(valoruni * quantida, prec);
 	return valorart - this.RoundQG(pdescont / 100.0 * valorart, prec);
 }
 
@@ -1117,7 +1108,7 @@ qapi.prototype.Diferenca_entre_Datas = function (dt_inicio, dt_fim, escala)
 	{
 		dt_fim = new Date(dt_fim);
 	}
-	let dif = dt_fim.getTime() - dt_inicio.getTime();
+	var dif = dt_fim.getTime() - dt_inicio.getTime();
 	dif = dif / 1000;
 
 	switch (escala.toString().toUpperCase())
@@ -1151,11 +1142,11 @@ qapi.prototype.DateFloorDay = function (date)
  */
 qapi.prototype.isGuid = function (key)
 {
-	const isEmptyGuid = this.emptyG(key);
+	var isEmptyGuid = this.emptyG(key);
 	if (isEmptyGuid === 1)
 		return isEmptyGuid;
 
-	const regex = /^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$/;
+	var regex = /^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$/;
 	if (regex.test(key))
 		return 1;
 	return 0;
@@ -1163,21 +1154,20 @@ qapi.prototype.isGuid = function (key)
 /*********** Support data structures ***********/
 
 const FLAT_VUE_THEME_VARIABLES = {
-	'$footer-bg': "transparent",
+	'$footer-bg': "#FFFFFF",
 	'$menu-sidebar-width': "16rem",
 	'$menu-behaviour': "partial_collapse",
 	'$compactheader': "false",
 	'$save-icon': "floppy-disk",
 	'$compactstyle': "true",
 	'$border-radius': "0.25rem",
-	'$table-striped': "false",
+	'$table-striped': "true",
 	'$table-head-inverse': "false",
 	'$table-vertical-border': "true",
 	'$enable-table-wrap': "true",
 	'$font-size-base': "0.9rem",
 	'$font-family-sans-serif': "\"Lato\", Roboto, \"Helvetica Neue\", Arial, sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\"",
 	'$font-headings': "$font-family-sans-serif",
-	'$headings-text-transform': "uppercase",
 	'$primary': "#008ad2",
 	'$secondary': "#001d31",
 	'$highlight': "#ff8241",
@@ -1229,14 +1219,13 @@ const HORIZONTAL_VUE_THEME_VARIABLES = {
 	'$save-icon': "floppy-disk",
 	'$compactstyle': "false",
 	'$border-radius': "0",
-	'$table-striped': "false",
+	'$table-striped': "true",
 	'$table-head-inverse': "true",
 	'$table-vertical-border': "true",
 	'$enable-table-wrap': "true",
 	'$font-size-base': "0.9rem",
 	'$font-family-sans-serif': "\"Lato\", Roboto, \"Helvetica Neue\", Arial, sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\"",
 	'$font-headings': "$font-family-sans-serif",
-	'$headings-text-transform': "uppercase",
 	'$primary': "#008ad2",
 	'$secondary': "#001d31",
 	'$highlight': "#ff8241",

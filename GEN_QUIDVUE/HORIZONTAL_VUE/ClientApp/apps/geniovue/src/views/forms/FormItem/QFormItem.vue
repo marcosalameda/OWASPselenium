@@ -38,16 +38,9 @@
 									:label="btn.label"
 									:disabled="btn.disabled"
 									@click="btn.action">
-									<template v-if="btn.icon">
-										<q-badge-indicator
-											v-if="btn.badge && btn.badge.isVisible"
-											:color="btn.badge.color">
-											<q-icon v-bind="btn.icon" />
-										</q-badge-indicator>
-										<q-icon
-											v-else
-											v-bind="btn.icon" />
-									</template>
+									<q-icon
+										v-if="btn.icon"
+										v-bind="btn.icon" />
 								</q-toggle-group-item>
 							</template>
 						</q-toggle-group>
@@ -59,7 +52,7 @@
 				v-if="$app.layout.FormAnchorsPosition === 'form-header' && visibleGroups.length > 0"
 				:anchors="anchorGroups"
 				:controls="visibleControls"
-				@focus-control="focusControl" />
+				@focus-control="(...args) => focusControl(...args)" />
 		</div>
 	</teleport>
 
@@ -80,7 +73,6 @@
 						v-if="btn.isActive && btn.isVisible && btn.showInHeading"
 						:id="`heading-${btn.id}`"
 						:label="btn.text"
-						:color="btn.color"
 						:variant="btn.variant"
 						:disabled="btn.disabled"
 						:icon-pos="btn.iconPos"
@@ -94,17 +86,16 @@
 			</q-button-group>
 		</div>
 
-		<q-container
-			fluid
+		<div
+			class="form-flow"
 			data-key="ITEM"
-			:data-loading="!formInitialDataLoaded || !isActiveForm">
+			:data-loading="!formInitialDataLoaded">
 			<template v-if="formControl.initialized && showFormBody">
-				<q-row v-if="controls.ITEM____GITEMITEMDES_.isVisible || controls.ITEM____WAREHWAREHDES.isVisible || controls.ITEM____ITEM_ITEMTYPE.isVisible || controls.ITEM____ITEM_ITEMDES_.isVisible || controls.ITEM____ITEM_ITEMCOD_.isVisible || controls.ITEM____ITEM_ENTRIES_.isVisible || controls.ITEM____ITEM_EXITS___.isVisible || controls.ITEM____ITEM_EXISTENC.isVisible || controls.ITEM____ITEM_IMAGE___.isVisible || controls.ITEM____ITEM_CATEGORY.isVisible || controls.ITEM____ITEM_VALID___.isVisible || controls.ITEM____ITEM_DISPONIB.isVisible || controls.ITEM____ITEM_DATE____.isVisible || controls.ITEM____ITEM_TECHSPEC.isVisible">
-					<q-col
-						v-if="controls.ITEM____GITEMITEMDES_.isVisible"
-						cols="auto">
+				<q-row-container v-show="controls.ITEM____GITEMITEMDES_.isVisible || controls.ITEM____WAREHWAREHDES.isVisible || controls.ITEM____ITEM_ITEMTYPE.isVisible || controls.ITEM____ITEM_ITEMDES_.isVisible || controls.ITEM____ITEM_ITEMCOD_.isVisible || controls.ITEM____ITEM_ENTRIES_.isVisible || controls.ITEM____ITEM_EXITS___.isVisible || controls.ITEM____ITEM_EXISTENC.isVisible || controls.ITEM____ITEM_IMAGE___.isVisible || controls.ITEM____ITEM_CATEGORY.isVisible || controls.ITEM____ITEM_VALID___.isVisible || controls.ITEM____ITEM_DISPONIB.isVisible || controls.ITEM____ITEM_DATE____.isVisible || controls.ITEM____ITEM_TECHSPEC.isVisible">
+					<q-control-wrapper
+						v-show="controls.ITEM____GITEMITEMDES_.isVisible"
+						class="${Vue.GetControlWrapperClass($controlsColumn)}">
 						<base-input-structure
-							v-if="controls.ITEM____GITEMITEMDES_.isVisible"
 							class="i-text"
 							v-bind="controls.ITEM____GITEMITEMDES_"
 							v-on="controls.ITEM____GITEMITEMDES_.handlers"
@@ -120,12 +111,11 @@
 								v-bind="controls.ITEM____GITEMITEMDES_.seeMoreParams"
 								v-on="controls.ITEM____GITEMITEMDES_.handlers" />
 						</base-input-structure>
-					</q-col>
-					<q-col
-						v-if="controls.ITEM____WAREHWAREHDES.isVisible"
-						cols="auto">
+					</q-control-wrapper>
+					<q-control-wrapper
+						v-show="controls.ITEM____WAREHWAREHDES.isVisible"
+						class="${Vue.GetControlWrapperClass($controlsColumn)}">
 						<base-input-structure
-							v-if="controls.ITEM____WAREHWAREHDES.isVisible"
 							class="i-text"
 							v-bind="controls.ITEM____WAREHWAREHDES"
 							v-on="controls.ITEM____WAREHWAREHDES.handlers"
@@ -141,12 +131,11 @@
 								v-bind="controls.ITEM____WAREHWAREHDES.seeMoreParams"
 								v-on="controls.ITEM____WAREHWAREHDES.handlers" />
 						</base-input-structure>
-					</q-col>
-					<q-col
-						v-if="controls.ITEM____ITEM_ITEMTYPE.isVisible"
-						cols="auto">
+					</q-control-wrapper>
+					<q-control-wrapper
+						v-show="controls.ITEM____ITEM_ITEMTYPE.isVisible"
+						class="${Vue.GetControlWrapperClass($controlsColumn)}">
 						<base-input-structure
-							v-if="controls.ITEM____ITEM_ITEMTYPE.isVisible"
 							class="i-text"
 							v-bind="controls.ITEM____ITEM_ITEMTYPE"
 							v-on="controls.ITEM____ITEM_ITEMTYPE.handlers"
@@ -158,12 +147,11 @@
 								v-bind="controls.ITEM____ITEM_ITEMTYPE.props"
 								@update:model-value="model.ValItemtype.fnUpdateValue" />
 						</base-input-structure>
-					</q-col>
-					<q-col
-						v-if="controls.ITEM____ITEM_ITEMDES_.isVisible"
-						cols="auto">
+					</q-control-wrapper>
+					<q-control-wrapper
+						v-show="controls.ITEM____ITEM_ITEMDES_.isVisible"
+						class="${Vue.GetControlWrapperClass($controlsColumn)}">
 						<base-input-structure
-							v-if="controls.ITEM____ITEM_ITEMDES_.isVisible"
 							class="i-text"
 							v-bind="controls.ITEM____ITEM_ITEMDES_"
 							v-on="controls.ITEM____ITEM_ITEMDES_.handlers"
@@ -175,12 +163,11 @@
 								@blur="onBlur(controls.ITEM____ITEM_ITEMDES_, model.ValItemdes.value)"
 								@change="model.ValItemdes.fnUpdateValueOnChange" />
 						</base-input-structure>
-					</q-col>
-					<q-col
-						v-if="controls.ITEM____ITEM_ITEMCOD_.isVisible"
-						cols="auto">
+					</q-control-wrapper>
+					<q-control-wrapper
+						v-show="controls.ITEM____ITEM_ITEMCOD_.isVisible"
+						class="${Vue.GetControlWrapperClass($controlsColumn)}">
 						<base-input-structure
-							v-if="controls.ITEM____ITEM_ITEMCOD_.isVisible"
 							class="i-text"
 							v-bind="controls.ITEM____ITEM_ITEMCOD_"
 							v-on="controls.ITEM____ITEM_ITEMCOD_.handlers"
@@ -192,12 +179,11 @@
 								@blur="onBlur(controls.ITEM____ITEM_ITEMCOD_, model.ValItemcod.value)"
 								@change="model.ValItemcod.fnUpdateValueOnChange" />
 						</base-input-structure>
-					</q-col>
-					<q-col
-						v-if="controls.ITEM____ITEM_ENTRIES_.isVisible"
-						cols="auto">
+					</q-control-wrapper>
+					<q-control-wrapper
+						v-show="controls.ITEM____ITEM_ENTRIES_.isVisible"
+						class="${Vue.GetControlWrapperClass($controlsColumn)}">
 						<base-input-structure
-							v-if="controls.ITEM____ITEM_ENTRIES_.isVisible"
 							class="i-text"
 							v-bind="controls.ITEM____ITEM_ENTRIES_"
 							v-on="controls.ITEM____ITEM_ENTRIES_.handlers"
@@ -209,12 +195,11 @@
 								v-bind="controls.ITEM____ITEM_ENTRIES_.props"
 								@update:model-value="model.ValEntries.fnUpdateValue" />
 						</base-input-structure>
-					</q-col>
-					<q-col
-						v-if="controls.ITEM____ITEM_EXITS___.isVisible"
-						cols="auto">
+					</q-control-wrapper>
+					<q-control-wrapper
+						v-show="controls.ITEM____ITEM_EXITS___.isVisible"
+						class="${Vue.GetControlWrapperClass($controlsColumn)}">
 						<base-input-structure
-							v-if="controls.ITEM____ITEM_EXITS___.isVisible"
 							class="i-text"
 							v-bind="controls.ITEM____ITEM_EXITS___"
 							v-on="controls.ITEM____ITEM_EXITS___.handlers"
@@ -226,12 +211,11 @@
 								v-bind="controls.ITEM____ITEM_EXITS___.props"
 								@update:model-value="model.ValExits.fnUpdateValue" />
 						</base-input-structure>
-					</q-col>
-					<q-col
-						v-if="controls.ITEM____ITEM_EXISTENC.isVisible"
-						cols="auto">
+					</q-control-wrapper>
+					<q-control-wrapper
+						v-show="controls.ITEM____ITEM_EXISTENC.isVisible"
+						class="${Vue.GetControlWrapperClass($controlsColumn)}">
 						<base-input-structure
-							v-if="controls.ITEM____ITEM_EXISTENC.isVisible"
 							class="i-text"
 							v-bind="controls.ITEM____ITEM_EXISTENC"
 							v-on="controls.ITEM____ITEM_EXISTENC.handlers"
@@ -243,12 +227,11 @@
 								v-bind="controls.ITEM____ITEM_EXISTENC.props"
 								@update:model-value="model.ValExistenc.fnUpdateValue" />
 						</base-input-structure>
-					</q-col>
-					<q-col
-						v-if="controls.ITEM____ITEM_IMAGE___.isVisible"
-						cols="auto">
+					</q-control-wrapper>
+					<q-control-wrapper
+						v-show="controls.ITEM____ITEM_IMAGE___.isVisible"
+						class="${Vue.GetControlWrapperClass($controlsColumn)}">
 						<base-input-structure
-							v-if="controls.ITEM____ITEM_IMAGE___.isVisible"
 							class="q-image"
 							v-bind="controls.ITEM____ITEM_IMAGE___"
 							v-on="controls.ITEM____ITEM_IMAGE___.handlers"
@@ -260,12 +243,11 @@
 								v-bind="controls.ITEM____ITEM_IMAGE___.props"
 								v-on="controls.ITEM____ITEM_IMAGE___.handlers" />
 						</base-input-structure>
-					</q-col>
-					<q-col
-						v-if="controls.ITEM____ITEM_CATEGORY.isVisible"
-						cols="auto">
+					</q-control-wrapper>
+					<q-control-wrapper
+						v-show="controls.ITEM____ITEM_CATEGORY.isVisible"
+						class="${Vue.GetControlWrapperClass($controlsColumn)}">
 						<base-input-structure
-							v-if="controls.ITEM____ITEM_CATEGORY.isVisible"
 							class="i-textarea"
 							v-bind="controls.ITEM____ITEM_CATEGORY"
 							v-on="controls.ITEM____ITEM_CATEGORY.handlers"
@@ -277,12 +259,11 @@
 								v-bind="controls.ITEM____ITEM_CATEGORY.props"
 								v-on="controls.ITEM____ITEM_CATEGORY.handlers" />
 						</base-input-structure>
-					</q-col>
-					<q-col
-						v-if="controls.ITEM____ITEM_VALID___.isVisible"
-						cols="auto">
+					</q-control-wrapper>
+					<q-control-wrapper
+						v-show="controls.ITEM____ITEM_VALID___.isVisible"
+						class="${Vue.GetControlWrapperClass($controlsColumn)}">
 						<base-input-structure
-							v-if="controls.ITEM____ITEM_VALID___.isVisible"
 							class="i-checkbox"
 							v-bind="controls.ITEM____ITEM_VALID___"
 							v-on="controls.ITEM____ITEM_VALID___.handlers"
@@ -290,18 +271,17 @@
 							:reporting-mode-on="reportingModeCAV"
 							:suggestion-mode-on="suggestionModeOn">
 							<template #label>
-								<q-checkbox
+								<q-checkbox-input
 									v-if="controls.ITEM____ITEM_VALID___.isVisible"
 									v-bind="controls.ITEM____ITEM_VALID___.props"
 									v-on="controls.ITEM____ITEM_VALID___.handlers" />
 							</template>
 						</base-input-structure>
-					</q-col>
-					<q-col
-						v-if="controls.ITEM____ITEM_DISPONIB.isVisible"
-						cols="auto">
+					</q-control-wrapper>
+					<q-control-wrapper
+						v-show="controls.ITEM____ITEM_DISPONIB.isVisible"
+						class="${Vue.GetControlWrapperClass($controlsColumn)}">
 						<base-input-structure
-							v-if="controls.ITEM____ITEM_DISPONIB.isVisible"
 							class="i-text"
 							v-bind="controls.ITEM____ITEM_DISPONIB"
 							v-on="controls.ITEM____ITEM_DISPONIB.handlers"
@@ -312,12 +292,11 @@
 								v-if="controls.ITEM____ITEM_DISPONIB.isVisible"
 								v-bind="controls.ITEM____ITEM_DISPONIB.props" />
 						</base-input-structure>
-					</q-col>
-					<q-col
-						v-if="controls.ITEM____ITEM_DATE____.isVisible"
-						cols="auto">
+					</q-control-wrapper>
+					<q-control-wrapper
+						v-show="controls.ITEM____ITEM_DATE____.isVisible"
+						class="${Vue.GetControlWrapperClass($controlsColumn)}">
 						<base-input-structure
-							v-if="controls.ITEM____ITEM_DATE____.isVisible"
 							class="i-text"
 							v-bind="controls.ITEM____ITEM_DATE____"
 							v-on="controls.ITEM____ITEM_DATE____.handlers"
@@ -331,12 +310,11 @@
 								@reset-icon-click="model.ValDate.fnUpdateValue(model.ValDate.originalValue ?? new Date())"
 								@update:model-value="model.ValDate.fnUpdateValue($event ?? '')" />
 						</base-input-structure>
-					</q-col>
-					<q-col
-						v-if="controls.ITEM____ITEM_TECHSPEC.isVisible"
-						cols="auto">
+					</q-control-wrapper>
+					<q-control-wrapper
+						v-show="controls.ITEM____ITEM_TECHSPEC.isVisible"
+						class="${Vue.GetControlWrapperClass($controlsColumn)}">
 						<base-input-structure
-							v-if="controls.ITEM____ITEM_TECHSPEC.isVisible"
 							class="i-text"
 							v-bind="controls.ITEM____ITEM_TECHSPEC"
 							v-on="controls.ITEM____ITEM_TECHSPEC.handlers"
@@ -348,10 +326,10 @@
 								v-bind="controls.ITEM____ITEM_TECHSPEC.props"
 								v-on="controls.ITEM____ITEM_TECHSPEC.handlers" />
 						</base-input-structure>
-					</q-col>
-				</q-row>
+					</q-control-wrapper>
+				</q-row-container>
 			</template>
-		</q-container>
+		</div>
 	</teleport>
 
 	<hr v-if="!isPopup && showFormFooter" />
@@ -360,7 +338,7 @@
 		v-if="formModalIsReady && showFormFooter"
 		:to="`#${uiContainersId.footer}`"
 		:disabled="!isPopup || isNested">
-		<q-row v-if="showFormFooter">
+		<q-row-container v-if="showFormFooter">
 			<div id="footer-action-btns">
 				<template
 					v-for="btn in formButtons"
@@ -369,7 +347,6 @@
 						v-if="btn.isActive && btn.isVisible && btn.showInFooter"
 						:id="`bottom-${btn.id}`"
 						:label="btn.text"
-						:color="btn.color"
 						:variant="btn.variant"
 						:disabled="btn.disabled"
 						:icon-pos="btn.iconPos"
@@ -381,12 +358,12 @@
 					</q-button>
 				</template>
 			</div>
-		</q-row>
+		</q-row-container>
 	</teleport>
 </template>
 
 <script>
-	/* eslint-disable @typescript-eslint/no-unused-vars */
+	/* eslint-disable no-unused-vars */
 	import { computed, defineAsyncComponent, readonly } from 'vue'
 	import { useRoute } from 'vue-router'
 
@@ -406,7 +383,7 @@
 	import qApi from '@/api/genio/quidgestFunctions.js'
 	import qFunctions from '@/api/genio/projectFunctions.js'
 	import qProjArrays from '@/api/genio/projectArrays.js'
-	/* eslint-enable @typescript-eslint/no-unused-vars */
+	/* eslint-enable no-unused-vars */
 
 	import FormViewModel from './QFormItemViewModel.js'
 
@@ -485,8 +462,7 @@
 					primaryKey: 'ValCoditem',
 					designation: computed(() => this.Resources.ARTICLES59822),
 					identifier: '', // Unique identifier received by route (when it's nested).
-					mode: '',
-					availableAgents: [],
+					mode: ''
 				},
 
 				formButtons: {
@@ -594,11 +570,7 @@
 						showInFooter: true,
 						isActive: true,
 						isVisible: computed(() => vm.authData.isAllowed && vm.isEditable),
-						action: vm.saveForm,
-						badge: {
-							isVisible: computed(() => vm.model?.isDirty === true),
-							color: 'highlight'
-						}
+						action: vm.saveForm
 					},
 					confirmBtn: {
 						id: 'confirm-btn',
@@ -766,9 +738,10 @@
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						maxLength: 1,
+						labelId: 'label_ITEM____ITEM_ITEMTYPE',
 						arrayName: 'TipoArti',
-						helpShortItem: '',
-						helpDetailedItem: '',
+						helpShortItem: 'None',
+						helpDetailedItem: 'None',
 						controlLimits: [
 						],
 					}, this),
@@ -782,6 +755,7 @@
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						maxLength: 85,
+						labelId: 'label_ITEM____ITEM_ITEMDES_',
 						mustBeFilled: true,
 						controlLimits: [
 						],
@@ -796,6 +770,7 @@
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						maxLength: 15,
+						labelId: 'label_ITEM____ITEM_ITEMCOD_',
 						controlLimits: [
 						],
 					}, this),
@@ -897,9 +872,10 @@
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						isFormulaBlocked: true,
 						maxLength: 1,
+						labelId: 'label_ITEM____ITEM_DISPONIB',
 						arrayName: 'dsiponib',
-						helpShortItem: '',
-						helpDetailedItem: '',
+						helpShortItem: 'None',
+						helpDetailedItem: 'None',
 						controlLimits: [
 						],
 					}, this),
@@ -912,7 +888,7 @@
 						label: computed(() => this.Resources.DATE18475),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						dateTimeType: 'date',
+						format: 'date',
 						controlLimits: [
 						],
 					}, this),
@@ -1044,23 +1020,17 @@
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 		},
 
-		beforeUnmount()
-		{
-/* eslint-disable indent, vue/html-indent, vue/script-indent */
-// USE /[MANUAL GQT COMPONENT_BEFORE_UNMOUNT ITEM]/
-// eslint-disable-next-line
-/* eslint-enable indent, vue/html-indent, vue/script-indent */
-		},
-
 		methods: {
 			/**
 			 * Called before form init.
 			 */
 			async beforeLoad()
 			{
+				let loadForm = true
+
 				// Execute the "Before init" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.beforeInit)
-				for (const trigger of triggers)
+				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
 				this.emitEvent('before-load-form')
@@ -1070,7 +1040,7 @@
 // eslint-disable-next-line
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 
-				return true
+				return loadForm
 			},
 
 			/**
@@ -1080,7 +1050,7 @@
 			{
 				// Execute the "After init" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.afterInit)
-				for (const trigger of triggers)
+				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
 				this.emitEvent('after-load-form')
@@ -1100,33 +1070,19 @@
 
 				// Execute the "Before apply" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.beforeApply)
-				for (const trigger of triggers)
+				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
-				const ticketsPromise = this.model.updateFilesTickets(true)
-				this.addBusy(ticketsPromise, this.Resources[hardcodedTexts.processing])
-				const canSetDocums = await ticketsPromise
+				const canSetDocums = await this.model.updateFilesTickets(true)
 
 				if (canSetDocums)
 				{
-					let results
-					const changesPromise = this.model.setDocumentChanges()
-					this.addBusy(changesPromise, this.Resources[hardcodedTexts.processing])
-					applyForm = await changesPromise
+					applyForm = await this.model.setDocumentChanges()
 
 					if (applyForm)
 					{
-						const insertsPromise = this.model.saveDocuments()
-						this.addBusy(insertsPromise, this.Resources[hardcodedTexts.processing])
-						results = await insertsPromise
+						const results = await this.model.saveDocuments()
 						applyForm = results.every((e) => e === true)
-					}
-
-					if (!changesPromise || (results && !results.every((e) => e === true)))
-					{
-						this.validationErrors = {
-							Erro: this.Resources.OCORREU_UM_ERRO_AO_T51884
-						}
 					}
 				}
 
@@ -1147,7 +1103,7 @@
 			{
 				// Execute the "After apply" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.afterApply)
-				for (const trigger of triggers)
+				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
 				this.emitEvent('after-apply-form')
@@ -1167,33 +1123,19 @@
 
 				// Execute the "Before save" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.beforeSave)
-				for (const trigger of triggers)
+				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
-				const ticketsPromise = this.model.updateFilesTickets()
-				this.addBusy(ticketsPromise, this.Resources[hardcodedTexts.processing])
-				const canSetDocums = await ticketsPromise
+				const canSetDocums = await this.model.updateFilesTickets()
 
 				if (canSetDocums)
 				{
-					let results
-					const changesPromise = this.model.setDocumentChanges()
-					this.addBusy(changesPromise, this.Resources[hardcodedTexts.processing])
-					saveForm = await changesPromise
+					saveForm = await this.model.setDocumentChanges()
 
 					if (saveForm)
 					{
-						const insertsPromise = this.model.saveDocuments()
-						this.addBusy(insertsPromise, this.Resources[hardcodedTexts.processing])
-						results = await insertsPromise
+						const results = await this.model.saveDocuments()
 						saveForm = results.every((e) => e === true)
-					}
-
-					if (!changesPromise || (results && !results.every((e) => e === true)))
-					{
-						this.validationErrors = {
-							Erro: this.Resources.OCORREU_UM_ERRO_AO_T51884
-						}
 					}
 				}
 
@@ -1212,9 +1154,11 @@
 			 */
 			async afterSave()
 			{
+				let redirectPage = true // Set to 'false' to cancel page redirect.
+
 				// Execute the "After save" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.afterSave)
-				for (const trigger of triggers)
+				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
 				this.emitEvent('after-save-form')
@@ -1224,7 +1168,7 @@
 // eslint-disable-next-line
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 
-				return true
+				return redirectPage
 			},
 
 			/**
@@ -1232,6 +1176,8 @@
 			 */
 			async beforeDel()
 			{
+				let deleteForm = true // Set to 'false' to cancel form delete.
+
 				this.emitEvent('before-delete-form')
 
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
@@ -1239,7 +1185,7 @@
 // eslint-disable-next-line
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 
-				return true
+				return deleteForm
 			},
 
 			/**
@@ -1247,6 +1193,8 @@
 			 */
 			async afterDel()
 			{
+				let redirectPage = true // Set to 'false' to cancel page redirect.
+
 				this.emitEvent('after-delete-form')
 
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
@@ -1254,7 +1202,7 @@
 // eslint-disable-next-line
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 
-				return true
+				return redirectPage
 			},
 
 			/**
@@ -1262,9 +1210,11 @@
 			 */
 			async beforeExit()
 			{
+				let leaveForm = true // Set to 'false' to cancel page redirect.
+
 				// Execute the "Before exit" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.beforeExit)
-				for (const trigger of triggers)
+				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
 				this.emitEvent('before-exit-form')
@@ -1274,7 +1224,7 @@
 // eslint-disable-next-line
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 
-				return true
+				return leaveForm
 			},
 
 			/**
@@ -1284,7 +1234,7 @@
 			{
 				// Execute the "After exit" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.afterExit)
-				for (const trigger of triggers)
+				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
 				this.emitEvent('after-exit-form')
@@ -1345,7 +1295,6 @@
 
 				this.afterControlUpdate(controlField, fieldValue)
 			},
-
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
 // USE /[MANUAL GQT FUNCTIONS_JS ITEM]/
 // eslint-disable-next-line

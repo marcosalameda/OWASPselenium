@@ -53,6 +53,12 @@ public class Accordi_Pess1ValName_RowViewModel : Models.Pess1
 		bool canDuplicate = true;
 		bool canInsert = true;
 
+		using (new CSGenio.persistence.ScopedPersistentSupport(m_userContext.PersistentSupport))
+		{
+
+			// Table PESS1 CRUD conditions.
+		}
+
 		BtnPermission = new TableRowCrudButtonPermissions()
 		{
 			ViewBtnDisabled = !canView,

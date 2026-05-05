@@ -1,30 +1,78 @@
 ﻿<template>
-	<q-grid-table-row
-		:id="id"
-		:initial-state="initialState"
-		:is-deleted-state="isDeletedState"
-		:mode="mode"
-		:nested-model="nestedModel"
-		:permissions="permissions"
-		:texts="texts"
-		@mark-for-deletion="emitEvent('mark-for-deletion')"
-		@undo-deletion="emitEvent('undo-deletion')"
-		@toggle-errors="emitEvent('toggle-errors')">
-		<q-grid-table-column
-			v-if="canShowColumn('ATAGS', 'NAME')"
-			class=""
-			v-bind="controls.EQUIPM__PSEUDA_TAGS____ATAGS__NAME.wrapperProps">
-			<q-text-field
-				v-bind="controls.EQUIPM__PSEUDA_TAGS____ATAGS__NAME.props"
-				@blur="onBlur(controls.EQUIPM__PSEUDA_TAGS____ATAGS__NAME, model.ValName.value)"
-				@change="model.ValName.fnUpdateValueOnChange" />
-		</q-grid-table-column>
-	</q-grid-table-row>
+	<tr
+		:data-key="id"
+		:class="rowClass">
+		<td class="grid-table-row__state">
+			<div class="grid-table-row__state-icon">
+				<q-icon
+					v-if="rowStateIcon"
+					:icon="rowStateIcon" />
+
+				<q-button
+					v-if="hasMessages"
+					variant="text"
+					@click="toggleErrors">
+					<q-icon :icon="expandIcon" />
+				</q-button>
+			</div>
+
+			<div v-if="hasMessages">
+				<q-badge :color="badgeColor">
+					{{ numMessages }}
+				</q-badge>
+				<span class="grid-table-row__messages">
+					{{ texts.messages }}
+				</span>
+			</div>
+		</td>
+
+		<td class="grid-table-row__action">
+			<div class="grid-table-row__action-btn">
+				<q-button
+					v-if="showDeleteBtn"
+					variant="text"
+					:title="texts.delete"
+					data-testid="delete"
+					@click="markForDeletion">
+					<q-icon icon="delete" />
+				</q-button>
+
+				<q-button
+					v-if="showRemoveBtn"
+					variant="text"
+					:title="texts.remove"
+					data-testid="delete"
+					@click="markForDeletion">
+					<q-icon icon="remove-sign" />
+				</q-button>
+
+				<q-button
+					v-if="showUndoBtn"
+					variant="text"
+					:title="texts.restore"
+					data-testid="undo"
+					@click="undoMarkForDeletion">
+					<q-icon icon="undo" />
+				</q-button>
+			</div>
+		</td>
+
+		<td v-if="canShowColumn('ATAGS', 'NAME')">
+			<grid-base-input-structure
+				class=""
+				v-bind="controls.EQUIPM__PSEUDA_TAGS____ATAGS__NAME.wrapperProps">
+				<q-text-field
+					v-bind="controls.EQUIPM__PSEUDA_TAGS____ATAGS__NAME.props"
+					@blur="onBlur(controls.EQUIPM__PSEUDA_TAGS____ATAGS__NAME, model.ValName.value)"
+					@change="model.ValName.fnUpdateValueOnChange" />
+			</grid-base-input-structure>
+		</td>
+	</tr>
 </template>
 
 <script>
-	/* eslint-disable @typescript-eslint/no-unused-vars */
-	import { computed, defineAsyncComponent, readonly } from 'vue'
+	/* eslint-disable no-unused-vars */
+	import { computed, defineAsyncComponent } from 'vue'
 
 	import GridFormHandlers from '@/mixins/gridFormHandlers.js'
 	import formFunctions from '@/mixins/formFunctions.js'
@@ -39,10 +87,9 @@
 	import qFunctions from '@/api/genio/projectFunctions.js'
 	import qProjArrays from '@/api/genio/projectArrays.js'
 	import asyncProcM from '@quidgest/clientapp/composables/async'
-	/* eslint-enable @typescript-eslint/no-unused-vars */
 
-	import QGridTableColumn from '@/components/inputs/GridBaseInputStructure.vue'
-	import QGridTableRow from '@/components/table/QGridTableRow.vue'
+	import GridBaseInputStructure from '@/components/inputs/GridBaseInputStructure.vue'
+	/* eslint-enable no-unused-vars */
 
 	const requiredTextResources = ['QGridFormEquipmPseudaTags', 'hardcoded', 'messages']
 
@@ -55,13 +102,16 @@
 		name: 'QGridFormEquipmPseudaTags',
 
 		components: {
-			QGridTableColumn,
-			QGridTableRow
+			GridBaseInputStructure
 		},
 
-		mixins: [GridFormHandlers],
+		mixins: [
+			GridFormHandlers
+		],
 
-		expose: ['navigationId'],
+		expose: [
+			'navigationId'
+		],
 
 		data()
 		{
@@ -103,6 +153,7 @@
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						maxLength: 75,
+						labelId: 'label_EQUIPM__PSEUDA_TAGS____ATAGS__NAME',
 						controlLimits: [
 						],
 					}, this),
@@ -137,23 +188,17 @@
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 		},
 
-		beforeUnmount()
-		{
-/* eslint-disable indent, vue/html-indent, vue/script-indent */
-// USE /[MANUAL GQT COMPONENT_BEFORE_UNMOUNT EQUIPM__PSEUDA_TAGS__]/
-// eslint-disable-next-line
-/* eslint-enable indent, vue/html-indent, vue/script-indent */
-		},
-
 		methods: {
 			/**
 			 * Called before form init.
 			 */
 			async beforeLoad()
 			{
+				let loadForm = true
+
 				// Execute the "Before init" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.beforeInit)
-				for (const trigger of triggers)
+				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
 				this.emitEvent('before-load-form')
@@ -163,7 +208,7 @@
 // eslint-disable-next-line
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 
-				return true
+				return loadForm
 			},
 
 			/**
@@ -173,7 +218,7 @@
 			{
 				// Execute the "After init" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.afterInit)
-				for (const trigger of triggers)
+				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
 				this.emitEvent('after-load-form')
@@ -193,33 +238,19 @@
 
 				// Execute the "Before apply" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.beforeApply)
-				for (const trigger of triggers)
+				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
-				const ticketsPromise = this.model.updateFilesTickets(true)
-				this.addBusy(ticketsPromise, this.Resources[hardcodedTexts.processing])
-				const canSetDocums = await ticketsPromise
+				const canSetDocums = await this.model.updateFilesTickets(true)
 
 				if (canSetDocums)
 				{
-					let results
-					const changesPromise = this.model.setDocumentChanges()
-					this.addBusy(changesPromise, this.Resources[hardcodedTexts.processing])
-					applyForm = await changesPromise
+					applyForm = await this.model.setDocumentChanges()
 
 					if (applyForm)
 					{
-						const insertsPromise = this.model.saveDocuments()
-						this.addBusy(insertsPromise, this.Resources[hardcodedTexts.processing])
-						results = await insertsPromise
+						const results = await this.model.saveDocuments()
 						applyForm = results.every((e) => e === true)
-					}
-
-					if (!changesPromise || (results && !results.every((e) => e === true)))
-					{
-						this.validationErrors = {
-							Erro: this.Resources.OCORREU_UM_ERRO_AO_T51884
-						}
 					}
 				}
 
@@ -240,7 +271,7 @@
 			{
 				// Execute the "After apply" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.afterApply)
-				for (const trigger of triggers)
+				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
 				this.emitEvent('after-apply-form')
@@ -260,33 +291,19 @@
 
 				// Execute the "Before save" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.beforeSave)
-				for (const trigger of triggers)
+				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
-				const ticketsPromise = this.model.updateFilesTickets()
-				this.addBusy(ticketsPromise, this.Resources[hardcodedTexts.processing])
-				const canSetDocums = await ticketsPromise
+				const canSetDocums = await this.model.updateFilesTickets()
 
 				if (canSetDocums)
 				{
-					let results
-					const changesPromise = this.model.setDocumentChanges()
-					this.addBusy(changesPromise, this.Resources[hardcodedTexts.processing])
-					saveForm = await changesPromise
+					saveForm = await this.model.setDocumentChanges()
 
 					if (saveForm)
 					{
-						const insertsPromise = this.model.saveDocuments()
-						this.addBusy(insertsPromise, this.Resources[hardcodedTexts.processing])
-						results = await insertsPromise
+						const results = await this.model.saveDocuments()
 						saveForm = results.every((e) => e === true)
-					}
-
-					if (!changesPromise || (results && !results.every((e) => e === true)))
-					{
-						this.validationErrors = {
-							Erro: this.Resources.OCORREU_UM_ERRO_AO_T51884
-						}
 					}
 				}
 
@@ -305,9 +322,11 @@
 			 */
 			async afterSave()
 			{
+				let redirectPage = true // Set to 'false' to cancel page redirect.
+
 				// Execute the "After save" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.afterSave)
-				for (const trigger of triggers)
+				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
 				this.emitEvent('after-save-form')
@@ -317,7 +336,7 @@
 // eslint-disable-next-line
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 
-				return true
+				return redirectPage
 			},
 
 			/**
@@ -325,6 +344,8 @@
 			 */
 			async beforeDel()
 			{
+				let deleteForm = true // Set to 'false' to cancel form delete.
+
 				this.emitEvent('before-delete-form')
 
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
@@ -332,7 +353,7 @@
 // eslint-disable-next-line
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 
-				return true
+				return deleteForm
 			},
 
 			/**
@@ -340,6 +361,8 @@
 			 */
 			async afterDel()
 			{
+				let redirectPage = true // Set to 'false' to cancel page redirect.
+
 				this.emitEvent('after-delete-form')
 
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
@@ -347,7 +370,7 @@
 // eslint-disable-next-line
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 
-				return true
+				return redirectPage
 			},
 
 			/**
@@ -355,9 +378,11 @@
 			 */
 			async beforeExit()
 			{
+				let leaveForm = true // Set to 'false' to cancel page redirect.
+
 				// Execute the "Before exit" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.beforeExit)
-				for (const trigger of triggers)
+				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
 				this.emitEvent('before-exit-form')
@@ -367,7 +392,7 @@
 // eslint-disable-next-line
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 
-				return true
+				return leaveForm
 			},
 
 			/**
@@ -377,7 +402,7 @@
 			{
 				// Execute the "After exit" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.afterExit)
-				for (const trigger of triggers)
+				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
 				this.emitEvent('after-exit-form')

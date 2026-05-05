@@ -1,10 +1,17 @@
-﻿using CSGenio;
-using CSGenio.core.di;
+﻿using CSGenio.business;
 using CSGenio.framework;
+using CSGenio.persistence;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+using Quidgest.Persistence.GenericQuery;
 using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.ComponentModel;
-using System.Net.Http;
+using System.Linq;
+using System.Net;
+using System.Security.Principal;
+using System.Text;
 using System.Text.Json.Nodes;
 using System.Web;
 
@@ -19,11 +26,53 @@ namespace GenioServer.security
      *      TokenEndpoint -> https://login.microsoftonline.com/[tennentId]/oauth2/v2.0/token
      */
 
-    [CredentialProvider(typeof(TokenCredential))]
-    [Description("Establishes identity using an external OpenIdConnect provider.")]
-    [DisplayName("OpenIdConnect")]
-    public class OpenIdConnectIdentityProvider : BaseIdentityProvider
+    public class OpenIdConnectIdentityProviderOptions
     {
+        public OpenIdConnectIdentityProviderOptions(string description, string jsonOptions)
+        {
+            Scope = new List<String>() 
+            { 
+                "openid", //This is the only mandatory scope and will return a sub claim which represents a unique identifier for the authenticated user.
+                "profile" //This scope value requests access to the End-User’s default profile Claims, which are: name, family_name, given_name, middle_name, nickname, preferred_username, profile, picture, website, gender, birthdate, zoneinfo, locale, and updated_at.                
+            };
+
+            if (Log.IsDebugEnabled)
+                Log.Debug(string.Format("OpenID Config: {0}", jsonOptions));
+
+            try
+            {
+                dynamic jsonOp = JObject.Parse(jsonOptions.Substring(jsonOptions.IndexOf("=") + 1));
+                Authority = jsonOp.Authority;
+                ClientId = jsonOp.ClientId;
+                try
+                {
+                    ClientSecret = jsonOp.ClientSecret;
+                    TokenEndpoint = jsonOp.TokenEndpoint;
+                }
+                catch 
+                {
+                    ClientSecret = null;
+                    TokenEndpoint = null;
+                }
+
+                UserIdField = jsonOp.UserIdField;
+
+                try
+                {
+                    Scopes = jsonOp.Scopes.ToObject<List<string>>();
+                }
+                catch { Scopes = null;}
+                
+                if(Scopes !=null)
+                    Scope.AddRange(Scopes);
+            }
+            catch(Exception ex)
+            {
+                Log.Error(string.Format("OpenIdConnectIdentityProviderOptions: {0}", ex.Message));
+                throw new Exception("Missing options! It's mandatory Authority, ClientId, ClientSecret and TokenEndpoint");
+            }
+        }
+
         /// <summary>
         /// Authority is the url used when making OpenIdConnect calls.
         /// </summary>
@@ -57,7 +106,8 @@ namespace GenioServer.security
         /// <summary>
         /// Gets the list of permissions to request.
         /// </summary>
-        public List<string> Scope { get; private set; } = new List<string>();
+        [JsonIgnore]
+        public List<string> Scope { get; private set; }
         /// <summary>
         /// field used to connect to a database user Ex: "email"
         /// </summary>
@@ -70,48 +120,40 @@ namespace GenioServer.security
         [SecurityProviderOption(optional: true)]
         [Description("List of user information properties to request")]
         public List<string> Scopes { get; set; }
+    }
 
-
-        /// <inheritdoc/>
-        public OpenIdConnectIdentityProvider(IdentityProviderCfgEl config) : base(config)
-        {
-            Scope = [
-                "openid", //This is the only mandatory scope and will return a sub claim which represents a unique identifier for the authenticated user.
-                "profile" //This scope value requests access to the End-User’s default profile Claims, which are: name, family_name, given_name, middle_name, nickname, preferred_username, profile, picture, website, gender, birthdate, zoneinfo, locale, and updated_at.                
-            ];
-
-            if (Scopes != null)
-                Scope.AddRange(Scopes);
-        }
-
-
+    [CredentialProvider(typeof(TokenCredential))]
+    [Description("Establishes identity using an external OpenIdConnect provider.")]
+    [DisplayName("OpenIdConnect")]
+    public class OpenIdConnectIdentityProvider : BaseIdentityProvider
+    {
         /// <inheritdoc/>
         public override bool HasRedirectLogin() => true;
 
         /// <inheritdoc/>
         public override string GetRedirectLoginUrl(string callback, string state = null)
         {
-            if (string.IsNullOrEmpty(Authority) || string.IsNullOrEmpty(ClientId) || string.IsNullOrEmpty(callback))
-                throw new InvalidOperationException("It's mandatory to configure Authority, ClientId and CallbackPath options");
+            if (String.IsNullOrEmpty(Options.Authority) || String.IsNullOrEmpty(Options.ClientId) || String.IsNullOrEmpty(callback))
+                throw new Exception("It's mandatory to configure Authority, ClientId and CallbackPath options");
 
-            var uriBuilder = new UriBuilder(Authority);
+            var uriBuilder = new UriBuilder(Options.Authority);
             var parameters = HttpUtility.ParseQueryString(string.Empty);
             //authorization flow
-            if (!string.IsNullOrEmpty(TokenEndpoint))
+            if (!string.IsNullOrEmpty(Options.TokenEndpoint))
                 parameters["response_type"] = "code";
             //implicit flow
             else
                 parameters["response_type"] = "id_token";
             parameters["response_mode"] = "form_post";
             parameters["nonce"] = Guid.NewGuid().ToString("N").ToUpper();
-            parameters["client_id"] = ClientId;
+            parameters["client_id"] = Options.ClientId;
             parameters["redirect_uri"] = callback;
-            parameters["scope"] = string.Join(" ", Scope);
+            parameters["scope"] = string.Join(" ", Options.Scope);
 
             if (!string.IsNullOrEmpty(state))
                 parameters["state"] = state;
 
-            uriBuilder.Query = HttpUtility.UrlDecode(parameters.ToString());
+            uriBuilder.Query = System.Web.HttpUtility.UrlDecode(parameters.ToString());
 
             if (Log.IsDebugEnabled)
                 Log.Debug(string.Format("GetRedirectLoginUrl: {0}", uriBuilder.Uri.ToString()));
@@ -119,28 +161,75 @@ namespace GenioServer.security
             return uriBuilder.Uri.ToString();
         }
 
+        /// <inheritdoc/>
+        public override bool RegisterExternalId(Credential credential, User user)
+        {
+            if (!(credential is TokenCredential tokenCredential))
+                return false;
+
+            try
+            {
+                string username = ValidateToken(tokenCredential);
+                if(string.IsNullOrEmpty(username)) 
+                    return false;
+
+                var sp = PersistentSupport.getPersistentSupport(user.Year);
+
+                //save data to PSW
+                sp.openConnection();
+                var userPsw = CSGenioApsw.search(sp, user.Codpsw, user);
+                //UserId-Email matching
+                if (!string.IsNullOrEmpty(Options.UserIdField))
+                    userPsw.ValEmail = username;
+                //External userId matching
+                else
+                    userPsw.ValUserid = username;
+                userPsw.updateDirect(sp);
+                sp.closeConnection();
+            }
+            catch(Exception ex)
+            {
+                Log.Error(ex.Message);
+                return false;
+            }
+
+            return true;
+        }
+
+
+        [SecurityProviderOption(isJson:true)]
+        public OpenIdConnectIdentityProviderOptions Options { get; set; }
+
+        public OpenIdConnectIdentityProvider ()
+        {
+            var allOpenIdAuth = Configuration.Security.IdentityProviders.FindAll(x => x.Type == typeof(OpenIdConnectIdentityProvider).FullName);
+            if (allOpenIdAuth.Count == 0)
+                return;
+
+            Options = new OpenIdConnectIdentityProviderOptions(allOpenIdAuth[0].Name, allOpenIdAuth[0].Config);
+        }
+
+        //Legacy mechanism so we can initialize the json options without doing it in the constructor
+        //TODO: The complex options configuration format needs to be refactored!
+        public void InitJsonOptions()
+        {
+            var ip = Configuration.Security.IdentityProviders.FirstOrDefault(x => x.Name == this.Id);
+            Options = new OpenIdConnectIdentityProviderOptions(ip.Description, ip.Config);
+        }
+
+
+
         /// <summary>
         /// Will check credentials and will find the "authenticated" user are on our application
         /// </summary>
         /// <param name="credential">Token identification to user on external provider</param>
         /// <returns>Internal Identity when user are found and success login on external provider</returns>
-        public override GenioIdentity Authenticate(Credential credential)
+        public override IIdentity Authenticate(Credential credential)
         {
             if (credential is TokenCredential token)
                 return Authenticate(token);
 
             return null;
-        }
-        
-        /// <summary>
-        /// Will check credentials and will find the "authenticated" user are on our application
-        /// </summary>
-        /// <param name="credential">Token identification to user on external provider</param>
-        /// <param name="code">When not empty will double check if code returned from JWT are alright authenticated on external provider</param>
-        /// <returns>Internal Identity when user are found and success login on external provider</returns>
-        private GenioIdentity Authenticate(TokenCredential credential)
-        {
-            return ValidateToken(credential);
         }
 
         /// <summary>
@@ -148,37 +237,46 @@ namespace GenioServer.security
         /// </summary>
         /// <param name="credential">Token identification to user on external provider</param>
         /// <returns>The external identity if it suceeds or null in case it fails</returns>
-        private GenioIdentity ValidateToken(TokenCredential tokenCredential)
+        private string ValidateToken(TokenCredential tokenCredential)
         {
             //Authorization Flow - Exchange the auth token for the identity token on the external service
-            if (!string.IsNullOrEmpty(TokenEndpoint))
+            if (!string.IsNullOrEmpty(Options.TokenEndpoint))
             {
-                if (string.IsNullOrEmpty(ClientSecret))
+                if (string.IsNullOrEmpty(Options.ClientSecret))
                     return null;
                 if (string.IsNullOrEmpty(tokenCredential.Auth))
                     return null;
 
-                using var http = GenioDI.HttpFactory.CreateClient("openid");
-                http.DefaultRequestHeaders.Accept.Add(new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue("application/json"));
+                using (var wb = new WebClient())
+                {
+                    var data = new NameValueCollection();
+                    data["grant_type"] = "authorization_code";
+                    data["code"] = tokenCredential.Auth;
+                    data["client_id"] = Options.ClientId;
+                    data["client_secret"] = Options.ClientSecret;
+                    data["redirect_uri"] = tokenCredential.OriginUrl; //HydrateURL(Options.CallbackPath);
 
-                var content = new FormUrlEncodedContent(new Dictionary<string, string> {
-                    { "grant_type", "authorization_code" },
-                    { "code", tokenCredential.Auth },
-                    { "client_id", ClientId },
-                    { "client_secret", ClientSecret },
-                    { "redirect_uri", tokenCredential.OriginUrl },
-                });
+                    try
+                    {
+                        var response = wb.UploadValues(Options.TokenEndpoint, "POST", data);
+                        string responseInString = Encoding.UTF8.GetString(response);
+                        
+                        var json = JsonNode.Parse(responseInString);
+                        var jwtstring = json["id_token"].GetValue<string>();
+                        var jwt = new System.IdentityModel.Tokens.Jwt.JwtSecurityToken(jwtstring);
+                        var ext_username = CalcExternalUsername(jwt);
 
-                var resp = http.PostAsync(TokenEndpoint, content).Result;
-                resp.EnsureSuccessStatusCode();
-                string responseInString = resp.Content.ReadAsStringAsync().Result;
+                        if (Log.IsDebugEnabled)
+                            Log.Debug(string.Format("ValidateToken Autorization FLow: {0}", ext_username));
 
-                var json = JsonNode.Parse(responseInString);
-                var jwtstring = json["id_token"].GetValue<string>();
-                var jwt = new System.IdentityModel.Tokens.Jwt.JwtSecurityToken(jwtstring);
-                var ext_username = CalcExternalUsername(jwt);
-
-                return ext_username;
+                        return ext_username;
+                    }
+                    catch (Exception ex)
+                    {
+                        Log.Error(string.Format("ValidateToken failed: {0}", ex.Message));
+                        throw ex;
+                    }
+                }
             }
             //Implicit Flow - Trust the jwt directly sent by the authentication callback
             // This is NOT recommended, and is considered a very insecure method
@@ -190,33 +288,95 @@ namespace GenioServer.security
                 //TODO: we should at least validate if the JWT public key matched the authorized issuer
                 var ext_username = CalcExternalUsername(jwt);
                 if (Log.IsDebugEnabled)
-                    Log.Debug(string.Format("ValidateToken Implicit Flow: {0}", ext_username.Name));
+                    Log.Debug(string.Format("ValidateToken Implicit Flow: {0}", ext_username));
 
                 return ext_username;
             }
         }
 
-        private GenioIdentity CalcExternalUsername(System.IdentityModel.Tokens.Jwt.JwtSecurityToken jwt)
+        private string CalcExternalUsername(System.IdentityModel.Tokens.Jwt.JwtSecurityToken jwt)
         {
-            GenioIdentity res = new()
-            {
-                Name = string.IsNullOrEmpty(UserIdField)
-                    ? jwt.Subject + "@" + jwt.Issuer
-                    : jwt.Payload[UserIdField].ToString(),
-                IsAuthenticated = true,
-                AuthenticationType = this.GetType().Name,
-                IdProperty = string.IsNullOrEmpty(UserIdField)
-                    ? GenioIdentityType.ExternalId
-                    : GenioIdentityType.Email
-            };
-
-            foreach (var prop in jwt.Payload)
-                res.Claims.Add(prop.Key, prop.Value.ToString());
-
-            return res;
+            if (!string.IsNullOrEmpty(Options.UserIdField))
+                return jwt.Payload[Options.UserIdField].ToString();
+            else
+                return jwt.Subject + "@" + jwt.Issuer;
         }
 
+        /// <summary>
+        /// Will check credentials and will find the "authenticated" user are on our application
+        /// </summary>
+        /// <param name="credential">Token identification to user on external provider</param>
+        /// <param name="code">When not empty will double check if code returned from JWT are alright authenticated on external provider</param>
+        /// <returns>Internal Identity when user are found and success login on external provider</returns>
+        private IIdentity Authenticate(TokenCredential credential)
+        {
+            string ext_username = ValidateToken(credential);
+            if (string.IsNullOrEmpty(ext_username))
+                return null;
 
+            //TODO: Extract this duplicated code in all providers with a UserService.GetUserBy[Name|Mail|UserId|PrimaryKey]
+            //At this moment the user is authenticated and we have to check if that user exist on database
+            IList<string> anos = new List<string>(Configuration.Years);
+            if (Configuration.Years.Count == 0)
+                anos.Add(Configuration.DefaultYear);
+                
+            IIdentity id = null;
+            foreach (string Qyear in anos)
+            {
+                PersistentSupport sp = PersistentSupport.getPersistentSupport(Qyear);
+                try
+                {
+                    sp.openConnection();
+                    id = Authenticate(ext_username, sp);
+                }
+                catch (Exception ex)
+                {
+                    if(Log.IsDebugEnabled)
+                        Log.Debug(string.Format("OpenIdConnectProvider authentication partial fail: {0}", ex.Message));
+                }
+                finally
+                {
+                    sp.closeConnection();
+                }
 
+                if (id != null)
+                    break;
+            }
+
+            return id;
+        }
+
+        protected virtual IIdentity Authenticate(string ext_username, PersistentSupport sp)
+        {
+            try
+            {
+                //if the options specify an email jwt id field, then match with psw email field
+                //else match with userid field                
+                string psw_id_field = string.IsNullOrEmpty(Options.UserIdField) ? "userid" : "email";
+
+                SelectQuery select = new SelectQuery()
+                    .Select("psw", "status")
+                    .Select("psw", "nome")
+                    .From(Area.AreaPSW)
+                    .Where(CriteriaSet.And().Equal("psw", psw_id_field, ext_username));
+
+                var results = sp.executeReaderOneRow(select);
+                if (results.Count < 2)
+                    return null;
+
+                int status = DBConversion.ToInteger(results[0]);
+                string name = DBConversion.ToString(results[1]);
+
+                if (status == 2)
+                    return null;
+
+                return new GenericIdentity(name);
+            }
+            catch (Exception ex)
+            {
+                Log.Error(String.Format("Authenticate: {0}", ex.Message));
+                return null;
+            }
+        }
     }
 }

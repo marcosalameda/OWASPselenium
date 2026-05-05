@@ -1,20 +1,20 @@
-﻿using CSGenio.business;
-using CSGenio.framework;
-using CSGenio.persistence;
-using GenioMVC.Helpers;
-using GenioMVC.Models.Exception;
-using GenioMVC.Models.Navigation;
+﻿using JsonIgnoreAttribute = System.Text.Json.Serialization.JsonIgnoreAttribute;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Quidgest.Persistence;
-using Quidgest.Persistence.GenericQuery;
-
 using System.Collections;
 using System.Collections.Concurrent;
 using System.Collections.Specialized;
 using System.ComponentModel.DataAnnotations;
 using System.Data;
 using System.Globalization;
-using System.Text.Json.Serialization;
+
+using CSGenio.business;
+using CSGenio.framework;
+using CSGenio.persistence;
+using GenioMVC.Helpers;
+using GenioMVC.Models.Exception;
+using GenioMVC.Models.Navigation;
+using Quidgest.Persistence;
+using Quidgest.Persistence.GenericQuery;
 
 namespace GenioMVC.ViewModels.Lendi
 {
@@ -44,7 +44,6 @@ namespace GenioMVC.ViewModels.Lendi
 		public string ValCodpess2 { get; set; }
 
 		#endregion
-
 		/// <summary>
 		/// Title: "Lending" | Type: "C"
 		/// </summary>
@@ -64,7 +63,7 @@ namespace GenioMVC.ViewModels.Lendi
 		/// Title: "Equipment" | Type: "C"
 		/// </summary>
 		[ValidateSetAccess]
-		public string EquipValDesignat
+		public string EquipValDesignat 
 		{
 			get
 			{
@@ -81,7 +80,7 @@ namespace GenioMVC.ViewModels.Lendi
 		/// Title: "Loan Frequency" | Type: "AN"
 		/// </summary>
 		[ValidateSetAccess]
-		public decimal EquipValFrequenc
+		public decimal EquipValFrequenc 
 		{
 			get
 			{
@@ -321,7 +320,12 @@ namespace GenioMVC.ViewModels.Lendi
 			}
 		}
 
-		/// <inheritdoc />
+		/// <summary>
+		/// Sets the value of a single property of the view model based on the provided table and field names.
+		/// </summary>
+		/// <param name="fullFieldName">The full field name in the format "table.field".</param>
+		/// <param name="value">The field value.</param>
+		/// <exception cref="ArgumentNullException">Thrown if <paramref name="fullFieldName"/> is null.</exception>
 		public override void SetViewModelValue(string fullFieldName, object value)
 		{
 			try
@@ -411,17 +415,6 @@ namespace GenioMVC.ViewModels.Lendi
 				// Conexão deve estar aberta de fora. Podem haver formulas que utilizam funções "manuais".
 				// TODO: It needs to be analyzed whether we should disable the security of field filling here. If there is any case where the field with the block condition can only be calculated after the double calculation of the formulas.
 				MapToModel(Model);
-
-				// If it's inserting or duplicating, needs to fill the default values.
-				if (Navigation.CurrentLevel.FormMode == FormMode.New || Navigation.CurrentLevel.FormMode == FormMode.Duplicate)
-				{
-					FunctionType funcType = Navigation.CurrentLevel.FormMode == FormMode.New
-						? FunctionType.INS
-						: FunctionType.DUP;
-
-					Model.baseklass.fillValuesDefault(m_userContext.PersistentSupport, funcType);
-				}
-
 				// Preencher operações internas
 				Model.klass.fillInternalOperations(m_userContext.PersistentSupport, oldvalues);
 				MapFromModel(Model);
@@ -466,7 +459,6 @@ namespace GenioMVC.ViewModels.Lendi
 			Load_Comod___pess1name____(qs, lazyLoad);
 			Load_Comod___pess2name____(qs, lazyLoad);
 			Load_Comod___equipregistnr(qs, lazyLoad);
-
 // USE /[MANUAL GQT VIEWMODEL_LOADPARTIAL COMOD]/
 		}
 
@@ -541,7 +533,10 @@ namespace GenioMVC.ViewModels.Lendi
 				}
 			}
 
-			TablePess1Name = new TableDBEdit<Models.Pess1>();
+			TablePess1Name = new TableDBEdit<Models.Pess1>
+			{
+				IsLazyLoad = lazyLoad
+			};
 
 			if (lazyLoad)
 			{
@@ -556,7 +551,7 @@ namespace GenioMVC.ViewModels.Lendi
 
 			if (comod___pess1name____DoLoad)
 			{
-				List<ColumnSort> sorts = [];
+				List<ColumnSort> sorts = new List<ColumnSort>();
 				ColumnSort requestedSort = GetRequestSort(TablePess1Name, "sTablePess1Name", "dTablePess1Name", qs, "pess1");
 				if (requestedSort != null)
 					sorts.Add(requestedSort);
@@ -606,7 +601,7 @@ namespace GenioMVC.ViewModels.Lendi
 
 				TablePess1Name.SetPagination(page, numberItems, listing.HasMore, listing.GetTotal, listing.TotalRecords);
 				TablePess1Name.Query = query;
-				TablePess1Name.Elements = listing.RowsForViewModel((r) => new GenioMVC.Models.Pess1(m_userContext, r, true, _fieldsToSerialize_COMOD___PESS1NAME____));
+				TablePess1Name.Elements = listing.RowsForViewModel<GenioMVC.Models.Pess1>((r) => new GenioMVC.Models.Pess1(m_userContext, r, true, _fieldsToSerialize_COMOD___PESS1NAME____));
 
 				//created by [ MH ] at [ 14.04.2016 ] - Foi alterada a forma de retornar a key do novo registo inserido / editado no form de apoio do DBEdit.
 				//last update by [ MH ] at [ 10.05.2016 ] - Validação se key encontra-se no level atual, as chaves dos niveis anteriores devem ser ignorados.
@@ -728,7 +723,10 @@ namespace GenioMVC.ViewModels.Lendi
 				}
 			}
 
-			TablePess2Name = new TableDBEdit<Models.Pess2>();
+			TablePess2Name = new TableDBEdit<Models.Pess2>
+			{
+				IsLazyLoad = lazyLoad
+			};
 
 			if (lazyLoad)
 			{
@@ -743,7 +741,7 @@ namespace GenioMVC.ViewModels.Lendi
 
 			if (comod___pess2name____DoLoad)
 			{
-				List<ColumnSort> sorts = [];
+				List<ColumnSort> sorts = new List<ColumnSort>();
 				ColumnSort requestedSort = GetRequestSort(TablePess2Name, "sTablePess2Name", "dTablePess2Name", qs, "pess2");
 				if (requestedSort != null)
 					sorts.Add(requestedSort);
@@ -793,7 +791,7 @@ namespace GenioMVC.ViewModels.Lendi
 
 				TablePess2Name.SetPagination(page, numberItems, listing.HasMore, listing.GetTotal, listing.TotalRecords);
 				TablePess2Name.Query = query;
-				TablePess2Name.Elements = listing.RowsForViewModel((r) => new GenioMVC.Models.Pess2(m_userContext, r, true, _fieldsToSerialize_COMOD___PESS2NAME____));
+				TablePess2Name.Elements = listing.RowsForViewModel<GenioMVC.Models.Pess2>((r) => new GenioMVC.Models.Pess2(m_userContext, r, true, _fieldsToSerialize_COMOD___PESS2NAME____));
 
 				//created by [ MH ] at [ 14.04.2016 ] - Foi alterada a forma de retornar a key do novo registo inserido / editado no form de apoio do DBEdit.
 				//last update by [ MH ] at [ 10.05.2016 ] - Validação se key encontra-se no level atual, as chaves dos niveis anteriores devem ser ignorados.
@@ -919,7 +917,10 @@ namespace GenioMVC.ViewModels.Lendi
 			// Area limit
 			comod___equipregistnrDoLoad &= AddCriteriaAreaLimit(comod___equipregistnrConds, CSGenio.business.CSGenioApess1.FldCodpesso, "pess1", this.ValCodpess1, true);
 
-			TableEquipRegistnr = new TableDBEdit<Models.Equip>();
+			TableEquipRegistnr = new TableDBEdit<Models.Equip>
+			{
+				IsLazyLoad = lazyLoad
+			};
 
 			if (lazyLoad)
 			{
@@ -937,7 +938,7 @@ namespace GenioMVC.ViewModels.Lendi
 
 			if (comod___equipregistnrDoLoad)
 			{
-				List<ColumnSort> sorts = [];
+				List<ColumnSort> sorts = new List<ColumnSort>();
 				ColumnSort requestedSort = GetRequestSort(TableEquipRegistnr, "sTableEquipRegistnr", "dTableEquipRegistnr", qs, "equip");
 				if (requestedSort != null)
 					sorts.Add(requestedSort);
@@ -987,7 +988,7 @@ namespace GenioMVC.ViewModels.Lendi
 
 				TableEquipRegistnr.SetPagination(page, numberItems, listing.HasMore, listing.GetTotal, listing.TotalRecords);
 				TableEquipRegistnr.Query = query;
-				TableEquipRegistnr.Elements = listing.RowsForViewModel((r) => new GenioMVC.Models.Equip(m_userContext, r, true, _fieldsToSerialize_COMOD___EQUIPREGISTNR));
+				TableEquipRegistnr.Elements = listing.RowsForViewModel<GenioMVC.Models.Equip>((r) => new GenioMVC.Models.Equip(m_userContext, r, true, _fieldsToSerialize_COMOD___EQUIPREGISTNR));
 
 				//created by [ MH ] at [ 14.04.2016 ] - Foi alterada a forma de retornar a key do novo registo inserido / editado no form de apoio do DBEdit.
 				//last update by [ MH ] at [ 10.05.2016 ] - Validação se key encontra-se no level atual, as chaves dos niveis anteriores devem ser ignorados.

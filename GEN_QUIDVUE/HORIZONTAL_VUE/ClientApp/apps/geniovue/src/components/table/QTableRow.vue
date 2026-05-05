@@ -15,24 +15,23 @@
 		@keydown="rowOnKeydown"
 		@keyup="rowOnKeyup">
 		<!-- BEGIN: cell -->
-		<template
-			v-for="(column, key, index) in columns"
-			:key="index">
+		<template v-for="(column, key, index) in columns">
 			<td
 				v-if="canShowColumn(column)"
-				:headers="headerCellIds[column.name]"
+				:key="index"
 				:class="cellClasses(column)"
 				:style="getCellStyles(column)"
 				:title="getCellTitle(column)">
+				<slot :name="'vbt-' + getCellSlotName(column)" />
 				<!-- BEGIN: Row drag and drop column -->
 				<template v-if="isDragAndDropColumn(column)">
 					<slot
 						:name="getCellSlotName(column)"
 						:row-key="row.rowKey"
 						:column="column">
-						<div class="q-table__row-drag">
+						<div class="c-table__dnd">
 							<span
-								class="q-table__row-drag-handle"
+								class="c-table__drag"
 								:title="texts.rowDragDropReorder"
 								@keydown="allowRowOrderKeys = true"
 								@keyup="reorderRowUpDown">
@@ -43,11 +42,10 @@
 							<q-button-group>
 								<q-button
 									:id="rowId + '-reorder-up'"
-									:aria-label="texts.moveUp"
+									:aria-label="texts.MoveUp"
 									variant="text"
+									data-table-action-selected="false"
 									tabindex="-1"
-									:data-table-action-selected="isNaN(rowIndex) || rowIndex <= 0 ? undefined : false"
-									:disabled="isNaN(rowIndex) || rowIndex <= 0"
 									@click="reorderRow(-1)">
 									<q-icon
 										icon="circle-arrow-top"
@@ -55,14 +53,24 @@
 								</q-button>
 								<q-button
 									:id="rowId + '-reorder-down'"
-									:aria-label="texts.moveDown"
+									:aria-label="texts.MoveDown"
 									variant="text"
+									data-table-action-selected="false"
 									tabindex="-1"
-									:data-table-action-selected="isNaN(rowIndex) || rowIndex >= rowCount - 1 ? undefined : false"
-									:disabled="isNaN(rowIndex) || rowIndex >= rowCount - 1"
 									@click="reorderRow(1)">
 									<q-icon
 										icon="circle-arrow-down"
+										:key="row.Rownum" />
+								</q-button>
+								<q-button
+									v-if="addAction"
+									:aria-label="texts.rowAddNewAfter"
+									variant="text"
+									data-table-action-selected="false"
+									tabindex="-1"
+									@click="addRowAfter">
+									<q-icon
+										icon="add"
 										:key="row.Rownum" />
 								</q-button>
 							</q-button-group>
@@ -77,17 +85,14 @@
 						:row-key="row.rowKey"
 						:column="column">
 						<q-action-list
-							data-table-action-selected="false"
-							dropdown-size="small"
-							placement="bottom-start"
-							tabindex="-1"
-							variant="outlined"
-							:borderless="rowActionDisplay === 'inline'"
-							:groups="rowActionGroups"
-							:items="rowActions"
+							:actions="rowActions"
+							:action-groups="rowActionGroups"
 							:readonly="readonly"
-							:title="texts.selectOptions"
-							@click="emitRowAction" />
+							:texts="texts"
+							data-table-action-selected="false"
+							tabindex="-1"
+							@click:action="(emitAction) => emitRowAction(emitAction)"
+						/>
 					</slot>
 				</template>
 				<!-- END: Row action column -->
@@ -103,7 +108,6 @@
 							:readonly="readonly"
 							:row-key="row.rowKey"
 							:disabled="disableCheckbox"
-							:check-box-size="checkBoxSize"
 							:title="texts.select"
 							@click="onSelect"
 							@toggle-row-selected="$emit('toggle-row-selected', row.rowKey)" />
@@ -135,7 +139,8 @@
 					<slot
 						:name="getCellSlotName(column)"
 						:row="row"
-						:column="column" />
+						:column="column">
+					</slot>
 				</template>
 				<!-- END: Totalizer title column -->
 				<!-- BEGIN: Normal data columns -->
@@ -144,12 +149,12 @@
 						:name="getCellSlotName(column)"
 						:row="row"
 						:column="column"
-						:cell-value="getValueFromRow(row, column)"
-						:emit-event="handleEmitEvent">
+						:cell-value="getValueFromRow(row, column)">
 						<!-- If column has tree expand / collapse action, add wrapper element, if not, use v-fragment which adds content but does not add wrapper element -->
 						<span
 							v-if="hasTreeAction(column)"
-							:style="{ 'margin-left': level * 24 + 'px' }" />
+							:style="{ 'margin-left': level * 24 + 'px' }">
+						</span>
 
 						<q-button
 							v-if="hasTreeAction(column)"
@@ -161,7 +166,7 @@
 							data-testid="tree-action">
 							<q-icon
 								:icon="showChildren ? collapseIcon : expandIcon"
-								class="action-item tree-action-item" />
+								:class="['action-item', 'tree-action-item']" />
 						</q-button>
 						<span
 							v-if="hasTreeAction(column) && !hasDataAction(column)"
@@ -185,6 +190,7 @@
 									})
 								"
 								:background-color="getBackgroundColor(column)"
+								:raw-value="getValueFromRow(row, column)"
 								:table-name="tableName"
 								:row-index="rowIndex"
 								:column-name="column.name"
@@ -213,15 +219,15 @@
 	import includes from 'lodash-es/includes'
 	import _find from 'lodash-es/find'
 
-	import { QActionList } from '@quidgest/clientapp/components'
 	import QRenderBoolean from '@/components/rendering/QRenderBoolean.vue'
 	import QRenderData from '@/components/rendering/QRenderData.vue'
 	import QRenderDocument from '@/components/rendering/QRenderDocument.vue'
 	import QRenderHyperlink from '@/components/rendering/QRenderHyperlink.vue'
 	import QRenderImage from '@/components/rendering/QRenderImage.vue'
+	import QActionList from '@/components/rendering/QActionList.vue'
 
-	import { getCellValue } from '@/mixins/listFunctions.js'
-	import { btnHasPermission } from '@quidgest/clientapp/utils/genericFunctions'
+	import listFunctions from '@/mixins/listFunctions.js'
+	import genericFunctions from '@quidgest/clientapp/utils/genericFunctions'
 
 	export default {
 		name: 'QTableRow',
@@ -244,6 +250,7 @@
 		],
 
 		components: {
+			QTableRecordActionsMenu: defineAsyncComponent(() => import('@/components/table/QTableRecordActionsMenu.vue')),
 			QTableChecklistCheckbox: defineAsyncComponent(() => import('@/components/table/QTableChecklistCheckbox.vue')),
 			QRenderBoolean,
 			QRenderData,
@@ -291,19 +298,19 @@
 			propCellClasses: [Object, String],
 
 			/**
-			 * The index of the row within the current set of table data.
+			 * A unique identifier for the row, often matching the primary key from the data source.
 			 */
-			rowIndex: {
+			uniqueId: {
 				type: [Number, String],
 				required: true
 			},
 
 			/**
-			 * The total count of rows in the table.
+			 * The index of the row within the current set of table data.
 			 */
-			rowCount: {
-				type: Number,
-				default: 0
+			rowIndex: {
+				type: [Number, String],
+				required: true
 			},
 
 			/**
@@ -347,14 +354,6 @@
 			},
 
 			/**
-			 * IDs for header cells.
-			 */
-			headerCellIds: {
-				type: Object,
-				default: () => ({})
-			},
-
-			/**
 			 * An array of default CRUD actions that can be performed on the row.
 			 */
 			crudActions: {
@@ -379,11 +378,75 @@
 			},
 
 			/**
+			 * An array of custom-defined general actions available at the table level.
+			 */
+			generalCustomActions: {
+				type: Array,
+				default: () => []
+			},
+
+			/**
 			 * Determines the display style for row actions ('dropdown', 'inline', etc.).
 			 */
 			rowActionDisplay: {
 				type: String,
 				default: 'dropdown'
+			},
+
+			/**
+			 * Determines the placement of action buttons within the row ('left', 'right', etc.).
+			 */
+			actionsPlacement: {
+				type: String,
+				default: 'left'
+			},
+
+			/**
+			 * Determines the placement of general action buttons in relation to the table ('below', 'above', etc.).
+			 */
+			generalActionsPlacement: {
+				type: String,
+				default: 'below'
+			},
+
+			/**
+			 * Flag indicating if icons for row actions should be displayed.
+			 */
+			showRowActionIcon: {
+				type: Boolean,
+				default: true
+			},
+
+			/**
+			 * Flag indicating if icons for general actions should be shown.
+			 */
+			showGeneralActionIcon: {
+				type: Boolean,
+				default: true
+			},
+
+			/**
+			 * Flag indicating if text labels for row actions should be visible.
+			 */
+			showRowActionText: {
+				type: Boolean,
+				default: true
+			},
+
+			/**
+			 * Flag indicating if text labels for general actions should be displayed.
+			 */
+			showGeneralActionText: {
+				type: Boolean,
+				default: true
+			},
+
+			/**
+			 * Custom CSS classes to be applied to action buttons.
+			 */
+			actionClasses: {
+				type: Object,
+				default: () => ({})
 			},
 
 			/**
@@ -406,6 +469,14 @@
 			 * Flag indicating if the overall table is in a read-only state.
 			 */
 			readonly: {
+				type: Boolean,
+				default: false
+			},
+
+			/**
+			 * Flag indicating the availability of drag-and-drop row reordering.
+			 */
+			hasRowDragAndDrop: {
 				type: Boolean,
 				default: false
 			},
@@ -489,14 +560,6 @@
 			navigatedRowKeyPath: {
 				type: Array,
 				default: () => []
-			},
-
-			/**
-			 * Check box size
-			 */
-			checkBoxSize: {
-				type: String,
-				default: 'regular'
 			}
 		},
 
@@ -514,16 +577,21 @@
 			'getValueFromRow',
 			'getCellSlotName',
 			'canShowColumn',
+			'isSortableColumn',
 			'isActionsColumn',
 			'isExtendedActionsColumn',
 			'isChecklistColumn',
 			'isDragAndDropColumn',
 			'isTotalizerColumn',
+			'getRowClasses',
 			'getRowTitle',
+			'rowIsValid',
 			'hasExtendedAction',
 			'hasDataAction',
 			'getCellDataDisplay',
-			'isRowSelected'
+			'getRowCellDataTitles',
+			'isRowSelected',
+			'rowWithoutChildren'
 		],
 
 		mounted() {
@@ -549,7 +617,7 @@
 			},
 
 			rowClasses() {
-				const classes = ['c-table__row']
+				let classes = ['c-table__row']
 
 				//Row selected
 				if (this.rowSelected) classes.push('vbt-row-selected')
@@ -574,7 +642,7 @@
 						if (typeof value === 'boolean' && value) {
 							classes += key
 						} else if (typeof value === 'function') {
-							const truth = value(this.row)
+							let truth = value(this.row)
 							if (typeof truth === 'boolean' && truth) {
 								classes += ' '
 								classes += key
@@ -643,63 +711,41 @@
 			/**
 			 * Computes the list of actions and extra properties to use in the row actions
 			 */
-			rowActions() {
-				const mainRowActions = [
-					...this.customActions.map((act) => ({
+			rowActions(){
+				return [
+					...this.customActions.map(act => ({
 						...act,
-						key: act.id,
-						label: act.title,
 						group: 'custom',
-						isVisible: this.row.actionVisibility?.[act.id] ?? act.isVisible,
-						disabled: this.row.actionDisability?.[act.id] ?? act.disabled
+						isVisible: this.row.actionVisibility?.[act.id] ?? act.isVisible
 					})),
-					...this.crudActions.map((act) => ({
+					...this.crudActions.map(act => ({
 						...act,
-						key: act.id,
-						label: act.title,
 						group: 'crud',
-						disabled: !btnHasPermission(this.row.btnPermission, act.id)
+						disabled: !genericFunctions.btnHasPermission(this.row.btnPermission, act.id)
 					}))
-				]
-
-				if (typeof this.addAction === 'object') {
-					const containsDragAndDrop = this.columns?.some((column) => this.isDragAndDropColumn(column)) ?? false
-
-					if (containsDragAndDrop) {
-						mainRowActions.unshift({
-							...this.addAction,
-							key: this.addAction.id,
-							label: this.texts.insertBelow,
-							icon: { icon: 'add' },
-							group: 'dragAndDrop'
-						})
-					}
-				}
-
-				return mainRowActions
+				];
 			},
 
 			/**
 			 * Computes the groups of actions to use in the row actions
 			 */
 			rowActionGroups() {
-				const display = this.rowActionDisplay
-				const size = 'small'
-
+				const commonSettings = {
+					display: this.rowActionDisplay,
+					disabled: false,
+					size: 'small',
+					borderless: true,
+					separator: false,
+					customClass: undefined
+				}
 				return [
-					{ id: 'dragAndDrop', display, size },
-					{ id: 'custom', display, size },
-					{ id: 'crud', display, size }
+					{ id: 'custom', ...commonSettings },
+					{ id: 'crud', ...commonSettings },
 				]
 			}
 		},
 
 		methods: {
-			handleEmitEvent(eventName, params)
-			{
-				this.$emit(eventName, ...params)
-			},
-
 			//CSS classes for cell
 			/**
 			 * Get CSS classes for column
@@ -707,10 +753,10 @@
 			 * @returns String
 			 */
 			cellClasses(column) {
-				const classes = []
+				let classes = []
 
 				//BEGIN: Text alignment class
-				const alignments = ['text-justify', 'text-right', 'text-left', 'text-center']
+				let alignments = ['text-justify', 'text-right', 'text-left', 'text-center']
 
 				//Undefined data type, use rowTextAlignment
 				if (has(column, 'rowTextAlignment') && includes(alignments, column.rowTextAlignment)) {
@@ -731,7 +777,7 @@
 						if (typeof value === 'boolean' && value) {
 							classes.push(key)
 						} else if (typeof value === 'function') {
-							const truth = value(this.row, column, this.getValueFromRow(this.row, column.name))
+							let truth = value(this.row, column, this.getValueFromRow(this.row, column.name))
 							if (typeof truth === 'boolean' && truth) {
 								classes.push(key)
 							}
@@ -787,7 +833,7 @@
 			 * @returns
 			 */
 			rowClickAction() {
-				this.$emit('row-click', this.row, this.rowId)
+				this.$emit('row-click', this.row)
 			},
 
 			/**
@@ -799,12 +845,17 @@
 
 				switch(key)
 				{
+					case "Insert":
+						// Insert new record
+						this.$emit('row-action', { id: 'insert', rowKeyPath: this.rowKeyPath ?? [this.rowKey] })
+						event.preventDefault()
+						break
 					case "Delete":
 						// Prevent if not focused on the row element
 						if (event.target.tagName !== 'TR')
 							break
 						// Delete record
-						this.$emit('row-action', { id: 'delete', rowKeyPath: this.rowKeyPath ?? [this.rowKey], returnElement: this.rowId })
+						this.$emit('row-action', { id: 'delete', rowKeyPath: this.rowKeyPath ?? [this.rowKey] })
 						event.preventDefault()
 						break
 				}
@@ -822,7 +873,7 @@
 					case 'Enter':
 						// Trigger only from the row and cell elements.
 						if (event?.target.tagName === 'TR' || event?.target.tagName === 'TD')
-							this.$emit('row-click', this.row, this.rowId)
+							this.$emit('row-click', this.row)
 						break
 				}
 			},
@@ -915,30 +966,12 @@
 
 			/**
 			 * Emit row action
-			 * @param {string} optionKey The identifier of the selected action
+			 * @param emitAction {Object}
+			 * @returns Boolean
 			 */
-			emitRowAction(optionKey) {
-				let emitAction = {
-					...this.rowActions.find((e) => e.key === optionKey),
-					returnElement: this.rowId
-				}
-
-				// Check if it is a Drag&Drop action
-				if (emitAction?.group === 'dragAndDrop' && emitAction.id === 'insert') {
-					// Add new row after this row
-					const addNewAction = cloneDeep(this.addAction)
-					if (!addNewAction) return
-
-					// Pre-fill order field with current + 1
-					const sortColumnName = `${this.sortOrderColumn.area}.${this.sortOrderColumn.field}`.toLowerCase()
-					addNewAction.params.prefillValues = {
-						[sortColumnName]: parseInt(getCellValue(this.row, this.sortOrderColumn)) + 1
-					}
-					emitAction = { action: addNewAction }
-				}
-
-				if (this.row.value !== undefined && this.row.value !== null)
-					emitAction.rowValue = this.row.value
+			emitRowAction(emitAction) {
+				if (this.row.Value !== undefined && this.row.Value !== null)
+					emitAction.rowValue = this.row.Value
 
 				if (this.rowKeyPath !== undefined && this.rowKeyPath !== null)
 					emitAction.rowKeyPath = this.rowKeyPath
@@ -955,7 +988,7 @@
 			 * @returns
 			 */
 			reorderRow(shift) {
-				const shiftValue = parseInt(shift)
+				var shiftValue = parseInt(shift)
 				//Update column value
 				this.$emit('row-reorder', { row: this.row, sortOrderColumn: this.sortOrderColumn, shiftValue })
 			},
@@ -966,7 +999,7 @@
 			 * @returns
 			 */
 			reorderRowUpDown(e) {
-				let shiftValue = 0
+				var shiftValue = 0
 				//Key pressed: tab
 				//Must disable ordering keys right after keyup if it's the tab key
 				//in order to avoid reordering rows when using shift+tab to tab backwards through elements
@@ -985,6 +1018,21 @@
 
 				//Update column value
 				this.reorderRow(shiftValue)
+			},
+
+			/**
+			 * Add new row after this row
+			 * @returns
+			 */
+			addRowAfter() {
+				var addNewAction = cloneDeep(this.addAction)
+				if (!addNewAction) return
+
+				const sortColumnName = `${this.sortOrderColumn.area.toLowerCase()}.${this.sortOrderColumn.field.toLowerCase()}`
+				addNewAction.params.prefillValues = {}
+				addNewAction.params.prefillValues[sortColumnName] =
+					parseInt(listFunctions.getCellValue(this.row, this.sortOrderColumn)) + 1
+				this.emitRowAction({ action: addNewAction })
 			},
 
 			onSelect(event)

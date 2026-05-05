@@ -9,13 +9,12 @@
 			<div
 				v-if="showFormHeader"
 				class="c-action-bar">
-				<component
+				<h1
 					v-if="formControl.uiComponents.header && formInfo.designation"
-					:is="topHeadingTag"
 					:id="formTitleId"
 					class="form-header">
 					{{ formInfo.designation }}
-				</component>
+				</h1>
 
 				<div class="c-action-bar__menu">
 					<template
@@ -39,13 +38,9 @@
 									:label="btn.label"
 									:disabled="btn.disabled"
 									@click="btn.action">
-									<template v-if="btn.icon">
-										<q-badge-indicator
-											:enabled="btn.badge?.isVisible ?? false"
-											:color="btn.badge?.color">
-											<q-icon v-bind="btn.icon" />
-										</q-badge-indicator>
-									</template>
+									<q-icon
+										v-if="btn.icon"
+										v-bind="btn.icon" />
 								</q-toggle-group-item>
 							</template>
 						</q-toggle-group>
@@ -57,7 +52,7 @@
 				v-if="$app.layout.FormAnchorsPosition === 'form-header' && visibleGroups.length > 0"
 				:anchors="anchorGroups"
 				:controls="visibleControls"
-				@focus-control="focusControl" />
+				@focus-control="(...args) => focusControl(...args)" />
 		</div>
 	</teleport>
 
@@ -78,7 +73,6 @@
 						v-if="btn.isActive && btn.isVisible && btn.showInHeading"
 						:id="`heading-${btn.id}`"
 						:label="btn.text"
-						:color="btn.color"
 						:variant="btn.variant"
 						:disabled="btn.disabled"
 						:icon-pos="btn.iconPos"
@@ -92,21 +86,18 @@
 			</q-button-group>
 		</div>
 
-		<q-container
-			fluid
+		<div
+			class="form-flow"
 			data-key="TPEQ1"
-			:data-identifier="primaryKeyValue"
-			:data-loading="!formInitialDataLoaded || !isActiveForm">
+			:data-loading="!formInitialDataLoaded">
 			<template v-if="formControl.initialized && showFormBody">
-				<q-row v-if="controls.TPEQ1___FAMI1FAMILY__.isVisible || controls.TPEQ1___TPEQ1TPEQUCOD.isVisible || controls.TPEQ1___TPEQ1NIVEL___.isVisible">
-					<q-col
-						v-if="controls.TPEQ1___FAMI1FAMILY__.isVisible"
-						cols="auto">
+				<q-row-container v-show="controls.TPEQ1___FAMI1FAMILY__.isVisible || controls.TPEQ1___TPEQ1TPEQUCOD.isVisible || controls.TPEQ1___TPEQ1NIVEL___.isVisible">
+					<q-control-wrapper
+						v-show="controls.TPEQ1___FAMI1FAMILY__.isVisible"
+						class="${Vue.GetControlWrapperClass($controlsColumn)}">
 						<base-input-structure
-							v-if="controls.TPEQ1___FAMI1FAMILY__.isVisible"
 							class="i-text"
-							v-bind="controls.TPEQ1___FAMI1FAMILY__.wrapperProps"
-							:id="getControlId(controls.TPEQ1___FAMI1FAMILY__)"
+							v-bind="controls.TPEQ1___FAMI1FAMILY__"
 							v-on="controls.TPEQ1___FAMI1FAMILY__.handlers"
 							:loading="controls.TPEQ1___FAMI1FAMILY__.props.loading"
 							:reporting-mode-on="reportingModeCAV"
@@ -114,37 +105,31 @@
 							<q-lookup
 								v-if="controls.TPEQ1___FAMI1FAMILY__.isVisible"
 								v-bind="controls.TPEQ1___FAMI1FAMILY__.props"
-								:id="getControlId(controls.TPEQ1___FAMI1FAMILY__)"
 								v-on="controls.TPEQ1___FAMI1FAMILY__.handlers" />
 							<q-see-more-tpeq1-fami1family
 								v-if="controls.TPEQ1___FAMI1FAMILY__.seeMoreIsVisible"
 								v-bind="controls.TPEQ1___FAMI1FAMILY__.seeMoreParams"
 								v-on="controls.TPEQ1___FAMI1FAMILY__.handlers" />
 						</base-input-structure>
-					</q-col>
-					<q-col
-						v-if="controls.TPEQ1___TPEQ1TPEQUCOD.isVisible || controls.TPEQ1___TPEQ1NIVEL___.isVisible"
-						cols="auto">
+					</q-control-wrapper>
+					<q-control-wrapper
+						v-show="controls.TPEQ1___TPEQ1TPEQUCOD.isVisible || controls.TPEQ1___TPEQ1NIVEL___.isVisible"
+						class="${Vue.GetControlWrapperClass($controlsColumn)}">
 						<base-input-structure
-							v-if="controls.TPEQ1___TPEQ1TPEQUCOD.isVisible"
 							class="i-text"
-							v-bind="controls.TPEQ1___TPEQ1TPEQUCOD.wrapperProps"
-							:id="getControlId(controls.TPEQ1___TPEQ1TPEQUCOD)"
+							v-bind="controls.TPEQ1___TPEQ1TPEQUCOD"
 							v-on="controls.TPEQ1___TPEQ1TPEQUCOD.handlers"
 							:loading="controls.TPEQ1___TPEQ1TPEQUCOD.props.loading"
 							:reporting-mode-on="reportingModeCAV"
 							:suggestion-mode-on="suggestionModeOn">
 							<q-text-field
 								v-bind="controls.TPEQ1___TPEQ1TPEQUCOD.props"
-								:id="getControlId(controls.TPEQ1___TPEQ1TPEQUCOD)"
 								@blur="onBlur(controls.TPEQ1___TPEQ1TPEQUCOD, model.ValTpequcod.value)"
 								@change="model.ValTpequcod.fnUpdateValueOnChange" />
 						</base-input-structure>
 						<base-input-structure
-							v-if="controls.TPEQ1___TPEQ1NIVEL___.isVisible"
 							class="i-text"
-							v-bind="controls.TPEQ1___TPEQ1NIVEL___.wrapperProps"
-							:id="getControlId(controls.TPEQ1___TPEQ1NIVEL___)"
+							v-bind="controls.TPEQ1___TPEQ1NIVEL___"
 							v-on="controls.TPEQ1___TPEQ1NIVEL___.handlers"
 							:loading="controls.TPEQ1___TPEQ1NIVEL___.props.loading"
 							:reporting-mode-on="reportingModeCAV"
@@ -152,102 +137,87 @@
 							<q-numeric-input
 								v-if="controls.TPEQ1___TPEQ1NIVEL___.isVisible"
 								v-bind="controls.TPEQ1___TPEQ1NIVEL___.props"
-								:id="getControlId(controls.TPEQ1___TPEQ1NIVEL___)"
 								@update:model-value="model.ValNivel.fnUpdateValue" />
 						</base-input-structure>
-					</q-col>
-				</q-row>
-				<q-row v-if="controls.TPEQ1___TPEQ1TIPOEQUI.isVisible">
-					<q-col
-						v-if="controls.TPEQ1___TPEQ1TIPOEQUI.isVisible"
-						cols="auto">
+					</q-control-wrapper>
+				</q-row-container>
+				<q-row-container v-show="controls.TPEQ1___TPEQ1TIPOEQUI.isVisible">
+					<q-control-wrapper
+						v-show="controls.TPEQ1___TPEQ1TIPOEQUI.isVisible"
+						class="${Vue.GetControlWrapperClass($controlsColumn)}">
 						<base-input-structure
-							v-if="controls.TPEQ1___TPEQ1TIPOEQUI.isVisible"
 							class="i-text"
-							v-bind="controls.TPEQ1___TPEQ1TIPOEQUI.wrapperProps"
-							:id="getControlId(controls.TPEQ1___TPEQ1TIPOEQUI)"
+							v-bind="controls.TPEQ1___TPEQ1TIPOEQUI"
 							v-on="controls.TPEQ1___TPEQ1TIPOEQUI.handlers"
 							:loading="controls.TPEQ1___TPEQ1TIPOEQUI.props.loading"
 							:reporting-mode-on="reportingModeCAV"
 							:suggestion-mode-on="suggestionModeOn">
 							<q-text-field
 								v-bind="controls.TPEQ1___TPEQ1TIPOEQUI.props"
-								:id="getControlId(controls.TPEQ1___TPEQ1TIPOEQUI)"
 								@blur="onBlur(controls.TPEQ1___TPEQ1TIPOEQUI, model.ValTipoequi.value)"
 								@change="model.ValTipoequi.fnUpdateValueOnChange" />
 						</base-input-structure>
-					</q-col>
-				</q-row>
-				<q-row v-if="controls.TPEQ1___TPEQ1TPEQUPAI.isVisible">
-					<q-col
-						v-if="controls.TPEQ1___TPEQ1TPEQUPAI.isVisible"
-						cols="auto">
+					</q-control-wrapper>
+				</q-row-container>
+				<q-row-container v-show="controls.TPEQ1___TPEQ1TPEQUPAI.isVisible">
+					<q-control-wrapper
+						v-show="controls.TPEQ1___TPEQ1TPEQUPAI.isVisible"
+						class="${Vue.GetControlWrapperClass($controlsColumn)}">
 						<base-input-structure
-							v-if="controls.TPEQ1___TPEQ1TPEQUPAI.isVisible"
 							class="i-text"
-							v-bind="controls.TPEQ1___TPEQ1TPEQUPAI.wrapperProps"
-							:id="getControlId(controls.TPEQ1___TPEQ1TPEQUPAI)"
+							v-bind="controls.TPEQ1___TPEQ1TPEQUPAI"
 							v-on="controls.TPEQ1___TPEQ1TPEQUPAI.handlers"
 							:loading="controls.TPEQ1___TPEQ1TPEQUPAI.props.loading"
 							:reporting-mode-on="reportingModeCAV"
 							:suggestion-mode-on="suggestionModeOn">
 							<q-text-field
 								v-bind="controls.TPEQ1___TPEQ1TPEQUPAI.props"
-								:id="getControlId(controls.TPEQ1___TPEQ1TPEQUPAI)"
 								@blur="onBlur(controls.TPEQ1___TPEQ1TPEQUPAI, model.ValTpequpai.value)"
 								@change="model.ValTpequpai.fnUpdateValueOnChange" />
 						</base-input-structure>
-					</q-col>
-				</q-row>
-				<q-row v-if="controls.TPEQ1___TPEQ1BACKCOLO.isVisible || controls.TPEQ1___TPEQ1CORLETRA.isVisible">
-					<q-col
-						v-if="controls.TPEQ1___TPEQ1BACKCOLO.isVisible"
-						cols="auto">
+					</q-control-wrapper>
+				</q-row-container>
+				<q-row-container v-show="controls.TPEQ1___TPEQ1BACKCOLO.isVisible || controls.TPEQ1___TPEQ1CORLETRA.isVisible">
+					<q-control-wrapper
+						v-show="controls.TPEQ1___TPEQ1BACKCOLO.isVisible"
+						class="${Vue.GetControlWrapperClass($controlsColumn)}">
 						<base-input-structure
-							v-if="controls.TPEQ1___TPEQ1BACKCOLO.isVisible"
 							class="i-text"
-							v-bind="controls.TPEQ1___TPEQ1BACKCOLO.wrapperProps"
-							:id="getControlId(controls.TPEQ1___TPEQ1BACKCOLO)"
+							v-bind="controls.TPEQ1___TPEQ1BACKCOLO"
 							v-on="controls.TPEQ1___TPEQ1BACKCOLO.handlers"
 							:loading="controls.TPEQ1___TPEQ1BACKCOLO.props.loading"
 							:reporting-mode-on="reportingModeCAV"
 							:suggestion-mode-on="suggestionModeOn">
 							<q-text-field
 								v-bind="controls.TPEQ1___TPEQ1BACKCOLO.props"
-								:id="getControlId(controls.TPEQ1___TPEQ1BACKCOLO)"
 								@blur="onBlur(controls.TPEQ1___TPEQ1BACKCOLO, model.ValBackcolo.value)"
 								@change="model.ValBackcolo.fnUpdateValueOnChange" />
 						</base-input-structure>
-					</q-col>
-					<q-col
-						v-if="controls.TPEQ1___TPEQ1CORLETRA.isVisible"
-						cols="auto">
+					</q-control-wrapper>
+					<q-control-wrapper
+						v-show="controls.TPEQ1___TPEQ1CORLETRA.isVisible"
+						class="${Vue.GetControlWrapperClass($controlsColumn)}">
 						<base-input-structure
-							v-if="controls.TPEQ1___TPEQ1CORLETRA.isVisible"
 							class="i-text"
-							v-bind="controls.TPEQ1___TPEQ1CORLETRA.wrapperProps"
-							:id="getControlId(controls.TPEQ1___TPEQ1CORLETRA)"
+							v-bind="controls.TPEQ1___TPEQ1CORLETRA"
 							v-on="controls.TPEQ1___TPEQ1CORLETRA.handlers"
 							:loading="controls.TPEQ1___TPEQ1CORLETRA.props.loading"
 							:reporting-mode-on="reportingModeCAV"
 							:suggestion-mode-on="suggestionModeOn">
 							<q-text-field
 								v-bind="controls.TPEQ1___TPEQ1CORLETRA.props"
-								:id="getControlId(controls.TPEQ1___TPEQ1CORLETRA)"
 								@blur="onBlur(controls.TPEQ1___TPEQ1CORLETRA, model.ValCorletra.value)"
 								@change="model.ValCorletra.fnUpdateValueOnChange" />
 						</base-input-structure>
-					</q-col>
-				</q-row>
-				<q-row v-if="controls.TPEQ1___TPEQ1PRECOMAX.isVisible || controls.TPEQ1___TPEQ1PRECOULT.isVisible">
-					<q-col
-						v-if="controls.TPEQ1___TPEQ1PRECOMAX.isVisible"
-						cols="auto">
+					</q-control-wrapper>
+				</q-row-container>
+				<q-row-container v-show="controls.TPEQ1___TPEQ1PRECOMAX.isVisible || controls.TPEQ1___TPEQ1PRECOULT.isVisible">
+					<q-control-wrapper
+						v-show="controls.TPEQ1___TPEQ1PRECOMAX.isVisible"
+						class="${Vue.GetControlWrapperClass($controlsColumn)}">
 						<base-input-structure
-							v-if="controls.TPEQ1___TPEQ1PRECOMAX.isVisible"
 							class="i-text"
-							v-bind="controls.TPEQ1___TPEQ1PRECOMAX.wrapperProps"
-							:id="getControlId(controls.TPEQ1___TPEQ1PRECOMAX)"
+							v-bind="controls.TPEQ1___TPEQ1PRECOMAX"
 							v-on="controls.TPEQ1___TPEQ1PRECOMAX.handlers"
 							:loading="controls.TPEQ1___TPEQ1PRECOMAX.props.loading"
 							:reporting-mode-on="reportingModeCAV"
@@ -255,18 +225,15 @@
 							<q-numeric-input
 								v-if="controls.TPEQ1___TPEQ1PRECOMAX.isVisible"
 								v-bind="controls.TPEQ1___TPEQ1PRECOMAX.props"
-								:id="getControlId(controls.TPEQ1___TPEQ1PRECOMAX)"
 								@update:model-value="model.ValPrecomax.fnUpdateValue" />
 						</base-input-structure>
-					</q-col>
-					<q-col
-						v-if="controls.TPEQ1___TPEQ1PRECOULT.isVisible"
-						cols="auto">
+					</q-control-wrapper>
+					<q-control-wrapper
+						v-show="controls.TPEQ1___TPEQ1PRECOULT.isVisible"
+						class="${Vue.GetControlWrapperClass($controlsColumn)}">
 						<base-input-structure
-							v-if="controls.TPEQ1___TPEQ1PRECOULT.isVisible"
 							class="i-text"
-							v-bind="controls.TPEQ1___TPEQ1PRECOULT.wrapperProps"
-							:id="getControlId(controls.TPEQ1___TPEQ1PRECOULT)"
+							v-bind="controls.TPEQ1___TPEQ1PRECOULT"
 							v-on="controls.TPEQ1___TPEQ1PRECOULT.handlers"
 							:loading="controls.TPEQ1___TPEQ1PRECOULT.props.loading"
 							:reporting-mode-on="reportingModeCAV"
@@ -274,20 +241,17 @@
 							<q-numeric-input
 								v-if="controls.TPEQ1___TPEQ1PRECOULT.isVisible"
 								v-bind="controls.TPEQ1___TPEQ1PRECOULT.props"
-								:id="getControlId(controls.TPEQ1___TPEQ1PRECOULT)"
 								@update:model-value="model.ValPrecoult.fnUpdateValue" />
 						</base-input-structure>
-					</q-col>
-				</q-row>
-				<q-row v-if="controls.TPEQ1___TPEQ1SINCE___.isVisible || controls.TPEQ1___TPEQ1QTDEQUIP.isVisible || controls.TPEQ1___TPEQ1KIT_____.isVisible">
-					<q-col
-						v-if="controls.TPEQ1___TPEQ1SINCE___.isVisible"
-						cols="auto">
+					</q-control-wrapper>
+				</q-row-container>
+				<q-row-container v-show="controls.TPEQ1___TPEQ1SINCE___.isVisible || controls.TPEQ1___TPEQ1QTDEQUIP.isVisible || controls.TPEQ1___TPEQ1KIT_____.isVisible">
+					<q-control-wrapper
+						v-show="controls.TPEQ1___TPEQ1SINCE___.isVisible"
+						class="${Vue.GetControlWrapperClass($controlsColumn)}">
 						<base-input-structure
-							v-if="controls.TPEQ1___TPEQ1SINCE___.isVisible"
 							class="i-text"
-							v-bind="controls.TPEQ1___TPEQ1SINCE___.wrapperProps"
-							:id="getControlId(controls.TPEQ1___TPEQ1SINCE___)"
+							v-bind="controls.TPEQ1___TPEQ1SINCE___"
 							v-on="controls.TPEQ1___TPEQ1SINCE___.handlers"
 							:loading="controls.TPEQ1___TPEQ1SINCE___.props.loading"
 							:reporting-mode-on="reportingModeCAV"
@@ -295,20 +259,17 @@
 							<q-date-time-picker
 								v-if="controls.TPEQ1___TPEQ1SINCE___.isVisible"
 								v-bind="controls.TPEQ1___TPEQ1SINCE___.props"
-								:id="getControlId(controls.TPEQ1___TPEQ1SINCE___)"
 								:model-value="model.ValSince.value"
 								@reset-icon-click="model.ValSince.fnUpdateValue(model.ValSince.originalValue ?? new Date())"
 								@update:model-value="model.ValSince.fnUpdateValue($event ?? '')" />
 						</base-input-structure>
-					</q-col>
-					<q-col
-						v-if="controls.TPEQ1___TPEQ1QTDEQUIP.isVisible"
-						cols="auto">
+					</q-control-wrapper>
+					<q-control-wrapper
+						v-show="controls.TPEQ1___TPEQ1QTDEQUIP.isVisible"
+						class="${Vue.GetControlWrapperClass($controlsColumn)}">
 						<base-input-structure
-							v-if="controls.TPEQ1___TPEQ1QTDEQUIP.isVisible"
 							class="i-text"
-							v-bind="controls.TPEQ1___TPEQ1QTDEQUIP.wrapperProps"
-							:id="getControlId(controls.TPEQ1___TPEQ1QTDEQUIP)"
+							v-bind="controls.TPEQ1___TPEQ1QTDEQUIP"
 							v-on="controls.TPEQ1___TPEQ1QTDEQUIP.handlers"
 							:loading="controls.TPEQ1___TPEQ1QTDEQUIP.props.loading"
 							:reporting-mode-on="reportingModeCAV"
@@ -316,43 +277,39 @@
 							<q-numeric-input
 								v-if="controls.TPEQ1___TPEQ1QTDEQUIP.isVisible"
 								v-bind="controls.TPEQ1___TPEQ1QTDEQUIP.props"
-								:id="getControlId(controls.TPEQ1___TPEQ1QTDEQUIP)"
 								@update:model-value="model.ValQtdequip.fnUpdateValue" />
 						</base-input-structure>
-					</q-col>
-					<q-col
-						v-if="controls.TPEQ1___TPEQ1KIT_____.isVisible"
-						cols="auto">
+					</q-control-wrapper>
+					<q-control-wrapper
+						v-show="controls.TPEQ1___TPEQ1KIT_____.isVisible"
+						class="${Vue.GetControlWrapperClass($controlsColumn)}">
 						<base-input-structure
-							v-if="controls.TPEQ1___TPEQ1KIT_____.isVisible"
-							class="i-text"
-							v-bind="controls.TPEQ1___TPEQ1KIT_____.wrapperProps"
-							:id="getControlId(controls.TPEQ1___TPEQ1KIT_____)"
+							class="i-checkbox"
+							v-bind="controls.TPEQ1___TPEQ1KIT_____"
 							v-on="controls.TPEQ1___TPEQ1KIT_____.handlers"
 							:loading="controls.TPEQ1___TPEQ1KIT_____.props.loading"
 							:reporting-mode-on="reportingModeCAV"
 							:suggestion-mode-on="suggestionModeOn">
 							<template #label>
-								<q-checkbox
+								<q-checkbox-input
 									v-if="controls.TPEQ1___TPEQ1KIT_____.isVisible"
 									v-bind="controls.TPEQ1___TPEQ1KIT_____.props"
-									:id="getControlId(controls.TPEQ1___TPEQ1KIT_____)"
 									v-on="controls.TPEQ1___TPEQ1KIT_____.handlers" />
 							</template>
 						</base-input-structure>
-					</q-col>
-				</q-row>
+					</q-control-wrapper>
+				</q-row-container>
 			</template>
-		</q-container>
+		</div>
 	</teleport>
 
-	<q-divider v-if="!isPopup && showFormFooter" />
+	<hr v-if="!isPopup && showFormFooter" />
 
 	<teleport
 		v-if="formModalIsReady && showFormFooter"
 		:to="`#${uiContainersId.footer}`"
 		:disabled="!isPopup || isNested">
-		<q-row v-if="showFormFooter">
+		<q-row-container v-if="showFormFooter">
 			<div id="footer-action-btns">
 				<template
 					v-for="btn in formButtons"
@@ -361,7 +318,6 @@
 						v-if="btn.isActive && btn.isVisible && btn.showInFooter"
 						:id="`bottom-${btn.id}`"
 						:label="btn.text"
-						:color="btn.color"
 						:variant="btn.variant"
 						:disabled="btn.disabled"
 						:icon-pos="btn.iconPos"
@@ -373,12 +329,12 @@
 					</q-button>
 				</template>
 			</div>
-		</q-row>
+		</q-row-container>
 	</teleport>
 </template>
 
 <script>
-	/* eslint-disable @typescript-eslint/no-unused-vars */
+	/* eslint-disable no-unused-vars */
 	import { computed, defineAsyncComponent, readonly } from 'vue'
 	import { useRoute } from 'vue-router'
 
@@ -398,7 +354,7 @@
 	import qApi from '@/api/genio/quidgestFunctions.js'
 	import qFunctions from '@/api/genio/projectFunctions.js'
 	import qProjArrays from '@/api/genio/projectArrays.js'
-	/* eslint-enable @typescript-eslint/no-unused-vars */
+	/* eslint-enable no-unused-vars */
 
 	import FormViewModel from './QFormTpeq1ViewModel.js'
 
@@ -476,8 +432,7 @@
 					primaryKey: 'ValCodtpequ',
 					designation: computed(() => this.Resources.TYPE_OF_EQUIPMENT18080),
 					identifier: '', // Unique identifier received by route (when it's nested).
-					mode: '',
-					availableAgents: [],
+					mode: ''
 				},
 
 				formButtons: {
@@ -585,11 +540,7 @@
 						showInFooter: true,
 						isActive: true,
 						isVisible: computed(() => vm.authData.isAllowed && vm.isEditable),
-						action: vm.saveForm,
-						badge: {
-							isVisible: computed(() => vm.model?.isDirty === true),
-							color: 'highlight'
-						}
+						action: vm.saveForm
 					},
 					confirmBtn: {
 						id: 'confirm-btn',
@@ -727,6 +678,7 @@
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						maxLength: 20,
+						labelId: 'label_TPEQ1___TPEQ1TPEQUCOD',
 						mustBeFilled: true,
 						controlLimits: [
 						],
@@ -755,6 +707,7 @@
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						maxLength: 50,
+						labelId: 'label_TPEQ1___TPEQ1TIPOEQUI',
 						controlLimits: [
 						],
 					}, this),
@@ -768,6 +721,7 @@
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						maxLength: 20,
+						labelId: 'label_TPEQ1___TPEQ1TPEQUPAI',
 						controlLimits: [
 						],
 					}, this),
@@ -781,6 +735,7 @@
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						maxLength: 50,
+						labelId: 'label_TPEQ1___TPEQ1BACKCOLO',
 						controlLimits: [
 						],
 					}, this),
@@ -794,6 +749,7 @@
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						maxLength: 50,
+						labelId: 'label_TPEQ1___TPEQ1CORLETRA',
 						controlLimits: [
 						],
 					}, this),
@@ -834,7 +790,7 @@
 						label: computed(() => this.Resources.IN34902),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						dateTimeType: 'dateTime',
+						format: 'dateTime',
 						controlLimits: [
 						],
 					}, this),
@@ -846,7 +802,7 @@
 						size: 'small',
 						helpControl: {
 							shortHelp: {
-								type: 'subtext',
+								type: 'Tooltip',
 								text: computed(() => this.Resources.____615950),
 							},
 						},
@@ -971,23 +927,17 @@
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 		},
 
-		beforeUnmount()
-		{
-/* eslint-disable indent, vue/html-indent, vue/script-indent */
-// USE /[MANUAL GQT COMPONENT_BEFORE_UNMOUNT TPEQ1]/
-// eslint-disable-next-line
-/* eslint-enable indent, vue/html-indent, vue/script-indent */
-		},
-
 		methods: {
 			/**
 			 * Called before form init.
 			 */
 			async beforeLoad()
 			{
+				let loadForm = true
+
 				// Execute the "Before init" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.beforeInit)
-				for (const trigger of triggers)
+				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
 				this.emitEvent('before-load-form')
@@ -997,7 +947,7 @@
 // eslint-disable-next-line
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 
-				return true
+				return loadForm
 			},
 
 			/**
@@ -1007,7 +957,7 @@
 			{
 				// Execute the "After init" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.afterInit)
-				for (const trigger of triggers)
+				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
 				this.emitEvent('after-load-form')
@@ -1027,33 +977,19 @@
 
 				// Execute the "Before apply" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.beforeApply)
-				for (const trigger of triggers)
+				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
-				const ticketsPromise = this.model.updateFilesTickets(true)
-				this.addBusy(ticketsPromise, this.Resources[hardcodedTexts.processing])
-				const canSetDocums = await ticketsPromise
+				const canSetDocums = await this.model.updateFilesTickets(true)
 
 				if (canSetDocums)
 				{
-					let results
-					const changesPromise = this.model.setDocumentChanges()
-					this.addBusy(changesPromise, this.Resources[hardcodedTexts.processing])
-					applyForm = await changesPromise
+					applyForm = await this.model.setDocumentChanges()
 
 					if (applyForm)
 					{
-						const insertsPromise = this.model.saveDocuments()
-						this.addBusy(insertsPromise, this.Resources[hardcodedTexts.processing])
-						results = await insertsPromise
+						const results = await this.model.saveDocuments()
 						applyForm = results.every((e) => e === true)
-					}
-
-					if (!changesPromise || (results && !results.every((e) => e === true)))
-					{
-						this.validationErrors = {
-							Erro: this.Resources.OCORREU_UM_ERRO_AO_T51884
-						}
 					}
 				}
 
@@ -1074,7 +1010,7 @@
 			{
 				// Execute the "After apply" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.afterApply)
-				for (const trigger of triggers)
+				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
 				this.emitEvent('after-apply-form')
@@ -1094,33 +1030,19 @@
 
 				// Execute the "Before save" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.beforeSave)
-				for (const trigger of triggers)
+				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
-				const ticketsPromise = this.model.updateFilesTickets()
-				this.addBusy(ticketsPromise, this.Resources[hardcodedTexts.processing])
-				const canSetDocums = await ticketsPromise
+				const canSetDocums = await this.model.updateFilesTickets()
 
 				if (canSetDocums)
 				{
-					let results
-					const changesPromise = this.model.setDocumentChanges()
-					this.addBusy(changesPromise, this.Resources[hardcodedTexts.processing])
-					saveForm = await changesPromise
+					saveForm = await this.model.setDocumentChanges()
 
 					if (saveForm)
 					{
-						const insertsPromise = this.model.saveDocuments()
-						this.addBusy(insertsPromise, this.Resources[hardcodedTexts.processing])
-						results = await insertsPromise
+						const results = await this.model.saveDocuments()
 						saveForm = results.every((e) => e === true)
-					}
-
-					if (!changesPromise || (results && !results.every((e) => e === true)))
-					{
-						this.validationErrors = {
-							Erro: this.Resources.OCORREU_UM_ERRO_AO_T51884
-						}
 					}
 				}
 
@@ -1139,9 +1061,11 @@
 			 */
 			async afterSave()
 			{
+				let redirectPage = true // Set to 'false' to cancel page redirect.
+
 				// Execute the "After save" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.afterSave)
-				for (const trigger of triggers)
+				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
 				this.emitEvent('after-save-form')
@@ -1151,7 +1075,7 @@
 // eslint-disable-next-line
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 
-				return true
+				return redirectPage
 			},
 
 			/**
@@ -1159,6 +1083,8 @@
 			 */
 			async beforeDel()
 			{
+				let deleteForm = true // Set to 'false' to cancel form delete.
+
 				this.emitEvent('before-delete-form')
 
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
@@ -1166,7 +1092,7 @@
 // eslint-disable-next-line
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 
-				return true
+				return deleteForm
 			},
 
 			/**
@@ -1174,6 +1100,8 @@
 			 */
 			async afterDel()
 			{
+				let redirectPage = true // Set to 'false' to cancel page redirect.
+
 				this.emitEvent('after-delete-form')
 
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
@@ -1181,7 +1109,7 @@
 // eslint-disable-next-line
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 
-				return true
+				return redirectPage
 			},
 
 			/**
@@ -1189,9 +1117,11 @@
 			 */
 			async beforeExit()
 			{
+				let leaveForm = true // Set to 'false' to cancel page redirect.
+
 				// Execute the "Before exit" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.beforeExit)
-				for (const trigger of triggers)
+				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
 				this.emitEvent('before-exit-form')
@@ -1201,7 +1131,7 @@
 // eslint-disable-next-line
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 
-				return true
+				return leaveForm
 			},
 
 			/**
@@ -1211,7 +1141,7 @@
 			{
 				// Execute the "After exit" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.afterExit)
-				for (const trigger of triggers)
+				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
 				this.emitEvent('after-exit-form')

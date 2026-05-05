@@ -205,7 +205,7 @@ public class FldstblForm : Form
 	/// <summary>
 	/// Document
 	/// </summary>
-	public DocumentControl FldsAttach => new DocumentControl(driver, ContainerLocator, "FLDSTBL_FLDS_ATTACH__-container");
+	public DocumentControl FldsAttach => new DocumentControl(driver, ContainerLocator, "FLDSTBL_FLDS_ATTACH__");
 
 	/// <summary>
 	/// Day

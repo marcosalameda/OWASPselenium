@@ -9,13 +9,12 @@
 			<div
 				v-if="showFormHeader"
 				class="c-action-bar">
-				<component
+				<h1
 					v-if="formControl.uiComponents.header && formInfo.designation"
-					:is="topHeadingTag"
 					:id="formTitleId"
 					class="form-header">
 					{{ formInfo.designation }}
-				</component>
+				</h1>
 
 				<div class="c-action-bar__menu">
 					<template
@@ -39,13 +38,9 @@
 									:label="btn.label"
 									:disabled="btn.disabled"
 									@click="btn.action">
-									<template v-if="btn.icon">
-										<q-badge-indicator
-											:enabled="btn.badge?.isVisible ?? false"
-											:color="btn.badge?.color">
-											<q-icon v-bind="btn.icon" />
-										</q-badge-indicator>
-									</template>
+									<q-icon
+										v-if="btn.icon"
+										v-bind="btn.icon" />
 								</q-toggle-group-item>
 							</template>
 						</q-toggle-group>
@@ -57,7 +52,7 @@
 				v-if="$app.layout.FormAnchorsPosition === 'form-header' && visibleGroups.length > 0"
 				:anchors="anchorGroups"
 				:controls="visibleControls"
-				@focus-control="focusControl" />
+				@focus-control="(...args) => focusControl(...args)" />
 		</div>
 	</teleport>
 
@@ -78,7 +73,6 @@
 						v-if="btn.isActive && btn.isVisible && btn.showInHeading"
 						:id="`heading-${btn.id}`"
 						:label="btn.text"
-						:color="btn.color"
 						:variant="btn.variant"
 						:disabled="btn.disabled"
 						:icon-pos="btn.iconPos"
@@ -92,21 +86,18 @@
 			</q-button-group>
 		</div>
 
-		<q-container
-			fluid
+		<div
+			class="form-flow"
 			data-key="ARMAPESS"
-			:data-identifier="primaryKeyValue"
-			:data-loading="!formInitialDataLoaded || !isActiveForm">
+			:data-loading="!formInitialDataLoaded">
 			<template v-if="formControl.initialized && showFormBody">
-				<q-row v-if="controls.ARMAPESSWPESSNFUNC___.isVisible">
-					<q-col
-						v-if="controls.ARMAPESSWPESSNFUNC___.isVisible"
-						cols="auto">
+				<q-row-container v-show="controls.ARMAPESSWPESSNFUNC___.isVisible">
+					<q-control-wrapper
+						v-show="controls.ARMAPESSWPESSNFUNC___.isVisible"
+						class="${Vue.GetControlWrapperClass($controlsColumn)}">
 						<base-input-structure
-							v-if="controls.ARMAPESSWPESSNFUNC___.isVisible"
 							class="i-text"
-							v-bind="controls.ARMAPESSWPESSNFUNC___.wrapperProps"
-							:id="getControlId(controls.ARMAPESSWPESSNFUNC___)"
+							v-bind="controls.ARMAPESSWPESSNFUNC___"
 							v-on="controls.ARMAPESSWPESSNFUNC___.handlers"
 							:loading="controls.ARMAPESSWPESSNFUNC___.props.loading"
 							:reporting-mode-on="reportingModeCAV"
@@ -114,20 +105,17 @@
 							<q-numeric-input
 								v-if="controls.ARMAPESSWPESSNFUNC___.isVisible"
 								v-bind="controls.ARMAPESSWPESSNFUNC___.props"
-								:id="getControlId(controls.ARMAPESSWPESSNFUNC___)"
 								@update:model-value="model.ValNfunc.fnUpdateValue" />
 						</base-input-structure>
-					</q-col>
-				</q-row>
-				<q-row v-if="controls.ARMAPESSWPESSPFOTO___.isVisible">
-					<q-col
-						v-if="controls.ARMAPESSWPESSPFOTO___.isVisible"
-						cols="auto">
+					</q-control-wrapper>
+				</q-row-container>
+				<q-row-container v-show="controls.ARMAPESSWPESSPFOTO___.isVisible">
+					<q-control-wrapper
+						v-show="controls.ARMAPESSWPESSPFOTO___.isVisible"
+						class="${Vue.GetControlWrapperClass($controlsColumn)}">
 						<base-input-structure
-							v-if="controls.ARMAPESSWPESSPFOTO___.isVisible"
 							class="q-image"
-							v-bind="controls.ARMAPESSWPESSPFOTO___.wrapperProps"
-							:id="getControlId(controls.ARMAPESSWPESSPFOTO___)"
+							v-bind="controls.ARMAPESSWPESSPFOTO___"
 							v-on="controls.ARMAPESSWPESSPFOTO___.handlers"
 							:loading="controls.ARMAPESSWPESSPFOTO___.props.loading"
 							:reporting-mode-on="reportingModeCAV"
@@ -135,39 +123,33 @@
 							<q-image
 								v-if="controls.ARMAPESSWPESSPFOTO___.isVisible"
 								v-bind="controls.ARMAPESSWPESSPFOTO___.props"
-								:id="getControlId(controls.ARMAPESSWPESSPFOTO___)"
 								v-on="controls.ARMAPESSWPESSPFOTO___.handlers" />
 						</base-input-structure>
-					</q-col>
-				</q-row>
-				<q-row v-if="controls.ARMAPESSWPESSNAME____.isVisible || controls.ARMAPESSWPESSDATE____.isVisible || controls.ARMAPESSWPESSSEX_____.isVisible">
-					<q-col
-						v-if="controls.ARMAPESSWPESSNAME____.isVisible"
-						cols="auto">
+					</q-control-wrapper>
+				</q-row-container>
+				<q-row-container v-show="controls.ARMAPESSWPESSNAME____.isVisible || controls.ARMAPESSWPESSDATE____.isVisible || controls.ARMAPESSWPESSSEX_____.isVisible">
+					<q-control-wrapper
+						v-show="controls.ARMAPESSWPESSNAME____.isVisible"
+						class="${Vue.GetControlWrapperClass($controlsColumn)}">
 						<base-input-structure
-							v-if="controls.ARMAPESSWPESSNAME____.isVisible"
 							class="i-text"
-							v-bind="controls.ARMAPESSWPESSNAME____.wrapperProps"
-							:id="getControlId(controls.ARMAPESSWPESSNAME____)"
+							v-bind="controls.ARMAPESSWPESSNAME____"
 							v-on="controls.ARMAPESSWPESSNAME____.handlers"
 							:loading="controls.ARMAPESSWPESSNAME____.props.loading"
 							:reporting-mode-on="reportingModeCAV"
 							:suggestion-mode-on="suggestionModeOn">
 							<q-text-field
 								v-bind="controls.ARMAPESSWPESSNAME____.props"
-								:id="getControlId(controls.ARMAPESSWPESSNAME____)"
 								@blur="onBlur(controls.ARMAPESSWPESSNAME____, model.ValName.value)"
 								@change="model.ValName.fnUpdateValueOnChange" />
 						</base-input-structure>
-					</q-col>
-					<q-col
-						v-if="controls.ARMAPESSWPESSDATE____.isVisible"
-						cols="auto">
+					</q-control-wrapper>
+					<q-control-wrapper
+						v-show="controls.ARMAPESSWPESSDATE____.isVisible"
+						class="${Vue.GetControlWrapperClass($controlsColumn)}">
 						<base-input-structure
-							v-if="controls.ARMAPESSWPESSDATE____.isVisible"
 							class="i-text"
-							v-bind="controls.ARMAPESSWPESSDATE____.wrapperProps"
-							:id="getControlId(controls.ARMAPESSWPESSDATE____)"
+							v-bind="controls.ARMAPESSWPESSDATE____"
 							v-on="controls.ARMAPESSWPESSDATE____.handlers"
 							:loading="controls.ARMAPESSWPESSDATE____.props.loading"
 							:reporting-mode-on="reportingModeCAV"
@@ -175,20 +157,17 @@
 							<q-date-time-picker
 								v-if="controls.ARMAPESSWPESSDATE____.isVisible"
 								v-bind="controls.ARMAPESSWPESSDATE____.props"
-								:id="getControlId(controls.ARMAPESSWPESSDATE____)"
 								:model-value="model.ValDate.value"
 								@reset-icon-click="model.ValDate.fnUpdateValue(model.ValDate.originalValue ?? new Date())"
 								@update:model-value="model.ValDate.fnUpdateValue($event ?? '')" />
 						</base-input-structure>
-					</q-col>
-					<q-col
-						v-if="controls.ARMAPESSWPESSSEX_____.isVisible"
-						cols="auto">
+					</q-control-wrapper>
+					<q-control-wrapper
+						v-show="controls.ARMAPESSWPESSSEX_____.isVisible"
+						class="${Vue.GetControlWrapperClass($controlsColumn)}">
 						<base-input-structure
-							v-if="controls.ARMAPESSWPESSSEX_____.isVisible"
 							class="i-text"
-							v-bind="controls.ARMAPESSWPESSSEX_____.wrapperProps"
-							:id="getControlId(controls.ARMAPESSWPESSSEX_____)"
+							v-bind="controls.ARMAPESSWPESSSEX_____"
 							v-on="controls.ARMAPESSWPESSSEX_____.handlers"
 							:loading="controls.ARMAPESSWPESSSEX_____.props.loading"
 							:reporting-mode-on="reportingModeCAV"
@@ -196,146 +175,125 @@
 							<q-select
 								v-if="controls.ARMAPESSWPESSSEX_____.isVisible"
 								v-bind="controls.ARMAPESSWPESSSEX_____.props"
-								:id="getControlId(controls.ARMAPESSWPESSSEX_____)"
 								@update:model-value="model.ValSex.fnUpdateValue" />
 						</base-input-structure>
-					</q-col>
-				</q-row>
-				<q-row v-if="controls.ARMAPESSWPESSNATURALI.isVisible">
-					<q-col
-						v-if="controls.ARMAPESSWPESSNATURALI.isVisible"
-						cols="auto">
+					</q-control-wrapper>
+				</q-row-container>
+				<q-row-container v-show="controls.ARMAPESSWPESSNATURALI.isVisible">
+					<q-control-wrapper
+						v-show="controls.ARMAPESSWPESSNATURALI.isVisible"
+						class="${Vue.GetControlWrapperClass($controlsColumn)}">
 						<base-input-structure
-							v-if="controls.ARMAPESSWPESSNATURALI.isVisible"
 							class="i-text"
-							v-bind="controls.ARMAPESSWPESSNATURALI.wrapperProps"
-							:id="getControlId(controls.ARMAPESSWPESSNATURALI)"
+							v-bind="controls.ARMAPESSWPESSNATURALI"
 							v-on="controls.ARMAPESSWPESSNATURALI.handlers"
 							:loading="controls.ARMAPESSWPESSNATURALI.props.loading"
 							:reporting-mode-on="reportingModeCAV"
 							:suggestion-mode-on="suggestionModeOn">
 							<q-text-field
 								v-bind="controls.ARMAPESSWPESSNATURALI.props"
-								:id="getControlId(controls.ARMAPESSWPESSNATURALI)"
 								@blur="onBlur(controls.ARMAPESSWPESSNATURALI, model.ValNaturali.value)"
 								@change="model.ValNaturali.fnUpdateValueOnChange" />
 						</base-input-structure>
-					</q-col>
-				</q-row>
-				<q-row v-if="controls.ARMAPESSWPESSNACIONAL.isVisible">
-					<q-col
-						v-if="controls.ARMAPESSWPESSNACIONAL.isVisible"
-						cols="auto">
+					</q-control-wrapper>
+				</q-row-container>
+				<q-row-container v-show="controls.ARMAPESSWPESSNACIONAL.isVisible">
+					<q-control-wrapper
+						v-show="controls.ARMAPESSWPESSNACIONAL.isVisible"
+						class="${Vue.GetControlWrapperClass($controlsColumn)}">
 						<base-input-structure
-							v-if="controls.ARMAPESSWPESSNACIONAL.isVisible"
 							class="i-text"
-							v-bind="controls.ARMAPESSWPESSNACIONAL.wrapperProps"
-							:id="getControlId(controls.ARMAPESSWPESSNACIONAL)"
+							v-bind="controls.ARMAPESSWPESSNACIONAL"
 							v-on="controls.ARMAPESSWPESSNACIONAL.handlers"
 							:loading="controls.ARMAPESSWPESSNACIONAL.props.loading"
 							:reporting-mode-on="reportingModeCAV"
 							:suggestion-mode-on="suggestionModeOn">
 							<q-text-field
 								v-bind="controls.ARMAPESSWPESSNACIONAL.props"
-								:id="getControlId(controls.ARMAPESSWPESSNACIONAL)"
 								@blur="onBlur(controls.ARMAPESSWPESSNACIONAL, model.ValNacional.value)"
 								@change="model.ValNacional.fnUpdateValueOnChange" />
 						</base-input-structure>
-					</q-col>
-				</q-row>
-				<q-row v-if="controls.ARMAPESSWPESSADRESS__.isVisible || controls.ARMAPESSWPESSZIPCODE_.isVisible">
-					<q-col
-						v-if="controls.ARMAPESSWPESSADRESS__.isVisible"
-						cols="auto">
+					</q-control-wrapper>
+				</q-row-container>
+				<q-row-container v-show="controls.ARMAPESSWPESSADRESS__.isVisible || controls.ARMAPESSWPESSZIPCODE_.isVisible">
+					<q-control-wrapper
+						v-show="controls.ARMAPESSWPESSADRESS__.isVisible"
+						class="${Vue.GetControlWrapperClass($controlsColumn)}">
 						<base-input-structure
-							v-if="controls.ARMAPESSWPESSADRESS__.isVisible"
 							class="i-text"
-							v-bind="controls.ARMAPESSWPESSADRESS__.wrapperProps"
-							:id="getControlId(controls.ARMAPESSWPESSADRESS__)"
+							v-bind="controls.ARMAPESSWPESSADRESS__"
 							v-on="controls.ARMAPESSWPESSADRESS__.handlers"
 							:loading="controls.ARMAPESSWPESSADRESS__.props.loading"
 							:reporting-mode-on="reportingModeCAV"
 							:suggestion-mode-on="suggestionModeOn">
 							<q-text-field
 								v-bind="controls.ARMAPESSWPESSADRESS__.props"
-								:id="getControlId(controls.ARMAPESSWPESSADRESS__)"
 								@blur="onBlur(controls.ARMAPESSWPESSADRESS__, model.ValAdress.value)"
 								@change="model.ValAdress.fnUpdateValueOnChange" />
 						</base-input-structure>
-					</q-col>
-					<q-col
-						v-if="controls.ARMAPESSWPESSZIPCODE_.isVisible"
-						cols="auto">
+					</q-control-wrapper>
+					<q-control-wrapper
+						v-show="controls.ARMAPESSWPESSZIPCODE_.isVisible"
+						class="${Vue.GetControlWrapperClass($controlsColumn)}">
 						<base-input-structure
-							v-if="controls.ARMAPESSWPESSZIPCODE_.isVisible"
 							class="i-text"
-							v-bind="controls.ARMAPESSWPESSZIPCODE_.wrapperProps"
-							:id="getControlId(controls.ARMAPESSWPESSZIPCODE_)"
+							v-bind="controls.ARMAPESSWPESSZIPCODE_"
 							v-on="controls.ARMAPESSWPESSZIPCODE_.handlers"
 							:loading="controls.ARMAPESSWPESSZIPCODE_.props.loading"
 							:reporting-mode-on="reportingModeCAV"
 							:suggestion-mode-on="suggestionModeOn">
 							<q-mask
 								v-if="controls.ARMAPESSWPESSZIPCODE_.isVisible"
-								v-bind="controls.ARMAPESSWPESSZIPCODE_.props"
-								:id="getControlId(controls.ARMAPESSWPESSZIPCODE_)"
+								v-bind="controls.ARMAPESSWPESSZIPCODE_"
 								:model-value="model.ValZipcode.value"
-								@change="model.ValZipcode.fnUpdateValueOnChange" />
+								@update:model-value="model.ValZipcode.fnUpdateValue" />
 						</base-input-structure>
-					</q-col>
-				</q-row>
-				<q-row v-if="controls.ARMAPESSWPESSCOUNTRY_.isVisible">
-					<q-col
-						v-if="controls.ARMAPESSWPESSCOUNTRY_.isVisible"
-						cols="auto">
+					</q-control-wrapper>
+				</q-row-container>
+				<q-row-container v-show="controls.ARMAPESSWPESSCOUNTRY_.isVisible">
+					<q-control-wrapper
+						v-show="controls.ARMAPESSWPESSCOUNTRY_.isVisible"
+						class="${Vue.GetControlWrapperClass($controlsColumn)}">
 						<base-input-structure
-							v-if="controls.ARMAPESSWPESSCOUNTRY_.isVisible"
 							class="i-text"
-							v-bind="controls.ARMAPESSWPESSCOUNTRY_.wrapperProps"
-							:id="getControlId(controls.ARMAPESSWPESSCOUNTRY_)"
+							v-bind="controls.ARMAPESSWPESSCOUNTRY_"
 							v-on="controls.ARMAPESSWPESSCOUNTRY_.handlers"
 							:loading="controls.ARMAPESSWPESSCOUNTRY_.props.loading"
 							:reporting-mode-on="reportingModeCAV"
 							:suggestion-mode-on="suggestionModeOn">
 							<q-text-field
 								v-bind="controls.ARMAPESSWPESSCOUNTRY_.props"
-								:id="getControlId(controls.ARMAPESSWPESSCOUNTRY_)"
 								@blur="onBlur(controls.ARMAPESSWPESSCOUNTRY_, model.ValCountry.value)"
 								@change="model.ValCountry.fnUpdateValueOnChange" />
 						</base-input-structure>
-					</q-col>
-				</q-row>
-				<q-row v-if="controls.ARMAPESSWPESSEMAIL___.isVisible">
-					<q-col
-						v-if="controls.ARMAPESSWPESSEMAIL___.isVisible"
-						cols="auto">
+					</q-control-wrapper>
+				</q-row-container>
+				<q-row-container v-show="controls.ARMAPESSWPESSEMAIL___.isVisible">
+					<q-control-wrapper
+						v-show="controls.ARMAPESSWPESSEMAIL___.isVisible"
+						class="${Vue.GetControlWrapperClass($controlsColumn)}">
 						<base-input-structure
-							v-if="controls.ARMAPESSWPESSEMAIL___.isVisible"
 							class="i-text"
-							v-bind="controls.ARMAPESSWPESSEMAIL___.wrapperProps"
-							:id="getControlId(controls.ARMAPESSWPESSEMAIL___)"
+							v-bind="controls.ARMAPESSWPESSEMAIL___"
 							v-on="controls.ARMAPESSWPESSEMAIL___.handlers"
 							:loading="controls.ARMAPESSWPESSEMAIL___.props.loading"
 							:reporting-mode-on="reportingModeCAV"
 							:suggestion-mode-on="suggestionModeOn">
 							<q-mask
 								v-if="controls.ARMAPESSWPESSEMAIL___.isVisible"
-								v-bind="controls.ARMAPESSWPESSEMAIL___.props"
-								:id="getControlId(controls.ARMAPESSWPESSEMAIL___)"
+								v-bind="controls.ARMAPESSWPESSEMAIL___"
 								:model-value="model.ValEmail.value"
-								@change="model.ValEmail.fnUpdateValueOnChange" />
+								@update:model-value="model.ValEmail.fnUpdateValue" />
 						</base-input-structure>
-					</q-col>
-				</q-row>
-				<q-row v-if="controls.ARMAPESSWPESSCELLPHON.isVisible">
-					<q-col
-						v-if="controls.ARMAPESSWPESSCELLPHON.isVisible"
-						cols="auto">
+					</q-control-wrapper>
+				</q-row-container>
+				<q-row-container v-show="controls.ARMAPESSWPESSCELLPHON.isVisible">
+					<q-control-wrapper
+						v-show="controls.ARMAPESSWPESSCELLPHON.isVisible"
+						class="${Vue.GetControlWrapperClass($controlsColumn)}">
 						<base-input-structure
-							v-if="controls.ARMAPESSWPESSCELLPHON.isVisible"
 							class="i-text"
-							v-bind="controls.ARMAPESSWPESSCELLPHON.wrapperProps"
-							:id="getControlId(controls.ARMAPESSWPESSCELLPHON)"
+							v-bind="controls.ARMAPESSWPESSCELLPHON"
 							v-on="controls.ARMAPESSWPESSCELLPHON.handlers"
 							:loading="controls.ARMAPESSWPESSCELLPHON.props.loading"
 							:reporting-mode-on="reportingModeCAV"
@@ -343,20 +301,17 @@
 							<q-numeric-input
 								v-if="controls.ARMAPESSWPESSCELLPHON.isVisible"
 								v-bind="controls.ARMAPESSWPESSCELLPHON.props"
-								:id="getControlId(controls.ARMAPESSWPESSCELLPHON)"
 								@update:model-value="model.ValCellphon.fnUpdateValue" />
 						</base-input-structure>
-					</q-col>
-				</q-row>
-				<q-row v-if="controls.ARMAPESSWAREHWAREHDES.isVisible">
-					<q-col
-						v-if="controls.ARMAPESSWAREHWAREHDES.isVisible"
-						cols="auto">
+					</q-control-wrapper>
+				</q-row-container>
+				<q-row-container v-show="controls.ARMAPESSWAREHWAREHDES.isVisible">
+					<q-control-wrapper
+						v-show="controls.ARMAPESSWAREHWAREHDES.isVisible"
+						class="${Vue.GetControlWrapperClass($controlsColumn)}">
 						<base-input-structure
-							v-if="controls.ARMAPESSWAREHWAREHDES.isVisible"
 							class="i-text"
-							v-bind="controls.ARMAPESSWAREHWAREHDES.wrapperProps"
-							:id="getControlId(controls.ARMAPESSWAREHWAREHDES)"
+							v-bind="controls.ARMAPESSWAREHWAREHDES"
 							v-on="controls.ARMAPESSWAREHWAREHDES.handlers"
 							:loading="controls.ARMAPESSWAREHWAREHDES.props.loading"
 							:reporting-mode-on="reportingModeCAV"
@@ -364,26 +319,25 @@
 							<q-lookup
 								v-if="controls.ARMAPESSWAREHWAREHDES.isVisible"
 								v-bind="controls.ARMAPESSWAREHWAREHDES.props"
-								:id="getControlId(controls.ARMAPESSWAREHWAREHDES)"
 								v-on="controls.ARMAPESSWAREHWAREHDES.handlers" />
 							<q-see-more-armapesswarehwarehdes
 								v-if="controls.ARMAPESSWAREHWAREHDES.seeMoreIsVisible"
 								v-bind="controls.ARMAPESSWAREHWAREHDES.seeMoreParams"
 								v-on="controls.ARMAPESSWAREHWAREHDES.handlers" />
 						</base-input-structure>
-					</q-col>
-				</q-row>
+					</q-control-wrapper>
+				</q-row-container>
 			</template>
-		</q-container>
+		</div>
 	</teleport>
 
-	<q-divider v-if="!isPopup && showFormFooter" />
+	<hr v-if="!isPopup && showFormFooter" />
 
 	<teleport
 		v-if="formModalIsReady && showFormFooter"
 		:to="`#${uiContainersId.footer}`"
 		:disabled="!isPopup || isNested">
-		<q-row v-if="showFormFooter">
+		<q-row-container v-if="showFormFooter">
 			<div id="footer-action-btns">
 				<template
 					v-for="btn in formButtons"
@@ -392,7 +346,6 @@
 						v-if="btn.isActive && btn.isVisible && btn.showInFooter"
 						:id="`bottom-${btn.id}`"
 						:label="btn.text"
-						:color="btn.color"
 						:variant="btn.variant"
 						:disabled="btn.disabled"
 						:icon-pos="btn.iconPos"
@@ -404,12 +357,12 @@
 					</q-button>
 				</template>
 			</div>
-		</q-row>
+		</q-row-container>
 	</teleport>
 </template>
 
 <script>
-	/* eslint-disable @typescript-eslint/no-unused-vars */
+	/* eslint-disable no-unused-vars */
 	import { computed, defineAsyncComponent, readonly } from 'vue'
 	import { useRoute } from 'vue-router'
 
@@ -429,7 +382,7 @@
 	import qApi from '@/api/genio/quidgestFunctions.js'
 	import qFunctions from '@/api/genio/projectFunctions.js'
 	import qProjArrays from '@/api/genio/projectArrays.js'
-	/* eslint-enable @typescript-eslint/no-unused-vars */
+	/* eslint-enable no-unused-vars */
 
 	import FormViewModel from './QFormArmapessViewModel.js'
 
@@ -507,8 +460,7 @@
 					primaryKey: 'ValCodpess',
 					designation: computed(() => this.Resources.PERSON10446),
 					identifier: '', // Unique identifier received by route (when it's nested).
-					mode: '',
-					availableAgents: [],
+					mode: ''
 				},
 
 				formButtons: {
@@ -616,11 +568,7 @@
 						showInFooter: true,
 						isActive: true,
 						isVisible: computed(() => vm.authData.isAllowed && vm.isEditable),
-						action: vm.saveForm,
-						badge: {
-							isVisible: computed(() => vm.model?.isDirty === true),
-							color: 'highlight'
-						}
+						action: vm.saveForm
 					},
 					confirmBtn: {
 						id: 'confirm-btn',
@@ -759,6 +707,7 @@
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						maxLength: 50,
+						labelId: 'label_ARMAPESSWPESSNAME____',
 						controlLimits: [
 						],
 					}, this),
@@ -771,7 +720,7 @@
 						label: computed(() => this.Resources.BIRTH_DATE54504),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						dateTimeType: 'date',
+						format: 'date',
 						controlLimits: [
 						],
 					}, this),
@@ -785,6 +734,7 @@
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						maxLength: 9,
+						labelId: 'label_ARMAPESSWPESSSEX_____',
 						arrayName: 'SEXO',
 						helpShortItem: 'None',
 						helpDetailedItem: 'None',
@@ -801,6 +751,7 @@
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						maxLength: 50,
+						labelId: 'label_ARMAPESSWPESSNATURALI',
 						controlLimits: [
 						],
 					}, this),
@@ -814,6 +765,7 @@
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						maxLength: 50,
+						labelId: 'label_ARMAPESSWPESSNACIONAL',
 						controlLimits: [
 						],
 					}, this),
@@ -827,6 +779,7 @@
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						maxLength: 100,
+						labelId: 'label_ARMAPESSWPESSADRESS__',
 						controlLimits: [
 						],
 					}, this),
@@ -840,6 +793,7 @@
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						maxLength: 8,
+						labelId: 'label_ARMAPESSWPESSZIPCODE_',
 						controlLimits: [
 						],
 					}, this),
@@ -853,6 +807,7 @@
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						maxLength: 50,
+						labelId: 'label_ARMAPESSWPESSCOUNTRY_',
 						controlLimits: [
 						],
 					}, this),
@@ -866,6 +821,7 @@
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						maxLength: 150,
+						labelId: 'label_ARMAPESSWPESSEMAIL___',
 						controlLimits: [
 						],
 					}, this),
@@ -1014,23 +970,17 @@
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 		},
 
-		beforeUnmount()
-		{
-/* eslint-disable indent, vue/html-indent, vue/script-indent */
-// USE /[MANUAL GQT COMPONENT_BEFORE_UNMOUNT ARMAPESS]/
-// eslint-disable-next-line
-/* eslint-enable indent, vue/html-indent, vue/script-indent */
-		},
-
 		methods: {
 			/**
 			 * Called before form init.
 			 */
 			async beforeLoad()
 			{
+				let loadForm = true
+
 				// Execute the "Before init" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.beforeInit)
-				for (const trigger of triggers)
+				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
 				this.emitEvent('before-load-form')
@@ -1040,7 +990,7 @@
 // eslint-disable-next-line
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 
-				return true
+				return loadForm
 			},
 
 			/**
@@ -1050,7 +1000,7 @@
 			{
 				// Execute the "After init" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.afterInit)
-				for (const trigger of triggers)
+				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
 				this.emitEvent('after-load-form')
@@ -1070,33 +1020,19 @@
 
 				// Execute the "Before apply" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.beforeApply)
-				for (const trigger of triggers)
+				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
-				const ticketsPromise = this.model.updateFilesTickets(true)
-				this.addBusy(ticketsPromise, this.Resources[hardcodedTexts.processing])
-				const canSetDocums = await ticketsPromise
+				const canSetDocums = await this.model.updateFilesTickets(true)
 
 				if (canSetDocums)
 				{
-					let results
-					const changesPromise = this.model.setDocumentChanges()
-					this.addBusy(changesPromise, this.Resources[hardcodedTexts.processing])
-					applyForm = await changesPromise
+					applyForm = await this.model.setDocumentChanges()
 
 					if (applyForm)
 					{
-						const insertsPromise = this.model.saveDocuments()
-						this.addBusy(insertsPromise, this.Resources[hardcodedTexts.processing])
-						results = await insertsPromise
+						const results = await this.model.saveDocuments()
 						applyForm = results.every((e) => e === true)
-					}
-
-					if (!changesPromise || (results && !results.every((e) => e === true)))
-					{
-						this.validationErrors = {
-							Erro: this.Resources.OCORREU_UM_ERRO_AO_T51884
-						}
 					}
 				}
 
@@ -1117,7 +1053,7 @@
 			{
 				// Execute the "After apply" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.afterApply)
-				for (const trigger of triggers)
+				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
 				this.emitEvent('after-apply-form')
@@ -1137,33 +1073,19 @@
 
 				// Execute the "Before save" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.beforeSave)
-				for (const trigger of triggers)
+				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
-				const ticketsPromise = this.model.updateFilesTickets()
-				this.addBusy(ticketsPromise, this.Resources[hardcodedTexts.processing])
-				const canSetDocums = await ticketsPromise
+				const canSetDocums = await this.model.updateFilesTickets()
 
 				if (canSetDocums)
 				{
-					let results
-					const changesPromise = this.model.setDocumentChanges()
-					this.addBusy(changesPromise, this.Resources[hardcodedTexts.processing])
-					saveForm = await changesPromise
+					saveForm = await this.model.setDocumentChanges()
 
 					if (saveForm)
 					{
-						const insertsPromise = this.model.saveDocuments()
-						this.addBusy(insertsPromise, this.Resources[hardcodedTexts.processing])
-						results = await insertsPromise
+						const results = await this.model.saveDocuments()
 						saveForm = results.every((e) => e === true)
-					}
-
-					if (!changesPromise || (results && !results.every((e) => e === true)))
-					{
-						this.validationErrors = {
-							Erro: this.Resources.OCORREU_UM_ERRO_AO_T51884
-						}
 					}
 				}
 
@@ -1182,9 +1104,11 @@
 			 */
 			async afterSave()
 			{
+				let redirectPage = true // Set to 'false' to cancel page redirect.
+
 				// Execute the "After save" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.afterSave)
-				for (const trigger of triggers)
+				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
 				this.emitEvent('after-save-form')
@@ -1194,7 +1118,7 @@
 // eslint-disable-next-line
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 
-				return true
+				return redirectPage
 			},
 
 			/**
@@ -1202,6 +1126,8 @@
 			 */
 			async beforeDel()
 			{
+				let deleteForm = true // Set to 'false' to cancel form delete.
+
 				this.emitEvent('before-delete-form')
 
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
@@ -1209,7 +1135,7 @@
 // eslint-disable-next-line
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 
-				return true
+				return deleteForm
 			},
 
 			/**
@@ -1217,6 +1143,8 @@
 			 */
 			async afterDel()
 			{
+				let redirectPage = true // Set to 'false' to cancel page redirect.
+
 				this.emitEvent('after-delete-form')
 
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
@@ -1224,7 +1152,7 @@
 // eslint-disable-next-line
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 
-				return true
+				return redirectPage
 			},
 
 			/**
@@ -1232,9 +1160,11 @@
 			 */
 			async beforeExit()
 			{
+				let leaveForm = true // Set to 'false' to cancel page redirect.
+
 				// Execute the "Before exit" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.beforeExit)
-				for (const trigger of triggers)
+				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
 				this.emitEvent('before-exit-form')
@@ -1244,7 +1174,7 @@
 // eslint-disable-next-line
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 
-				return true
+				return leaveForm
 			},
 
 			/**
@@ -1254,7 +1184,7 @@
 			{
 				// Execute the "After exit" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.afterExit)
-				for (const trigger of triggers)
+				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
 				this.emitEvent('after-exit-form')

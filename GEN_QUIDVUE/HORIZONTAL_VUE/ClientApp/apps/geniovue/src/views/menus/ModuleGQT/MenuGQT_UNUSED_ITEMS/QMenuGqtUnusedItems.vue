@@ -10,12 +10,10 @@
 				<q-table
 					v-bind="controls.menu"
 					v-on="controls.menu.handlers">
-					<!-- USE /[MANUAL GQT CUSTOM_TABLE GQT_Menu_UNUSED_ITEMS]/ -->
 				</q-table>
 
 				<q-table-extra-extension
 					:list-ctrl="controls.menu"
-					:filter-operators="controls.menu.filterOperators"
 					v-on="controls.menu.handlers" />
 			</q-row-container>
 		</form>
@@ -50,7 +48,7 @@
 </template>
 
 <script>
-	/* eslint-disable @typescript-eslint/no-unused-vars */
+	/* eslint-disable no-unused-vars */
 	import asyncProcM from '@quidgest/clientapp/composables/async'
 	import qEnums from '@quidgest/clientapp/constants/enums'
 	import netAPI from '@quidgest/clientapp/network'
@@ -70,7 +68,7 @@
 	import qApi from '@/api/genio/quidgestFunctions.js'
 	import qFunctions from '@/api/genio/projectFunctions.js'
 	import qProjArrays from '@/api/genio/projectArrays.js'
-	/* eslint-enable @typescript-eslint/no-unused-vars */
+	/* eslint-enable no-unused-vars */
 
 	import MenuViewModel from './QMenuGQT_UNUSED_ITEMSViewModel.js'
 
@@ -154,7 +152,6 @@
 								label: computed(() => this.Resources.ARTICLE60065),
 								dataLength: 85,
 								scrollData: 30,
-								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 2,
@@ -164,7 +161,6 @@
 								label: computed(() => this.Resources.CODE49225),
 								dataLength: 15,
 								scrollData: 15,
-								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.BooleanColumn({
 								order: 3,
@@ -173,7 +169,6 @@
 								field: 'VALID',
 								label: computed(() => this.Resources.IN_USE42606),
 								scrollData: 1,
-								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.ArrayColumn({
 								order: 4,
@@ -183,8 +178,7 @@
 								label: computed(() => this.Resources.TYPE00312),
 								dataLength: 1,
 								scrollData: 1,
-								export: 1,
-								array: computed(() => new qProjArrays.QArrayTipoarti(vm.$getResource).elements),
+								array: computed(() => qProjArrays.QArrayTipoarti.setResources(vm.$getResource).elements),
 								arrayType: qProjArrays.QArrayTipoarti.type,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 						],
@@ -201,7 +195,8 @@
 							permissions: {
 							},
 							searchBarConfig: {
-								visibility: true
+								visibility: true,
+								searchOnPressEnter: true
 							},
 							filtersVisible: true,
 							allowColumnFilters: true,
@@ -302,7 +297,6 @@
 							rowClickAction: {
 								id: 'RCA_GQT_4A111',
 								name: 'form-ARTIG',
-								isVisible: true,
 								params: {
 									isRoute: true,
 									limits: [
@@ -329,15 +323,14 @@
 								sortOrder: 'asc'
 							}
 						},
-						globalEvents: ['changed-WAREH', 'changed-ITEM', 'changed-GITEM'],
+						globalEvents: ['changed-GITEM', 'changed-ITEM', 'changed-WAREH'],
 						uuid: '026b4b45-a993-4305-9455-a3c221daa253',
 						allSelectedRows: 'false',
 						headerLevel: 1,
 						/** Menu limits */
 						controlLimits: [
 							/** SC */
-						],
-						isActiveControl: computed(() => this.isActiveMenu)
+						]
 					}, this),
 				}
 			}
@@ -361,14 +354,6 @@
 		{
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
 // USE /[MANUAL GQT FORM_CODEJS GQT_MENU_UNUSED_ITEMS]/
-// eslint-disable-next-line
-/* eslint-enable indent, vue/html-indent, vue/script-indent */
-		},
-
-		beforeUnmount()
-		{
-/* eslint-disable indent, vue/html-indent, vue/script-indent */
-// USE /[MANUAL GQT COMPONENT_BEFORE_UNMOUNT GQT_MENU_UNUSED_ITEMS]/
 // eslint-disable-next-line
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 		},

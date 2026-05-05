@@ -25,6 +25,7 @@ namespace GenioServer.ai
         private User user;
         private string module; 
 
+
         public void LoadRecords(string key, PersistentSupport sp, User user)
         {
             //Base area
@@ -41,20 +42,9 @@ namespace GenioServer.ai
             this.module = user.CurrentModule;
 
             repar = (CSGenioArepar) area;
-			Files = new List<DBFile>();
-			// Documents to load
 
             // Areas dependent on base table
 
-        }
-
-		public void LoadFile(PersistentSupport sp, string valDocFk)
-        {
-            DBFile file = DbArea.getFileDB(valDocFk, sp);
-            if (file != null && file.File != null)
-            {
-                Files.Add(file);
-            }
         }
 
         public override string BuildUserPrompt()
@@ -76,14 +66,11 @@ namespace GenioServer.ai
                 $"You can't return a letter not in this 4 categories.\n";
         }
 
-        public override void Execute(DbArea area, PersistentSupport sp, User user, AgentContextData context = null)
+        public override void Execute(DbArea area, PersistentSupport sp, User user)
         {
             LoadRecords(area, sp, user);
 
-            if(context == null)
-                context = BuildAgentContext(user, area.QPrimaryKey);
-
-            RepairsCategorizerResponse response = base.GetResponse<RepairsCategorizerResponse>(context);
+            RepairsCategorizerResponse response = base.GetResponse<RepairsCategorizerResponse>(user);
             if (response == null)
                 throw new FrameworkException("Answer from AI service was empty", "RepairsCategorizerAgent.Execute", "Answer from AI service was empty");
             
@@ -102,7 +89,6 @@ namespace GenioServer.ai
                 Category = new
                 {
                     type = "string",
-                    title = Translations.Get("Technical area", user.Language),
                     description = "A one letter with the correct mapping"
                 }            }
         };

@@ -7,12 +7,11 @@
 				ref="menuContainer"
 				class="dropdown"
 				@focusout="onFocusoutMenu">
-				<a
+				<a 
 					ref="menuButton"
-					:class="['brand', 'modules__header']"
-					role="button"
-					href="#"
-					:aria-expanded="moduleMenuIsOpen"
+					:class="['brand', 'modules__header']" 
+					href="javascript:void(0)"
+					:aria-expanded="moduleMenuIsOpen" 
 					:data-key="system.currentModule"
 					@click.stop.prevent="toggleMenu"
 					@keyup="menuItemKeyup">
@@ -56,8 +55,8 @@
 			 */
 			onFocusoutMenu(event)
 			{
-				const menuContainer = this.$refs?.menuContainer
-				const focusedElem = event?.relatedTarget
+				let menuContainer = this.$refs?.menuContainer
+				let focusedElem = event?.relatedTarget
 				//If the focus went to an element within the menu button or dropdown,
 				//logically, the menu is still focused
 				if(menuContainer.contains(focusedElem))
@@ -83,7 +82,7 @@
 			{
 				//Focus on the menu toggle button
 				this.focusItem()
-
+				
 				//Close dropdown
 				this.setModuleMenuState(false)
 			},
@@ -94,7 +93,7 @@
 			menuItemKeyup(event)
 			{
 				const key = event?.key
-
+				
 				if(key === 'Escape')
 					this.closeMenuAndFocusItem()
 			},
@@ -106,7 +105,7 @@
 			{
 				//Toggle modules menu
 				this.toggleModulesMenu()
-
+				
 				//Signal if opening
 				if(this.moduleMenuIsOpen)
 					this.$emit('open-menu')

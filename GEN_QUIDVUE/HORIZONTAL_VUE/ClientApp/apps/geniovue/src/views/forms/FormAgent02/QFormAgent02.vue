@@ -9,13 +9,12 @@
 			<div
 				v-if="showFormHeader"
 				class="c-action-bar">
-				<component
+				<h1
 					v-if="formControl.uiComponents.header && formInfo.designation"
-					:is="topHeadingTag"
 					:id="formTitleId"
 					class="form-header">
 					{{ formInfo.designation }}
-				</component>
+				</h1>
 
 				<div class="c-action-bar__menu">
 					<template
@@ -39,13 +38,9 @@
 									:label="btn.label"
 									:disabled="btn.disabled"
 									@click="btn.action">
-									<template v-if="btn.icon">
-										<q-badge-indicator
-											:enabled="btn.badge?.isVisible ?? false"
-											:color="btn.badge?.color">
-											<q-icon v-bind="btn.icon" />
-										</q-badge-indicator>
-									</template>
+									<q-icon
+										v-if="btn.icon"
+										v-bind="btn.icon" />
 								</q-toggle-group-item>
 							</template>
 						</q-toggle-group>
@@ -57,7 +52,7 @@
 				v-if="$app.layout.FormAnchorsPosition === 'form-header' && visibleGroups.length > 0"
 				:anchors="anchorGroups"
 				:controls="visibleControls"
-				@focus-control="focusControl" />
+				@focus-control="(...args) => focusControl(...args)" />
 		</div>
 	</teleport>
 
@@ -78,7 +73,6 @@
 						v-if="btn.isActive && btn.isVisible && btn.showInHeading"
 						:id="`heading-${btn.id}`"
 						:label="btn.text"
-						:color="btn.color"
 						:variant="btn.variant"
 						:disabled="btn.disabled"
 						:icon-pos="btn.iconPos"
@@ -92,21 +86,18 @@
 			</q-button-group>
 		</div>
 
-		<q-container
-			fluid
+		<div
+			class="form-flow"
 			data-key="AGENT02"
-			:data-identifier="primaryKeyValue"
-			:data-loading="!formInitialDataLoaded || !isActiveForm">
+			:data-loading="!formInitialDataLoaded">
 			<template v-if="formControl.initialized && showFormBody">
-				<q-row v-if="controls.AGENT02_AGENTPHOTO___.isVisible">
-					<q-col
-						v-if="controls.AGENT02_AGENTPHOTO___.isVisible"
-						cols="auto">
+				<q-row-container v-show="controls.AGENT02_AGENTPHOTO___.isVisible">
+					<q-control-wrapper
+						v-show="controls.AGENT02_AGENTPHOTO___.isVisible"
+						class="${Vue.GetControlWrapperClass($controlsColumn)}">
 						<base-input-structure
-							v-if="controls.AGENT02_AGENTPHOTO___.isVisible"
 							class="q-image"
-							v-bind="controls.AGENT02_AGENTPHOTO___.wrapperProps"
-							:id="getControlId(controls.AGENT02_AGENTPHOTO___)"
+							v-bind="controls.AGENT02_AGENTPHOTO___"
 							v-on="controls.AGENT02_AGENTPHOTO___.handlers"
 							:loading="controls.AGENT02_AGENTPHOTO___.props.loading"
 							:reporting-mode-on="reportingModeCAV"
@@ -114,35 +105,29 @@
 							<q-image
 								v-if="controls.AGENT02_AGENTPHOTO___.isVisible"
 								v-bind="controls.AGENT02_AGENTPHOTO___.props"
-								:id="getControlId(controls.AGENT02_AGENTPHOTO___)"
 								v-on="controls.AGENT02_AGENTPHOTO___.handlers" />
 						</base-input-structure>
-					</q-col>
-				</q-row>
-				<q-row v-if="controls.AGENT02_AGENTNAME____.isVisible || controls.AGENT02_AGENTBIRTHDAT.isVisible">
-					<q-col
-						v-if="controls.AGENT02_AGENTNAME____.isVisible || controls.AGENT02_AGENTBIRTHDAT.isVisible"
-						cols="auto">
+					</q-control-wrapper>
+				</q-row-container>
+				<q-row-container v-show="controls.AGENT02_AGENTNAME____.isVisible || controls.AGENT02_AGENTBIRTHDAT.isVisible">
+					<q-control-wrapper
+						v-show="controls.AGENT02_AGENTNAME____.isVisible || controls.AGENT02_AGENTBIRTHDAT.isVisible"
+						class="${Vue.GetControlWrapperClass($controlsColumn)}">
 						<base-input-structure
-							v-if="controls.AGENT02_AGENTNAME____.isVisible"
 							class="i-text"
-							v-bind="controls.AGENT02_AGENTNAME____.wrapperProps"
-							:id="getControlId(controls.AGENT02_AGENTNAME____)"
+							v-bind="controls.AGENT02_AGENTNAME____"
 							v-on="controls.AGENT02_AGENTNAME____.handlers"
 							:loading="controls.AGENT02_AGENTNAME____.props.loading"
 							:reporting-mode-on="reportingModeCAV"
 							:suggestion-mode-on="suggestionModeOn">
 							<q-text-field
 								v-bind="controls.AGENT02_AGENTNAME____.props"
-								:id="getControlId(controls.AGENT02_AGENTNAME____)"
 								@blur="onBlur(controls.AGENT02_AGENTNAME____, model.ValName.value)"
 								@change="model.ValName.fnUpdateValueOnChange" />
 						</base-input-structure>
 						<base-input-structure
-							v-if="controls.AGENT02_AGENTBIRTHDAT.isVisible"
 							class="i-text"
-							v-bind="controls.AGENT02_AGENTBIRTHDAT.wrapperProps"
-							:id="getControlId(controls.AGENT02_AGENTBIRTHDAT)"
+							v-bind="controls.AGENT02_AGENTBIRTHDAT"
 							v-on="controls.AGENT02_AGENTBIRTHDAT.handlers"
 							:loading="controls.AGENT02_AGENTBIRTHDAT.props.loading"
 							:reporting-mode-on="reportingModeCAV"
@@ -150,61 +135,54 @@
 							<q-date-time-picker
 								v-if="controls.AGENT02_AGENTBIRTHDAT.isVisible"
 								v-bind="controls.AGENT02_AGENTBIRTHDAT.props"
-								:id="getControlId(controls.AGENT02_AGENTBIRTHDAT)"
 								:model-value="model.ValBirthdat.value"
 								@reset-icon-click="model.ValBirthdat.fnUpdateValue(model.ValBirthdat.originalValue ?? new Date())"
 								@update:model-value="model.ValBirthdat.fnUpdateValue($event ?? '')" />
 						</base-input-structure>
-					</q-col>
-				</q-row>
-				<q-row v-if="controls.AGENT02_AGENTEMAIL___.isVisible || controls.AGENT02_AGENTTELEPHON.isVisible">
-					<q-col
-						v-if="controls.AGENT02_AGENTEMAIL___.isVisible || controls.AGENT02_AGENTTELEPHON.isVisible"
-						cols="auto">
+					</q-control-wrapper>
+				</q-row-container>
+				<q-row-container v-show="controls.AGENT02_AGENTEMAIL___.isVisible || controls.AGENT02_AGENTTELEPHON.isVisible">
+					<q-control-wrapper
+						v-show="controls.AGENT02_AGENTEMAIL___.isVisible || controls.AGENT02_AGENTTELEPHON.isVisible"
+						class="${Vue.GetControlWrapperClass($controlsColumn)}">
 						<base-input-structure
-							v-if="controls.AGENT02_AGENTEMAIL___.isVisible"
 							class="i-text"
-							v-bind="controls.AGENT02_AGENTEMAIL___.wrapperProps"
-							:id="getControlId(controls.AGENT02_AGENTEMAIL___)"
+							v-bind="controls.AGENT02_AGENTEMAIL___"
 							v-on="controls.AGENT02_AGENTEMAIL___.handlers"
 							:loading="controls.AGENT02_AGENTEMAIL___.props.loading"
 							:reporting-mode-on="reportingModeCAV"
 							:suggestion-mode-on="suggestionModeOn">
 							<q-mask
 								v-if="controls.AGENT02_AGENTEMAIL___.isVisible"
-								v-bind="controls.AGENT02_AGENTEMAIL___.props"
-								:id="getControlId(controls.AGENT02_AGENTEMAIL___)"
+								v-bind="controls.AGENT02_AGENTEMAIL___"
 								:model-value="model.ValEmail.value"
-								@change="model.ValEmail.fnUpdateValueOnChange" />
+								@update:model-value="model.ValEmail.fnUpdateValue" />
 						</base-input-structure>
 						<base-input-structure
-							v-if="controls.AGENT02_AGENTTELEPHON.isVisible"
 							class="i-text"
-							v-bind="controls.AGENT02_AGENTTELEPHON.wrapperProps"
-							:id="getControlId(controls.AGENT02_AGENTTELEPHON)"
+							v-bind="controls.AGENT02_AGENTTELEPHON"
 							v-on="controls.AGENT02_AGENTTELEPHON.handlers"
 							:loading="controls.AGENT02_AGENTTELEPHON.props.loading"
 							:reporting-mode-on="reportingModeCAV"
 							:suggestion-mode-on="suggestionModeOn">
 							<q-text-field
 								v-bind="controls.AGENT02_AGENTTELEPHON.props"
-								:id="getControlId(controls.AGENT02_AGENTTELEPHON)"
 								@blur="onBlur(controls.AGENT02_AGENTTELEPHON, model.ValTelephon.value)"
 								@change="model.ValTelephon.fnUpdateValueOnChange" />
 						</base-input-structure>
-					</q-col>
-				</q-row>
+					</q-control-wrapper>
+				</q-row-container>
 			</template>
-		</q-container>
+		</div>
 	</teleport>
 
-	<q-divider v-if="!isPopup && showFormFooter" />
+	<hr v-if="!isPopup && showFormFooter" />
 
 	<teleport
 		v-if="formModalIsReady && showFormFooter"
 		:to="`#${uiContainersId.footer}`"
 		:disabled="!isPopup || isNested">
-		<q-row v-if="showFormFooter">
+		<q-row-container v-if="showFormFooter">
 			<div id="footer-action-btns">
 				<template
 					v-for="btn in formButtons"
@@ -213,7 +191,6 @@
 						v-if="btn.isActive && btn.isVisible && btn.showInFooter"
 						:id="`bottom-${btn.id}`"
 						:label="btn.text"
-						:color="btn.color"
 						:variant="btn.variant"
 						:disabled="btn.disabled"
 						:icon-pos="btn.iconPos"
@@ -225,12 +202,12 @@
 					</q-button>
 				</template>
 			</div>
-		</q-row>
+		</q-row-container>
 	</teleport>
 </template>
 
 <script>
-	/* eslint-disable @typescript-eslint/no-unused-vars */
+	/* eslint-disable no-unused-vars */
 	import { computed, defineAsyncComponent, readonly } from 'vue'
 	import { useRoute } from 'vue-router'
 
@@ -250,7 +227,7 @@
 	import qApi from '@/api/genio/quidgestFunctions.js'
 	import qFunctions from '@/api/genio/projectFunctions.js'
 	import qProjArrays from '@/api/genio/projectArrays.js'
-	/* eslint-enable @typescript-eslint/no-unused-vars */
+	/* eslint-enable no-unused-vars */
 
 	import FormViewModel from './QFormAgent02ViewModel.js'
 
@@ -327,8 +304,7 @@
 					primaryKey: 'ValCodagent',
 					designation: computed(() => this.Resources.AGENT00994),
 					identifier: '', // Unique identifier received by route (when it's nested).
-					mode: '',
-					availableAgents: [],
+					mode: ''
 				},
 
 				formButtons: {
@@ -436,11 +412,7 @@
 						showInFooter: true,
 						isActive: true,
 						isVisible: computed(() => vm.authData.isAllowed && vm.isEditable),
-						action: vm.saveForm,
-						badge: {
-							isVisible: computed(() => vm.model?.isDirty === true),
-							color: 'highlight'
-						}
+						action: vm.saveForm
 					},
 					confirmBtn: {
 						id: 'confirm-btn',
@@ -565,6 +537,7 @@
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						maxLength: 50,
+						labelId: 'label_AGENT02_AGENTNAME____',
 						mustBeFilled: true,
 						controlLimits: [
 						],
@@ -578,7 +551,7 @@
 						label: computed(() => this.Resources.DATA_DE_NASCIMENTO13938),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						dateTimeType: 'date',
+						format: 'date',
 						controlLimits: [
 						],
 					}, this),
@@ -592,6 +565,7 @@
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						maxLength: 50,
+						labelId: 'label_AGENT02_AGENTEMAIL___',
 						mustBeFilled: true,
 						controlLimits: [
 						],
@@ -606,6 +580,7 @@
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						maxLength: 50,
+						labelId: 'label_AGENT02_AGENTTELEPHON',
 						controlLimits: [
 						],
 					}, this),
@@ -690,23 +665,17 @@
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 		},
 
-		beforeUnmount()
-		{
-/* eslint-disable indent, vue/html-indent, vue/script-indent */
-// USE /[MANUAL GQT COMPONENT_BEFORE_UNMOUNT AGENT02]/
-// eslint-disable-next-line
-/* eslint-enable indent, vue/html-indent, vue/script-indent */
-		},
-
 		methods: {
 			/**
 			 * Called before form init.
 			 */
 			async beforeLoad()
 			{
+				let loadForm = true
+
 				// Execute the "Before init" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.beforeInit)
-				for (const trigger of triggers)
+				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
 				this.emitEvent('before-load-form')
@@ -716,7 +685,7 @@
 // eslint-disable-next-line
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 
-				return true
+				return loadForm
 			},
 
 			/**
@@ -726,7 +695,7 @@
 			{
 				// Execute the "After init" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.afterInit)
-				for (const trigger of triggers)
+				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
 				this.emitEvent('after-load-form')
@@ -746,33 +715,19 @@
 
 				// Execute the "Before apply" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.beforeApply)
-				for (const trigger of triggers)
+				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
-				const ticketsPromise = this.model.updateFilesTickets(true)
-				this.addBusy(ticketsPromise, this.Resources[hardcodedTexts.processing])
-				const canSetDocums = await ticketsPromise
+				const canSetDocums = await this.model.updateFilesTickets(true)
 
 				if (canSetDocums)
 				{
-					let results
-					const changesPromise = this.model.setDocumentChanges()
-					this.addBusy(changesPromise, this.Resources[hardcodedTexts.processing])
-					applyForm = await changesPromise
+					applyForm = await this.model.setDocumentChanges()
 
 					if (applyForm)
 					{
-						const insertsPromise = this.model.saveDocuments()
-						this.addBusy(insertsPromise, this.Resources[hardcodedTexts.processing])
-						results = await insertsPromise
+						const results = await this.model.saveDocuments()
 						applyForm = results.every((e) => e === true)
-					}
-
-					if (!changesPromise || (results && !results.every((e) => e === true)))
-					{
-						this.validationErrors = {
-							Erro: this.Resources.OCORREU_UM_ERRO_AO_T51884
-						}
 					}
 				}
 
@@ -793,7 +748,7 @@
 			{
 				// Execute the "After apply" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.afterApply)
-				for (const trigger of triggers)
+				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
 				this.emitEvent('after-apply-form')
@@ -813,33 +768,19 @@
 
 				// Execute the "Before save" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.beforeSave)
-				for (const trigger of triggers)
+				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
-				const ticketsPromise = this.model.updateFilesTickets()
-				this.addBusy(ticketsPromise, this.Resources[hardcodedTexts.processing])
-				const canSetDocums = await ticketsPromise
+				const canSetDocums = await this.model.updateFilesTickets()
 
 				if (canSetDocums)
 				{
-					let results
-					const changesPromise = this.model.setDocumentChanges()
-					this.addBusy(changesPromise, this.Resources[hardcodedTexts.processing])
-					saveForm = await changesPromise
+					saveForm = await this.model.setDocumentChanges()
 
 					if (saveForm)
 					{
-						const insertsPromise = this.model.saveDocuments()
-						this.addBusy(insertsPromise, this.Resources[hardcodedTexts.processing])
-						results = await insertsPromise
+						const results = await this.model.saveDocuments()
 						saveForm = results.every((e) => e === true)
-					}
-
-					if (!changesPromise || (results && !results.every((e) => e === true)))
-					{
-						this.validationErrors = {
-							Erro: this.Resources.OCORREU_UM_ERRO_AO_T51884
-						}
 					}
 				}
 
@@ -858,9 +799,11 @@
 			 */
 			async afterSave()
 			{
+				let redirectPage = true // Set to 'false' to cancel page redirect.
+
 				// Execute the "After save" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.afterSave)
-				for (const trigger of triggers)
+				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
 				this.emitEvent('after-save-form')
@@ -870,7 +813,7 @@
 // eslint-disable-next-line
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 
-				return true
+				return redirectPage
 			},
 
 			/**
@@ -878,6 +821,8 @@
 			 */
 			async beforeDel()
 			{
+				let deleteForm = true // Set to 'false' to cancel form delete.
+
 				this.emitEvent('before-delete-form')
 
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
@@ -885,7 +830,7 @@
 // eslint-disable-next-line
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 
-				return true
+				return deleteForm
 			},
 
 			/**
@@ -893,6 +838,8 @@
 			 */
 			async afterDel()
 			{
+				let redirectPage = true // Set to 'false' to cancel page redirect.
+
 				this.emitEvent('after-delete-form')
 
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
@@ -900,7 +847,7 @@
 // eslint-disable-next-line
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 
-				return true
+				return redirectPage
 			},
 
 			/**
@@ -908,9 +855,11 @@
 			 */
 			async beforeExit()
 			{
+				let leaveForm = true // Set to 'false' to cancel page redirect.
+
 				// Execute the "Before exit" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.beforeExit)
-				for (const trigger of triggers)
+				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
 				this.emitEvent('before-exit-form')
@@ -920,7 +869,7 @@
 // eslint-disable-next-line
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 
-				return true
+				return leaveForm
 			},
 
 			/**
@@ -930,7 +879,7 @@
 			{
 				// Execute the "After exit" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.afterExit)
-				for (const trigger of triggers)
+				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
 				this.emitEvent('after-exit-form')

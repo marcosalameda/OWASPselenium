@@ -9,6 +9,7 @@
 					<message
 						:Messaging="Messaging"
 						:Metadata="Metadata"
+						:model="model"
 						:resources="resources"
 						@alert-class="forwardAlert"
 					/>
@@ -16,6 +17,26 @@
 			</q-card>
 		</row>
 
+		<row>
+			<q-card
+				width="block"
+				class="q-card--admin-default"
+				:title="resources.messagingQueueServerTitle">
+				<q-row-container>
+					<queue
+						:model="model"
+						:resources="resources"
+						@update-model="forwardUpdate"
+						@alert-class="forwardAlert" />
+				</q-row-container>
+			</q-card>
+		</row>
+		<row class="footer-btn">
+			<q-button
+				variant="bold"
+				:label="hardcodedTexts.saveConfiguration"
+				@click="SaveIntegrationConfig" />
+		</row>
 	</div>
 </template>
 
@@ -26,12 +47,14 @@
 	import { texts } from '@/resources/hardcodedTexts.ts';
 	import QAlert from '@/components/QAlert.vue';
 	import message from './Message';
+	import queue from './Queue';
 	export default {
 		name: 'integration',
 
 		components: {
 			QAlert,
 			message,
+			queue
 		},
 
 		mixins: [reusableMixin],

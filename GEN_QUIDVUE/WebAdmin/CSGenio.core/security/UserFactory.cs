@@ -27,6 +27,140 @@ namespace GenioServer.security
             this.user = user;
         }
 
+
+
+		private static readonly string[] AVAILABLE_MODULES = new string[]
+            {
+                "TBS"
+                , "WMS"
+                , "IMO"
+                , "TRN"
+                , "STY"
+                , "PTN"
+                , "REG"
+                , "UIS"
+                , "GQT"
+                , "XRS"
+            };
+
+        public static readonly Tuple<string, Role>[] MODULE_ROLES = new Tuple<string, Role>[]
+        {
+            new Tuple<string,Role>("TBS", Role.UNAUTHORIZED),
+            new Tuple<string,Role>("WMS", Role.UNAUTHORIZED),
+            new Tuple<string,Role>("IMO", Role.UNAUTHORIZED),
+            new Tuple<string,Role>("TRN", Role.UNAUTHORIZED),
+            new Tuple<string,Role>("STY", Role.UNAUTHORIZED),
+            new Tuple<string,Role>("PTN", Role.UNAUTHORIZED),
+            new Tuple<string,Role>("REG", Role.UNAUTHORIZED),
+            new Tuple<string,Role>("UIS", Role.UNAUTHORIZED),
+            new Tuple<string,Role>("GQT", Role.UNAUTHORIZED),
+            new Tuple<string,Role>("XRS", Role.UNAUTHORIZED),
+
+			new Tuple<string,Role>("STY", Role.ROLE_ADMINISTRATOR),
+			new Tuple<string,Role>("GQT", Role.ROLE_ADMINISTRATOR),
+			new Tuple<string,Role>("TRN", Role.ROLE_ADMINISTRATOR),
+			new Tuple<string,Role>("UIS", Role.ROLE_ADMINISTRATOR),
+			new Tuple<string,Role>("TBS", Role.ROLE_ADMINISTRATOR),
+			new Tuple<string,Role>("PTN", Role.ROLE_ADMINISTRATOR),
+			new Tuple<string,Role>("REG", Role.ROLE_ADMINISTRATOR),
+			new Tuple<string,Role>("IMO", Role.ROLE_ADMINISTRATOR),
+			new Tuple<string,Role>("TRN", Role.ROLE_EDIT),
+			new Tuple<string,Role>("STY", Role.ROLE_EDIT),
+			new Tuple<string,Role>("GQT", Role.ROLE_EDIT),
+			new Tuple<string,Role>("PTN", Role.ROLE_EDIT),
+			new Tuple<string,Role>("TRN", Role.ROLE_EDIT_PESSO),
+			new Tuple<string,Role>("PTN", Role.ROLE_EDIT_PESSO),
+			new Tuple<string,Role>("REG", Role.ROLE_EMPLOYEE),
+			new Tuple<string,Role>("TBS", Role.ROLE_MANAGER),
+			new Tuple<string,Role>("TRN", Role.ROLE_MANAGER),
+			new Tuple<string,Role>("IMO", Role.ROLE_MANAGER),
+			new Tuple<string,Role>("PTN", Role.ROLE_MANAGER),
+			new Tuple<string,Role>("TBS", Role.ROLE_SYSADMIN),
+			new Tuple<string,Role>("PTN", Role.ROLE_SYSADMIN),
+			new Tuple<string,Role>("GQT", Role.ROLE_SYSADMIN),
+			new Tuple<string,Role>("IMO", Role.ROLE_SYSADMIN),
+			new Tuple<string,Role>("TRN", Role.ROLE_SYSADMIN),
+			new Tuple<string,Role>("REG", Role.ROLE_SYSADMIN),
+			new Tuple<string,Role>("STY", Role.ROLE_SYSADMIN),
+			new Tuple<string,Role>("UIS", Role.ROLE_SYSADMIN),
+			new Tuple<string,Role>("GQT", Role.ROLE_VIEW),
+			new Tuple<string,Role>("PTN", Role.ROLE_VIEW_PESSO),
+			new Tuple<string,Role>("TRN", Role.ROLE_VIEW_PESSO),
+			new Tuple<string,Role>("REG", Role.ROLE_1),
+			new Tuple<string,Role>("TRN", Role.ROLE_1),
+			new Tuple<string,Role>("TBS", Role.ROLE_1),
+			new Tuple<string,Role>("IMO", Role.ROLE_1),
+			new Tuple<string,Role>("GQT", Role.ROLE_1),
+			new Tuple<string,Role>("UIS", Role.ROLE_1),
+			new Tuple<string,Role>("PTN", Role.ROLE_1),
+			new Tuple<string,Role>("STY", Role.ROLE_1),
+			new Tuple<string,Role>("GQT", Role.ROLE_2),
+			new Tuple<string,Role>("TRN", Role.ROLE_3),
+			new Tuple<string,Role>("TRN", Role.ROLE_4),
+			new Tuple<string,Role>("WMS", Role.ROLE_20),
+			new Tuple<string,Role>("IMO", Role.ROLE_20),
+			new Tuple<string,Role>("GQT", Role.ROLE_20),
+			new Tuple<string,Role>("IMO", Role.ADMINISTRATION),
+			new Tuple<string,Role>("REG", Role.ADMINISTRATION),
+			new Tuple<string,Role>("TRN", Role.ADMINISTRATION),
+			new Tuple<string,Role>("PTN", Role.ADMINISTRATION),
+			new Tuple<string,Role>("TBS", Role.ADMINISTRATION),
+			new Tuple<string,Role>("UIS", Role.ADMINISTRATION),
+			new Tuple<string,Role>("GQT", Role.ADMINISTRATION),
+			new Tuple<string,Role>("WMS", Role.ADMINISTRATION),
+			new Tuple<string,Role>("XRS", Role.ADMINISTRATION),
+			new Tuple<string,Role>("STY", Role.ADMINISTRATION)        };
+
+        [Obsolete]
+        private static readonly string[] AVAILABLE_ROLES = new string[]
+            {
+                "TBS.0"
+				, "TBS.1"
+				, "TBS.99"
+                , "WMS.0"
+				, "WMS.20"
+				, "WMS.99"
+                , "IMO.0"
+				, "IMO.1"
+				, "IMO.20"
+				, "IMO.99"
+                , "TRN.0"
+				, "TRN.1"
+				, "TRN.3"
+				, "TRN.4"
+				, "TRN.99"
+                , "STY.0"
+				, "STY.1"
+				, "STY.99"
+                , "PTN.0"
+				, "PTN.1"
+				, "PTN.99"
+                , "REG.0"
+				, "REG.1"
+				, "REG.99"
+                , "UIS.0"
+				, "UIS.1"
+				, "UIS.99"
+                , "GQT.0"
+				, "GQT.1"
+				, "GQT.2"
+				, "GQT.20"
+				, "GQT.99"
+                , "XRS.0"
+				, "XRS.99"
+            };
+
+        private static List<string> GetYears(IPrincipal principal)
+        {
+            List<string> anos = new List<string>();
+            foreach (var Qyear in Configuration.Years)
+                if (principal.IsInRole(Qyear))
+                    anos.Add(Qyear);
+            return anos;
+        }
+
+
+
         /// <summary>
         /// Returns a user with the given userName from the login table. Returns null if the userid doesn't exist
         /// </summary>
@@ -141,7 +275,7 @@ namespace GenioServer.security
             return CheckNewPassword(userPsw.ValNome, newPass, confirmPass);
         }
 
-        public string CheckNewPassword(string username, string pass, string confirm)
+        private string CheckNewPassword(string username, string pass, string confirm)
         {
             if (pass == null) // null password protection
                 pass = "";
@@ -179,7 +313,7 @@ namespace GenioServer.security
                 return "";
 
             double pswStrength = PasswordFactory.scorePassword(pass);
-
+            
             if (!((configStrength == PasswordStrength.Forte && pswStrength > 80) ||
                 (configStrength == PasswordStrength.Bom && pswStrength > 60) ||
                 (configStrength == PasswordStrength.Fraco && pswStrength >= 30)))
@@ -204,7 +338,7 @@ namespace GenioServer.security
             var ct = DBConversion.ToInteger(sp.executeScalar(select));
             if (ct > 0)
                 return Translations.GetByCode("PASSWORD_VULNERAVEL_00083", user.Language);
-
+            
             return "";
         }
 
@@ -307,7 +441,7 @@ namespace GenioServer.security
                 catch (Exception e)
                 {
 
-                    throw new FrameworkException(Translations.Get("Não foi possível enviar o email.", user.User.Language), "UserFactory.MailSender", "Email wasn't sent.", e);
+                    throw new BusinessException(Translations.Get("Não foi possível enviar o email.", user.User.Language), "UserFactory.MailSender", "Email wasn't sent.", e);
                 }
             }
 
@@ -332,13 +466,22 @@ namespace GenioServer.security
             bool userHasEph = user.hasEph(ephID);
 
             if (!userHasEph)
-                throw new FrameworkException("O utilizador não tem o EPH definido.", "UserFactory.UpdateEPH", "O utilizador não tem o EPH definido.");
+                throw new BusinessException("O utilizador não tem o EPH definido.", "UserFactory.UpdateEPH", "O utilizador não tem o EPH definido.");
             else
                 user.SetEph(user.CurrentModule, ephID, ephValues);
 
             return user;
         }
 
+        public static string[] GetEPH(User user, string ephID)
+        {
+            return user.GetEph(user.CurrentModule, ephID);
+        }
+
+        public static User FillUser(IPrincipal principal, User user)
+        {
+            return FillUser(principal, user, "");
+        }
 
         public static bool IsGuest(string username)
         {
@@ -355,43 +498,57 @@ namespace GenioServer.security
 			return IsGuest(identity.Name);
 		}
 
-        /// <summary>
-        /// Complement the user roles with the EPH's limitations that are locally associated with the user.
-        /// </summary>
-        /// <param name="user">The user to read EPH's to</param>
-        /// <returns>The same user with EPH information filled</returns>
-        public static User ReadEphs(User user)
+        public static User FillUser(IPrincipal principal, User user, string location)
         {
-            user ??= SecurityFactory.GetGuest();
+			// USE /[MANUAL GQT USERPROVIDER]/
+			System.Diagnostics.Debug.Assert(principal != null);
+            System.Diagnostics.Debug.Assert(!(principal is ErrorPrincipal));
 
-            //If the user is a guest, we don't have any EPH's to read, so we just return the user with the default roles
-            if (user.IsGuest())
-                return user;
+            if(user == null){
+              user = new User(principal.Identity.Name, "guest", Configuration.DefaultYear, location);
+              user.Language = Thread.CurrentThread.CurrentCulture.Name.Replace("-", "").ToUpperInvariant();
+            }
 
-            //Iterate each year and read the associated EPH's for it
+			if (IsGuest(principal.Identity))
+			{
+				foreach (string module in AVAILABLE_MODULES)
+				{
+                    user.AddModuleRole(module, Role.UNAUTHORIZED);
+				}
+
+                user.AddModuleRole("Public", Role.UNAUTHORIZED);
+
+				return user;
+			}
+
             Exception lastException = null;
             bool sucess = false;
             string _year = user.Year, firstAvailableYear = string.Empty;
-            foreach (string Qyear in user.Years)
+            foreach (string Qyear in Configuration.Years)
             {
-                user.Year = Qyear;
-                try
+                if (principal.IsInRole(Qyear))
                 {
-                    user = ReadEphsCurrentYear(user);
-                    sucess = true;
-                    if (string.IsNullOrEmpty(firstAvailableYear))
-                        firstAvailableYear = Qyear;
-                }
-                catch (Exception e)
-                {
-                    lastException = e; //guarda a excepção e tenta o proximo Qyear
+                    user.Year = Qyear;
+
+                    try
+                    {
+                        user = fillUser(principal, user);
+                        sucess = true;
+                        if (string.IsNullOrEmpty(firstAvailableYear))
+                            firstAvailableYear = Qyear;
+                    }
+                    catch (Exception e)
+                    {
+                        lastException = e; //guarda a excepção e tenta o proximo Qyear
+                    }
                 }
             }
 
-            //if the user current year is not available redirect him to the first available one
-            if (user.Years.Contains(_year))
-                user.Year = _year;
-            else
+            user.Year = _year;
+            //filtrar a lista de anos
+            user.Years = GetYears(principal);
+
+            if (!principal.IsInRole(_year) && sucess)
                 user.Year = firstAvailableYear;
 
             // caso não tenhamos entrado em nenhum Qyear relançamos a excepção
@@ -403,90 +560,10 @@ namespace GenioServer.security
                 if (lastException != null)
                     throw lastException;
                 else
-                    throw new FrameworkException("O utilizador não pode aceder a nenhum módulo web.", "GlobalFunctions.logonEXW", "O utilizador não pode aceder a nenhum módulo web.");
+                    throw new BusinessException("O utilizador não pode aceder a nenhum módulo web.", "GlobalFunctions.logonEXW", "O utilizador não pode aceder a nenhum módulo web.");
             }
 
             return user;
-        }
-
-
-
-        private static User ReadEphsCurrentYear(User user)
-        {
-            PersistentSupport sp = null;
-            try
-            {
-                if (!user.Years.Contains(user.Year))
-                    throw new FrameworkException("Login não foi encontrado.", "GlobalFunctions.logonEXW", "Não foi possivel encontrar a chave correspondente ao login " + user.Name);
-
-                sp = PersistentSupport.getPersistentSupport(user.Year, user.Name);
-                sp.openConnection();
-
-                bool hasAnyModule = false;
-                var ephs = new System.Collections.Hashtable(); //variavel que vai ter as ephs do user
-                foreach (var moduleRole in Role.MODULE_ROLES)
-                {
-                    string module = moduleRole.Item1;
-                    Role role = moduleRole.Item2;
-                    if (!user.HasSpecificRole(role, module.ToUpper()))
-                        continue;
-
-                    hasAnyModule = true;
-                    //retirar todas as condições eph que o user está sujeito em cada module, tendo em conta o seu level
-                    EPH eph = EPH.getEPH(module);
-                    if (eph == null)
-                        continue;
-
-                    //se é desautorizado não se adiciona nada
-                    if (role == Role.UNAUTHORIZED)
-                        continue;
-
-                    if (!eph.EphsPerModule.TryGetValue(role.ToString(), out var condicoesEPH))
-                        continue;
-
-                    bool haAssocicaoEPH = true;
-                    foreach (EPHCondition condition in condicoesEPH)
-                    {
-                        //eph inicial só pode ser avaliado no contexto da aplicação
-                        if (!string.IsNullOrWhiteSpace(condition.IntialForm))
-                        {
-                            user.EphTofill ??= new EphsToFill();
-                            user.EphTofill.AddNew(module, condition);
-                            continue;
-                        }
-
-                        string[] valoresEPH = sp.ValuesEPH(user.Codpsw, condition);
-                        string ephKey = module + "_" + condition.EPHName;
-                        if (valoresEPH.Length == 0)
-                        {
-                            haAssocicaoEPH = false;
-                            break;
-                        }
-                        ephs[ephKey] = valoresEPH;
-                    }
-
-                    //não encontrámos valores de associação, por isso retiramos a autorização a este modulo
-                    if (!haAssocicaoEPH)
-                        user.RemoveModuleRole(module.ToUpper(), role);
-                }
-
-                user.AddModuleRole("Public", Role.UNAUTHORIZED);
-                if (!hasAnyModule)//se não existem módulo definidos
-                    throw new FrameworkException("Não existem módulos web definidos.", "GlobalFunctions.logonEXW", "Não existem módulos web definidos.");
-
-                if (ephs.Count != 0)//se existem EPHs
-                    user.Ephs = ephs;
-
-                return user;
-            }
-            catch (Exception ex)
-            {
-                throw new FrameworkException("Erro no Login", "GlobalFunctions.logonEXW", "Erro na função de login: " + ex.Message, ex);
-            }
-            finally
-            {
-                sp?.closeConnection();
-            }
         }
 
 		private static void TemplatedMailSender(string destination, string subject, AlternateView body, string language)
@@ -509,7 +586,127 @@ namespace GenioServer.security
             }
             catch (Exception e)
             {
-                throw new FrameworkException(Translations.Get("Não foi possível enviar o email.", language), "UserFactory.TemplatedMailSender", "Email wasn't sent.", e);
+                throw new BusinessException(Translations.Get("Não foi possível enviar o email.", language), "UserFactory.TemplatedMailSender", "Email wasn't sent.", e);
+            }
+        }
+
+		private static User fillUser(IPrincipal principal, User user)
+        {
+            PersistentSupport sp = null;
+            try
+            {
+                if (!principal.IsInRole(user.Year))
+                    throw new BusinessException("Login não foi encontrado.", "GlobalFunctions.logonEXW", "Não foi possivel encontrar a chave correspondente ao login " + principal.Identity.Name);
+                sp = PersistentSupport.getPersistentSupport(user.Year, user.Name);
+                CSGenioApsw psw = SecurityFactory.GetUser(principal.Identity,user,sp);
+
+                sp.openConnection();
+                //introduce o name dos modulos
+                //UserFactory factory = new UserFactory(sp, user);
+                //CSGenioApsw psw = factory.GetUser(principal.Identity.Name);
+
+                if (psw == null)
+                    throw new BusinessException("Login não foi encontrado.", "UserFactory.fillUser", "Não foi possivel encontrar o registo correspondente ao login " + principal.Identity.Name);
+
+                string tpPsw2FA = psw.ValPsw2fatp;
+
+                user.Name = principal.Identity.Name;
+                user.Codpsw = psw.ValCodpsw;
+                user.Status = (int)psw.ValStatus;
+                user.Auth2FA = !(string.IsNullOrEmpty(tpPsw2FA) || tpPsw2FA == GenioServer.security.Auth2FAModes.None.ToString());
+                user.Auth2FATp = user.Auth2FA ? tpPsw2FA: "";
+                bool hasAnyModule = false;
+                Hashtable ephs = new Hashtable(); //variavel que vai ter as ephs do user
+                List<Tuple<string, EPHCondition>> ephsToFill = new List<Tuple<string, EPHCondition>>();
+                //Dictionary<string,EPHCondition> ephsToFill = new Dictionary<string, EPHCondition>(); //variavel que vai ter as ephs iniciais do user
+                foreach (var moduleRole in MODULE_ROLES)
+                {
+                    string module = moduleRole.Item1;
+                    Role role = moduleRole.Item2;
+                    if (principal.IsInRole(user.Year + "." + module + "." + role.Id))
+                    {
+                        hasAnyModule = true;
+                        //retirar todas as condições eph que o user está sujeito em cada module, tendo em conta o seu level
+                        EPH eph = EPH.getEPH(module);
+                        if (eph != null)
+                        {
+                            if (!role.Equals(Role.UNAUTHORIZED))// se não é desautorizado, se é desautorizado não se adiciona nada
+                            {
+                                EPHCondition[] condicoesEPH = (EPHCondition[])eph.EphsPerModule[role.ToString()];
+                                if (condicoesEPH != null)//se exists condição eph do módulo to esse level
+                                {
+                                    bool haAssocicaoEPH = true;
+                                    foreach (EPHCondition condition in condicoesEPH)
+                                    {
+                                        if (String.IsNullOrWhiteSpace(condition.IntialForm))
+                                        {
+                                            string[] valoresEPH;//variavel com as conditions eph to este module
+                                            valoresEPH = sp.ValuesEPH(user.Codpsw, condition, module);
+                                            string ephKey = module + "_" + condition.EPHName;
+                                            if (valoresEPH.Length > 0 && !ephs.Contains(ephKey))
+                                            {
+                                                ephs.Add(ephKey, valoresEPH);
+                                            }
+                                            else if (valoresEPH.Length == 0)
+                                            {
+                                                haAssocicaoEPH = false;
+                                                break;
+                                            }
+                                        }
+                                        else
+                                        {
+                                            if(haAssocicaoEPH)
+                                                ephsToFill.Add( new Tuple<string, EPHCondition>(module, condition));
+                                        }
+                                    }
+                                    if (haAssocicaoEPH)
+                                    {
+                                        user.AddModuleRole(module.ToUpper(), role);
+
+                                        if (ephsToFill.Count > 0)
+                                        {
+                                            if(user.EphTofill == null)
+                                                user.EphTofill = new EphsToFill();
+                                            foreach (Tuple<string, EPHCondition> keyValue in ephsToFill)
+                                                user.EphTofill.AddNew(keyValue.Item1, keyValue.Item2);
+                                        }
+                                    }
+
+                                }
+                                else
+                                {
+                                    user.AddModuleRole(module.ToUpper(), role);
+                                }
+                            }
+                        }
+                        else//se não é sujeito a eph não se deixa aceder se for desautorizado
+                        {
+                            if (!role.Equals(Role.UNAUTHORIZED))
+                            {
+                                user.AddModuleRole(module.ToUpper(), role);
+                            }
+                        }
+                    }
+                }
+                user.AddModuleRole("Public", Role.UNAUTHORIZED);
+                if (!hasAnyModule)//se não existem módulo definidos
+                {
+                    throw new BusinessException("Não existem módulos web definidos.", "GlobalFunctions.logonEXW", "Não existem módulos web definidos.");
+                }
+                if (ephs.Count != 0)//se existem EPHs
+                {
+                    user.Ephs = ephs;
+                }
+                return user;
+            }
+            catch (Exception ex)
+            {
+                throw new BusinessException("Erro no Login", "GlobalFunctions.logonEXW", "Erro na função de login: " + ex.Message, ex);
+            }
+            finally
+            {
+                if (sp != null)
+                    sp.closeConnection();
             }
         }
 
@@ -521,7 +718,7 @@ namespace GenioServer.security
         /// <param name="values">Values to add the eph</param>
         /// <param name="formId">Eph form id</param>
         /// <returns>Returns information about the filled Initial EPH values to place it to the Cache</returns>
-        public static Dictionary<string, InitialEPHCache> FillEphRuntime(User user, List<string> modules, string[] values, string formId)
+        public static Dictionary<string, InitialEPHCache> FillEphRuntime(ref User user, List<string> modules, string[] values, string formId)
         {
             var result = new Dictionary<string, InitialEPHCache>();
             PersistentSupport sp = PersistentSupport.getPersistentSupport(user.Year, user.Name);
@@ -529,32 +726,72 @@ namespace GenioServer.security
             foreach (string module in modules)
             {
                 InitialEPHCache moduleEPHCache = new InitialEPHCache() { Module = module };
+
                 List<Role> roles = user.GetModuleRoles(user.CurrentModule);
-                List<EPHCondition> ephConditions = EPH.GetEPHForms(module, roles, formId);
 
-                foreach (EPHCondition condition in ephConditions)
+                List<string> ephNames = EPH.getEPHName(module, roles, formId);
+
+                foreach (string ephID in ephNames)
                 {
-                    string[] setValues = sp.ValuesEphInitial(condition, values);
-                    if (setValues.Length == 0)
-                        setValues = [""];
-
-                    if (user.Ephs != null && user.Ephs.ContainsKey(module + "_" + condition.EPHName))
+                    //Obter a eph correspodente aquele id
+                    EPH eph = EPH.getEPH(module);
+                    if (eph != null)
                     {
-                        user.SetEph(user.CurrentModule, condition.EPHName, setValues);
-                    }
-                    else
-                    {
-                        user.Ephs ??= new Hashtable();
-                        user.Ephs.Add(module + "_" + condition.EPHName, setValues);
-                        user.EphTofill.Remove(module, condition);
-                    }
+                        foreach (Role role in roles)
+                        {
+                            EPHCondition[] ephConditions = (EPHCondition[])eph.EphsPerModule[role.ToString()];
+                            if (ephConditions == null)
+                                continue;
+                            foreach (EPHCondition condition in ephConditions)
+                            {
+                                if (condition.EPHName == ephID)
+                                {
+                                    string[] setValues = sp.ValuesEphInitial(user.Codpsw, condition, module, values);
 
-                    // Save the initial PHE value so you can store it in the cache.
-                    moduleEPHCache.EPHValues[condition.EPHName] = setValues;
+                                    if (setValues.Length == 0)
+                                        setValues = new string[] { "" };
+
+                                    if (user.Ephs != null && user.Ephs.ContainsKey(module + "_" + condition.EPHName))
+                                    {
+                                        user.SetEph(user.CurrentModule, ephID, setValues);
+                                    }
+                                    else
+                                    {
+                                        if (user.Ephs == null)
+                                            user.Ephs = new Hashtable();
+
+                                        user.Ephs.Add(module + "_" + condition.EPHName, setValues);
+
+                                        user.EphTofill.Remove(module, condition);
+
+                                        if (!String.IsNullOrEmpty(condition.IntialForm))
+                                        {
+                                            string identifier = "ML" + condition.IntialForm;
+
+                                            if (eph.MenusNotSubjectEPH == null)
+                                            {
+                                                eph.MenusNotSubjectEPH = new Dictionary<string, List<string>>();
+                                                eph.MenusNotSubjectEPH.Add(identifier, new List<string>() { condition.EPHName });
+                                            }
+                                            else if (!eph.MenusNotSubjectEPH.ContainsKey(identifier))
+                                            {
+                                                eph.MenusNotSubjectEPH.Add(identifier, new List<string>() { condition.EPHName });
+                                            }
+                                        }
+                                    }
+
+                                    // Save the initial PHE value so you can store it in the cache.
+                                    if (!moduleEPHCache.EPHValues.ContainsKey(condition.EPHName))
+                                    {
+                                        moduleEPHCache.EPHValues.Add(condition.EPHName, setValues);
+                                    }
+                                }
+                            }
+                        }
+                    }
                 }
 
-
-                if (moduleEPHCache.EPHValues.Any())
+                if(moduleEPHCache.EPHValues.Any())
                     result.Add(module, moduleEPHCache);
             }
 
@@ -566,22 +803,25 @@ namespace GenioServer.security
         /// </summary>
         /// <param name="user">User to revalidate initial eph</param>
         /// <param name="initialEphCache"></param>
-        public static void FillEphRuntime(User user, Dictionary<string, InitialEPHCache> initialEphCache)
+        public static void FillEphRuntime(ref User user, Dictionary<string, InitialEPHCache> initialEphCache)
         {
-            if (user is null)
-                return;
-            if (initialEphCache is null)
-                return;
-
-            foreach (InitialEPHCache iephCache in initialEphCache.Values)
-                foreach (var iephValue in iephCache.EPHValues)
-                    if(!user.hasEph(iephCache.Module, iephValue.Key))
+            if (user != null && initialEphCache != null)
+            {
+                foreach (InitialEPHCache iephCache in initialEphCache.Values)
+                {
+                    foreach (var iephValue in iephCache.EPHValues)
                     {
-                        user.Ephs ??= new Hashtable();
-                        user.Ephs.Add(iephCache.Module + "_" + iephValue.Key, iephValue.Value);
-                    }
+                        if(!user.hasEph(iephCache.Module, iephValue.Key))
+                        {
+                            if(user.Ephs == null)
+                                user.Ephs = new Hashtable();
 
-            user.RevalidateEPHRuntime();
+                            user.Ephs.Add(iephCache.Module + "_" + iephValue.Key, iephValue.Value);
+                        }
+                    }
+                }
+                user.RevalidateEPHRuntime();
+            }
         }
 
 		public static DateTime CalculateExpirationDate()

@@ -108,7 +108,7 @@
 
 		methods: {
 			currentIndex() {
-				const lastChar = this.alphanumeric
+				var lastChar = this.alphanumeric
 					? _findLastIndex(this.pin, (char) => this.isAlphanumeric(char))
 					: _findLastIndex(this.pin, (char) => this.isDigit(char))
 				return lastChar + 1
@@ -207,7 +207,7 @@
 			 * MODELVALUE
 			 */
 			emitChange(index, value) {
-				const newPin = []
+				var newPin = []
 				for (let i = 0; i < this.charNumber; i++) {
 					if (this.alphanumeric) {
 						if (this.isAlphanumeric(this.pin[i]) || this.pin[i] === '') newPin.push(this.pin[i])

@@ -1,5 +1,5 @@
 ﻿
- 
+
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -182,7 +182,6 @@ namespace CSGenio.business
 			Qfield.Dupmsg = "";
             Qfield.NotDup = true;
 			Qfield.DefaultValue = new DefaultValue(DefaultValue.getGreaterPlus1_int, "order");
-			Qfield.HasOrdering = true;
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
@@ -305,7 +304,6 @@ namespace CSGenio.business
 
 			info.PrimaryKeyName="codprope";
 			info.HumanKeyName="title,".TrimEnd(',');
-			info.MainOrderField="order";
 			info.Alias="prope";
 			info.IsDomain = true;
 			info.PersistenceType = PersistenceType.Database;
@@ -582,17 +580,16 @@ namespace CSGenio.business
         /// <param name="key">The value of the primary key</param>
         /// <param name="user">The context of the user</param>
         /// <param name="fields">The fields to be filled in the area</param>
-		/// <param name="forUpdate">True if you are preparing to update this record, false otherwise</param>
         /// <returns>An area with the fields requests of the record read or null if the key does not exist</returns>
         /// <remarks>Persistence operations should not be used on a partially positioned register</remarks>
-        public static CSGenioAprope search(PersistentSupport sp, string key, User user, string[] fields = null, bool forUpdate = false)
+        public static CSGenioAprope search(PersistentSupport sp, string key, User user, string[] fields = null)
         {
 			if (string.IsNullOrEmpty(key))
 				return null;
 
 		    CSGenioAprope area = new CSGenioAprope(user, user.CurrentModule);
 
-            if (sp.getRecord(area, key, fields, forUpdate))
+            if (sp.getRecord(area, key, fields))
                 return area;
 			return null;
         }
@@ -652,15 +649,14 @@ namespace CSGenio.business
 
 
 
-
-		//To usar routine manual no pedido eliminate
+ 		//To usar routine manual no pedido eliminate
 		public override StatusMessage eliminate(PersistentSupport sp)
 		{
 			StatusMessage msg = base.eliminate(sp);
 
 			// ROW_REORDERING
 			CriteriaSet criteria = CriteriaSet.And();
-			sp.ReorderSequence(this, DBFields[FldOrder.Field], criteria);
+			sp.ReorderSequence(Area.AreaPROPE, CSGenioAprope.FldOrder, criteria);
 
             return msg;
 		}
@@ -671,21 +667,92 @@ namespace CSGenio.business
 		// USE /[MANUAL GQT TABAUX PROPE]/
 
      
-            		/// <summary>
+
+            
+		/// <summary>
         /// Reorders the values of the ordering field along a subset so that the current record moves in that order to the specified position
         /// </summary>
         /// <param name="sp">The current PersistentSupport</param>
         /// <param name="position">The position to where the record will be moved</param>
-        public void Reorder_Order(PersistentSupport sp, int position, bool moveRow = true)
+        /// <param name="condition">The subset to be reordered</param>
+        public void Reorder_Order(PersistentSupport sp, int position, CriteriaSet condition, List<Relation> relations = null, bool moveRow = true)
         {
             int posactual = (int)ValOrder;
             int posnova = position + 1;
             ValOrder = posnova;
 
-			ReorderByField(DBFields[FldOrder.Field], sp, posactual, posnova, moveRow);
+			//Get highest value for ordering field
+			int maxOrder;
+
+            try
+			{
+				maxOrder = sp.GetMaxFieldValue(Area.AreaPROPE, CSGenioAprope.FldOrder, condition, relations);
+			}
+			catch(Exception ex)
+			{
+                Log.Error(ex.Message);
+                return;
+			}
+
+			//Row is not being moved
+			if (posnova > maxOrder)
+			{
+				return;
+			}
+			if (!moveRow)
+			{
+				posactual = maxOrder + 1;
+			}
+			//Row is not being moved
+			if(posnova == posactual || posnova < 1){
+				return;
+			}
+
+			if (moveRow) {
+				//Set moved record position to 0 temporarily
+				UpdateQuery up_temp = new UpdateQuery()
+							.Update(Area.AreaPROPE)
+							.Set(CSGenioAprope.FldOrder, 0)
+							.Where(CriteriaSet.And().Equal(CSGenioAprope.FldCodprope, QPrimaryKey));
+				sp.Execute(up_temp);
+			}
+
+			//Set new positions of records in the range from the previous position to the new position
+			int posLow;
+			int posHigh;
+            int difference;
+			//If new position is greater than previous position
+			if (posnova > posactual) {
+				posLow = posactual + 1;
+				posHigh = posnova;
+                difference = -1;
+			}
+			//If new position is less than previous position
+			else {
+				posLow = posnova;
+				posHigh = posactual - 1;
+                difference = 1;
+            }
+			CriteriaSet range_condition = CriteriaSet.And();
+            range_condition.SubSet(condition);
+            range_condition.GreaterOrEqual(CSGenioAprope.FldOrder, posLow);
+            range_condition.LesserOrEqual(CSGenioAprope.FldOrder, posHigh);
+
+			sp.ReorderSequence(Area.AreaPROPE, CSGenioAprope.FldOrder, range_condition, relations, posLow + difference);
+
+			if (moveRow) {
+				//Set moved record position to new position
+				UpdateQuery up = new UpdateQuery()
+							.Update(Area.AreaPROPE)
+							.Set(CSGenioAprope.FldOrder, posnova)
+							.Where(CriteriaSet.And().Equal(CSGenioAprope.FldCodprope, QPrimaryKey));
+				sp.Execute(up);
+			}
+
+			OnReorder_Order(sp, posactual, condition, relations);
         }
 
-        private void OnReorder_Order(PersistentSupport sp, int oldpos, CriteriaSet condition)
+        private void OnReorder_Order(PersistentSupport sp, int oldpos, CriteriaSet condition, List<Relation> relations)
         {
 // USE /[MANUAL GQT ONREORDER PROPE.ORDER]/
         }

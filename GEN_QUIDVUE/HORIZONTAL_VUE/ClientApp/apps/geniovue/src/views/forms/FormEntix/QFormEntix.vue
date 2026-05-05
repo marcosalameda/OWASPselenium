@@ -9,13 +9,12 @@
 			<div
 				v-if="showFormHeader"
 				class="c-action-bar">
-				<component
+				<h1
 					v-if="formControl.uiComponents.header && formInfo.designation"
-					:is="topHeadingTag"
 					:id="formTitleId"
 					class="form-header">
 					{{ formInfo.designation }}
-				</component>
+				</h1>
 
 				<div class="c-action-bar__menu">
 					<template
@@ -39,13 +38,9 @@
 									:label="btn.label"
 									:disabled="btn.disabled"
 									@click="btn.action">
-									<template v-if="btn.icon">
-										<q-badge-indicator
-											:enabled="btn.badge?.isVisible ?? false"
-											:color="btn.badge?.color">
-											<q-icon v-bind="btn.icon" />
-										</q-badge-indicator>
-									</template>
+									<q-icon
+										v-if="btn.icon"
+										v-bind="btn.icon" />
 								</q-toggle-group-item>
 							</template>
 						</q-toggle-group>
@@ -57,7 +52,7 @@
 				v-if="$app.layout.FormAnchorsPosition === 'form-header' && visibleGroups.length > 0"
 				:anchors="anchorGroups"
 				:controls="visibleControls"
-				@focus-control="focusControl" />
+				@focus-control="(...args) => focusControl(...args)" />
 		</div>
 	</teleport>
 
@@ -78,7 +73,6 @@
 						v-if="btn.isActive && btn.isVisible && btn.showInHeading"
 						:id="`heading-${btn.id}`"
 						:label="btn.text"
-						:color="btn.color"
 						:variant="btn.variant"
 						:disabled="btn.disabled"
 						:icon-pos="btn.iconPos"
@@ -92,50 +86,47 @@
 			</q-button-group>
 		</div>
 
-		<q-container
-			fluid
+		<div
+			class="form-flow"
 			data-key="ENTIX"
-			:data-identifier="primaryKeyValue"
-			:data-loading="!formInitialDataLoaded || !isActiveForm">
+			:data-loading="!formInitialDataLoaded">
 			<template v-if="formControl.initialized && showFormBody">
-				<q-row v-if="controls.ENTIX___PSEUDNOVOGR01.isVisible">
-					<q-col v-if="controls.ENTIX___PSEUDNOVOGR01.isVisible">
+				<q-row-container
+					v-show="controls.ENTIX___PSEUDNOVOGR01.isVisible"
+					is-large>
+					<q-control-wrapper
+						v-show="controls.ENTIX___PSEUDNOVOGR01.isVisible"
+						class="${Vue.GetControlWrapperClass($controlsColumn)}">
 						<q-group-box-container
-							v-if="controls.ENTIX___PSEUDNOVOGR01.isVisible"
+							id="ENTIX___PSEUDNOVOGR01"
 							v-bind="controls.ENTIX___PSEUDNOVOGR01"
-							:id="getControlId(controls.ENTIX___PSEUDNOVOGR01)"
-							:no-border="controls.ENTIX___PSEUDNOVOGR01.borderless">
+							:is-visible="controls.ENTIX___PSEUDNOVOGR01.isVisible">
 							<!-- Start ENTIX___PSEUDNOVOGR01 -->
-							<q-row v-if="controls.ENTIX___ENTITNAME____.isVisible">
-								<q-col
-									v-if="controls.ENTIX___ENTITNAME____.isVisible"
-									cols="auto">
+							<q-row-container v-show="controls.ENTIX___ENTITNAME____.isVisible">
+								<q-control-wrapper
+									v-show="controls.ENTIX___ENTITNAME____.isVisible"
+									class="${Vue.GetControlWrapperClass($controlsColumn)}">
 									<base-input-structure
-										v-if="controls.ENTIX___ENTITNAME____.isVisible"
 										class="i-text"
-										v-bind="controls.ENTIX___ENTITNAME____.wrapperProps"
-										:id="getControlId(controls.ENTIX___ENTITNAME____)"
+										v-bind="controls.ENTIX___ENTITNAME____"
 										v-on="controls.ENTIX___ENTITNAME____.handlers"
 										:loading="controls.ENTIX___ENTITNAME____.props.loading"
 										:reporting-mode-on="reportingModeCAV"
 										:suggestion-mode-on="suggestionModeOn">
 										<q-text-field
 											v-bind="controls.ENTIX___ENTITNAME____.props"
-											:id="getControlId(controls.ENTIX___ENTITNAME____)"
 											@blur="onBlur(controls.ENTIX___ENTITNAME____, model.ValName.value)"
 											@change="model.ValName.fnUpdateValueOnChange" />
 									</base-input-structure>
-								</q-col>
-							</q-row>
-							<q-row v-if="controls.ENTIX___ENTITFOUNDED_.isVisible || controls.ENTIX___ENTITINITIALS.isVisible || controls.ENTIX___ENTITREGISTRA.isVisible || controls.ENTIX___ENTITTAXNUMBE.isVisible">
-								<q-col
-									v-if="controls.ENTIX___ENTITFOUNDED_.isVisible"
-									cols="auto">
+								</q-control-wrapper>
+							</q-row-container>
+							<q-row-container v-show="controls.ENTIX___ENTITFOUNDED_.isVisible || controls.ENTIX___ENTITINITIALS.isVisible || controls.ENTIX___ENTITREGISTRA.isVisible || controls.ENTIX___ENTITTAXNUMBE.isVisible">
+								<q-control-wrapper
+									v-show="controls.ENTIX___ENTITFOUNDED_.isVisible"
+									class="${Vue.GetControlWrapperClass($controlsColumn)}">
 									<base-input-structure
-										v-if="controls.ENTIX___ENTITFOUNDED_.isVisible"
 										class="i-text"
-										v-bind="controls.ENTIX___ENTITFOUNDED_.wrapperProps"
-										:id="getControlId(controls.ENTIX___ENTITFOUNDED_)"
+										v-bind="controls.ENTIX___ENTITFOUNDED_"
 										v-on="controls.ENTIX___ENTITFOUNDED_.handlers"
 										:loading="controls.ENTIX___ENTITFOUNDED_.props.loading"
 										:reporting-mode-on="reportingModeCAV"
@@ -143,549 +134,471 @@
 										<q-date-time-picker
 											v-if="controls.ENTIX___ENTITFOUNDED_.isVisible"
 											v-bind="controls.ENTIX___ENTITFOUNDED_.props"
-											:id="getControlId(controls.ENTIX___ENTITFOUNDED_)"
 											:model-value="model.ValFounded.value"
 											@reset-icon-click="model.ValFounded.fnUpdateValue(model.ValFounded.originalValue ?? new Date())"
 											@update:model-value="model.ValFounded.fnUpdateValue($event ?? '')" />
 									</base-input-structure>
-								</q-col>
-								<q-col
-									v-if="controls.ENTIX___ENTITINITIALS.isVisible"
-									cols="auto">
+								</q-control-wrapper>
+								<q-control-wrapper
+									v-show="controls.ENTIX___ENTITINITIALS.isVisible"
+									class="${Vue.GetControlWrapperClass($controlsColumn)}">
 									<base-input-structure
-										v-if="controls.ENTIX___ENTITINITIALS.isVisible"
 										class="i-text"
-										v-bind="controls.ENTIX___ENTITINITIALS.wrapperProps"
-										:id="getControlId(controls.ENTIX___ENTITINITIALS)"
+										v-bind="controls.ENTIX___ENTITINITIALS"
 										v-on="controls.ENTIX___ENTITINITIALS.handlers"
 										:loading="controls.ENTIX___ENTITINITIALS.props.loading"
 										:reporting-mode-on="reportingModeCAV"
 										:suggestion-mode-on="suggestionModeOn">
 										<q-text-field
 											v-bind="controls.ENTIX___ENTITINITIALS.props"
-											:id="getControlId(controls.ENTIX___ENTITINITIALS)"
 											@blur="onBlur(controls.ENTIX___ENTITINITIALS, model.ValInitials.value)"
 											@change="model.ValInitials.fnUpdateValueOnChange" />
 									</base-input-structure>
-								</q-col>
-								<q-col
-									v-if="controls.ENTIX___ENTITREGISTRA.isVisible"
-									cols="auto">
+								</q-control-wrapper>
+								<q-control-wrapper
+									v-show="controls.ENTIX___ENTITREGISTRA.isVisible"
+									class="${Vue.GetControlWrapperClass($controlsColumn)}">
 									<base-input-structure
-										v-if="controls.ENTIX___ENTITREGISTRA.isVisible"
 										class="i-text"
-										v-bind="controls.ENTIX___ENTITREGISTRA.wrapperProps"
-										:id="getControlId(controls.ENTIX___ENTITREGISTRA)"
+										v-bind="controls.ENTIX___ENTITREGISTRA"
 										v-on="controls.ENTIX___ENTITREGISTRA.handlers"
 										:loading="controls.ENTIX___ENTITREGISTRA.props.loading"
 										:reporting-mode-on="reportingModeCAV"
 										:suggestion-mode-on="suggestionModeOn">
 										<q-text-field
 											v-bind="controls.ENTIX___ENTITREGISTRA.props"
-											:id="getControlId(controls.ENTIX___ENTITREGISTRA)"
 											@blur="onBlur(controls.ENTIX___ENTITREGISTRA, model.ValRegistra.value)"
 											@change="model.ValRegistra.fnUpdateValueOnChange" />
 									</base-input-structure>
-								</q-col>
-								<q-col
-									v-if="controls.ENTIX___ENTITTAXNUMBE.isVisible"
-									cols="auto">
+								</q-control-wrapper>
+								<q-control-wrapper
+									v-show="controls.ENTIX___ENTITTAXNUMBE.isVisible"
+									class="${Vue.GetControlWrapperClass($controlsColumn)}">
 									<base-input-structure
-										v-if="controls.ENTIX___ENTITTAXNUMBE.isVisible"
 										class="i-text"
-										v-bind="controls.ENTIX___ENTITTAXNUMBE.wrapperProps"
-										:id="getControlId(controls.ENTIX___ENTITTAXNUMBE)"
+										v-bind="controls.ENTIX___ENTITTAXNUMBE"
 										v-on="controls.ENTIX___ENTITTAXNUMBE.handlers"
 										:loading="controls.ENTIX___ENTITTAXNUMBE.props.loading"
 										:reporting-mode-on="reportingModeCAV"
 										:suggestion-mode-on="suggestionModeOn">
 										<q-text-field
 											v-bind="controls.ENTIX___ENTITTAXNUMBE.props"
-											:id="getControlId(controls.ENTIX___ENTITTAXNUMBE)"
 											@blur="onBlur(controls.ENTIX___ENTITTAXNUMBE, model.ValTaxnumbe.value)"
 											@change="model.ValTaxnumbe.fnUpdateValueOnChange" />
 									</base-input-structure>
-								</q-col>
-							</q-row>
-							<q-row v-if="controls.ENTIX___ENTITIBAN____.isVisible || controls.ENTIX___ENTITPHONENUM.isVisible">
-								<q-col
-									v-if="controls.ENTIX___ENTITIBAN____.isVisible"
-									cols="auto">
+								</q-control-wrapper>
+							</q-row-container>
+							<q-row-container v-show="controls.ENTIX___ENTITIBAN____.isVisible || controls.ENTIX___ENTITPHONENUM.isVisible">
+								<q-control-wrapper
+									v-show="controls.ENTIX___ENTITIBAN____.isVisible"
+									class="${Vue.GetControlWrapperClass($controlsColumn)}">
 									<base-input-structure
-										v-if="controls.ENTIX___ENTITIBAN____.isVisible"
 										class="i-text"
-										v-bind="controls.ENTIX___ENTITIBAN____.wrapperProps"
-										:id="getControlId(controls.ENTIX___ENTITIBAN____)"
+										v-bind="controls.ENTIX___ENTITIBAN____"
 										v-on="controls.ENTIX___ENTITIBAN____.handlers"
 										:loading="controls.ENTIX___ENTITIBAN____.props.loading"
 										:reporting-mode-on="reportingModeCAV"
 										:suggestion-mode-on="suggestionModeOn">
 										<q-text-field
 											v-bind="controls.ENTIX___ENTITIBAN____.props"
-											:id="getControlId(controls.ENTIX___ENTITIBAN____)"
 											@blur="onBlur(controls.ENTIX___ENTITIBAN____, model.ValIban.value)"
 											@change="model.ValIban.fnUpdateValueOnChange" />
 									</base-input-structure>
-								</q-col>
-								<q-col
-									v-if="controls.ENTIX___ENTITPHONENUM.isVisible"
-									cols="auto">
+								</q-control-wrapper>
+								<q-control-wrapper
+									v-show="controls.ENTIX___ENTITPHONENUM.isVisible"
+									class="${Vue.GetControlWrapperClass($controlsColumn)}">
 									<base-input-structure
-										v-if="controls.ENTIX___ENTITPHONENUM.isVisible"
 										class="i-text"
-										v-bind="controls.ENTIX___ENTITPHONENUM.wrapperProps"
-										:id="getControlId(controls.ENTIX___ENTITPHONENUM)"
+										v-bind="controls.ENTIX___ENTITPHONENUM"
 										v-on="controls.ENTIX___ENTITPHONENUM.handlers"
 										:loading="controls.ENTIX___ENTITPHONENUM.props.loading"
 										:reporting-mode-on="reportingModeCAV"
 										:suggestion-mode-on="suggestionModeOn">
 										<q-text-field
 											v-bind="controls.ENTIX___ENTITPHONENUM.props"
-											:id="getControlId(controls.ENTIX___ENTITPHONENUM)"
 											@blur="onBlur(controls.ENTIX___ENTITPHONENUM, model.ValPhonenum.value)"
 											@change="model.ValPhonenum.fnUpdateValueOnChange" />
 									</base-input-structure>
-								</q-col>
-							</q-row>
-							<q-row v-if="controls.ENTIX___ENTITOWNER___.isVisible || controls.ENTIX___ENTITCARRIER_.isVisible || controls.ENTIX___ENTITSUPPLIER.isVisible || controls.ENTIX___ENTITMANUFACT.isVisible">
-								<q-col
-									v-if="controls.ENTIX___ENTITOWNER___.isVisible"
-									cols="auto">
+								</q-control-wrapper>
+							</q-row-container>
+							<q-row-container v-show="controls.ENTIX___ENTITOWNER___.isVisible || controls.ENTIX___ENTITCARRIER_.isVisible || controls.ENTIX___ENTITSUPPLIER.isVisible || controls.ENTIX___ENTITMANUFACT.isVisible">
+								<q-control-wrapper
+									v-show="controls.ENTIX___ENTITOWNER___.isVisible"
+									class="${Vue.GetControlWrapperClass($controlsColumn)}">
 									<base-input-structure
-										v-if="controls.ENTIX___ENTITOWNER___.isVisible"
 										class="i-text"
-										v-bind="controls.ENTIX___ENTITOWNER___.wrapperProps"
-										:id="getControlId(controls.ENTIX___ENTITOWNER___)"
+										v-bind="controls.ENTIX___ENTITOWNER___"
 										v-on="controls.ENTIX___ENTITOWNER___.handlers"
 										:loading="controls.ENTIX___ENTITOWNER___.props.loading"
 										:reporting-mode-on="reportingModeCAV"
 										:suggestion-mode-on="suggestionModeOn">
-										<template #label>
-											<q-checkbox
-												v-if="controls.ENTIX___ENTITOWNER___.isVisible"
-												v-bind="controls.ENTIX___ENTITOWNER___.props"
-												:id="getControlId(controls.ENTIX___ENTITOWNER___)"
-												v-on="controls.ENTIX___ENTITOWNER___.handlers" />
-										</template>
+										<q-text-field
+											v-bind="controls.ENTIX___ENTITOWNER___.props"
+											@blur="onBlur(controls.ENTIX___ENTITOWNER___, model.ValOwner.value)"
+											@change="model.ValOwner.fnUpdateValueOnChange" />
 									</base-input-structure>
-								</q-col>
-								<q-col
-									v-if="controls.ENTIX___ENTITCARRIER_.isVisible"
-									cols="auto">
+								</q-control-wrapper>
+								<q-control-wrapper
+									v-show="controls.ENTIX___ENTITCARRIER_.isVisible"
+									class="${Vue.GetControlWrapperClass($controlsColumn)}">
 									<base-input-structure
-										v-if="controls.ENTIX___ENTITCARRIER_.isVisible"
-										class="i-text"
-										v-bind="controls.ENTIX___ENTITCARRIER_.wrapperProps"
-										:id="getControlId(controls.ENTIX___ENTITCARRIER_)"
+										class="i-checkbox"
+										v-bind="controls.ENTIX___ENTITCARRIER_"
 										v-on="controls.ENTIX___ENTITCARRIER_.handlers"
 										:loading="controls.ENTIX___ENTITCARRIER_.props.loading"
 										:reporting-mode-on="reportingModeCAV"
 										:suggestion-mode-on="suggestionModeOn">
 										<template #label>
-											<q-checkbox
+											<q-checkbox-input
 												v-if="controls.ENTIX___ENTITCARRIER_.isVisible"
 												v-bind="controls.ENTIX___ENTITCARRIER_.props"
-												:id="getControlId(controls.ENTIX___ENTITCARRIER_)"
 												v-on="controls.ENTIX___ENTITCARRIER_.handlers" />
 										</template>
 									</base-input-structure>
-								</q-col>
-								<q-col
-									v-if="controls.ENTIX___ENTITSUPPLIER.isVisible"
-									cols="auto">
+								</q-control-wrapper>
+								<q-control-wrapper
+									v-show="controls.ENTIX___ENTITSUPPLIER.isVisible"
+									class="${Vue.GetControlWrapperClass($controlsColumn)}">
 									<base-input-structure
-										v-if="controls.ENTIX___ENTITSUPPLIER.isVisible"
-										class="i-text"
-										v-bind="controls.ENTIX___ENTITSUPPLIER.wrapperProps"
-										:id="getControlId(controls.ENTIX___ENTITSUPPLIER)"
+										class="i-checkbox"
+										v-bind="controls.ENTIX___ENTITSUPPLIER"
 										v-on="controls.ENTIX___ENTITSUPPLIER.handlers"
 										:loading="controls.ENTIX___ENTITSUPPLIER.props.loading"
 										:reporting-mode-on="reportingModeCAV"
 										:suggestion-mode-on="suggestionModeOn">
 										<template #label>
-											<q-checkbox
+											<q-checkbox-input
 												v-if="controls.ENTIX___ENTITSUPPLIER.isVisible"
 												v-bind="controls.ENTIX___ENTITSUPPLIER.props"
-												:id="getControlId(controls.ENTIX___ENTITSUPPLIER)"
 												v-on="controls.ENTIX___ENTITSUPPLIER.handlers" />
 										</template>
 									</base-input-structure>
-								</q-col>
-								<q-col
-									v-if="controls.ENTIX___ENTITMANUFACT.isVisible"
-									cols="auto">
+								</q-control-wrapper>
+								<q-control-wrapper
+									v-show="controls.ENTIX___ENTITMANUFACT.isVisible"
+									class="${Vue.GetControlWrapperClass($controlsColumn)}">
 									<base-input-structure
-										v-if="controls.ENTIX___ENTITMANUFACT.isVisible"
-										class="i-text"
-										v-bind="controls.ENTIX___ENTITMANUFACT.wrapperProps"
-										:id="getControlId(controls.ENTIX___ENTITMANUFACT)"
+										class="i-checkbox"
+										v-bind="controls.ENTIX___ENTITMANUFACT"
 										v-on="controls.ENTIX___ENTITMANUFACT.handlers"
 										:loading="controls.ENTIX___ENTITMANUFACT.props.loading"
 										:reporting-mode-on="reportingModeCAV"
 										:suggestion-mode-on="suggestionModeOn">
 										<template #label>
-											<q-checkbox
+											<q-checkbox-input
 												v-if="controls.ENTIX___ENTITMANUFACT.isVisible"
 												v-bind="controls.ENTIX___ENTITMANUFACT.props"
-												:id="getControlId(controls.ENTIX___ENTITMANUFACT)"
 												v-on="controls.ENTIX___ENTITMANUFACT.handlers" />
 										</template>
 									</base-input-structure>
-								</q-col>
-							</q-row>
+								</q-control-wrapper>
+							</q-row-container>
 							<!-- End ENTIX___PSEUDNOVOGR01 -->
 						</q-group-box-container>
-					</q-col>
-				</q-row>
-				<q-row v-if="controls.ENTIX___PSEUDNOVOGR05.isVisible || controls.ENTIX___PSEUDNOVOGR06.isVisible">
-					<q-col
-						v-if="controls.ENTIX___PSEUDNOVOGR05.isVisible"
-						cols="auto">
+					</q-control-wrapper>
+				</q-row-container>
+				<q-row-container
+					v-show="controls.ENTIX___PSEUDNOVOGR05.isVisible"
+					is-large>
+					<q-control-wrapper
+						v-show="controls.ENTIX___PSEUDNOVOGR05.isVisible"
+						class="${Vue.GetControlWrapperClass($controlsColumn)}">
 						<q-accordion
 							v-if="controls.ENTIX___PSEUDNOVOGR05.isVisible"
-							:id="getControlId(controls.ENTIX___PSEUDNOVOGR05)"
-							v-model="controls.ENTIX___PSEUDNOVOGR05.openChild">
+							id="ENTIX___PSEUDNOVOGR05"
+							v-bind="controls.ENTIX___PSEUDNOVOGR05">
 							<!-- Start ENTIX___PSEUDNOVOGR05 -->
-							<q-accordion-item
-								v-if="controls.ENTIX___PSEUDNOVOGR02.isVisible"
-								:id="getControlId(controls.ENTIX___PSEUDNOVOGR02) + '-container'"
-								value="ENTIX___PSEUDNOVOGR02"
-								:title="controls.ENTIX___PSEUDNOVOGR02.label">
+							<q-group-collapsible
+								id="ENTIX___PSEUDNOVOGR02"
+								v-bind="controls.ENTIX___PSEUDNOVOGR02"
+								v-on="controls.ENTIX___PSEUDNOVOGR02.handlers">
 								<!-- Start ENTIX___PSEUDNOVOGR02 -->
-								<q-row v-if="controls.ENTIX___ENTITTELEPHON.isVisible || controls.ENTIX___ENTITFAX_____.isVisible">
-									<q-col
-										v-if="controls.ENTIX___ENTITTELEPHON.isVisible"
-										cols="auto">
+								<q-row-container v-show="controls.ENTIX___ENTITTELEPHON.isVisible || controls.ENTIX___ENTITFAX_____.isVisible">
+									<q-control-wrapper
+										v-show="controls.ENTIX___ENTITTELEPHON.isVisible"
+										class="${Vue.GetControlWrapperClass($controlsColumn)}">
 										<base-input-structure
-											v-if="controls.ENTIX___ENTITTELEPHON.isVisible"
 											class="i-text"
-											v-bind="controls.ENTIX___ENTITTELEPHON.wrapperProps"
-											:id="getControlId(controls.ENTIX___ENTITTELEPHON)"
+											v-bind="controls.ENTIX___ENTITTELEPHON"
 											v-on="controls.ENTIX___ENTITTELEPHON.handlers"
 											:loading="controls.ENTIX___ENTITTELEPHON.props.loading"
 											:reporting-mode-on="reportingModeCAV"
 											:suggestion-mode-on="suggestionModeOn">
 											<q-text-field
 												v-bind="controls.ENTIX___ENTITTELEPHON.props"
-												:id="getControlId(controls.ENTIX___ENTITTELEPHON)"
 												@blur="onBlur(controls.ENTIX___ENTITTELEPHON, model.ValTelephon.value)"
 												@change="model.ValTelephon.fnUpdateValueOnChange" />
 										</base-input-structure>
-									</q-col>
-									<q-col
-										v-if="controls.ENTIX___ENTITFAX_____.isVisible"
-										cols="auto">
+									</q-control-wrapper>
+									<q-control-wrapper
+										v-show="controls.ENTIX___ENTITFAX_____.isVisible"
+										class="${Vue.GetControlWrapperClass($controlsColumn)}">
 										<base-input-structure
-											v-if="controls.ENTIX___ENTITFAX_____.isVisible"
 											class="i-text"
-											v-bind="controls.ENTIX___ENTITFAX_____.wrapperProps"
-											:id="getControlId(controls.ENTIX___ENTITFAX_____)"
+											v-bind="controls.ENTIX___ENTITFAX_____"
 											v-on="controls.ENTIX___ENTITFAX_____.handlers"
 											:loading="controls.ENTIX___ENTITFAX_____.props.loading"
 											:reporting-mode-on="reportingModeCAV"
 											:suggestion-mode-on="suggestionModeOn">
 											<q-text-field
 												v-bind="controls.ENTIX___ENTITFAX_____.props"
-												:id="getControlId(controls.ENTIX___ENTITFAX_____)"
 												@blur="onBlur(controls.ENTIX___ENTITFAX_____, model.ValFax.value)"
 												@change="model.ValFax.fnUpdateValueOnChange" />
 										</base-input-structure>
-									</q-col>
-								</q-row>
-								<q-row v-if="controls.ENTIX___ENTITEMAIL___.isVisible">
-									<q-col
-										v-if="controls.ENTIX___ENTITEMAIL___.isVisible"
-										cols="auto">
+									</q-control-wrapper>
+								</q-row-container>
+								<q-row-container v-show="controls.ENTIX___ENTITEMAIL___.isVisible">
+									<q-control-wrapper
+										v-show="controls.ENTIX___ENTITEMAIL___.isVisible"
+										class="${Vue.GetControlWrapperClass($controlsColumn)}">
 										<base-input-structure
-											v-if="controls.ENTIX___ENTITEMAIL___.isVisible"
 											class="i-text"
-											v-bind="controls.ENTIX___ENTITEMAIL___.wrapperProps"
-											:id="getControlId(controls.ENTIX___ENTITEMAIL___)"
+											v-bind="controls.ENTIX___ENTITEMAIL___"
 											v-on="controls.ENTIX___ENTITEMAIL___.handlers"
 											:loading="controls.ENTIX___ENTITEMAIL___.props.loading"
 											:reporting-mode-on="reportingModeCAV"
 											:suggestion-mode-on="suggestionModeOn">
 											<q-text-field
 												v-bind="controls.ENTIX___ENTITEMAIL___.props"
-												:id="getControlId(controls.ENTIX___ENTITEMAIL___)"
 												@blur="onBlur(controls.ENTIX___ENTITEMAIL___, model.ValEmail.value)"
 												@change="model.ValEmail.fnUpdateValueOnChange" />
 										</base-input-structure>
-									</q-col>
-								</q-row>
-								<q-row v-if="controls.ENTIX___ENTITWEBSITE_.isVisible">
-									<q-col
-										v-if="controls.ENTIX___ENTITWEBSITE_.isVisible"
-										cols="auto">
+									</q-control-wrapper>
+								</q-row-container>
+								<q-row-container v-show="controls.ENTIX___ENTITWEBSITE_.isVisible">
+									<q-control-wrapper
+										v-show="controls.ENTIX___ENTITWEBSITE_.isVisible"
+										class="${Vue.GetControlWrapperClass($controlsColumn)}">
 										<base-input-structure
-											v-if="controls.ENTIX___ENTITWEBSITE_.isVisible"
 											class="i-text"
-											v-bind="controls.ENTIX___ENTITWEBSITE_.wrapperProps"
-											:id="getControlId(controls.ENTIX___ENTITWEBSITE_)"
+											v-bind="controls.ENTIX___ENTITWEBSITE_"
 											v-on="controls.ENTIX___ENTITWEBSITE_.handlers"
 											:loading="controls.ENTIX___ENTITWEBSITE_.props.loading"
 											:reporting-mode-on="reportingModeCAV"
 											:suggestion-mode-on="suggestionModeOn">
 											<q-text-field
 												v-bind="controls.ENTIX___ENTITWEBSITE_.props"
-												:id="getControlId(controls.ENTIX___ENTITWEBSITE_)"
 												@blur="onBlur(controls.ENTIX___ENTITWEBSITE_, model.ValWebsite.value)"
 												@change="model.ValWebsite.fnUpdateValueOnChange" />
 										</base-input-structure>
-									</q-col>
-								</q-row>
-								<q-row v-if="controls.ENTIX___ENTITPERSON__.isVisible">
-									<q-col
-										v-if="controls.ENTIX___ENTITPERSON__.isVisible"
-										cols="auto">
+									</q-control-wrapper>
+								</q-row-container>
+								<q-row-container v-show="controls.ENTIX___ENTITPERSON__.isVisible">
+									<q-control-wrapper
+										v-show="controls.ENTIX___ENTITPERSON__.isVisible"
+										class="${Vue.GetControlWrapperClass($controlsColumn)}">
 										<base-input-structure
-											v-if="controls.ENTIX___ENTITPERSON__.isVisible"
 											class="i-text"
-											v-bind="controls.ENTIX___ENTITPERSON__.wrapperProps"
-											:id="getControlId(controls.ENTIX___ENTITPERSON__)"
+											v-bind="controls.ENTIX___ENTITPERSON__"
 											v-on="controls.ENTIX___ENTITPERSON__.handlers"
 											:loading="controls.ENTIX___ENTITPERSON__.props.loading"
 											:reporting-mode-on="reportingModeCAV"
 											:suggestion-mode-on="suggestionModeOn">
 											<q-text-field
 												v-bind="controls.ENTIX___ENTITPERSON__.props"
-												:id="getControlId(controls.ENTIX___ENTITPERSON__)"
 												@blur="onBlur(controls.ENTIX___ENTITPERSON__, model.ValPerson.value)"
 												@change="model.ValPerson.fnUpdateValueOnChange" />
 										</base-input-structure>
-									</q-col>
-								</q-row>
-								<q-row v-if="controls.ENTIX___ENTITCONTACT_.isVisible || controls.ENTIX___ENTITLANGUAGE.isVisible || controls.ENTIX___ENTITCURRENCY.isVisible">
-									<q-col
-										v-if="controls.ENTIX___ENTITCONTACT_.isVisible"
-										cols="auto">
+									</q-control-wrapper>
+								</q-row-container>
+								<q-row-container v-show="controls.ENTIX___ENTITCONTACT_.isVisible || controls.ENTIX___ENTITLANGUAGE.isVisible || controls.ENTIX___ENTITCURRENCY.isVisible">
+									<q-control-wrapper
+										v-show="controls.ENTIX___ENTITCONTACT_.isVisible"
+										class="${Vue.GetControlWrapperClass($controlsColumn)}">
 										<base-input-structure
-											v-if="controls.ENTIX___ENTITCONTACT_.isVisible"
 											class="i-text"
-											v-bind="controls.ENTIX___ENTITCONTACT_.wrapperProps"
-											:id="getControlId(controls.ENTIX___ENTITCONTACT_)"
+											v-bind="controls.ENTIX___ENTITCONTACT_"
 											v-on="controls.ENTIX___ENTITCONTACT_.handlers"
 											:loading="controls.ENTIX___ENTITCONTACT_.props.loading"
 											:reporting-mode-on="reportingModeCAV"
 											:suggestion-mode-on="suggestionModeOn">
 											<q-text-field
 												v-bind="controls.ENTIX___ENTITCONTACT_.props"
-												:id="getControlId(controls.ENTIX___ENTITCONTACT_)"
 												@blur="onBlur(controls.ENTIX___ENTITCONTACT_, model.ValContact.value)"
 												@change="model.ValContact.fnUpdateValueOnChange" />
 										</base-input-structure>
-									</q-col>
-									<q-col
-										v-if="controls.ENTIX___ENTITLANGUAGE.isVisible"
-										cols="auto">
+									</q-control-wrapper>
+									<q-control-wrapper
+										v-show="controls.ENTIX___ENTITLANGUAGE.isVisible"
+										class="${Vue.GetControlWrapperClass($controlsColumn)}">
 										<base-input-structure
-											v-if="controls.ENTIX___ENTITLANGUAGE.isVisible"
 											class="i-text"
-											v-bind="controls.ENTIX___ENTITLANGUAGE.wrapperProps"
-											:id="getControlId(controls.ENTIX___ENTITLANGUAGE)"
+											v-bind="controls.ENTIX___ENTITLANGUAGE"
 											v-on="controls.ENTIX___ENTITLANGUAGE.handlers"
 											:loading="controls.ENTIX___ENTITLANGUAGE.props.loading"
 											:reporting-mode-on="reportingModeCAV"
 											:suggestion-mode-on="suggestionModeOn">
 											<q-text-field
 												v-bind="controls.ENTIX___ENTITLANGUAGE.props"
-												:id="getControlId(controls.ENTIX___ENTITLANGUAGE)"
 												@blur="onBlur(controls.ENTIX___ENTITLANGUAGE, model.ValLanguage.value)"
 												@change="model.ValLanguage.fnUpdateValueOnChange" />
 										</base-input-structure>
-									</q-col>
-									<q-col
-										v-if="controls.ENTIX___ENTITCURRENCY.isVisible"
-										cols="auto">
+									</q-control-wrapper>
+									<q-control-wrapper
+										v-show="controls.ENTIX___ENTITCURRENCY.isVisible"
+										class="${Vue.GetControlWrapperClass($controlsColumn)}">
 										<base-input-structure
-											v-if="controls.ENTIX___ENTITCURRENCY.isVisible"
 											class="i-text"
-											v-bind="controls.ENTIX___ENTITCURRENCY.wrapperProps"
-											:id="getControlId(controls.ENTIX___ENTITCURRENCY)"
+											v-bind="controls.ENTIX___ENTITCURRENCY"
 											v-on="controls.ENTIX___ENTITCURRENCY.handlers"
 											:loading="controls.ENTIX___ENTITCURRENCY.props.loading"
 											:reporting-mode-on="reportingModeCAV"
 											:suggestion-mode-on="suggestionModeOn">
 											<q-text-field
 												v-bind="controls.ENTIX___ENTITCURRENCY.props"
-												:id="getControlId(controls.ENTIX___ENTITCURRENCY)"
 												@blur="onBlur(controls.ENTIX___ENTITCURRENCY, model.ValCurrency.value)"
 												@change="model.ValCurrency.fnUpdateValueOnChange" />
 										</base-input-structure>
-									</q-col>
-								</q-row>
+									</q-control-wrapper>
+								</q-row-container>
 								<!-- End ENTIX___PSEUDNOVOGR02 -->
-							</q-accordion-item>
-							<q-accordion-item
-								v-if="controls.ENTIX___PSEUDNOVOGR03.isVisible"
-								:id="getControlId(controls.ENTIX___PSEUDNOVOGR03) + '-container'"
-								value="ENTIX___PSEUDNOVOGR03"
-								:title="controls.ENTIX___PSEUDNOVOGR03.label">
+							</q-group-collapsible>
+							<q-group-collapsible
+								id="ENTIX___PSEUDNOVOGR03"
+								v-bind="controls.ENTIX___PSEUDNOVOGR03"
+								v-on="controls.ENTIX___PSEUDNOVOGR03.handlers">
 								<!-- Start ENTIX___PSEUDNOVOGR03 -->
-								<q-row v-if="controls.ENTIX___ENTITBUILDING.isVisible">
-									<q-col
-										v-if="controls.ENTIX___ENTITBUILDING.isVisible"
-										cols="auto">
+								<q-row-container v-show="controls.ENTIX___ENTITBUILDING.isVisible">
+									<q-control-wrapper
+										v-show="controls.ENTIX___ENTITBUILDING.isVisible"
+										class="${Vue.GetControlWrapperClass($controlsColumn)}">
 										<base-input-structure
-											v-if="controls.ENTIX___ENTITBUILDING.isVisible"
 											class="i-text"
-											v-bind="controls.ENTIX___ENTITBUILDING.wrapperProps"
-											:id="getControlId(controls.ENTIX___ENTITBUILDING)"
+											v-bind="controls.ENTIX___ENTITBUILDING"
 											v-on="controls.ENTIX___ENTITBUILDING.handlers"
 											:loading="controls.ENTIX___ENTITBUILDING.props.loading"
 											:reporting-mode-on="reportingModeCAV"
 											:suggestion-mode-on="suggestionModeOn">
 											<q-text-field
 												v-bind="controls.ENTIX___ENTITBUILDING.props"
-												:id="getControlId(controls.ENTIX___ENTITBUILDING)"
 												@blur="onBlur(controls.ENTIX___ENTITBUILDING, model.ValBuilding.value)"
 												@change="model.ValBuilding.fnUpdateValueOnChange" />
 										</base-input-structure>
-									</q-col>
-								</q-row>
-								<q-row v-if="controls.ENTIX___ENTITSTREET__.isVisible">
-									<q-col
-										v-if="controls.ENTIX___ENTITSTREET__.isVisible"
-										cols="auto">
+									</q-control-wrapper>
+								</q-row-container>
+								<q-row-container v-show="controls.ENTIX___ENTITSTREET__.isVisible">
+									<q-control-wrapper
+										v-show="controls.ENTIX___ENTITSTREET__.isVisible"
+										class="${Vue.GetControlWrapperClass($controlsColumn)}">
 										<base-input-structure
-											v-if="controls.ENTIX___ENTITSTREET__.isVisible"
 											class="i-text"
-											v-bind="controls.ENTIX___ENTITSTREET__.wrapperProps"
-											:id="getControlId(controls.ENTIX___ENTITSTREET__)"
+											v-bind="controls.ENTIX___ENTITSTREET__"
 											v-on="controls.ENTIX___ENTITSTREET__.handlers"
 											:loading="controls.ENTIX___ENTITSTREET__.props.loading"
 											:reporting-mode-on="reportingModeCAV"
 											:suggestion-mode-on="suggestionModeOn">
 											<q-text-field
 												v-bind="controls.ENTIX___ENTITSTREET__.props"
-												:id="getControlId(controls.ENTIX___ENTITSTREET__)"
 												@blur="onBlur(controls.ENTIX___ENTITSTREET__, model.ValStreet.value)"
 												@change="model.ValStreet.fnUpdateValueOnChange" />
 										</base-input-structure>
-									</q-col>
-								</q-row>
-								<q-row v-if="controls.ENTIX___ENTITTOWN____.isVisible">
-									<q-col
-										v-if="controls.ENTIX___ENTITTOWN____.isVisible"
-										cols="auto">
+									</q-control-wrapper>
+								</q-row-container>
+								<q-row-container v-show="controls.ENTIX___ENTITTOWN____.isVisible">
+									<q-control-wrapper
+										v-show="controls.ENTIX___ENTITTOWN____.isVisible"
+										class="${Vue.GetControlWrapperClass($controlsColumn)}">
 										<base-input-structure
-											v-if="controls.ENTIX___ENTITTOWN____.isVisible"
 											class="i-text"
-											v-bind="controls.ENTIX___ENTITTOWN____.wrapperProps"
-											:id="getControlId(controls.ENTIX___ENTITTOWN____)"
+											v-bind="controls.ENTIX___ENTITTOWN____"
 											v-on="controls.ENTIX___ENTITTOWN____.handlers"
 											:loading="controls.ENTIX___ENTITTOWN____.props.loading"
 											:reporting-mode-on="reportingModeCAV"
 											:suggestion-mode-on="suggestionModeOn">
 											<q-text-field
 												v-bind="controls.ENTIX___ENTITTOWN____.props"
-												:id="getControlId(controls.ENTIX___ENTITTOWN____)"
 												@blur="onBlur(controls.ENTIX___ENTITTOWN____, model.ValTown.value)"
 												@change="model.ValTown.fnUpdateValueOnChange" />
 										</base-input-structure>
-									</q-col>
-								</q-row>
-								<q-row v-if="controls.ENTIX___ENTITCOUNTY__.isVisible">
-									<q-col
-										v-if="controls.ENTIX___ENTITCOUNTY__.isVisible"
-										cols="auto">
+									</q-control-wrapper>
+								</q-row-container>
+								<q-row-container v-show="controls.ENTIX___ENTITCOUNTY__.isVisible">
+									<q-control-wrapper
+										v-show="controls.ENTIX___ENTITCOUNTY__.isVisible"
+										class="${Vue.GetControlWrapperClass($controlsColumn)}">
 										<base-input-structure
-											v-if="controls.ENTIX___ENTITCOUNTY__.isVisible"
 											class="i-text"
-											v-bind="controls.ENTIX___ENTITCOUNTY__.wrapperProps"
-											:id="getControlId(controls.ENTIX___ENTITCOUNTY__)"
+											v-bind="controls.ENTIX___ENTITCOUNTY__"
 											v-on="controls.ENTIX___ENTITCOUNTY__.handlers"
 											:loading="controls.ENTIX___ENTITCOUNTY__.props.loading"
 											:reporting-mode-on="reportingModeCAV"
 											:suggestion-mode-on="suggestionModeOn">
 											<q-text-field
 												v-bind="controls.ENTIX___ENTITCOUNTY__.props"
-												:id="getControlId(controls.ENTIX___ENTITCOUNTY__)"
 												@blur="onBlur(controls.ENTIX___ENTITCOUNTY__, model.ValCounty.value)"
 												@change="model.ValCounty.fnUpdateValueOnChange" />
 										</base-input-structure>
-									</q-col>
-								</q-row>
-								<q-row v-if="controls.ENTIX___ENTITSTATE___.isVisible">
-									<q-col
-										v-if="controls.ENTIX___ENTITSTATE___.isVisible"
-										cols="auto">
+									</q-control-wrapper>
+								</q-row-container>
+								<q-row-container v-show="controls.ENTIX___ENTITSTATE___.isVisible">
+									<q-control-wrapper
+										v-show="controls.ENTIX___ENTITSTATE___.isVisible"
+										class="${Vue.GetControlWrapperClass($controlsColumn)}">
 										<base-input-structure
-											v-if="controls.ENTIX___ENTITSTATE___.isVisible"
 											class="i-text"
-											v-bind="controls.ENTIX___ENTITSTATE___.wrapperProps"
-											:id="getControlId(controls.ENTIX___ENTITSTATE___)"
+											v-bind="controls.ENTIX___ENTITSTATE___"
 											v-on="controls.ENTIX___ENTITSTATE___.handlers"
 											:loading="controls.ENTIX___ENTITSTATE___.props.loading"
 											:reporting-mode-on="reportingModeCAV"
 											:suggestion-mode-on="suggestionModeOn">
 											<q-text-field
 												v-bind="controls.ENTIX___ENTITSTATE___.props"
-												:id="getControlId(controls.ENTIX___ENTITSTATE___)"
 												@blur="onBlur(controls.ENTIX___ENTITSTATE___, model.ValState.value)"
 												@change="model.ValState.fnUpdateValueOnChange" />
 										</base-input-structure>
-									</q-col>
-								</q-row>
-								<q-row v-if="controls.ENTIX___ENTITPOSTALCO.isVisible">
-									<q-col
-										v-if="controls.ENTIX___ENTITPOSTALCO.isVisible"
-										cols="auto">
+									</q-control-wrapper>
+								</q-row-container>
+								<q-row-container v-show="controls.ENTIX___ENTITPOSTALCO.isVisible">
+									<q-control-wrapper
+										v-show="controls.ENTIX___ENTITPOSTALCO.isVisible"
+										class="${Vue.GetControlWrapperClass($controlsColumn)}">
 										<base-input-structure
-											v-if="controls.ENTIX___ENTITPOSTALCO.isVisible"
 											class="i-text"
-											v-bind="controls.ENTIX___ENTITPOSTALCO.wrapperProps"
-											:id="getControlId(controls.ENTIX___ENTITPOSTALCO)"
+											v-bind="controls.ENTIX___ENTITPOSTALCO"
 											v-on="controls.ENTIX___ENTITPOSTALCO.handlers"
 											:loading="controls.ENTIX___ENTITPOSTALCO.props.loading"
 											:reporting-mode-on="reportingModeCAV"
 											:suggestion-mode-on="suggestionModeOn">
 											<q-text-field
 												v-bind="controls.ENTIX___ENTITPOSTALCO.props"
-												:id="getControlId(controls.ENTIX___ENTITPOSTALCO)"
 												@blur="onBlur(controls.ENTIX___ENTITPOSTALCO, model.ValPostalco.value)"
 												@change="model.ValPostalco.fnUpdateValueOnChange" />
 										</base-input-structure>
-									</q-col>
-								</q-row>
-								<q-row v-if="controls.ENTIX___ENTITPOBOX___.isVisible">
-									<q-col
-										v-if="controls.ENTIX___ENTITPOBOX___.isVisible"
-										cols="auto">
+									</q-control-wrapper>
+								</q-row-container>
+								<q-row-container v-show="controls.ENTIX___ENTITPOBOX___.isVisible">
+									<q-control-wrapper
+										v-show="controls.ENTIX___ENTITPOBOX___.isVisible"
+										class="${Vue.GetControlWrapperClass($controlsColumn)}">
 										<base-input-structure
-											v-if="controls.ENTIX___ENTITPOBOX___.isVisible"
 											class="i-text"
-											v-bind="controls.ENTIX___ENTITPOBOX___.wrapperProps"
-											:id="getControlId(controls.ENTIX___ENTITPOBOX___)"
+											v-bind="controls.ENTIX___ENTITPOBOX___"
 											v-on="controls.ENTIX___ENTITPOBOX___.handlers"
 											:loading="controls.ENTIX___ENTITPOBOX___.props.loading"
 											:reporting-mode-on="reportingModeCAV"
 											:suggestion-mode-on="suggestionModeOn">
 											<q-text-field
 												v-bind="controls.ENTIX___ENTITPOBOX___.props"
-												:id="getControlId(controls.ENTIX___ENTITPOBOX___)"
 												@blur="onBlur(controls.ENTIX___ENTITPOBOX___, model.ValPobox.value)"
 												@change="model.ValPobox.fnUpdateValueOnChange" />
 										</base-input-structure>
-									</q-col>
-								</q-row>
+									</q-control-wrapper>
+								</q-row-container>
 								<!-- End ENTIX___PSEUDNOVOGR03 -->
-							</q-accordion-item>
-							<q-accordion-item
-								v-if="controls.ENTIX___PSEUDNOVOGR04.isVisible"
-								:id="getControlId(controls.ENTIX___PSEUDNOVOGR04) + '-container'"
-								value="ENTIX___PSEUDNOVOGR04"
-								:title="controls.ENTIX___PSEUDNOVOGR04.label">
+							</q-group-collapsible>
+							<q-group-collapsible
+								id="ENTIX___PSEUDNOVOGR04"
+								v-bind="controls.ENTIX___PSEUDNOVOGR04"
+								v-on="controls.ENTIX___PSEUDNOVOGR04.handlers">
 								<!-- Start ENTIX___PSEUDNOVOGR04 -->
-								<q-row v-if="controls.ENTIX___FACI1NAME____.isVisible || controls.ENTIX___FACI2NAME____.isVisible">
-									<q-col
-										v-if="controls.ENTIX___FACI1NAME____.isVisible"
-										cols="auto">
+								<q-row-container v-show="controls.ENTIX___FACI1NAME____.isVisible || controls.ENTIX___FACI2NAME____.isVisible">
+									<q-control-wrapper
+										v-show="controls.ENTIX___FACI1NAME____.isVisible"
+										class="${Vue.GetControlWrapperClass($controlsColumn)}">
 										<base-input-structure
-											v-if="controls.ENTIX___FACI1NAME____.isVisible"
 											class="i-text"
-											v-bind="controls.ENTIX___FACI1NAME____.wrapperProps"
-											:id="getControlId(controls.ENTIX___FACI1NAME____)"
+											v-bind="controls.ENTIX___FACI1NAME____"
 											v-on="controls.ENTIX___FACI1NAME____.handlers"
 											:loading="controls.ENTIX___FACI1NAME____.props.loading"
 											:reporting-mode-on="reportingModeCAV"
@@ -693,18 +606,15 @@
 											<q-lookup
 												v-if="controls.ENTIX___FACI1NAME____.isVisible"
 												v-bind="controls.ENTIX___FACI1NAME____.props"
-												:id="getControlId(controls.ENTIX___FACI1NAME____)"
 												v-on="controls.ENTIX___FACI1NAME____.handlers" />
 										</base-input-structure>
-									</q-col>
-									<q-col
-										v-if="controls.ENTIX___FACI2NAME____.isVisible"
-										cols="auto">
+									</q-control-wrapper>
+									<q-control-wrapper
+										v-show="controls.ENTIX___FACI2NAME____.isVisible"
+										class="${Vue.GetControlWrapperClass($controlsColumn)}">
 										<base-input-structure
-											v-if="controls.ENTIX___FACI2NAME____.isVisible"
 											class="i-text"
-											v-bind="controls.ENTIX___FACI2NAME____.wrapperProps"
-											:id="getControlId(controls.ENTIX___FACI2NAME____)"
+											v-bind="controls.ENTIX___FACI2NAME____"
 											v-on="controls.ENTIX___FACI2NAME____.handlers"
 											:loading="controls.ENTIX___FACI2NAME____.props.loading"
 											:reporting-mode-on="reportingModeCAV"
@@ -712,58 +622,53 @@
 											<q-lookup
 												v-if="controls.ENTIX___FACI2NAME____.isVisible"
 												v-bind="controls.ENTIX___FACI2NAME____.props"
-												:id="getControlId(controls.ENTIX___FACI2NAME____)"
 												v-on="controls.ENTIX___FACI2NAME____.handlers" />
 										</base-input-structure>
-									</q-col>
-								</q-row>
+									</q-control-wrapper>
+								</q-row-container>
 								<!-- End ENTIX___PSEUDNOVOGR04 -->
-							</q-accordion-item>
+							</q-group-collapsible>
 							<!-- End ENTIX___PSEUDNOVOGR05 -->
 						</q-accordion>
-					</q-col>
-					<q-col
-						v-if="controls.ENTIX___PSEUDNOVOGR06.isVisible"
-						cols="auto">
+					</q-control-wrapper>
+				</q-row-container>
+				<q-row-container v-show="controls.ENTIX___PSEUDNOVOGR06.isVisible">
+					<q-control-wrapper
+						v-show="controls.ENTIX___PSEUDNOVOGR06.isVisible"
+						class="${Vue.GetControlWrapperClass($controlsColumn)}">
 						<q-group-box-container
-							v-if="controls.ENTIX___PSEUDNOVOGR06.isVisible"
+							id="ENTIX___PSEUDNOVOGR06"
 							v-bind="controls.ENTIX___PSEUDNOVOGR06"
-							:id="getControlId(controls.ENTIX___PSEUDNOVOGR06)"
-							:no-border="controls.ENTIX___PSEUDNOVOGR06.borderless">
+							:is-visible="controls.ENTIX___PSEUDNOVOGR06.isVisible">
 							<!-- Start ENTIX___PSEUDNOVOGR06 -->
-							<q-row v-if="controls.ENTIX___PSEUDFACILITE.isVisible">
-								<q-col
-									v-if="controls.ENTIX___PSEUDFACILITE.isVisible"
-									cols="auto">
+							<q-row-container v-show="controls.ENTIX___PSEUDFACILITE.isVisible">
+								<q-control-wrapper
+									v-show="controls.ENTIX___PSEUDFACILITE.isVisible"
+									class="${Vue.GetControlWrapperClass($controlsColumn)}">
 									<q-table
-										v-if="controls.ENTIX___PSEUDFACILITE.isVisible"
+										v-show="controls.ENTIX___PSEUDFACILITE.isVisible"
 										v-bind="controls.ENTIX___PSEUDFACILITE"
-										:id="getControlId(controls.ENTIX___PSEUDFACILITE)"
-										v-on="controls.ENTIX___PSEUDFACILITE.handlers">
-										<template #header>
-											<q-table-config
-												:table-ctrl="controls.ENTIX___PSEUDFACILITE"
-												v-on="controls.ENTIX___PSEUDFACILITE.handlers" />
-										</template>
-										<!-- USE /[MANUAL GQT CUSTOM_TABLE ENTIX___PSEUDFACILITE]/ -->
-									</q-table>
-								</q-col>
-							</q-row>
+										v-on="controls.ENTIX___PSEUDFACILITE.handlers" />
+									<q-table-extra-extension
+										:list-ctrl="controls.ENTIX___PSEUDFACILITE"
+										v-on="controls.ENTIX___PSEUDFACILITE.handlers" />
+								</q-control-wrapper>
+							</q-row-container>
 							<!-- End ENTIX___PSEUDNOVOGR06 -->
 						</q-group-box-container>
-					</q-col>
-				</q-row>
+					</q-control-wrapper>
+				</q-row-container>
 			</template>
-		</q-container>
+		</div>
 	</teleport>
 
-	<q-divider v-if="!isPopup && showFormFooter" />
+	<hr v-if="!isPopup && showFormFooter" />
 
 	<teleport
 		v-if="formModalIsReady && showFormFooter"
 		:to="`#${uiContainersId.footer}`"
 		:disabled="!isPopup || isNested">
-		<q-row v-if="showFormFooter">
+		<q-row-container v-if="showFormFooter">
 			<div id="footer-action-btns">
 				<template
 					v-for="btn in formButtons"
@@ -772,7 +677,6 @@
 						v-if="btn.isActive && btn.isVisible && btn.showInFooter"
 						:id="`bottom-${btn.id}`"
 						:label="btn.text"
-						:color="btn.color"
 						:variant="btn.variant"
 						:disabled="btn.disabled"
 						:icon-pos="btn.iconPos"
@@ -784,12 +688,12 @@
 					</q-button>
 				</template>
 			</div>
-		</q-row>
+		</q-row-container>
 	</teleport>
 </template>
 
 <script>
-	/* eslint-disable @typescript-eslint/no-unused-vars */
+	/* eslint-disable no-unused-vars */
 	import { computed, defineAsyncComponent, readonly } from 'vue'
 	import { useRoute } from 'vue-router'
 
@@ -809,7 +713,7 @@
 	import qApi from '@/api/genio/quidgestFunctions.js'
 	import qFunctions from '@/api/genio/projectFunctions.js'
 	import qProjArrays from '@/api/genio/projectArrays.js'
-	/* eslint-enable @typescript-eslint/no-unused-vars */
+	/* eslint-enable no-unused-vars */
 
 	import FormViewModel from './QFormEntixViewModel.js'
 
@@ -886,8 +790,7 @@
 					primaryKey: 'ValCodentit',
 					designation: computed(() => this.Resources.ENTITY62049),
 					identifier: '', // Unique identifier received by route (when it's nested).
-					mode: '',
-					availableAgents: [],
+					mode: ''
 				},
 
 				formButtons: {
@@ -995,11 +898,7 @@
 						showInFooter: true,
 						isActive: true,
 						isVisible: computed(() => vm.authData.isAllowed && vm.isEditable),
-						action: vm.saveForm,
-						badge: {
-							isVisible: computed(() => vm.model?.isDirty === true),
-							color: 'highlight'
-						}
+						action: vm.saveForm
 					},
 					confirmBtn: {
 						id: 'confirm-btn',
@@ -1106,7 +1005,6 @@
 						label: computed(() => this.Resources.COMPANY_IDENTIFICATI44986),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						borderless: false,
 						isCollapsible: false,
 						anchored: false,
 						directChildren: ['ENTIX___ENTITNAME____', 'ENTIX___ENTITFOUNDED_', 'ENTIX___ENTITINITIALS', 'ENTIX___ENTITREGISTRA', 'ENTIX___ENTITTAXNUMBE', 'ENTIX___ENTITIBAN____', 'ENTIX___ENTITPHONENUM', 'ENTIX___ENTITOWNER___', 'ENTIX___ENTITCARRIER_', 'ENTIX___ENTITSUPPLIER', 'ENTIX___ENTITMANUFACT'],
@@ -1125,6 +1023,7 @@
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'ENTIX___PSEUDNOVOGR01',
 						maxLength: 85,
+						labelId: 'label_ENTIX___ENTITNAME____',
 						mustBeFilled: true,
 						controlLimits: [
 						],
@@ -1139,7 +1038,7 @@
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'ENTIX___PSEUDNOVOGR01',
-						dateTimeType: 'date',
+						format: 'date',
 						controlLimits: [
 						],
 					}, this),
@@ -1154,6 +1053,7 @@
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'ENTIX___PSEUDNOVOGR01',
 						maxLength: 10,
+						labelId: 'label_ENTIX___ENTITINITIALS',
 						controlLimits: [
 						],
 					}, this),
@@ -1167,7 +1067,8 @@
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'ENTIX___PSEUDNOVOGR01',
-						maxLength: 20,
+						maxLength: 30,
+						labelId: 'label_ENTIX___ENTITREGISTRA',
 						controlLimits: [
 						],
 					}, this),
@@ -1181,7 +1082,8 @@
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'ENTIX___PSEUDNOVOGR01',
-						maxLength: 20,
+						maxLength: 30,
+						labelId: 'label_ENTIX___ENTITTAXNUMBE',
 						controlLimits: [
 						],
 					}, this),
@@ -1195,7 +1097,8 @@
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'ENTIX___PSEUDNOVOGR01',
-						maxLength: 25,
+						maxLength: 33,
+						labelId: 'label_ENTIX___ENTITIBAN____',
 						controlLimits: [
 						],
 					}, this),
@@ -1210,19 +1113,22 @@
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'ENTIX___PSEUDNOVOGR01',
 						maxLength: 20,
+						labelId: 'label_ENTIX___ENTITPHONENUM',
 						controlLimits: [
 						],
 					}, this),
-					ENTIX___ENTITOWNER___: new fieldControlClass.BooleanControl({
+					ENTIX___ENTITOWNER___: new fieldControlClass.StringControl({
 						modelField: 'ValOwner',
 						valueChangeEvent: 'fieldChange:entit.owner',
 						id: 'ENTIX___ENTITOWNER___',
 						name: 'OWNER',
-						size: 'mini',
+						size: 'medium',
 						label: computed(() => this.Resources.OWNER09558),
 						placeholder: '',
-						labelPosition: computed(() => this.labelAlignment.right),
+						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'ENTIX___PSEUDNOVOGR01',
+						maxLength: 50,
+						labelId: 'label_ENTIX___ENTITOWNER___',
 						controlLimits: [
 						],
 					}, this),
@@ -1234,7 +1140,7 @@
 						size: 'mini',
 						label: computed(() => this.Resources.CARRIER64855),
 						placeholder: '',
-						labelPosition: computed(() => this.labelAlignment.right),
+						labelPosition: computed(() => this.$app.layout.CheckboxLabelAlignment),
 						container: 'ENTIX___PSEUDNOVOGR01',
 						controlLimits: [
 						],
@@ -1247,7 +1153,7 @@
 						size: 'small',
 						label: computed(() => this.Resources.SUPPLIER17230),
 						placeholder: '',
-						labelPosition: computed(() => this.labelAlignment.right),
+						labelPosition: computed(() => this.$app.layout.CheckboxLabelAlignment),
 						container: 'ENTIX___PSEUDNOVOGR01',
 						controlLimits: [
 						],
@@ -1260,7 +1166,7 @@
 						size: 'small',
 						label: computed(() => this.Resources.MANUFACTURER50759),
 						placeholder: '',
-						labelPosition: computed(() => this.labelAlignment.right),
+						labelPosition: computed(() => this.$app.layout.CheckboxLabelAlignment),
 						container: 'ENTIX___PSEUDNOVOGR01',
 						controlLimits: [
 						],
@@ -1268,7 +1174,7 @@
 					ENTIX___PSEUDNOVOGR05: new fieldControlClass.AccordionControl({
 						id: 'ENTIX___PSEUDNOVOGR05',
 						name: 'NOVOGR05',
-						size: 'xxlarge',
+						size: 'block',
 						label: computed(() => this.Resources.ACCORDION01950),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
@@ -1286,8 +1192,6 @@
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'ENTIX___PSEUDNOVOGR05',
-						isInAccordion: true,
-						borderless: false,
 						isCollapsible: true,
 						anchored: false,
 						directChildren: ['ENTIX___ENTITTELEPHON', 'ENTIX___ENTITFAX_____', 'ENTIX___ENTITEMAIL___', 'ENTIX___ENTITWEBSITE_', 'ENTIX___ENTITPERSON__', 'ENTIX___ENTITCONTACT_', 'ENTIX___ENTITLANGUAGE', 'ENTIX___ENTITCURRENCY'],
@@ -1305,6 +1209,7 @@
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'ENTIX___PSEUDNOVOGR02',
 						maxLength: 20,
+						labelId: 'label_ENTIX___ENTITTELEPHON',
 						controlLimits: [
 						],
 					}, this),
@@ -1319,6 +1224,7 @@
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'ENTIX___PSEUDNOVOGR02',
 						maxLength: 20,
+						labelId: 'label_ENTIX___ENTITFAX_____',
 						controlLimits: [
 						],
 					}, this),
@@ -1333,6 +1239,7 @@
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'ENTIX___PSEUDNOVOGR02',
 						maxLength: 254,
+						labelId: 'label_ENTIX___ENTITEMAIL___',
 						controlLimits: [
 						],
 					}, this),
@@ -1347,6 +1254,7 @@
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'ENTIX___PSEUDNOVOGR02',
 						maxLength: 254,
+						labelId: 'label_ENTIX___ENTITWEBSITE_',
 						controlLimits: [
 						],
 					}, this),
@@ -1361,6 +1269,7 @@
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'ENTIX___PSEUDNOVOGR02',
 						maxLength: 85,
+						labelId: 'label_ENTIX___ENTITPERSON__',
 						controlLimits: [
 						],
 					}, this),
@@ -1374,7 +1283,8 @@
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'ENTIX___PSEUDNOVOGR02',
-						maxLength: 20,
+						maxLength: 30,
+						labelId: 'label_ENTIX___ENTITCONTACT_',
 						controlLimits: [
 						],
 					}, this),
@@ -1389,6 +1299,7 @@
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'ENTIX___PSEUDNOVOGR02',
 						maxLength: 2,
+						labelId: 'label_ENTIX___ENTITLANGUAGE',
 						controlLimits: [
 						],
 					}, this),
@@ -1403,6 +1314,7 @@
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'ENTIX___PSEUDNOVOGR02',
 						maxLength: 3,
+						labelId: 'label_ENTIX___ENTITCURRENCY',
 						controlLimits: [
 						],
 					}, this),
@@ -1414,8 +1326,6 @@
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'ENTIX___PSEUDNOVOGR05',
-						isInAccordion: true,
-						borderless: false,
 						isCollapsible: true,
 						anchored: false,
 						directChildren: ['ENTIX___ENTITBUILDING', 'ENTIX___ENTITSTREET__', 'ENTIX___ENTITTOWN____', 'ENTIX___ENTITCOUNTY__', 'ENTIX___ENTITSTATE___', 'ENTIX___ENTITPOSTALCO', 'ENTIX___ENTITPOBOX___'],
@@ -1432,7 +1342,8 @@
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'ENTIX___PSEUDNOVOGR03',
-						maxLength: 10,
+						maxLength: 25,
+						labelId: 'label_ENTIX___ENTITBUILDING',
 						controlLimits: [
 						],
 					}, this),
@@ -1446,7 +1357,8 @@
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'ENTIX___PSEUDNOVOGR03',
-						maxLength: 85,
+						maxLength: 50,
+						labelId: 'label_ENTIX___ENTITSTREET__',
 						controlLimits: [
 						],
 					}, this),
@@ -1460,7 +1372,8 @@
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'ENTIX___PSEUDNOVOGR03',
-						maxLength: 85,
+						maxLength: 50,
+						labelId: 'label_ENTIX___ENTITTOWN____',
 						controlLimits: [
 						],
 					}, this),
@@ -1474,7 +1387,8 @@
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'ENTIX___PSEUDNOVOGR03',
-						maxLength: 85,
+						maxLength: 50,
+						labelId: 'label_ENTIX___ENTITCOUNTY__',
 						controlLimits: [
 						],
 					}, this),
@@ -1488,7 +1402,8 @@
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'ENTIX___PSEUDNOVOGR03',
-						maxLength: 85,
+						maxLength: 50,
+						labelId: 'label_ENTIX___ENTITSTATE___',
 						controlLimits: [
 						],
 					}, this),
@@ -1502,7 +1417,8 @@
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'ENTIX___PSEUDNOVOGR03',
-						maxLength: 50,
+						maxLength: 10,
+						labelId: 'label_ENTIX___ENTITPOSTALCO',
 						controlLimits: [
 						],
 					}, this),
@@ -1517,6 +1433,7 @@
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'ENTIX___PSEUDNOVOGR03',
 						maxLength: 5,
+						labelId: 'label_ENTIX___ENTITPOBOX___',
 						controlLimits: [
 						],
 					}, this),
@@ -1528,8 +1445,6 @@
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'ENTIX___PSEUDNOVOGR05',
-						isInAccordion: true,
-						borderless: false,
 						isCollapsible: true,
 						anchored: false,
 						directChildren: ['ENTIX___FACI1NAME____', 'ENTIX___FACI2NAME____'],
@@ -1541,7 +1456,7 @@
 						valueChangeEvent: 'fieldChange:faci1.name',
 						id: 'ENTIX___FACI1NAME____',
 						name: 'NAME',
-						size: 'xlarge',
+						size: 'mini',
 						label: computed(() => this.Resources.FACILITY_NAME19514),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
@@ -1603,7 +1518,6 @@
 						label: '',
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						borderless: true,
 						isCollapsible: false,
 						anchored: false,
 						directChildren: ['ENTIX___PSEUDFACILITE'],
@@ -1613,12 +1527,11 @@
 					ENTIX___PSEUDFACILITE: new fieldControlClass.TableListControl({
 						id: 'ENTIX___PSEUDFACILITE',
 						name: 'FACILITE',
-						size: 'xxlarge',
+						size: '',
 						label: computed(() => this.Resources.FACILITIES08876),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'ENTIX___PSEUDNOVOGR06',
-						headerLevel: computed(() => this.baseHeadingLevel + 1),
 						controller: 'ENTIT',
 						action: 'Entix_ValFacilite',
 						hasDependencies: false,
@@ -1632,7 +1545,6 @@
 								label: computed(() => this.Resources.INCORPORATION10135),
 								scrollData: 8,
 								dateTimeType: 'date',
-								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 2,
@@ -1642,7 +1554,6 @@
 								label: computed(() => this.Resources.FACILITY_NAME19514),
 								dataLength: 85,
 								scrollData: 30,
-								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 3,
@@ -1652,7 +1563,6 @@
 								label: computed(() => this.Resources.FACILITY_TYPE44577),
 								dataLength: 25,
 								scrollData: 25,
-								export: 1,
 								pkColumn: 'ValCodfacty',
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.NumericColumn({
@@ -1664,7 +1574,6 @@
 								scrollData: 10,
 								maxDigits: 3,
 								decimalPlaces: 6,
-								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.NumericColumn({
 								order: 5,
@@ -1675,7 +1584,6 @@
 								scrollData: 10,
 								maxDigits: 3,
 								decimalPlaces: 6,
-								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.GeographicColumn({
 								order: 6,
@@ -1687,7 +1595,6 @@
 								scrollData: 30,
 								sortable: false,
 								searchable: false,
-								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.ImageColumn({
 								order: 7,
@@ -1699,7 +1606,6 @@
 								scrollData: 3,
 								sortable: false,
 								searchable: false,
-								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 						],
 						config: {
@@ -1715,8 +1621,10 @@
 							permissions: {
 							},
 							searchBarConfig: {
-								visibility: false
+								visibility: false,
+								searchOnPressEnter: true
 							},
+							filtersVisible: false,
 							allowColumnFilters: false,
 							allowColumnSort: true,
 							crudActions: [
@@ -1790,7 +1698,9 @@
 									id: 'insert',
 									name: 'insert',
 									title: computed(() => this.Resources.INSERIR43365),
-									icon: { icon: 'add' },
+									icon: {
+										icon: 'add'
+									},
 									isInReadOnly: false,
 									params: {
 										action: vm.openFormAction,
@@ -1837,7 +1747,7 @@
 								sortOrder: 'asc'
 							}
 						},
-						globalEvents: ['changed-FACTY', 'changed-FACIL', 'changed-ENTIT'],
+						globalEvents: ['changed-FACIL', 'changed-ENTIT', 'changed-CNTRY', 'changed-FACTY'],
 						uuid: 'Entix_ValFacilite',
 						allSelectedRows: 'false',
 						controlLimits: [
@@ -1995,23 +1905,17 @@
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 		},
 
-		beforeUnmount()
-		{
-/* eslint-disable indent, vue/html-indent, vue/script-indent */
-// USE /[MANUAL GQT COMPONENT_BEFORE_UNMOUNT ENTIX]/
-// eslint-disable-next-line
-/* eslint-enable indent, vue/html-indent, vue/script-indent */
-		},
-
 		methods: {
 			/**
 			 * Called before form init.
 			 */
 			async beforeLoad()
 			{
+				let loadForm = true
+
 				// Execute the "Before init" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.beforeInit)
-				for (const trigger of triggers)
+				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
 				this.emitEvent('before-load-form')
@@ -2021,7 +1925,7 @@
 // eslint-disable-next-line
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 
-				return true
+				return loadForm
 			},
 
 			/**
@@ -2031,7 +1935,7 @@
 			{
 				// Execute the "After init" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.afterInit)
-				for (const trigger of triggers)
+				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
 				this.emitEvent('after-load-form')
@@ -2051,33 +1955,19 @@
 
 				// Execute the "Before apply" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.beforeApply)
-				for (const trigger of triggers)
+				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
-				const ticketsPromise = this.model.updateFilesTickets(true)
-				this.addBusy(ticketsPromise, this.Resources[hardcodedTexts.processing])
-				const canSetDocums = await ticketsPromise
+				const canSetDocums = await this.model.updateFilesTickets(true)
 
 				if (canSetDocums)
 				{
-					let results
-					const changesPromise = this.model.setDocumentChanges()
-					this.addBusy(changesPromise, this.Resources[hardcodedTexts.processing])
-					applyForm = await changesPromise
+					applyForm = await this.model.setDocumentChanges()
 
 					if (applyForm)
 					{
-						const insertsPromise = this.model.saveDocuments()
-						this.addBusy(insertsPromise, this.Resources[hardcodedTexts.processing])
-						results = await insertsPromise
+						const results = await this.model.saveDocuments()
 						applyForm = results.every((e) => e === true)
-					}
-
-					if (!changesPromise || (results && !results.every((e) => e === true)))
-					{
-						this.validationErrors = {
-							Erro: this.Resources.OCORREU_UM_ERRO_AO_T51884
-						}
 					}
 				}
 
@@ -2098,7 +1988,7 @@
 			{
 				// Execute the "After apply" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.afterApply)
-				for (const trigger of triggers)
+				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
 				this.emitEvent('after-apply-form')
@@ -2118,33 +2008,19 @@
 
 				// Execute the "Before save" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.beforeSave)
-				for (const trigger of triggers)
+				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
-				const ticketsPromise = this.model.updateFilesTickets()
-				this.addBusy(ticketsPromise, this.Resources[hardcodedTexts.processing])
-				const canSetDocums = await ticketsPromise
+				const canSetDocums = await this.model.updateFilesTickets()
 
 				if (canSetDocums)
 				{
-					let results
-					const changesPromise = this.model.setDocumentChanges()
-					this.addBusy(changesPromise, this.Resources[hardcodedTexts.processing])
-					saveForm = await changesPromise
+					saveForm = await this.model.setDocumentChanges()
 
 					if (saveForm)
 					{
-						const insertsPromise = this.model.saveDocuments()
-						this.addBusy(insertsPromise, this.Resources[hardcodedTexts.processing])
-						results = await insertsPromise
+						const results = await this.model.saveDocuments()
 						saveForm = results.every((e) => e === true)
-					}
-
-					if (!changesPromise || (results && !results.every((e) => e === true)))
-					{
-						this.validationErrors = {
-							Erro: this.Resources.OCORREU_UM_ERRO_AO_T51884
-						}
 					}
 				}
 
@@ -2163,9 +2039,11 @@
 			 */
 			async afterSave()
 			{
+				let redirectPage = true // Set to 'false' to cancel page redirect.
+
 				// Execute the "After save" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.afterSave)
-				for (const trigger of triggers)
+				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
 				this.emitEvent('after-save-form')
@@ -2175,7 +2053,7 @@
 // eslint-disable-next-line
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 
-				return true
+				return redirectPage
 			},
 
 			/**
@@ -2183,6 +2061,8 @@
 			 */
 			async beforeDel()
 			{
+				let deleteForm = true // Set to 'false' to cancel form delete.
+
 				this.emitEvent('before-delete-form')
 
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
@@ -2190,7 +2070,7 @@
 // eslint-disable-next-line
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 
-				return true
+				return deleteForm
 			},
 
 			/**
@@ -2198,6 +2078,8 @@
 			 */
 			async afterDel()
 			{
+				let redirectPage = true // Set to 'false' to cancel page redirect.
+
 				this.emitEvent('after-delete-form')
 
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
@@ -2205,7 +2087,7 @@
 // eslint-disable-next-line
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 
-				return true
+				return redirectPage
 			},
 
 			/**
@@ -2213,9 +2095,11 @@
 			 */
 			async beforeExit()
 			{
+				let leaveForm = true // Set to 'false' to cancel page redirect.
+
 				// Execute the "Before exit" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.beforeExit)
-				for (const trigger of triggers)
+				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
 				this.emitEvent('before-exit-form')
@@ -2225,7 +2109,7 @@
 // eslint-disable-next-line
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 
-				return true
+				return leaveForm
 			},
 
 			/**
@@ -2235,7 +2119,7 @@
 			{
 				// Execute the "After exit" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.afterExit)
-				for (const trigger of triggers)
+				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
 				this.emitEvent('after-exit-form')

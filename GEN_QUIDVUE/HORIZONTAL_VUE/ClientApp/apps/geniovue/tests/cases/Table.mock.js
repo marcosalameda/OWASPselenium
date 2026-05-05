@@ -1,4 +1,6 @@
-﻿import controlClass from '@/mixins/fieldControl.js'
+﻿import cloneDeep from 'lodash-es/cloneDeep'
+
+import controlClass from '@/mixins/fieldControl.js'
 import listFunctions from '@/mixins/listFunctions.js'
 
 function getTableTest(context)
@@ -465,7 +467,19 @@ function getTableTest(context)
 					dataSearch: listFunctions.textSearchCell,
 					isDefaultSearch: true,
 					sortable: true,
-					searchable: true
+					searchable: true,
+					distinctValues: [
+						'thing',
+						'things',
+						'thang',
+						'stuff',
+						'cool',
+						'asfd',
+						'nkef',
+						'dyn',
+						'mgh',
+						'nm'
+					]
 				},
 				{
 					order: 4,
@@ -577,6 +591,8 @@ function getTableTest(context)
 				name: 'DFLDS',
 				pkColumn: 'PrimaryKey',
 				tableTitle: 'Basic Types',
+				lcid: 'pt-PT',
+				serverMode: false,
 				numberFormat: {
 					decimalSeparator: ',',
 					groupSeparator: '.'
@@ -594,7 +610,12 @@ function getTableTest(context)
 					mode: 'insert',
 					repeatInsert: false
 				},
+				globalSearch: {
+					placeholder: 'PESQUISAR34506',
+					visibility: true
+				},
 				viewManagement: 'T',
+				signalOpenAdvancedFilters: null,
 				allowColumnFilters: true,
 				customActions: [
 					{
@@ -688,6 +709,7 @@ function getTableTest(context)
 				allowFileImport: true,
 				importOptions: [{ key: 'xlsx', value: 'FOLHA_DE_CALCULO_EXC59518' }],
 				importTemplateOptions: [{ key: 'xlsx', value: 'DOWNLOAD_DE_TEMPLATE48385' }],
+				columnConfigIsVisible: false,
 				rowClickActionInternal: 'selectMultiple',
 				hasTextWrap: false,
 				defaultSearchColumnName: 'Key',
@@ -695,47 +717,59 @@ function getTableTest(context)
 				canInsert: true
 			},
 			readonly: false,
-			filters: [],
+			advancedFilters: [],
 			groupFilters: [
 				{
 					id: 'filter_GQT_Menu_111_DEVOLUCAO',
 					isMultiple: false,
-					selected: '3',
-					items: [
+					value: '2',
+					filters: [
+						{
+							key: '0',
+							value: 'POR_DEVOLVER13204',
+							selected: false,
+							id: 'filter_GQT_Menu_111_DEVOLUCAO_0'
+						},
 						{
 							key: '1',
-							value: 'To return'
+							value: 'DEVOLVIDOS52106',
+							selected: false,
+							id: 'filter_GQT_Menu_111_DEVOLUCAO_1'
 						},
 						{
 							key: '2',
-							value: 'Returned'
-						},
-						{
-							key: '3',
-							value: 'All'
+							value: 'TODOS59977',
+							selected: true,
+							id: 'filter_GQT_Menu_111_DEVOLUCAO_2'
 						}
 					]
 				}
 			],
 			activeFilters: {
-				selected: ['upcoming'],
-				items: [
+				options: [
 					{
-						key: 'current',
-						value: 'Active'
+						key: '0',
+						value: 'ACTIVE',
+						selected: false,
+						id: 'filter_GQT_Menu_111_ActiveFilter_A'
 					},
 					{
-						key: 'previous',
-						value: 'Inactive'
+						key: '1',
+						value: 'INACTIVE',
+						selected: false,
+						id: 'filter_GQT_Menu_111_ActiveFilter_I'
 					},
 					{
-						key: 'upcoming',
-						value: 'Futures'
+						key: '2',
+						value: 'FUTURE',
+						selected: true,
+						id: 'filter_GQT_Menu_111_ActiveFilter_F'
 					}
 				],
-				date: {
+				dateValue: {
 					type: 'date',
 					title: 'Date',
+					id: 'GQT_Menu_111_dataRef',
 					value: ''
 				}
 			},
@@ -745,7 +779,6 @@ function getTableTest(context)
 		context || {
 			$getResource: (resId) => resId
 		},
-		{},
 		{}
 	)
 }
@@ -1089,6 +1122,7 @@ export default {
 					dataDisplay: listFunctions.textDisplayCell,
 					dataSearch: listFunctions.textSearchCell,
 					sortable: true,
+					distinctValues: [],
 					component: 'q-edit-text',
 					componentOptions: {}
 				},
@@ -1175,6 +1209,7 @@ export default {
 				name: 'DFLDS',
 				pkColumn: 'PrimaryKey',
 				tableTitle: 'Basic Types (Edit)',
+				lcid: 'pt-PT',
 				numberFormat: {
 					decimalSeparator: ',',
 					groupSeparator: '.'
@@ -1191,6 +1226,9 @@ export default {
 					type: 'popup',
 					mode: 'insert',
 					repeatInsert: false
+				},
+				globalSearch: {
+					visibility: true
 				},
 				crudActions: [
 					{
@@ -1289,48 +1327,59 @@ export default {
 				{
 					id: 'filter_GQT_Menu_111_DEVOLUCAO',
 					isMultiple: false,
-					selected: '3',
-					items: [
+					value: '2',
+					filters: [
+						{
+							key: '0',
+							value: 'POR_DEVOLVER13204',
+							selected: false,
+							id: 'filter_GQT_Menu_111_DEVOLUCAO_0'
+						},
 						{
 							key: '1',
-							value: 'To return'
+							value: 'DEVOLVIDOS52106',
+							selected: false,
+							id: 'filter_GQT_Menu_111_DEVOLUCAO_1'
 						},
 						{
 							key: '2',
-							value: 'Returned'
-						},
-						{
-							key: '3',
-							value: 'All'
+							value: 'TODOS59977',
+							selected: true,
+							id: 'filter_GQT_Menu_111_DEVOLUCAO_2'
 						}
 					]
 				}
 			],
 			activeFilters: {
-				selected: ['upcoming'],
-				items: [
+				options: [
 					{
-						key: 'current',
-						value: 'Active'
+						key: '0',
+						value: 'ACTIVE',
+						selected: false,
+						id: 'filter_GQT_Menu_111_ActiveFilter_A'
 					},
 					{
-						key: 'previous',
-						value: 'Inactive'
+						key: '1',
+						value: 'INACTIVE',
+						selected: false,
+						id: 'filter_GQT_Menu_111_ActiveFilter_I'
 					},
 					{
-						key: 'upcoming',
-						value: 'Futures'
+						key: '2',
+						value: 'FUTURE',
+						selected: true,
+						id: 'filter_GQT_Menu_111_ActiveFilter_F'
 					}
 				],
-				date: {
+				dateValue: {
 					type: 'date',
 					title: 'Date',
+					id: 'GQT_Menu_111_dataRef',
 					value: ''
 				}
 			},
 			dataImportResponse: {}
 		},
-		{},
 		{},
 		{}
 	),
@@ -1668,6 +1717,7 @@ export default {
 					dataDisplay: listFunctions.textDisplayCell,
 					dataSearch: listFunctions.textSearchCell,
 					sortable: true,
+					distinctValues: [],
 					component: 'q-edit-text',
 					componentOptions: {}
 				},
@@ -1685,6 +1735,7 @@ export default {
 					dataType: 'Numeric',
 					dataDisplay: listFunctions.numericDisplayCell,
 					dataSearch: listFunctions.numericSearchCell,
+					dataOnChange: listFunctions.reCalcCellOrder,
 					decimalPlaces: 3,
 					columnClasses: 'c-table__cell-numeric row-numeric',
 					columnHeaderClasses: 'c-table__head-numeric',
@@ -1695,7 +1746,8 @@ export default {
 						isDecimal: false,
 						thousandsSep: ' ',
 						decimalSep: '.'
-					}
+					},
+					isOrderingColumn: true
 				},
 				{
 					label: 'Date',
@@ -1754,6 +1806,7 @@ export default {
 				name: 'DFLDS_REORDER',
 				pkColumn: 'PrimaryKey',
 				tableTitle: 'Basic Types (Reorder)',
+				lcid: 'pt-PT',
 				numberFormat: {
 					decimalSeparator: ',',
 					groupSeparator: '.'
@@ -1770,6 +1823,9 @@ export default {
 					type: 'popup',
 					mode: 'insert',
 					repeatInsert: false
+				},
+				globalSearch: {
+					visibility: true
 				},
 				crudActions: [
 					{
@@ -1870,48 +1926,59 @@ export default {
 				{
 					id: 'filter_GQT_Menu_111_DEVOLUCAO',
 					isMultiple: false,
-					selected: '3',
-					items: [
+					value: '2',
+					filters: [
+						{
+							key: '0',
+							value: 'POR_DEVOLVER13204',
+							selected: false,
+							id: 'filter_GQT_Menu_111_DEVOLUCAO_0'
+						},
 						{
 							key: '1',
-							value: 'To return'
+							value: 'DEVOLVIDOS52106',
+							selected: false,
+							id: 'filter_GQT_Menu_111_DEVOLUCAO_1'
 						},
 						{
 							key: '2',
-							value: 'Returned'
-						},
-						{
-							key: '3',
-							value: 'All'
+							value: 'TODOS59977',
+							selected: true,
+							id: 'filter_GQT_Menu_111_DEVOLUCAO_2'
 						}
 					]
 				}
 			],
 			activeFilters: {
-				selected: ['upcoming'],
-				items: [
+				options: [
 					{
-						key: 'current',
-						value: 'Active'
+						key: '0',
+						value: 'ACTIVE',
+						selected: false,
+						id: 'filter_GQT_Menu_111_ActiveFilter_A'
 					},
 					{
-						key: 'previous',
-						value: 'Inactive'
+						key: '1',
+						value: 'INACTIVE',
+						selected: false,
+						id: 'filter_GQT_Menu_111_ActiveFilter_I'
 					},
 					{
-						key: 'upcoming',
-						value: 'Futures'
+						key: '2',
+						value: 'FUTURE',
+						selected: true,
+						id: 'filter_GQT_Menu_111_ActiveFilter_F'
 					}
 				],
-				date: {
+				dateValue: {
 					type: 'date',
 					title: 'Date',
+					id: 'GQT_Menu_111_dataRef',
 					value: ''
 				}
 			},
 			dataImportResponse: {}
 		},
-		{},
 		{},
 		{}
 	),
@@ -2142,6 +2209,7 @@ export default {
 				name: 'DDATE',
 				pkColumn: '',
 				tableTitle: 'Date Types',
+				lcid: 'pt-PT',
 				numberFormat: {
 					decimalSeparator: ',',
 					groupSeparator: '.'
@@ -2158,6 +2226,9 @@ export default {
 					type: 'popup',
 					mode: 'insert',
 					repeatInsert: false
+				},
+				globalSearch: {
+					visibility: true
 				},
 				crudActions: [
 					{
@@ -2213,7 +2284,6 @@ export default {
 				]
 			}
 		},
-		{},
 		{},
 		{}
 	),
@@ -2563,12 +2633,16 @@ export default {
 				name: 'DMISC',
 				pkColumn: 'Key',
 				tableTitle: 'Other Types',
+				lcid: 'pt-PT',
 				system: 0,
 				supportForm: {
 					name: 'FORMX',
 					type: 'popup',
 					mode: 'insert',
 					repeatInsert: false
+				},
+				globalSearch: {
+					visibility: true
 				},
 				crudActions: [
 					{
@@ -2624,7 +2698,6 @@ export default {
 				]
 			}
 		},
-		{},
 		{},
 		{}
 	),
@@ -2886,7 +2959,8 @@ export default {
 					dataType: 'Text',
 					dataDisplay: listFunctions.textDisplayCell,
 					dataSearch: listFunctions.textSearchCell,
-					sortable: true
+					sortable: true,
+					distinctValues: []
 				},
 				{
 					label: 'Numeric1',
@@ -2966,6 +3040,7 @@ export default {
 				name: 'DFLDS',
 				pkColumn: 'PrimaryKey',
 				tableTitle: 'Column Totalers',
+				lcid: 'pt-PT',
 				numberFormat: {
 					decimalSeparator: ',',
 					groupSeparator: '.'
@@ -2982,6 +3057,9 @@ export default {
 					type: 'popup',
 					mode: 'insert',
 					repeatInsert: false
+				},
+				globalSearch: {
+					visibility: true
 				},
 				crudActions: [
 					{
@@ -3040,7 +3118,6 @@ export default {
 			rowsSelected: {},
 			rowsChecked: {}
 		},
-		{},
 		{},
 		{}
 	),
@@ -3302,7 +3379,8 @@ export default {
 					dataType: 'Text',
 					dataDisplay: listFunctions.textDisplayCell,
 					dataSearch: listFunctions.textSearchCell,
-					sortable: true
+					sortable: true,
+					distinctValues: []
 				},
 				{
 					label: 'Numeric1',
@@ -3382,6 +3460,7 @@ export default {
 				name: 'DFLDS',
 				pkColumn: 'PrimaryKey',
 				tableTitle: 'Column Totalers (selected)',
+				lcid: 'pt-PT',
 				numberFormat: {
 					decimalSeparator: ',',
 					groupSeparator: '.'
@@ -3398,6 +3477,9 @@ export default {
 					type: 'popup',
 					mode: 'insert',
 					repeatInsert: false
+				},
+				globalSearch: {
+					visibility: true
 				},
 				crudActions: [
 					{
@@ -3459,7 +3541,6 @@ export default {
 			rowsSelected: {},
 			rowsChecked: {}
 		},
-		{},
 		{},
 		{}
 	),
@@ -3721,7 +3802,8 @@ export default {
 					dataType: 'Text',
 					dataDisplay: listFunctions.textDisplayCell,
 					dataSearch: listFunctions.textSearchCell,
-					sortable: true
+					sortable: true,
+					distinctValues: []
 				},
 				{
 					label: 'Numeric1',
@@ -3801,6 +3883,7 @@ export default {
 				name: 'DFLDS_SELECT_CHECK',
 				pkColumn: 'PrimaryKey',
 				tableTitle: 'Select Multiple Rows',
+				lcid: 'pt-PT',
 				numberFormat: {
 					decimalSeparator: ',',
 					groupSeparator: '.'
@@ -3817,6 +3900,9 @@ export default {
 					type: 'popup',
 					mode: 'insert',
 					repeatInsert: false
+				},
+				globalSearch: {
+					visibility: true
 				},
 				crudActions: [
 					{
@@ -3879,7 +3965,6 @@ export default {
 			rowsSelected: {},
 			rowsChecked: {}
 		},
-		{},
 		{},
 		{}
 	),
@@ -4141,7 +4226,8 @@ export default {
 					dataType: 'Text',
 					dataDisplay: listFunctions.textDisplayCell,
 					dataSearch: listFunctions.textSearchCell,
-					sortable: true
+					sortable: true,
+					distinctValues: []
 				},
 				{
 					label: 'Numeric1',
@@ -4221,6 +4307,7 @@ export default {
 				name: 'DFLDS_SELECT_CHECK_MULTI',
 				pkColumn: 'PrimaryKey',
 				tableTitle: 'Select Multiple Rows (Multiple Actions)',
+				lcid: 'pt-PT',
 				numberFormat: {
 					decimalSeparator: ',',
 					groupSeparator: '.'
@@ -4237,6 +4324,9 @@ export default {
 					type: 'popup',
 					mode: 'insert',
 					repeatInsert: false
+				},
+				globalSearch: {
+					visibility: true
 				},
 				crudActions: [
 					{
@@ -4337,7 +4427,6 @@ export default {
 			rowsSelected: {},
 			rowsChecked: {}
 		},
-		{},
 		{},
 		{}
 	),
@@ -4599,7 +4688,8 @@ export default {
 					dataType: 'Text',
 					dataDisplay: listFunctions.textDisplayCell,
 					dataSearch: listFunctions.textSearchCell,
-					sortable: true
+					sortable: true,
+					distinctValues: []
 				},
 				{
 					label: 'Numeric1',
@@ -4679,6 +4769,7 @@ export default {
 				name: 'DFLDS',
 				pkColumn: 'PrimaryKey',
 				tableTitle: 'Select Single Row',
+				lcid: 'pt-PT',
 				numberFormat: {
 					decimalSeparator: ',',
 					groupSeparator: '.'
@@ -4695,6 +4786,9 @@ export default {
 					type: 'popup',
 					mode: 'insert',
 					repeatInsert: false
+				},
+				globalSearch: {
+					visibility: true
 				},
 				crudActions: [
 					{
@@ -4755,7 +4849,6 @@ export default {
 			rowsSelected: {},
 			rowsChecked: {}
 		},
-		{},
 		{},
 		{}
 	),
@@ -5017,7 +5110,8 @@ export default {
 					dataType: 'Text',
 					dataDisplay: listFunctions.textDisplayCell,
 					dataSearch: listFunctions.textSearchCell,
-					sortable: true
+					sortable: true,
+					distinctValues: []
 				},
 				{
 					label: 'Numeric1',
@@ -5091,6 +5185,7 @@ export default {
 				name: 'DFLDS',
 				pkColumn: 'PrimaryKey',
 				tableTitle: 'Remove Rows',
+				lcid: 'pt-PT',
 				numberFormat: {
 					decimalSeparator: ',',
 					groupSeparator: '.'
@@ -5108,6 +5203,9 @@ export default {
 					mode: 'insert',
 					repeatInsert: false
 				},
+				globalSearch: {
+					visibility: true
+				},
 				actionsPlacement: 'left',
 				rowClickActionInternal: '',
 				rowBgColorSelected: '#e0e0e0',
@@ -5118,7 +5216,6 @@ export default {
 			rowsSelected: {},
 			rowsChecked: {}
 		},
-		{},
 		{},
 		{}
 	),
@@ -5320,13 +5417,16 @@ export default {
 					dataType: 'Text',
 					dataDisplay: listFunctions.textDisplayCell,
 					dataSearch: listFunctions.textSearchCell,
-					sortable: true
+					sortable: true,
+					distinctValues: []
 				}
 			],
 			config: {
 				name: 'DFLDS',
 				pkColumn: 'PrimaryKey',
 				tableTitle: 'Pagination (normal)',
+				lcid: 'pt-PT',
+				serverMode: false,
 				numberFormat: {
 					decimalSeparator: ',',
 					groupSeparator: '.'
@@ -5337,6 +5437,9 @@ export default {
 					dateTimeSeconds: 'yyyy/MM/dd HH:mm:ss',
 					hours: 'HH:mm',
 					use12Hour: false
+				},
+				globalSearch: {
+					visibility: true
 				},
 				crudActions: [
 					{
@@ -5393,11 +5496,10 @@ export default {
 				actionsPlacement: 'left',
 				rowClickActionInternal: '',
 				perPage: 1,
-				numVisiblePaginationButtons: 5,
+				numVisibilePaginationButtons: 5,
 				showRecordCount: true
 			}
 		},
-		{},
 		{},
 		{}
 	),
@@ -5407,6 +5509,7 @@ export default {
 				name: 'DFLDS',
 				pkColumn: 'PrimaryKey',
 				tableTitle: 'Pagination (normal, server)',
+				lcid: 'pt-PT',
 				numberFormat: {
 					decimalSeparator: ',',
 					groupSeparator: '.'
@@ -5417,6 +5520,9 @@ export default {
 					dateTimeSeconds: 'yyyy/MM/dd HH:mm:ss',
 					hours: 'HH:mm',
 					use12Hour: false
+				},
+				globalSearch: {
+					visibility: true
 				},
 				crudActions: [
 					{
@@ -5473,12 +5579,13 @@ export default {
 				actionsPlacement: 'left',
 				rowClickActionInternal: '',
 				perPage: 1,
-				numVisiblePaginationButtons: 5,
+				numVisibilePaginationButtons: 5,
 				showRecordCount: true,
+				serverMode: true,
+				canEmitQueries: true,
 				hydrate: listFunctions.hydrateTableData
 			}
 		},
-		{},
 		{},
 		{}
 	),
@@ -5680,13 +5787,16 @@ export default {
 					dataType: 'Text',
 					dataDisplay: listFunctions.textDisplayCell,
 					dataSearch: listFunctions.textSearchCell,
-					sortable: true
+					sortable: true,
+					distinctValues: []
 				}
 			],
 			config: {
 				name: 'DFLDS',
 				pkColumn: 'PrimaryKey',
 				tableTitle: 'Pagination (alternate)',
+				lcid: 'pt-PT',
+				serverMode: false,
 				numberFormat: {
 					decimalSeparator: ',',
 					groupSeparator: '.'
@@ -5697,6 +5807,9 @@ export default {
 					dateTimeSeconds: 'yyyy/MM/dd HH:mm:ss',
 					hours: 'HH:mm',
 					use12Hour: false
+				},
+				globalSearch: {
+					visibility: true
 				},
 				crudActions: [
 					{
@@ -5757,7 +5870,6 @@ export default {
 			}
 		},
 		{},
-		{},
 		{}
 	),
 	columns01: [
@@ -5799,7 +5911,19 @@ export default {
 			dataDisplay: listFunctions.textDisplayCell,
 			dataSearch: listFunctions.textSearchCell,
 			isDefaultSearch: true,
-			sortable: true
+			sortable: true,
+			distinctValues: [
+				'thing',
+				'things',
+				'thang',
+				'stuff',
+				'cool',
+				'asfd',
+				'nkef',
+				'dyn',
+				'mgh',
+				'nm'
+			]
 		},
 		{
 			label: 'Text',
@@ -5925,7 +6049,19 @@ export default {
 			dataDisplay: listFunctions.textDisplayCell,
 			dataSearch: listFunctions.textSearchCell,
 			isDefaultSearch: true,
-			sortable: true
+			sortable: true,
+			distinctValues: [
+				'thing',
+				'things',
+				'thang',
+				'stuff',
+				'cool',
+				'asfd',
+				'nkef',
+				'dyn',
+				'mgh',
+				'nm'
+			]
 		},
 		{
 			label: 'Text',
@@ -6058,7 +6194,19 @@ export default {
 			dataDisplay: listFunctions.textDisplayCell,
 			dataSearch: listFunctions.textSearchCell,
 			isDefaultSearch: true,
-			sortable: true
+			sortable: true,
+			distinctValues: [
+				'thing',
+				'things',
+				'thang',
+				'stuff',
+				'cool',
+				'asfd',
+				'nkef',
+				'dyn',
+				'mgh',
+				'nm'
+			]
 		},
 		{
 			label: 'Text',
@@ -6399,6 +6547,13 @@ export default {
 		],
 		readonly: true
 	},
+	searchbar01: {
+		globalSearch: {
+			placeholder: 'PESQUISAR34506',
+			visibility: true
+		},
+		tableTitle: 'Basic Types'
+	},
 	exportOptions01: [
 		{ id: 'pdf', text: 'FORMATO_DE_DOCUMENTO48724' },
 		{ id: 'ods', text: 'FOLHA_DE_CALCULO__OD46941' },
@@ -6412,22 +6567,24 @@ export default {
 		{
 			id: 'filter_thing',
 			isMultiple: false,
-			selected: '2',
-			default: '2',
-			items: [
+			value: '2',
+			filters: [
 				{
 					key: '0',
 					value: 'VALUE_0',
+					selected: false,
 					id: 'filter_thing_0'
 				},
 				{
 					key: '1',
 					value: 'VALUE_1',
+					selected: false,
 					id: 'filter_thing_1'
 				},
 				{
 					key: '2',
 					value: 'VALUE_2',
+					selected: true,
 					id: 'filter_thing_2'
 				}
 			]
@@ -6437,46 +6594,54 @@ export default {
 		{
 			id: 'filter_stuff',
 			isMultiple: true,
-			selected: ['2'],
-			default: ['2'],
-			items: [
+			value: '2',
+			filters: [
 				{
 					key: '0',
 					value: 'VALUE_0',
+					selected: false,
 					id: 'filter_stuff_0'
 				},
 				{
 					key: '1',
 					value: 'VALUE_1',
+					selected: false,
 					id: 'filter_stuff_1'
 				},
 				{
 					key: '2',
 					value: 'VALUE_2',
+					selected: true,
 					id: 'filter_stuff_2'
 				}
 			]
 		}
 	],
 	activeFilters01: {
-		selected: ['2'],
-		items: [
+		options: [
 			{
 				key: '0',
 				value: 'ACTIVE',
+				selected: false,
+				id: 'active_filter_ActiveFilter_A'
 			},
 			{
 				key: '1',
 				value: 'INACTIVE',
+				selected: false,
+				id: 'active_filter_ActiveFilter_I'
 			},
 			{
 				key: '2',
 				value: 'FUTURE',
+				selected: true,
+				id: 'active_filter_ActiveFilter_F'
 			}
 		],
-		date: {
+		dateValue: {
 			type: 'date',
 			title: 'Date',
+			id: 'active_filter_dataRef',
 			value: ''
 		}
 	},
@@ -6484,7 +6649,7 @@ export default {
 		page: 5,
 		perPage: 10,
 		rowCount: 100,
-		numVisiblePaginationButtons: 5
+		numVisibilePaginationButtons: 5
 	},
 	paginationAlt01: {
 		page: 5,
@@ -6737,40 +6902,87 @@ export default {
 	columnFilter01: {
 		name: '',
 		active: true,
-		field: 'DFLDS.BOOLEAN',
-		operator: '',
-		values: []
+		conditions: [
+			{
+				name: '',
+				active: true,
+				field: 'DFLDS.BOOLEAN',
+				operator: '',
+				values: []
+			}
+		]
 	},
 	filterArray01: [
 		{
-			name: 'filter 1',
+			name: '',
 			active: true,
-			field: 'DFLDS.KEY',
-			operator: '',
-			values: []
+			conditions: [
+				{
+					name: 'filter 1',
+					active: true,
+					field: 'DFLDS.KEY',
+					operator: '',
+					values: []
+				}
+			]
 		},
 		{
-			name: 'filter 2',
+			name: '',
 			active: true,
-			field: 'DFLDS.VAL',
-			operator: '',
-			values: []
-		},
-		{
-			name: 'filter a',
-			active: true,
-			field: 'DFLDS.TEXT',
-			operator: '',
-			values: []
-		},
-		{
-			name: 'filter b',
-			active: true,
-			field: 'DFLDS.NUMERIC',
-			operator: '',
-			values: []
+			conditions: [
+				{
+					name: 'filter 2',
+					active: true,
+					field: 'DFLDS.VAL',
+					operator: '',
+					values: []
+				}
+			]
 		}
 	],
+	filterHash01: {
+		column01: {
+			name: '',
+			active: true,
+			conditions: [
+				{
+					name: 'filter a',
+					active: true,
+					field: 'DFLDS.TEXT',
+					operator: '',
+					values: []
+				}
+			]
+		},
+		column02: {
+			name: '',
+			active: true,
+			conditions: [
+				{
+					name: 'filter b',
+					active: true,
+					field: 'DFLDS.NUMERIC',
+					operator: '',
+					values: []
+				}
+			]
+		}
+	},
+	filterHash02: {
+		columnA: {
+			name: '',
+			active: true,
+			conditions: [
+				{
+					name: 'filter a',
+					active: true,
+					field: 'DFLDS.DATE',
+					operator: '',
+					values: []
+				}
+			]
+		}
+	},
 	cssClasses: {
 		invalidRow: 'c-table__row--pending'
 	},
@@ -6778,6 +6990,8 @@ export default {
 		name: 'DFLDS',
 		pkColumn: 'PrimaryKey',
 		tableTitle: 'Rows with empty field values',
+		lcid: 'pt-PT',
+		serverMode: false,
 		dateFormats: {
 			date: 'yyyy/MM/dd',
 			dateTime: 'yyyy/MM/dd HH:mm',
@@ -6785,6 +6999,11 @@ export default {
 			hours: 'HH:mm',
 			use12Hour: false
 		},
+		globalSearch: {
+			placeholder: 'PESQUISAR34506',
+			visibility: true
+		},
+		signalOpenAdvancedFilters: null,
 		allowColumnFilters: true,
 		rowClickAction: {
 			id: 'EDIT',
@@ -6799,6 +7018,7 @@ export default {
 			fnValidate: (row) => row.Fields.isValid,
 			message: 'ATENCAO__ESTA_FICHA_24725'
 		},
+		columnConfigIsVisible: false,
 		hasTextWrap: false,
 		defaultSearchColumnName: 'Key',
 		resourcesPath: 'dist/Content/img/'
@@ -6806,69 +7026,74 @@ export default {
 	simpleUsageMethods: {
 		runAction(eventName, emittedAction)
 		{
-			const str = eventName + ':\n' + JSON.stringify(emittedAction)
+			var str = eventName + ':\n' + JSON.stringify(emittedAction)
 			alert(str)
 		},
-
 		displayEmit(emittedAction)
 		{
-			const str = JSON.stringify(emittedAction)
+			var str = JSON.stringify(emittedAction)
 			alert(str)
 		},
-
 		displayAction(eventName, emittedAction)
 		{
-			const str = eventName + ':\n' + JSON.stringify(emittedAction)
+			var str = eventName + ':\n' + JSON.stringify(emittedAction)
 			alert(str)
 		},
-
 		executeAction(emittedAction)
 		{
 			this.runAction('execute-action', emittedAction)
 		},
-
 		rowAction(emittedAction)
 		{
 			this.runAction('row-action', emittedAction)
 		},
-
 		cellAction(emittedAction)
 		{
 			this.runAction('cell-action', emittedAction)
 		},
-
 		exportDataAction(emittedAction)
 		{
 			this.displayAction('export-data-action', emittedAction)
 		},
-
 		importDataAction(emittedAction)
 		{
 			this.displayAction('import-data-action', emittedAction)
 		},
-
 		exportTemplateAction(emittedAction)
 		{
 			this.displayAction('export-template-action', emittedAction)
 		},
-
-		showPopupAction(emittedAction)
+		showPopupAction(emittedAction, popupName)
 		{
 			this.$emit('show-popup', emittedAction)
-		},
 
-		hidePopupAction(emittedAction)
+			if (popupName === 'column-config')
+				emittedAction.config.columnConfigIsVisible = true;
+			else if (popupName === 'advanced-filters')
+				emittedAction.config.advancedFiltersIsVisible = true;
+		},
+		hidePopupAction(emittedAction, popupName)
 		{
 			this.$emit('hide-popup', emittedAction)
-		},
 
+			if (popupName === 'column-config') emittedAction.config.columnConfigIsVisible = false
+			else if (popupName === 'advanced-filters')
+				emittedAction.config.advancedFiltersIsVisible = false
+		},
+		saveColumnConfig(emittedAction)
+		{
+			this.displayAction('save-column-config', emittedAction)
+		},
+		resetColumnConfig(emittedAction)
+		{
+			this.displayAction('reset-column-config', emittedAction)
+		},
 		//FOR: EXTENDED ROW ACTIONS - REMOVE
 		removeRow(rows, rowKey)
 		{
-			const rowIdx = rows.findIndex((elem) => elem.rowKey === rowKey);
+			var rowIdx = rows.findIndex((elem) => elem.rowKey === rowKey);
 			rows.splice(rowIdx, 1);
 		},
-
 		/**
 		 * Add row to array of selected rows
 		 * @param rowArray {Object}
@@ -6880,7 +7105,6 @@ export default {
 			rowArray[rowKey] = true
 			alert(JSON.stringify(rowArray))
 		},
-
 		/**
 		 * Remove row from array of selected rows
 		 * @param rowArray {Object}
@@ -6892,7 +7116,6 @@ export default {
 			delete rowArray[rowKey]
 			alert(JSON.stringify(rowArray))
 		},
-
 		/**
 		 * Add row to array of selected rows
 		 * @param rowArray {Object}
@@ -6901,10 +7124,9 @@ export default {
 		 */
 		selectRows(rowArray, rowKeys)
 		{
-			for (const rowKey in rowKeys) rowArray[rowKey] = true
+			for (let rowKey in rowKeys) rowArray[rowKey] = true
 			alert(JSON.stringify(rowArray))
 		},
-
 		/**
 		 * Remove rows from array of selected rows
 		 * @param rowArray {Object}
@@ -6913,10 +7135,9 @@ export default {
 		 */
 		unselectRows(rowArray, rowKeys)
 		{
-			for (const rowKey in rowKeys) delete rowArray[rowKey]
+			for (let rowKey in rowKeys) delete rowArray[rowKey]
 			alert(JSON.stringify(rowArray))
 		},
-
 		/**
 		 * Remove all rows from array of selected rows
 		 * @param rowArray {Object}
@@ -6924,13 +7145,176 @@ export default {
 		 */
 		unselectAllRows(rowArray)
 		{
-			for (const rowKey in rowArray) delete rowArray[rowKey]
+			for (let rowKey in rowArray) delete rowArray[rowKey]
 			alert(JSON.stringify(rowArray))
 		},
-
+		/**
+		 * Add row to array of rows checked in checklist column
+		 * @param rowArray {Object}
+		 * @param rowKey {Object}
+		 * @returns Boolean
+		 */
+		checkRow(rowArray, rowKey)
+		{
+			rowArray[rowKey] = true
+			alert(JSON.stringify(rowArray))
+		},
+		/**
+		 * Remove row from array of rows checked in checklist column
+		 * @param rowArray {Object}
+		 * @param rowKey {Object}
+		 * @returns Boolean
+		 */
+		uncheckRow(rowArray, rowKey)
+		{
+			delete rowArray[rowKey]
+			alert(JSON.stringify(rowArray))
+		},
+		/**
+		 * Add row to array of rows checked in checklist column
+		 * @param rowArray {Object}
+		 * @param rowKey {Object}
+		 * @returns Boolean
+		 */
+		checkRows(rowArray, rowKeys)
+		{
+			for (let rowKey in rowKeys) rowArray[rowKey] = true
+			alert(JSON.stringify(rowArray))
+		},
+		/**
+		 * Remove rows from array of rows checked in checklist column
+		 * @param rowArray {Object}
+		 * @param rowKey {Object}
+		 * @returns Boolean
+		 */
+		uncheckRows(rowArray, rowKeys)
+		{
+			for (let rowKey in rowKeys) delete rowArray[rowKey]
+			alert(JSON.stringify(rowArray))
+		},
+		/**
+		 * Remove all rows from array of rows checked in checklist column
+		 * @param rowArray {Object}
+		 * @returns Boolean
+		 */
+		uncheckAllRows(rowArray)
+		{
+			for (let rowKey in rowArray) delete rowArray[rowKey]
+			alert(JSON.stringify(rowArray))
+		},
+		/**
+		 * Copy checked rows to selected rows
+		 * @param table {Object}
+		 * @returns Boolean
+		 */
+		selectCheckedRows(table)
+		{
+			table.rowsSelected = cloneDeep(table.rowsChecked) //alert(JSON.stringify(table.rowsSelected));
+		},
+		/**
+		 * Copy selected rows to checked rows
+		 * @param table {Object}
+		 * @returns Boolean
+		 */
+		checkSelectedRows(table)
+		{
+			table.rowsChecked = cloneDeep(table.rowsSelected) //alert(JSON.stringify(table.rowsChecked));
+		},
 		rowGroupAction(emittedAction)
 		{
 			this.runAction('row-group-action', emittedAction)
+		},
+		/**
+		 * Add advanced filter
+		 * @param {object} listConf The list configuration
+		 * @param filter {Object}
+		 */
+		addAdvancedFilter(listConf, filter)
+		{
+			listConf.advancedFilters.push(filter)
+		},
+
+		/**
+		 * Edit advanced filter
+		 * @param {object} listConf The list configuration
+		 * @param filter {Object}
+		 * @param index {number}
+		 */
+		editAdvancedFilters(listConf, filters)
+		{
+			listConf.advancedFilters = filters
+		},
+
+		/**
+		 * Set advanced filter state
+		 * @param {object} listConf The list configuration
+		 * @param {number} index : index
+		 * @param {boolean} active : active state
+		 */
+		setAdvancedFilterState(listConf, index, active)
+		{
+			listConf.advancedFilters[index].active = active
+		},
+
+		/**
+		 * Set multiple advanced filter states
+		 * @param {object} listConf The list configuration
+		 * @param {Array} selectedFilterIdxs : index
+		 * @param {boolean} active : active state
+		 */
+		setAdvancedFilterStates(listConf, selectedFilterIdxs, active)
+		{
+			var selectedFilterIdx = -1
+			for (let idx in selectedFilterIdxs)
+			{
+				selectedFilterIdx = selectedFilterIdxs[idx]
+				listConf.advancedFilters[selectedFilterIdx].active = active
+			}
+		},
+
+		/**
+		 * Set advanced filter state
+		 * @param {object} listConf The list configuration
+		 * @param {number} index : index
+		 */
+		removeAdvancedFilter(listConf, index)
+		{
+			listConf.advancedFilters.splice(index, 1)
+		},
+		/**
+		 * Clear all advanced filters
+		 * @param {object} listConf The list configuration
+		 */
+		clearAdvancedFilters(listConf)
+		{
+			listConf.advancedFilters = []
+		},
+
+		/**
+		 * Open advanced filters
+		 * @param {object} listConf The list configuration
+		 * @param {boolean} visible
+		 * @param {number} selectedFilterIdx
+		 */
+		setAdvancedFiltersPopup(listConf, visible, selectedFilterIdx)
+		{
+			var useVisible = false
+			if (visible !== undefined)
+			{
+				useVisible = !!visible
+			}
+
+			var useSelectedFilterIdx = null
+			if (selectedFilterIdx !== undefined)
+			{
+				useSelectedFilterIdx = selectedFilterIdx
+			}
+
+			//Set advanced filters open config to show and select corresponding filter by index
+			listConf.config.signalOpenAdvancedFilters = {
+				show: useVisible,
+				selectedFilterIdx: useSelectedFilterIdx
+			}
 		}
 	}
 }

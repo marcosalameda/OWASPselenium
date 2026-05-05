@@ -1,4 +1,4 @@
-﻿/* eslint-disable @typescript-eslint/no-unused-vars */
+﻿/* eslint-disable no-unused-vars */
 import { computed, reactive, watch } from 'vue'
 import _merge from 'lodash-es/merge'
 
@@ -11,7 +11,7 @@ import netAPI from '@quidgest/clientapp/network'
 import qApi from '@/api/genio/quidgestFunctions.js'
 import qFunctions from '@/api/genio/projectFunctions.js'
 import qProjArrays from '@/api/genio/projectArrays.js'
-/* eslint-enable @typescript-eslint/no-unused-vars */
+/* eslint-enable no-unused-vars */
 
 /**
  * Represents a ViewModel class.
@@ -25,11 +25,11 @@ export default class ViewModel extends FormViewModelBase
 	 * @param {object} options - The options for the ViewModel
 	 * @param {object} values - A ViewModel instance to copy values from
 	 */
-	// eslint-disable-next-line @typescript-eslint/no-unused-vars
+	// eslint-disable-next-line no-unused-vars
 	constructor(vueContext, options, values)
 	{
 		super(vueContext, options)
-		// eslint-disable-next-line @typescript-eslint/no-unused-vars
+		// eslint-disable-next-line no-unused-vars
 		const vm = this.vueContext
 
 		// The view model metadata
@@ -37,9 +37,8 @@ export default class ViewModel extends FormViewModelBase
 			name: 'TRADU',
 			area: 'TRADU',
 			actions: {
-				recalculateFormulas: 'RecalculateFormulas_Tradu',
-				updateFilesTickets: 'UpdateFilesTicketsTradu',
-				setFile: 'SetFileTradu'
+				recalculateFormulas: 'RecalculateFormulas_TRADU',
+				updateFilesTickets: 'UpdateFilesTicketsTRADU'
 			}
 		})
 
@@ -51,7 +50,7 @@ export default class ViewModel extends FormViewModelBase
 			field: 'CODTRADU',
 			description: '',
 		}).cloneFrom(values?.ValCodtradu))
-		this.stopWatchers.push(watch(() => this.ValCodtradu.value, (newValue, oldValue) => this.onUpdate('tradu.codtradu', this.ValCodtradu, newValue, oldValue)))
+		watch(() => this.ValCodtradu.value, (newValue, oldValue) => this.onUpdate('tradu.codtradu', this.ValCodtradu, newValue, oldValue))
 
 		/** The used foreign keys. */
 		this.ValCodidio1 = reactive(new modelFieldType.ForeignKey({
@@ -62,7 +61,7 @@ export default class ViewModel extends FormViewModelBase
 			relatedArea: 'LANG1',
 			description: computed(() => this.Resources.LANGUAGE33172),
 		}).cloneFrom(values?.ValCodidio1))
-		this.stopWatchers.push(watch(() => this.ValCodidio1.value, (newValue, oldValue) => this.onUpdate('tradu.codidio1', this.ValCodidio1, newValue, oldValue)))
+		watch(() => this.ValCodidio1.value, (newValue, oldValue) => this.onUpdate('tradu.codidio1', this.ValCodidio1, newValue, oldValue))
 
 		this.ValCodidio2 = reactive(new modelFieldType.ForeignKey({
 			id: 'ValCodidio2',
@@ -72,7 +71,7 @@ export default class ViewModel extends FormViewModelBase
 			relatedArea: 'LANG2',
 			description: computed(() => this.Resources.LANGUAGE16872),
 		}).cloneFrom(values?.ValCodidio2))
-		this.stopWatchers.push(watch(() => this.ValCodidio2.value, (newValue, oldValue) => this.onUpdate('tradu.codidio2', this.ValCodidio2, newValue, oldValue)))
+		watch(() => this.ValCodidio2.value, (newValue, oldValue) => this.onUpdate('tradu.codidio2', this.ValCodidio2, newValue, oldValue))
 
 		/** The remaining form fields. */
 		this.ValReferenc = reactive(new modelFieldType.String({
@@ -83,7 +82,7 @@ export default class ViewModel extends FormViewModelBase
 			maxLength: 50,
 			description: computed(() => this.Resources.REFERENCE28402),
 		}).cloneFrom(values?.ValReferenc))
-		this.stopWatchers.push(watch(() => this.ValReferenc.value, (newValue, oldValue) => this.onUpdate('tradu.referenc', this.ValReferenc, newValue, oldValue)))
+		watch(() => this.ValReferenc.value, (newValue, oldValue) => this.onUpdate('tradu.referenc', this.ValReferenc, newValue, oldValue))
 
 		this.TableLang1Langua = reactive(new modelFieldType.String({
 			type: 'Lookup',
@@ -93,9 +92,8 @@ export default class ViewModel extends FormViewModelBase
 			field: 'LANGUA',
 			maxLength: 50,
 			description: computed(() => this.Resources.LANGUAGE16872),
-			ignoreFldSubmit: true,
 		}).cloneFrom(values?.TableLang1Langua))
-		this.stopWatchers.push(watch(() => this.TableLang1Langua.value, (newValue, oldValue) => this.onUpdate('lang1.langua', this.TableLang1Langua, newValue, oldValue)))
+		watch(() => this.TableLang1Langua.value, (newValue, oldValue) => this.onUpdate('lang1.langua', this.TableLang1Langua, newValue, oldValue))
 
 		this.ValAtraduzi = reactive(new modelFieldType.String({
 			id: 'ValAtraduzi',
@@ -105,7 +103,7 @@ export default class ViewModel extends FormViewModelBase
 			maxLength: 50,
 			description: computed(() => this.Resources.TO_REVIEW46268),
 		}).cloneFrom(values?.ValAtraduzi))
-		this.stopWatchers.push(watch(() => this.ValAtraduzi.value, (newValue, oldValue) => this.onUpdate('tradu.atraduzi', this.ValAtraduzi, newValue, oldValue)))
+		watch(() => this.ValAtraduzi.value, (newValue, oldValue) => this.onUpdate('tradu.atraduzi', this.ValAtraduzi, newValue, oldValue))
 
 		this.TableLang2Langua = reactive(new modelFieldType.String({
 			type: 'Lookup',
@@ -115,9 +113,8 @@ export default class ViewModel extends FormViewModelBase
 			field: 'LANGUA',
 			maxLength: 50,
 			description: computed(() => this.Resources.LANGUAGE16872),
-			ignoreFldSubmit: true,
 		}).cloneFrom(values?.TableLang2Langua))
-		this.stopWatchers.push(watch(() => this.TableLang2Langua.value, (newValue, oldValue) => this.onUpdate('lang2.langua', this.TableLang2Langua, newValue, oldValue)))
+		watch(() => this.TableLang2Langua.value, (newValue, oldValue) => this.onUpdate('lang2.langua', this.TableLang2Langua, newValue, oldValue))
 
 		this.ValTraduzid = reactive(new modelFieldType.String({
 			id: 'ValTraduzid',
@@ -127,7 +124,7 @@ export default class ViewModel extends FormViewModelBase
 			maxLength: 50,
 			description: computed(() => this.Resources.TRANSLATED03333),
 		}).cloneFrom(values?.ValTraduzid))
-		this.stopWatchers.push(watch(() => this.ValTraduzid.value, (newValue, oldValue) => this.onUpdate('tradu.traduzid', this.ValTraduzid, newValue, oldValue)))
+		watch(() => this.ValTraduzid.value, (newValue, oldValue) => this.onUpdate('tradu.traduzid', this.ValTraduzid, newValue, oldValue))
 	}
 
 	/**

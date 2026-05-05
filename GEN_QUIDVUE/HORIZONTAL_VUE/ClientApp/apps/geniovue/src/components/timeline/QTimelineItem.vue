@@ -1,35 +1,26 @@
 ﻿<template>
 	<div
-		:class="tlItem.TipoTimeLine ==='S'
-			? 'c-simple_timeline__item-content'
-			: 'c-timeline__item-content'"
+		class="c-timeline__item-content"
 		:style="contentStyle">
 		<div
-			:class="tlItem.TipoTimeLine ==='S'
-				? 'c-simple_timeline__item-header'
-				: 'c-timeline__item-header'"
-			:style="tlItem.TipoTimeLine === 'S' ? simpleHeaderStyle : headerStyle">
-			<span
-				:class="tlItem.TipoTimeLine ==='S'
-					? 'c-simple_timeline__item-datetime e-badge e-badge--primary'
-					: 'c-timeline__item-datetime e-badge e-badge--dark'"
-				:style="textColor">
+			class="c-timeline__item-header"
+			:style="headerStyle">
+			<span class="c-timeline__item-datetime e-badge e-badge--dark">
 				{{ formatedDated }}
 			</span>
 			<span
-				:class="{
-					'c-simple_timeline__item-title': tlItem.TipoTimeLine === 'S',
-					'c-timeline__item-title': tlItem.TipoTimeLine !== 'S'}"
+				class="c-timeline__item-title"
 				:style="textColor">
 				{{ tlItem.Texto }}
 			</span>
 		</div>
-		<div :class="tlItem.TipoTimeLine === 'S' ? 'c-simple_timeline__item-text' : 'c-timeline__item-text'">
-			<!--Iterate all row fields (not image kind)-->
+
+		<div class="c-timeline__item-text">
+			<!--Iterate all row fields (not image kind) -->
 			<span
 				v-for="col in tlItem.Columns"
 				:key="col.order"
-				:class="tlItem.TipoTimeLine === 'S' ? 'c-simple_timeline__item-field' : 'c-timeline__item-field'">
+				class="c-timeline__item-field">
 				<template v-if="col.Valor !== ''">
 					<i
 						v-if="col.Icone"
@@ -39,6 +30,7 @@
 					<br />
 				</template>
 			</span>
+
 			<!--Images columns in row-->
 			<div v-if="tlItem.ImagesColumns.length > 0">
 				<div
@@ -50,13 +42,13 @@
 						:src="img.Image" />
 				</div>
 			</div>
+
 			<!-- Popup Data-Form Btn -->
 			<a
 				v-if="tlItem.Url"
 				data-testid="popup-btn"
 				class="q-button q-button--primary q-button--size-small mt-1"
-				role="button"
-				href="#"
+				href="javascript:void(0)"
 				:style="headerStyle"
 				@click.stop.prevent="$emit('form-popup', tlItem)">
 				<q-icon
@@ -167,7 +159,7 @@
 			 */
 			formatedDated()
 			{
-				const newDate = new Date(this.tlItem.Data)
+				let newDate = new Date(this.tlItem.Data)
 				return genericFunctions.dateDisplay(newDate, this.dateTimeFormat)
 			}
 		}

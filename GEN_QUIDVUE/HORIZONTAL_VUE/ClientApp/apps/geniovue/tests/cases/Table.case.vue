@@ -7,7 +7,7 @@
 				:columns="tableTest.columns"
 				:config="tableTest.config"
 				:total-rows="tableTest.totalRows"
-				:filters="tableTest.filters"
+				:advanced-filters="tableTest.advancedFilters"
 				:group-filters="tableTest.groupFilters"
 				:active-filters="tableTest.activeFilters"
 				:header-level="1"
@@ -20,14 +20,46 @@
 				@on-import-data="importDataAction"
 				@on-export-template="exportTemplateAction"
 				@show-popup="showPopupAction(tableTest, $event)"
-				@hide-popup="hidePopupAction(tableTest, $event)">
-				<template #header>
-					<q-table-config
-						:table-ctrl="tableTest"
-						@show-popup="showPopupAction(tableTest, $event)"
-						@hide-popup="hidePopupAction(tableTest, $event)" />
-				</template>
-			</q-table>
+				@hide-popup="hidePopupAction(tableTest, $event)"
+				@show-column-config="tableTest.config.columnConfigIsVisible = true"
+				@show-advanced-filters="setAdvancedFiltersPopup(tableTest, [true, -1])"
+				@add-advanced-filter="(...args) => addAdvancedFilter(tableTest, ...args)"
+				@on-save-column-config="saveColumnConfig"
+				@on-reset-column-config="resetColumnConfig"
+				@check-row="checkRow(tableTest.rowsChecked, $event)"
+				@uncheck-row="uncheckRow(tableTest.rowsChecked, $event)"
+				@check-rows="checkRows(tableTest.rowsChecked, $event)"
+				@uncheck-all-rows="uncheckAllRows(tableTest.rowsChecked)" />
+			<q-table-column-config
+				v-bind="tableTest.config"
+				modal-id="column-config"
+				:columns="tableTest.columns"
+				:server-mode="tableTest.config.serverMode"
+				:is-visible="tableTest.config.columnConfigIsVisible"
+				:has-text-wrap="tableTest.config.hasTextWrap"
+				:texts="tableTest.texts"
+				@show-popup="showPopupAction(tableTest, $event)"
+				@hide-popup="hidePopupAction(tableTest, $event)"
+				@save-column-config="saveColumnConfig"
+				@reset-column-config="resetColumnConfig"
+				@toggle-text-wrap="tableTest.config.hasTextWrap = !tableTest.config.hasTextWrap" />
+			<q-table-advanced-filters
+				v-if="tableTest.config.allowAdvancedFilters"
+				modal-id="advanced-filters"
+				:columns="tableTest.columns"
+				:filters="tableTest.advancedFilters"
+				:search-filter-data="tableTest.config.searchFilterData"
+				:texts="tableTest.texts"
+				:has-advanced-filters-active="tableTest.config.hasAdvancedFiltersActive"
+				:server-mode="tableTest.config.serverMode"
+				:signal-open="tableTest.config.signalOpenAdvancedFilters"
+				@show-popup="showPopupAction(tableTest, $event)"
+				@hide-popup="hidePopupAction(tableTest, $event)"
+				@add-advanced-filter="(...args) => addAdvancedFilter(tableTest, ...args)"
+				@edit-advanced-filters="(...args) => editAdvancedFilters(tableTest, ...args)"
+				@set-advanced-filter-state="(...args) => setAdvancedFilterState(tableTest, ...args)"
+				@set-advanced-filter-states="(...args) => setAdvancedFilterStates(tableTest, ...args)"
+				@remove-advanced-filter="(...args) => removeAdvancedFilter(tableTest, ...args)" />
 		</div>
 
 		<div>
@@ -35,7 +67,7 @@
 				:name="tableTest.config.name"
 				:rows="tableTest.rows"
 				:columns="tableTest.columns"
-				:config="{ ...tableTest.config, tableTitle: 'BASIC TYPES (READ-ONLY)' }"
+				:config="{ ...tableTest.config, ...{ tableTitle: 'BASIC TYPES (READ-ONLY)' } }"
 				:total-rows="tableTest.totalRows"
 				:group-filters="tableTest.groupFilters"
 				:active-filters="tableTest.activeFilters"
@@ -48,7 +80,11 @@
 				@on-import-data="displayEmit"
 				@on-export-template="exportTemplateAction"
 				@show-popup="showPopupAction"
-				@hide-popup="hidePopupAction" />
+				@hide-popup="hidePopupAction"
+				@check-row="checkRow(tableTest.rowsChecked, $event)"
+				@uncheck-row="uncheckRow(tableTest.rowsChecked, $event)"
+				@check-rows="checkRows(tableTest.rowsChecked, $event)"
+				@uncheck-all-rows="uncheckAllRows(tableTest.rowsChecked)" />
 		</div>
 
 		<div>
@@ -56,9 +92,9 @@
 				:name="tableTest.config.name"
 				:rows="tableTest.rows"
 				:columns="tableTest.columns"
-				:config="{ ...tableTest.config, tableTitle: 'BASIC TYPES (LIMITS)', showLimitsInfo: true }"
+				:config="{ ...tableTest.config, ...{ tableTitle: 'BASIC TYPES (LIMITS)', showLimitsInfo: true } }"
 				:total-rows="tableTest.totalRows"
-				:filters="tableTest.filters"
+				:advanced-filters="tableTest.advancedFilters"
 				:group-filters="tableTest.groupFilters"
 				:active-filters="tableTest.activeFilters"
 				:header-level="1"
@@ -72,7 +108,16 @@
 				@on-import-data="importDataAction"
 				@on-export-template="exportTemplateAction"
 				@show-popup="showPopupAction(tableTest, $event)"
-				@hide-popup="hidePopupAction(tableTest, $event)" />
+				@hide-popup="hidePopupAction(tableTest, $event)"
+				@show-column-config="tableTest.config.columnConfigIsVisible = true"
+				@show-advanced-filters="setAdvancedFiltersPopup(tableTest, [true, -1])"
+				@add-advanced-filter="(...args) => addAdvancedFilter(tableTest, ...args)"
+				@on-save-column-config="saveColumnConfig"
+				@on-reset-column-config="resetColumnConfig"
+				@check-row="checkRow(tableTest.rowsChecked, $event)"
+				@uncheck-row="uncheckRow(tableTest.rowsChecked, $event)"
+				@check-rows="checkRows(tableTest.rowsChecked, $event)"
+				@uncheck-all-rows="uncheckAllRows(tableTest.rowsChecked)" />
 		</div>
 
 		<div>
@@ -80,9 +125,9 @@
 				:name="tableTest.config.name"
 				:rows="tableTest.rows"
 				:columns="tableTest.columns.map(obj => ({ ...obj, scrollData: 5 }))"
-				:config="{ ...tableTest.config, tableTitle: 'BASIC TYPES (SCROLL)' }"
+				:config="{ ...tableTest.config, ...{ tableTitle: 'BASIC TYPES (SCROLL)' } }"
 				:total-rows="tableTest.totalRows"
-				:filters="tableTest.filters"
+				:advanced-filters="tableTest.advancedFilters"
 				:group-filters="tableTest.groupFilters"
 				:active-filters="tableTest.activeFilters"
 				:header-level="1"
@@ -96,7 +141,16 @@
 				@on-import-data="importDataAction"
 				@on-export-template="exportTemplateAction"
 				@show-popup="showPopupAction(tableTest, $event)"
-				@hide-popup="hidePopupAction(tableTest, $event)" />
+				@hide-popup="hidePopupAction(tableTest, $event)"
+				@show-column-config="tableTest.config.columnConfigIsVisible = true"
+				@show-advanced-filters="setAdvancedFiltersPopup(tableTest, [true, -1])"
+				@add-advanced-filter="(...args) => addAdvancedFilter(tableTest, ...args)"
+				@on-save-column-config="saveColumnConfig"
+				@on-reset-column-config="resetColumnConfig"
+				@check-row="checkRow(tableTest.rowsChecked, $event)"
+				@uncheck-row="uncheckRow(tableTest.rowsChecked, $event)"
+				@check-rows="checkRows(tableTest.rowsChecked, $event)"
+				@uncheck-all-rows="uncheckAllRows(tableTest.rowsChecked)" />
 		</div>
 
 		<div>
@@ -158,9 +212,9 @@
 				:name="tableTestOther.config.name"
 				:rows="tableTestOther.rows"
 				:columns="tableTestOther.columns"
-				:config="{ ...tableTestOther.config, tableTitle: 'OTHER TYPES' }"
+				:config="{ ...tableTestOther.config, ...{ tableTitle: 'OTHER TYPES' } }"
 				:total-rows="tableTestOther.totalRows"
-				:filters="tableTestOther.filters"
+				:advanced-filters="tableTestOther.advancedFilters"
 				:group-filters="tableTestOther.groupFilters"
 				:active-filters="tableTestOther.activeFilters"
 				:header-level="1"
@@ -174,7 +228,16 @@
 				@on-import-data="importDataAction"
 				@on-export-template="exportTemplateAction"
 				@show-popup="showPopupAction(tableTestOther, $event)"
-				@hide-popup="hidePopupAction(tableTestOther, $event)" />
+				@hide-popup="hidePopupAction(tableTestOther, $event)"
+				@show-column-config="tableTestOther.config.columnConfigIsVisible = true"
+				@show-advanced-filters="setAdvancedFiltersPopup(tableTestOther, [true, -1])"
+				@add-advanced-filter="(...args) => addAdvancedFilter(tableTestOther, ...args)"
+				@on-save-column-config="saveColumnConfig"
+				@on-reset-column-config="resetColumnConfig"
+				@check-row="checkRow(tableTestOther.rowsChecked, $event)"
+				@uncheck-row="uncheckRow(tableTestOther.rowsChecked, $event)"
+				@check-rows="checkRows(tableTestOther.rowsChecked, $event)"
+				@uncheck-all-rows="uncheckAllRows(tableTestOther.rowsChecked)" />
 		</div>
 
 		<div>
@@ -182,9 +245,9 @@
 				:name="tableTestOther.config.name"
 				:rows="tableTestOther.rows"
 				:columns="tableTestOther.columns.map(obj => ({ ...obj, scrollData: 5 }))"
-				:config="{ ...tableTestOther.config, tableTitle: 'OTHER TYPES (SCROLL)' }"
+				:config="{ ...tableTestOther.config, ...{ tableTitle: 'OTHER TYPES (SCROLL)' } }"
 				:total-rows="tableTestOther.totalRows"
-				:filters="tableTestOther.filters"
+				:advanced-filters="tableTestOther.advancedFilters"
 				:group-filters="tableTestOther.groupFilters"
 				:active-filters="tableTestOther.activeFilters"
 				:header-level="1"
@@ -198,7 +261,16 @@
 				@on-import-data="importDataAction"
 				@on-export-template="exportTemplateAction"
 				@show-popup="showPopupAction(tableTestOther, $event)"
-				@hide-popup="hidePopupAction(tableTestOther, $event)" />
+				@hide-popup="hidePopupAction(tableTestOther, $event)"
+				@show-column-config="tableTestOther.config.columnConfigIsVisible = true"
+				@show-advanced-filters="setAdvancedFiltersPopup(tableTestOther, [true, -1])"
+				@add-advanced-filter="(...args) => addAdvancedFilter(tableTestOther, ...args)"
+				@on-save-column-config="saveColumnConfig"
+				@on-reset-column-config="resetColumnConfig"
+				@check-row="checkRow(tableTestOther.rowsChecked, $event)"
+				@uncheck-row="uncheckRow(tableTestOther.rowsChecked, $event)"
+				@check-rows="checkRows(tableTestOther.rowsChecked, $event)"
+				@uncheck-all-rows="uncheckAllRows(tableTestOther.rowsChecked)" />
 		</div>
 
 		<div>
@@ -250,6 +322,12 @@
 				@unselect-row="unselectRow(tableTestSelectMultiple.rowsSelected, $event)"
 				@select-rows="selectRows(tableTestSelectMultiple.rowsSelected, $event)"
 				@unselect-all-rows="unselectAllRows(tableTestSelectMultiple.rowsSelected)"
+				@check-row="checkRow(tableTestSelectMultiple.rowsChecked, $event)"
+				@uncheck-row="uncheckRow(tableTestSelectMultiple.rowsChecked, $event)"
+				@check-rows="checkRows(tableTestSelectMultiple.rowsChecked, $event)"
+				@uncheck-all-rows="uncheckAllRows(tableTestSelectMultiple.rowsChecked)"
+				@check-selected-rows="checkSelectedRows(tableTestSelectMultiple)"
+				@select-checked-rows="selectCheckedRows(tableTestSelectMultiple)"
 				@row-group-action="rowGroupAction" />
 		</div>
 
@@ -269,6 +347,12 @@
 				@unselect-row="unselectRow(tableTestSelectMultipleMultiAction.rowsSelected, $event)"
 				@select-rows="selectRows(tableTestSelectMultipleMultiAction.rowsSelected, $event)"
 				@unselect-all-rows="unselectAllRows(tableTestSelectMultipleMultiAction.rowsSelected)"
+				@check-row="checkRow(tableTestSelectMultipleMultiAction.rowsChecked, $event)"
+				@uncheck-row="uncheckRow(tableTestSelectMultipleMultiAction.rowsChecked, $event)"
+				@check-rows="checkRows(tableTestSelectMultipleMultiAction.rowsChecked, $event)"
+				@uncheck-all-rows="uncheckAllRows(tableTestSelectMultipleMultiAction.rowsChecked)"
+				@check-selected-rows="checkSelectedRows(tableTestSelectMultipleMultiAction)"
+				@select-checked-rows="selectCheckedRows(tableTestSelectMultipleMultiAction)"
 				@row-group-action="rowGroupAction" />
 		</div>
 
@@ -287,7 +371,13 @@
 				@select-row="selectRow(tableTestSelectSingle.rowsSelected, $event)"
 				@unselect-row="unselectRow(tableTestSelectSingle.rowsSelected, $event)"
 				@select-rows="selectRows(tableTestSelectSingle.rowsSelected, $event)"
-				@unselect-all-rows="unselectAllRows(tableTestSelectSingle.rowsSelected)" />
+				@unselect-all-rows="unselectAllRows(tableTestSelectSingle.rowsSelected)"
+				@check-row="checkRow(tableTestSelectSingle.rowsChecked, $event)"
+				@uncheck-row="uncheckRow(tableTestSelectSingle.rowsChecked, $event)"
+				@check-rows="checkRows(tableTestSelectSingle.rowsChecked, $event)"
+				@uncheck-all-rows="uncheckAllRows(tableTestSelectSingle.rowsChecked)"
+				@check-selected-rows="checkSelectedRows(tableTestSelectSingle)"
+				@select-checked-rows="selectCheckedRows(tableTestSelectSingle)" />
 		</div>
 
 		<div>
@@ -350,6 +440,125 @@
 		</div>
 
 		<div>
+			<h2>Actions Menu (Dropdown)</h2>
+		</div>
+
+		<div>
+			<h3>Normal mode, 0 Actions</h3>
+			<q-table-record-actions-menu
+				:row-key="actionsMenu0.rowKey"
+				:crud-actions="actionsMenu0.crudActions"
+				:custom-actions="actionsMenu0.customActions"
+				:texts="tableTest.texts"
+				:readonly="actionsMenu0.readonly" />
+		</div>
+
+		<div>
+			<h3>Normal mode, 1 Actions</h3>
+			<q-table-record-actions-menu
+				:row-key="actionsMenu1.rowKey"
+				:crud-actions="actionsMenu1.crudActions"
+				:custom-actions="actionsMenu1.customActions"
+				:texts="tableTest.texts"
+				:readonly="actionsMenu1.readonly" />
+		</div>
+
+		<div>
+			<h3>Normal mode, N Actions</h3>
+			<q-table-record-actions-menu
+				:row-key="actionsMenuN.rowKey"
+				:crud-actions="actionsMenuN.crudActions"
+				:custom-actions="actionsMenuN.customActions"
+				:texts="tableTest.texts"
+				:readonly="actionsMenuN.readonly" />
+		</div>
+
+		<div>
+			<h3>Read-Only mode, 1 Actions (0 available in Read-Only)</h3>
+			<q-table-record-actions-menu
+				:row-key="actionsMenu1ReadOnly0.rowKey"
+				:crud-actions="actionsMenu1ReadOnly0.crudActions"
+				:custom-actions="actionsMenu1ReadOnly0.customActions"
+				:texts="tableTest.texts"
+				:readonly="actionsMenu1ReadOnly0.readonly" />
+		</div>
+
+		<div>
+			<h3>Read-Only mode, 1 Actions (1 available in Read-Only)</h3>
+			<q-table-record-actions-menu
+				:row-key="actionsMenu1ReadOnly1.rowKey"
+				:crud-actions="actionsMenu1ReadOnly1.crudActions"
+				:custom-actions="actionsMenu1ReadOnly1.customActions"
+				:texts="tableTest.texts"
+				:readonly="actionsMenu1ReadOnly1.readonly" />
+		</div>
+
+		<div>
+			<h3>Read-Only mode, N Actions (0 available in Read-Only)</h3>
+			<q-table-record-actions-menu
+				:row-key="actionsMenuNReadOnly0.rowKey"
+				:crud-actions="actionsMenuNReadOnly0.crudActions"
+				:custom-actions="actionsMenuNReadOnly0.customActions"
+				:texts="tableTest.texts"
+				:readonly="actionsMenuNReadOnly0.readonly" />
+		</div>
+
+		<div>
+			<h3>Read-Only mode, N Actions (1 available in Read-Only)</h3>
+			<q-table-record-actions-menu
+				:row-key="actionsMenuNReadOnly1.rowKey"
+				:crud-actions="actionsMenuNReadOnly1.crudActions"
+				:custom-actions="actionsMenuNReadOnly1.customActions"
+				:texts="tableTest.texts"
+				:readonly="actionsMenuNReadOnly1.readonly" />
+		</div>
+
+		<div>
+			<h3>Read-Only mode, N Actions (N available in Read-Only)</h3>
+			<q-table-record-actions-menu
+				:row-key="actionsMenuNReadOnlyN.rowKey"
+				:crud-actions="actionsMenuNReadOnlyN.crudActions"
+				:custom-actions="actionsMenuNReadOnlyN.customActions"
+				:texts="tableTest.texts"
+				:readonly="actionsMenuNReadOnlyN.readonly" />
+		</div>
+
+		<div>
+			<h2>Actions Menu (Icons)</h2>
+		</div>
+
+		<div>
+			<h3>Normal mode, N Actions</h3>
+			<q-table-record-actions-menu
+				:row-key="actionsMenuN.rowKey"
+				:crud-actions="actionsMenuN.crudActions"
+				:custom-actions="actionsMenuN.customActions"
+				:texts="tableTest.texts"
+				display="icons"
+				:readonly="actionsMenuN.readonly" />
+		</div>
+
+		<div>
+			<h2>Search</h2>
+		</div>
+
+		<div>
+			<h3>Search</h3>
+			<q-table-search
+				v-if="searchbar01.globalSearch.visibility"
+				:table-title="searchbar01.tableTitle"
+				:searchable-columns="searchableColumns01"
+				:placeholder="searchbar01.globalSearch.placeholder"
+				:classes="searchbar01.globalSearch.classes"
+				:case-sensitive="searchbar01.globalSearch.caseSensitive"
+				:search-on-press-enter="searchbar01.globalSearch.searchOnPressEnter"
+				:search-debounce-rate="searchbar01.globalSearch.searchDebounceRate"
+				:show-refresh-button="searchbar01.globalSearch.showRefreshButton"
+				:show-reset-button="searchbar01.globalSearch.showResetButton"
+				:texts="tableTest.texts" />
+		</div>
+
+		<div>
 			<h2>Import/Export</h2>
 		</div>
 
@@ -367,26 +576,33 @@
 				:texts="tableTest.texts"
 				:options="importOptions01"
 				:template-options="importTemplateOptions01"
-				:data-import-response="tableTest.config.dataImportResponse" />
+				:data-import-response="tableTest.config.dataImportResponse"
+				:server-mode="tableTest.config.serverMode" />
 		</div>
 
 		<div>
-			<h2>Group Filters</h2>
+			<h2>Static Filters</h2>
 		</div>
 
 		<div>
 			<h3>Single Select Filters</h3>
-			<q-table-static-filters :group-filters="groupFiltersSingle01" />
+			<q-table-static-filters
+				:menu-name="tableTest.config.name"
+				:group-filters="groupFiltersSingle01" />
 		</div>
 
 		<div>
 			<h3>Multiple Select Filters</h3>
-			<q-table-static-filters :group-filters="groupFiltersMultiple01" />
+			<q-table-static-filters
+				:menu-name="tableTest.config.name"
+				:group-filters="groupFiltersMultiple01" />
 		</div>
 
 		<div>
 			<h3>Active Filter</h3>
-			<q-table-static-filters :active-filters="activeFilters01" />
+			<q-table-static-filters
+				:menu-name="tableTest.config.name"
+				:active-filters="activeFilters01" />
 		</div>
 
 		<div>
@@ -399,7 +615,7 @@
 				:page="1"
 				:per-page="paginationNormal01.perPage"
 				:total="0"
-				:num-visible-pagination-buttons="paginationNormal01.numVisiblePaginationButtons" />
+				:num-visibile-pagination-buttons="paginationNormal01.numVisibilePaginationButtons" />
 		</div>
 
 		<div>
@@ -408,7 +624,7 @@
 				:page="1"
 				:per-page="paginationNormal01.perPage"
 				:total="paginationNormal01.rowCount"
-				:num-visible-pagination-buttons="paginationNormal01.numVisiblePaginationButtons" />
+				:num-visibile-pagination-buttons="paginationNormal01.numVisibilePaginationButtons" />
 		</div>
 
 		<div>
@@ -417,7 +633,7 @@
 				:page="2"
 				:per-page="paginationNormal01.perPage"
 				:total="paginationNormal01.rowCount"
-				:num-visible-pagination-buttons="paginationNormal01.numVisiblePaginationButtons" />
+				:num-visibile-pagination-buttons="paginationNormal01.numVisibilePaginationButtons" />
 		</div>
 
 		<div>
@@ -426,7 +642,7 @@
 				:page="paginationNormal01.page"
 				:per-page="paginationNormal01.perPage"
 				:total="paginationNormal01.rowCount"
-				:num-visible-pagination-buttons="paginationNormal01.numVisiblePaginationButtons" />
+				:num-visibile-pagination-buttons="paginationNormal01.numVisibilePaginationButtons" />
 		</div>
 
 		<div>
@@ -435,7 +651,7 @@
 				:page="(paginationNormal01.rowCount / paginationNormal01.perPage) - 1"
 				:per-page="paginationNormal01.perPage"
 				:total="paginationNormal01.rowCount"
-				:num-visible-pagination-buttons="paginationNormal01.numVisiblePaginationButtons" />
+				:num-visibile-pagination-buttons="paginationNormal01.numVisibilePaginationButtons" />
 		</div>
 
 		<div>
@@ -444,7 +660,7 @@
 				:page="paginationNormal01.rowCount / paginationNormal01.perPage"
 				:per-page="paginationNormal01.perPage"
 				:total="paginationNormal01.rowCount"
-				:num-visible-pagination-buttons="paginationNormal01.numVisiblePaginationButtons" />
+				:num-visibile-pagination-buttons="paginationNormal01.numVisibilePaginationButtons" />
 		</div>
 
 		<div>
@@ -530,6 +746,16 @@
 		</div>
 
 		<div>
+			<h3>Column dropdown</h3>
+			<q-table-column-filters
+				allow-column-filters
+				:column="columns01[1]"
+				:searchable-columns="searchableColumns01"
+				:filter="columnFilter01"
+				:texts="tableTest.texts" />
+		</div>
+
+		<div>
 			<h2>Active Filters</h2>
 		</div>
 
@@ -538,7 +764,9 @@
 			<q-table-active-filters
 				has-filters-active
 				:searchable-columns="searchableColumns01"
-				:filters="filterArray01"
+				:advanced-filters="filterArray01"
+				:column-filters="filterHash01"
+				:search-bar-filters="filterHash02"
 				:texts="tableTest.texts" />
 		</div>
 	</div>
@@ -547,7 +775,8 @@
 <script>
 	import fakeData from './Table.mock.js'
 
-	import QTableConfig from '@/components/table/QTableConfig.vue'
+	import QTableColumnConfig from '@/components/table/QTableColumnConfig.vue'
+	import QTableAdvancedFilters from '@/components/table/QTableAdvancedFilters.vue'
 
 	export default {
 		name: 'QTableContainer',
@@ -555,7 +784,8 @@
 		docsfile: './docs/table/QTable.md',
 
 		components: {
-			QTableConfig
+			QTableColumnConfig,
+			QTableAdvancedFilters
 		},
 
 		emits: [

@@ -66,29 +66,14 @@ export default {
 	beforeUnmount()
 	{
 		this.$eventHub.off('modal-is-ready', this.setMenuModalReady)
-
-		this.internalEvents?.removeAllListeners()
-		this.internalEvents = null
-
-		if(typeof this.componentOnLoadProc?.destroy === 'function')
-		{
+		if (this.componentOnLoadProc)
 			this.componentOnLoadProc.destroy()
-			this.componentOnLoadProc = null
-		}
 	},
 
 	computed: {
 		...mapState(useSystemDataStore, [
 			'system'
 		]),
-
-		/**
-		 * True if the menu is a popup, false otherwise.
-		 */
-		isPopup()
-		{
-			return this.menuInfo.isPopup
-		},
 
 		/**
 		 * The data of the current user.
@@ -118,9 +103,9 @@ export default {
 			const menuIdentifier = `q-modal-${this.isHomePage ? `home-${this.system.currentModule}` : this.menuInfo.route}`
 
 			return {
-				main: menuIdentifier && this.isPopup ? `${menuIdentifier}` : 'app',
-				body: menuIdentifier && this.isPopup ? `${menuIdentifier}-body` : 'app',
-				footer: menuIdentifier && this.isPopup ? `${menuIdentifier}-footer` : 'app'
+				main: `${menuIdentifier}`,
+				body: `${menuIdentifier}-body`,
+				footer: `${menuIdentifier}-footer`
 			}
 		},
 
@@ -167,28 +152,23 @@ export default {
 
 		/**
 		 * If the menu should be displayed as a popup, sets it's properties.
-		 * @param {object} props The dialog component properties
-		 * @param {object} modalProps The modal properties
+		 * @param {object} props The modal properties
 		 */
-		setModalProperties(props = {}, modalProps = {})
+		setModalProperties(props)
 		{
 			if (!this.menuInfo.route)
 				return
 			if (!this.menuInfo.isPopup)
 				return
+			if (typeof props !== 'object')
+				return
 
-			props = {
-				class: 'q-dialog-form',
-				dismissible: false,
+			const modalProps = {
+				id: this.menuInfo.route,
 				...props
 			}
 
-			modalProps = {
-				id: this.menuInfo.route,
-				...modalProps
-			}
-
-			this.setModal(props, modalProps)
+			this.setModal(modalProps)
 		},
 
 		/**
@@ -198,7 +178,7 @@ export default {
 		updateMenuNavigation(routeData)
 		{
 			this.menuInfo.route = routeData.name
-			this.menuInfo.isPopup = routeData.meta.isPopup
+			this.menuInfo.isPopup = routeData.params.isPopup === 'true'
 		},
 
 		/**
@@ -282,10 +262,10 @@ export default {
 			if (_isEmpty(this.controls) || _isEmpty(actionData) || _isEmpty(actionData.rowsSelected))
 				return
 
-			const data = []
+			var data = []
 
 			// Convert the selected row keys from object to list.
-			for (const key in actionData.rowsSelected)
+			for (let key in actionData.rowsSelected)
 				if (actionData.rowsSelected[key])
 					data.push(key)
 
@@ -306,10 +286,12 @@ export default {
 		'menuInfo.isPopup'(val)
 		{
 			const modalProps = {
-				isActive: val
+				isActive: val,
+				hideHeader: true,
+				hideFooter: !this.hasButtons
 			}
 
-			this.setModalProperties({}, modalProps)
+			this.setModalProperties(modalProps)
 		}
 	}
 }

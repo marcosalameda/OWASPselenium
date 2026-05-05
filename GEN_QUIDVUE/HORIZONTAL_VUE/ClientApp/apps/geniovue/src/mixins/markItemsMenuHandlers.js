@@ -25,10 +25,10 @@ export default {
 		// before running init on controls. This is because certain operations like
 		// crudConditions evaluation might depend on the data fetched from these calls.
 		Promise.all([
-			this.controls.firstTable.fetchListData({}),
-			this.controls.secondTable.fetchListData({})
+			this.fetchListData(this.controls.firstTable, {}),
+			this.fetchListData(this.controls.secondTable, {})
 		]).then(async () => {
-			for (const i in this.controls)
+			for (let i in this.controls)
 			{
 				await this.controls[i].init()
 				this.controls[i].initData?.()
@@ -46,7 +46,7 @@ export default {
 			'remove',
 			'remove-reset'
 		]
-		for (const i in config.permissions)
+		for (let i in config.permissions)
 			config.permissions[i] = false
 	},
 
@@ -86,7 +86,7 @@ export default {
 		clearSelectedRows()
 		{
 			// Unselect all rows.
-			this.mainTable.onUnselectAllRows()
+			this.onUnselectAllRows(this.mainTable)
 
 			// Clears the selected rows hash table.
 			this.unselectAllRowsData()
@@ -99,7 +99,7 @@ export default {
 		 */
 		handleSelectedRow(tableConf, rowKey)
 		{
-			tableConf.onSelectRow({ rowKeyPath: rowKey, multipleSelection: true })
+			this.onSelectRow(tableConf, { rowKeyPath: rowKey, multipleSelection: true })
 			if (rowKey?.multipleSelection)
 				rowKey = rowKey.rowKeyPath
 			this.selectRowData(rowKey)
@@ -112,7 +112,7 @@ export default {
 		 */
 		handleUnSelectedRow(tableConf, rowKey)
 		{
-			tableConf.onUnselectRow(rowKey)
+			this.onUnselectRow(tableConf, rowKey)
 			if (rowKey?.multipleSelection)
 				rowKey = rowKey.rowKeyPath
 			this.unselectRowData(rowKey)
@@ -125,7 +125,7 @@ export default {
 		 */
 		handleSelectedRows(tableConf, rowKeys)
 		{
-			tableConf.onSelectRows(rowKeys)
+			this.onSelectRows(tableConf, rowKeys)
 			this.selectRowsData(rowKeys)
 		},
 
@@ -135,7 +135,7 @@ export default {
 		 */
 		handleUnselectAllRows(tableConf)
 		{
-			tableConf.onUnselectAllRows()
+			this.onUnselectAllRows(tableConf)
 			this.unselectAllRowsData()
 		},
 
@@ -156,7 +156,7 @@ export default {
 			{
 				const queryParams = {}
 				queryParams[baseArea] = this.selectedItemKey
-				this.controls.secondTable.fetchListData({ queryParams })
+				this.fetchListData(this.controls.secondTable, { queryParams })
 			}
 		},
 
@@ -172,8 +172,8 @@ export default {
 				return
 
 			const params = {
-				selectedIds: this.selectedItemsKeys,
-				destinationId: this.selectedItemKey
+				SelectedIds: this.selectedItemsKeys,
+				DestinationId: this.selectedItemKey
 			}
 
 			// Add all selected.
@@ -181,21 +181,21 @@ export default {
 			if (allSelected.findIndex((e) => e === this.controls.firstTable.id) !== -1)
 				params.AllSelected = true
 
-			params.tableConfiguration = listFunctions.getTableConfiguration(this.controls.firstTable)
+			params.TableConfiguration = listFunctions.getTableConfiguration(this.controls.firstTable)
 
 			postData(
 				this.controls.firstTable.controller,
 				action,
 				params,
 				(data) => {
-					this.controls.firstTable.fetchListData({})
+					this.fetchListData(this.controls.firstTable, {})
 
 					// Reload table with related records.
 					if (reloadTable && !_isEmpty(baseArea))
 					{
 						const queryParams = {}
 						queryParams[baseArea] = this.selectedItemKey
-						this.controls.secondTable.fetchListData({ queryParams })
+						this.fetchListData(this.controls.secondTable, { queryParams })
 					}
 
 					let msgType = 'error'
@@ -242,7 +242,7 @@ export default {
 			if (selectedRows.length < 1)
 				return
 
-			for (const idx in selectedRows)
+			for (let idx in selectedRows)
 				this.model.selectedRows[selectedRows[idx].rowKey] = selectedRows[idx]
 		},
 

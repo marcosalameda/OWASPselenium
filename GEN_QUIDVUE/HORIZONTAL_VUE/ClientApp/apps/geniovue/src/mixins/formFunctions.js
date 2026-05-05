@@ -7,7 +7,7 @@
  */
 export function validateStoredValues(key, storeObj, formInfo)
 {
-	if (typeof key !== 'string' || key.length === 0 || storeObj === null || typeof storeObj !== 'object')
+	if (typeof key !== 'string' || key.length === 0)
 		return false
 
 	const areaName = formInfo.area
@@ -64,23 +64,10 @@ export function fieldIsVisible(controls, fieldId, checkCollapsed)
 	if (typeof checkCollapsed !== 'boolean')
 		checkCollapsed = false
 
-	const field = controls?.[fieldId]
-
-	// If the specified indentifier isn't part of the controls,
-	// means this isn't a form, so we just return true.
-	if (typeof field === 'undefined')
-		return true
-
-	let formTabs = 'formTabs'
-	if (field.type === 'Tab' && field.container)
-	{
-		const tabContainer = controls[field.container]
-		formTabs = tabContainer ? `formTabs_${tabContainer.name}` : 'formTabs'
-	}
-
-	if (!field.isVisible ||
-		checkCollapsed && field.type === 'Group' && field.isCollapsible && !field.modelValue ||
-		checkCollapsed && field.type === 'Tab' && controls[formTabs].selectedTab !== fieldId)
+	const field = controls[fieldId]
+	if (!field?.isVisible ||
+		checkCollapsed && field.type === 'Group' && field.isCollapsible && !field.isOpen ||
+		checkCollapsed && field.type === 'Tab' && controls.formTabs.selectedTab !== fieldId)
 		return false
 
 	const parentId = field.parent
@@ -105,21 +92,9 @@ export function makeFieldVisible(controls, fieldId, skipValidation)
 	const field = controls[fieldId]
 
 	if (field.type === 'Group')
-	{
-		if (field.isInAccordion)
-		{
-			const accordion = controls[field.container]
-			accordion.openChild = field.id
-		}
-		else
-			field.setState(true)
-	}
-	else if (field.type === 'Tab') {
-		const tabContainer = controls[field.container]
-
-		if(!tabContainer) controls.formTabs.selectTab(fieldId)
-		else controls[`formTabs_${tabContainer.name}`].selectTab(fieldId)
-	}
+		field.setState(true)
+	else if (field.type === 'Tab')
+		controls.formTabs.selectTab(fieldId)
 
 	const parentId = field.parent
 	if (parentId)

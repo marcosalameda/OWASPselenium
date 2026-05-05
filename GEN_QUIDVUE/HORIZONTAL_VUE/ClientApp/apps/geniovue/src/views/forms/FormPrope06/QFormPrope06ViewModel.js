@@ -1,4 +1,4 @@
-﻿/* eslint-disable @typescript-eslint/no-unused-vars */
+﻿/* eslint-disable no-unused-vars */
 import { computed, reactive, watch } from 'vue'
 import _merge from 'lodash-es/merge'
 
@@ -11,7 +11,7 @@ import netAPI from '@quidgest/clientapp/network'
 import qApi from '@/api/genio/quidgestFunctions.js'
 import qFunctions from '@/api/genio/projectFunctions.js'
 import qProjArrays from '@/api/genio/projectArrays.js'
-/* eslint-enable @typescript-eslint/no-unused-vars */
+/* eslint-enable no-unused-vars */
 
 /**
  * Represents a ViewModel class.
@@ -25,11 +25,11 @@ export default class ViewModel extends FormViewModelBase
 	 * @param {object} options - The options for the ViewModel
 	 * @param {object} values - A ViewModel instance to copy values from
 	 */
-	// eslint-disable-next-line @typescript-eslint/no-unused-vars
+	// eslint-disable-next-line no-unused-vars
 	constructor(vueContext, options, values)
 	{
 		super(vueContext, options)
-		// eslint-disable-next-line @typescript-eslint/no-unused-vars
+		// eslint-disable-next-line no-unused-vars
 		const vm = this.vueContext
 
 		// The view model metadata
@@ -37,9 +37,8 @@ export default class ViewModel extends FormViewModelBase
 			name: 'PROPE06',
 			area: 'PROPE',
 			actions: {
-				recalculateFormulas: 'RecalculateFormulas_Prope06',
-				updateFilesTickets: 'UpdateFilesTicketsPrope06',
-				setFile: 'SetFilePrope06'
+				recalculateFormulas: 'RecalculateFormulas_PROPE06',
+				updateFilesTickets: 'UpdateFilesTicketsPROPE06'
 			}
 		})
 
@@ -51,7 +50,7 @@ export default class ViewModel extends FormViewModelBase
 			field: 'CODPROPE',
 			description: '',
 		}).cloneFrom(values?.ValCodprope))
-		this.stopWatchers.push(watch(() => this.ValCodprope.value, (newValue, oldValue) => this.onUpdate('prope.codprope', this.ValCodprope, newValue, oldValue)))
+		watch(() => this.ValCodprope.value, (newValue, oldValue) => this.onUpdate('prope.codprope', this.ValCodprope, newValue, oldValue))
 
 		/** The used foreign keys. */
 		this.ValCodcity = reactive(new modelFieldType.ForeignKey({
@@ -62,7 +61,7 @@ export default class ViewModel extends FormViewModelBase
 			relatedArea: 'CITY',
 			description: computed(() => this.Resources.CITY42505),
 		}).cloneFrom(values?.ValCodcity))
-		this.stopWatchers.push(watch(() => this.ValCodcity.value, (newValue, oldValue) => this.onUpdate('prope.codcity', this.ValCodcity, newValue, oldValue)))
+		watch(() => this.ValCodcity.value, (newValue, oldValue) => this.onUpdate('prope.codcity', this.ValCodcity, newValue, oldValue))
 
 		this.ValCodagent = reactive(new modelFieldType.ForeignKey({
 			id: 'ValCodagent',
@@ -72,7 +71,7 @@ export default class ViewModel extends FormViewModelBase
 			relatedArea: 'AGENT',
 			description: '',
 		}).cloneFrom(values?.ValCodagent))
-		this.stopWatchers.push(watch(() => this.ValCodagent.value, (newValue, oldValue) => this.onUpdate('prope.codagent', this.ValCodagent, newValue, oldValue)))
+		watch(() => this.ValCodagent.value, (newValue, oldValue) => this.onUpdate('prope.codagent', this.ValCodagent, newValue, oldValue))
 
 		/** The remaining form fields. */
 		this.ValPhoto = reactive(new modelFieldType.Image({
@@ -82,7 +81,7 @@ export default class ViewModel extends FormViewModelBase
 			field: 'PHOTO',
 			description: computed(() => this.Resources.MAIN_PHOTO18723),
 		}).cloneFrom(values?.ValPhoto))
-		this.stopWatchers.push(watch(() => this.ValPhoto.value, (newValue, oldValue) => this.onUpdate('prope.photo', this.ValPhoto, newValue, oldValue)))
+		watch(() => this.ValPhoto.value, (newValue, oldValue) => this.onUpdate('prope.photo', this.ValPhoto, newValue, oldValue))
 
 		this.ValTitle = reactive(new modelFieldType.String({
 			id: 'ValTitle',
@@ -92,7 +91,7 @@ export default class ViewModel extends FormViewModelBase
 			maxLength: 50,
 			description: computed(() => this.Resources.TITLE21885),
 		}).cloneFrom(values?.ValTitle))
-		this.stopWatchers.push(watch(() => this.ValTitle.value, (newValue, oldValue) => this.onUpdate('prope.title', this.ValTitle, newValue, oldValue)))
+		watch(() => this.ValTitle.value, (newValue, oldValue) => this.onUpdate('prope.title', this.ValTitle, newValue, oldValue))
 
 		this.ValPrice = reactive(new modelFieldType.Number({
 			id: 'ValPrice',
@@ -103,7 +102,7 @@ export default class ViewModel extends FormViewModelBase
 			decimalDigits: 2,
 			description: computed(() => this.Resources.PRICE06900),
 		}).cloneFrom(values?.ValPrice))
-		this.stopWatchers.push(watch(() => this.ValPrice.value, (newValue, oldValue) => this.onUpdate('prope.price', this.ValPrice, newValue, oldValue)))
+		watch(() => this.ValPrice.value, (newValue, oldValue) => this.onUpdate('prope.price', this.ValPrice, newValue, oldValue))
 
 		this.ValDescript = reactive(new modelFieldType.MultiLineString({
 			id: 'ValDescript',
@@ -112,7 +111,7 @@ export default class ViewModel extends FormViewModelBase
 			field: 'DESCRIPT',
 			description: computed(() => this.Resources.DESCRIPTION07383),
 		}).cloneFrom(values?.ValDescript))
-		this.stopWatchers.push(watch(() => this.ValDescript.value, (newValue, oldValue) => this.onUpdate('prope.descript', this.ValDescript, newValue, oldValue)))
+		watch(() => this.ValDescript.value, (newValue, oldValue) => this.onUpdate('prope.descript', this.ValDescript, newValue, oldValue))
 
 		this.TableCityCity = reactive(new modelFieldType.String({
 			type: 'Lookup',
@@ -122,9 +121,8 @@ export default class ViewModel extends FormViewModelBase
 			field: 'CITY',
 			maxLength: 50,
 			description: computed(() => this.Resources.CITY42505),
-			ignoreFldSubmit: true,
 		}).cloneFrom(values?.TableCityCity))
-		this.stopWatchers.push(watch(() => this.TableCityCity.value, (newValue, oldValue) => this.onUpdate('city.city', this.TableCityCity, newValue, oldValue)))
+		watch(() => this.TableCityCity.value, (newValue, oldValue) => this.onUpdate('city.city', this.TableCityCity, newValue, oldValue))
 
 		this.ValSize = reactive(new modelFieldType.Number({
 			id: 'ValSize',
@@ -135,7 +133,7 @@ export default class ViewModel extends FormViewModelBase
 			decimalDigits: 0,
 			description: computed(() => this.Resources.SIZE__M2_57059),
 		}).cloneFrom(values?.ValSize))
-		this.stopWatchers.push(watch(() => this.ValSize.value, (newValue, oldValue) => this.onUpdate('prope.size', this.ValSize, newValue, oldValue)))
+		watch(() => this.ValSize.value, (newValue, oldValue) => this.onUpdate('prope.size', this.ValSize, newValue, oldValue))
 
 		this.ValBathrms = reactive(new modelFieldType.Number({
 			id: 'ValBathrms',
@@ -146,7 +144,7 @@ export default class ViewModel extends FormViewModelBase
 			decimalDigits: 0,
 			description: computed(() => this.Resources.NUMBER_OF_BATHROOMS64857),
 		}).cloneFrom(values?.ValBathrms))
-		this.stopWatchers.push(watch(() => this.ValBathrms.value, (newValue, oldValue) => this.onUpdate('prope.bathrms', this.ValBathrms, newValue, oldValue)))
+		watch(() => this.ValBathrms.value, (newValue, oldValue) => this.onUpdate('prope.bathrms', this.ValBathrms, newValue, oldValue))
 
 		this.ValYear = reactive(new modelFieldType.String({
 			id: 'ValYear',
@@ -156,7 +154,7 @@ export default class ViewModel extends FormViewModelBase
 			maxLength: 50,
 			description: computed(() => this.Resources.YEAR_BUILT55277),
 		}).cloneFrom(values?.ValYear))
-		this.stopWatchers.push(watch(() => this.ValYear.value, (newValue, oldValue) => this.onUpdate('prope.year', this.ValYear, newValue, oldValue)))
+		watch(() => this.ValYear.value, (newValue, oldValue) => this.onUpdate('prope.year', this.ValYear, newValue, oldValue))
 
 		this.TableAgentName = reactive(new modelFieldType.String({
 			type: 'Lookup',
@@ -166,9 +164,8 @@ export default class ViewModel extends FormViewModelBase
 			field: 'NAME',
 			maxLength: 50,
 			description: computed(() => this.Resources.NAME31974),
-			ignoreFldSubmit: true,
 		}).cloneFrom(values?.TableAgentName))
-		this.stopWatchers.push(watch(() => this.TableAgentName.value, (newValue, oldValue) => this.onUpdate('agent.name', this.TableAgentName, newValue, oldValue)))
+		watch(() => this.TableAgentName.value, (newValue, oldValue) => this.onUpdate('agent.name', this.TableAgentName, newValue, oldValue))
 	}
 
 	/**

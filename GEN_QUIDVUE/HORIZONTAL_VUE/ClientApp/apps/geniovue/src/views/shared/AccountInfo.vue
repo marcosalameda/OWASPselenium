@@ -172,6 +172,7 @@
 						/*size: 'xlarge',*/
 						label: computed(() => this.Resources[hardcodedTexts.user]),
 						maxLength: authConfig.maxUsrSize,
+						labelId: 'label_Nome',
 						isRequired: true
 					}, this),
 					Email: new fieldControlClass.StringControl({
@@ -182,6 +183,7 @@
 						/*size: 'xlarge',*/
 						label: computed(() => this.Resources[hardcodedTexts.email]),
 						maxLength: 254,
+						labelId: 'label_Email',
 						isRequired: true
 					}, this),
 					Password: new fieldControlClass.StringControl({
@@ -193,6 +195,7 @@
 						label: computed(() => this.Resources[hardcodedTexts.password]),
 						labelPosition: '',
 						maxLength: authConfig.maxPswSize,
+						labelId: 'label_Password',
 						isRequired: true
 					}, this),
 					ConfirmPassword: new fieldControlClass.StringControl({
@@ -204,6 +207,7 @@
 						label: computed(() => this.Resources[hardcodedTexts.confirm]),
 						labelPosition: '',
 						maxLength: authConfig.maxPswSize,
+						labelId: 'label_ConfirmValPassword',
 						isRequired: true
 					}, this)
 				},
@@ -227,7 +231,7 @@
 			 */
 			hydrate(rawData)
 			{
-				for (const fld in this.model)
+				for (let fld in this.model)
 					this.model[fld].updateValue(rawData[fld])
 			},
 

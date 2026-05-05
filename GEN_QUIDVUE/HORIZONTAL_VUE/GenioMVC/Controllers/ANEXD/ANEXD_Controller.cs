@@ -106,7 +106,7 @@ namespace GenioMVC.Controllers
 			}
 
 			if (result != null)
-				return JsonOK(result);
+				return JsonOK(new { List = result.List, TotalRows = result.Pagination.TotalRows, Selected = result.Selected, Value = result.Value });
 			return JsonERROR("Not found any valid result");
 		}
 
@@ -161,6 +161,26 @@ namespace GenioMVC.Controllers
 
 
 
+		// POST: /Anexd/ANEXD_InsertCondition
+		[HttpPost]
+		public JsonResult ANEXD_InsertCondition()
+		{
+			try
+			{
+				// Create a model from form data to avoid extra database queries.
+				var p = new Models.Anexd(UserContext.Current);
+
+				// Formula: HasRole("A") && !isEmptyG([EQUIP->CODEQUIP])
+				if (!((Logical)(CSGenio.business.GlobalFunctions.HasRole(m_userContext.User,"A")&&!(((string)p.Equip.ValCodequip) == ""))))
+					return JsonOK(false);
+
+				return JsonOK(true);
+			}
+			catch (Exception ex)
+			{
+				return JsonERROR(ex.Message);
+			}
+		}
 
 
 		/// <summary>
@@ -246,6 +266,16 @@ namespace GenioMVC.Controllers
 		public ActionResult GetFile([FromBody] RequestDocumGetModel requestModel)
 		{
 			return base.GetFile(requestModel.Ticket, requestModel.ViewType);
+		}
+
+		/// <summary>
+		/// Stores a new document in the Docums table
+		/// </summary>
+		/// <param name="requestModel">The request model with the document and ticket</param>
+		/// <returns>A JSON response with the result of the operation</returns>
+		public ActionResult SetFile([FromForm] RequestDocumsCreateModel requestModel)
+		{
+			return base.SetFile(requestModel.Ticket, requestModel.Mode, requestModel.Version);
 		}
 
 		/// <summary>

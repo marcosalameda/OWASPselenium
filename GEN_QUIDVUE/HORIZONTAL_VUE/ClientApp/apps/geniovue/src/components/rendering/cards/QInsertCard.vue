@@ -1,36 +1,36 @@
 ﻿<template>
 	<q-card-view
-		v-if="props.variant === 'image'"
-		v-bind="props"
+		v-if="variant === 'image'"
+		v-bind="config"
 		class="q-card-view--insert q-card-view--insert-image"
-		@click="emit('click')">
+		@click="$emit('row-action', insertAction)">
 		<template #image>
 			<img
 				role="cell"
 				loading="lazy"
 				decoding="async"
-				:alt="props.texts.cardImage"
-				:src="props.src" />
+				:alt="texts.cardImage"
+				:src="`${resourcesPath}insert_card.png`" />
 		</template>
-		<template
-			#title
-			v-if="props.tableName">
-			{{ props.texts.createText }}
-			{{ props.tableName.toLowerCase() }}
+		<template #title>
+			{{ texts.createText }}
+			{{ tableName.toLowerCase() }}
 		</template>
 		<template #subtitle>
-			<q-button @click="emit('click')">
-				<q-icon icon="add"></q-icon>
-				{{ props.texts.insertText }}
-			</q-button>
+			<q-table-record-actions-menu
+				display="inline"
+				show-general-action-text
+				show-general-action-icon
+				:texts="texts"
+				:general-actions="[insertAction]"
+				@row-action="$emit('row-action', $event)" />
 		</template>
 	</q-card-view>
-
 	<q-card-view
 		v-else
-		v-bind="props"
-		:class="['q-card-view--insert', `q-card-view--insert-${props.variant}`]"
-		@click="emit('click')">
+		v-bind="config"
+		:class="['q-card-view--insert', `q-card-view--insert-${variant}`]"
+		@click="$emit('row-action', insertAction)">
 		<template #title></template>
 		<template #subtitle></template>
 		<template #text></template>
@@ -38,29 +38,94 @@
 		<template #underlay>
 			<span>
 				<q-icon icon="add" />
-				{{ props.texts.insertText }}
+				{{ texts.insertText }}
 			</span>
 		</template>
 	</q-card-view>
 </template>
 
-<script setup lang="ts">
-	// Constants
-	import { DEFAULT_TEXTS } from './constants'
+<script>
+	import { defineAsyncComponent } from 'vue'
 
-	// Components
-	import QCardView from './QCardView.vue'
+	import { validateTexts } from '@quidgest/clientapp/utils/genericFunctions'
 
-	// Types
-	import type { QInsertCardProps } from './types'
+	import QCardView from '@/components/containers/QCard.vue'
 
-	const props = withDefaults(defineProps<QInsertCardProps>(), {
-		variant: 'secondary',
-		config: () => ({}),
-		texts: () => DEFAULT_TEXTS
-	})
+	// The texts needed by the component.
+	const DEFAULT_TEXTS = {
+		createText: 'Create',
+		insertText: 'Insert',
+		cardImage: 'Card image'
+	}
 
-	const emit = defineEmits<{
-		(e: 'click'): void
-	}>()
+	export default {
+		name: 'QInsertCard',
+
+		emits: ['row-action'],
+
+		components: {
+			QCardView,
+			QTableRecordActionsMenu: defineAsyncComponent(() => import('@/components/table/QTableRecordActionsMenu.vue'))
+		},
+
+		inheritAttrs: false,
+
+		props: {
+			/**
+			 * The configuration of the card.
+			 */
+			config: {
+				type: Object,
+				default: () => {
+					return {}
+				}
+			},
+
+			/**
+			 * The variant of the insert action.
+			 */
+			variant: {
+				type: String,
+				require: true,
+				validator: (value) => {
+					return ['image', 'primary', 'secondary'].includes(value)
+				}
+			},
+
+			/**
+			 * The insert action.
+			 */
+			insertAction: {
+				type: Object,
+				required: true
+			},
+
+			/**
+			 * The table name.
+			 */
+			tableName: {
+				type: String,
+				required: true
+			},
+
+			/**
+			 * Path for the resources.
+			 */
+			resourcesPath: {
+				type: String,
+				required: true
+			},
+
+			/**
+			 * The necessary strings to be used inside the component.
+			 */
+			texts: {
+				type: Object,
+				validator: (value) => validateTexts(DEFAULT_TEXTS, value),
+				default: () => DEFAULT_TEXTS
+			}
+		},
+
+		expose: []
+	}
 </script>

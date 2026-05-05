@@ -38,16 +38,9 @@
 									:label="btn.label"
 									:disabled="btn.disabled"
 									@click="btn.action">
-									<template v-if="btn.icon">
-										<q-badge-indicator
-											v-if="btn.badge && btn.badge.isVisible"
-											:color="btn.badge.color">
-											<q-icon v-bind="btn.icon" />
-										</q-badge-indicator>
-										<q-icon
-											v-else
-											v-bind="btn.icon" />
-									</template>
+									<q-icon
+										v-if="btn.icon"
+										v-bind="btn.icon" />
 								</q-toggle-group-item>
 							</template>
 						</q-toggle-group>
@@ -59,7 +52,7 @@
 				v-if="$app.layout.FormAnchorsPosition === 'form-header' && visibleGroups.length > 0"
 				:anchors="anchorGroups"
 				:controls="visibleControls"
-				@focus-control="focusControl" />
+				@focus-control="(...args) => focusControl(...args)" />
 		</div>
 	</teleport>
 
@@ -80,7 +73,6 @@
 						v-if="btn.isActive && btn.isVisible && btn.showInHeading"
 						:id="`heading-${btn.id}`"
 						:label="btn.text"
-						:color="btn.color"
 						:variant="btn.variant"
 						:disabled="btn.disabled"
 						:icon-pos="btn.iconPos"
@@ -94,17 +86,16 @@
 			</q-button-group>
 		</div>
 
-		<q-container
-			fluid
+		<div
+			class="form-flow"
 			data-key="WARE_WS"
-			:data-loading="!formInitialDataLoaded || !isActiveForm">
+			:data-loading="!formInitialDataLoaded">
 			<template v-if="formControl.initialized && showFormBody">
-				<q-row v-if="controls.WARE_WS_WAREHWAREHDES.isVisible || controls.WARE_WS_WAREHWAREHCOD.isVisible || controls.WARE_WS_WAREHACTIVITY.isVisible || controls.WARE_WS_WAREHSHOWRECO.isVisible || controls.WARE_WS_WAREHNUMEMPLO.isVisible || controls.WARE_WS_PSEUDXITEM___.isVisible">
-					<q-col
-						v-if="controls.WARE_WS_WAREHWAREHDES.isVisible"
-						cols="auto">
+				<q-row-container v-show="controls.WARE_WS_WAREHWAREHDES.isVisible || controls.WARE_WS_WAREHWAREHCOD.isVisible || controls.WARE_WS_WAREHACTIVITY.isVisible || controls.WARE_WS_WAREHSHOWRECO.isVisible || controls.WARE_WS_WAREHNUMEMPLO.isVisible || controls.WARE_WS_PSEUDXITEM___.isVisible">
+					<q-control-wrapper
+						v-show="controls.WARE_WS_WAREHWAREHDES.isVisible"
+						class="${Vue.GetControlWrapperClass($controlsColumn)}">
 						<base-input-structure
-							v-if="controls.WARE_WS_WAREHWAREHDES.isVisible"
 							class="i-text"
 							v-bind="controls.WARE_WS_WAREHWAREHDES"
 							v-on="controls.WARE_WS_WAREHWAREHDES.handlers"
@@ -116,12 +107,11 @@
 								@blur="onBlur(controls.WARE_WS_WAREHWAREHDES, model.ValWarehdes.value)"
 								@change="model.ValWarehdes.fnUpdateValueOnChange" />
 						</base-input-structure>
-					</q-col>
-					<q-col
-						v-if="controls.WARE_WS_WAREHWAREHCOD.isVisible"
-						cols="auto">
+					</q-control-wrapper>
+					<q-control-wrapper
+						v-show="controls.WARE_WS_WAREHWAREHCOD.isVisible"
+						class="${Vue.GetControlWrapperClass($controlsColumn)}">
 						<base-input-structure
-							v-if="controls.WARE_WS_WAREHWAREHCOD.isVisible"
 							class="i-text"
 							v-bind="controls.WARE_WS_WAREHWAREHCOD"
 							v-on="controls.WARE_WS_WAREHWAREHCOD.handlers"
@@ -133,29 +123,27 @@
 								@blur="onBlur(controls.WARE_WS_WAREHWAREHCOD, model.ValWarehcod.value)"
 								@change="model.ValWarehcod.fnUpdateValueOnChange" />
 						</base-input-structure>
-					</q-col>
-					<q-col
-						v-if="controls.WARE_WS_WAREHACTIVITY.isVisible"
-						cols="auto">
+					</q-control-wrapper>
+					<q-control-wrapper
+						v-show="controls.WARE_WS_WAREHACTIVITY.isVisible"
+						class="${Vue.GetControlWrapperClass($controlsColumn)}">
 						<base-input-structure
-							v-if="controls.WARE_WS_WAREHACTIVITY.isVisible"
 							class="i-text"
 							v-bind="controls.WARE_WS_WAREHACTIVITY"
 							v-on="controls.WARE_WS_WAREHACTIVITY.handlers"
 							:loading="controls.WARE_WS_WAREHACTIVITY.props.loading"
 							:reporting-mode-on="reportingModeCAV"
 							:suggestion-mode-on="suggestionModeOn">
-							<q-switch
+							<q-toggle-input
 								v-if="controls.WARE_WS_WAREHACTIVITY.isVisible"
 								v-bind="controls.WARE_WS_WAREHACTIVITY.props"
 								v-on="controls.WARE_WS_WAREHACTIVITY.handlers" />
 						</base-input-structure>
-					</q-col>
-					<q-col
-						v-if="controls.WARE_WS_WAREHSHOWRECO.isVisible"
-						cols="auto">
+					</q-control-wrapper>
+					<q-control-wrapper
+						v-show="controls.WARE_WS_WAREHSHOWRECO.isVisible"
+						class="${Vue.GetControlWrapperClass($controlsColumn)}">
 						<base-input-structure
-							v-if="controls.WARE_WS_WAREHSHOWRECO.isVisible"
 							class="i-checkbox"
 							v-bind="controls.WARE_WS_WAREHSHOWRECO"
 							v-on="controls.WARE_WS_WAREHSHOWRECO.handlers"
@@ -163,18 +151,17 @@
 							:reporting-mode-on="reportingModeCAV"
 							:suggestion-mode-on="suggestionModeOn">
 							<template #label>
-								<q-checkbox
+								<q-checkbox-input
 									v-if="controls.WARE_WS_WAREHSHOWRECO.isVisible"
 									v-bind="controls.WARE_WS_WAREHSHOWRECO.props"
 									v-on="controls.WARE_WS_WAREHSHOWRECO.handlers" />
 							</template>
 						</base-input-structure>
-					</q-col>
-					<q-col
-						v-if="controls.WARE_WS_WAREHNUMEMPLO.isVisible"
-						cols="auto">
+					</q-control-wrapper>
+					<q-control-wrapper
+						v-show="controls.WARE_WS_WAREHNUMEMPLO.isVisible"
+						class="${Vue.GetControlWrapperClass($controlsColumn)}">
 						<base-input-structure
-							v-if="controls.WARE_WS_WAREHNUMEMPLO.isVisible"
 							class="i-text"
 							v-bind="controls.WARE_WS_WAREHNUMEMPLO"
 							v-on="controls.WARE_WS_WAREHNUMEMPLO.handlers"
@@ -186,25 +173,21 @@
 								v-bind="controls.WARE_WS_WAREHNUMEMPLO.props"
 								@update:model-value="model.ValNum_employee.fnUpdateValue" />
 						</base-input-structure>
-					</q-col>
-					<q-col
-						v-if="controls.WARE_WS_PSEUDXITEM___.isVisible"
-						cols="auto">
+					</q-control-wrapper>
+					<q-control-wrapper
+						v-show="controls.WARE_WS_PSEUDXITEM___.isVisible"
+						class="${Vue.GetControlWrapperClass($controlsColumn)}">
 						<q-table
-							v-if="controls.WARE_WS_PSEUDXITEM___.isVisible"
+							v-show="controls.WARE_WS_PSEUDXITEM___.isVisible"
 							v-bind="controls.WARE_WS_PSEUDXITEM___"
-							v-on="controls.WARE_WS_PSEUDXITEM___.handlers">
-							<!-- USE /[MANUAL GQT CUSTOM_TABLE WARE_WS_PSEUDXITEM___]/ -->
-						</q-table>
-						<q-table-extra-extension
-							v-if="controls.WARE_WS_PSEUDXITEM___.isVisible"
-							:list-ctrl="controls.WARE_WS_PSEUDXITEM___"
-							:filter-operators="controls.WARE_WS_PSEUDXITEM___.filterOperators"
 							v-on="controls.WARE_WS_PSEUDXITEM___.handlers" />
-					</q-col>
-				</q-row>
+						<q-table-extra-extension
+							:list-ctrl="controls.WARE_WS_PSEUDXITEM___"
+							v-on="controls.WARE_WS_PSEUDXITEM___.handlers" />
+					</q-control-wrapper>
+				</q-row-container>
 			</template>
-		</q-container>
+		</div>
 	</teleport>
 
 	<hr v-if="!isPopup && showFormFooter" />
@@ -213,7 +196,7 @@
 		v-if="formModalIsReady && showFormFooter"
 		:to="`#${uiContainersId.footer}`"
 		:disabled="!isPopup || isNested">
-		<q-row v-if="showFormFooter">
+		<q-row-container v-if="showFormFooter">
 			<div id="footer-action-btns">
 				<template
 					v-for="btn in formButtons"
@@ -222,7 +205,6 @@
 						v-if="btn.isActive && btn.isVisible && btn.showInFooter"
 						:id="`bottom-${btn.id}`"
 						:label="btn.text"
-						:color="btn.color"
 						:variant="btn.variant"
 						:disabled="btn.disabled"
 						:icon-pos="btn.iconPos"
@@ -234,12 +216,12 @@
 					</q-button>
 				</template>
 			</div>
-		</q-row>
+		</q-row-container>
 	</teleport>
 </template>
 
 <script>
-	/* eslint-disable @typescript-eslint/no-unused-vars */
+	/* eslint-disable no-unused-vars */
 	import { computed, defineAsyncComponent, readonly } from 'vue'
 	import { useRoute } from 'vue-router'
 
@@ -259,7 +241,7 @@
 	import qApi from '@/api/genio/quidgestFunctions.js'
 	import qFunctions from '@/api/genio/projectFunctions.js'
 	import qProjArrays from '@/api/genio/projectArrays.js'
-	/* eslint-enable @typescript-eslint/no-unused-vars */
+	/* eslint-enable no-unused-vars */
 
 	import FormViewModel from './QFormWareWsViewModel.js'
 
@@ -336,8 +318,7 @@
 					primaryKey: 'ValCodwareh',
 					designation: computed(() => this.Resources.WAREHOUSE51864),
 					identifier: '', // Unique identifier received by route (when it's nested).
-					mode: '',
-					availableAgents: [],
+					mode: ''
 				},
 
 				formButtons: {
@@ -445,11 +426,7 @@
 						showInFooter: true,
 						isActive: true,
 						isVisible: computed(() => vm.authData.isAllowed && vm.isEditable),
-						action: vm.saveForm,
-						badge: {
-							isVisible: computed(() => vm.model?.isDirty === true),
-							color: 'highlight'
-						}
+						action: vm.saveForm
 					},
 					confirmBtn: {
 						id: 'confirm-btn',
@@ -559,6 +536,7 @@
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						maxLength: 85,
+						labelId: 'label_WARE_WS_WAREHWAREHDES',
 						controlLimits: [
 						],
 					}, this),
@@ -572,6 +550,7 @@
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						maxLength: 10,
+						labelId: 'label_WARE_WS_WAREHWAREHCOD',
 						controlLimits: [
 						],
 					}, this),
@@ -639,8 +618,7 @@
 								label: computed(() => this.Resources.TYPE00312),
 								dataLength: 1,
 								scrollData: 1,
-								export: 1,
-								array: computed(() => new qProjArrays.QArrayTipoarti(vm.$getResource).elements),
+								array: computed(() => qProjArrays.QArrayTipoarti.setResources(vm.$getResource).elements),
 								arrayType: qProjArrays.QArrayTipoarti.type,
 								arrayDisplayMode: 'D',
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
@@ -652,7 +630,6 @@
 								label: computed(() => this.Resources.ARTICLE60065),
 								dataLength: 85,
 								scrollData: 30,
-								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 3,
@@ -662,7 +639,6 @@
 								label: computed(() => this.Resources.CODE49225),
 								dataLength: 15,
 								scrollData: 15,
-								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.NumericColumn({
 								order: 4,
@@ -673,7 +649,6 @@
 								scrollData: 10,
 								maxDigits: 10,
 								decimalPlaces: 0,
-								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.NumericColumn({
 								order: 5,
@@ -684,7 +659,6 @@
 								scrollData: 10,
 								maxDigits: 10,
 								decimalPlaces: 0,
-								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.NumericColumn({
 								order: 6,
@@ -695,7 +669,6 @@
 								scrollData: 10,
 								maxDigits: 10,
 								decimalPlaces: 0,
-								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.ImageColumn({
 								order: 7,
@@ -707,7 +680,6 @@
 								scrollData: 3,
 								sortable: false,
 								searchable: false,
-								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 8,
@@ -716,7 +688,6 @@
 								field: 'CATEGORY',
 								label: computed(() => this.Resources.CATEGORIZATION17554),
 								scrollData: 30,
-								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.BooleanColumn({
 								order: 9,
@@ -725,7 +696,6 @@
 								field: 'VALID',
 								label: computed(() => this.Resources.IN_USE42606),
 								scrollData: 1,
-								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.ArrayColumn({
 								order: 10,
@@ -735,8 +705,7 @@
 								label: computed(() => this.Resources.AVAILABILITY56489),
 								dataLength: 1,
 								scrollData: 1,
-								export: 1,
-								array: computed(() => new qProjArrays.QArrayDsiponib(vm.$getResource).elements),
+								array: computed(() => qProjArrays.QArrayDsiponib.setResources(vm.$getResource).elements),
 								arrayType: qProjArrays.QArrayDsiponib.type,
 								arrayDisplayMode: 'D',
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
@@ -748,7 +717,6 @@
 								label: computed(() => this.Resources.DATE18475),
 								scrollData: 8,
 								dateTimeType: 'date',
-								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 						],
 						config: {
@@ -764,7 +732,8 @@
 							permissions: {
 							},
 							searchBarConfig: {
-								visibility: false
+								visibility: false,
+								searchOnPressEnter: true
 							},
 							filtersVisible: false,
 							allowColumnFilters: false,
@@ -889,7 +858,7 @@
 								sortOrder: 'asc'
 							}
 						},
-						globalEvents: ['changed-WAREH', 'changed-ITEM', 'changed-GITEM'],
+						globalEvents: ['changed-GITEM', 'changed-ITEM', 'changed-WAREH'],
 						uuid: 'Ware_ws_ValXitem',
 						allSelectedRows: 'false',
 						controlLimits: [
@@ -983,23 +952,17 @@
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 		},
 
-		beforeUnmount()
-		{
-/* eslint-disable indent, vue/html-indent, vue/script-indent */
-// USE /[MANUAL GQT COMPONENT_BEFORE_UNMOUNT WARE_WS]/
-// eslint-disable-next-line
-/* eslint-enable indent, vue/html-indent, vue/script-indent */
-		},
-
 		methods: {
 			/**
 			 * Called before form init.
 			 */
 			async beforeLoad()
 			{
+				let loadForm = true
+
 				// Execute the "Before init" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.beforeInit)
-				for (const trigger of triggers)
+				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
 				this.emitEvent('before-load-form')
@@ -1009,7 +972,7 @@
 // eslint-disable-next-line
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 
-				return true
+				return loadForm
 			},
 
 			/**
@@ -1019,7 +982,7 @@
 			{
 				// Execute the "After init" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.afterInit)
-				for (const trigger of triggers)
+				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
 				this.emitEvent('after-load-form')
@@ -1039,33 +1002,19 @@
 
 				// Execute the "Before apply" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.beforeApply)
-				for (const trigger of triggers)
+				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
-				const ticketsPromise = this.model.updateFilesTickets(true)
-				this.addBusy(ticketsPromise, this.Resources[hardcodedTexts.processing])
-				const canSetDocums = await ticketsPromise
+				const canSetDocums = await this.model.updateFilesTickets(true)
 
 				if (canSetDocums)
 				{
-					let results
-					const changesPromise = this.model.setDocumentChanges()
-					this.addBusy(changesPromise, this.Resources[hardcodedTexts.processing])
-					applyForm = await changesPromise
+					applyForm = await this.model.setDocumentChanges()
 
 					if (applyForm)
 					{
-						const insertsPromise = this.model.saveDocuments()
-						this.addBusy(insertsPromise, this.Resources[hardcodedTexts.processing])
-						results = await insertsPromise
+						const results = await this.model.saveDocuments()
 						applyForm = results.every((e) => e === true)
-					}
-
-					if (!changesPromise || (results && !results.every((e) => e === true)))
-					{
-						this.validationErrors = {
-							Erro: this.Resources.OCORREU_UM_ERRO_AO_T51884
-						}
 					}
 				}
 
@@ -1086,7 +1035,7 @@
 			{
 				// Execute the "After apply" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.afterApply)
-				for (const trigger of triggers)
+				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
 				this.emitEvent('after-apply-form')
@@ -1106,33 +1055,19 @@
 
 				// Execute the "Before save" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.beforeSave)
-				for (const trigger of triggers)
+				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
-				const ticketsPromise = this.model.updateFilesTickets()
-				this.addBusy(ticketsPromise, this.Resources[hardcodedTexts.processing])
-				const canSetDocums = await ticketsPromise
+				const canSetDocums = await this.model.updateFilesTickets()
 
 				if (canSetDocums)
 				{
-					let results
-					const changesPromise = this.model.setDocumentChanges()
-					this.addBusy(changesPromise, this.Resources[hardcodedTexts.processing])
-					saveForm = await changesPromise
+					saveForm = await this.model.setDocumentChanges()
 
 					if (saveForm)
 					{
-						const insertsPromise = this.model.saveDocuments()
-						this.addBusy(insertsPromise, this.Resources[hardcodedTexts.processing])
-						results = await insertsPromise
+						const results = await this.model.saveDocuments()
 						saveForm = results.every((e) => e === true)
-					}
-
-					if (!changesPromise || (results && !results.every((e) => e === true)))
-					{
-						this.validationErrors = {
-							Erro: this.Resources.OCORREU_UM_ERRO_AO_T51884
-						}
 					}
 				}
 
@@ -1151,9 +1086,11 @@
 			 */
 			async afterSave()
 			{
+				let redirectPage = true // Set to 'false' to cancel page redirect.
+
 				// Execute the "After save" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.afterSave)
-				for (const trigger of triggers)
+				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
 				this.emitEvent('after-save-form')
@@ -1163,7 +1100,7 @@
 // eslint-disable-next-line
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 
-				return true
+				return redirectPage
 			},
 
 			/**
@@ -1171,6 +1108,8 @@
 			 */
 			async beforeDel()
 			{
+				let deleteForm = true // Set to 'false' to cancel form delete.
+
 				this.emitEvent('before-delete-form')
 
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
@@ -1178,7 +1117,7 @@
 // eslint-disable-next-line
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 
-				return true
+				return deleteForm
 			},
 
 			/**
@@ -1186,6 +1125,8 @@
 			 */
 			async afterDel()
 			{
+				let redirectPage = true // Set to 'false' to cancel page redirect.
+
 				this.emitEvent('after-delete-form')
 
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
@@ -1193,7 +1134,7 @@
 // eslint-disable-next-line
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 
-				return true
+				return redirectPage
 			},
 
 			/**
@@ -1201,9 +1142,11 @@
 			 */
 			async beforeExit()
 			{
+				let leaveForm = true // Set to 'false' to cancel page redirect.
+
 				// Execute the "Before exit" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.beforeExit)
-				for (const trigger of triggers)
+				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
 				this.emitEvent('before-exit-form')
@@ -1213,7 +1156,7 @@
 // eslint-disable-next-line
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 
-				return true
+				return leaveForm
 			},
 
 			/**
@@ -1223,7 +1166,7 @@
 			{
 				// Execute the "After exit" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.afterExit)
-				for (const trigger of triggers)
+				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
 				this.emitEvent('after-exit-form')
@@ -1284,7 +1227,6 @@
 
 				this.afterControlUpdate(controlField, fieldValue)
 			},
-
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
 // USE /[MANUAL GQT FUNCTIONS_JS WARE_WS]/
 // eslint-disable-next-line

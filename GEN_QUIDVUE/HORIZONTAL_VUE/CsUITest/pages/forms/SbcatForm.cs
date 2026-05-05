@@ -10,8 +10,8 @@ public class SbcatForm : Form
 	/// <summary>
 	/// Sub categoria
 	/// </summary>
-	public BaseInputControl SbcatSubcateg => new BaseInputControl(driver, ContainerLocator, "container-SBCAT___SBCATSUBCATEG" + IdSuffix, "#SBCAT___SBCATSUBCATEG" + IdSuffix);
+	public BaseInputControl SbcatSubcateg => new BaseInputControl(driver, ContainerLocator, "container-SBCAT___SBCATSUBCATEG", "#SBCAT___SBCATSUBCATEG");
 
-	public SbcatForm(IWebDriver driver, FORM_MODE mode, By? containerLocator = null, bool usePkInId = false)
-		: base(driver, mode, "SBCAT", containerLocator: containerLocator, usePkInId: usePkInId) { }
+	public SbcatForm(IWebDriver driver, FORM_MODE mode, By? containerLocator = null)
+		: base(driver, mode, "SBCAT", containerLocator: containerLocator) { }
 }

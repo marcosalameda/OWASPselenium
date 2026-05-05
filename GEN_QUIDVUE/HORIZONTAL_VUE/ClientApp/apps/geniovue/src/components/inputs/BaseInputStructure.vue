@@ -1,14 +1,16 @@
 ﻿<template>
 	<div
+		v-if="isVisible"
 		:id="controlId"
 		ref="mainWrapper"
 		v-bind="wrapperAttrs"
-		:class="[{ draggable: reportingModeOn }, labelPositionClass]"
+		:class="[{ draggable: reportingModeOn }, classObject.labelPosition]"
 		:data-draggable="reportingModeOn"
 		:data-loading="loading">
 		<div
 			v-if="hasLabelContainer"
-			:class="['label-container', ...classes]">
+			style="align-items: center"
+			:class="[classObject.labelContainerFlex, ...classes]">
 			<slot
 				v-if="labelPosition !== labelAlignment.left"
 				name="label" />
@@ -19,7 +21,7 @@
 				v-bind="labelAttrs"
 				:for="id"
 				:data-val-required="isRequired && !(readonly || disabled)"
-				:class="{ disabled: disabled }">
+				:class="[{ disabled: disabled }, ...(classObject.labelClass || [])]">
 				{{ label }}
 			</label>
 
@@ -41,8 +43,7 @@
 
 			<a
 				v-if="reportingModeOn"
-				href="#"
-				role="button"
+				href="javascript:void(0)"
 				class="q-icon--reporting report-mode"
 				@click.stop.prevent="addCavField">
 				<q-icon icon="stats" />
@@ -50,8 +51,7 @@
 
 			<a
 				v-if="displaySuggestions"
-				href="#"
-				role="button"
+				href="javascript:void(0)"
 				class="suggest suggest-mode"
 				@click.stop.prevent="openSuggestionMode">
 				<q-icon icon="new-suggestion" />
@@ -168,11 +168,27 @@
 			},
 
 			/**
+			 * Whether or not the control is currently visible.
+			 */
+			isVisible: {
+				type: Boolean,
+				default: true
+			},
+
+			/**
 			 * The name of the array if this control is part of an array structure.
 			 */
 			arrayName: {
 				type: String,
 				default: ''
+			},
+
+			/**
+			 * Set flexbox to display inline if true.
+			 */
+			dFlexInline: {
+				type: Boolean,
+				default: false
 			},
 
 			/**
@@ -243,18 +259,27 @@
 
 		expose: [],
 
-		setup(props, ctx)
+		data()
 		{
 			return {
 				labelAlignment,
 
-				controlId: `container-${props.id ?? 'undefined'}`,
+				controlId: `container-${this.id || this._.uid}`,
 
-				wrapperAttrs: {
-					class: ctx.attrs.class ?? ''
+				classObject: {
+					labelPosition:
+						_isEmpty(this.label) || _isEmpty(this.labelPosition)
+							? ''
+							: `label${this.labelPosition}`,
+					labelContainerFlex: this.dFlexInline ? 'label-container--inline' : 'label-container'
 				},
 
-				labelAttrs: ctx.attrs.labelAttrs ?? ctx.attrs['label-attrs'] ?? {},
+				wrapperAttrs: {
+					class: this.$attrs.class ?? '',
+					'data-control-type': this.$attrs['data-control-type']
+				},
+
+				labelAttrs: this.$attrs.labelAttrs ?? this.$attrs['label-attrs'] ?? {},
 
 				sortablePlugin: null
 			}
@@ -277,16 +302,6 @@
 			labelId()
 			{
 				return `label_${this.id}`
-			},
-
-			/**
-			 * The class that determines the label position.
-			 */
-			labelPositionClass()
-			{
-				return _isEmpty(this.label) || _isEmpty(this.labelPosition)
-					? ''
-					: `label${this.labelPosition}`
 			},
 
 			/**
@@ -317,7 +332,7 @@
 			},
 
 			displayTooltip() {
-				return this.tooltipText && !_isEmpty(this.label)
+				return this.popoverText && !_isEmpty(this.label)
 			},
 
 			displaySuggestions() {
@@ -325,7 +340,7 @@
 			},
 
 			hasLabelSlot() {
-				return !!this.$slots.label
+				return !!this.$slots.label;
 			},
 
 			hasLabelContainer() {
@@ -431,14 +446,6 @@
 			reportingModeOn()
 			{
 				this.draggable(false)
-			},
-
-			$attrs: {
-				handler(attrs)
-				{
-					this.wrapperAttrs.class = attrs.class ?? ''
-				},
-				deep: true
 			}
 		}
 	}

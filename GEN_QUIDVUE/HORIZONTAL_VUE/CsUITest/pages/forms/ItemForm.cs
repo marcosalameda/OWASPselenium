@@ -77,7 +77,7 @@ public class ItemForm : Form
 	/// <summary>
 	/// Specifications
 	/// </summary>
-	public DocumentControl ItemTechspec => new DocumentControl(driver, ContainerLocator, "ITEM____ITEM_TECHSPEC-container");
+	public DocumentControl ItemTechspec => new DocumentControl(driver, ContainerLocator, "ITEM____ITEM_TECHSPEC");
 
 	public ItemForm(IWebDriver driver, FORM_MODE mode, By? containerLocator = null)
 		: base(driver, mode, "ITEM", containerLocator: containerLocator) { }

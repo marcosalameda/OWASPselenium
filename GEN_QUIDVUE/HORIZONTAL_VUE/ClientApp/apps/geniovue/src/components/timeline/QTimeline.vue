@@ -32,14 +32,8 @@
 
 		<!-- Timeline builder -->
 		<q-timeline-collapsible :show="isExpanded">
-			<div
-				:class="tipoTimeline === 'S'
-					? 'c-simple_accordion__panel-body'
-					: 'c-accordion__panel-body'">
-				<div
-					:class="tipoTimeline === 'S'
-						? 'c-simple_timeline__container c-simple_timeline--alternate'
-						: 'c-timeline__container c-timeline--alternate'">
+			<div class="c-accordion__panel-body">
+				<div class="c-timeline--alternate c-timeline__container">
 					<template
 						v-for="(groups, groupKey) in groupedData"
 						:key="groupKey">
@@ -49,20 +43,23 @@
 								:key="tlItem.Identifier"
 								class="c-timeline__item"
 								data-testid="item-card">
-								<div v-if="tlItem.Texto && tlItem.TipoTimeLine !== 'S'">
+								<!-- Selected group === null -> render all -->
+								<!-- TODO: check tlItem.Data condition as well  -->
+								<div v-if="tlItem.Texto">
 									<q-timeline-circle
 										:circlestyle="tlItem.Background"
 										:icon="tlItem.Icon" />
+
+									<q-timeline-item
+										data-testid="vertical-timeline"
+										:aria-expanded="isExpanded"
+										role="definition"
+										aria-label="vertical-timeline"
+										:aria-hidden="isExpanded"
+										:tl-item="tlItem"
+										:date-time-format="config.dateTimeFormat"
+										@form-popup="$emit('show-popup', $event)" />
 								</div>
-								<q-timeline-item
-									data-testid="vertical-timeline"
-									:aria-expanded="isExpanded"
-									role="definition"
-									aria-label="vertical-timeline"
-									:aria-hidden="isExpanded"
-									:tl-item="tlItem"
-									:date-time-format="config.dateTimeFormat"
-									@form-popup="$emit('show-popup', $event)" />
 							</div>
 						</template>
 					</template>
@@ -117,14 +114,6 @@
 			},
 
 			/**
-			 * The type of the timeline.
-			 */
-			tipoTimeline: {
-				type: String,
-				required: true
-			},
-
-			/**
 			 * The timeline configuration.
 			 */
 			config: {
@@ -167,7 +156,7 @@
 			 */
 			showSummary()
 			{
-				return this.config.scale !== 'un' || this.tipoTimeline === 'S'
+				return this.config.scale !== 'un'
 			}
 		},
 
@@ -213,9 +202,7 @@
 						this.groupedData = this.groupByDay(tlItems)
 						break
 					case 'un':
-						this.groupedData = tlItems.scale === "un" && tlItems.TipoTimeLine !== "S"
-							? this.groupIndividually(tlItems)
-							: this.groupByDay(tlItems);
+						this.groupedData = this.groupIndividually(tlItems)
 						break
 					default:
 						break
@@ -227,11 +214,11 @@
 			 */
 			groupByYear(tlItems)
 			{
-				const yearGroups = {}
+				let yearGroups = {}
 
 				tlItems.forEach((row) => {
-					const newDate = new Date(row.Data)
-					const yearNotation = newDate.getFullYear()
+					let newDate = new Date(row.Data)
+					let yearNotation = newDate.getFullYear()
 
 					yearGroups[yearNotation] = [
 						...(yearGroups[yearNotation] || []),
@@ -247,13 +234,13 @@
 			 */
 			groupByMonth(tlItems)
 			{
-				const monthGroups = {}
+				let monthGroups = {}
 
 				tlItems.forEach((row) => {
 					if (row.Data)
 					{
-						const newDate = new Date(row.Data)
-						const monthGroupNotation = 1 + newDate.getMonth() + '/' + newDate.getFullYear()
+						let newDate = new Date(row.Data)
+						let monthGroupNotation = 1 + newDate.getMonth() + '/' + newDate.getFullYear()
 
 						monthGroups[monthGroupNotation] = [
 							...(monthGroups[monthGroupNotation] || []),
@@ -270,7 +257,7 @@
 			 */
 			groupByWeek(tlItems)
 			{
-				const weekGroups = {}
+				let weekGroups = {}
 
 				tlItems.forEach((row) => {
 					const newDate = new Date(row.Data)
@@ -292,11 +279,11 @@
 			 */
 			groupByDay(tlItems)
 			{
-				const dayGroups = {}
+				let dayGroups = {}
 
 				tlItems.forEach((row) => {
-					const newDate = new Date(row.Data)
-					const dayNotation =
+					let newDate = new Date(row.Data)
+					let dayNotation =
 						newDate.getUTCDate() +
 						'/' +
 						(1 + newDate.getMonth()) +
@@ -317,11 +304,11 @@
 			 */
 			groupIndividually(tlItems)
 			{
-				const groups = {}
+				let groups = {}
 
 				tlItems.forEach((row) => {
-					const newDate = new Date(row.Data)
-					const dayNotation =
+					let newDate = new Date(row.Data)
+					let dayNotation =
 						newDate.getUTCDate() +
 						'/' +
 						(1 + newDate.getMonth()) +

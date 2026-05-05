@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using System.Threading;
-using System.Globalization;
 using CSGenio.framework;
 
 namespace CSGenio.persistence
@@ -144,8 +142,6 @@ namespace CSGenio.persistence
 
         public static string FromDateTime(DateTime Qvalue, DatabaseType link)
         {
-			Thread.CurrentThread.CurrentCulture = CultureInfo.InvariantCulture;
-
             DateTime data = (DateTime)Qvalue;
             if (data.Equals(DateTime.MinValue))
                 return "NULL";

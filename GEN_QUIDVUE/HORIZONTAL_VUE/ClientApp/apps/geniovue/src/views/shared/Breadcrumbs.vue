@@ -12,8 +12,8 @@
 						<a
 							id="dropdown-menu-link"
 							class="dropdown-toggle dropdown n-breadcrumb__link"
+							href="javascript:void(0)"
 							role="button"
-							href="#"
 							data-toggle="dropdown"
 							aria-haspopup="true"
 							aria-expanded="false">
@@ -213,7 +213,7 @@
 				if (typeof menuOrder !== 'string' || this.isEmpty(menuOrder) || !Array.isArray(menus) || menus.length === 0)
 					return ''
 
-				for (const m of menus)
+				for (let m of menus)
 				{
 					if (menuOrder.startsWith(m.Order))
 					{
@@ -294,7 +294,7 @@
 				const breadcrumbType = this.getBreadcrumbType(navEntry)
 				const breadcrumbIcon = this.getBreadcrumbIcon(navEntry)
 				const breadcrumbText = this.getBreadcrumbText(navEntry)
-				const hoverText = breadcrumbType === breadcrumbTypes.home ? this.Resources[hardcodedTexts.initialPage] : null
+				const hoverText = breadcrumbType === breadcrumbTypes.home ? this.Resources[hardcodedTexts.initialPage] : breadcrumbText
 				const humanKey = this.getHumanKey(navEntry)
 				const isActive = this.isEntryActive(navEntry)
 
@@ -317,7 +317,7 @@
 				const navHistory = navDataStore.navigation.getHistory(this.navigationId).convertToCollection()
 				const breadcrumbsData = []
 
-				for (const navEntry of navHistory)
+				for (let navEntry of navHistory)
 				{
 					if (navEntry.isNested)
 						continue

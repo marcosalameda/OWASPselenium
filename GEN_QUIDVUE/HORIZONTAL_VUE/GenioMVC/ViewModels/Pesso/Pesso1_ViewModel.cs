@@ -1,20 +1,20 @@
-﻿using CSGenio.business;
-using CSGenio.framework;
-using CSGenio.persistence;
-using GenioMVC.Helpers;
-using GenioMVC.Models.Exception;
-using GenioMVC.Models.Navigation;
+﻿using JsonIgnoreAttribute = System.Text.Json.Serialization.JsonIgnoreAttribute;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Quidgest.Persistence;
-using Quidgest.Persistence.GenericQuery;
-
 using System.Collections;
 using System.Collections.Concurrent;
 using System.Collections.Specialized;
 using System.ComponentModel.DataAnnotations;
 using System.Data;
 using System.Globalization;
-using System.Text.Json.Serialization;
+
+using CSGenio.business;
+using CSGenio.framework;
+using CSGenio.persistence;
+using GenioMVC.Helpers;
+using GenioMVC.Models.Exception;
+using GenioMVC.Models.Navigation;
+using Quidgest.Persistence;
+using Quidgest.Persistence.GenericQuery;
 
 namespace GenioMVC.ViewModels.Pesso
 {
@@ -53,7 +53,6 @@ namespace GenioMVC.ViewModels.Pesso
 		public string ValCodregia { get; set; }
 
 		#endregion
-
 		/// <summary>
 		/// Title: "Photo" | Type: "IJ"
 		/// </summary>
@@ -115,7 +114,7 @@ namespace GenioMVC.ViewModels.Pesso
 		/// Title: "Country" | Type: "C"
 		/// </summary>
 		[ValidateSetAccess]
-		public string CntryValCountry
+		public string CntryValCountry 
 		{
 			get
 			{
@@ -137,7 +136,7 @@ namespace GenioMVC.ViewModels.Pesso
 		/// Title: "Country" | Type: "C"
 		/// </summary>
 		[ValidateSetAccess]
-		public string Pais1ValCountry
+		public string Pais1ValCountry 
 		{
 			get
 			{
@@ -365,7 +364,12 @@ namespace GenioMVC.ViewModels.Pesso
 			}
 		}
 
-		/// <inheritdoc />
+		/// <summary>
+		/// Sets the value of a single property of the view model based on the provided table and field names.
+		/// </summary>
+		/// <param name="fullFieldName">The full field name in the format "table.field".</param>
+		/// <param name="value">The field value.</param>
+		/// <exception cref="ArgumentNullException">Thrown if <paramref name="fullFieldName"/> is null.</exception>
 		public override void SetViewModelValue(string fullFieldName, object value)
 		{
 			try
@@ -473,17 +477,6 @@ namespace GenioMVC.ViewModels.Pesso
 				// Conexão deve estar aberta de fora. Podem haver formulas que utilizam funções "manuais".
 				// TODO: It needs to be analyzed whether we should disable the security of field filling here. If there is any case where the field with the block condition can only be calculated after the double calculation of the formulas.
 				MapToModel(Model);
-
-				// If it's inserting or duplicating, needs to fill the default values.
-				if (Navigation.CurrentLevel.FormMode == FormMode.New || Navigation.CurrentLevel.FormMode == FormMode.Duplicate)
-				{
-					FunctionType funcType = Navigation.CurrentLevel.FormMode == FormMode.New
-						? FunctionType.INS
-						: FunctionType.DUP;
-
-					Model.baseklass.fillValuesDefault(m_userContext.PersistentSupport, funcType);
-				}
-
 				// Preencher operações internas
 				Model.klass.fillInternalOperations(m_userContext.PersistentSupport, oldvalues);
 				MapFromModel(Model);
@@ -529,7 +522,6 @@ namespace GenioMVC.ViewModels.Pesso
 			Load_Pesso1__categcategory(qs, lazyLoad);
 			Load_Pesso1__cmpnydesignat(qs, lazyLoad);
 			Load_Pesso1__regi1regiao__(qs, lazyLoad);
-
 // USE /[MANUAL GQT VIEWMODEL_LOADPARTIAL PESSO1]/
 		}
 
@@ -545,8 +537,6 @@ namespace GenioMVC.ViewModels.Pesso
 			CrudViewModelFieldValidator validator = new(m_userContext.User.Language);
 
 			validator.StringLength("ValName", Resources.Resources.NAME_23841, ValName, 85);
-
-			validator.Required("ValName", Resources.Resources.NAME_23841, ViewModelConversion.ToString(ValName), FieldType.TEXT.GetFormatting());
 			validator.StringLength("ValTelephon", Resources.Resources.TELEPHONE28697, ValTelephon, 20);
 			validator.StringLength("ValEmail", Resources.Resources.EMAIL_44228, ValEmail, 254);
 			validator.StringLength("CntryValCountry", Resources.Resources.COUNTRY64133, CntryValCountry, 90);
@@ -606,7 +596,10 @@ namespace GenioMVC.ViewModels.Pesso
 				}
 			}
 
-			TableCategCategory = new TableDBEdit<Models.Categ>();
+			TableCategCategory = new TableDBEdit<Models.Categ>
+			{
+				IsLazyLoad = lazyLoad
+			};
 
 			if (lazyLoad)
 			{
@@ -621,7 +614,7 @@ namespace GenioMVC.ViewModels.Pesso
 
 			if (pesso1__categcategoryDoLoad)
 			{
-				List<ColumnSort> sorts = [];
+				List<ColumnSort> sorts = new List<ColumnSort>();
 				ColumnSort requestedSort = GetRequestSort(TableCategCategory, "sTableCategCategory", "dTableCategCategory", qs, "categ");
 				if (requestedSort != null)
 					sorts.Add(requestedSort);
@@ -672,7 +665,7 @@ namespace GenioMVC.ViewModels.Pesso
 
 				TableCategCategory.SetPagination(page, numberItems, listing.HasMore, listing.GetTotal, listing.TotalRecords);
 				TableCategCategory.Query = query;
-				TableCategCategory.Elements = listing.RowsForViewModel((r) => new GenioMVC.Models.Categ(m_userContext, r, true, _fieldsToSerialize_PESSO1__CATEGCATEGORY));
+				TableCategCategory.Elements = listing.RowsForViewModel<GenioMVC.Models.Categ>((r) => new GenioMVC.Models.Categ(m_userContext, r, true, _fieldsToSerialize_PESSO1__CATEGCATEGORY));
 
 				//created by [ MH ] at [ 14.04.2016 ] - Foi alterada a forma de retornar a key do novo registo inserido / editado no form de apoio do DBEdit.
 				//last update by [ MH ] at [ 10.05.2016 ] - Validação se key encontra-se no level atual, as chaves dos niveis anteriores devem ser ignorados.
@@ -794,7 +787,10 @@ namespace GenioMVC.ViewModels.Pesso
 				}
 			}
 
-			TableCmpnyDesignat = new TableDBEdit<Models.Cmpny>();
+			TableCmpnyDesignat = new TableDBEdit<Models.Cmpny>
+			{
+				IsLazyLoad = lazyLoad
+			};
 
 			if (lazyLoad)
 			{
@@ -809,7 +805,7 @@ namespace GenioMVC.ViewModels.Pesso
 
 			if (pesso1__cmpnydesignatDoLoad)
 			{
-				List<ColumnSort> sorts = [];
+				List<ColumnSort> sorts = new List<ColumnSort>();
 				ColumnSort requestedSort = GetRequestSort(TableCmpnyDesignat, "sTableCmpnyDesignat", "dTableCmpnyDesignat", qs, "cmpny");
 				if (requestedSort != null)
 					sorts.Add(requestedSort);
@@ -859,7 +855,7 @@ namespace GenioMVC.ViewModels.Pesso
 
 				TableCmpnyDesignat.SetPagination(page, numberItems, listing.HasMore, listing.GetTotal, listing.TotalRecords);
 				TableCmpnyDesignat.Query = query;
-				TableCmpnyDesignat.Elements = listing.RowsForViewModel((r) => new GenioMVC.Models.Cmpny(m_userContext, r, true, _fieldsToSerialize_PESSO1__CMPNYDESIGNAT));
+				TableCmpnyDesignat.Elements = listing.RowsForViewModel<GenioMVC.Models.Cmpny>((r) => new GenioMVC.Models.Cmpny(m_userContext, r, true, _fieldsToSerialize_PESSO1__CMPNYDESIGNAT));
 
 				//created by [ MH ] at [ 14.04.2016 ] - Foi alterada a forma de retornar a key do novo registo inserido / editado no form de apoio do DBEdit.
 				//last update by [ MH ] at [ 10.05.2016 ] - Validação se key encontra-se no level atual, as chaves dos niveis anteriores devem ser ignorados.
@@ -987,7 +983,10 @@ namespace GenioMVC.ViewModels.Pesso
 			// History limit
 			pesso1__regi1regiao__DoLoad &= AddCriteriaHistoryLimit(pesso1__regi1regiao__Conds, CSGenio.business.CSGenioAregi1.FldCodcntry, OperationType.EQUAL, "pais", true);
 
-			TableRegi1Regiao = new TableDBEdit<Models.Regi1>();
+			TableRegi1Regiao = new TableDBEdit<Models.Regi1>
+			{
+				IsLazyLoad = lazyLoad
+			};
 
 			if (lazyLoad)
 			{
@@ -1002,7 +1001,7 @@ namespace GenioMVC.ViewModels.Pesso
 
 			if (pesso1__regi1regiao__DoLoad)
 			{
-				List<ColumnSort> sorts = [];
+				List<ColumnSort> sorts = new List<ColumnSort>();
 				ColumnSort requestedSort = GetRequestSort(TableRegi1Regiao, "sTableRegi1Regiao", "dTableRegi1Regiao", qs, "regi1");
 				if (requestedSort != null)
 					sorts.Add(requestedSort);
@@ -1052,7 +1051,7 @@ namespace GenioMVC.ViewModels.Pesso
 
 				TableRegi1Regiao.SetPagination(page, numberItems, listing.HasMore, listing.GetTotal, listing.TotalRecords);
 				TableRegi1Regiao.Query = query;
-				TableRegi1Regiao.Elements = listing.RowsForViewModel((r) => new GenioMVC.Models.Regi1(m_userContext, r, true, _fieldsToSerialize_PESSO1__REGI1REGIAO__));
+				TableRegi1Regiao.Elements = listing.RowsForViewModel<GenioMVC.Models.Regi1>((r) => new GenioMVC.Models.Regi1(m_userContext, r, true, _fieldsToSerialize_PESSO1__REGI1REGIAO__));
 
 				//created by [ MH ] at [ 14.04.2016 ] - Foi alterada a forma de retornar a key do novo registo inserido / editado no form de apoio do DBEdit.
 				//last update by [ MH ] at [ 10.05.2016 ] - Validação se key encontra-se no level atual, as chaves dos niveis anteriores devem ser ignorados.

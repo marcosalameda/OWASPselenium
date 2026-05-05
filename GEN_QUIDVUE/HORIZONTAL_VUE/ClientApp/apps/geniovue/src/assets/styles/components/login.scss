@@ -17,11 +17,6 @@
 		height: 100%;
 	}
 
-	// Removes the container padding in the login pop up
-	.q-container {
-		padding: 0;
-	}
-
 	&__background {
 		margin-top: auto;
 		margin-bottom: auto;
@@ -46,12 +41,8 @@
 		color: $white;
 		font-weight: 500;
 
-		h1 {
+		p {
 			padding-top: 1rem;
-			margin-bottom: 1rem;
-			font-size: 1.35rem;
-			font-weight: 500;
-			line-height: 1.5;
 		}
 
 		img {
@@ -244,8 +235,8 @@ select.f-login__input-field:focus::-ms-value {
 		background: none;
 
 		&__brand img {
-			max-height: 75px;
-			width: auto;
+			max-height:75px;
+			width:auto;
 		}
 	}
 
@@ -253,11 +244,6 @@ select.f-login__input-field:focus::-ms-value {
 		width: 300px;
 		background-color: $secondary;
 		padding: 20px;
-		color: $primary;
-	}
-
-	.f-login__link {
-		text-decoration: underline;
 	}
 
 	.c-card__body {
@@ -454,17 +440,18 @@ li.n-menu__aside-item .q-button--outlined {
 		}
 	}
 
-	.q-button--login:not(.q-button--loading) {
- 		&:not(:hover) {
-    		background-color: $primary;
-  		}
+	.q-button--login {
+		&:not(:hover) {
+			background-color: $primary;
+		}
 
 		.q-button__content {
 			color: $white;
 		}
 	}
-	
-	.q-logon-text {
+
+
+	.f-login__link, .q-logon-text {
 		color: $primary;
 	}
 
@@ -511,10 +498,10 @@ li.n-menu__aside-item .q-button--outlined {
 		}
 	}
 
-	.q-button--login:not(.q-button--loading) {
-  		&:not(:hover) {
-   			background-color: $primary;
-  		}
+	.q-button--login {
+		&:not(:hover) {
+			background-color: $primary;
+		}
 
 		.q-button__content {
 			color: $white;

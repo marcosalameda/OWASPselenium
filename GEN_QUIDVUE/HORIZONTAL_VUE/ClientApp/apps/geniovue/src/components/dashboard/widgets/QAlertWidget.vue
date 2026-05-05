@@ -1,10 +1,8 @@
 ﻿<template>
 	<a
-		tabindex="0"
-		role="button"
+		href="javascript:void(0)"
 		:class="classes"
-		@click.stop="onAlertClick"
-		@keydown.enter.stop="onAlertClick">
+		@click.stop="onAlertClick">
 		<q-counter-widget
 			v-if="widget.data"
 			:value="widgetValue"

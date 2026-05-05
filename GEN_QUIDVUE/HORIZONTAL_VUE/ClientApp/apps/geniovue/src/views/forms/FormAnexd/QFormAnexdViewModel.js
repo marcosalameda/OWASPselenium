@@ -1,4 +1,4 @@
-﻿/* eslint-disable @typescript-eslint/no-unused-vars */
+﻿/* eslint-disable no-unused-vars */
 import { computed, reactive, watch } from 'vue'
 import _merge from 'lodash-es/merge'
 
@@ -11,7 +11,7 @@ import netAPI from '@quidgest/clientapp/network'
 import qApi from '@/api/genio/quidgestFunctions.js'
 import qFunctions from '@/api/genio/projectFunctions.js'
 import qProjArrays from '@/api/genio/projectArrays.js'
-/* eslint-enable @typescript-eslint/no-unused-vars */
+/* eslint-enable no-unused-vars */
 
 /**
  * Represents a ViewModel class.
@@ -25,11 +25,11 @@ export default class ViewModel extends FormViewModelBase
 	 * @param {object} options - The options for the ViewModel
 	 * @param {object} values - A ViewModel instance to copy values from
 	 */
-	// eslint-disable-next-line @typescript-eslint/no-unused-vars
+	// eslint-disable-next-line no-unused-vars
 	constructor(vueContext, options, values)
 	{
 		super(vueContext, options)
-		// eslint-disable-next-line @typescript-eslint/no-unused-vars
+		// eslint-disable-next-line no-unused-vars
 		const vm = this.vueContext
 
 		// The view model metadata
@@ -37,9 +37,8 @@ export default class ViewModel extends FormViewModelBase
 			name: 'ANEXD',
 			area: 'ANEXD',
 			actions: {
-				recalculateFormulas: 'RecalculateFormulas_Anexd',
-				updateFilesTickets: 'UpdateFilesTicketsAnexd',
-				setFile: 'SetFileAnexd'
+				recalculateFormulas: 'RecalculateFormulas_ANEXD',
+				updateFilesTickets: 'UpdateFilesTicketsANEXD'
 			}
 		})
 
@@ -51,7 +50,7 @@ export default class ViewModel extends FormViewModelBase
 			field: 'CODANEXD',
 			description: '',
 		}).cloneFrom(values?.ValCodanexd))
-		this.stopWatchers.push(watch(() => this.ValCodanexd.value, (newValue, oldValue) => this.onUpdate('anexd.codanexd', this.ValCodanexd, newValue, oldValue)))
+		watch(() => this.ValCodanexd.value, (newValue, oldValue) => this.onUpdate('anexd.codanexd', this.ValCodanexd, newValue, oldValue))
 
 		/** The used foreign keys. */
 		this.ValCodequip = reactive(new modelFieldType.ForeignKey({
@@ -62,7 +61,7 @@ export default class ViewModel extends FormViewModelBase
 			relatedArea: 'EQUIP',
 			description: '',
 		}).cloneFrom(values?.ValCodequip))
-		this.stopWatchers.push(watch(() => this.ValCodequip.value, (newValue, oldValue) => this.onUpdate('anexd.codequip', this.ValCodequip, newValue, oldValue)))
+		watch(() => this.ValCodequip.value, (newValue, oldValue) => this.onUpdate('anexd.codequip', this.ValCodequip, newValue, oldValue))
 
 		this.ValCodlang = reactive(new modelFieldType.ForeignKey({
 			id: 'ValCodlang',
@@ -72,7 +71,7 @@ export default class ViewModel extends FormViewModelBase
 			relatedArea: 'LANGU',
 			description: computed(() => this.Resources._LANGUAGE30793),
 		}).cloneFrom(values?.ValCodlang))
-		this.stopWatchers.push(watch(() => this.ValCodlang.value, (newValue, oldValue) => this.onUpdate('anexd.codlang', this.ValCodlang, newValue, oldValue)))
+		watch(() => this.ValCodlang.value, (newValue, oldValue) => this.onUpdate('anexd.codlang', this.ValCodlang, newValue, oldValue))
 
 		/** The remaining form fields. */
 		this.TableEquipRegistnr = reactive(new modelFieldType.String({
@@ -83,9 +82,8 @@ export default class ViewModel extends FormViewModelBase
 			field: 'REGISTNR',
 			maxLength: 6,
 			description: computed(() => this.Resources.NO__REGISTER04207),
-			ignoreFldSubmit: true,
 		}).cloneFrom(values?.TableEquipRegistnr))
-		this.stopWatchers.push(watch(() => this.TableEquipRegistnr.value, (newValue, oldValue) => this.onUpdate('equip.registnr', this.TableEquipRegistnr, newValue, oldValue)))
+		watch(() => this.TableEquipRegistnr.value, (newValue, oldValue) => this.onUpdate('equip.registnr', this.TableEquipRegistnr, newValue, oldValue))
 
 		this.ValDthranex = reactive(new modelFieldType.DateTime({
 			id: 'ValDthranex',
@@ -94,7 +92,7 @@ export default class ViewModel extends FormViewModelBase
 			field: 'DTHRANEX',
 			description: computed(() => this.Resources.ATTACHED26247),
 		}).cloneFrom(values?.ValDthranex))
-		this.stopWatchers.push(watch(() => this.ValDthranex.value, (newValue, oldValue) => this.onUpdate('anexd.dthranex', this.ValDthranex, newValue, oldValue)))
+		watch(() => this.ValDthranex.value, (newValue, oldValue) => this.onUpdate('anexd.dthranex', this.ValDthranex, newValue, oldValue))
 
 		this.ValReferenc = reactive(new modelFieldType.String({
 			id: 'ValReferenc',
@@ -104,7 +102,7 @@ export default class ViewModel extends FormViewModelBase
 			maxLength: 50,
 			description: computed(() => this.Resources.REFERENCE28402),
 		}).cloneFrom(values?.ValReferenc))
-		this.stopWatchers.push(watch(() => this.ValReferenc.value, (newValue, oldValue) => this.onUpdate('anexd.referenc', this.ValReferenc, newValue, oldValue)))
+		watch(() => this.ValReferenc.value, (newValue, oldValue) => this.onUpdate('anexd.referenc', this.ValReferenc, newValue, oldValue))
 
 		this.ValTitle = reactive(new modelFieldType.String({
 			id: 'ValTitle',
@@ -114,7 +112,7 @@ export default class ViewModel extends FormViewModelBase
 			maxLength: 85,
 			description: computed(() => this.Resources.TITLE21885),
 		}).cloneFrom(values?.ValTitle))
-		this.stopWatchers.push(watch(() => this.ValTitle.value, (newValue, oldValue) => this.onUpdate('anexd.title', this.ValTitle, newValue, oldValue)))
+		watch(() => this.ValTitle.value, (newValue, oldValue) => this.onUpdate('anexd.title', this.ValTitle, newValue, oldValue))
 
 		this.TableLanguLangua = reactive(new modelFieldType.String({
 			type: 'Lookup',
@@ -124,9 +122,8 @@ export default class ViewModel extends FormViewModelBase
 			field: 'LANGUA',
 			maxLength: 50,
 			description: computed(() => this.Resources.LANGUAGE16872),
-			ignoreFldSubmit: true,
 		}).cloneFrom(values?.TableLanguLangua))
-		this.stopWatchers.push(watch(() => this.TableLanguLangua.value, (newValue, oldValue) => this.onUpdate('langu.langua', this.TableLanguLangua, newValue, oldValue)))
+		watch(() => this.TableLanguLangua.value, (newValue, oldValue) => this.onUpdate('langu.langua', this.TableLanguLangua, newValue, oldValue))
 
 		this.ValTittradu = reactive(new modelFieldType.String({
 			id: 'ValTittradu',
@@ -137,7 +134,7 @@ export default class ViewModel extends FormViewModelBase
 			isFixed: true,
 			valueFormula: {
 				stopRecalcCondition() { return false },
-				// eslint-disable-next-line @typescript-eslint/no-unused-vars
+				// eslint-disable-next-line no-unused-vars
 				fnFormula(params)
 				{
 					const fieldId = params?.originField?.id
@@ -150,7 +147,7 @@ export default class ViewModel extends FormViewModelBase
 			},
 			description: computed(() => this.Resources.TRANSLATED_TITLE58577),
 		}).cloneFrom(values?.ValTittradu))
-		this.stopWatchers.push(watch(() => this.ValTittradu.value, (newValue, oldValue) => this.onUpdate('anexd.tittradu', this.ValTittradu, newValue, oldValue)))
+		watch(() => this.ValTittradu.value, (newValue, oldValue) => this.onUpdate('anexd.tittradu', this.ValTittradu, newValue, oldValue))
 
 		this.ValDocument = reactive(new modelFieldType.Document({
 			id: 'ValDocument',
@@ -162,7 +159,7 @@ export default class ViewModel extends FormViewModelBase
 			currentDocument: computed(() => this.ValDocumentData),
 			description: computed(() => this.Resources.DOCUMENT00695),
 		}).cloneFrom(values?.ValDocument))
-		this.stopWatchers.push(watch(() => this.ValDocument.value, (newValue, oldValue) => this.onUpdate('anexd.document', this.ValDocument, newValue, oldValue)))
+		watch(() => this.ValDocument.value, (newValue, oldValue) => this.onUpdate('anexd.document', this.ValDocument, newValue, oldValue))
 
 		this.ValDocumentPropertiesVM = reactive(new modelFieldType.Base({
 			id: 'ValDocumentPropertiesVM',
@@ -175,15 +172,14 @@ export default class ViewModel extends FormViewModelBase
 			area: 'ANEXD',
 			field: 'DOCUMENTFK'
 		}).cloneFrom(values?.ValDocumentfk))
-		this.stopWatchers.push(watch(() => this.ValDocumentfk.value, (newValue, oldValue) => this.onUpdate('anexd.documentfk', this.ValDocumentfk, newValue, oldValue)))
-
+		watch(() => this.ValDocumentfk.value, (newValue, oldValue) => this.onUpdate('anexd.documentfk', this.ValDocumentfk, newValue, oldValue))
 		this.ValDocumentData = reactive(new modelFieldType.DocumentData({
 			id: 'ValDocumentData',
 			area: 'ANEXD',
 			field: 'DOCUMENTDATA',
 			ignoreFldSubmit: true
 		}).cloneFrom(values?.ValDocumentData))
-		this.stopWatchers.push(watch(() => this.ValDocumentData.value, (newValue, oldValue) => this.onUpdate('anexd.documentdata', this.ValDocumentData, newValue, oldValue), { deep: true }))
+		watch(() => this.ValDocumentData.value, (newValue, oldValue) => this.onUpdate('anexd.documentdata', this.ValDocumentData, newValue, oldValue), { deep: true })
 	}
 
 	/**

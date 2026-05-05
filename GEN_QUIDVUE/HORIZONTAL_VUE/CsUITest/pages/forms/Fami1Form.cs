@@ -10,18 +10,18 @@ public class Fami1Form : Form
 	/// <summary>
 	/// Equipment family
 	/// </summary>
-	public BaseInputControl Fami1Family => new BaseInputControl(driver, ContainerLocator, "container-FAMI1___FAMI1FAMILY__" + IdSuffix, "#FAMI1___FAMI1FAMILY__" + IdSuffix);
+	public BaseInputControl Fami1Family => new BaseInputControl(driver, ContainerLocator, "container-FAMI1___FAMI1FAMILY__", "#FAMI1___FAMI1FAMILY__");
 
 	/// <summary>
 	/// Type of equipment
 	/// </summary>
-	public ListControl PseudTiposequ => new ListControl(driver, ContainerLocator, "#FAMI1___PSEUDTIPOSEQU" + IdSuffix);
+	public ListControl PseudTiposequ => new ListControl(driver, ContainerLocator, "#FAMI1___PSEUDTIPOSEQU");
 
 	/// <summary>
 	/// Type of equipment
 	/// </summary>
 	public IWebElement PseudTiposeq1 => throw new NotImplementedException();
 
-	public Fami1Form(IWebDriver driver, FORM_MODE mode, By? containerLocator = null, bool usePkInId = false)
-		: base(driver, mode, "FAMI1", containerLocator: containerLocator, usePkInId: usePkInId) { }
+	public Fami1Form(IWebDriver driver, FORM_MODE mode, By? containerLocator = null)
+		: base(driver, mode, "FAMI1", containerLocator: containerLocator) { }
 }

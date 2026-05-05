@@ -1,6 +1,6 @@
-// @ts-expect-error -- types still WIP
+//@ts-expect-error
 export * from './eventTracker'
-// @ts-expect-error -- types still WIP
+//@ts-expect-error
 export * from './telemetryHandler'
-// @ts-expect-error -- types still WIP
+//@ts-expect-error
 export * from './tracingEvents'

@@ -9,13 +9,12 @@
 			<div
 				v-if="showFormHeader"
 				class="c-action-bar">
-				<component
+				<h1
 					v-if="formControl.uiComponents.header && formInfo.designation"
-					:is="topHeadingTag"
 					:id="formTitleId"
 					class="form-header">
 					{{ formInfo.designation }}
-				</component>
+				</h1>
 
 				<div class="c-action-bar__menu">
 					<template
@@ -39,13 +38,9 @@
 									:label="btn.label"
 									:disabled="btn.disabled"
 									@click="btn.action">
-									<template v-if="btn.icon">
-										<q-badge-indicator
-											:enabled="btn.badge?.isVisible ?? false"
-											:color="btn.badge?.color">
-											<q-icon v-bind="btn.icon" />
-										</q-badge-indicator>
-									</template>
+									<q-icon
+										v-if="btn.icon"
+										v-bind="btn.icon" />
 								</q-toggle-group-item>
 							</template>
 						</q-toggle-group>
@@ -57,7 +52,7 @@
 				v-if="$app.layout.FormAnchorsPosition === 'form-header' && visibleGroups.length > 0"
 				:anchors="anchorGroups"
 				:controls="visibleControls"
-				@focus-control="focusControl" />
+				@focus-control="(...args) => focusControl(...args)" />
 		</div>
 	</teleport>
 
@@ -78,7 +73,6 @@
 						v-if="btn.isActive && btn.isVisible && btn.showInHeading"
 						:id="`heading-${btn.id}`"
 						:label="btn.text"
-						:color="btn.color"
 						:variant="btn.variant"
 						:disabled="btn.disabled"
 						:icon-pos="btn.iconPos"
@@ -92,21 +86,18 @@
 			</q-button-group>
 		</div>
 
-		<q-container
-			fluid
+		<div
+			class="form-flow"
 			data-key="REGIAPRO"
-			:data-identifier="primaryKeyValue"
-			:data-loading="!formInitialDataLoaded || !isActiveForm">
+			:data-loading="!formInitialDataLoaded">
 			<template v-if="formControl.initialized && showFormBody">
-				<q-row v-if="controls.REGIAPROCNTRYCOUNTRY_.isVisible || controls.REGIAPROREGIOREGIAO__.isVisible || controls.REGIAPROPAIS1COUNTRY_.isVisible || controls.REGIAPROPSEUDIMOVEISS.isVisible || controls.REGIAPROPSEUDIMOVEISL.isVisible || controls.REGIAPROPSEUDIMOVEISG.isVisible">
-					<q-col
-						v-if="controls.REGIAPROCNTRYCOUNTRY_.isVisible"
-						cols="auto">
+				<q-row-container v-show="controls.REGIAPROCNTRYCOUNTRY_.isVisible || controls.REGIAPROREGIOREGIAO__.isVisible || controls.REGIAPROPAIS1COUNTRY_.isVisible || controls.REGIAPROPSEUDIMOVEISS.isVisible || controls.REGIAPROPSEUDIMOVEISL.isVisible || controls.REGIAPROPSEUDIMOVEISG.isVisible">
+					<q-control-wrapper
+						v-show="controls.REGIAPROCNTRYCOUNTRY_.isVisible"
+						class="${Vue.GetControlWrapperClass($controlsColumn)}">
 						<base-input-structure
-							v-if="controls.REGIAPROCNTRYCOUNTRY_.isVisible"
 							class="i-text"
-							v-bind="controls.REGIAPROCNTRYCOUNTRY_.wrapperProps"
-							:id="getControlId(controls.REGIAPROCNTRYCOUNTRY_)"
+							v-bind="controls.REGIAPROCNTRYCOUNTRY_"
 							v-on="controls.REGIAPROCNTRYCOUNTRY_.handlers"
 							:loading="controls.REGIAPROCNTRYCOUNTRY_.props.loading"
 							:reporting-mode-on="reportingModeCAV"
@@ -114,41 +105,35 @@
 							<q-lookup
 								v-if="controls.REGIAPROCNTRYCOUNTRY_.isVisible"
 								v-bind="controls.REGIAPROCNTRYCOUNTRY_.props"
-								:id="getControlId(controls.REGIAPROCNTRYCOUNTRY_)"
 								v-on="controls.REGIAPROCNTRYCOUNTRY_.handlers" />
 							<q-see-more-regiaprocntrycountry
 								v-if="controls.REGIAPROCNTRYCOUNTRY_.seeMoreIsVisible"
 								v-bind="controls.REGIAPROCNTRYCOUNTRY_.seeMoreParams"
 								v-on="controls.REGIAPROCNTRYCOUNTRY_.handlers" />
 						</base-input-structure>
-					</q-col>
-					<q-col
-						v-if="controls.REGIAPROREGIOREGIAO__.isVisible"
-						cols="auto">
+					</q-control-wrapper>
+					<q-control-wrapper
+						v-show="controls.REGIAPROREGIOREGIAO__.isVisible"
+						class="${Vue.GetControlWrapperClass($controlsColumn)}">
 						<base-input-structure
-							v-if="controls.REGIAPROREGIOREGIAO__.isVisible"
 							class="i-text"
-							v-bind="controls.REGIAPROREGIOREGIAO__.wrapperProps"
-							:id="getControlId(controls.REGIAPROREGIOREGIAO__)"
+							v-bind="controls.REGIAPROREGIOREGIAO__"
 							v-on="controls.REGIAPROREGIOREGIAO__.handlers"
 							:loading="controls.REGIAPROREGIOREGIAO__.props.loading"
 							:reporting-mode-on="reportingModeCAV"
 							:suggestion-mode-on="suggestionModeOn">
 							<q-text-field
 								v-bind="controls.REGIAPROREGIOREGIAO__.props"
-								:id="getControlId(controls.REGIAPROREGIOREGIAO__)"
 								@blur="onBlur(controls.REGIAPROREGIOREGIAO__, model.ValRegiao.value)"
 								@change="model.ValRegiao.fnUpdateValueOnChange" />
 						</base-input-structure>
-					</q-col>
-					<q-col
-						v-if="controls.REGIAPROPAIS1COUNTRY_.isVisible"
-						cols="auto">
+					</q-control-wrapper>
+					<q-control-wrapper
+						v-show="controls.REGIAPROPAIS1COUNTRY_.isVisible"
+						class="${Vue.GetControlWrapperClass($controlsColumn)}">
 						<base-input-structure
-							v-if="controls.REGIAPROPAIS1COUNTRY_.isVisible"
 							class="i-text"
-							v-bind="controls.REGIAPROPAIS1COUNTRY_.wrapperProps"
-							:id="getControlId(controls.REGIAPROPAIS1COUNTRY_)"
+							v-bind="controls.REGIAPROPAIS1COUNTRY_"
 							v-on="controls.REGIAPROPAIS1COUNTRY_.handlers"
 							:loading="controls.REGIAPROPAIS1COUNTRY_.props.loading"
 							:reporting-mode-on="reportingModeCAV"
@@ -156,74 +141,58 @@
 							<q-lookup
 								v-if="controls.REGIAPROPAIS1COUNTRY_.isVisible"
 								v-bind="controls.REGIAPROPAIS1COUNTRY_.props"
-								:id="getControlId(controls.REGIAPROPAIS1COUNTRY_)"
 								v-on="controls.REGIAPROPAIS1COUNTRY_.handlers" />
 							<q-see-more-regiapropais1country
 								v-if="controls.REGIAPROPAIS1COUNTRY_.seeMoreIsVisible"
 								v-bind="controls.REGIAPROPAIS1COUNTRY_.seeMoreParams"
 								v-on="controls.REGIAPROPAIS1COUNTRY_.handlers" />
 						</base-input-structure>
-					</q-col>
-					<q-col
-						v-if="controls.REGIAPROPSEUDIMOVEISS.isVisible"
-						cols="auto">
+					</q-control-wrapper>
+					<q-control-wrapper
+						v-show="controls.REGIAPROPSEUDIMOVEISS.isVisible"
+						class="${Vue.GetControlWrapperClass($controlsColumn)}">
 						<q-table
-							v-if="controls.REGIAPROPSEUDIMOVEISS.isVisible"
+							v-show="controls.REGIAPROPSEUDIMOVEISS.isVisible"
 							v-bind="controls.REGIAPROPSEUDIMOVEISS"
-							:id="getControlId(controls.REGIAPROPSEUDIMOVEISS)"
-							v-on="controls.REGIAPROPSEUDIMOVEISS.handlers">
-							<template #header>
-								<q-table-config
-									:table-ctrl="controls.REGIAPROPSEUDIMOVEISS"
-									v-on="controls.REGIAPROPSEUDIMOVEISS.handlers" />
-							</template>
-							<!-- USE /[MANUAL GQT CUSTOM_TABLE REGIAPROPSEUDIMOVEISS]/ -->
-						</q-table>
-					</q-col>
-					<q-col
-						v-if="controls.REGIAPROPSEUDIMOVEISL.isVisible"
-						cols="auto">
+							v-on="controls.REGIAPROPSEUDIMOVEISS.handlers" />
+						<q-table-extra-extension
+							:list-ctrl="controls.REGIAPROPSEUDIMOVEISS"
+							v-on="controls.REGIAPROPSEUDIMOVEISS.handlers" />
+					</q-control-wrapper>
+					<q-control-wrapper
+						v-show="controls.REGIAPROPSEUDIMOVEISL.isVisible"
+						class="${Vue.GetControlWrapperClass($controlsColumn)}">
 						<q-table
-							v-if="controls.REGIAPROPSEUDIMOVEISL.isVisible"
+							v-show="controls.REGIAPROPSEUDIMOVEISL.isVisible"
 							v-bind="controls.REGIAPROPSEUDIMOVEISL"
-							:id="getControlId(controls.REGIAPROPSEUDIMOVEISL)"
-							v-on="controls.REGIAPROPSEUDIMOVEISL.handlers">
-							<template #header>
-								<q-table-config
-									:table-ctrl="controls.REGIAPROPSEUDIMOVEISL"
-									v-on="controls.REGIAPROPSEUDIMOVEISL.handlers" />
-							</template>
-							<!-- USE /[MANUAL GQT CUSTOM_TABLE REGIAPROPSEUDIMOVEISL]/ -->
-						</q-table>
-					</q-col>
-					<q-col
-						v-if="controls.REGIAPROPSEUDIMOVEISG.isVisible"
-						cols="auto">
+							v-on="controls.REGIAPROPSEUDIMOVEISL.handlers" />
+						<q-table-extra-extension
+							:list-ctrl="controls.REGIAPROPSEUDIMOVEISL"
+							v-on="controls.REGIAPROPSEUDIMOVEISL.handlers" />
+					</q-control-wrapper>
+					<q-control-wrapper
+						v-show="controls.REGIAPROPSEUDIMOVEISG.isVisible"
+						class="${Vue.GetControlWrapperClass($controlsColumn)}">
 						<q-table
-							v-if="controls.REGIAPROPSEUDIMOVEISG.isVisible"
+							v-show="controls.REGIAPROPSEUDIMOVEISG.isVisible"
 							v-bind="controls.REGIAPROPSEUDIMOVEISG"
-							:id="getControlId(controls.REGIAPROPSEUDIMOVEISG)"
-							v-on="controls.REGIAPROPSEUDIMOVEISG.handlers">
-							<template #header>
-								<q-table-config
-									:table-ctrl="controls.REGIAPROPSEUDIMOVEISG"
-									v-on="controls.REGIAPROPSEUDIMOVEISG.handlers" />
-							</template>
-							<!-- USE /[MANUAL GQT CUSTOM_TABLE REGIAPROPSEUDIMOVEISG]/ -->
-						</q-table>
-					</q-col>
-				</q-row>
+							v-on="controls.REGIAPROPSEUDIMOVEISG.handlers" />
+						<q-table-extra-extension
+							:list-ctrl="controls.REGIAPROPSEUDIMOVEISG"
+							v-on="controls.REGIAPROPSEUDIMOVEISG.handlers" />
+					</q-control-wrapper>
+				</q-row-container>
 			</template>
-		</q-container>
+		</div>
 	</teleport>
 
-	<q-divider v-if="!isPopup && showFormFooter" />
+	<hr v-if="!isPopup && showFormFooter" />
 
 	<teleport
 		v-if="formModalIsReady && showFormFooter"
 		:to="`#${uiContainersId.footer}`"
 		:disabled="!isPopup || isNested">
-		<q-row v-if="showFormFooter">
+		<q-row-container v-if="showFormFooter">
 			<div id="footer-action-btns">
 				<template
 					v-for="btn in formButtons"
@@ -232,7 +201,6 @@
 						v-if="btn.isActive && btn.isVisible && btn.showInFooter"
 						:id="`bottom-${btn.id}`"
 						:label="btn.text"
-						:color="btn.color"
 						:variant="btn.variant"
 						:disabled="btn.disabled"
 						:icon-pos="btn.iconPos"
@@ -244,12 +212,12 @@
 					</q-button>
 				</template>
 			</div>
-		</q-row>
+		</q-row-container>
 	</teleport>
 </template>
 
 <script>
-	/* eslint-disable @typescript-eslint/no-unused-vars */
+	/* eslint-disable no-unused-vars */
 	import { computed, defineAsyncComponent, readonly } from 'vue'
 	import { useRoute } from 'vue-router'
 
@@ -269,7 +237,7 @@
 	import qApi from '@/api/genio/quidgestFunctions.js'
 	import qFunctions from '@/api/genio/projectFunctions.js'
 	import qProjArrays from '@/api/genio/projectArrays.js'
-	/* eslint-enable @typescript-eslint/no-unused-vars */
+	/* eslint-enable no-unused-vars */
 
 	import FormViewModel from './QFormRegiaproViewModel.js'
 
@@ -348,8 +316,7 @@
 					primaryKey: 'ValCodregia',
 					designation: computed(() => this.Resources.IMOVEIS_NA_REGIAO56821),
 					identifier: '', // Unique identifier received by route (when it's nested).
-					mode: '',
-					availableAgents: [],
+					mode: ''
 				},
 
 				formButtons: {
@@ -457,11 +424,7 @@
 						showInFooter: true,
 						isActive: true,
 						isVisible: computed(() => vm.authData.isAllowed && vm.isEditable),
-						action: vm.saveForm,
-						badge: {
-							isVisible: computed(() => vm.model?.isDirty === true),
-							color: 'highlight'
-						}
+						action: vm.saveForm
 					},
 					confirmBtn: {
 						id: 'confirm-btn',
@@ -601,6 +564,7 @@
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						maxLength: 50,
+						labelId: 'label_REGIAPROREGIOREGIAO__',
 						controlLimits: [
 						],
 					}, this),
@@ -635,11 +599,10 @@
 					REGIAPROPSEUDIMOVEISS: new fieldControlClass.TableListControl({
 						id: 'REGIAPROPSEUDIMOVEISS',
 						name: 'IMOVEISS',
-						size: 'xxlarge',
+						size: '',
 						label: computed(() => this.Resources.NON_LIMITED_PROPERTI11098),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						headerLevel: computed(() => this.baseHeadingLevel + 1),
 						controller: 'REGIO',
 						action: 'Regiapro_ValImoveiss',
 						hasDependencies: false,
@@ -653,7 +616,6 @@
 								label: computed(() => this.Resources.PROPERTY_NAME18934),
 								dataLength: 85,
 								scrollData: 30,
-								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.CurrencyColumn({
 								order: 2,
@@ -664,7 +626,6 @@
 								scrollData: 12,
 								maxDigits: 9,
 								decimalPlaces: 2,
-								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.ImageColumn({
 								order: 3,
@@ -676,7 +637,6 @@
 								scrollData: 3,
 								sortable: false,
 								searchable: false,
-								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 4,
@@ -685,7 +645,6 @@
 								field: 'DESCRIPT',
 								label: computed(() => this.Resources.DESCRIPTION07383),
 								scrollData: 30,
-								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.GeographicColumn({
 								order: 5,
@@ -697,7 +656,6 @@
 								scrollData: 30,
 								sortable: false,
 								searchable: false,
-								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 6,
@@ -707,7 +665,6 @@
 								label: computed(() => this.Resources.PAIS_PESSOA61621),
 								dataLength: 90,
 								scrollData: 30,
-								export: 1,
 								pkColumn: 'ValCodcntry',
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
@@ -718,7 +675,6 @@
 								label: computed(() => this.Resources.COUNTRY64133),
 								dataLength: 90,
 								scrollData: 30,
-								export: 1,
 								pkColumn: 'ValCodcntry',
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 						],
@@ -735,8 +691,10 @@
 							permissions: {
 							},
 							searchBarConfig: {
-								visibility: false
+								visibility: false,
+								searchOnPressEnter: true
 							},
+							filtersVisible: false,
 							allowColumnFilters: false,
 							allowColumnSort: true,
 							crudActions: [
@@ -810,7 +768,9 @@
 									id: 'insert',
 									name: 'insert',
 									title: computed(() => this.Resources.INSERIR43365),
-									icon: { icon: 'add' },
+									icon: {
+										icon: 'add'
+									},
 									isInReadOnly: false,
 									params: {
 										action: vm.openFormAction,
@@ -857,7 +817,7 @@
 								sortOrder: 'asc'
 							}
 						},
-						globalEvents: ['changed-CNTRY', 'changed-REGIO', 'changed-PAIS1', 'changed-PROPR', 'changed-TPPRO', 'changed-PESSO'],
+						globalEvents: ['changed-REGIO', 'changed-TPPRO', 'changed-PESSO', 'changed-CNTRY', 'changed-PROPR', 'changed-PAIS1'],
 						uuid: 'Regiapro_ValImoveiss',
 						allSelectedRows: 'false',
 						controlLimits: [
@@ -867,22 +827,15 @@
 								dependencyField: 'REGIO.CODREGIA',
 								fnValueSelector: (model) => model.ValCodregia.value
 							},
-							{
-								identifier: ['pais1', 'regio.codpais1'],
-								dependencyEvents: ['fieldChange:regio.codpais1'],
-								dependencyField: 'REGIO.CODPAIS1',
-								fnValueSelector: (model) => model.ValCodpais1.value
-							},
 						],
 					}, this),
 					REGIAPROPSEUDIMOVEISL: new fieldControlClass.TableListControl({
 						id: 'REGIAPROPSEUDIMOVEISL',
 						name: 'IMOVEISL',
-						size: 'xxlarge',
+						size: '',
 						label: computed(() => this.Resources.PROPERTIES34868),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						headerLevel: computed(() => this.baseHeadingLevel + 1),
 						controller: 'REGIO',
 						action: 'Regiapro_ValImoveisl',
 						hasDependencies: false,
@@ -896,7 +849,6 @@
 								label: computed(() => this.Resources.PROPERTY_NAME18934),
 								dataLength: 85,
 								scrollData: 30,
-								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.CurrencyColumn({
 								order: 2,
@@ -907,7 +859,6 @@
 								scrollData: 12,
 								maxDigits: 9,
 								decimalPlaces: 2,
-								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.ImageColumn({
 								order: 3,
@@ -919,7 +870,6 @@
 								scrollData: 3,
 								sortable: false,
 								searchable: false,
-								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 4,
@@ -928,7 +878,6 @@
 								field: 'DESCRIPT',
 								label: computed(() => this.Resources.DESCRIPTION07383),
 								scrollData: 30,
-								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.GeographicColumn({
 								order: 5,
@@ -940,7 +889,6 @@
 								scrollData: 30,
 								sortable: false,
 								searchable: false,
-								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 6,
@@ -950,7 +898,6 @@
 								label: computed(() => this.Resources.PAIS_PESSOA61621),
 								dataLength: 90,
 								scrollData: 30,
-								export: 1,
 								pkColumn: 'ValCodcntry',
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
@@ -961,7 +908,6 @@
 								label: computed(() => this.Resources.COUNTRY64133),
 								dataLength: 90,
 								scrollData: 30,
-								export: 1,
 								pkColumn: 'ValCodcntry',
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 						],
@@ -978,8 +924,10 @@
 							permissions: {
 							},
 							searchBarConfig: {
-								visibility: false
+								visibility: false,
+								searchOnPressEnter: true
 							},
+							filtersVisible: false,
 							allowColumnFilters: false,
 							allowColumnSort: true,
 							crudActions: [
@@ -1053,7 +1001,9 @@
 									id: 'insert',
 									name: 'insert',
 									title: computed(() => this.Resources.INSERIR43365),
-									icon: { icon: 'add' },
+									icon: {
+										icon: 'add'
+									},
 									isInReadOnly: false,
 									params: {
 										action: vm.openFormAction,
@@ -1100,7 +1050,7 @@
 								sortOrder: 'asc'
 							}
 						},
-						globalEvents: ['changed-CNTRY', 'changed-REGIO', 'changed-PAIS1', 'changed-PROPR', 'changed-TPPRO', 'changed-PESSO'],
+						globalEvents: ['changed-REGIO', 'changed-TPPRO', 'changed-PESSO', 'changed-CNTRY', 'changed-PROPR', 'changed-PAIS1'],
 						uuid: 'Regiapro_ValImoveisl',
 						allSelectedRows: 'false',
 						controlLimits: [
@@ -1115,11 +1065,10 @@
 					REGIAPROPSEUDIMOVEISG: new fieldControlClass.TableListControl({
 						id: 'REGIAPROPSEUDIMOVEISG',
 						name: 'IMOVEISG',
-						size: 'xxlarge',
+						size: '',
 						label: computed(() => this.Resources.PROPERTIES34868),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						headerLevel: computed(() => this.baseHeadingLevel + 1),
 						controller: 'REGIO',
 						action: 'Regiapro_ValImoveisg',
 						hasDependencies: false,
@@ -1133,7 +1082,6 @@
 								label: computed(() => this.Resources.PROPERTY_NAME18934),
 								dataLength: 85,
 								scrollData: 30,
-								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.CurrencyColumn({
 								order: 2,
@@ -1144,7 +1092,6 @@
 								scrollData: 12,
 								maxDigits: 9,
 								decimalPlaces: 2,
-								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.ImageColumn({
 								order: 3,
@@ -1156,7 +1103,6 @@
 								scrollData: 3,
 								sortable: false,
 								searchable: false,
-								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 4,
@@ -1165,7 +1111,6 @@
 								field: 'DESCRIPT',
 								label: computed(() => this.Resources.DESCRIPTION07383),
 								scrollData: 30,
-								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.GeographicColumn({
 								order: 5,
@@ -1177,7 +1122,6 @@
 								scrollData: 30,
 								sortable: false,
 								searchable: false,
-								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 						],
 						config: {
@@ -1192,8 +1136,10 @@
 							permissions: {
 							},
 							searchBarConfig: {
-								visibility: false
+								visibility: false,
+								searchOnPressEnter: true
 							},
+							filtersVisible: false,
 							allowColumnFilters: false,
 							allowColumnSort: true,
 							crudActions: [
@@ -1267,7 +1213,9 @@
 									id: 'insert',
 									name: 'insert',
 									title: computed(() => this.Resources.INSERIR43365),
-									icon: { icon: 'add' },
+									icon: {
+										icon: 'add'
+									},
 									isInReadOnly: false,
 									params: {
 										action: vm.openFormAction,
@@ -1314,7 +1262,7 @@
 								sortOrder: 'asc'
 							}
 						},
-						globalEvents: ['changed-CNTRY', 'changed-REGIO', 'changed-PAIS1', 'changed-PROPR', 'changed-TPPRO', 'changed-PESSO'],
+						globalEvents: ['changed-REGIO', 'changed-TPPRO', 'changed-PESSO', 'changed-CNTRY', 'changed-PROPR', 'changed-PAIS1'],
 						uuid: 'Regiapro_ValImoveisg',
 						allSelectedRows: 'false',
 						controlLimits: [
@@ -1418,23 +1366,17 @@
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 		},
 
-		beforeUnmount()
-		{
-/* eslint-disable indent, vue/html-indent, vue/script-indent */
-// USE /[MANUAL GQT COMPONENT_BEFORE_UNMOUNT REGIAPRO]/
-// eslint-disable-next-line
-/* eslint-enable indent, vue/html-indent, vue/script-indent */
-		},
-
 		methods: {
 			/**
 			 * Called before form init.
 			 */
 			async beforeLoad()
 			{
+				let loadForm = true
+
 				// Execute the "Before init" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.beforeInit)
-				for (const trigger of triggers)
+				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
 				this.emitEvent('before-load-form')
@@ -1444,7 +1386,7 @@
 // eslint-disable-next-line
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 
-				return true
+				return loadForm
 			},
 
 			/**
@@ -1454,7 +1396,7 @@
 			{
 				// Execute the "After init" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.afterInit)
-				for (const trigger of triggers)
+				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
 				this.emitEvent('after-load-form')
@@ -1474,33 +1416,19 @@
 
 				// Execute the "Before apply" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.beforeApply)
-				for (const trigger of triggers)
+				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
-				const ticketsPromise = this.model.updateFilesTickets(true)
-				this.addBusy(ticketsPromise, this.Resources[hardcodedTexts.processing])
-				const canSetDocums = await ticketsPromise
+				const canSetDocums = await this.model.updateFilesTickets(true)
 
 				if (canSetDocums)
 				{
-					let results
-					const changesPromise = this.model.setDocumentChanges()
-					this.addBusy(changesPromise, this.Resources[hardcodedTexts.processing])
-					applyForm = await changesPromise
+					applyForm = await this.model.setDocumentChanges()
 
 					if (applyForm)
 					{
-						const insertsPromise = this.model.saveDocuments()
-						this.addBusy(insertsPromise, this.Resources[hardcodedTexts.processing])
-						results = await insertsPromise
+						const results = await this.model.saveDocuments()
 						applyForm = results.every((e) => e === true)
-					}
-
-					if (!changesPromise || (results && !results.every((e) => e === true)))
-					{
-						this.validationErrors = {
-							Erro: this.Resources.OCORREU_UM_ERRO_AO_T51884
-						}
 					}
 				}
 
@@ -1521,7 +1449,7 @@
 			{
 				// Execute the "After apply" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.afterApply)
-				for (const trigger of triggers)
+				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
 				this.emitEvent('after-apply-form')
@@ -1541,33 +1469,19 @@
 
 				// Execute the "Before save" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.beforeSave)
-				for (const trigger of triggers)
+				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
-				const ticketsPromise = this.model.updateFilesTickets()
-				this.addBusy(ticketsPromise, this.Resources[hardcodedTexts.processing])
-				const canSetDocums = await ticketsPromise
+				const canSetDocums = await this.model.updateFilesTickets()
 
 				if (canSetDocums)
 				{
-					let results
-					const changesPromise = this.model.setDocumentChanges()
-					this.addBusy(changesPromise, this.Resources[hardcodedTexts.processing])
-					saveForm = await changesPromise
+					saveForm = await this.model.setDocumentChanges()
 
 					if (saveForm)
 					{
-						const insertsPromise = this.model.saveDocuments()
-						this.addBusy(insertsPromise, this.Resources[hardcodedTexts.processing])
-						results = await insertsPromise
+						const results = await this.model.saveDocuments()
 						saveForm = results.every((e) => e === true)
-					}
-
-					if (!changesPromise || (results && !results.every((e) => e === true)))
-					{
-						this.validationErrors = {
-							Erro: this.Resources.OCORREU_UM_ERRO_AO_T51884
-						}
 					}
 				}
 
@@ -1586,9 +1500,11 @@
 			 */
 			async afterSave()
 			{
+				let redirectPage = true // Set to 'false' to cancel page redirect.
+
 				// Execute the "After save" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.afterSave)
-				for (const trigger of triggers)
+				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
 				this.emitEvent('after-save-form')
@@ -1598,7 +1514,7 @@
 // eslint-disable-next-line
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 
-				return true
+				return redirectPage
 			},
 
 			/**
@@ -1606,6 +1522,8 @@
 			 */
 			async beforeDel()
 			{
+				let deleteForm = true // Set to 'false' to cancel form delete.
+
 				this.emitEvent('before-delete-form')
 
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
@@ -1613,7 +1531,7 @@
 // eslint-disable-next-line
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 
-				return true
+				return deleteForm
 			},
 
 			/**
@@ -1621,6 +1539,8 @@
 			 */
 			async afterDel()
 			{
+				let redirectPage = true // Set to 'false' to cancel page redirect.
+
 				this.emitEvent('after-delete-form')
 
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
@@ -1628,7 +1548,7 @@
 // eslint-disable-next-line
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 
-				return true
+				return redirectPage
 			},
 
 			/**
@@ -1636,9 +1556,11 @@
 			 */
 			async beforeExit()
 			{
+				let leaveForm = true // Set to 'false' to cancel page redirect.
+
 				// Execute the "Before exit" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.beforeExit)
-				for (const trigger of triggers)
+				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
 				this.emitEvent('before-exit-form')
@@ -1648,7 +1570,7 @@
 // eslint-disable-next-line
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 
-				return true
+				return leaveForm
 			},
 
 			/**
@@ -1658,7 +1580,7 @@
 			{
 				// Execute the "After exit" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.afterExit)
-				for (const trigger of triggers)
+				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
 				this.emitEvent('after-exit-form')

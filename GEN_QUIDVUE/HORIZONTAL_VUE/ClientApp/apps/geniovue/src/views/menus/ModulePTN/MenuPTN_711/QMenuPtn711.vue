@@ -10,12 +10,10 @@
 				<q-table
 					v-bind="controls.menu"
 					v-on="controls.menu.handlers">
-					<!-- USE /[MANUAL GQT CUSTOM_TABLE PTN_Menu_711]/ -->
 				</q-table>
 
 				<q-table-extra-extension
 					:list-ctrl="controls.menu"
-					:filter-operators="controls.menu.filterOperators"
 					v-on="controls.menu.handlers" />
 			</q-row-container>
 		</form>
@@ -50,7 +48,7 @@
 </template>
 
 <script>
-	/* eslint-disable @typescript-eslint/no-unused-vars */
+	/* eslint-disable no-unused-vars */
 	import asyncProcM from '@quidgest/clientapp/composables/async'
 	import qEnums from '@quidgest/clientapp/constants/enums'
 	import netAPI from '@quidgest/clientapp/network'
@@ -70,7 +68,7 @@
 	import qApi from '@/api/genio/quidgestFunctions.js'
 	import qFunctions from '@/api/genio/projectFunctions.js'
 	import qProjArrays from '@/api/genio/projectArrays.js'
-	/* eslint-enable @typescript-eslint/no-unused-vars */
+	/* eslint-enable no-unused-vars */
 
 	import MenuViewModel from './QMenuPTN_711ViewModel.js'
 
@@ -154,7 +152,6 @@
 								label: computed(() => this.Resources.MAP_HEIGHT06476),
 								dataLength: 50,
 								scrollData: 30,
-								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.ArrayColumn({
 								order: 2,
@@ -164,8 +161,7 @@
 								label: computed(() => this.Resources.GENRE63303),
 								dataLength: 1,
 								scrollData: 1,
-								export: 1,
-								array: computed(() => new qProjArrays.QArrayGenero(vm.$getResource).elements),
+								array: computed(() => qProjArrays.QArrayGenero.setResources(vm.$getResource).elements),
 								arrayType: qProjArrays.QArrayGenero.type,
 								arrayDisplayMode: 'D',
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
@@ -178,7 +174,6 @@
 								dataLength: 50,
 								scrollData: 30,
 								sortable: false,
-								export: 1,
 								viewType: qEnums.documentViewTypeMode.preview,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
@@ -189,7 +184,6 @@
 								label: computed(() => this.Resources.PHONE56703),
 								dataLength: 20,
 								scrollData: 20,
-								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 5,
@@ -199,7 +193,6 @@
 								label: computed(() => this.Resources.POLYLINE_COLOR11664),
 								dataLength: 50,
 								scrollData: 30,
-								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.BooleanColumn({
 								order: 6,
@@ -208,7 +201,6 @@
 								field: 'CANROT',
 								label: computed(() => this.Resources.ALLOW_FEATURE_ROTATI56653),
 								scrollData: 1,
-								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.BooleanColumn({
 								order: 7,
@@ -217,7 +209,6 @@
 								field: 'DRAWMRK',
 								label: computed(() => this.Resources.ALLOW_DRAWING_MARKER56732),
 								scrollData: 1,
-								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.BooleanColumn({
 								order: 8,
@@ -226,7 +217,6 @@
 								field: 'CANEXPOR',
 								label: computed(() => this.Resources.ALLOW_EXPORTING_MAP27916),
 								scrollData: 1,
-								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 9,
@@ -236,7 +226,6 @@
 								label: computed(() => this.Resources.NAME31974),
 								dataLength: 85,
 								scrollData: 30,
-								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.BooleanColumn({
 								order: 10,
@@ -245,7 +234,6 @@
 								field: 'CANREMOV',
 								label: computed(() => this.Resources.ALLOW_FEATURE_REMOVA13844),
 								scrollData: 1,
-								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.DateColumn({
 								order: 11,
@@ -255,7 +243,6 @@
 								label: computed(() => this.Resources.SINCE47259),
 								scrollData: 8,
 								dateTimeType: 'date',
-								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.NumericColumn({
 								order: 12,
@@ -266,7 +253,6 @@
 								scrollData: 2,
 								maxDigits: 2,
 								decimalPlaces: 0,
-								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.DateColumn({
 								order: 13,
@@ -276,7 +262,6 @@
 								label: computed(() => this.Resources.BIRTH21799),
 								scrollData: 8,
 								dateTimeType: 'date',
-								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.ImageColumn({
 								order: 14,
@@ -288,7 +273,6 @@
 								scrollData: 3,
 								sortable: false,
 								searchable: false,
-								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.GeographicShapeColumn({
 								order: 15,
@@ -299,7 +283,6 @@
 								scrollData: 30,
 								sortable: false,
 								searchable: false,
-								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.BooleanColumn({
 								order: 16,
@@ -308,7 +291,6 @@
 								field: 'ALLOWLIN',
 								label: computed(() => this.Resources.ALLOW_DRAWING_POLYLI25703),
 								scrollData: 1,
-								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 17,
@@ -318,7 +300,6 @@
 								label: computed(() => this.Resources.EMAIL25170),
 								dataLength: 254,
 								scrollData: 30,
-								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 18,
@@ -328,7 +309,6 @@
 								label: computed(() => this.Resources.QUERY_FOR_EXTERNAL_A51761),
 								dataLength: 250,
 								scrollData: 30,
-								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.BooleanColumn({
 								order: 19,
@@ -337,7 +317,6 @@
 								field: 'CANDRAG',
 								label: computed(() => this.Resources.ALLOW_FEATURE_DRAGGI09054),
 								scrollData: 1,
-								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 20,
@@ -347,7 +326,6 @@
 								label: computed(() => this.Resources.CATEGORY18978),
 								dataLength: 50,
 								scrollData: 30,
-								export: 1,
 								pkColumn: 'ValCodcateg',
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
@@ -358,7 +336,6 @@
 								label: computed(() => this.Resources.DESIGNATION35876),
 								dataLength: 85,
 								scrollData: 30,
-								export: 1,
 								pkColumn: 'ValCodparte',
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
@@ -369,7 +346,6 @@
 								label: computed(() => this.Resources.DESIGNATION35876),
 								dataLength: 85,
 								scrollData: 30,
-								export: 1,
 								pkColumn: 'ValCodempre',
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.NumericColumn({
@@ -381,7 +357,6 @@
 								scrollData: 5,
 								maxDigits: 5,
 								decimalPlaces: 0,
-								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.BooleanColumn({
 								order: 24,
@@ -390,7 +365,6 @@
 								field: 'CANEDIT',
 								label: computed(() => this.Resources.ALLOW_FEATURE_EDITIN16439),
 								scrollData: 1,
-								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 25,
@@ -400,7 +374,6 @@
 								label: computed(() => this.Resources.EMAIL25170),
 								dataLength: 254,
 								scrollData: 30,
-								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.BooleanColumn({
 								order: 26,
@@ -409,7 +382,6 @@
 								field: 'GROUPMRK',
 								label: computed(() => this.Resources.GROUP_MARKERS_IN_CLU31341),
 								scrollData: 1,
-								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.BooleanColumn({
 								order: 27,
@@ -418,7 +390,6 @@
 								field: 'ALLOWPOL',
 								label: computed(() => this.Resources.ALLOW_DRAWING_POLYGO46480),
 								scrollData: 1,
-								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.NumericColumn({
 								order: 28,
@@ -429,7 +400,6 @@
 								scrollData: 2,
 								maxDigits: 2,
 								decimalPlaces: 0,
-								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.BooleanColumn({
 								order: 29,
@@ -438,7 +408,6 @@
 								field: 'EXTERNA',
 								label: computed(() => this.Resources.EXTERNAL13375),
 								scrollData: 1,
-								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.NumericColumn({
 								order: 30,
@@ -449,7 +418,6 @@
 								scrollData: 2,
 								maxDigits: 2,
 								decimalPlaces: 0,
-								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.BooleanColumn({
 								order: 31,
@@ -458,7 +426,6 @@
 								field: 'INTERNA',
 								label: computed(() => this.Resources.INTERNAL04894),
 								scrollData: 1,
-								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.BooleanColumn({
 								order: 32,
@@ -467,7 +434,6 @@
 								field: 'CANCUT',
 								label: computed(() => this.Resources.ALLOW_FEATURE_CUTTIN10746),
 								scrollData: 1,
-								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.NumericColumn({
 								order: 33,
@@ -478,7 +444,6 @@
 								scrollData: 6,
 								maxDigits: 6,
 								decimalPlaces: 0,
-								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 34,
@@ -488,7 +453,6 @@
 								label: computed(() => this.Resources.POLYGON_COLOR32161),
 								dataLength: 50,
 								scrollData: 30,
-								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.BooleanColumn({
 								order: 35,
@@ -497,7 +461,6 @@
 								field: 'NOTIFIND',
 								label: computed(() => this.Resources.INDIVIDUAL_NOTIFICAT21987),
 								scrollData: 1,
-								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 						],
 						config: {
@@ -513,7 +476,8 @@
 							permissions: {
 							},
 							searchBarConfig: {
-								visibility: true
+								visibility: true,
+								searchOnPressEnter: true
 							},
 							filtersVisible: true,
 							allowColumnFilters: true,
@@ -614,7 +578,6 @@
 							rowClickAction: {
 								id: 'RCA_PTN_7111',
 								name: 'form-PESS1',
-								isVisible: true,
 								params: {
 									isRoute: true,
 									limits: [
@@ -644,7 +607,6 @@
 						uuid: 'ceade97e-c180-4cae-a25f-a2f0b7c050f2',
 						allSelectedRows: 'false',
 						headerLevel: 1,
-						isActiveControl: computed(() => this.isActiveMenu)
 					}, this),
 				}
 			}
@@ -668,14 +630,6 @@
 		{
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
 // USE /[MANUAL GQT FORM_CODEJS PTN_MENU_711]/
-// eslint-disable-next-line
-/* eslint-enable indent, vue/html-indent, vue/script-indent */
-		},
-
-		beforeUnmount()
-		{
-/* eslint-disable indent, vue/html-indent, vue/script-indent */
-// USE /[MANUAL GQT COMPONENT_BEFORE_UNMOUNT PTN_MENU_711]/
 // eslint-disable-next-line
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 		},

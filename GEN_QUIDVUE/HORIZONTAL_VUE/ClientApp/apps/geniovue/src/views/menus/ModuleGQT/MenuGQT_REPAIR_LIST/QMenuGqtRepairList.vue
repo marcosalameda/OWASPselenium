@@ -10,12 +10,10 @@
 				<q-table
 					v-bind="controls.menu"
 					v-on="controls.menu.handlers">
-					<!-- USE /[MANUAL GQT CUSTOM_TABLE GQT_Menu_REPAIR_LIST]/ -->
 				</q-table>
 
 				<q-table-extra-extension
 					:list-ctrl="controls.menu"
-					:filter-operators="controls.menu.filterOperators"
 					v-on="controls.menu.handlers" />
 			</q-row-container>
 		</form>
@@ -50,7 +48,7 @@
 </template>
 
 <script>
-	/* eslint-disable @typescript-eslint/no-unused-vars */
+	/* eslint-disable no-unused-vars */
 	import asyncProcM from '@quidgest/clientapp/composables/async'
 	import qEnums from '@quidgest/clientapp/constants/enums'
 	import netAPI from '@quidgest/clientapp/network'
@@ -70,7 +68,7 @@
 	import qApi from '@/api/genio/quidgestFunctions.js'
 	import qFunctions from '@/api/genio/projectFunctions.js'
 	import qProjArrays from '@/api/genio/projectArrays.js'
-	/* eslint-enable @typescript-eslint/no-unused-vars */
+	/* eslint-enable no-unused-vars */
 
 	import MenuViewModel from './QMenuGQT_REPAIR_LISTViewModel.js'
 
@@ -155,7 +153,6 @@
 								scrollData: 10,
 								maxDigits: 10,
 								decimalPlaces: 0,
-								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.DateColumn({
 								order: 2,
@@ -165,7 +162,6 @@
 								label: computed(() => this.Resources.FIXED_IN00179),
 								scrollData: 16,
 								dateTimeType: 'dateTime',
-								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 3,
@@ -175,7 +171,6 @@
 								label: computed(() => this.Resources.NO__REGISTER04207),
 								dataLength: 6,
 								scrollData: 6,
-								export: 1,
 								pkColumn: 'ValCodequip',
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
@@ -186,7 +181,6 @@
 								label: computed(() => this.Resources.EQUIPMENT03632),
 								dataLength: 85,
 								scrollData: 30,
-								export: 1,
 								pkColumn: 'ValCodequip',
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
@@ -197,7 +191,6 @@
 								label: computed(() => this.Resources.TECHNICAL18245),
 								dataLength: 85,
 								scrollData: 30,
-								export: 1,
 								pkColumn: 'ValCodpesso',
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.ArrayColumn({
@@ -208,8 +201,7 @@
 								label: computed(() => this.Resources.TECHNICAL_AREA50773),
 								dataLength: 1,
 								scrollData: 1,
-								export: 1,
-								array: computed(() => new qProjArrays.QArrayAreatecn(vm.$getResource).elements),
+								array: computed(() => qProjArrays.QArrayAreatecn.setResources(vm.$getResource).elements),
 								arrayType: qProjArrays.QArrayAreatecn.type,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
@@ -220,7 +212,6 @@
 								label: computed(() => this.Resources.SPECIALTY09304),
 								dataLength: 50,
 								scrollData: 30,
-								export: 1,
 								pkColumn: 'ValCodespec',
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
@@ -230,7 +221,6 @@
 								field: 'DESCRIPT',
 								label: computed(() => this.Resources.DESCRIPTION_OF_THE_R26085),
 								scrollData: 30,
-								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.NumericColumn({
 								order: 9,
@@ -241,7 +231,6 @@
 								scrollData: 10,
 								maxDigits: 10,
 								decimalPlaces: 0,
-								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 10,
@@ -252,7 +241,6 @@
 								dataLength: 85,
 								scrollData: 30,
 								isVisible: false,
-								export: 1,
 								pkColumn: 'ValCodempre',
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 						],
@@ -269,7 +257,8 @@
 							permissions: {
 							},
 							searchBarConfig: {
-								visibility: true
+								visibility: true,
+								searchOnPressEnter: true
 							},
 							filtersVisible: true,
 							allowColumnFilters: true,
@@ -370,7 +359,6 @@
 							rowClickAction: {
 								id: 'RCA_GQT_3111',
 								name: 'form-REPAR',
-								isVisible: true,
 								params: {
 									isRoute: true,
 									limits: [
@@ -396,11 +384,10 @@
 								sortOrder: 'asc'
 							}
 						},
-						globalEvents: ['changed-PESSO', 'changed-REPAR', 'changed-CATE1', 'changed-CMPNY', 'changed-SPECI', 'changed-EQUIP'],
+						globalEvents: ['changed-CATE1', 'changed-SPECI', 'changed-CMPNY', 'changed-EQUIP', 'changed-PESSO', 'changed-REPAR'],
 						uuid: 'eb5c42d7-9401-4743-a232-b08f9c554f17',
 						allSelectedRows: 'false',
 						headerLevel: 1,
-						isActiveControl: computed(() => this.isActiveMenu)
 					}, this),
 				}
 			}
@@ -424,14 +411,6 @@
 		{
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
 // USE /[MANUAL GQT FORM_CODEJS GQT_MENU_REPAIR_LIST]/
-// eslint-disable-next-line
-/* eslint-enable indent, vue/html-indent, vue/script-indent */
-		},
-
-		beforeUnmount()
-		{
-/* eslint-disable indent, vue/html-indent, vue/script-indent */
-// USE /[MANUAL GQT COMPONENT_BEFORE_UNMOUNT GQT_MENU_REPAIR_LIST]/
 // eslint-disable-next-line
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 		},

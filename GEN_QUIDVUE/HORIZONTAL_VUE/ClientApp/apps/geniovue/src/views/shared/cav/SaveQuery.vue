@@ -1,67 +1,75 @@
 ﻿<template>
-	<q-button
-		borderless
-		:title="texts.saveQuery"
-		:disabled="inMaintenance"
-		@click="showDialog">
-		<q-icon icon="save" />
-	</q-button>
-
-	<teleport
-		v-if="isDialogVisible"
-		:to="`#q-modal-${modalId}-body`">
-		<q-row-container>
-			<q-control-wrapper class="control-join-group">
-				<base-input-structure
-					id="cav-save-query-name"
-					:class="['i-text', { 'i-text--disabled': false }]"
-					:label="texts.queryName"
-					:label-attrs="{ class: 'i-text__label' }">
-					<q-text-field
+	<div
+		id="cav-save-query-modal"
+		class="modal-fbody">
+		<div class="container-fluid">
+			<q-row-container>
+				<q-control-wrapper class="control-join-group">
+					<base-input-structure
 						id="cav-save-query-name"
-						size="small"
-						v-model="queryName"
-						:max-length="15" />
-				</base-input-structure>
-			</q-control-wrapper>
-		</q-row-container>
+						:class="['i-text', { 'i-text--disabled': false }]"
+						:label="texts.queryName"
+						:label-attrs="{ class: 'i-text__label' }">
+						<q-text-field
+							id="cav-save-query-name"
+							size="small"
+							v-model="queryName"
+							:max-length="15" />
+					</base-input-structure>
+				</q-control-wrapper>
+			</q-row-container>
 
-		<q-row-container>
-			<q-control-wrapper class="control-join-group">
-				<base-input-structure
-					id="cav-save-query-access"
-					:class="['i-text', { 'i-text--disabled': false }]"
-					:label="texts.queryAccess"
-					:label-attrs="{ class: 'i-text__label' }">
-					<q-radio-group
+			<q-row-container>
+				<q-control-wrapper class="control-join-group">
+					<base-input-structure
 						id="cav-save-query-access"
-						v-model="accessType">
-						<q-radio-button
-							v-for="radio in accessTypes"
-							:key="radio.key"
-							:value="radio.key"
-							:label="radio.value" />
-					</q-radio-group>
-				</base-input-structure>
-			</q-control-wrapper>
-		</q-row-container>
+						:class="['i-text', { 'i-text--disabled': false }]"
+						:label="texts.queryAccess"
+						:label-attrs="{ class: 'i-text__label' }">
+						<q-radio-group
+							id="cav-save-query-access"
+							v-model="accessType"
+							deselect-radio
+							:label-left-side="false"
+							:options-list="accessTypes" />
+					</base-input-structure>
+				</q-control-wrapper>
+			</q-row-container>
 
-		<q-row-container v-if="overrideVisible">
-			<q-control-wrapper class="control-join-group">
-				<q-checkbox
-					id="cav-save-query-is-override"
-					v-model="isOverride"
-					:label="texts.overlapQuery" />
-			</q-control-wrapper>
-		</q-row-container>
-	</teleport>
+			<q-row-container v-if="overrideVisible">
+				<q-control-wrapper class="control-join-group">
+					<base-input-structure
+						id="cav-save-query-is-override"
+						label-position="center"
+						:label="texts.overlapQuery"
+						:label-attrs="{ class: 'i-checkbox i-checkbox__label' }">
+						<template #label>
+							<q-checkbox-input
+								id="cav-save-query-is-override"
+								v-model="isOverride" />
+						</template>
+					</base-input-structure>
+				</q-control-wrapper>
+			</q-row-container>
+
+			<q-row-container>
+				<q-control-wrapper class="control-join-group">
+					<q-button
+						variant="bold"
+						:label="texts.save"
+						:title="texts.save"
+						@click="saveQuery">
+						<q-icon icon="save" />
+					</q-button>
+				</q-control-wrapper>
+			</q-row-container>
+		</div>
+	</div>
 </template>
 
 <script>
-	import { computed, nextTick } from 'vue'
+	import { computed } from 'vue'
 
-	import { useGenericDataStore } from '@quidgest/clientapp/stores'
-	import { removeModal } from '@/utils/layout'
 	import hardcodedTexts from '@/hardcodedTexts.js'
 	import cavArrays from '@/api/genio/cavArrays.js'
 
@@ -105,14 +113,8 @@
 					queryName: computed(() => this.Resources[hardcodedTexts.queryName]),
 					queryAccess: computed(() => this.Resources[hardcodedTexts.queryAccess]),
 					overlapQuery: computed(() => this.Resources[hardcodedTexts.overlapQuery]),
-					close: computed(() => this.Resources[hardcodedTexts.close]),
-					save: computed(() => this.Resources[hardcodedTexts.save]),
-					saveQuery: computed(() => this.Resources[hardcodedTexts.saveQuery])
-				},
-
-				modalId: 'cav-save',
-
-				isDialogVisible: false
+					save: computed(() => this.Resources[hardcodedTexts.save])
+				}
 			}
 		},
 
@@ -132,72 +134,10 @@
 			overrideVisible()
 			{
 				return this.currentQueryId !== 'new'
-			},
-
-			/**
-			 * Whether the system is currently in maintenance.
-			 */
-			inMaintenance()
-			{
-				const genericDataStore = useGenericDataStore()
-				return genericDataStore.maintenance.isActive
 			}
 		},
 
 		methods: {
-			/**
-			 * Opens the modal dialog.
-			 */
-			async showDialog()
-			{
-				const props = {
-					title: this.texts.saveQuery,
-					class: 'q-dialog-form',
-					size: 'small',
-					buttons: [
-						{
-							id: 'dialog-button-save',
-							action: this.saveQuery,
-							icon: { icon: 'save' },
-							props: {
-								label: this.texts.save,
-								title: this.texts.save,
-								variant: 'bold'
-							}
-						},
-						{
-							id: 'dialog-button-close',
-							action: this.hideDialog,
-							icon: { icon: 'close' },
-							props: {
-								label: this.texts.close,
-								title: this.texts.close
-							}
-						}
-					]
-				}
-				const modalProps = {
-					id: this.modalId,
-					isActive: true,
-					dismissAction: this.hideDialog
-				}
-
-				const genericDataStore = useGenericDataStore()
-				genericDataStore.setModal(props, modalProps)
-
-				await nextTick()
-				this.isDialogVisible = true
-			},
-
-			/**
-			 * Closes the modal dialog.
-			 */
-			hideDialog()
-			{
-				removeModal(this.modalId)
-				this.isDialogVisible = false
-			},
-
 			/**
 			 * Emits a 'save-query' event with the query data when the save button is clicked.
 			 */

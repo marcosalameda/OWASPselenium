@@ -3,6 +3,7 @@
 		borderless
 		class="removecaret dropdown-toggle"
 		:label="texts.importButtonTitle"
+		:title="texts.importButtonTitle"
 		@click="fnShowImportPopup">
 		<q-icon icon="file-import" />
 	</q-button>
@@ -14,13 +15,13 @@
 		:key="domKey">
 		<div
 			v-if="showResponseData"
-			class="c-message"
+			class="bootbox-body c-message"
 			:class="messageClasses">
 			<div class="message-icon">
 				<q-icon :icon="messageIcon" />
 			</div>
 
-			<h2>{{ dataImportResponse.msg }}</h2>
+			<h5>{{ dataImportResponse.msg }}</h5>
 
 			<div
 				v-for="(line, index) in dataImportResponse.lines"
@@ -48,12 +49,10 @@
 					:style="uploadStyles">
 					<span class="upload-text">{{ texts.dropToUpload }}</span>
 				</div>
-				<template v-else>
-					<ul>
-						<li>{{ texts.downloadTemplateText }}</li>
-						<li>{{ texts.fillTemplateFileText }}</li>
-						<li>{{ texts.importTemplateFileText }}</li>
-					</ul>
+				<div v-else>
+					<li>{{ texts.downloadTemplateText }}</li>
+					<li>{{ texts.fillTemplateFileText }}</li>
+					<li>{{ texts.importTemplateFileText }}</li>
 
 					<q-button
 						aria-expanded="false"
@@ -64,7 +63,7 @@
 						@click="$emit('export-template', templateOptions[0].id)">
 						<q-icon icon="file-import" />
 					</q-button>
-				</template>
+				</div>
 
 				<input
 					type="file"
@@ -144,6 +143,14 @@
 			dataImportResponse: {
 				type: Object,
 				default: () => ({})
+			},
+
+			/**
+			 * Indicates if the import operation should be handled via server-side functionality.
+			 */
+			serverMode: {
+				type: Boolean,
+				default: false
 			},
 
 			/**

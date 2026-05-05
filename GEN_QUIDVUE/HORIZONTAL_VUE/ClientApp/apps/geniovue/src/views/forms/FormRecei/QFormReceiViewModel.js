@@ -1,4 +1,4 @@
-﻿/* eslint-disable @typescript-eslint/no-unused-vars */
+﻿/* eslint-disable no-unused-vars */
 import { computed, reactive, watch } from 'vue'
 import _merge from 'lodash-es/merge'
 
@@ -11,7 +11,7 @@ import netAPI from '@quidgest/clientapp/network'
 import qApi from '@/api/genio/quidgestFunctions.js'
 import qFunctions from '@/api/genio/projectFunctions.js'
 import qProjArrays from '@/api/genio/projectArrays.js'
-/* eslint-enable @typescript-eslint/no-unused-vars */
+/* eslint-enable no-unused-vars */
 
 /**
  * Represents a ViewModel class.
@@ -25,11 +25,11 @@ export default class ViewModel extends FormViewModelBase
 	 * @param {object} options - The options for the ViewModel
 	 * @param {object} values - A ViewModel instance to copy values from
 	 */
-	// eslint-disable-next-line @typescript-eslint/no-unused-vars
+	// eslint-disable-next-line no-unused-vars
 	constructor(vueContext, options, values)
 	{
 		super(vueContext, options)
-		// eslint-disable-next-line @typescript-eslint/no-unused-vars
+		// eslint-disable-next-line no-unused-vars
 		const vm = this.vueContext
 
 		// The view model metadata
@@ -37,9 +37,8 @@ export default class ViewModel extends FormViewModelBase
 			name: 'RECEI',
 			area: 'RECEI',
 			actions: {
-				recalculateFormulas: 'RecalculateFormulas_Recei',
-				updateFilesTickets: 'UpdateFilesTicketsRecei',
-				setFile: 'SetFileRecei'
+				recalculateFormulas: 'RecalculateFormulas_RECEI',
+				updateFilesTickets: 'UpdateFilesTicketsRECEI'
 			}
 		})
 
@@ -51,7 +50,7 @@ export default class ViewModel extends FormViewModelBase
 			field: 'CODRECEI',
 			description: '',
 		}).cloneFrom(values?.ValCodrecei))
-		this.stopWatchers.push(watch(() => this.ValCodrecei.value, (newValue, oldValue) => this.onUpdate('recei.codrecei', this.ValCodrecei, newValue, oldValue)))
+		watch(() => this.ValCodrecei.value, (newValue, oldValue) => this.onUpdate('recei.codrecei', this.ValCodrecei, newValue, oldValue))
 
 		/** The used foreign keys. */
 		this.ValCodentit = reactive(new modelFieldType.ForeignKey({
@@ -62,7 +61,7 @@ export default class ViewModel extends FormViewModelBase
 			relatedArea: 'ENTIT',
 			description: computed(() => this.Resources.__SUPPLIER62145),
 		}).cloneFrom(values?.ValCodentit))
-		this.stopWatchers.push(watch(() => this.ValCodentit.value, (newValue, oldValue) => this.onUpdate('recei.codentit', this.ValCodentit, newValue, oldValue)))
+		watch(() => this.ValCodentit.value, (newValue, oldValue) => this.onUpdate('recei.codentit', this.ValCodentit, newValue, oldValue))
 
 		/** The remaining form fields. */
 		this.ValDtreceip = reactive(new modelFieldType.DateTime({
@@ -72,7 +71,7 @@ export default class ViewModel extends FormViewModelBase
 			field: 'DTRECEIP',
 			description: computed(() => this.Resources.RECEIPT_DATE00996),
 		}).cloneFrom(values?.ValDtreceip))
-		this.stopWatchers.push(watch(() => this.ValDtreceip.value, (newValue, oldValue) => this.onUpdate('recei.dtreceip', this.ValDtreceip, newValue, oldValue)))
+		watch(() => this.ValDtreceip.value, (newValue, oldValue) => this.onUpdate('recei.dtreceip', this.ValDtreceip, newValue, oldValue))
 
 		this.ValNumber = reactive(new modelFieldType.Number({
 			id: 'ValNumber',
@@ -83,7 +82,7 @@ export default class ViewModel extends FormViewModelBase
 			decimalDigits: 0,
 			description: computed(() => this.Resources.RECEIPT_NUMBER31380),
 		}).cloneFrom(values?.ValNumber))
-		this.stopWatchers.push(watch(() => this.ValNumber.value, (newValue, oldValue) => this.onUpdate('recei.number', this.ValNumber, newValue, oldValue)))
+		watch(() => this.ValNumber.value, (newValue, oldValue) => this.onUpdate('recei.number', this.ValNumber, newValue, oldValue))
 
 		this.TableEntitName = reactive(new modelFieldType.String({
 			type: 'Lookup',
@@ -93,9 +92,8 @@ export default class ViewModel extends FormViewModelBase
 			field: 'NAME',
 			maxLength: 85,
 			description: computed(() => this.Resources.LEGAL_NAME42902),
-			ignoreFldSubmit: true,
 		}).cloneFrom(values?.TableEntitName))
-		this.stopWatchers.push(watch(() => this.TableEntitName.value, (newValue, oldValue) => this.onUpdate('entit.name', this.TableEntitName, newValue, oldValue)))
+		watch(() => this.TableEntitName.value, (newValue, oldValue) => this.onUpdate('entit.name', this.TableEntitName, newValue, oldValue))
 
 		this.ValDtcheck = reactive(new modelFieldType.DateTime({
 			id: 'ValDtcheck',
@@ -104,7 +102,7 @@ export default class ViewModel extends FormViewModelBase
 			field: 'DTCHECK',
 			description: computed(() => this.Resources.RECEIPT_VERIFICATION62328),
 		}).cloneFrom(values?.ValDtcheck))
-		this.stopWatchers.push(watch(() => this.ValDtcheck.value, (newValue, oldValue) => this.onUpdate('recei.dtcheck', this.ValDtcheck, newValue, oldValue)))
+		watch(() => this.ValDtcheck.value, (newValue, oldValue) => this.onUpdate('recei.dtcheck', this.ValDtcheck, newValue, oldValue))
 
 		this.ValTocheck = reactive(new modelFieldType.Boolean({
 			id: 'ValTocheck',
@@ -114,7 +112,7 @@ export default class ViewModel extends FormViewModelBase
 			isFixed: true,
 			valueFormula: {
 				stopRecalcCondition() { return false },
-				// eslint-disable-next-line @typescript-eslint/no-unused-vars
+				// eslint-disable-next-line no-unused-vars
 				fnFormula(params)
 				{
 					// Formula: iif(!isEmptyD([RECEI->DTRECEIP]) && isEmptyD([RECEI->DTCHECK]),1,0)
@@ -126,7 +124,7 @@ export default class ViewModel extends FormViewModelBase
 			},
 			description: computed(() => this.Resources.TO_CHECK57511),
 		}).cloneFrom(values?.ValTocheck))
-		this.stopWatchers.push(watch(() => this.ValTocheck.value, (newValue, oldValue) => this.onUpdate('recei.tocheck', this.ValTocheck, newValue, oldValue)))
+		watch(() => this.ValTocheck.value, (newValue, oldValue) => this.onUpdate('recei.tocheck', this.ValTocheck, newValue, oldValue))
 
 		this.ValChecked = reactive(new modelFieldType.Boolean({
 			id: 'ValChecked',
@@ -136,7 +134,7 @@ export default class ViewModel extends FormViewModelBase
 			isFixed: true,
 			valueFormula: {
 				stopRecalcCondition() { return false },
-				// eslint-disable-next-line @typescript-eslint/no-unused-vars
+				// eslint-disable-next-line no-unused-vars
 				fnFormula(params)
 				{
 					// Formula: iif(isEmptyD([RECEI->DTCHECK]),0,1)
@@ -148,7 +146,7 @@ export default class ViewModel extends FormViewModelBase
 			},
 			description: computed(() => this.Resources.CHECKED31708),
 		}).cloneFrom(values?.ValChecked))
-		this.stopWatchers.push(watch(() => this.ValChecked.value, (newValue, oldValue) => this.onUpdate('recei.checked', this.ValChecked, newValue, oldValue)))
+		watch(() => this.ValChecked.value, (newValue, oldValue) => this.onUpdate('recei.checked', this.ValChecked, newValue, oldValue))
 
 		this.ValStored = reactive(new modelFieldType.Boolean({
 			id: 'ValStored',
@@ -157,7 +155,7 @@ export default class ViewModel extends FormViewModelBase
 			field: 'STORED',
 			description: computed(() => this.Resources.STORED41854),
 		}).cloneFrom(values?.ValStored))
-		this.stopWatchers.push(watch(() => this.ValStored.value, (newValue, oldValue) => this.onUpdate('recei.stored', this.ValStored, newValue, oldValue)))
+		watch(() => this.ValStored.value, (newValue, oldValue) => this.onUpdate('recei.stored', this.ValStored, newValue, oldValue))
 
 		this.ValDtstorag = reactive(new modelFieldType.DateTime({
 			id: 'ValDtstorag',
@@ -166,7 +164,7 @@ export default class ViewModel extends FormViewModelBase
 			field: 'DTSTORAG',
 			description: computed(() => this.Resources.STORAGE_DATE59954),
 		}).cloneFrom(values?.ValDtstorag))
-		this.stopWatchers.push(watch(() => this.ValDtstorag.value, (newValue, oldValue) => this.onUpdate('recei.dtstorag', this.ValDtstorag, newValue, oldValue)))
+		watch(() => this.ValDtstorag.value, (newValue, oldValue) => this.onUpdate('recei.dtstorag', this.ValDtstorag, newValue, oldValue))
 	}
 
 	/**

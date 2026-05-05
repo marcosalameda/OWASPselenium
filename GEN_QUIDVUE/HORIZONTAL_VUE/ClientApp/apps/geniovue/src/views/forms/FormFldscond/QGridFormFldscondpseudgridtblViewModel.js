@@ -1,4 +1,4 @@
-﻿/* eslint-disable @typescript-eslint/no-unused-vars */
+﻿/* eslint-disable no-unused-vars */
 import { computed, reactive, watch } from 'vue'
 import _merge from 'lodash-es/merge'
 
@@ -11,7 +11,7 @@ import netAPI from '@quidgest/clientapp/network'
 import qApi from '@/api/genio/quidgestFunctions.js'
 import qFunctions from '@/api/genio/projectFunctions.js'
 import qProjArrays from '@/api/genio/projectArrays.js'
-/* eslint-enable @typescript-eslint/no-unused-vars */
+/* eslint-enable no-unused-vars */
 
 /**
  * Represents a ViewModel class.
@@ -25,11 +25,11 @@ export default class ViewModel extends FormViewModelBase
 	 * @param {object} options - The options for the ViewModel
 	 * @param {object} values - A ViewModel instance to copy values from
 	 */
-	// eslint-disable-next-line @typescript-eslint/no-unused-vars
+	// eslint-disable-next-line no-unused-vars
 	constructor(vueContext, options, values)
 	{
 		super(vueContext, options)
-		// eslint-disable-next-line @typescript-eslint/no-unused-vars
+		// eslint-disable-next-line no-unused-vars
 		const vm = this.vueContext
 
 		// The view model metadata
@@ -37,9 +37,8 @@ export default class ViewModel extends FormViewModelBase
 			name: 'FLDSCONDPSEUDGRIDTBL_',
 			area: 'FEECA',
 			actions: {
-				recalculateFormulas: 'RecalculateFormulas_Fldscondpseudgridtbl_',
-				updateFilesTickets: 'UpdateFilesTicketsFldscondpseudgridtbl_',
-				setFile: 'SetFileFldscondpseudgridtbl_'
+				recalculateFormulas: 'RecalculateFormulas_FLDSCONDPSEUDGRIDTBL_',
+				updateFilesTickets: 'UpdateFilesTicketsFLDSCONDPSEUDGRIDTBL_'
 			}
 		})
 
@@ -51,7 +50,7 @@ export default class ViewModel extends FormViewModelBase
 			field: 'CODFEECA',
 			description: '',
 		}).cloneFrom(values?.ValCodfeeca))
-		this.stopWatchers.push(watch(() => this.ValCodfeeca.value, (newValue, oldValue) => this.onUpdate('feeca.codfeeca', this.ValCodfeeca, newValue, oldValue)))
+		watch(() => this.ValCodfeeca.value, (newValue, oldValue) => this.onUpdate('feeca.codfeeca', this.ValCodfeeca, newValue, oldValue))
 
 		/** The hidden foreign keys. */
 		this.ValCodflds = reactive(new modelFieldType.ForeignKey({
@@ -63,7 +62,7 @@ export default class ViewModel extends FormViewModelBase
 			isFixed: true,
 			description: '',
 		}).cloneFrom(values?.ValCodflds))
-		this.stopWatchers.push(watch(() => this.ValCodflds.value, (newValue, oldValue) => this.onUpdate('feeca.codflds', this.ValCodflds, newValue, oldValue)))
+		watch(() => this.ValCodflds.value, (newValue, oldValue) => this.onUpdate('feeca.codflds', this.ValCodflds, newValue, oldValue))
 
 		/** The remaining form fields. */
 		this.ValFeedback = reactive(new modelFieldType.String({
@@ -74,7 +73,7 @@ export default class ViewModel extends FormViewModelBase
 			maxLength: 50,
 			description: computed(() => this.Resources.FEEDBACK52855),
 		}).cloneFrom(values?.ValFeedback))
-		this.stopWatchers.push(watch(() => this.ValFeedback.value, (newValue, oldValue) => this.onUpdate('feeca.feedback', this.ValFeedback, newValue, oldValue)))
+		watch(() => this.ValFeedback.value, (newValue, oldValue) => this.onUpdate('feeca.feedback', this.ValFeedback, newValue, oldValue))
 	}
 
 	/**

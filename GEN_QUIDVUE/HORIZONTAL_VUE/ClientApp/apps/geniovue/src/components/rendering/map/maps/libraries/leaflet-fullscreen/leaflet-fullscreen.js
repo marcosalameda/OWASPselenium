@@ -15,7 +15,7 @@ export function addFullScreenMode(leaflet)
 		_screenfull: screenfull,
 
 		onAdd: function (map) {
-			let className = 'leaflet-control-zoom-fullscreen', container, content = ''
+			var className = 'leaflet-control-zoom-fullscreen', container, content = ''
 
 			if (map.zoomControl && !this.options.forceSeparateButton) {
 				container = map.zoomControl._container
@@ -82,7 +82,7 @@ export function addFullScreenMode(leaflet)
 		},
 
 		toggleFullScreen: function () {
-			const map = this._map
+			var map = this._map
 			map._exitFired = false
 			if (map._isFullscreen) {
 				if (this._screenfull.isEnabled && !this.options.forcePseudoFullscreen) {
@@ -113,7 +113,7 @@ export function addFullScreenMode(leaflet)
 		},
 
 		_handleFullscreenChange: function () {
-			const map = this._map
+			var map = this._map
 			map.invalidateSize()
 			if (!this._screenfull.isFullscreen && !map._exitFired) {
 				map.fire('exitFullscreen')

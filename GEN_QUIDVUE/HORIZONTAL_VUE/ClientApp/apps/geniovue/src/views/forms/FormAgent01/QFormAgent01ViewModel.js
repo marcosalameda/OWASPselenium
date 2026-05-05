@@ -1,4 +1,4 @@
-﻿/* eslint-disable @typescript-eslint/no-unused-vars */
+﻿/* eslint-disable no-unused-vars */
 import { computed, reactive, watch } from 'vue'
 import _merge from 'lodash-es/merge'
 
@@ -11,7 +11,7 @@ import netAPI from '@quidgest/clientapp/network'
 import qApi from '@/api/genio/quidgestFunctions.js'
 import qFunctions from '@/api/genio/projectFunctions.js'
 import qProjArrays from '@/api/genio/projectArrays.js'
-/* eslint-enable @typescript-eslint/no-unused-vars */
+/* eslint-enable no-unused-vars */
 
 /**
  * Represents a ViewModel class.
@@ -25,11 +25,11 @@ export default class ViewModel extends FormViewModelBase
 	 * @param {object} options - The options for the ViewModel
 	 * @param {object} values - A ViewModel instance to copy values from
 	 */
-	// eslint-disable-next-line @typescript-eslint/no-unused-vars
+	// eslint-disable-next-line no-unused-vars
 	constructor(vueContext, options, values)
 	{
 		super(vueContext, options)
-		// eslint-disable-next-line @typescript-eslint/no-unused-vars
+		// eslint-disable-next-line no-unused-vars
 		const vm = this.vueContext
 
 		// The view model metadata
@@ -37,9 +37,8 @@ export default class ViewModel extends FormViewModelBase
 			name: 'AGENT01',
 			area: 'AGENT',
 			actions: {
-				recalculateFormulas: 'RecalculateFormulas_Agent01',
-				updateFilesTickets: 'UpdateFilesTicketsAgent01',
-				setFile: 'SetFileAgent01'
+				recalculateFormulas: 'RecalculateFormulas_AGENT01',
+				updateFilesTickets: 'UpdateFilesTicketsAGENT01'
 			}
 		})
 
@@ -51,7 +50,7 @@ export default class ViewModel extends FormViewModelBase
 			field: 'CODAGENT',
 			description: '',
 		}).cloneFrom(values?.ValCodagent))
-		this.stopWatchers.push(watch(() => this.ValCodagent.value, (newValue, oldValue) => this.onUpdate('agent.codagent', this.ValCodagent, newValue, oldValue)))
+		watch(() => this.ValCodagent.value, (newValue, oldValue) => this.onUpdate('agent.codagent', this.ValCodagent, newValue, oldValue))
 
 		/** The remaining form fields. */
 		this.ValPhoto = reactive(new modelFieldType.Image({
@@ -61,7 +60,7 @@ export default class ViewModel extends FormViewModelBase
 			field: 'PHOTO',
 			description: computed(() => this.Resources.PHOTO51874),
 		}).cloneFrom(values?.ValPhoto))
-		this.stopWatchers.push(watch(() => this.ValPhoto.value, (newValue, oldValue) => this.onUpdate('agent.photo', this.ValPhoto, newValue, oldValue)))
+		watch(() => this.ValPhoto.value, (newValue, oldValue) => this.onUpdate('agent.photo', this.ValPhoto, newValue, oldValue))
 
 		this.ValName = reactive(new modelFieldType.String({
 			id: 'ValName',
@@ -71,7 +70,7 @@ export default class ViewModel extends FormViewModelBase
 			maxLength: 50,
 			description: computed(() => this.Resources.NAME31974),
 		}).cloneFrom(values?.ValName))
-		this.stopWatchers.push(watch(() => this.ValName.value, (newValue, oldValue) => this.onUpdate('agent.name', this.ValName, newValue, oldValue)))
+		watch(() => this.ValName.value, (newValue, oldValue) => this.onUpdate('agent.name', this.ValName, newValue, oldValue))
 
 		this.ValBirthdat = reactive(new modelFieldType.Date({
 			id: 'ValBirthdat',
@@ -80,7 +79,7 @@ export default class ViewModel extends FormViewModelBase
 			field: 'BIRTHDAT',
 			description: computed(() => this.Resources.BIRTHDATE22743),
 		}).cloneFrom(values?.ValBirthdat))
-		this.stopWatchers.push(watch(() => this.ValBirthdat.value, (newValue, oldValue) => this.onUpdate('agent.birthdat', this.ValBirthdat, newValue, oldValue)))
+		watch(() => this.ValBirthdat.value, (newValue, oldValue) => this.onUpdate('agent.birthdat', this.ValBirthdat, newValue, oldValue))
 
 		this.ValEmail = reactive(new modelFieldType.String({
 			id: 'ValEmail',
@@ -91,7 +90,7 @@ export default class ViewModel extends FormViewModelBase
 			maskType: 'EM',
 			valueFormula: {
 				stopRecalcCondition() { return false },
-				// eslint-disable-next-line @typescript-eslint/no-unused-vars
+				// eslint-disable-next-line no-unused-vars
 				fnFormula(params)
 				{
 					// Formula: "@agency.com"
@@ -103,7 +102,7 @@ export default class ViewModel extends FormViewModelBase
 			},
 			description: computed(() => this.Resources.EMAIL25170),
 		}).cloneFrom(values?.ValEmail))
-		this.stopWatchers.push(watch(() => this.ValEmail.value, (newValue, oldValue) => this.onUpdate('agent.email', this.ValEmail, newValue, oldValue)))
+		watch(() => this.ValEmail.value, (newValue, oldValue) => this.onUpdate('agent.email', this.ValEmail, newValue, oldValue))
 	}
 
 	/**

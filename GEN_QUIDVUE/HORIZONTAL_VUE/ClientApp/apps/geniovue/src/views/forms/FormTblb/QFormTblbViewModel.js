@@ -1,4 +1,4 @@
-﻿/* eslint-disable @typescript-eslint/no-unused-vars */
+﻿/* eslint-disable no-unused-vars */
 import { computed, reactive, watch } from 'vue'
 import _merge from 'lodash-es/merge'
 
@@ -11,7 +11,7 @@ import netAPI from '@quidgest/clientapp/network'
 import qApi from '@/api/genio/quidgestFunctions.js'
 import qFunctions from '@/api/genio/projectFunctions.js'
 import qProjArrays from '@/api/genio/projectArrays.js'
-/* eslint-enable @typescript-eslint/no-unused-vars */
+/* eslint-enable no-unused-vars */
 
 /**
  * Represents a ViewModel class.
@@ -25,11 +25,11 @@ export default class ViewModel extends FormViewModelBase
 	 * @param {object} options - The options for the ViewModel
 	 * @param {object} values - A ViewModel instance to copy values from
 	 */
-	// eslint-disable-next-line @typescript-eslint/no-unused-vars
+	// eslint-disable-next-line no-unused-vars
 	constructor(vueContext, options, values)
 	{
 		super(vueContext, options)
-		// eslint-disable-next-line @typescript-eslint/no-unused-vars
+		// eslint-disable-next-line no-unused-vars
 		const vm = this.vueContext
 
 		// The view model metadata
@@ -37,9 +37,8 @@ export default class ViewModel extends FormViewModelBase
 			name: 'TBLB',
 			area: 'TBLB',
 			actions: {
-				recalculateFormulas: 'RecalculateFormulas_Tblb',
-				updateFilesTickets: 'UpdateFilesTicketsTblb',
-				setFile: 'SetFileTblb'
+				recalculateFormulas: 'RecalculateFormulas_TBLB',
+				updateFilesTickets: 'UpdateFilesTicketsTBLB'
 			}
 		})
 
@@ -51,7 +50,7 @@ export default class ViewModel extends FormViewModelBase
 			field: 'CODTBLB',
 			description: '',
 		}).cloneFrom(values?.ValCodtblb))
-		this.stopWatchers.push(watch(() => this.ValCodtblb.value, (newValue, oldValue) => this.onUpdate('tblb.codtblb', this.ValCodtblb, newValue, oldValue)))
+		watch(() => this.ValCodtblb.value, (newValue, oldValue) => this.onUpdate('tblb.codtblb', this.ValCodtblb, newValue, oldValue))
 
 		/** The hidden foreign keys. */
 		this.ValFkey1 = reactive(new modelFieldType.ForeignKey({
@@ -63,7 +62,7 @@ export default class ViewModel extends FormViewModelBase
 			isFixed: true,
 			description: computed(() => this.Resources.FOREIGN_KEY39588),
 		}).cloneFrom(values?.ValFkey1))
-		this.stopWatchers.push(watch(() => this.ValFkey1.value, (newValue, oldValue) => this.onUpdate('tblb.fkey1', this.ValFkey1, newValue, oldValue)))
+		watch(() => this.ValFkey1.value, (newValue, oldValue) => this.onUpdate('tblb.fkey1', this.ValFkey1, newValue, oldValue))
 
 		/** The remaining form fields. */
 		this.ValText = reactive(new modelFieldType.String({
@@ -74,7 +73,7 @@ export default class ViewModel extends FormViewModelBase
 			maxLength: 50,
 			description: computed(() => this.Resources.TEXT04938),
 		}).cloneFrom(values?.ValText))
-		this.stopWatchers.push(watch(() => this.ValText.value, (newValue, oldValue) => this.onUpdate('tblb.text', this.ValText, newValue, oldValue)))
+		watch(() => this.ValText.value, (newValue, oldValue) => this.onUpdate('tblb.text', this.ValText, newValue, oldValue))
 
 		this.ValTextml = reactive(new modelFieldType.MultiLineString({
 			id: 'ValTextml',
@@ -83,7 +82,7 @@ export default class ViewModel extends FormViewModelBase
 			field: 'TEXTML',
 			description: computed(() => this.Resources.MULTILINE_TEXT38013),
 		}).cloneFrom(values?.ValTextml))
-		this.stopWatchers.push(watch(() => this.ValTextml.value, (newValue, oldValue) => this.onUpdate('tblb.textml', this.ValTextml, newValue, oldValue)))
+		watch(() => this.ValTextml.value, (newValue, oldValue) => this.onUpdate('tblb.textml', this.ValTextml, newValue, oldValue))
 
 		this.ValNumint = reactive(new modelFieldType.Number({
 			id: 'ValNumint',
@@ -94,7 +93,7 @@ export default class ViewModel extends FormViewModelBase
 			decimalDigits: 0,
 			description: computed(() => this.Resources.NUMERIC__INTEGER_50289),
 		}).cloneFrom(values?.ValNumint))
-		this.stopWatchers.push(watch(() => this.ValNumint.value, (newValue, oldValue) => this.onUpdate('tblb.numint', this.ValNumint, newValue, oldValue)))
+		watch(() => this.ValNumint.value, (newValue, oldValue) => this.onUpdate('tblb.numint', this.ValNumint, newValue, oldValue))
 
 		this.ValNumdec = reactive(new modelFieldType.Number({
 			id: 'ValNumdec',
@@ -105,7 +104,7 @@ export default class ViewModel extends FormViewModelBase
 			decimalDigits: 3,
 			description: computed(() => this.Resources.NUMERIC__DECIMAL_36157),
 		}).cloneFrom(values?.ValNumdec))
-		this.stopWatchers.push(watch(() => this.ValNumdec.value, (newValue, oldValue) => this.onUpdate('tblb.numdec', this.ValNumdec, newValue, oldValue)))
+		watch(() => this.ValNumdec.value, (newValue, oldValue) => this.onUpdate('tblb.numdec', this.ValNumdec, newValue, oldValue))
 
 		this.ValCurint = reactive(new modelFieldType.Number({
 			id: 'ValCurint',
@@ -116,7 +115,7 @@ export default class ViewModel extends FormViewModelBase
 			decimalDigits: 2,
 			description: computed(() => this.Resources.CURRENCY__INTERGER_21437),
 		}).cloneFrom(values?.ValCurint))
-		this.stopWatchers.push(watch(() => this.ValCurint.value, (newValue, oldValue) => this.onUpdate('tblb.curint', this.ValCurint, newValue, oldValue)))
+		watch(() => this.ValCurint.value, (newValue, oldValue) => this.onUpdate('tblb.curint', this.ValCurint, newValue, oldValue))
 
 		this.ValCurdec = reactive(new modelFieldType.Number({
 			id: 'ValCurdec',
@@ -127,7 +126,7 @@ export default class ViewModel extends FormViewModelBase
 			decimalDigits: 4,
 			description: computed(() => this.Resources.CURRENCY__DECIMAL_11718),
 		}).cloneFrom(values?.ValCurdec))
-		this.stopWatchers.push(watch(() => this.ValCurdec.value, (newValue, oldValue) => this.onUpdate('tblb.curdec', this.ValCurdec, newValue, oldValue)))
+		watch(() => this.ValCurdec.value, (newValue, oldValue) => this.onUpdate('tblb.curdec', this.ValCurdec, newValue, oldValue))
 
 		this.ValBool = reactive(new modelFieldType.Boolean({
 			id: 'ValBool',
@@ -136,7 +135,7 @@ export default class ViewModel extends FormViewModelBase
 			field: 'BOOL',
 			description: computed(() => this.Resources.BOOLEAN45002),
 		}).cloneFrom(values?.ValBool))
-		this.stopWatchers.push(watch(() => this.ValBool.value, (newValue, oldValue) => this.onUpdate('tblb.bool', this.ValBool, newValue, oldValue)))
+		watch(() => this.ValBool.value, (newValue, oldValue) => this.onUpdate('tblb.bool', this.ValBool, newValue, oldValue))
 
 		this.ValDate = reactive(new modelFieldType.Date({
 			id: 'ValDate',
@@ -145,7 +144,7 @@ export default class ViewModel extends FormViewModelBase
 			field: 'DATE',
 			description: computed(() => this.Resources.DATE18475),
 		}).cloneFrom(values?.ValDate))
-		this.stopWatchers.push(watch(() => this.ValDate.value, (newValue, oldValue) => this.onUpdate('tblb.date', this.ValDate, newValue, oldValue)))
+		watch(() => this.ValDate.value, (newValue, oldValue) => this.onUpdate('tblb.date', this.ValDate, newValue, oldValue))
 
 		this.ValDatetm = reactive(new modelFieldType.DateTime({
 			id: 'ValDatetm',
@@ -154,7 +153,7 @@ export default class ViewModel extends FormViewModelBase
 			field: 'DATETM',
 			description: computed(() => this.Resources.DATETIME__MINUTES_59352),
 		}).cloneFrom(values?.ValDatetm))
-		this.stopWatchers.push(watch(() => this.ValDatetm.value, (newValue, oldValue) => this.onUpdate('tblb.datetm', this.ValDatetm, newValue, oldValue)))
+		watch(() => this.ValDatetm.value, (newValue, oldValue) => this.onUpdate('tblb.datetm', this.ValDatetm, newValue, oldValue))
 
 		this.ValDatets = reactive(new modelFieldType.DateTimeSeconds({
 			id: 'ValDatets',
@@ -163,7 +162,7 @@ export default class ViewModel extends FormViewModelBase
 			field: 'DATETS',
 			description: computed(() => this.Resources.DATETIME__SECONDS_49861),
 		}).cloneFrom(values?.ValDatets))
-		this.stopWatchers.push(watch(() => this.ValDatets.value, (newValue, oldValue) => this.onUpdate('tblb.datets', this.ValDatets, newValue, oldValue)))
+		watch(() => this.ValDatets.value, (newValue, oldValue) => this.onUpdate('tblb.datets', this.ValDatets, newValue, oldValue))
 
 		this.ValTimehm = reactive(new modelFieldType.Time({
 			id: 'ValTimehm',
@@ -172,7 +171,7 @@ export default class ViewModel extends FormViewModelBase
 			field: 'TIMEHM',
 			description: computed(() => this.Resources.TIME__HOURS_MINUTES_01660),
 		}).cloneFrom(values?.ValTimehm))
-		this.stopWatchers.push(watch(() => this.ValTimehm.value, (newValue, oldValue) => this.onUpdate('tblb.timehm', this.ValTimehm, newValue, oldValue)))
+		watch(() => this.ValTimehm.value, (newValue, oldValue) => this.onUpdate('tblb.timehm', this.ValTimehm, newValue, oldValue))
 
 		this.ValEnumt = reactive(new modelFieldType.String({
 			id: 'ValEnumt',
@@ -180,10 +179,10 @@ export default class ViewModel extends FormViewModelBase
 			area: 'TBLB',
 			field: 'ENUMT',
 			maxLength: 1,
-			arrayOptions: computed(() => new qProjArrays.QArrayTypet(vm.$getResource).elements),
+			arrayOptions: computed(() => qProjArrays.QArrayTypet.setResources(vm.$getResource).elements),
 			description: computed(() => this.Resources.ENUMERATION__TEXT_15855),
 		}).cloneFrom(values?.ValEnumt))
-		this.stopWatchers.push(watch(() => this.ValEnumt.value, (newValue, oldValue) => this.onUpdate('tblb.enumt', this.ValEnumt, newValue, oldValue)))
+		watch(() => this.ValEnumt.value, (newValue, oldValue) => this.onUpdate('tblb.enumt', this.ValEnumt, newValue, oldValue))
 
 		this.ValEnumn = reactive(new modelFieldType.Number({
 			id: 'ValEnumn',
@@ -192,10 +191,10 @@ export default class ViewModel extends FormViewModelBase
 			field: 'ENUMN',
 			maxDigits: 1,
 			decimalDigits: 0,
-			arrayOptions: computed(() => new qProjArrays.QArrayTypen(vm.$getResource).elements),
+			arrayOptions: computed(() => qProjArrays.QArrayTypen.setResources(vm.$getResource).elements),
 			description: computed(() => this.Resources.ENUMERATION__NUMERIC44708),
 		}).cloneFrom(values?.ValEnumn))
-		this.stopWatchers.push(watch(() => this.ValEnumn.value, (newValue, oldValue) => this.onUpdate('tblb.enumn', this.ValEnumn, newValue, oldValue)))
+		watch(() => this.ValEnumn.value, (newValue, oldValue) => this.onUpdate('tblb.enumn', this.ValEnumn, newValue, oldValue))
 	}
 
 	/**

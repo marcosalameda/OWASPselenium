@@ -1,27 +1,36 @@
 ﻿<template>
-	<q-numeric-input
+	<component
+		:is="options?.component ? options.component : 'base-input-structure'"
 		:id="`${tableName}_${rowIndex}_${columnName}`"
-		:data-testid="$attrs['data-testid']"
-		:size="size"
-		:classes="classes"
-		:thousands-separator="options.numberFormat?.groupSeparator"
-		:decimal-point="options.numberFormat?.decimalSeparator"
-		:max-integers="options.maxDigits"
-		:is-decimal="options.decimalPlaces !== undefined && options.decimalPlaces > 0"
-		:max-decimals="options.decimalPlaces"
-		:currency-symbol="options.currencySymbol"
-		:readonly="options.readonly"
-		:model-value="Number(value)"
-		data-table-action-selected="false"
-		tabindex="-1"
-		:aria-label="options.label"
-		@update:model-value="onUpdateModelValue" />
+		:class="containerClasses"
+		:d-flex-inline="false"
+		:label-attrs="{ class: 'i-text__label' }"
+		:model-field-ref="modelField"
+		:error-display-type="options?.errorDisplayType">
+		<q-numeric-input
+			:id="`${tableName}_${rowIndex}_${columnName}`"
+			:size="size ?? options.size"
+			:classes="classes"
+			:thousands-separator="options.thousandsSep"
+			:decimal-point="options.decimalSep"
+			:max-integers="options.maxDigits"
+			:is-decimal="options.decimalPlaces !== undefined && options.decimalPlaces > 0"
+			:max-decimals="options.decimalPlaces"
+			:currency-symbol="options.currencySymbol"
+			:readonly="options.readonly"
+			:model-value="rawValue"
+			data-table-action-selected="false"
+			tabindex="-1"
+			:aria-label="options?.label"
+			@update:model-value="onUpdateModelValue" />
+	</component>
 </template>
 
 <script>
 	import _isEmpty from 'lodash-es/isEmpty'
 
 	import { inputSize } from '@quidgest/clientapp/constants/enums'
+	import modelFieldType from '@quidgest/clientapp/models/fields'
 
 	import QNumericInput from '@/components/inputs/NumericInput.vue'
 
@@ -40,6 +49,14 @@
 			 */
 			value: {
 				type: [Number, String],
+				default: 0
+			},
+
+			/**
+			 * The raw numeric value without any formatting.
+			 */
+			rawValue: {
+				type: Number,
 				default: 0
 			},
 
@@ -80,7 +97,6 @@
 			 */
 			size: {
 				type: String,
-				default: inputSize.mini,
 				validator: (value) => _isEmpty(value) || Reflect.has(inputSize, value)
 			},
 
@@ -90,10 +106,33 @@
 			classes: {
 				type: Array,
 				default: () => []
+			},
+
+			/**
+			 * Additional classes to apply to the control's container.
+			 */
+			containerClasses: {
+				type: Array,
+				default: () => []
+			},
+
+			/**
+			 * Error messages related to the current field to be displayed.
+			 */
+			errorMessages: {
+				type: Array,
+				default: () => []
 			}
 		},
 
 		expose: [],
+
+		data()
+		{
+			return {
+				modelField: new modelFieldType.Number()
+			}
+		},
 
 		mounted()
 		{
@@ -108,6 +147,16 @@
 			onUpdateModelValue(event)
 			{
 				this.$emit('update', event)
+			}
+		},
+
+		watch: {
+			errorMessages: {
+				handler(newValue)
+				{
+					this.modelField.serverErrorMessages = newValue
+				},
+				deep: true
 			}
 		}
 	}

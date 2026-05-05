@@ -10,24 +10,24 @@ public class ParamForm : Form
 	/// <summary>
 	/// Kind of equipment
 	/// </summary>
-	public LookupControl KindeDesignat => new LookupControl(driver, ContainerLocator, "container-PARAM___KINDEDESIGNAT" + IdSuffix);
-	public SeeMorePage KindeDesignatSeeMorePage => new SeeMorePage(driver, "PARAM", "PARAM___KINDEDESIGNAT" + IdSuffix);
+	public LookupControl KindeDesignat => new LookupControl(driver, ContainerLocator, "container-PARAM___KINDEDESIGNAT");
+	public SeeMorePage KindeDesignatSeeMorePage => new SeeMorePage(driver, "PARAM", "PARAM___KINDEDESIGNAT");
 
 	/// <summary>
 	/// Parameter
 	/// </summary>
-	public BaseInputControl ParamParamete => new BaseInputControl(driver, ContainerLocator, "container-PARAM___PARAMPARAMETE" + IdSuffix, "#PARAM___PARAMPARAMETE" + IdSuffix);
+	public BaseInputControl ParamParamete => new BaseInputControl(driver, ContainerLocator, "container-PARAM___PARAMPARAMETE", "#PARAM___PARAMPARAMETE");
 
 	/// <summary>
 	/// Data type
 	/// </summary>
-	public EnumControl ParamDatatype => new EnumControl(driver, ContainerLocator, "container-PARAM___PARAMDATATYPE" + IdSuffix);
+	public EnumControl ParamDatatype => new EnumControl(driver, ContainerLocator, "container-PARAM___PARAMDATATYPE");
 
 	/// <summary>
 	/// Decimal places
 	/// </summary>
-	public EnumControl ParamDecplace => new EnumControl(driver, ContainerLocator, "container-PARAM___PARAMDECPLACE" + IdSuffix);
+	public EnumControl ParamDecplace => new EnumControl(driver, ContainerLocator, "container-PARAM___PARAMDECPLACE");
 
-	public ParamForm(IWebDriver driver, FORM_MODE mode, By? containerLocator = null, bool usePkInId = false)
-		: base(driver, mode, "PARAM", containerLocator: containerLocator, usePkInId: usePkInId) { }
+	public ParamForm(IWebDriver driver, FORM_MODE mode, By? containerLocator = null)
+		: base(driver, mode, "PARAM", containerLocator: containerLocator) { }
 }

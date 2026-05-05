@@ -28,32 +28,53 @@ namespace GenioMVC.Controllers
 {
 	public partial class ReparController : ControllerBase
 	{
-		private static readonly NavigationLocation ACTION_GQT_MENU_311 = new NavigationLocation("REPAIRS18165", "GQT_Menu_311", "Repar") { vueRouteName = "menu-GQT_311" };
+		private static readonly NavigationLocation ACTION_GQT_MENU_REPAIR_LIST = new NavigationLocation("REPAIRS18165", "GQT_Menu_REPAIR_LIST", "Repar") { vueRouteName = "menu-GQT_REPAIR_LIST" };
 
 
 		//
-		// GET: /Repar/GQT_Menu_311
-		[ActionName("GQT_Menu_311")]
+		// GET: /Repar/GQT_Menu_REPAIR_LIST
+		[ActionName("GQT_Menu_REPAIR_LIST")]
 		[HttpPost]
-		public ActionResult GQT_Menu_311([FromBody] RequestMenuModel requestModel)
+		public ActionResult GQT_Menu_REPAIR_LIST([FromBody]RequestMenuModel requestModel)
 		{
 			var queryParams = requestModel.QueryParams;
 
-			GQT_Menu_311_ViewModel model = new(m_userContext);
+			int perPage = CSGenio.framework.Configuration.NrRegDBedit;
+			string rowsPerPageOptionsString = "";
 
-			CSGenio.core.framework.table.TableConfiguration tableConfig = model.GetTableConfig(
-				requestModel.TableConfiguration,
-				requestModel.UserTableConfigName,
-				requestModel.LoadDefaultView);
+			GQT_Menu_REPAIR_LIST_ViewModel model = new GQT_Menu_REPAIR_LIST_ViewModel(UserContext.Current);
+
+			// Table configuration load options
+			CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions tableConfigOptions = new CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions();
+
+
+			// Determine which table configuration to use and load it
+			CSGenio.framework.TableConfiguration.TableConfiguration tableConfig = TableUiSettings.Load(
+				UserContext.Current.PersistentSupport,
+				model.Uuid,
+				UserContext.Current.User,
+				tableConfigOptions
+			).DetermineTableConfig(
+				requestModel?.TableConfiguration,
+				requestModel?.UserTableConfigName,
+				(bool)requestModel?.LoadDefaultView,
+				tableConfigOptions
+			);
 
 			// Determine rows per page
-			tableConfig.RowsPerPage = tableConfig.DetermineRowsPerPage(CSGenio.framework.Configuration.NrRegDBedit, "");
+			tableConfig.RowsPerPage = CSGenio.framework.TableConfiguration.TableConfigurationHelpers.DetermineRowsPerPage(tableConfig.RowsPerPage, perPage, rowsPerPageOptionsString);
+
+			// Determine what columns have totalizers
+			tableConfig.TotalizerColumns = requestModel.TotalizerColumns;
+
+			// For tables with multiple selection enabled, determine currently selected rows
+			tableConfig.SelectedRows = requestModel.SelectedRows;
 
 			bool isHomePage = RouteData.Values.ContainsKey("isHomePage") ? (bool)RouteData.Values["isHomePage"] : false;
 			if (isHomePage)
-				Navigation.SetValue("HomePage", "GQT_Menu_311");
+				Navigation.SetValue("HomePage", "GQT_Menu_REPAIR_LIST");
 
-			// If there was a recent operation on this table then force the primary persistence server to be called and ignore the read only feature
+			//If there was a recent operation on this table then force the primary persistence server to be called and ignore the read only feature
 			if (string.IsNullOrEmpty(Navigation.GetStrValue("ForcePrimaryRead_repar")))
 				UserContext.Current.SetPersistenceReadOnly(true);
 			else
@@ -65,32 +86,33 @@ namespace GenioMVC.Controllers
 			if (result.Status.Equals(CSGenio.framework.Status.E))
 				return PermissionError(result.Message);
 
-			NameValueCollection querystring = [];
+			NameValueCollection querystring = new NameValueCollection();
 			if (queryParams != null && queryParams.Count > 0)
 				querystring.AddRange(queryParams);
 
 			if (!isHomePage &&
-				(Navigation.CurrentLevel == null || !ACTION_GQT_MENU_311.IsSameAction(Navigation.CurrentLevel.Location)) &&
-				Navigation.CurrentLevel.Location.Action != ACTION_GQT_MENU_311.Action)
+				(Navigation.CurrentLevel == null || !ACTION_GQT_MENU_REPAIR_LIST.IsSameAction(Navigation.CurrentLevel.Location)) &&
+				Navigation.CurrentLevel.Location.Action != ACTION_GQT_MENU_REPAIR_LIST.Action)
 				CSGenio.framework.Audit.registAction(UserContext.Current.User, Resources.Resources.MENU01948 + " " + Navigation.CurrentLevel.Location.ShortDescription());
 			else if (isHomePage)
 			{
-				CSGenio.framework.Audit.registAction(UserContext.Current.User, Resources.Resources.MENU01948 + " " + ACTION_GQT_MENU_311.ShortDescription());
+				CSGenio.framework.Audit.registAction(UserContext.Current.User, Resources.Resources.MENU01948 + " " + ACTION_GQT_MENU_REPAIR_LIST.ShortDescription());
 				Navigation.SetValue("HomePageContainsList", true);
 			}
 
 
 
-// USE /[MANUAL GQT MENU_GET 311]/
+// USE /[MANUAL GQT MENU_GET REPAIR_LIST]/
 
-			try
-			{
-				model.Load(tableConfig, querystring, Request.IsAjaxRequest());
-			}
-			catch (Exception e)
-			{
-				return JsonERROR(HandleException(e), model);
-			}
+
+            try
+            {
+			    model.Load(tableConfig, querystring, Request.IsAjaxRequest());
+            }
+            catch(Exception e)
+            {
+                return JsonERROR(HandleException(e), model);
+            }
 
 
 			return JsonOK(model);

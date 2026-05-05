@@ -1,4 +1,4 @@
-﻿/* eslint-disable @typescript-eslint/no-unused-vars */
+﻿/* eslint-disable no-unused-vars */
 import { computed, reactive, watch } from 'vue'
 import _merge from 'lodash-es/merge'
 
@@ -11,7 +11,7 @@ import netAPI from '@quidgest/clientapp/network'
 import qApi from '@/api/genio/quidgestFunctions.js'
 import qFunctions from '@/api/genio/projectFunctions.js'
 import qProjArrays from '@/api/genio/projectArrays.js'
-/* eslint-enable @typescript-eslint/no-unused-vars */
+/* eslint-enable no-unused-vars */
 
 /**
  * Represents a ViewModel class.
@@ -25,11 +25,11 @@ export default class ViewModel extends FormViewModelBase
 	 * @param {object} options - The options for the ViewModel
 	 * @param {object} values - A ViewModel instance to copy values from
 	 */
-	// eslint-disable-next-line @typescript-eslint/no-unused-vars
+	// eslint-disable-next-line no-unused-vars
 	constructor(vueContext, options, values)
 	{
 		super(vueContext, options)
-		// eslint-disable-next-line @typescript-eslint/no-unused-vars
+		// eslint-disable-next-line no-unused-vars
 		const vm = this.vueContext
 
 		// The view model metadata
@@ -37,9 +37,8 @@ export default class ViewModel extends FormViewModelBase
 			name: 'PWORG',
 			area: 'PWORG',
 			actions: {
-				recalculateFormulas: 'RecalculateFormulas_Pworg',
-				updateFilesTickets: 'UpdateFilesTicketsPworg',
-				setFile: 'SetFilePworg'
+				recalculateFormulas: 'RecalculateFormulas_PWORG',
+				updateFilesTickets: 'UpdateFilesTicketsPWORG'
 			}
 		})
 
@@ -51,7 +50,7 @@ export default class ViewModel extends FormViewModelBase
 			field: 'CODPWORG',
 			description: '',
 		}).cloneFrom(values?.ValCodpworg))
-		this.stopWatchers.push(watch(() => this.ValCodpworg.value, (newValue, oldValue) => this.onUpdate('pworg.codpworg', this.ValCodpworg, newValue, oldValue)))
+		watch(() => this.ValCodpworg.value, (newValue, oldValue) => this.onUpdate('pworg.codpworg', this.ValCodpworg, newValue, oldValue))
 
 		/** The used foreign keys. */
 		this.ValCodpsw = reactive(new modelFieldType.ForeignKey({
@@ -62,7 +61,7 @@ export default class ViewModel extends FormViewModelBase
 			relatedArea: 'PSW',
 			description: '',
 		}).cloneFrom(values?.ValCodpsw))
-		this.stopWatchers.push(watch(() => this.ValCodpsw.value, (newValue, oldValue) => this.onUpdate('pworg.codpsw', this.ValCodpsw, newValue, oldValue)))
+		watch(() => this.ValCodpsw.value, (newValue, oldValue) => this.onUpdate('pworg.codpsw', this.ValCodpsw, newValue, oldValue))
 
 		this.ValCodorgan = reactive(new modelFieldType.ForeignKey({
 			id: 'ValCodorgan',
@@ -72,7 +71,7 @@ export default class ViewModel extends FormViewModelBase
 			relatedArea: 'ORGAN',
 			description: '',
 		}).cloneFrom(values?.ValCodorgan))
-		this.stopWatchers.push(watch(() => this.ValCodorgan.value, (newValue, oldValue) => this.onUpdate('pworg.codorgan', this.ValCodorgan, newValue, oldValue)))
+		watch(() => this.ValCodorgan.value, (newValue, oldValue) => this.onUpdate('pworg.codorgan', this.ValCodorgan, newValue, oldValue))
 
 		/** The remaining form fields. */
 		this.TablePswNome = reactive(new modelFieldType.String({
@@ -83,9 +82,8 @@ export default class ViewModel extends FormViewModelBase
 			field: 'NOME',
 			maxLength: 100,
 			description: computed(() => this.Resources.NAME31974),
-			ignoreFldSubmit: true,
 		}).cloneFrom(values?.TablePswNome))
-		this.stopWatchers.push(watch(() => this.TablePswNome.value, (newValue, oldValue) => this.onUpdate('psw.nome', this.TablePswNome, newValue, oldValue)))
+		watch(() => this.TablePswNome.value, (newValue, oldValue) => this.onUpdate('psw.nome', this.TablePswNome, newValue, oldValue))
 
 		this.TableOrganOrganiza = reactive(new modelFieldType.String({
 			type: 'Lookup',
@@ -95,9 +93,8 @@ export default class ViewModel extends FormViewModelBase
 			field: 'ORGANIZA',
 			maxLength: 85,
 			description: computed(() => this.Resources.ORGANIZATION64123),
-			ignoreFldSubmit: true,
 		}).cloneFrom(values?.TableOrganOrganiza))
-		this.stopWatchers.push(watch(() => this.TableOrganOrganiza.value, (newValue, oldValue) => this.onUpdate('organ.organiza', this.TableOrganOrganiza, newValue, oldValue)))
+		watch(() => this.TableOrganOrganiza.value, (newValue, oldValue) => this.onUpdate('organ.organiza', this.TableOrganOrganiza, newValue, oldValue))
 	}
 
 	/**

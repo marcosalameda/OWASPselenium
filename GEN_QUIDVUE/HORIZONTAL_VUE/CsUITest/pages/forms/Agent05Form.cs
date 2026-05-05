@@ -10,33 +10,33 @@ public class Agent05Form : Form
 	/// <summary>
 	/// Informação do agente
 	/// </summary>
-	public CollapsibleZoneControl PseudAgentinf => new CollapsibleZoneControl(driver, ContainerLocator, "#AGENT05_PSEUDAGENTINF" + IdSuffix + "-container");
+	public CollapsibleZoneControl PseudAgentinf => new CollapsibleZoneControl(driver, ContainerLocator, "#AGENT05_PSEUDAGENTINF-container");
 
 	/// <summary>
 	/// Photo
 	/// </summary>
-	public BaseInputControl AgentPhoto => new BaseInputControl(driver, ContainerLocator, "container-AGENT05_AGENTPHOTO___" + IdSuffix, "#AGENT05_AGENTPHOTO___" + IdSuffix);
+	public BaseInputControl AgentPhoto => new BaseInputControl(driver, ContainerLocator, "container-AGENT05_AGENTPHOTO___", "#AGENT05_AGENTPHOTO___");
 
 	/// <summary>
 	/// Name
 	/// </summary>
-	public BaseInputControl AgentName => new BaseInputControl(driver, ContainerLocator, "container-AGENT05_AGENTNAME____" + IdSuffix, "#AGENT05_AGENTNAME____" + IdSuffix);
+	public BaseInputControl AgentName => new BaseInputControl(driver, ContainerLocator, "container-AGENT05_AGENTNAME____", "#AGENT05_AGENTNAME____");
 
 	/// <summary>
 	/// Data de nascimento
 	/// </summary>
-	public DateInputControl AgentBirthdat => new DateInputControl(driver, ContainerLocator, "#AGENT05_AGENTBIRTHDAT" + IdSuffix);
+	public DateInputControl AgentBirthdat => new DateInputControl(driver, ContainerLocator, "#AGENT05_AGENTBIRTHDAT");
 
 	/// <summary>
 	/// Email
 	/// </summary>
-	public BaseInputControl AgentEmail => new BaseInputControl(driver, ContainerLocator, "container-AGENT05_AGENTEMAIL___" + IdSuffix, "#AGENT05_AGENTEMAIL___" + IdSuffix);
+	public BaseInputControl AgentEmail => new BaseInputControl(driver, ContainerLocator, "container-AGENT05_AGENTEMAIL___", "#AGENT05_AGENTEMAIL___");
 
 	/// <summary>
 	/// Telephone
 	/// </summary>
-	public BaseInputControl AgentTelephon => new BaseInputControl(driver, ContainerLocator, "container-AGENT05_AGENTTELEPHON" + IdSuffix, "#AGENT05_AGENTTELEPHON" + IdSuffix);
+	public BaseInputControl AgentTelephon => new BaseInputControl(driver, ContainerLocator, "container-AGENT05_AGENTTELEPHON", "#AGENT05_AGENTTELEPHON");
 
-	public Agent05Form(IWebDriver driver, FORM_MODE mode, By? containerLocator = null, bool usePkInId = false)
-		: base(driver, mode, "AGENT05", containerLocator: containerLocator, usePkInId: usePkInId) { }
+	public Agent05Form(IWebDriver driver, FORM_MODE mode, By? containerLocator = null)
+		: base(driver, mode, "AGENT05", containerLocator: containerLocator) { }
 }

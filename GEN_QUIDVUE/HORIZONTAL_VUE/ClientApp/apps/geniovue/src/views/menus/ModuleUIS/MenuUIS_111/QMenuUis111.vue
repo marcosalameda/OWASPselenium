@@ -10,12 +10,10 @@
 				<q-table
 					v-bind="controls.menu"
 					v-on="controls.menu.handlers">
-					<!-- USE /[MANUAL GQT CUSTOM_TABLE UIS_Menu_111]/ -->
 				</q-table>
 
 				<q-table-extra-extension
 					:list-ctrl="controls.menu"
-					:filter-operators="controls.menu.filterOperators"
 					v-on="controls.menu.handlers" />
 			</q-row-container>
 		</form>
@@ -50,7 +48,7 @@
 </template>
 
 <script>
-	/* eslint-disable @typescript-eslint/no-unused-vars */
+	/* eslint-disable no-unused-vars */
 	import asyncProcM from '@quidgest/clientapp/composables/async'
 	import qEnums from '@quidgest/clientapp/constants/enums'
 	import netAPI from '@quidgest/clientapp/network'
@@ -70,7 +68,7 @@
 	import qApi from '@/api/genio/quidgestFunctions.js'
 	import qFunctions from '@/api/genio/projectFunctions.js'
 	import qProjArrays from '@/api/genio/projectArrays.js'
-	/* eslint-enable @typescript-eslint/no-unused-vars */
+	/* eslint-enable no-unused-vars */
 
 	import MenuViewModel from './QMenuUIS_111ViewModel.js'
 
@@ -146,36 +144,35 @@
 							'page-full-height'
 						],
 						columnsOriginal: [
-							new listColumnTypes.TextColumn({
-								order: 1,
-								name: 'ValCompclas',
-								area: 'COMPC',
-								field: 'COMPCLAS',
-								label: computed(() => this.Resources.COMPONENT_CLASS55392),
-								dataLength: 50,
-								scrollData: 30,
-								export: 1,
-							}, computed(() => vm.model), computed(() => vm.internalEvents)),
-							new listColumnTypes.TextColumn({
-								order: 2,
-								name: 'ValClassdes',
-								area: 'COMPC',
-								field: 'CLASSDES',
-								label: computed(() => this.Resources.CLASS_DESCRIPTION30131),
-								scrollData: 30,
-								export: 1,
-							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.ImageColumn({
-								order: 3,
+								order: 1,
 								name: 'ValClassico',
 								area: 'COMPC',
 								field: 'CLASSICO',
 								label: computed(() => this.Resources.CLASS_ICON19969),
 								dataTitle: computed(() => genericFunctions.formatString(vm.Resources.IMAGEM_UTILIZADA_PAR58591, vm.Resources.CLASS_ICON19969)),
 								scrollData: 3,
+								isVisible: false,
 								sortable: false,
 								searchable: false,
-								export: 1,
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
+							new listColumnTypes.TextColumn({
+								order: 2,
+								name: 'ValCompclas',
+								area: 'COMPC',
+								field: 'COMPCLAS',
+								label: computed(() => this.Resources.COMPONENT_CLASS55392),
+								dataLength: 50,
+								scrollData: 30,
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
+							new listColumnTypes.TextColumn({
+								order: 3,
+								name: 'ValClassdes',
+								area: 'COMPC',
+								field: 'CLASSDES',
+								label: computed(() => this.Resources.CLASS_DESCRIPTION30131),
+								scrollData: 100,
+								sortable: false,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 						],
 						config: {
@@ -190,7 +187,8 @@
 							permissions: {
 							},
 							searchBarConfig: {
-								visibility: true
+								visibility: true,
+								searchOnPressEnter: true
 							},
 							filtersVisible: true,
 							allowColumnFilters: true,
@@ -291,7 +289,6 @@
 							rowClickAction: {
 								id: 'RCA_UIS_1111',
 								name: 'menu-UIS_1111',
-								isVisible: true,
 								params: {
 									isRoute: true,
 									limits: [
@@ -379,16 +376,12 @@
 										rawValue: 'grid',
 										isMapped: false
 									},
-									gridMode: {
-										rawValue: 'fixed',
-										isMapped: false
-									},
 									containerAlignment: {
 										rawValue: 'left',
 										isMapped: false
 									},
 									hoverScaleAmount: {
-										rawValue: 1.00,
+										rawValue: '1.00',
 										isMapped: false
 									},
 									imageShape: {
@@ -411,9 +404,21 @@
 								groups: {
 								}
 							},
+							{
+								id: 'LIST',
+								type: 'list',
+								subtype: '',
+								label: computed(() => this.Resources.LISTA13474),
+								order: 2,
+								mappingVariables: readonly({
+								}),
+								styleVariables: {
+								},
+								groups: {
+								}
+							},
 						],
 						headerLevel: 1,
-						isActiveControl: computed(() => this.isActiveMenu)
 					}, this),
 				}
 			}
@@ -437,14 +442,6 @@
 		{
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
 // USE /[MANUAL GQT FORM_CODEJS UIS_MENU_111]/
-// eslint-disable-next-line
-/* eslint-enable indent, vue/html-indent, vue/script-indent */
-		},
-
-		beforeUnmount()
-		{
-/* eslint-disable indent, vue/html-indent, vue/script-indent */
-// USE /[MANUAL GQT COMPONENT_BEFORE_UNMOUNT UIS_MENU_111]/
 // eslint-disable-next-line
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 		},

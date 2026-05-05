@@ -9,13 +9,12 @@
 			<div
 				v-if="showFormHeader"
 				class="c-action-bar">
-				<component
+				<h1
 					v-if="formControl.uiComponents.header && formInfo.designation"
-					:is="topHeadingTag"
 					:id="formTitleId"
 					class="form-header">
 					{{ formInfo.designation }}
-				</component>
+				</h1>
 
 				<div class="c-action-bar__menu">
 					<template
@@ -39,13 +38,9 @@
 									:label="btn.label"
 									:disabled="btn.disabled"
 									@click="btn.action">
-									<template v-if="btn.icon">
-										<q-badge-indicator
-											:enabled="btn.badge?.isVisible ?? false"
-											:color="btn.badge?.color">
-											<q-icon v-bind="btn.icon" />
-										</q-badge-indicator>
-									</template>
+									<q-icon
+										v-if="btn.icon"
+										v-bind="btn.icon" />
 								</q-toggle-group-item>
 							</template>
 						</q-toggle-group>
@@ -57,7 +52,7 @@
 				v-if="$app.layout.FormAnchorsPosition === 'form-header' && visibleGroups.length > 0"
 				:anchors="anchorGroups"
 				:controls="visibleControls"
-				@focus-control="focusControl" />
+				@focus-control="(...args) => focusControl(...args)" />
 		</div>
 	</teleport>
 
@@ -78,7 +73,6 @@
 						v-if="btn.isActive && btn.isVisible && btn.showInHeading"
 						:id="`heading-${btn.id}`"
 						:label="btn.text"
-						:color="btn.color"
 						:variant="btn.variant"
 						:disabled="btn.disabled"
 						:icon-pos="btn.iconPos"
@@ -92,21 +86,18 @@
 			</q-button-group>
 		</div>
 
-		<q-container
-			fluid
+		<div
+			class="form-flow"
 			data-key="DENTR"
-			:data-identifier="primaryKeyValue"
-			:data-loading="!formInitialDataLoaded || !isActiveForm">
+			:data-loading="!formInitialDataLoaded">
 			<template v-if="formControl.initialized && showFormBody">
-				<q-row v-if="controls.DENTR___CNTRYCOUNTRY_.isVisible">
-					<q-col
-						v-if="controls.DENTR___CNTRYCOUNTRY_.isVisible"
-						cols="auto">
+				<q-row-container v-show="controls.DENTR___CNTRYCOUNTRY_.isVisible">
+					<q-control-wrapper
+						v-show="controls.DENTR___CNTRYCOUNTRY_.isVisible"
+						class="${Vue.GetControlWrapperClass($controlsColumn)}">
 						<base-input-structure
-							v-if="controls.DENTR___CNTRYCOUNTRY_.isVisible"
 							class="i-text"
-							v-bind="controls.DENTR___CNTRYCOUNTRY_.wrapperProps"
-							:id="getControlId(controls.DENTR___CNTRYCOUNTRY_)"
+							v-bind="controls.DENTR___CNTRYCOUNTRY_"
 							v-on="controls.DENTR___CNTRYCOUNTRY_.handlers"
 							:loading="controls.DENTR___CNTRYCOUNTRY_.props.loading"
 							:reporting-mode-on="reportingModeCAV"
@@ -114,24 +105,21 @@
 							<q-lookup
 								v-if="controls.DENTR___CNTRYCOUNTRY_.isVisible"
 								v-bind="controls.DENTR___CNTRYCOUNTRY_.props"
-								:id="getControlId(controls.DENTR___CNTRYCOUNTRY_)"
 								v-on="controls.DENTR___CNTRYCOUNTRY_.handlers" />
 							<q-see-more-dentr-cntrycountry
 								v-if="controls.DENTR___CNTRYCOUNTRY_.seeMoreIsVisible"
 								v-bind="controls.DENTR___CNTRYCOUNTRY_.seeMoreParams"
 								v-on="controls.DENTR___CNTRYCOUNTRY_.handlers" />
 						</base-input-structure>
-					</q-col>
-				</q-row>
-				<q-row v-if="controls.DENTR___CMPNYDESIGNAT.isVisible">
-					<q-col
-						v-if="controls.DENTR___CMPNYDESIGNAT.isVisible"
-						cols="auto">
+					</q-control-wrapper>
+				</q-row-container>
+				<q-row-container v-show="controls.DENTR___CMPNYDESIGNAT.isVisible">
+					<q-control-wrapper
+						v-show="controls.DENTR___CMPNYDESIGNAT.isVisible"
+						class="${Vue.GetControlWrapperClass($controlsColumn)}">
 						<base-input-structure
-							v-if="controls.DENTR___CMPNYDESIGNAT.isVisible"
 							class="i-text"
-							v-bind="controls.DENTR___CMPNYDESIGNAT.wrapperProps"
-							:id="getControlId(controls.DENTR___CMPNYDESIGNAT)"
+							v-bind="controls.DENTR___CMPNYDESIGNAT"
 							v-on="controls.DENTR___CMPNYDESIGNAT.handlers"
 							:loading="controls.DENTR___CMPNYDESIGNAT.props.loading"
 							:reporting-mode-on="reportingModeCAV"
@@ -139,24 +127,21 @@
 							<q-lookup
 								v-if="controls.DENTR___CMPNYDESIGNAT.isVisible"
 								v-bind="controls.DENTR___CMPNYDESIGNAT.props"
-								:id="getControlId(controls.DENTR___CMPNYDESIGNAT)"
 								v-on="controls.DENTR___CMPNYDESIGNAT.handlers" />
 							<q-see-more-dentr-cmpnydesignat
 								v-if="controls.DENTR___CMPNYDESIGNAT.seeMoreIsVisible"
 								v-bind="controls.DENTR___CMPNYDESIGNAT.seeMoreParams"
 								v-on="controls.DENTR___CMPNYDESIGNAT.handlers" />
 						</base-input-structure>
-					</q-col>
-				</q-row>
-				<q-row v-if="controls.DENTR___PESSONAME____.isVisible">
-					<q-col
-						v-if="controls.DENTR___PESSONAME____.isVisible"
-						cols="auto">
+					</q-control-wrapper>
+				</q-row-container>
+				<q-row-container v-show="controls.DENTR___PESSONAME____.isVisible">
+					<q-control-wrapper
+						v-show="controls.DENTR___PESSONAME____.isVisible"
+						class="${Vue.GetControlWrapperClass($controlsColumn)}">
 						<base-input-structure
-							v-if="controls.DENTR___PESSONAME____.isVisible"
 							class="i-text"
-							v-bind="controls.DENTR___PESSONAME____.wrapperProps"
-							:id="getControlId(controls.DENTR___PESSONAME____)"
+							v-bind="controls.DENTR___PESSONAME____"
 							v-on="controls.DENTR___PESSONAME____.handlers"
 							:loading="controls.DENTR___PESSONAME____.props.loading"
 							:reporting-mode-on="reportingModeCAV"
@@ -164,24 +149,21 @@
 							<q-lookup
 								v-if="controls.DENTR___PESSONAME____.isVisible"
 								v-bind="controls.DENTR___PESSONAME____.props"
-								:id="getControlId(controls.DENTR___PESSONAME____)"
 								v-on="controls.DENTR___PESSONAME____.handlers" />
 							<q-see-more-dentr-pessoname
 								v-if="controls.DENTR___PESSONAME____.seeMoreIsVisible"
 								v-bind="controls.DENTR___PESSONAME____.seeMoreParams"
 								v-on="controls.DENTR___PESSONAME____.handlers" />
 						</base-input-structure>
-					</q-col>
-				</q-row>
-				<q-row v-if="controls.DENTR___WARE1WAREHDES.isVisible">
-					<q-col
-						v-if="controls.DENTR___WARE1WAREHDES.isVisible"
-						cols="auto">
+					</q-control-wrapper>
+				</q-row-container>
+				<q-row-container v-show="controls.DENTR___WARE1WAREHDES.isVisible">
+					<q-control-wrapper
+						v-show="controls.DENTR___WARE1WAREHDES.isVisible"
+						class="${Vue.GetControlWrapperClass($controlsColumn)}">
 						<base-input-structure
-							v-if="controls.DENTR___WARE1WAREHDES.isVisible"
 							class="i-text"
-							v-bind="controls.DENTR___WARE1WAREHDES.wrapperProps"
-							:id="getControlId(controls.DENTR___WARE1WAREHDES)"
+							v-bind="controls.DENTR___WARE1WAREHDES"
 							v-on="controls.DENTR___WARE1WAREHDES.handlers"
 							:loading="controls.DENTR___WARE1WAREHDES.props.loading"
 							:reporting-mode-on="reportingModeCAV"
@@ -189,24 +171,21 @@
 							<q-lookup
 								v-if="controls.DENTR___WARE1WAREHDES.isVisible"
 								v-bind="controls.DENTR___WARE1WAREHDES.props"
-								:id="getControlId(controls.DENTR___WARE1WAREHDES)"
 								v-on="controls.DENTR___WARE1WAREHDES.handlers" />
 							<q-see-more-dentr-ware1warehdes
 								v-if="controls.DENTR___WARE1WAREHDES.seeMoreIsVisible"
 								v-bind="controls.DENTR___WARE1WAREHDES.seeMoreParams"
 								v-on="controls.DENTR___WARE1WAREHDES.handlers" />
 						</base-input-structure>
-					</q-col>
-				</q-row>
-				<q-row v-if="controls.DENTR___INDOCDATE____.isVisible">
-					<q-col
-						v-if="controls.DENTR___INDOCDATE____.isVisible"
-						cols="auto">
+					</q-control-wrapper>
+				</q-row-container>
+				<q-row-container v-show="controls.DENTR___INDOCDATE____.isVisible">
+					<q-control-wrapper
+						v-show="controls.DENTR___INDOCDATE____.isVisible"
+						class="${Vue.GetControlWrapperClass($controlsColumn)}">
 						<base-input-structure
-							v-if="controls.DENTR___INDOCDATE____.isVisible"
 							class="i-text"
-							v-bind="controls.DENTR___INDOCDATE____.wrapperProps"
-							:id="getControlId(controls.DENTR___INDOCDATE____)"
+							v-bind="controls.DENTR___INDOCDATE____"
 							v-on="controls.DENTR___INDOCDATE____.handlers"
 							:loading="controls.DENTR___INDOCDATE____.props.loading"
 							:reporting-mode-on="reportingModeCAV"
@@ -214,22 +193,19 @@
 							<q-date-time-picker
 								v-if="controls.DENTR___INDOCDATE____.isVisible"
 								v-bind="controls.DENTR___INDOCDATE____.props"
-								:id="getControlId(controls.DENTR___INDOCDATE____)"
 								:model-value="model.ValDate.value"
 								@reset-icon-click="model.ValDate.fnUpdateValue(model.ValDate.originalValue ?? new Date())"
 								@update:model-value="model.ValDate.fnUpdateValue($event ?? '')" />
 						</base-input-structure>
-					</q-col>
-				</q-row>
-				<q-row v-if="controls.DENTR___INDOCDOCUMENR.isVisible">
-					<q-col
-						v-if="controls.DENTR___INDOCDOCUMENR.isVisible"
-						cols="auto">
+					</q-control-wrapper>
+				</q-row-container>
+				<q-row-container v-show="controls.DENTR___INDOCDOCUMENR.isVisible">
+					<q-control-wrapper
+						v-show="controls.DENTR___INDOCDOCUMENR.isVisible"
+						class="${Vue.GetControlWrapperClass($controlsColumn)}">
 						<base-input-structure
-							v-if="controls.DENTR___INDOCDOCUMENR.isVisible"
 							class="i-text"
-							v-bind="controls.DENTR___INDOCDOCUMENR.wrapperProps"
-							:id="getControlId(controls.DENTR___INDOCDOCUMENR)"
+							v-bind="controls.DENTR___INDOCDOCUMENR"
 							v-on="controls.DENTR___INDOCDOCUMENR.handlers"
 							:loading="controls.DENTR___INDOCDOCUMENR.props.loading"
 							:reporting-mode-on="reportingModeCAV"
@@ -237,20 +213,17 @@
 							<q-numeric-input
 								v-if="controls.DENTR___INDOCDOCUMENR.isVisible"
 								v-bind="controls.DENTR___INDOCDOCUMENR.props"
-								:id="getControlId(controls.DENTR___INDOCDOCUMENR)"
 								@update:model-value="model.ValDocumenr.fnUpdateValue" />
 						</base-input-structure>
-					</q-col>
-				</q-row>
-				<q-row v-if="controls.DENTR___INDOCDHDOCUME.isVisible">
-					<q-col
-						v-if="controls.DENTR___INDOCDHDOCUME.isVisible"
-						cols="auto">
+					</q-control-wrapper>
+				</q-row-container>
+				<q-row-container v-show="controls.DENTR___INDOCDHDOCUME.isVisible">
+					<q-control-wrapper
+						v-show="controls.DENTR___INDOCDHDOCUME.isVisible"
+						class="${Vue.GetControlWrapperClass($controlsColumn)}">
 						<base-input-structure
-							v-if="controls.DENTR___INDOCDHDOCUME.isVisible"
 							class="i-text"
-							v-bind="controls.DENTR___INDOCDHDOCUME.wrapperProps"
-							:id="getControlId(controls.DENTR___INDOCDHDOCUME)"
+							v-bind="controls.DENTR___INDOCDHDOCUME"
 							v-on="controls.DENTR___INDOCDHDOCUME.handlers"
 							:loading="controls.DENTR___INDOCDHDOCUME.props.loading"
 							:reporting-mode-on="reportingModeCAV"
@@ -258,53 +231,36 @@
 							<q-date-time-picker
 								v-if="controls.DENTR___INDOCDHDOCUME.isVisible"
 								v-bind="controls.DENTR___INDOCDHDOCUME.props"
-								:id="getControlId(controls.DENTR___INDOCDHDOCUME)"
 								:model-value="model.ValDhdocume.value"
 								@reset-icon-click="model.ValDhdocume.fnUpdateValue(model.ValDhdocume.originalValue ?? new Date())"
 								@update:model-value="model.ValDhdocume.fnUpdateValue($event ?? '')" />
 						</base-input-structure>
-					</q-col>
-				</q-row>
-				<q-row v-if="controls.DENTR___PSEUDENTRADAS.isVisible">
-					<q-col
-						v-if="controls.DENTR___PSEUDENTRADAS.isVisible"
-						cols="auto">
+					</q-control-wrapper>
+				</q-row-container>
+				<q-row-container v-show="controls.DENTR___PSEUDENTRADAS.isVisible">
+					<q-control-wrapper
+						v-show="controls.DENTR___PSEUDENTRADAS.isVisible"
+						class="${Vue.GetControlWrapperClass($controlsColumn)}">
 						<q-table
-							v-if="controls.DENTR___PSEUDENTRADAS.isVisible"
+							v-show="controls.DENTR___PSEUDENTRADAS.isVisible"
 							v-bind="controls.DENTR___PSEUDENTRADAS"
-							:id="getControlId(controls.DENTR___PSEUDENTRADAS)"
-							v-on="controls.DENTR___PSEUDENTRADAS.handlers">
-							<template #header>
-								<q-table-config
-									:table-ctrl="controls.DENTR___PSEUDENTRADAS"
-									v-on="controls.DENTR___PSEUDENTRADAS.handlers" />
-							</template>
-							<template
-								v-if="controls.DENTR___PSEUDENTRADAS.config.hasRowDragAndDrop"
-								#[controls.DENTR___PSEUDENTRADAS.config.defaultColumnSorting.columnName]="{ cellValue, column, row }">
-								<q-edit-numeric
-									:value="cellValue"
-									:table-name="controls.DENTR___PSEUDENTRADAS.config.name"
-									:column-name="column.name"
-									:row-index="row.rowKey"
-									:options="column"
-									@update="controls.DENTR___PSEUDENTRADAS.onTableListRowReorder({ rowKey: row.rowKey, index: $event - 1 })" />
-							</template>
-							<!-- USE /[MANUAL GQT CUSTOM_TABLE DENTR___PSEUDENTRADAS]/ -->
-						</q-table>
-					</q-col>
-				</q-row>
+							v-on="controls.DENTR___PSEUDENTRADAS.handlers" />
+						<q-table-extra-extension
+							:list-ctrl="controls.DENTR___PSEUDENTRADAS"
+							v-on="controls.DENTR___PSEUDENTRADAS.handlers" />
+					</q-control-wrapper>
+				</q-row-container>
 			</template>
-		</q-container>
+		</div>
 	</teleport>
 
-	<q-divider v-if="!isPopup && showFormFooter" />
+	<hr v-if="!isPopup && showFormFooter" />
 
 	<teleport
 		v-if="formModalIsReady && showFormFooter"
 		:to="`#${uiContainersId.footer}`"
 		:disabled="!isPopup || isNested">
-		<q-row v-if="showFormFooter">
+		<q-row-container v-if="showFormFooter">
 			<div id="footer-action-btns">
 				<template
 					v-for="btn in formButtons"
@@ -313,7 +269,6 @@
 						v-if="btn.isActive && btn.isVisible && btn.showInFooter"
 						:id="`bottom-${btn.id}`"
 						:label="btn.text"
-						:color="btn.color"
 						:variant="btn.variant"
 						:disabled="btn.disabled"
 						:icon-pos="btn.iconPos"
@@ -325,12 +280,12 @@
 					</q-button>
 				</template>
 			</div>
-		</q-row>
+		</q-row-container>
 	</teleport>
 </template>
 
 <script>
-	/* eslint-disable @typescript-eslint/no-unused-vars */
+	/* eslint-disable no-unused-vars */
 	import { computed, defineAsyncComponent, readonly } from 'vue'
 	import { useRoute } from 'vue-router'
 
@@ -350,7 +305,7 @@
 	import qApi from '@/api/genio/quidgestFunctions.js'
 	import qFunctions from '@/api/genio/projectFunctions.js'
 	import qProjArrays from '@/api/genio/projectArrays.js'
-	/* eslint-enable @typescript-eslint/no-unused-vars */
+	/* eslint-enable no-unused-vars */
 
 	import FormViewModel from './QFormDentrViewModel.js'
 
@@ -431,8 +386,7 @@
 					primaryKey: 'ValCoddentr',
 					designation: computed(() => this.Resources.INPUT_DOCUMENT28194),
 					identifier: '', // Unique identifier received by route (when it's nested).
-					mode: '',
-					availableAgents: [],
+					mode: ''
 				},
 
 				formButtons: {
@@ -540,11 +494,7 @@
 						showInFooter: true,
 						isActive: true,
 						isVisible: computed(() => vm.authData.isAllowed && vm.isEditable),
-						action: vm.saveForm,
-						badge: {
-							isVisible: computed(() => vm.model?.isDirty === true),
-							color: 'highlight'
-						}
+						action: vm.saveForm
 					},
 					confirmBtn: {
 						id: 'confirm-btn',
@@ -698,12 +648,6 @@
 							set 'cmpny.designat'(value) { vm.model.TableCmpnyDesignat.updateValue(value) },
 						}),
 						controlLimits: [
-							{
-								identifier: ['cntry', 'indoc.codcntry'],
-								dependencyEvents: ['fieldChange:indoc.codcntry'],
-								dependencyField: 'INDOC.CODCNTRY',
-								fnValueSelector: (model) => model.ValCodcntry.value
-							},
 						],
 					}, this),
 					DENTR___PESSONAME____: new fieldControlClass.LookupControl({
@@ -732,18 +676,6 @@
 							set 'pesso.name'(value) { vm.model.TablePessoName.updateValue(value) },
 						}),
 						controlLimits: [
-							{
-								identifier: ['cntry', 'indoc.codcntry'],
-								dependencyEvents: ['fieldChange:indoc.codcntry'],
-								dependencyField: 'INDOC.CODCNTRY',
-								fnValueSelector: (model) => model.ValCodcntry.value
-							},
-							{
-								identifier: ['cmpny', 'indoc.codempre'],
-								dependencyEvents: ['fieldChange:indoc.codempre'],
-								dependencyField: 'INDOC.CODEMPRE',
-								fnValueSelector: (model) => model.ValCodempre.value
-							},
 						],
 					}, this),
 					DENTR___WARE1WAREHDES: new fieldControlClass.LookupControl({
@@ -784,7 +716,7 @@
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						isFormulaBlocked: true,
-						dateTimeType: 'dateTime',
+						format: 'dateTime',
 						controlLimits: [
 						],
 					}, this),
@@ -813,18 +745,17 @@
 						label: computed(() => this.Resources.DATE18475),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						dateTimeType: 'dateTime',
+						format: 'dateTime',
 						controlLimits: [
 						],
 					}, this),
 					DENTR___PSEUDENTRADAS: new fieldControlClass.TableListControl({
 						id: 'DENTR___PSEUDENTRADAS',
 						name: 'ENTRADAS',
-						size: 'xxlarge',
+						size: '',
 						label: computed(() => this.Resources.ENTRIES32319),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						headerLevel: computed(() => this.baseHeadingLevel + 1),
 						controller: 'INDOC',
 						action: 'Dentr_ValEntradas',
 						hasDependencies: false,
@@ -839,8 +770,7 @@
 								scrollData: 5,
 								maxDigits: 3,
 								decimalPlaces: 1,
-								export: 1,
-								sortOrder: 1,
+								isOrderingColumn: true,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 2,
@@ -850,7 +780,6 @@
 								label: computed(() => this.Resources.WAREHOUSE51864),
 								dataLength: 85,
 								scrollData: 30,
-								export: 1,
 								pkColumn: 'ValCodwareh',
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
@@ -861,7 +790,6 @@
 								label: computed(() => this.Resources.ARTICLE60065),
 								dataLength: 85,
 								scrollData: 30,
-								export: 1,
 								pkColumn: 'ValCoditem',
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.NumericColumn({
@@ -873,7 +801,6 @@
 								scrollData: 10,
 								maxDigits: 10,
 								decimalPlaces: 0,
-								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.DateColumn({
 								order: 5,
@@ -883,7 +810,6 @@
 								label: computed(() => this.Resources.INSTANT_ENTRANCE27379),
 								scrollData: 16,
 								dateTimeType: 'dateTime',
-								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 						],
 						config: {
@@ -906,8 +832,10 @@
 							permissions: {
 							},
 							searchBarConfig: {
-								visibility: true
+								visibility: true,
+								searchOnPressEnter: true
 							},
+							filtersVisible: true,
 							allowColumnFilters: true,
 							allowColumnSort: true,
 							crudActions: [
@@ -981,7 +909,9 @@
 									id: 'insert',
 									name: 'insert',
 									title: computed(() => this.Resources.INSERIR43365),
-									icon: { icon: 'add' },
+									icon: {
+										icon: 'add'
+									},
 									isInReadOnly: false,
 									params: {
 										action: vm.openFormAction,
@@ -1046,9 +976,6 @@
 								sortOrder: 'asc'
 							}
 						},
-						actionIDs: [
-							'DENTR___PSEUDNORMAL__',
-						],
 						globalEvents: ['changed-WAREH', 'changed-INDOC', 'changed-LDENT', 'changed-ITEM'],
 						uuid: 'Dentr_ValEntradas',
 						allSelectedRows: 'false',
@@ -1064,13 +991,14 @@
 					DENTR___PSEUDNORMAL__: new fieldControlClass.ButtonControl({
 						id: 'DENTR___PSEUDNORMAL__',
 						name: 'NORMAL',
+						size: 'small',
 						hasLabel: false,
 						label: computed(() => this.Resources.NORMAL_FORM03650),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						// eslint-disable-next-line
 						action: (event) => {
-							const btnAction = () => {
+							let btnAction = () => {
 								const params = {
 									id: event?.rowKey,
 									mode: vm.formInfo.mode,
@@ -1081,7 +1009,7 @@
 
 								vm.navigateToForm('LDENTNOR', params.mode, event?.rowKey, params)
 							}
-							const options = {
+							let options = {
 								form: 'DENTR',
 								callback: btnAction
 							}
@@ -1200,23 +1128,17 @@
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 		},
 
-		beforeUnmount()
-		{
-/* eslint-disable indent, vue/html-indent, vue/script-indent */
-// USE /[MANUAL GQT COMPONENT_BEFORE_UNMOUNT DENTR]/
-// eslint-disable-next-line
-/* eslint-enable indent, vue/html-indent, vue/script-indent */
-		},
-
 		methods: {
 			/**
 			 * Called before form init.
 			 */
 			async beforeLoad()
 			{
+				let loadForm = true
+
 				// Execute the "Before init" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.beforeInit)
-				for (const trigger of triggers)
+				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
 				this.emitEvent('before-load-form')
@@ -1226,7 +1148,7 @@
 // eslint-disable-next-line
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 
-				return true
+				return loadForm
 			},
 
 			/**
@@ -1236,7 +1158,7 @@
 			{
 				// Execute the "After init" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.afterInit)
-				for (const trigger of triggers)
+				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
 				this.emitEvent('after-load-form')
@@ -1256,33 +1178,19 @@
 
 				// Execute the "Before apply" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.beforeApply)
-				for (const trigger of triggers)
+				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
-				const ticketsPromise = this.model.updateFilesTickets(true)
-				this.addBusy(ticketsPromise, this.Resources[hardcodedTexts.processing])
-				const canSetDocums = await ticketsPromise
+				const canSetDocums = await this.model.updateFilesTickets(true)
 
 				if (canSetDocums)
 				{
-					let results
-					const changesPromise = this.model.setDocumentChanges()
-					this.addBusy(changesPromise, this.Resources[hardcodedTexts.processing])
-					applyForm = await changesPromise
+					applyForm = await this.model.setDocumentChanges()
 
 					if (applyForm)
 					{
-						const insertsPromise = this.model.saveDocuments()
-						this.addBusy(insertsPromise, this.Resources[hardcodedTexts.processing])
-						results = await insertsPromise
+						const results = await this.model.saveDocuments()
 						applyForm = results.every((e) => e === true)
-					}
-
-					if (!changesPromise || (results && !results.every((e) => e === true)))
-					{
-						this.validationErrors = {
-							Erro: this.Resources.OCORREU_UM_ERRO_AO_T51884
-						}
 					}
 				}
 
@@ -1303,7 +1211,7 @@
 			{
 				// Execute the "After apply" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.afterApply)
-				for (const trigger of triggers)
+				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
 				this.emitEvent('after-apply-form')
@@ -1323,33 +1231,19 @@
 
 				// Execute the "Before save" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.beforeSave)
-				for (const trigger of triggers)
+				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
-				const ticketsPromise = this.model.updateFilesTickets()
-				this.addBusy(ticketsPromise, this.Resources[hardcodedTexts.processing])
-				const canSetDocums = await ticketsPromise
+				const canSetDocums = await this.model.updateFilesTickets()
 
 				if (canSetDocums)
 				{
-					let results
-					const changesPromise = this.model.setDocumentChanges()
-					this.addBusy(changesPromise, this.Resources[hardcodedTexts.processing])
-					saveForm = await changesPromise
+					saveForm = await this.model.setDocumentChanges()
 
 					if (saveForm)
 					{
-						const insertsPromise = this.model.saveDocuments()
-						this.addBusy(insertsPromise, this.Resources[hardcodedTexts.processing])
-						results = await insertsPromise
+						const results = await this.model.saveDocuments()
 						saveForm = results.every((e) => e === true)
-					}
-
-					if (!changesPromise || (results && !results.every((e) => e === true)))
-					{
-						this.validationErrors = {
-							Erro: this.Resources.OCORREU_UM_ERRO_AO_T51884
-						}
 					}
 				}
 
@@ -1368,9 +1262,11 @@
 			 */
 			async afterSave()
 			{
+				let redirectPage = true // Set to 'false' to cancel page redirect.
+
 				// Execute the "After save" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.afterSave)
-				for (const trigger of triggers)
+				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
 				this.emitEvent('after-save-form')
@@ -1380,7 +1276,7 @@
 // eslint-disable-next-line
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 
-				return true
+				return redirectPage
 			},
 
 			/**
@@ -1388,6 +1284,8 @@
 			 */
 			async beforeDel()
 			{
+				let deleteForm = true // Set to 'false' to cancel form delete.
+
 				this.emitEvent('before-delete-form')
 
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
@@ -1395,7 +1293,7 @@
 // eslint-disable-next-line
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 
-				return true
+				return deleteForm
 			},
 
 			/**
@@ -1403,6 +1301,8 @@
 			 */
 			async afterDel()
 			{
+				let redirectPage = true // Set to 'false' to cancel page redirect.
+
 				this.emitEvent('after-delete-form')
 
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
@@ -1410,7 +1310,7 @@
 // eslint-disable-next-line
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 
-				return true
+				return redirectPage
 			},
 
 			/**
@@ -1418,9 +1318,11 @@
 			 */
 			async beforeExit()
 			{
+				let leaveForm = true // Set to 'false' to cancel page redirect.
+
 				// Execute the "Before exit" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.beforeExit)
-				for (const trigger of triggers)
+				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
 				this.emitEvent('before-exit-form')
@@ -1430,7 +1332,7 @@
 // eslint-disable-next-line
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 
-				return true
+				return leaveForm
 			},
 
 			/**
@@ -1440,7 +1342,7 @@
 			{
 				// Execute the "After exit" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.afterExit)
-				for (const trigger of triggers)
+				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
 				this.emitEvent('after-exit-form')

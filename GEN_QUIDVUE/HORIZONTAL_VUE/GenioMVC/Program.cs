@@ -1,31 +1,40 @@
-﻿using CSGenio.core.ai;
-using CSGenio.core.di;
-using CSGenio.core.logger;
-using CSGenio.framework;
+﻿using CSGenio.framework;
 using CSGenio.persistence;
-using GenioMVC;
-using GenioMVC.Helpers;
 using GenioServer.security;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.ModelBinding;
+using GenioMVC;
 using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.Extensions.Options;
+using log4net;
+using log4net.Config;
+using OpenTelemetry.Trace;
+using OpenTelemetry.Logs;
+using OpenTelemetry.Resources;
+using System.Diagnostics.Metrics;
+using OpenTelemetry.Metrics;
+using CSGenio.core.logger;
+using CSGenio.core.di;
+using GenioMVC.Metrics;
+using CSGenio.core.ai;
+using GenioMVC.Helpers;
 
 //---------------------------------
 // Setup the GenioServer services
 //---------------------------------
 CSGenio.GenioDIDefault.Use();
+CSGenio.business.ElasticsearchQueriesExtra.Use();
 
 //---------------------------------
 // Setup the WebServer services
 //---------------------------------
 var builder = WebApplication.CreateBuilder(args);
 
-// If it finds it, read the web.config as if it was a strongly typed Options provider
+//If it finds it, read the web.config as if it was a strongly typed Options provider
 ((IConfigurationBuilder)builder.Configuration).Add(new WebConfigConfigurationSource());
 
 // Customize the default automatic validation behaviour to our custom on demand validation
-builder.Services.AddSingleton<IObjectModelValidator>(s =>
+builder.Services.AddSingleton<IObjectModelValidator>( s =>
 {
     var options = s.GetRequiredService<IOptions<MvcOptions>>().Value;
     var metadataProvider = s.GetRequiredService<IModelMetadataProvider>();
@@ -38,8 +47,9 @@ builder.Services.AddSingleton<IObjectModelValidator>(s =>
 var telemetryConfig = builder.Configuration.GetSection("TelemetryConfig").Get<TelemetryConfiguration>();
 builder.Services.ConfigureTelemetry(telemetryConfig, builder.Logging);
 
+
 // Add services to the container.
-builder.Services.AddControllers(options =>
+builder.Services.AddControllers(options => 
     {
         options.Filters.Add<ModuleActionFilter>();
         options.SuppressImplicitRequiredAttributeForNonNullableReferenceTypes = true;
@@ -65,16 +75,13 @@ builder.Services.AddControllers(options =>
 // Add Http Client and Service for ChatbotAPI
 builder.Services.AddHttpClient();
 builder.Services.AddScoped<IChatbotService, ChatbotService>();
-builder.Services.AddSingleton<IToolRepo>(McpToolFactory.AllGenioTools());
-
-// Menu loader — singleton since it caches the XML on first access
-builder.Services.AddSingleton<GenioMVC.Helpers.Menus.IMenuLoader, GenioMVC.Helpers.Menus.XmlMenuLoaderService>();
 
 // Any controller that needs User information it can add UserContextService to its constructor
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddScoped<IUserContextService, UserContextService>();
-// TODO: Replace all controller constructors that use the concrete class and replace it with the interface
+//TODO: Replace all controller constructors that use the concrete class and replace it with the interface
 builder.Services.AddScoped<UserContextService>();
+
 
 // Add a shim authentication to provide compatibility with the old code
 // It would actually handle the authentication, UserContextService will deal with that
@@ -93,14 +100,14 @@ builder.Services.AddSession(options =>
     builder.Configuration.GetSection("SessionOptions").Bind(options);
 });
 
-// Authentication handlers
+//Authentication handlers
 var schemeName = LegacyFormsAuthenticationOptions.DefaultScheme;
 builder.Services.AddAuthentication(schemeName)
     .AddScheme<LegacyFormsAuthenticationOptions, LegacyFormsAuthentication>(schemeName, options => {
         builder.Configuration.GetSection("LegacyFormsAuthentication").Bind(options);
     });
 
-// gzip compression
+//gzip compression
 builder.Services.AddResponseCompression(options =>
 {
     options.EnableForHttps = true;
@@ -111,7 +118,7 @@ builder.WebHost.ConfigureKestrel(options =>
     options.AddServerHeader = false;
 });
 
-// Background services (messaging, scheduling, ...)
+//Background services (messaging, scheduling, ...)
 builder.WebHost.UseShutdownTimeout(TimeSpan.FromSeconds(60));
 builder.Services.AddHostedService<MessagingServiceHost>();
 
@@ -133,14 +140,14 @@ if (telemetryConfig != null && telemetryConfig.LoggerType == TelemetryConfigurat
 // Default will be redirecting to https.
 // Set https_redirect to 'none' when reverse proxy deals already deals with https redirection.
 // Set https_port when using a different https port than 443
-string? httpsRedirect = app.Configuration["https_redirect"];
-if (httpsRedirect == null || httpsRedirect == "redirect")
+string? https_redirect = app.Configuration["https_redirect"];
+if (https_redirect == null || https_redirect == "redirect")
     app.UseHttpsRedirection();
-if (httpsRedirect == "hsts")
+if (https_redirect == "hsts")
     app.UseHsts();
 
 // Callback paths calculations need to take into account reverse Proxys
-// TODO: Get a utility class or service
+//TODO: Get a utility class or service
 AbsoluteUrlUtils.ProxyUrl = app.Configuration["ProxyUrl"] ?? "";
 
 if (app.Environment.IsDevelopment())
@@ -165,17 +172,17 @@ else
     });
 }
 
-// AspCore wrapper already does this, so it's not needed
+// AspCore wrapper already does this, so its not needed
 //app.UseRouting();
 
 app.UseAuthentication();
 app.UseAuthorization();
 app.UseSession();
 
-// This is only needed when using the [ApiController] attributes
+//This is only needed when using the [ApiController] attributes
 //app.MapControllers();
 
-// External authentication endpoints
+//External authentication endpoints
 app.MapControllerRoute(
     name: "authRedirectRoute",
     pattern: "auth/{action}/{providerId}",
@@ -187,53 +194,47 @@ app.MapControllerRoute(
     });
 
 
-// Add specific MCP route
-app.MapControllerRoute(
-    name: "mcp",
-    pattern: "mcp",
-    defaults: new { controller = "Mcp", action = "HandleMcp" });
-
-
 //Chatbot API proxy endpoints
-var chatbotRoutes = new[]
-{
-    new { Name = "chatbotapi_submit", Pattern = "chatbotapi/prompt/submit", Action = "ChatbotApiStreamProxy" },
-    new { Name = "chatbotapi_agent_response", Pattern = "chatbotapi/get-job-result", Action = "ChatbotApiStreamProxy" },
-    new { Name = "chatbotapi_direct_agent_chat", Pattern = "chatbotapi/prompt/direct-agent-chat", Action = "ChatbotApiStreamProxy" },
-    new { Name = "chatbotapi_clear", Pattern = "chatbotapi/prompt/clear", Action = "ChatbotApiProxy" },
-    new { Name = "chatbotapi_load", Pattern = "chatbotapi/prompt/load", Action = "ChatbotApiProxy" },
-    new { Name = "chatbotapi_cancel_execution", Pattern = "chatbotapi/prompt/cancel-execution", Action = "ChatbotApiProxy" }
-};
+app.MapControllerRoute(
+    name: "chatbotapi",
+    pattern: "chatbotapi/prompt/submit",
+    defaults: new { controller = "ChatbotApi", action = "ChatbotApiStreamProxy" });
 
-foreach (var route in chatbotRoutes)
-{
-    app.MapControllerRoute(
-        name: route.Name,
-        pattern: route.Pattern,
-        defaults: new { controller = "ChatbotApi", action = route.Action });
-}
+app.MapControllerRoute(
+    name: "chatbotapi",
+    pattern: "chatbotapi/{**values}",
+    defaults: new { controller = "ChatbotApi", action = "ChatbotApiProxy" });
 
-// Configuration and Antiforgery token
+app.MapControllerRoute(
+    name: "chatbotapi",
+    pattern: "chatbotapi/login",
+    defaults: new { controller = "ChatbotApi", action = "ChatbotApiAuth" });
+    
+
+//Configuration and Antiforgery token
 app.MapControllerRoute("config",
     "api/Config/{action}/{system}",
     new {
         controller = "Config",
         action = "GetConfig",
         system = Configuration.DefaultYear
-    });
+        }
+    );
 
-// User profile
+//User profile
 app.MapControllerRoute("RouteForUsersProfile",
     "{culture}/{system}/User{action}/{id}",
-    new {
+    new
+    {
         culture = "en-US",
         system = Configuration.DefaultYear,
         controller = "Home",
         action = "Profile",
         module = "Public"
-    });
+    }
+);
 
-// Default route
+//Default route
 app.MapControllerRoute("default",
     "api/{culture}/{system}/{module}/{controller}/{action}/{id?}",
     new {
@@ -242,14 +243,7 @@ app.MapControllerRoute("default",
         module = "Public",
         controller = "Home",
         action = "Index"
-    });
-
-// Health check endpoint
-app.MapControllerRoute("health",
-    "api/health",
-    new {
-        controller = "HealthCheck",
-        action = "Index"
-    });
+        }
+    );
 
 app.Run();

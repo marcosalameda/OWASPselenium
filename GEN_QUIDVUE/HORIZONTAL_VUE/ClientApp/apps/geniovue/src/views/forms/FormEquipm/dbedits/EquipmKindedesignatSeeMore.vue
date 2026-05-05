@@ -2,22 +2,16 @@
 	<teleport
 		v-if="isReady"
 		to="#q-modal-see-more-equipm-kindedesignat-body">
-		<q-row>
+		<q-row-container>
 			<q-table
 				v-bind="listCtrl"
-				v-on="listCtrl.handlers">
-				<template #header>
-					<q-table-config
-						:table-ctrl="listCtrl"
-						v-on="listCtrl.handlers" />
-				</template>
-			</q-table>
-		</q-row>
+				v-on="listCtrl.handlers" />
+		</q-row-container>
 	</teleport>
 </template>
 
 <script>
-	/* eslint-disable @typescript-eslint/no-unused-vars */
+	/* eslint-disable no-unused-vars */
 	import { computed } from 'vue'
 	import { mapActions } from 'pinia'
 	import _merge from 'lodash-es/merge'
@@ -30,7 +24,6 @@
 	import { TableListControl } from '@/mixins/fieldControl.js'
 	import listFunctions from '@/mixins/listFunctions.js'
 	import listColumnTypes from '@/mixins/listColumnTypes.js'
-	import hardcodedTexts from '@/hardcodedTexts.js'
 
 	import { loadResources } from '@/plugins/i18n.js'
 	import asyncProcM from '@quidgest/clientapp/composables/async'
@@ -42,7 +35,7 @@
 	import genericFunctions from '@quidgest/clientapp/utils/genericFunctions'
 	import qEnums from '@quidgest/clientapp/constants/enums'
 	import { removeModal } from '@/utils/layout'
-	/* eslint-enable @typescript-eslint/no-unused-vars */
+	/* eslint-enable no-unused-vars */
 
 	import ViewModelBase from '@/mixins/viewModelBase.js'
 
@@ -135,25 +128,15 @@
 
 			const modalProps = {
 				id: 'see-more-equipm-kindedesignat',
+				headerTitle: computed(() => this.Resources.TYPES_OF_EQUIPMENT61264),
+				closeButtonEnable: true,
+				hideFooter: true,
+				dismissWithEsc: true,
 				dismissAction: this.close,
+				isActive: true,
 				returnElement: 'EQUIPM__KINDEDESIGNAT_see-more_button'
 			}
-			const props = {
-				class: 'q-dialog-see-more',
-				title: computed(() => this.Resources.TYPES_OF_EQUIPMENT61264),
-				buttons: [
-					{
-						id: 'dialog-button-close',
-						action: this.close,
-						icon: { icon: 'cancel', type: 'svg' },
-						props: {
-							label: computed(() => this.Resources[hardcodedTexts.cancel]),
-							variant: 'bold'
-						}
-					}
-				]
-			}
-			this.setModal(props, modalProps)
+			this.setModal(modalProps)
 		},
 
 		beforeUnmount()
@@ -183,16 +166,13 @@
 
 			onTableDBDataChanged()
 			{
-				// Wait for the computed properties of columns to finish resolving (e.g. "isVisible").
-				setTimeout(() => {
-					const params = {
-						id: this.id || null,
-						limits: this.limits,
-						tableConfiguration: listFunctions.getTableConfiguration(this.listCtrl)
-					}
+				const params = {
+					id: this.id || null,
+					limits: this.limits,
+					tableConfiguration: listFunctions.getTableConfiguration(this.listCtrl)
+				}
 
-					this.listCtrl.fetchListData(params)
-				}, 0)
+				this.listCtrl.componentOnLoadProc.addWL(this.fetchListData(this.listCtrl, params))
 			},
 
 			handleRowAction(eventData)
@@ -227,7 +207,6 @@
 								label: computed(() => this.Resources.KIND_OF_EQUIPMENT22928),
 								dataLength: 85,
 								scrollData: 85,
-								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 						],
 						config: {
@@ -242,8 +221,10 @@
 							permissions: {
 							},
 							searchBarConfig: {
-								visibility: true
+								visibility: true,
+								searchOnPressEnter: true
 							},
+							filtersVisible: true,
 							allowColumnFilters: true,
 							allowColumnSort: true,
 							generalCustomActions: [

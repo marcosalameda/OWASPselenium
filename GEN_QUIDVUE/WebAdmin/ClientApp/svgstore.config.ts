@@ -1,42 +1,36 @@
-import { readdirSync, readFileSync, writeFileSync } from 'node:fs'
-import { dirname, extname, join, parse } from 'node:path'
-import { fileURLToPath } from 'node:url'
+import { readdirSync, readFileSync, writeFileSync, type PathOrFileDescriptor } from 'fs'
+import { extname, join, parse } from 'path'
 
-// @ts-expect-error svgstore does not export types
+// @ts-expect-error svgstore doesn't export types
 import svgstore from 'svgstore'
 
 /**
- * Bundles all SVG icons in a directory into a single sprite sheet.
+ * Specific bundling setup for this project.
  */
-function bundleSvgIcons(sourceDir: string, outputFile: string) {
-	const files = readdirSync(sourceDir)
-	const sprites = svgstore()
-
-	files.forEach((file) => {
-		if (extname(file) === '.svg') {
-			const id = parse(file).name
-			const content = readFileSync(join(sourceDir, file), 'utf8')
-			sprites.add(id, content)
-		}
-	})
-
-	writeFileSync(outputFile, sprites.toString())
+function PackBundle() {
+	PackSvg('./public/Content/svg/', './public/Content/svgbundle.svg')
 }
 
 /**
- * Project-specific bundler that generates the final SVG sprite file.
+ * Bundles all the svg files found in a souce directory into an single svg output file.
+ * @param {string} dirname - Path to svg directory
+ * @param {string} output - Path to resulting svg bundle
  */
-export function generateSvgSpriteBundle() {
-	const __filename = fileURLToPath(import.meta.url)
-	const __dirname = dirname(__filename)
+function PackSvg(dir: string, output: PathOrFileDescriptor) {
+	const sprites = svgstore()
 
-	bundleSvgIcons(
-		join(__dirname, './public/Content/svg/'),
-		join(__dirname, './public/Content/svgbundle.svg')
-	)
+	const svgs = readdirSync(dir)
 
-	console.log(
-	'\x1b[36m%s\x1b[0m',
-		`✅ SVG sprite bundle generated successfully at: ./public/Content/svgbundle.svg`
-	)
+	svgs.forEach((svg) => {
+		if (extname(svg) === '.svg') {
+			const iconId = parse(svg).name
+			const iconContent = readFileSync(join(dir, svg), 'utf8')
+
+			sprites.add(iconId, iconContent)
+		}
+	})
+
+	writeFileSync(output, sprites.toString())
 }
+
+export default PackBundle

@@ -1,22 +1,30 @@
 ﻿<template>
 	<!-- BEGIN: View Popup -->
 	<teleport
+		v-if="(showPopup || showInline) && showHeader"
+		:to="`#q-modal-${modalId}-header`"
+		:key="domKey">
+		<div>
+			<h2
+				class="c-modal__header-title"
+				:id="`q-modal-${modalId}_title`">
+				{{ texts.viewManagerText }}
+			</h2>
+		</div>
+	</teleport>
+
+	<teleport
 		v-if="(showPopup || showInline) && showBody"
 		:to="`#q-modal-${modalId}-body`"
 		:key="domKey">
 		<div>
-			<q-row>
-				<q-col>
-					<q-switch
-						:model-value="selectedSavedView"
-						size="small"
-						show-state-labels
-						:label="texts.defaultViewText"
-						:true-label="texts.savedView"
-						:false-label="texts.baseTable"
-						@update:model-value="toggleBaseTable" />
-				</q-col>
-			</q-row>
+			<div class="d-flex">
+				<q-toggle-input
+					:model-value="selectedSavedView"
+					:false-label="texts.baseTableAsDefault"
+					:true-label="texts.savedView"
+					@update:model-value="toggleBaseTable" />
+			</div>
 			<!-- BEGIN: View list -->
 			<div ref="viewsTableContainer">
 				<q-table
@@ -58,7 +66,6 @@
 </template>
 
 <script>
-	import { computed } from 'vue'
 	import listFunctions from '@/mixins/listFunctions.js'
 
 	import QTable from './QTable.vue'
@@ -100,6 +107,14 @@
 			},
 
 			/**
+			 * A flag indicating whether the table data should be fetched from the server.
+			 */
+			serverMode: {
+				type: Boolean,
+				default: false
+			},
+
+			/**
 			 * An array containing the names of the saved configurations/views.
 			 */
 			configNames: {
@@ -130,18 +145,19 @@
 			return {
 				showPopup: false,
 				showInline: false,
+				showHeader: true,
 				showBody: true,
 				showFooter: true,
 				domKey: 0,
 				viewRows: [],
 				viewColumns: [
 					{
-						label: computed(() => this.texts.viewNameText),
+						label: this.texts.viewNameText,
 						name: 'name',
 						dataDisplay: this.textDisplayCell
 					},
 					{
-						label: computed(() => this.texts.defaultViewText),
+						label: this.texts.defaultViewText,
 						name: 'selectedView',
 						optionGroupName: 'selectedView',
 						dataDisplay: listFunctions.radioDisplayCell,
@@ -163,7 +179,7 @@
 						{
 							id: 'SHOW',
 							name: 'SHOW',
-							title: computed(() => this.texts.viewText),
+							title: this.texts.viewText,
 							icon: {
 								icon: 'go-to'
 							},
@@ -176,7 +192,7 @@
 						{
 							id: 'RENAME',
 							name: 'RENAME',
-							title: computed(() => this.texts.renameText),
+							title: this.texts.renameText,
 							icon: {
 								icon: 'pencil'
 							},
@@ -189,7 +205,7 @@
 						{
 							id: 'DUPLICATE',
 							name: 'DUPLICATE',
-							title: computed(() => this.texts.duplicateText),
+							title: this.texts.duplicateText,
 							icon: {
 								icon: 'duplicate'
 							},
@@ -202,7 +218,7 @@
 						{
 							id: 'DELETE',
 							name: 'DELETE',
-							title: computed(() => this.texts.deleteText),
+							title: this.texts.deleteText,
 							icon: {
 								icon: 'delete'
 							},
@@ -291,12 +307,12 @@
 			 * @returns Array
 			 */
 			getRows() {
-				const rows = []
+				var rows = []
 
 				//Iterate configNames
-				let thisIdx = 1
-				let configName = {}
-				for (const idx in this.configNames) {
+				var thisIdx = 1
+				var configName = {}
+				for (let idx in this.configNames) {
 					configName = this.configNames[idx]
 					// Needs btnPermission to be defined to avoid having actions disabled
 					rows.push({ Rownum: thisIdx, rowKey: thisIdx, Value: configName, Fields: { name: configName, selectedView: true }, btnPermission: {} })
@@ -312,7 +328,7 @@
 			 * @returns Array
 			 */
 			selectView(value) {
-				const viewColumn = this.viewColumns.find((x) => x.name === 'selectedView')
+				var viewColumn = this.viewColumns.find((x) => x.name === 'selectedView')
 				viewColumn.checkedValue = value
 				this.selectedViewNameCfg = value
 
@@ -320,9 +336,9 @@
 				if (value === '') {
 					//Set all radio buttons to unchecked (needs to be done this way)
 					if (!this.$refs.viewsTableContainer) return
-					const selectedViewButtons = this.$refs.viewsTableContainer.querySelectorAll("[name='selectedView']")
-					for (const idx in selectedViewButtons) {
-						const selectedViewButton = selectedViewButtons[idx]
+					let selectedViewButtons = this.$refs.viewsTableContainer.querySelectorAll("[name='selectedView']")
+					for (let idx in selectedViewButtons) {
+						let selectedViewButton = selectedViewButtons[idx]
 						if (selectedViewButton.type && selectedViewButton.type === 'radio') {
 							selectedViewButton.checked = false
 						}
@@ -346,7 +362,7 @@
 		watch: {
 			signal: {
 				handler(newValue) {
-					for (const key in newValue) {
+					for (let key in newValue) {
 						switch (key) {
 							case 'show':
 								if (newValue.show) {
@@ -354,7 +370,7 @@
 								}
 								break
 							default:
-								if (['showInline', 'showBody', 'showFooter'].includes(key)) {
+								if (['showInline', 'showHeader', 'showBody', 'showFooter'].includes(key)) {
 									this[key] = newValue[key]
 								}
 								break

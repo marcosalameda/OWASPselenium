@@ -3,23 +3,20 @@
 		v-if="menuModalIsReady"
 		:to="`#${uiContainersId.body}`"
 		:disabled="!menuInfo.isPopup">
-		<div
+		<form
 			class="form-horizontal"
 			@submit.prevent>
 			<q-row-container>
 				<q-table
 					v-bind="controls.menu"
 					v-on="controls.menu.handlers">
-					<template #header>
-						<q-table-config
-							:table-ctrl="controls.menu"
-							v-on="controls.menu.handlers">
-						</q-table-config>
-					</template>
-					<!-- USE /[MANUAL GQT CUSTOM_TABLE PTN_Menu_LIST_DB_MC_T]/ -->
 				</q-table>
+
+				<q-table-extra-extension
+					:list-ctrl="controls.menu"
+					v-on="controls.menu.handlers" />
 			</q-row-container>
-		</div>
+		</form>
 	</teleport>
 
 	<teleport
@@ -51,7 +48,7 @@
 </template>
 
 <script>
-	/* eslint-disable @typescript-eslint/no-unused-vars */
+	/* eslint-disable no-unused-vars */
 	import asyncProcM from '@quidgest/clientapp/composables/async'
 	import qEnums from '@quidgest/clientapp/constants/enums'
 	import netAPI from '@quidgest/clientapp/network'
@@ -71,7 +68,7 @@
 	import qApi from '@/api/genio/quidgestFunctions.js'
 	import qFunctions from '@/api/genio/projectFunctions.js'
 	import qProjArrays from '@/api/genio/projectArrays.js'
-	/* eslint-enable @typescript-eslint/no-unused-vars */
+	/* eslint-enable no-unused-vars */
 
 	import MenuViewModel from './QMenuPTN_LIST_DB_MC_TViewModel.js'
 
@@ -155,7 +152,6 @@
 								label: computed(() => this.Resources.ANO33022),
 								dataLength: 4,
 								scrollData: 4,
-								export: 1,
 								pkColumn: 'ValCodyear',
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.NumericColumn({
@@ -167,7 +163,6 @@
 								scrollData: 4,
 								maxDigits: 4,
 								decimalPlaces: 0,
-								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.CurrencyColumn({
 								order: 3,
@@ -178,7 +173,6 @@
 								scrollData: 10,
 								maxDigits: 7,
 								decimalPlaces: 2,
-								export: 1,
 								pkColumn: 'ValCodaggre',
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
@@ -189,7 +183,6 @@
 								label: computed(() => this.Resources.DESCRIPTION07383),
 								dataLength: 85,
 								scrollData: 30,
-								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.CurrencyColumn({
 								order: 5,
@@ -200,7 +193,6 @@
 								scrollData: 10,
 								maxDigits: 7,
 								decimalPlaces: 2,
-								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.CurrencyColumn({
 								order: 6,
@@ -211,7 +203,6 @@
 								scrollData: 10,
 								maxDigits: 7,
 								decimalPlaces: 2,
-								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 7,
@@ -221,7 +212,6 @@
 								label: computed(() => this.Resources.PROJECTO50142),
 								dataLength: 50,
 								scrollData: 30,
-								export: 1,
 								pkColumn: 'ValCodproje',
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 						],
@@ -238,8 +228,10 @@
 							permissions: {
 							},
 							searchBarConfig: {
-								visibility: true
+								visibility: true,
+								searchOnPressEnter: true
 							},
+							filtersVisible: true,
 							allowColumnFilters: true,
 							allowColumnSort: true,
 							crudActions: [
@@ -313,7 +305,9 @@
 									id: 'insert',
 									name: 'insert',
 									title: computed(() => this.Resources.INSERIR43365),
-									icon: { icon: 'add' },
+									icon: {
+										icon: 'add'
+									},
 									isInReadOnly: true,
 									params: {
 										action: vm.openFormAction,
@@ -362,7 +356,6 @@
 							rowClickAction: {
 								id: 'RCA_PTN_3B11',
 								name: 'PTN_MenuMC_LIST_DB_MC_T',
-								isVisible: true,
 								params: {
 									limits: [
 										{
@@ -386,11 +379,10 @@
 								sortOrder: 'asc'
 							}
 						},
-						globalEvents: ['changed-PROJE', 'changed-YEAR', 'changed-AGREG', 'changed-EXPEN'],
+						globalEvents: ['changed-PROJE', 'changed-AGREG', 'changed-EXPEN', 'changed-YEAR'],
 						uuid: 'd271f8e2-a487-40b9-b6aa-1c69abb862d1',
 						allSelectedRows: 'false',
 						headerLevel: 1,
-						isActiveControl: computed(() => this.isActiveMenu)
 					}, this),
 				}
 			}
@@ -424,10 +416,6 @@
 		{
 			// Listener for MC action in case of redirect by Jump if just one.
 			this.$eventHub.off('EXEC-PTN_MenuMC_LIST_DB_MC_T', this.PTN_MenuMC_LIST_DB_MC_T)
-/* eslint-disable indent, vue/html-indent, vue/script-indent */
-// USE /[MANUAL GQT COMPONENT_BEFORE_UNMOUNT PTN_MENU_LIST_DB_MC_T]/
-// eslint-disable-next-line
-/* eslint-enable indent, vue/html-indent, vue/script-indent */
 		},
 
 		methods: {
@@ -456,14 +444,16 @@
 			 * Event triggered by a click on the trigger button 3B111.
 			 * @param {string} id The primary key of the record
 			 */
-			// eslint-disable-next-line @typescript-eslint/no-unused-vars
+			// eslint-disable-next-line
 			async PTN_MenuTR_3B111(listConf, actionCfg, row)
 			{
 				const id = row.rowKey
 
 				// Parallel trigger execution.
 				await Promise.all([
-					this.PTN_MenuTR_3B111_EMPTYDESCRIPTIO2_1(id),
+					Promise.resolve((async () => {
+						await this.PTN_MenuTR_3B111_EMPTYDESCRIPTIO2_1(id)
+					})()),
 				])
 			},
 
@@ -471,7 +461,7 @@
 			 * Client-side component of action #1 (FLDUPDT) of trigger EMPTYDESCRIPTIO2.
 			 * @param {string} id The primary key of the record
 			 */
-			// eslint-disable-next-line @typescript-eslint/no-unused-vars
+			// eslint-disable-next-line
 			async PTN_MenuTR_3B111_EMPTYDESCRIPTIO2_1(id)
 			{
 				try
@@ -522,7 +512,7 @@
 			 * Client-side component of action #2 (PREFRESH) of trigger EMPTYDESCRIPTIO2.
 			 * @param {string} id The primary key of the record
 			 */
-			// eslint-disable-next-line @typescript-eslint/no-unused-vars
+			// eslint-disable-next-line
 			async PTN_MenuTR_3B111_EMPTYDESCRIPTIO2_2(id)
 			{
 				await this.loadList()
@@ -533,14 +523,16 @@
 			 * Event triggered by a click on the trigger button 3B121.
 			 * @param {string} id The primary key of the record
 			 */
-			// eslint-disable-next-line @typescript-eslint/no-unused-vars
+			// eslint-disable-next-line
 			async PTN_MenuTR_3B121(listConf, actionCfg, row)
 			{
 				const id = row.rowKey
 
 				// Parallel trigger execution.
 				await Promise.all([
-					this.PTN_MenuTR_3B121_FILLDESCRIPTION2_1(id),
+					Promise.resolve((async () => {
+						await this.PTN_MenuTR_3B121_FILLDESCRIPTION2_1(id)
+					})()),
 				])
 			},
 
@@ -548,7 +540,7 @@
 			 * Client-side component of action #1 (FLDUPDT) of trigger FILLDESCRIPTION2.
 			 * @param {string} id The primary key of the record
 			 */
-			// eslint-disable-next-line @typescript-eslint/no-unused-vars
+			// eslint-disable-next-line
 			async PTN_MenuTR_3B121_FILLDESCRIPTION2_1(id)
 			{
 				try
@@ -599,7 +591,7 @@
 			 * Client-side component of action #2 (PREFRESH) of trigger FILLDESCRIPTION2.
 			 * @param {string} id The primary key of the record
 			 */
-			// eslint-disable-next-line @typescript-eslint/no-unused-vars
+			// eslint-disable-next-line
 			async PTN_MenuTR_3B121_FILLDESCRIPTION2_2(id)
 			{
 				await this.loadList()

@@ -1,11 +1,11 @@
-﻿using System;
+﻿using JsonIgnoreAttribute = System.Text.Json.Serialization.JsonIgnoreAttribute;
+using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Data;
 using System.Globalization;
 using System.Linq;
 using System.Linq.Expressions;
-using System.Text.Json.Serialization;
 
 using CSGenio.business;
 using CSGenio.framework;
@@ -18,7 +18,6 @@ namespace GenioMVC.ViewModels.Wareh
 {
 	public class Tmline_ValTmdsaid_ViewModel : ViewModelBase
 	{
-		[JsonPropertyName("table")]
 		public TablePartial<Models.TimelineItem> Menu { get; set; }
 
 		/// <summary>
@@ -33,8 +32,7 @@ namespace GenioMVC.ViewModels.Wareh
 		[JsonIgnore]
 		public Models.ModelBase ParentCtx { get; set; }
 
-		[JsonPropertyName("uuid")]
-		public string Uuid => "Tmline_ValTmdsaid";
+		public string Uuid { get => "Tmline_ValTmdsaid"; }
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="Tmline_ValTmdsaid_ViewModel" /> class.
@@ -66,21 +64,21 @@ namespace GenioMVC.ViewModels.Wareh
 
 		public void Load(int numberListItems, NameValueCollection requestValues, bool ajaxRequest, bool isToExport, ref List<Models.TimelineItem> Qlisting, ref CriteriaSet conditions)
 		{
-			CSGenio.core.framework.table.TableConfiguration tableConfig = new();
+			CSGenio.framework.TableConfiguration.TableConfiguration tableConfig = new CSGenio.framework.TableConfiguration.TableConfiguration();
 
 			tableConfig.RowsPerPage = numberListItems;
 
 			Load(tableConfig, requestValues, ajaxRequest, isToExport, ref Qlisting, ref conditions);
 		}
 
-		public void Load(CSGenio.core.framework.table.TableConfiguration tableConfig, NameValueCollection requestValues, bool ajaxRequest = false)
+		public void Load(CSGenio.framework.TableConfiguration.TableConfiguration tableConfig, NameValueCollection requestValues, bool ajaxRequest = false)
 		{
 			List<Models.TimelineItem> listing = null;
 			CriteriaSet conditions = null;
 			Load(tableConfig, requestValues, ajaxRequest, false, ref listing, ref conditions);
 		}
 
-		public void Load(CSGenio.core.framework.table.TableConfiguration tableConfig, NameValueCollection requestValues, bool ajaxRequest, bool isToExport, ref List<Models.TimelineItem> Qlisting, ref CriteriaSet conditions)
+		public void Load(CSGenio.framework.TableConfiguration.TableConfiguration tableConfig, NameValueCollection requestValues, bool ajaxRequest, bool isToExport, ref List<Models.TimelineItem> Qlisting, ref CriteriaSet conditions)
 		{
 			if (ajaxRequest)
 				this.Navigation.SetValue("requestValues" + "Tmline_ValTmdsaid", requestValues);
@@ -138,7 +136,6 @@ namespace GenioMVC.ViewModels.Wareh
 
 			model.Icon = "";
 			model.Escala = "un";
-			model.TipoTimeLine = "";
 
 			foreach (RequestedField Qfield in row.Fields.Values)
 			{
@@ -154,22 +151,25 @@ namespace GenioMVC.ViewModels.Wareh
 				if (Qfield.FullName.Equals("item.itemdes"))
 				{
 					var fieldType = FieldType.TEXT;
-					Models.TimelineColumn column = new() { Titulo = "Item", Valor = Conversion.internal2String(Qfield.Value, fieldType), Icone = "", Order = 1, fieldType = fieldType.ToString() };
+					Models.TimelineColumn column = new Models.TimelineColumn { Titulo = "Item", Valor = Conversion.internal2String(Qfield.Value, fieldType), Icone = "", Order = 1, fieldType = fieldType.ToString() };
 					model.Columns.Add(column);
+
 				}
 
 				if (Qfield.FullName.Equals("item.itemcod"))
 				{
 					var fieldType = FieldType.TEXT;
-					Models.TimelineColumn column = new() { Titulo = "Code", Valor = Conversion.internal2String(Qfield.Value, fieldType), Icone = "", Order = 2, fieldType = fieldType.ToString() };
+					Models.TimelineColumn column = new Models.TimelineColumn { Titulo = "Code", Valor = Conversion.internal2String(Qfield.Value, fieldType), Icone = "", Order = 2, fieldType = fieldType.ToString() };
 					model.Columns.Add(column);
+
 				}
 
 				if (Qfield.FullName.Equals("item.date"))
 				{
 					var fieldType = FieldType.DATE;
-					Models.TimelineColumn column = new() { Titulo = "Date", Valor = Conversion.internal2String(Qfield.Value, fieldType), Icone = "", Order = 3, fieldType = fieldType.ToString() };
+					Models.TimelineColumn column = new Models.TimelineColumn { Titulo = "Date", Valor = Conversion.internal2String(Qfield.Value, fieldType), Icone = "", Order = 3, fieldType = fieldType.ToString() };
 					model.Columns.Add(column);
+
 				}
 			}
 

@@ -48,6 +48,13 @@ namespace CSGenio.business
 			            Qresult.AppendLine("if {{{0}}} = \"C\" then \"Não existe CC (contabilidade de custos)\" else");
             Qresult.Append("\"                                              \"");
             todasArrays.Add("accustos", Qresult.ToString());
+			// acondtst
+            Qresult = new StringBuilder();
+			            Qresult.AppendLine("if {{{0}}} = \"BLOCK\" then \"Block field\" else");
+			            Qresult.AppendLine("if {{{0}}} = \"HIDE\" then \"Hide field\" else");
+			            Qresult.AppendLine("if {{{0}}} = \"REQUIRE\" then \"Require field\" else");
+            Qresult.Append("\"                                              \"");
+            todasArrays.Add("acondtst", Qresult.ToString());
 			// active
             Qresult = new StringBuilder();
 			            Qresult.AppendLine("if {{{0}}} = \"Y\" then \"Yes\" else");
@@ -241,6 +248,22 @@ namespace CSGenio.business
 			            Qresult.AppendLine("if {{{0}}} = \"N\" then \"Não\" else");
             Qresult.Append("\"                                              \"");
             todasArrays.Add("asimnao", Qresult.ToString());
+			// assetcategory
+            Qresult = new StringBuilder();
+			            Qresult.AppendLine("if {{{0}}} = \"RE\" then \"Real Estate\" else");
+			            Qresult.AppendLine("if {{{0}}} = \"VCL\" then \"Vehicle\" else");
+			            Qresult.AppendLine("if {{{0}}} = \"EQUIP\" then \"Equipment\" else");
+			            Qresult.AppendLine("if {{{0}}} = \"FNTR\" then \"Furniture\" else");
+            Qresult.Append("\"                                              \"");
+            todasArrays.Add("assetcategory", Qresult.ToString());
+			// assettags
+            Qresult = new StringBuilder();
+			Qresult.AppendLine("if {{{0}}} = 1 then \"Urgent\" else");
+			Qresult.AppendLine("if {{{0}}} = 2 then \"Checked\" else");
+			Qresult.AppendLine("if {{{0}}} = 3 then \"In Repair\" else");
+			Qresult.AppendLine("if {{{0}}} = 4 then \"Important\" else");
+            Qresult.Append("\"                                              \"");
+            todasArrays.Add("assettags", Qresult.ToString());
 			// assettyp
             Qresult = new StringBuilder();
 			            Qresult.AppendLine("if {{{0}}} = \"E\" then \"Equipment\" else");
@@ -332,6 +355,13 @@ namespace CSGenio.business
 			            Qresult.AppendLine("if {{{0}}} = \"SEC\" then \"Sector\" else");
             Qresult.Append("\"                                              \"");
             todasArrays.Add("atpseg", Qresult.ToString());
+			// authentication_options
+            Qresult = new StringBuilder();
+			            Qresult.AppendLine("if {{{0}}} = \"D\" then \"Default\" else");
+			            Qresult.AppendLine("if {{{0}}} = \"L\" then \"Light\" else");
+			            Qresult.AppendLine("if {{{0}}} = \"S\" then \"Secondary\" else");
+            Qresult.Append("\"                                              \"");
+            todasArrays.Add("authentication_options", Qresult.ToString());
 			// avisperi
             Qresult = new StringBuilder();
 			Qresult.AppendLine("if {{{0}}} = 4 then \"Mensal\" else");
@@ -369,6 +399,14 @@ namespace CSGenio.business
 			            Qresult.AppendLine("if {{{0}}} = \"O\" then \"Other\" else");
             Qresult.Append("\"                                              \"");
             todasArrays.Add("buildtyp", Qresult.ToString());
+			// city
+            Qresult = new StringBuilder();
+			            Qresult.AppendLine("if {{{0}}} = \"LS\" then \"Lisboa\" else");
+			            Qresult.AppendLine("if {{{0}}} = \"CS\" then \"Cascais\" else");
+			            Qresult.AppendLine("if {{{0}}} = \"PO\" then \"Porto\" else");
+			            Qresult.AppendLine("if {{{0}}} = \"GM\" then \"Guimarães\" else");
+            Qresult.Append("\"                                              \"");
+            todasArrays.Add("city", Qresult.ToString());
 			// class
             Qresult = new StringBuilder();
 			            Qresult.AppendLine("if {{{0}}} = \"1C\" then \"1ªClasse\" else");
@@ -383,6 +421,18 @@ namespace CSGenio.business
 			Qresult.AppendLine("if {{{0}}} = 3 then \"Económica\" else");
             Qresult.Append("\"                                              \"");
             todasArrays.Add("classnum", Qresult.ToString());
+			// componenticons
+            Qresult = new StringBuilder();
+			Qresult.AppendLine("if {{{0}}} = 2 then \"Data Input\" else");
+			Qresult.AppendLine("if {{{0}}} = 6 then \"Data Display\" else");
+			Qresult.AppendLine("if {{{0}}} = 3 then \"Data Grid\" else");
+			Qresult.AppendLine("if {{{0}}} = 4 then \"Action\" else");
+			Qresult.AppendLine("if {{{0}}} = 5 then \"Container\" else");
+			Qresult.AppendLine("if {{{0}}} = 8 then \"Relational structure\" else");
+			Qresult.AppendLine("if {{{0}}} = 7 then \"Interactive\" else");
+			Qresult.AppendLine("if {{{0}}} = 1 then \"Media\" else");
+            Qresult.Append("\"                                              \"");
+            todasArrays.Add("componenticons", Qresult.ToString());
 			// datatype
             Qresult = new StringBuilder();
 			            Qresult.AppendLine("if {{{0}}} = \"T\" then \"Text\" else");
@@ -406,6 +456,12 @@ namespace CSGenio.business
 			            Qresult.AppendLine("if {{{0}}} = \"D\" then \"Dispatched\" else");
             Qresult.Append("\"                                              \"");
             todasArrays.Add("dispstat", Qresult.ToString());
+			// dropdown
+            Qresult = new StringBuilder();
+			Qresult.AppendLine("if {{{0}}} = 1 then \"Dropdown\" else");
+			Qresult.AppendLine("if {{{0}}} = 2 then \"Inline\" else");
+            Qresult.Append("\"                                              \"");
+            todasArrays.Add("dropdown", Qresult.ToString());
 			// dsiponib
             Qresult = new StringBuilder();
 			            Qresult.AppendLine("if {{{0}}} = \"A\" then \"Disponível\" else");
@@ -423,6 +479,15 @@ namespace CSGenio.business
 			            Qresult.AppendLine("if {{{0}}} = \"O\" then \"Office\" else");
             Qresult.Append("\"                                              \"");
             todasArrays.Add("faciltyp", Qresult.ToString());
+			// feedback
+            Qresult = new StringBuilder();
+			Qresult.AppendLine("if {{{0}}} = 1 then \"1 star\" else");
+			Qresult.AppendLine("if {{{0}}} = 2 then \"2 stars\" else");
+			Qresult.AppendLine("if {{{0}}} = 3 then \"3 stars\" else");
+			Qresult.AppendLine("if {{{0}}} = 4 then \"4 stars\" else");
+			Qresult.AppendLine("if {{{0}}} = 5 then \"5 stars\" else");
+            Qresult.Append("\"                                              \"");
+            todasArrays.Add("feedback", Qresult.ToString());
 			// freqempr
             Qresult = new StringBuilder();
 			Qresult.AppendLine("if {{{0}}} = 7 then \"Average\" else");
@@ -460,6 +525,19 @@ namespace CSGenio.business
 			            Qresult.AppendLine("if {{{0}}} = \"P\" then \"Point in Map\" else");
             Qresult.Append("\"                                              \"");
             todasArrays.Add("gpsinput", Qresult.ToString());
+			// header
+            Qresult = new StringBuilder();
+			Qresult.AppendLine("if {{{0}}} = 1 then \"Header\" else");
+			Qresult.AppendLine("if {{{0}}} = 2 then \"Footer\" else");
+            Qresult.Append("\"                                              \"");
+            todasArrays.Add("header", Qresult.ToString());
+			// iconrating
+            Qresult = new StringBuilder();
+			Qresult.AppendLine("if {{{0}}} = 1 then \"Good\" else");
+			Qresult.AppendLine("if {{{0}}} = 2 then \"Average\" else");
+			Qresult.AppendLine("if {{{0}}} = 3 then \"Bad\" else");
+            Qresult.Append("\"                                              \"");
+            todasArrays.Add("iconrating", Qresult.ToString());
 			// identtyp
             Qresult = new StringBuilder();
 			            Qresult.AppendLine("if {{{0}}} = \"I\" then \"Individual\" else");
@@ -510,6 +588,15 @@ namespace CSGenio.business
 			            Qresult.AppendLine("if {{{0}}} = \"5\" then \"Acções de Melhoria\" else");
             Qresult.Append("\"                                              \"");
             todasArrays.Add("qartipqu", Qresult.ToString());
+			// quickfeedback
+            Qresult = new StringBuilder();
+			            Qresult.AppendLine("if {{{0}}} = \"A\" then \"The information is hard to understand\" else");
+			            Qresult.AppendLine("if {{{0}}} = \"B\" then \"Need more details\" else");
+			            Qresult.AppendLine("if {{{0}}} = \"C\" then \"I can't find what I'm looking for\" else");
+			            Qresult.AppendLine("if {{{0}}} = \"D\" then \"I'd like to have more information in my language\" else");
+			            Qresult.AppendLine("if {{{0}}} = \"E\" then \"I have technical issues\" else");
+            Qresult.Append("\"                                              \"");
+            todasArrays.Add("quickfeedback", Qresult.ToString());
 			// radiobtn
             Qresult = new StringBuilder();
 			            Qresult.AppendLine("if {{{0}}} = \"Radio\" then \"Radio\" else");
@@ -556,6 +643,13 @@ namespace CSGenio.business
             Qresult = new StringBuilder();
             Qresult.Append("\"                                              \"");
             todasArrays.Add("s_tpproc", Qresult.ToString());
+			// servicetype
+            Qresult = new StringBuilder();
+			            Qresult.AppendLine("if {{{0}}} = \"A\" then \"Customer service\" else");
+			            Qresult.AppendLine("if {{{0}}} = \"B\" then \"Platform performance\" else");
+			            Qresult.AppendLine("if {{{0}}} = \"C\" then \"Other\" else");
+            Qresult.Append("\"                                              \"");
+            todasArrays.Add("servicetype", Qresult.ToString());
 			// sexo
             Qresult = new StringBuilder();
 			            Qresult.AppendLine("if {{{0}}} = \"Masculino\" then \"Male\" else");
@@ -563,6 +657,12 @@ namespace CSGenio.business
 			            Qresult.AppendLine("if {{{0}}} = \"Outro\" then \"Other\" else");
             Qresult.Append("\"                                              \"");
             todasArrays.Add("sexo", Qresult.ToString());
+			// side
+            Qresult = new StringBuilder();
+			Qresult.AppendLine("if {{{0}}} = 1 then \"Left\" else");
+			Qresult.AppendLine("if {{{0}}} = 2 then \"Right\" else");
+            Qresult.Append("\"                                              \"");
+            todasArrays.Add("side", Qresult.ToString());
 			// spacetyp
             Qresult = new StringBuilder();
 			            Qresult.AppendLine("if {{{0}}} = \"F\" then \"Floor\" else");
@@ -572,6 +672,13 @@ namespace CSGenio.business
 			            Qresult.AppendLine("if {{{0}}} = \"A\" then \"Another\" else");
             Qresult.Append("\"                                              \"");
             todasArrays.Add("spacetyp", Qresult.ToString());
+			// sstatus
+            Qresult = new StringBuilder();
+			            Qresult.AppendLine("if {{{0}}} = \"AV\" then \"Available\" else");
+			            Qresult.AppendLine("if {{{0}}} = \"SO\" then \"Sold\" else");
+			            Qresult.AppendLine("if {{{0}}} = \"RT\" then \"Rented\" else");
+            Qresult.Append("\"                                              \"");
+            todasArrays.Add("sstatus", Qresult.ToString());
 			// tipoarti
             Qresult = new StringBuilder();
 			            Qresult.AppendLine("if {{{0}}} = \"B\" then \"Very mobile\" else");
@@ -604,6 +711,13 @@ namespace CSGenio.business
 			            Qresult.AppendLine("if {{{0}}} = \"C\" then \"Type C\" else");
             Qresult.Append("\"                                              \"");
             todasArrays.Add("typet", Qresult.ToString());
+			// usefulfeedb
+            Qresult = new StringBuilder();
+			Qresult.AppendLine("if {{{0}}} = 1 then \"Yes\" else");
+			Qresult.AppendLine("if {{{0}}} = 2 then \"No\" else");
+			Qresult.AppendLine("if {{{0}}} = 3 then \"Partially\" else");
+            Qresult.Append("\"                                              \"");
+            todasArrays.Add("usefulfeedb", Qresult.ToString());
 			// yesno
             Qresult = new StringBuilder();
 			            Qresult.AppendLine("if {{{0}}} = \"0\" then \"Not in use\" else");

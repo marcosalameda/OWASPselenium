@@ -8,9 +8,6 @@ public class WidgetAlertControl : WidgetBaseControl
     base(driver, containerLocator, css)
     { }
 
-    protected IWebElement Counter => m_control.FindElement(By.CssSelector(".q-counter-widget"));
-    protected IWebElement CounterValue => m_control.FindElement(By.CssSelector(".q-counter-widget__value"));
-
     public string GetTitle()
     {
         if (!IsVisible)
@@ -24,11 +21,8 @@ public class WidgetAlertControl : WidgetBaseControl
     {
         if (!IsVisible)
             throw new InvalidOperationException($"Widget with Id {id} is not present in the dashboard.");
-        
-        wait.Until(c =>
-            Counter.GetAttribute("data-loading") == null ||
-            Counter.GetAttribute("data-loading") == "false");
 
-        return int.Parse(CounterValue.Text);
+        var count = m_control.FindElement(By.CssSelector(".q-counter-widget__value"));
+        return int.Parse(count.Text);
     }
 }

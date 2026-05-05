@@ -1,4 +1,4 @@
-﻿/* eslint-disable @typescript-eslint/no-unused-vars */
+﻿/* eslint-disable no-unused-vars */
 import { computed, reactive, watch } from 'vue'
 import _merge from 'lodash-es/merge'
 
@@ -11,7 +11,7 @@ import netAPI from '@quidgest/clientapp/network'
 import qApi from '@/api/genio/quidgestFunctions.js'
 import qFunctions from '@/api/genio/projectFunctions.js'
 import qProjArrays from '@/api/genio/projectArrays.js'
-/* eslint-enable @typescript-eslint/no-unused-vars */
+/* eslint-enable no-unused-vars */
 
 /**
  * Represents a ViewModel class.
@@ -25,11 +25,11 @@ export default class ViewModel extends FormViewModelBase
 	 * @param {object} options - The options for the ViewModel
 	 * @param {object} values - A ViewModel instance to copy values from
 	 */
-	// eslint-disable-next-line @typescript-eslint/no-unused-vars
+	// eslint-disable-next-line no-unused-vars
 	constructor(vueContext, options, values)
 	{
 		super(vueContext, options)
-		// eslint-disable-next-line @typescript-eslint/no-unused-vars
+		// eslint-disable-next-line no-unused-vars
 		const vm = this.vueContext
 
 		// The view model metadata
@@ -37,9 +37,8 @@ export default class ViewModel extends FormViewModelBase
 			name: 'FAQS',
 			area: 'FAQS',
 			actions: {
-				recalculateFormulas: 'RecalculateFormulas_Faqs',
-				updateFilesTickets: 'UpdateFilesTicketsFaqs',
-				setFile: 'SetFileFaqs'
+				recalculateFormulas: 'RecalculateFormulas_FAQS',
+				updateFilesTickets: 'UpdateFilesTicketsFAQS'
 			}
 		})
 
@@ -51,7 +50,7 @@ export default class ViewModel extends FormViewModelBase
 			field: 'CODFAQS',
 			description: '',
 		}).cloneFrom(values?.ValCodfaqs))
-		this.stopWatchers.push(watch(() => this.ValCodfaqs.value, (newValue, oldValue) => this.onUpdate('faqs.codfaqs', this.ValCodfaqs, newValue, oldValue)))
+		watch(() => this.ValCodfaqs.value, (newValue, oldValue) => this.onUpdate('faqs.codfaqs', this.ValCodfaqs, newValue, oldValue))
 
 		/** The hidden foreign keys. */
 		this.ValCodcfaqs = reactive(new modelFieldType.ForeignKey({
@@ -63,7 +62,7 @@ export default class ViewModel extends FormViewModelBase
 			isFixed: true,
 			description: '',
 		}).cloneFrom(values?.ValCodcfaqs))
-		this.stopWatchers.push(watch(() => this.ValCodcfaqs.value, (newValue, oldValue) => this.onUpdate('faqs.codcfaqs', this.ValCodcfaqs, newValue, oldValue)))
+		watch(() => this.ValCodcfaqs.value, (newValue, oldValue) => this.onUpdate('faqs.codcfaqs', this.ValCodcfaqs, newValue, oldValue))
 
 		/** The remaining form fields. */
 		this.ValQuestion = reactive(new modelFieldType.MultiLineString({
@@ -73,7 +72,7 @@ export default class ViewModel extends FormViewModelBase
 			field: 'QUESTION',
 			description: computed(() => this.Resources.QUESTION00194),
 		}).cloneFrom(values?.ValQuestion))
-		this.stopWatchers.push(watch(() => this.ValQuestion.value, (newValue, oldValue) => this.onUpdate('faqs.question', this.ValQuestion, newValue, oldValue)))
+		watch(() => this.ValQuestion.value, (newValue, oldValue) => this.onUpdate('faqs.question', this.ValQuestion, newValue, oldValue))
 
 		this.ValAnswer = reactive(new modelFieldType.MultiLineString({
 			type: 'TextEditor',
@@ -83,7 +82,7 @@ export default class ViewModel extends FormViewModelBase
 			field: 'ANSWER',
 			description: computed(() => this.Resources.ANSWER22961),
 		}).cloneFrom(values?.ValAnswer))
-		this.stopWatchers.push(watch(() => this.ValAnswer.value, (newValue, oldValue) => this.onUpdate('faqs.answer', this.ValAnswer, newValue, oldValue)))
+		watch(() => this.ValAnswer.value, (newValue, oldValue) => this.onUpdate('faqs.answer', this.ValAnswer, newValue, oldValue))
 	}
 
 	/**

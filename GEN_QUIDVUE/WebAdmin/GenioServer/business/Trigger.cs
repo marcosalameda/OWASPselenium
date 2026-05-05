@@ -1,5 +1,4 @@
 ﻿using CSGenio.core.ai;
-using CSGenio.core.business;
 using CSGenio.framework;
 using CSGenio.persistence;
 using System;
@@ -240,7 +239,36 @@ namespace CSGenio.business.Triggers
 		/// <value>
 		/// The dirty rows.
 		/// </value>
-		public Dictionary<string, Dictionary<string, DbArea>> DirtyRows { get; } = new Dictionary<string, Dictionary<string, DbArea>>();
+		public Dictionary<string, Dictionary<string, DbArea>> DirtyRows { get; }
+			= new Dictionary<string, Dictionary<string, DbArea>>();
+
+	}
+
+	/// <summary>
+	/// Trigger UPDATE_FORMULAS
+	/// </summary>
+	/// <seealso cref="CSGenio.business.Trigger" />
+	public class TriggerUpdateFormulas : Trigger
+	{
+		/// <summary>
+		/// Initializes a new instance of the <see cref="TriggerUpdateFormulas" /> class.
+		/// </summary>
+		/// <param name="context">The context.</param>
+		public TriggerUpdateFormulas(TriggerContext context) : base(context)
+		{
+			_id = "UPDATE_FORMULAS";
+
+			List<ByAreaArguments> argumentsListByArea;
+
+			argumentsListByArea = new List<ByAreaArguments>();
+			argumentsListByArea.Add(new ByAreaArguments(new string[] {"tipoequi"}, new int[] {0}, "tpequ", "codtpequ"));
+			context.Condition = new ConditionFormula(argumentsListByArea, 1, delegate(object[] args, User user, string module, PersistentSupport sp) {
+				return (((string)args[0]) == "")&&GlobalFunctions.HasRole(user,"A");
+			});
+
+			// Actions
+			AddAction(1, new RecalcTableAction(context, "pesso"));
+		}
 	}
 
 	/// <summary>
@@ -269,7 +297,7 @@ namespace CSGenio.business.Triggers
 			InternalOperationFormula formula;
 
 			argumentsListByArea = new List<ByAreaArguments>();
-			argumentsListByArea.Add(new ByAreaArguments(new string[] { "designat" }, new int[] { 0 }, "cmpny", "codempre"));
+			argumentsListByArea.Add(new ByAreaArguments(new string[] {"designat"}, new int[] {0}, "cmpny", "codempre"));
 			formula = new InternalOperationFormula(argumentsListByArea, 1, delegate(object[] args, User user, string module, PersistentSupport sp) {
 				return ((string)args[0])+".";
 			});
@@ -277,7 +305,7 @@ namespace CSGenio.business.Triggers
 			AddAction(1, new UpdateFieldValueAction(context, "cmpny", "designat", formula, false));
 
 			argumentsListByArea = new List<ByAreaArguments>();
-			argumentsListByArea.Add(new ByAreaArguments(new string[] { "photogra" }, new int[] { 0 }, "pesso", "codpesso"));
+			argumentsListByArea.Add(new ByAreaArguments(new string[] {"photogra"}, new int[] {0}, "pesso", "codpesso"));
 			formula = new InternalOperationFormula(argumentsListByArea, 1, delegate(object[] args, User user, string module, PersistentSupport sp) {
 				return ((byte[])args[0]);
 			});
@@ -418,6 +446,26 @@ namespace CSGenio.business.Triggers
 			});
 
 			AddAction(1, new UpdateFieldValueAction(context, "expen", "descript", formula, false));
+		}
+	}
+
+	/// <summary>
+	/// Trigger REPAIR_AGENT
+	/// </summary>
+	/// <seealso cref="CSGenio.business.Trigger" />
+	public class TriggerRepairAgent : Trigger
+	{
+		/// <summary>
+		/// Initializes a new instance of the <see cref="TriggerRepairAgent" /> class.
+		/// </summary>
+		/// <param name="context">The context.</param>
+		public TriggerRepairAgent(TriggerContext context) : base(context)
+		{
+			_id = "REPAIR_AGENT";
+
+			// Actions
+			var agent = new GenioServer.ai.RepairsCategorizerAgent(core.di.GenioDI.GetService<IChatbotService>());
+			AddAction(1, new CallAiAgentAction(context, agent));
 		}
 	}
 

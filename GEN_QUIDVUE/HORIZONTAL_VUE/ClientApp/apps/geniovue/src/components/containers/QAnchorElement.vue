@@ -5,8 +5,7 @@
 			:class="{ active: ctrl.isActive }" />
 
 		<a
-			href="#"
-			role="button"
+			href="javascript:void(0)"
 			:class="['anchored', { active: ctrl.isActive }]"
 			@click.stop.prevent="$emit('focus-control', ctrl.id, false, 'start', 'instant')">
 			{{ ctrl.label }}

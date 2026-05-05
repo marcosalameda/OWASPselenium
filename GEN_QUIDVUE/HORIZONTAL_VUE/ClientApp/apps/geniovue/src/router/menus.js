@@ -1,4 +1,4 @@
-﻿// eslint-disable-next-line @typescript-eslint/no-unused-vars
+﻿// eslint-disable-next-line no-unused-vars
 import { updateQueryParams } from './routeUtils.js'
 
 export default function getMenusRoutes()
@@ -15,7 +15,6 @@ export default function getMenusRoutes()
 				baseArea: 'PWCOM',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValName'],
-				isPopup: false
 			}
 		},
 		{
@@ -29,7 +28,6 @@ export default function getMenusRoutes()
 				baseArea: 'GENRE',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValGender'],
-				isPopup: false
 			}
 		},
 		{
@@ -43,7 +41,6 @@ export default function getMenusRoutes()
 				baseArea: 'FEECA',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValFeedback'],
-				isPopup: false
 			}
 		},
 		{
@@ -57,7 +54,19 @@ export default function getMenusRoutes()
 				baseArea: 'NOTIF',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValNrcomoda'],
-				isPopup: false
+			}
+		},
+		{
+			path: '/:culture/:system/WMS/menu/WMS_251',
+			name: 'menu-WMS_251',
+			component: () => import('@/views/menus/ModuleWMS/MenuWMS_251/QMenuWms251.vue'),
+			meta: {
+				routeType: 'menu',
+				module: 'WMS',
+				order: '251',
+				baseArea: 'DISST',
+				hasInitialPHE: false,
+				humanKeyFields: ['ValStatus'],
 			}
 		},
 		{
@@ -71,7 +80,6 @@ export default function getMenusRoutes()
 				baseArea: 'ASSET',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValName'],
-				isPopup: false
 			}
 		},
 		{
@@ -85,7 +93,6 @@ export default function getMenusRoutes()
 				baseArea: 'LENDI',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValLendinnr'],
-				isPopup: false
 			}
 		},
 		{
@@ -99,7 +106,19 @@ export default function getMenusRoutes()
 				baseArea: 'LENDI',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValLendinnr'],
-				isPopup: false
+			}
+		},
+		{
+			path: '/:culture/:system/PTN/menu/PTN_3171',
+			name: 'menu-PTN_3171',
+			component: () => import('@/views/menus/ModulePTN/MenuPTN_3171/QMenuPtn3171.vue'),
+			meta: {
+				routeType: 'menu',
+				module: 'PTN',
+				order: '3171',
+				baseArea: 'LENDI',
+				hasInitialPHE: false,
+				humanKeyFields: ['ValLendinnr'],
 			}
 		},
 		{
@@ -113,7 +132,6 @@ export default function getMenusRoutes()
 				baseArea: 'LENDI',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValLendinnr'],
-				isPopup: false
 			}
 		},
 		{
@@ -127,7 +145,6 @@ export default function getMenusRoutes()
 				baseArea: 'LENDI',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValLendinnr'],
-				isPopup: false
 			}
 		},
 		{
@@ -141,7 +158,6 @@ export default function getMenusRoutes()
 				baseArea: 'LENDI',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValLendinnr'],
-				isPopup: false
 			}
 		},
 		{
@@ -155,7 +171,6 @@ export default function getMenusRoutes()
 				baseArea: 'LENDI',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValLendinnr'],
-				isPopup: false
 			}
 		},
 		{
@@ -169,7 +184,6 @@ export default function getMenusRoutes()
 				baseArea: 'LENDI',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValLendinnr'],
-				isPopup: true
 			}
 		},
 		{
@@ -184,8 +198,7 @@ export default function getMenusRoutes()
 				baseArea: 'LENDI',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValLendinnr'],
-				limitations: ['minLendiValStart', 'maxLendiValStart' /* SE */],
-				isPopup: false
+				limitations: ['minLendiValStart', 'maxLendiValStart' /* SE */]
 			}
 		},
 		{
@@ -199,7 +212,6 @@ export default function getMenusRoutes()
 				baseArea: 'LENDI',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValLendinnr'],
-				isPopup: true
 			}
 		},
 		{
@@ -213,7 +225,6 @@ export default function getMenusRoutes()
 				baseArea: 'LENDI',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValLendinnr'],
-				isPopup: false
 			}
 		},
 		{
@@ -228,8 +239,20 @@ export default function getMenusRoutes()
 				baseArea: 'LENDI',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValLendinnr'],
-				limitations: ['equip' /* DB */],
-				isPopup: false
+				limitations: ['equip' /* DB */]
+			}
+		},
+		{
+			path: '/:culture/:system/GQT/menu/GQT_DEVOLOBS',
+			name: 'menu-GQT_DEVOLOBS',
+			component: () => import('@/views/menus/ModuleGQT/MenuGQT_DEVOLOBS/QMenuGqtDevolobs.vue'),
+			meta: {
+				routeType: 'menu',
+				module: 'GQT',
+				order: '18111',
+				baseArea: 'LENDI',
+				hasInitialPHE: false,
+				humanKeyFields: ['ValLendinnr'],
 			}
 		},
 		{
@@ -243,7 +266,6 @@ export default function getMenusRoutes()
 				baseArea: 'CNTRY',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValCountry'],
-				isPopup: false
 			}
 		},
 		{
@@ -257,7 +279,6 @@ export default function getMenusRoutes()
 				baseArea: 'CNTRY',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValCountry'],
-				isPopup: false
 			}
 		},
 		{
@@ -271,13 +292,25 @@ export default function getMenusRoutes()
 				baseArea: 'CNTRY',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValCountry'],
-				isPopup: false
 			}
 		},
 		{
-			path: '/:culture/:system/GQT/menu/GQT_311',
-			name: 'menu-GQT_311',
-			component: () => import('@/views/menus/ModuleGQT/MenuGQT_311/QMenuGqt311.vue'),
+			path: '/:culture/:system/WMS/menu/WMS_4271',
+			name: 'menu-WMS_4271',
+			component: () => import('@/views/menus/ModuleWMS/MenuWMS_4271/QMenuWms4271.vue'),
+			meta: {
+				routeType: 'menu',
+				module: 'WMS',
+				order: '4271',
+				baseArea: 'CNTRY',
+				hasInitialPHE: false,
+				humanKeyFields: ['ValCountry'],
+			}
+		},
+		{
+			path: '/:culture/:system/GQT/menu/GQT_REPAIR_LIST',
+			name: 'menu-GQT_REPAIR_LIST',
+			component: () => import('@/views/menus/ModuleGQT/MenuGQT_REPAIR_LIST/QMenuGqtRepairList.vue'),
 			meta: {
 				routeType: 'menu',
 				module: 'GQT',
@@ -285,7 +318,6 @@ export default function getMenusRoutes()
 				baseArea: 'REPAR',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValDtrepara'],
-				isPopup: false
 			}
 		},
 		{
@@ -299,7 +331,6 @@ export default function getMenusRoutes()
 				baseArea: 'C_ADD',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValCountry'],
-				isPopup: false
 			}
 		},
 		{
@@ -313,7 +344,6 @@ export default function getMenusRoutes()
 				baseArea: 'SALE',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValIdentifi'],
-				isPopup: false
 			}
 		},
 		{
@@ -327,7 +357,6 @@ export default function getMenusRoutes()
 				baseArea: 'SALE',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValIdentifi'],
-				isPopup: false
 			}
 		},
 		{
@@ -341,7 +370,6 @@ export default function getMenusRoutes()
 				baseArea: 'SALE',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValIdentifi'],
-				isPopup: false
 			}
 		},
 		{
@@ -355,7 +383,6 @@ export default function getMenusRoutes()
 				baseArea: 'SALE',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValIdentifi'],
-				isPopup: false
 			}
 		},
 		{
@@ -369,7 +396,6 @@ export default function getMenusRoutes()
 				baseArea: 'SALE',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValIdentifi'],
-				isPopup: false
 			}
 		},
 		{
@@ -383,21 +409,19 @@ export default function getMenusRoutes()
 				baseArea: 'SALE',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValIdentifi'],
-				isPopup: false
 			}
 		},
 		{
-			path: '/:culture/:system/WMS/menu/WMS_2111',
-			name: 'menu-WMS_2111',
-			component: () => import('@/views/menus/ModuleWMS/MenuWMS_2111/QMenuWms2111.vue'),
+			path: '/:culture/:system/WMS/menu/WMS_211',
+			name: 'menu-WMS_211',
+			component: () => import('@/views/menus/ModuleWMS/MenuWMS_211/QMenuWms211.vue'),
 			meta: {
 				routeType: 'menu',
 				module: 'WMS',
-				order: '2111',
+				order: '211',
 				baseArea: 'DISPA',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValDispanr'],
-				isPopup: false
 			}
 		},
 		{
@@ -411,21 +435,32 @@ export default function getMenusRoutes()
 				baseArea: 'DISPA',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValDispanr'],
-				isPopup: false
 			}
 		},
 		{
-			path: '/:culture/:system/WMS/menu/WMS_231',
-			name: 'menu-WMS_231',
-			component: () => import('@/views/menus/ModuleWMS/MenuWMS_231/QMenuWms231.vue'),
+			path: '/:culture/:system/WMS/menu/WMS_2311',
+			name: 'menu-WMS_2311',
+			component: () => import('@/views/menus/ModuleWMS/MenuWMS_2311/QMenuWms2311.vue'),
 			meta: {
 				routeType: 'menu',
 				module: 'WMS',
-				order: '231',
+				order: '2311',
 				baseArea: 'DISPA',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValDispanr'],
-				isPopup: false
+			}
+		},
+		{
+			path: '/:culture/:system/WMS/menu/WMS_241',
+			name: 'menu-WMS_241',
+			component: () => import('@/views/menus/ModuleWMS/MenuWMS_241/QMenuWms241.vue'),
+			meta: {
+				routeType: 'menu',
+				module: 'WMS',
+				order: '241',
+				baseArea: 'DISPA',
+				hasInitialPHE: false,
+				humanKeyFields: ['ValDispanr'],
 			}
 		},
 		{
@@ -439,7 +474,6 @@ export default function getMenusRoutes()
 				baseArea: 'INPGR',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValIcongro'],
-				isPopup: false
 			}
 		},
 		{
@@ -453,7 +487,6 @@ export default function getMenusRoutes()
 				baseArea: 'RORDF',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValOrder'],
-				isPopup: false
 			}
 		},
 		{
@@ -467,7 +500,6 @@ export default function getMenusRoutes()
 				baseArea: 'SPECI',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValEspecial'],
-				isPopup: false
 			}
 		},
 		{
@@ -481,7 +513,6 @@ export default function getMenusRoutes()
 				baseArea: 'CATEG',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValCategoria', 'ValAbbreviation'],
-				isPopup: false
 			}
 		},
 		{
@@ -495,7 +526,6 @@ export default function getMenusRoutes()
 				baseArea: 'TPEQU',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValTipoequi'],
-				isPopup: false
 			}
 		},
 		{
@@ -509,7 +539,6 @@ export default function getMenusRoutes()
 				baseArea: 'TPEQU',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValTipoequi'],
-				isPopup: false
 			}
 		},
 		{
@@ -523,7 +552,6 @@ export default function getMenusRoutes()
 				baseArea: 'TPEQU',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValTipoequi'],
-				isPopup: false
 			}
 		},
 		{
@@ -537,7 +565,6 @@ export default function getMenusRoutes()
 				baseArea: 'TPEQU',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValTipoequi'],
-				isPopup: false
 			}
 		},
 		{
@@ -551,7 +578,6 @@ export default function getMenusRoutes()
 				baseArea: 'ADDRE',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValAddressuse'],
-				isPopup: false
 			}
 		},
 		{
@@ -565,7 +591,6 @@ export default function getMenusRoutes()
 				baseArea: 'CFAQS',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValCategory'],
-				isPopup: false
 			}
 		},
 		{
@@ -579,7 +604,6 @@ export default function getMenusRoutes()
 				baseArea: 'CFAQS',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValCategory'],
-				isPopup: false
 			}
 		},
 		{
@@ -593,7 +617,6 @@ export default function getMenusRoutes()
 				baseArea: 'GITEM',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValItemdes'],
-				isPopup: false
 			}
 		},
 		{
@@ -607,7 +630,6 @@ export default function getMenusRoutes()
 				baseArea: 'C_BRN',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValCountry'],
-				isPopup: false
 			}
 		},
 		{
@@ -621,7 +643,6 @@ export default function getMenusRoutes()
 				baseArea: 'DECOM',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValDecomnr'],
-				isPopup: false
 			}
 		},
 		{
@@ -635,7 +656,6 @@ export default function getMenusRoutes()
 				baseArea: 'DECOM',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValDecomnr'],
-				isPopup: false
 			}
 		},
 		{
@@ -649,7 +669,6 @@ export default function getMenusRoutes()
 				baseArea: 'DECOM',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValDecomnr'],
-				isPopup: false
 			}
 		},
 		{
@@ -663,7 +682,21 @@ export default function getMenusRoutes()
 				baseArea: 'PROJE',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValProjecto'],
-				isPopup: false
+			}
+		},
+		{
+			path: '/:culture/:system/UIS/menu/UIS_411',
+			name: 'menu-UIS_411',
+			component: () => import('@/views/menus/ModuleUIS/MenuUIS_411/QMenuUis411.vue'),
+			beforeEnter: [updateQueryParams],
+			meta: {
+				routeType: 'menu',
+				module: 'UIS',
+				order: '411',
+				baseArea: 'MENUIT',
+				hasInitialPHE: false,
+				humanKeyFields: ['ValMtype'],
+				limitations: ['menuc' /* DB */]
 			}
 		},
 		{
@@ -677,7 +710,19 @@ export default function getMenusRoutes()
 				baseArea: 'YEAR',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValYear'],
-				isPopup: false
+			}
+		},
+		{
+			path: '/:culture/:system/UIS/menu/UIS_231',
+			name: 'menu-UIS_231',
+			component: () => import('@/views/menus/ModuleUIS/MenuUIS_231/QMenuUis231.vue'),
+			meta: {
+				routeType: 'menu',
+				module: 'UIS',
+				order: '231',
+				baseArea: 'HERODESCRIP',
+				hasInitialPHE: false,
+				humanKeyFields: [],
 			}
 		},
 		{
@@ -691,7 +736,6 @@ export default function getMenusRoutes()
 				baseArea: 'REGIO',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValRegiao'],
-				isPopup: false
 			}
 		},
 		{
@@ -705,7 +749,6 @@ export default function getMenusRoutes()
 				baseArea: 'REGIO',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValRegiao'],
-				isPopup: false
 			}
 		},
 		{
@@ -719,7 +762,6 @@ export default function getMenusRoutes()
 				baseArea: 'REGIO',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValRegiao'],
-				isPopup: false
 			}
 		},
 		{
@@ -733,7 +775,6 @@ export default function getMenusRoutes()
 				baseArea: 'REGIO',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValRegiao'],
-				isPopup: false
 			}
 		},
 		{
@@ -748,8 +789,7 @@ export default function getMenusRoutes()
 				baseArea: 'REGIO',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValRegiao'],
-				limitations: ['cntry' /* DB */],
-				isPopup: false
+				limitations: ['cntry' /* DB */]
 			}
 		},
 		{
@@ -763,7 +803,6 @@ export default function getMenusRoutes()
 				baseArea: 'AGENT',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValName'],
-				isPopup: false
 			}
 		},
 		{
@@ -777,7 +816,6 @@ export default function getMenusRoutes()
 				baseArea: 'AGENT',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValName'],
-				isPopup: false
 			}
 		},
 		{
@@ -791,7 +829,6 @@ export default function getMenusRoutes()
 				baseArea: 'AGENT',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValName'],
-				isPopup: false
 			}
 		},
 		{
@@ -805,7 +842,6 @@ export default function getMenusRoutes()
 				baseArea: 'AGENT',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValName'],
-				isPopup: false
 			}
 		},
 		{
@@ -819,7 +855,6 @@ export default function getMenusRoutes()
 				baseArea: 'AGENT',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValName'],
-				isPopup: false
 			}
 		},
 		{
@@ -833,7 +868,6 @@ export default function getMenusRoutes()
 				baseArea: 'AGENT',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValName'],
-				isPopup: false
 			}
 		},
 		{
@@ -847,7 +881,6 @@ export default function getMenusRoutes()
 				baseArea: 'AGENT',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValName'],
-				isPopup: false
 			}
 		},
 		{
@@ -861,7 +894,6 @@ export default function getMenusRoutes()
 				baseArea: 'AGENT',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValName'],
-				isPopup: false
 			}
 		},
 		{
@@ -875,7 +907,6 @@ export default function getMenusRoutes()
 				baseArea: 'AGENT',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValName'],
-				isPopup: false
 			}
 		},
 		{
@@ -889,7 +920,6 @@ export default function getMenusRoutes()
 				baseArea: 'AGENT',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValName'],
-				isPopup: false
 			}
 		},
 		{
@@ -904,8 +934,7 @@ export default function getMenusRoutes()
 				baseArea: 'FAQS',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValQuestion'],
-				limitations: ['cfaqs' /* DB */],
-				isPopup: false
+				limitations: ['cfaqs' /* DB */]
 			}
 		},
 		{
@@ -919,7 +948,32 @@ export default function getMenusRoutes()
 				baseArea: 'TPCON',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValTipocont'],
-				isPopup: false
+			}
+		},
+		{
+			path: '/:culture/:system/UIS/menu/UIS_211',
+			name: 'menu-UIS_211',
+			component: () => import('@/views/menus/ModuleUIS/MenuUIS_211/QMenuUis211.vue'),
+			meta: {
+				routeType: 'menu',
+				module: 'UIS',
+				order: '211',
+				baseArea: 'AUTHENTICATOPT',
+				hasInitialPHE: false,
+				humanKeyFields: ['ValAuthoptions'],
+			}
+		},
+		{
+			path: '/:culture/:system/UIS/menu/UIS_41',
+			name: 'menu-UIS_41',
+			component: () => import('@/views/menus/ModuleUIS/MenuUIS_41/QMenuUis41.vue'),
+			meta: {
+				routeType: 'menu',
+				module: 'UIS',
+				order: '41',
+				baseArea: 'MENUC',
+				hasInitialPHE: false,
+				humanKeyFields: ['ValMenucl'],
 			}
 		},
 		{
@@ -933,7 +987,6 @@ export default function getMenusRoutes()
 				baseArea: 'CTRY',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValCountry'],
-				isPopup: false
 			}
 		},
 		{
@@ -947,7 +1000,6 @@ export default function getMenusRoutes()
 				baseArea: 'CTRY',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValCountry'],
-				isPopup: false
 			}
 		},
 		{
@@ -961,7 +1013,6 @@ export default function getMenusRoutes()
 				baseArea: 'CTRY',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValCountry'],
-				isPopup: false
 			}
 		},
 		{
@@ -975,7 +1026,6 @@ export default function getMenusRoutes()
 				baseArea: 'CTRY',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValCountry'],
-				isPopup: false
 			}
 		},
 		{
@@ -989,7 +1039,6 @@ export default function getMenusRoutes()
 				baseArea: 'FAMI1',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValFamily'],
-				isPopup: false
 			}
 		},
 		{
@@ -1003,7 +1052,6 @@ export default function getMenusRoutes()
 				baseArea: 'LANGU',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValLangua'],
-				isPopup: false
 			}
 		},
 		{
@@ -1017,7 +1065,6 @@ export default function getMenusRoutes()
 				baseArea: 'WPESS',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValName'],
-				isPopup: false
 			}
 		},
 		{
@@ -1031,7 +1078,6 @@ export default function getMenusRoutes()
 				baseArea: 'WPESS',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValName'],
-				isPopup: false
 			}
 		},
 		{
@@ -1045,7 +1091,6 @@ export default function getMenusRoutes()
 				baseArea: 'WPESS',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValName'],
-				isPopup: false
 			}
 		},
 		{
@@ -1059,7 +1104,6 @@ export default function getMenusRoutes()
 				baseArea: 'WPESS',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValName'],
-				isPopup: false
 			}
 		},
 		{
@@ -1073,7 +1117,6 @@ export default function getMenusRoutes()
 				baseArea: 'WPESS',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValName'],
-				isPopup: false
 			}
 		},
 		{
@@ -1087,7 +1130,6 @@ export default function getMenusRoutes()
 				baseArea: 'CATTP',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValTpcatego'],
-				isPopup: false
 			}
 		},
 		{
@@ -1101,7 +1143,6 @@ export default function getMenusRoutes()
 				baseArea: 'REGIS',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValName'],
-				isPopup: false
 			}
 		},
 		{
@@ -1115,7 +1156,6 @@ export default function getMenusRoutes()
 				baseArea: 'FACTY',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValType'],
-				isPopup: false
 			}
 		},
 		{
@@ -1129,7 +1169,6 @@ export default function getMenusRoutes()
 				baseArea: 'RORDI',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValOrder'],
-				isPopup: false
 			}
 		},
 		{
@@ -1143,7 +1182,6 @@ export default function getMenusRoutes()
 				baseArea: 'ENTIT',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValName', 'ValInitials'],
-				isPopup: false
 			}
 		},
 		{
@@ -1157,7 +1195,6 @@ export default function getMenusRoutes()
 				baseArea: 'ENTIT',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValName', 'ValInitials'],
-				isPopup: false
 			}
 		},
 		{
@@ -1171,7 +1208,6 @@ export default function getMenusRoutes()
 				baseArea: 'ENTIT',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValName', 'ValInitials'],
-				isPopup: false
 			}
 		},
 		{
@@ -1185,21 +1221,6 @@ export default function getMenusRoutes()
 				baseArea: 'ENTIT',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValName', 'ValInitials'],
-				isPopup: false
-			}
-		},
-		{
-			path: '/:culture/:system/WMS/menu/WMS_5511',
-			name: 'menu-WMS_5511',
-			component: () => import('@/views/menus/ModuleWMS/MenuWMS_5511/QMenuWms5511.vue'),
-			meta: {
-				routeType: 'menu',
-				module: 'WMS',
-				order: '5511',
-				baseArea: 'ENTIT',
-				hasInitialPHE: false,
-				humanKeyFields: ['ValName', 'ValInitials'],
-				isPopup: false
 			}
 		},
 		{
@@ -1213,7 +1234,6 @@ export default function getMenusRoutes()
 				baseArea: 'LCEXT',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValGlnext'],
-				isPopup: false
 			}
 		},
 		{
@@ -1227,7 +1247,6 @@ export default function getMenusRoutes()
 				baseArea: 'DTTYP',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValString'],
-				isPopup: false
 			}
 		},
 		{
@@ -1241,7 +1260,19 @@ export default function getMenusRoutes()
 				baseArea: 'TBLB',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValText'],
-				isPopup: false
+			}
+		},
+		{
+			path: '/:culture/:system/PTN/menu/PTN_3141',
+			name: 'menu-PTN_3141',
+			component: () => import('@/views/menus/ModulePTN/MenuPTN_3141/QMenuPtn3141.vue'),
+			meta: {
+				routeType: 'menu',
+				module: 'PTN',
+				order: '3141',
+				baseArea: 'TBLB',
+				hasInitialPHE: false,
+				humanKeyFields: ['ValText'],
 			}
 		},
 		{
@@ -1255,7 +1286,6 @@ export default function getMenusRoutes()
 				baseArea: 'PROPH',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValTitle'],
-				isPopup: false
 			}
 		},
 		{
@@ -1269,7 +1299,6 @@ export default function getMenusRoutes()
 				baseArea: 'WAREH',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValWarehdes'],
-				isPopup: false
 			}
 		},
 		{
@@ -1283,7 +1312,6 @@ export default function getMenusRoutes()
 				baseArea: 'WAREH',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValWarehdes'],
-				isPopup: false
 			}
 		},
 		{
@@ -1297,7 +1325,6 @@ export default function getMenusRoutes()
 				baseArea: 'WAREH',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValWarehdes'],
-				isPopup: false
 			}
 		},
 		{
@@ -1311,7 +1338,6 @@ export default function getMenusRoutes()
 				baseArea: 'WAREH',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValWarehdes'],
-				isPopup: false
 			}
 		},
 		{
@@ -1325,7 +1351,6 @@ export default function getMenusRoutes()
 				baseArea: 'WAREH',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValWarehdes'],
-				isPopup: false
 			}
 		},
 		{
@@ -1339,7 +1364,6 @@ export default function getMenusRoutes()
 				baseArea: 'WAREH',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValWarehdes'],
-				isPopup: false
 			}
 		},
 		{
@@ -1353,7 +1377,6 @@ export default function getMenusRoutes()
 				baseArea: 'WAREH',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValWarehdes'],
-				isPopup: false
 			}
 		},
 		{
@@ -1367,7 +1390,6 @@ export default function getMenusRoutes()
 				baseArea: 'WAREH',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValWarehdes'],
-				isPopup: false
 			}
 		},
 		{
@@ -1381,7 +1403,6 @@ export default function getMenusRoutes()
 				baseArea: 'WAREH',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValWarehdes'],
-				isPopup: false
 			}
 		},
 		{
@@ -1395,7 +1416,6 @@ export default function getMenusRoutes()
 				baseArea: 'WAREH',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValWarehdes'],
-				isPopup: false
 			}
 		},
 		{
@@ -1409,7 +1429,6 @@ export default function getMenusRoutes()
 				baseArea: 'GLOB',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValHome'],
-				isPopup: false
 			}
 		},
 		{
@@ -1423,21 +1442,19 @@ export default function getMenusRoutes()
 				baseArea: 'GLOB',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValHome'],
-				isPopup: false
 			}
 		},
 		{
-			path: '/:culture/:system/PTN/menu/PTN_3151',
-			name: 'menu-PTN_3151',
-			component: () => import('@/views/menus/ModulePTN/MenuPTN_3151/QMenuPtn3151.vue'),
+			path: '/:culture/:system/PTN/menu/PTN_3161',
+			name: 'menu-PTN_3161',
+			component: () => import('@/views/menus/ModulePTN/MenuPTN_3161/QMenuPtn3161.vue'),
 			meta: {
 				routeType: 'menu',
 				module: 'PTN',
-				order: '3151',
+				order: '3161',
 				baseArea: 'TBLK',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValName'],
-				isPopup: false
 			}
 		},
 		{
@@ -1451,7 +1468,6 @@ export default function getMenusRoutes()
 				baseArea: 'CMPNY',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValDesignat'],
-				isPopup: false
 			}
 		},
 		{
@@ -1465,7 +1481,6 @@ export default function getMenusRoutes()
 				baseArea: 'CMPNY',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValDesignat'],
-				isPopup: false
 			}
 		},
 		{
@@ -1479,7 +1494,6 @@ export default function getMenusRoutes()
 				baseArea: 'CMPNY',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValDesignat'],
-				isPopup: false
 			}
 		},
 		{
@@ -1493,7 +1507,6 @@ export default function getMenusRoutes()
 				baseArea: 'INDOC',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValDocumenr'],
-				isPopup: false
 			}
 		},
 		{
@@ -1507,7 +1520,6 @@ export default function getMenusRoutes()
 				baseArea: 'LOCAT',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValGln'],
-				isPopup: false
 			}
 		},
 		{
@@ -1522,8 +1534,7 @@ export default function getMenusRoutes()
 				baseArea: 'CMPKI',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValOrder'],
-				limitations: ['tpequ' /* DB */],
-				isPopup: false
+				limitations: ['tpequ' /* DB */]
 			}
 		},
 		{
@@ -1537,7 +1548,6 @@ export default function getMenusRoutes()
 				baseArea: 'CMPKI',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValOrder'],
-				isPopup: false
 			}
 		},
 		{
@@ -1551,7 +1561,6 @@ export default function getMenusRoutes()
 				baseArea: 'PRODU',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValProduct'],
-				isPopup: false
 			}
 		},
 		{
@@ -1565,7 +1574,6 @@ export default function getMenusRoutes()
 				baseArea: 'PRODU',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValProduct'],
-				isPopup: false
 			}
 		},
 		{
@@ -1579,7 +1587,6 @@ export default function getMenusRoutes()
 				baseArea: 'KINDE',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValDesignat'],
-				isPopup: false
 			}
 		},
 		{
@@ -1593,7 +1600,19 @@ export default function getMenusRoutes()
 				baseArea: 'RULES',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValDescript'],
-				isPopup: false
+			}
+		},
+		{
+			path: '/:culture/:system/UIS/menu/UIS_311',
+			name: 'menu-UIS_311',
+			component: () => import('@/views/menus/ModuleUIS/MenuUIS_311/QMenuUis311.vue'),
+			meta: {
+				routeType: 'menu',
+				module: 'UIS',
+				order: '311',
+				baseArea: 'CARDS',
+				hasInitialPHE: false,
+				humanKeyFields: ['ValTitle'],
 			}
 		},
 		{
@@ -1607,7 +1626,6 @@ export default function getMenusRoutes()
 				baseArea: 'CATE1',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValCategoria', 'ValAbbreviation'],
-				isPopup: false
 			}
 		},
 		{
@@ -1621,7 +1639,6 @@ export default function getMenusRoutes()
 				baseArea: 'PROPR',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValName'],
-				isPopup: false
 			}
 		},
 		{
@@ -1636,8 +1653,7 @@ export default function getMenusRoutes()
 				baseArea: 'PROPR',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValName'],
-				limitations: ['cntry' /* DB */],
-				isPopup: false
+				limitations: ['cntry' /* DB */]
 			}
 		},
 		{
@@ -1651,7 +1667,6 @@ export default function getMenusRoutes()
 				baseArea: 'PESSO',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValName'],
-				isPopup: false
 			}
 		},
 		{
@@ -1665,7 +1680,6 @@ export default function getMenusRoutes()
 				baseArea: 'PESSO',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValName'],
-				isPopup: false
 			}
 		},
 		{
@@ -1679,7 +1693,6 @@ export default function getMenusRoutes()
 				baseArea: 'PESSO',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValName'],
-				isPopup: false
 			}
 		},
 		{
@@ -1693,7 +1706,6 @@ export default function getMenusRoutes()
 				baseArea: 'PESSO',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValName'],
-				isPopup: false
 			}
 		},
 		{
@@ -1707,7 +1719,6 @@ export default function getMenusRoutes()
 				baseArea: 'PESSO',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValName'],
-				isPopup: false
 			}
 		},
 		{
@@ -1722,8 +1733,7 @@ export default function getMenusRoutes()
 				baseArea: 'PESSO',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValName'],
-				limitations: ['cmpny' /* DB */],
-				isPopup: false
+				limitations: ['cmpny' /* DB */]
 			}
 		},
 		{
@@ -1738,8 +1748,7 @@ export default function getMenusRoutes()
 				baseArea: 'PESSO',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValName'],
-				limitations: ['cmpny' /* DB */],
-				isPopup: false
+				limitations: ['cmpny' /* DB */]
 			}
 		},
 		{
@@ -1754,8 +1763,7 @@ export default function getMenusRoutes()
 				baseArea: 'PESSO',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValName'],
-				limitations: ['cmpny' /* DB */],
-				isPopup: false
+				limitations: ['cmpny' /* DB */]
 			}
 		},
 		{
@@ -1769,7 +1777,6 @@ export default function getMenusRoutes()
 				baseArea: 'PESSO',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValName'],
-				isPopup: false
 			}
 		},
 		{
@@ -1783,7 +1790,6 @@ export default function getMenusRoutes()
 				baseArea: 'PESSO',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValName'],
-				isPopup: false
 			}
 		},
 		{
@@ -1798,8 +1804,7 @@ export default function getMenusRoutes()
 				baseArea: 'PESSO',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValName'],
-				limitations: ['cate1' /* DB */],
-				isPopup: false
+				limitations: ['cate1' /* DB */]
 			}
 		},
 		{
@@ -1813,7 +1818,6 @@ export default function getMenusRoutes()
 				baseArea: 'PESSO',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValName'],
-				isPopup: false
 			}
 		},
 		{
@@ -1827,7 +1831,19 @@ export default function getMenusRoutes()
 				baseArea: 'GRPB',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValName'],
-				isPopup: false
+			}
+		},
+		{
+			path: '/:culture/:system/PTN/menu/PTN_3M1',
+			name: 'menu-PTN_3M1',
+			component: () => import('@/views/menus/ModulePTN/MenuPTN_3M1/QMenuPtn3m1.vue'),
+			meta: {
+				routeType: 'menu',
+				module: 'PTN',
+				order: '3M1',
+				baseArea: 'GRPB',
+				hasInitialPHE: false,
+				humanKeyFields: ['ValName'],
 			}
 		},
 		{
@@ -1841,7 +1857,19 @@ export default function getMenusRoutes()
 				baseArea: 'USERS',
 				hasInitialPHE: false,
 				humanKeyFields: [],
-				isPopup: false
+			}
+		},
+		{
+			path: '/:culture/:system/UIS/menu/UIS_111',
+			name: 'menu-UIS_111',
+			component: () => import('@/views/menus/ModuleUIS/MenuUIS_111/QMenuUis111.vue'),
+			meta: {
+				routeType: 'menu',
+				module: 'UIS',
+				order: '111',
+				baseArea: 'COMPC',
+				hasInitialPHE: false,
+				humanKeyFields: ['ValCompclas'],
 			}
 		},
 		{
@@ -1855,7 +1883,6 @@ export default function getMenusRoutes()
 				baseArea: 'UICOM',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValName'],
-				isPopup: false
 			}
 		},
 		{
@@ -1869,7 +1896,6 @@ export default function getMenusRoutes()
 				baseArea: 'PERSO',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValName'],
-				isPopup: false
 			}
 		},
 		{
@@ -1883,7 +1909,6 @@ export default function getMenusRoutes()
 				baseArea: 'PERSO',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValName'],
-				isPopup: false
 			}
 		},
 		{
@@ -1898,8 +1923,7 @@ export default function getMenusRoutes()
 				baseArea: 'PERSO',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValName'],
-				limitations: ['perso_gender' /* AC */],
-				isPopup: false
+				limitations: ['perso_gender' /* AC */]
 			}
 		},
 		{
@@ -1913,7 +1937,6 @@ export default function getMenusRoutes()
 				baseArea: 'PROCN',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValName'],
-				isPopup: false
 			}
 		},
 		{
@@ -1927,7 +1950,6 @@ export default function getMenusRoutes()
 				baseArea: 'PROCN',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValName'],
-				isPopup: false
 			}
 		},
 		{
@@ -1941,7 +1963,6 @@ export default function getMenusRoutes()
 				baseArea: 'HPESS',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValName'],
-				isPopup: false
 			}
 		},
 		{
@@ -1955,7 +1976,6 @@ export default function getMenusRoutes()
 				baseArea: 'MESSA',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValIdnotif'],
-				isPopup: false
 			}
 		},
 		{
@@ -1969,7 +1989,6 @@ export default function getMenusRoutes()
 				baseArea: 'OUTPT',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValDocumenr'],
-				isPopup: false
 			}
 		},
 		{
@@ -1983,7 +2002,19 @@ export default function getMenusRoutes()
 				baseArea: 'OUTPT',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValDocumenr'],
-				isPopup: false
+			}
+		},
+		{
+			path: '/:culture/:system/STY/menu/STY_441',
+			name: 'menu-STY_441',
+			component: () => import('@/views/menus/ModuleSTY/MenuSTY_441/QMenuSty441.vue'),
+			meta: {
+				routeType: 'menu',
+				module: 'STY',
+				order: '441',
+				baseArea: 'ITEM',
+				hasInitialPHE: false,
+				humanKeyFields: ['ValItemdes'],
 			}
 		},
 		{
@@ -1997,7 +2028,6 @@ export default function getMenusRoutes()
 				baseArea: 'ITEM',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValItemdes'],
-				isPopup: false
 			}
 		},
 		{
@@ -2011,7 +2041,6 @@ export default function getMenusRoutes()
 				baseArea: 'ITEM',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValItemdes'],
-				isPopup: false
 			}
 		},
 		{
@@ -2025,7 +2054,6 @@ export default function getMenusRoutes()
 				baseArea: 'ITEM',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValItemdes'],
-				isPopup: false
 			}
 		},
 		{
@@ -2039,7 +2067,6 @@ export default function getMenusRoutes()
 				baseArea: 'ITEM',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValItemdes'],
-				isPopup: false
 			}
 		},
 		{
@@ -2053,7 +2080,6 @@ export default function getMenusRoutes()
 				baseArea: 'ITEM',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValItemdes'],
-				isPopup: false
 			}
 		},
 		{
@@ -2067,7 +2093,6 @@ export default function getMenusRoutes()
 				baseArea: 'ITEM',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValItemdes'],
-				isPopup: false
 			}
 		},
 		{
@@ -2082,22 +2107,20 @@ export default function getMenusRoutes()
 				baseArea: 'ITEM',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValItemdes'],
-				limitations: ['wareh' /* DB */],
-				isPopup: false
+				limitations: ['wareh' /* DB */]
 			}
 		},
 		{
-			path: '/:culture/:system/GQT/menu/GQT_4A1',
-			name: 'menu-GQT_4A1',
-			component: () => import('@/views/menus/ModuleGQT/MenuGQT_4A1/QMenuGqt4a1.vue'),
+			path: '/:culture/:system/GQT/menu/GQT_UNUSED_ITEMS',
+			name: 'menu-GQT_UNUSED_ITEMS',
+			component: () => import('@/views/menus/ModuleGQT/MenuGQT_UNUSED_ITEMS/QMenuGqtUnusedItems.vue'),
 			meta: {
 				routeType: 'menu',
 				module: 'GQT',
-				order: '4A1',
+				order: '4A11',
 				baseArea: 'ITEM',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValItemdes'],
-				isPopup: false
 			}
 		},
 		{
@@ -2112,8 +2135,7 @@ export default function getMenusRoutes()
 				baseArea: 'ROIGF',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValOrder'],
-				limitations: ['rogl1' /* DB */],
-				isPopup: false
+				limitations: ['rogl1' /* DB */]
 			}
 		},
 		{
@@ -2127,7 +2149,6 @@ export default function getMenusRoutes()
 				baseArea: 'CONTA',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValContacto'],
-				isPopup: false
 			}
 		},
 		{
@@ -2141,7 +2162,6 @@ export default function getMenusRoutes()
 				baseArea: 'INSTA',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValSince'],
-				isPopup: false
 			}
 		},
 		{
@@ -2155,7 +2175,6 @@ export default function getMenusRoutes()
 				baseArea: 'INSTA',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValSince'],
-				isPopup: false
 			}
 		},
 		{
@@ -2169,7 +2188,6 @@ export default function getMenusRoutes()
 				baseArea: 'INSTA',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValSince'],
-				isPopup: false
 			}
 		},
 		{
@@ -2183,7 +2201,6 @@ export default function getMenusRoutes()
 				baseArea: 'RECEI',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValNumber'],
-				isPopup: false
 			}
 		},
 		{
@@ -2197,7 +2214,6 @@ export default function getMenusRoutes()
 				baseArea: 'RECEI',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValNumber'],
-				isPopup: false
 			}
 		},
 		{
@@ -2211,7 +2227,6 @@ export default function getMenusRoutes()
 				baseArea: 'RECEI',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValNumber'],
-				isPopup: false
 			}
 		},
 		{
@@ -2225,7 +2240,6 @@ export default function getMenusRoutes()
 				baseArea: 'ROOMS',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValRoomnr'],
-				isPopup: false
 			}
 		},
 		{
@@ -2239,21 +2253,19 @@ export default function getMenusRoutes()
 				baseArea: 'ROOMS',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValRoomnr'],
-				isPopup: false
 			}
 		},
 		{
-			path: '/:culture/:system/PTN/menu/PTN_3511',
-			name: 'menu-PTN_3511',
-			component: () => import('@/views/menus/ModulePTN/MenuPTN_3511/QMenuPtn3511.vue'),
+			path: '/:culture/:system/PTN/menu/PTN_351',
+			name: 'menu-PTN_351',
+			component: () => import('@/views/menus/ModulePTN/MenuPTN_351/QMenuPtn351.vue'),
 			meta: {
 				routeType: 'menu',
 				module: 'PTN',
-				order: '3511',
+				order: '351',
 				baseArea: 'ROOMS',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValRoomnr'],
-				isPopup: false
 			}
 		},
 		{
@@ -2267,7 +2279,6 @@ export default function getMenusRoutes()
 				baseArea: 'ROOMS',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValRoomnr'],
-				isPopup: false
 			}
 		},
 		{
@@ -2281,7 +2292,6 @@ export default function getMenusRoutes()
 				baseArea: 'ROOMS',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValRoomnr'],
-				isPopup: false
 			}
 		},
 		{
@@ -2295,7 +2305,6 @@ export default function getMenusRoutes()
 				baseArea: 'EXPEN',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValDescript'],
-				isPopup: false
 			}
 		},
 		{
@@ -2309,7 +2318,6 @@ export default function getMenusRoutes()
 				baseArea: 'EXPEN',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValDescript'],
-				isPopup: false
 			}
 		},
 		{
@@ -2323,7 +2331,6 @@ export default function getMenusRoutes()
 				baseArea: 'EXPEN',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValDescript'],
-				isPopup: false
 			}
 		},
 		{
@@ -2337,7 +2344,6 @@ export default function getMenusRoutes()
 				baseArea: 'EXPEN',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValDescript'],
-				isPopup: false
 			}
 		},
 		{
@@ -2351,7 +2357,6 @@ export default function getMenusRoutes()
 				baseArea: 'EXPEN',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValDescript'],
-				isPopup: false
 			}
 		},
 		{
@@ -2365,7 +2370,6 @@ export default function getMenusRoutes()
 				baseArea: 'EXPEN',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValDescript'],
-				isPopup: false
 			}
 		},
 		{
@@ -2380,8 +2384,7 @@ export default function getMenusRoutes()
 				baseArea: 'ROIGI',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValOrder'],
-				limitations: ['rogl1' /* DB */],
-				isPopup: false
+				limitations: ['rogl1' /* DB */]
 			}
 		},
 		{
@@ -2395,21 +2398,19 @@ export default function getMenusRoutes()
 				baseArea: 'ITEMC',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValTpcateg'],
-				isPopup: false
 			}
 		},
 		{
-			path: '/:culture/:system/PTN/menu/PTN_3141',
-			name: 'menu-PTN_3141',
-			component: () => import('@/views/menus/ModulePTN/MenuPTN_3141/QMenuPtn3141.vue'),
+			path: '/:culture/:system/PTN/menu/PTN_3151',
+			name: 'menu-PTN_3151',
+			component: () => import('@/views/menus/ModulePTN/MenuPTN_3151/QMenuPtn3151.vue'),
 			meta: {
 				routeType: 'menu',
 				module: 'PTN',
-				order: '3141',
+				order: '3151',
 				baseArea: 'TRSB',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValName'],
-				isPopup: false
 			}
 		},
 		{
@@ -2423,7 +2424,6 @@ export default function getMenusRoutes()
 				baseArea: 'PWREG',
 				hasInitialPHE: false,
 				humanKeyFields: [],
-				isPopup: true
 			}
 		},
 		{
@@ -2437,7 +2437,32 @@ export default function getMenusRoutes()
 				baseArea: 'PWREG',
 				hasInitialPHE: false,
 				humanKeyFields: [],
-				isPopup: false
+			}
+		},
+		{
+			path: '/:culture/:system/UIS/menu/UIS_2411',
+			name: 'menu-UIS_2411',
+			component: () => import('@/views/menus/ModuleUIS/MenuUIS_2411/QMenuUis2411.vue'),
+			meta: {
+				routeType: 'menu',
+				module: 'UIS',
+				order: '2411',
+				baseArea: 'UFEEDBACK',
+				hasInitialPHE: false,
+				humanKeyFields: [],
+			}
+		},
+		{
+			path: '/:culture/:system/UIS/menu/UIS_2441',
+			name: 'menu-UIS_2441',
+			component: () => import('@/views/menus/ModuleUIS/MenuUIS_2441/QMenuUis2441.vue'),
+			meta: {
+				routeType: 'menu',
+				module: 'UIS',
+				order: '2441',
+				baseArea: 'UFEEDBACK',
+				hasInitialPHE: false,
+				humanKeyFields: [],
 			}
 		},
 		{
@@ -2451,7 +2476,6 @@ export default function getMenusRoutes()
 				baseArea: 'ANEXD',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValTitle'],
-				isPopup: false
 			}
 		},
 		{
@@ -2465,7 +2489,6 @@ export default function getMenusRoutes()
 				baseArea: 'PESS1',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValName'],
-				isPopup: false
 			}
 		},
 		{
@@ -2479,7 +2502,6 @@ export default function getMenusRoutes()
 				baseArea: 'PESS1',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValName'],
-				isPopup: false
 			}
 		},
 		{
@@ -2493,7 +2515,6 @@ export default function getMenusRoutes()
 				baseArea: 'PESS1',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValName'],
-				isPopup: false
 			}
 		},
 		{
@@ -2507,7 +2528,6 @@ export default function getMenusRoutes()
 				baseArea: 'PESS1',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValName'],
-				isPopup: false
 			}
 		},
 		{
@@ -2521,7 +2541,46 @@ export default function getMenusRoutes()
 				baseArea: 'PESS1',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValName'],
-				isPopup: false
+			}
+		},
+		{
+			path: '/:culture/:system/PTN/menu/PTN_531',
+			name: 'menu-PTN_531',
+			component: () => import('@/views/menus/ModulePTN/MenuPTN_531/QMenuPtn531.vue'),
+			meta: {
+				routeType: 'menu',
+				module: 'PTN',
+				order: '531',
+				baseArea: 'PESS1',
+				hasInitialPHE: false,
+				humanKeyFields: ['ValName'],
+			}
+		},
+		{
+			path: '/:culture/:system/PTN/menu/PTN_711',
+			name: 'menu-PTN_711',
+			component: () => import('@/views/menus/ModulePTN/MenuPTN_711/QMenuPtn711.vue'),
+			meta: {
+				routeType: 'menu',
+				module: 'PTN',
+				order: '711',
+				baseArea: 'PESS1',
+				hasInitialPHE: false,
+				humanKeyFields: ['ValName'],
+			}
+		},
+		{
+			path: '/:culture/:system/PTN/menu/PTN_5311',
+			name: 'menu-PTN_5311',
+			component: () => import('@/views/menus/ModulePTN/MenuPTN_5311/QMenuPtn5311.vue'),
+			beforeEnter: [updateQueryParams],
+			meta: {
+				routeType: 'menu',
+				module: 'PTN',
+				order: '5311',
+				baseArea: 'PESS1',
+				hasInitialPHE: false,
+				limitations: ['pess1' /* DB */]
 			}
 		},
 		{
@@ -2535,7 +2594,6 @@ export default function getMenusRoutes()
 				baseArea: 'ROGL1',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValTitle'],
-				isPopup: false
 			}
 		},
 		{
@@ -2549,7 +2607,6 @@ export default function getMenusRoutes()
 				baseArea: 'ROGL1',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValTitle'],
-				isPopup: false
 			}
 		},
 		{
@@ -2563,7 +2620,6 @@ export default function getMenusRoutes()
 				baseArea: 'EQUIP',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValRegistnr'],
-				isPopup: false
 			}
 		},
 		{
@@ -2577,7 +2633,6 @@ export default function getMenusRoutes()
 				baseArea: 'EQUIP',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValRegistnr'],
-				isPopup: false
 			}
 		},
 		{
@@ -2591,7 +2646,6 @@ export default function getMenusRoutes()
 				baseArea: 'EQUIP',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValRegistnr'],
-				isPopup: false
 			}
 		},
 		{
@@ -2605,7 +2659,6 @@ export default function getMenusRoutes()
 				baseArea: 'EQUIP',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValRegistnr'],
-				isPopup: false
 			}
 		},
 		{
@@ -2619,7 +2672,6 @@ export default function getMenusRoutes()
 				baseArea: 'EQUIP',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValRegistnr'],
-				isPopup: false
 			}
 		},
 		{
@@ -2633,7 +2685,6 @@ export default function getMenusRoutes()
 				baseArea: 'EQUIP',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValRegistnr'],
-				isPopup: false
 			}
 		},
 		{
@@ -2647,7 +2698,6 @@ export default function getMenusRoutes()
 				baseArea: 'EQUIP',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValRegistnr'],
-				isPopup: false
 			}
 		},
 		{
@@ -2661,7 +2711,6 @@ export default function getMenusRoutes()
 				baseArea: 'EQUIP',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValRegistnr'],
-				isPopup: false
 			}
 		},
 		{
@@ -2675,7 +2724,6 @@ export default function getMenusRoutes()
 				baseArea: 'EQUIP',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValRegistnr'],
-				isPopup: false
 			}
 		},
 		{
@@ -2689,7 +2737,6 @@ export default function getMenusRoutes()
 				baseArea: 'EQUIP',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValRegistnr'],
-				isPopup: false
 			}
 		},
 		{
@@ -2703,7 +2750,6 @@ export default function getMenusRoutes()
 				baseArea: 'EQUIP',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValRegistnr'],
-				isPopup: true
 			}
 		},
 		{
@@ -2718,8 +2764,7 @@ export default function getMenusRoutes()
 				baseArea: 'EQUIP',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValRegistnr'],
-				limitations: ['minEquipValDtaquisi', 'maxEquipValDtaquisi' /* SE */],
-				isPopup: false
+				limitations: ['minEquipValDtaquisi', 'maxEquipValDtaquisi' /* SE */]
 			}
 		},
 		{
@@ -2733,7 +2778,6 @@ export default function getMenusRoutes()
 				baseArea: 'EQUIP',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValRegistnr'],
-				isPopup: false
 			}
 		},
 		{
@@ -2747,7 +2791,6 @@ export default function getMenusRoutes()
 				baseArea: 'EQUIP',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValRegistnr'],
-				isPopup: false
 			}
 		},
 		{
@@ -2761,7 +2804,6 @@ export default function getMenusRoutes()
 				baseArea: 'EQUIP',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValRegistnr'],
-				isPopup: false
 			}
 		},
 		{
@@ -2775,7 +2817,6 @@ export default function getMenusRoutes()
 				baseArea: 'EQUIP',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValRegistnr'],
-				isPopup: false
 			}
 		},
 		{
@@ -2789,7 +2830,6 @@ export default function getMenusRoutes()
 				baseArea: 'EQUIP',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValRegistnr'],
-				isPopup: false
 			}
 		},
 		{
@@ -2803,7 +2843,6 @@ export default function getMenusRoutes()
 				baseArea: 'EQUIP',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValRegistnr'],
-				isPopup: false
 			}
 		},
 		{
@@ -2817,7 +2856,6 @@ export default function getMenusRoutes()
 				baseArea: 'EQUIP',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValRegistnr'],
-				isPopup: false
 			}
 		},
 		{
@@ -2831,7 +2869,6 @@ export default function getMenusRoutes()
 				baseArea: 'EQUIP',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValRegistnr'],
-				isPopup: false
 			}
 		},
 		{
@@ -2845,7 +2882,6 @@ export default function getMenusRoutes()
 				baseArea: 'EQUIP',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValRegistnr'],
-				isPopup: false
 			}
 		},
 		{
@@ -2859,7 +2895,6 @@ export default function getMenusRoutes()
 				baseArea: 'EQUIP',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValRegistnr'],
-				isPopup: false
 			}
 		},
 		{
@@ -2874,8 +2909,7 @@ export default function getMenusRoutes()
 				baseArea: 'EQUIP',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValRegistnr'],
-				limitations: ['cmpny' /* DB */],
-				isPopup: false
+				limitations: ['cmpny' /* DB */]
 			}
 		},
 		{
@@ -2889,7 +2923,6 @@ export default function getMenusRoutes()
 				baseArea: 'CITY',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValCity'],
-				isPopup: false
 			}
 		},
 		{
@@ -2903,7 +2936,6 @@ export default function getMenusRoutes()
 				baseArea: 'CITY',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValCity'],
-				isPopup: false
 			}
 		},
 		{
@@ -2917,7 +2949,6 @@ export default function getMenusRoutes()
 				baseArea: 'CITY',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValCity'],
-				isPopup: false
 			}
 		},
 		{
@@ -2931,7 +2962,6 @@ export default function getMenusRoutes()
 				baseArea: 'CITY',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValCity'],
-				isPopup: false
 			}
 		},
 		{
@@ -2945,7 +2975,19 @@ export default function getMenusRoutes()
 				baseArea: 'PWORG',
 				hasInitialPHE: false,
 				humanKeyFields: [],
-				isPopup: false
+			}
+		},
+		{
+			path: '/:culture/:system/UIS/menu/UIS_221',
+			name: 'menu-UIS_221',
+			component: () => import('@/views/menus/ModuleUIS/MenuUIS_221/QMenuUis221.vue'),
+			meta: {
+				routeType: 'menu',
+				module: 'UIS',
+				order: '221',
+				baseArea: 'RECORDINFO',
+				hasInitialPHE: false,
+				humanKeyFields: [],
 			}
 		},
 		{
@@ -2959,7 +3001,34 @@ export default function getMenusRoutes()
 				baseArea: 'TRADU',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValReferenc'],
-				isPopup: false
+			}
+		},
+		{
+			path: '/:culture/:system/UIS/menu/UIS_1111',
+			name: 'menu-UIS_1111',
+			component: () => import('@/views/menus/ModuleUIS/MenuUIS_1111/QMenuUis1111.vue'),
+			beforeEnter: [updateQueryParams],
+			meta: {
+				routeType: 'menu',
+				module: 'UIS',
+				order: '1111',
+				baseArea: 'COMPO',
+				hasInitialPHE: false,
+				humanKeyFields: ['ValComptype'],
+				limitations: ['compc' /* DB */]
+			}
+		},
+		{
+			path: '/:culture/:system/UIS/menu/UIS_121',
+			name: 'menu-UIS_121',
+			component: () => import('@/views/menus/ModuleUIS/MenuUIS_121/QMenuUis121.vue'),
+			meta: {
+				routeType: 'menu',
+				module: 'UIS',
+				order: '121',
+				baseArea: 'COMPO',
+				hasInitialPHE: false,
+				humanKeyFields: ['ValComptype'],
 			}
 		},
 		{
@@ -2973,7 +3042,6 @@ export default function getMenusRoutes()
 				baseArea: 'PEDID',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValNrpedido'],
-				isPopup: false
 			}
 		},
 		{
@@ -2987,7 +3055,6 @@ export default function getMenusRoutes()
 				baseArea: 'FACIL',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValName'],
-				isPopup: false
 			}
 		},
 		{
@@ -3001,7 +3068,6 @@ export default function getMenusRoutes()
 				baseArea: 'FACIL',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValName'],
-				isPopup: false
 			}
 		},
 		{
@@ -3015,7 +3081,6 @@ export default function getMenusRoutes()
 				baseArea: 'AERO',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValName'],
-				isPopup: false
 			}
 		},
 		{
@@ -3029,7 +3094,6 @@ export default function getMenusRoutes()
 				baseArea: 'AERO',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValName'],
-				isPopup: false
 			}
 		},
 		{
@@ -3043,7 +3107,6 @@ export default function getMenusRoutes()
 				baseArea: 'FLDS',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValDescrip'],
-				isPopup: false
 			}
 		},
 		{
@@ -3057,7 +3120,6 @@ export default function getMenusRoutes()
 				baseArea: 'FLDS',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValDescrip'],
-				isPopup: false
 			}
 		},
 		{
@@ -3071,7 +3133,6 @@ export default function getMenusRoutes()
 				baseArea: 'FLDS',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValDescrip'],
-				isPopup: false
 			}
 		},
 		{
@@ -3085,7 +3146,32 @@ export default function getMenusRoutes()
 				baseArea: 'FLDS',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValDescrip'],
-				isPopup: false
+			}
+		},
+		{
+			path: '/:culture/:system/PTN/menu/PTN_261',
+			name: 'menu-PTN_261',
+			component: () => import('@/views/menus/ModulePTN/MenuPTN_261/QMenuPtn261.vue'),
+			meta: {
+				routeType: 'menu',
+				module: 'PTN',
+				order: '261',
+				baseArea: 'FLDS',
+				hasInitialPHE: false,
+				humanKeyFields: ['ValDescrip'],
+			}
+		},
+		{
+			path: '/:culture/:system/PTN/menu/PTN_271',
+			name: 'menu-PTN_271',
+			component: () => import('@/views/menus/ModulePTN/MenuPTN_271/QMenuPtn271.vue'),
+			meta: {
+				routeType: 'menu',
+				module: 'PTN',
+				order: '271',
+				baseArea: 'FLDS',
+				hasInitialPHE: false,
+				humanKeyFields: ['ValDescrip'],
 			}
 		},
 		{
@@ -3099,7 +3185,6 @@ export default function getMenusRoutes()
 				baseArea: 'FLDS',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValDescrip'],
-				isPopup: false
 			}
 		},
 		{
@@ -3113,7 +3198,6 @@ export default function getMenusRoutes()
 				baseArea: 'FLDS',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValDescrip'],
-				isPopup: false
 			}
 		},
 		{
@@ -3127,7 +3211,6 @@ export default function getMenusRoutes()
 				baseArea: 'AGREG',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValValue'],
-				isPopup: false
 			}
 		},
 		{
@@ -3141,7 +3224,6 @@ export default function getMenusRoutes()
 				baseArea: 'PROPE',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValTitle'],
-				isPopup: false
 			}
 		},
 		{
@@ -3155,7 +3237,6 @@ export default function getMenusRoutes()
 				baseArea: 'PROPE',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValTitle'],
-				isPopup: false
 			}
 		},
 		{
@@ -3169,7 +3250,6 @@ export default function getMenusRoutes()
 				baseArea: 'PROPE',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValTitle'],
-				isPopup: false
 			}
 		},
 		{
@@ -3183,7 +3263,6 @@ export default function getMenusRoutes()
 				baseArea: 'PROPE',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValTitle'],
-				isPopup: false
 			}
 		},
 		{
@@ -3197,7 +3276,6 @@ export default function getMenusRoutes()
 				baseArea: 'PROPE',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValTitle'],
-				isPopup: false
 			}
 		},
 		{
@@ -3211,7 +3289,6 @@ export default function getMenusRoutes()
 				baseArea: 'PROPE',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValTitle'],
-				isPopup: false
 			}
 		},
 		{
@@ -3225,7 +3302,6 @@ export default function getMenusRoutes()
 				baseArea: 'PROPE',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValTitle'],
-				isPopup: false
 			}
 		},
 		{
@@ -3239,7 +3315,6 @@ export default function getMenusRoutes()
 				baseArea: 'PROPE',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValTitle'],
-				isPopup: false
 			}
 		},
 		{
@@ -3253,7 +3328,6 @@ export default function getMenusRoutes()
 				baseArea: 'PROPE',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValTitle'],
-				isPopup: false
 			}
 		},
 		{
@@ -3267,7 +3341,6 @@ export default function getMenusRoutes()
 				baseArea: 'PROPE',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValTitle'],
-				isPopup: false
 			}
 		},
 		{
@@ -3282,8 +3355,7 @@ export default function getMenusRoutes()
 				baseArea: 'PROPE',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValTitle'],
-				limitations: ['agent' /* DB */],
-				isPopup: false
+				limitations: ['agent' /* DB */]
 			}
 		},
 		{
@@ -3298,8 +3370,7 @@ export default function getMenusRoutes()
 				baseArea: 'PROPE',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValTitle'],
-				limitations: ['agent' /* DB */],
-				isPopup: false
+				limitations: ['agent' /* DB */]
 			}
 		},
 		{
@@ -3313,7 +3384,6 @@ export default function getMenusRoutes()
 				baseArea: 'PROPE',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValTitle'],
-				isPopup: false
 			}
 		},
 		{
@@ -3328,8 +3398,7 @@ export default function getMenusRoutes()
 				baseArea: 'PROPE',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValTitle'],
-				limitations: ['agent' /* DB */],
-				isPopup: false
+				limitations: ['agent' /* DB */]
 			}
 		},
 		{
@@ -3343,7 +3412,6 @@ export default function getMenusRoutes()
 				baseArea: 'PROPE',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValTitle'],
-				isPopup: false
 			}
 		},
 		{
@@ -3357,7 +3425,6 @@ export default function getMenusRoutes()
 				baseArea: 'PROPE',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValTitle'],
-				isPopup: false
 			}
 		},
 		{
@@ -3370,8 +3437,7 @@ export default function getMenusRoutes()
 				order: '431',
 				baseArea: 'Dashboard',
 				isDashboardPage: true,
-				hasInitialPHE: false,
-				isPopup: false
+				hasInitialPHE: false
 			}
 		},
 		{
@@ -3384,8 +3450,30 @@ export default function getMenusRoutes()
 				order: '3L1',
 				baseArea: 'Dashboard',
 				isDashboardPage: true,
-				hasInitialPHE: false,
-				isPopup: false
+				hasInitialPHE: false
+			}
+		},
+		{
+			path: '/:culture/:system/GQT/menu/GQT_TESTDS',
+			name: 'menu-GQT_TESTDS',
+			component: () => import('@/views/menus/ModuleGQT/MenuGQT_TESTDS/QMenuGqtTestds.vue'),
+			meta: {
+				routeType: 'menu',
+				module: 'GQT',
+				order: 'C1',
+				baseArea: 'Dashboard',
+				isDashboardPage: true,
+				hasInitialPHE: false
+			}
+		},
+		{
+			path: '/:culture/:system/:module/menu/EQUIP_Menu_HEROBUT',
+			name: 'menu-EQUIP_Menu_HEROBUT',
+			component: () => import('@/views/menus/Shared/MenuEQUIP_Menu_HEROBUT/QMenuEquipMenuHerobut.vue'),
+			meta: {
+				routeType: 'menu',
+				baseArea: 'EQUIP',
+				humanKeyFields: ['ValRegistnr']
 			}
 		},
 	]

@@ -286,7 +286,7 @@
 			 */
 			isStepVisible(step)
 			{
-				for (const s of this.activatedSteps)
+				for (let s of this.activatedSteps)
 					if (s.order === step.order)
 						return s.isVisible
 				return false
@@ -350,7 +350,7 @@
 				let firstVisible, lastVisible
 
 				// Sets the first and last visible steps.
-				for (const s of this.activatedSteps)
+				for (let s of this.activatedSteps)
 				{
 					if (s.isVisible)
 					{
@@ -381,12 +381,12 @@
 			{
 				this.activatedSteps = []
 
-				for (const step of this.stepList)
+				for (let step of this.stepList)
 				{
 					if (!this.dynamicSteps || this.isStepActivated(step))
 					{
-						const isVisible = this.isVertical || this.activatedSteps.length < this.visibleSteps
-						const stepData = {
+						let isVisible = this.isVertical || this.activatedSteps.length < this.visibleSteps
+						let stepData = {
 							order: step.order,
 							isVisible
 						}

@@ -1,4 +1,4 @@
-﻿/* eslint-disable @typescript-eslint/no-unused-vars */
+﻿/* eslint-disable no-unused-vars */
 import { computed, reactive, watch } from 'vue'
 import _merge from 'lodash-es/merge'
 
@@ -11,7 +11,7 @@ import netAPI from '@quidgest/clientapp/network'
 import qApi from '@/api/genio/quidgestFunctions.js'
 import qFunctions from '@/api/genio/projectFunctions.js'
 import qProjArrays from '@/api/genio/projectArrays.js'
-/* eslint-enable @typescript-eslint/no-unused-vars */
+/* eslint-enable no-unused-vars */
 
 /**
  * Represents a ViewModel class.
@@ -25,11 +25,11 @@ export default class ViewModel extends FormViewModelBase
 	 * @param {object} options - The options for the ViewModel
 	 * @param {object} values - A ViewModel instance to copy values from
 	 */
-	// eslint-disable-next-line @typescript-eslint/no-unused-vars
+	// eslint-disable-next-line no-unused-vars
 	constructor(vueContext, options, values)
 	{
 		super(vueContext, options)
-		// eslint-disable-next-line @typescript-eslint/no-unused-vars
+		// eslint-disable-next-line no-unused-vars
 		const vm = this.vueContext
 
 		// The view model metadata
@@ -37,9 +37,8 @@ export default class ViewModel extends FormViewModelBase
 			name: 'LDSAI',
 			area: 'OUTPU',
 			actions: {
-				recalculateFormulas: 'RecalculateFormulas_Ldsai',
-				updateFilesTickets: 'UpdateFilesTicketsLdsai',
-				setFile: 'SetFileLdsai'
+				recalculateFormulas: 'RecalculateFormulas_LDSAI',
+				updateFilesTickets: 'UpdateFilesTicketsLDSAI'
 			}
 		})
 
@@ -51,7 +50,7 @@ export default class ViewModel extends FormViewModelBase
 			field: 'CODOUTPU',
 			description: '',
 		}).cloneFrom(values?.ValCodoutpu))
-		this.stopWatchers.push(watch(() => this.ValCodoutpu.value, (newValue, oldValue) => this.onUpdate('outpu.codoutpu', this.ValCodoutpu, newValue, oldValue)))
+		watch(() => this.ValCodoutpu.value, (newValue, oldValue) => this.onUpdate('outpu.codoutpu', this.ValCodoutpu, newValue, oldValue))
 
 		/** The used foreign keys. */
 		this.ValCodoutpt = reactive(new modelFieldType.ForeignKey({
@@ -62,7 +61,7 @@ export default class ViewModel extends FormViewModelBase
 			relatedArea: 'OUTPT',
 			description: '',
 		}).cloneFrom(values?.ValCodoutpt))
-		this.stopWatchers.push(watch(() => this.ValCodoutpt.value, (newValue, oldValue) => this.onUpdate('outpu.codoutpt', this.ValCodoutpt, newValue, oldValue)))
+		watch(() => this.ValCodoutpt.value, (newValue, oldValue) => this.onUpdate('outpu.codoutpt', this.ValCodoutpt, newValue, oldValue))
 
 		this.ValCodwareh = reactive(new modelFieldType.ForeignKey({
 			id: 'ValCodwareh',
@@ -72,7 +71,7 @@ export default class ViewModel extends FormViewModelBase
 			relatedArea: 'WAREH',
 			valueFormula: {
 				stopRecalcCondition() { return false },
-				// eslint-disable-next-line @typescript-eslint/no-unused-vars
+				// eslint-disable-next-line no-unused-vars
 				fnFormula(params)
 				{
 					// Formula: [OUTPT->CODWAREH]
@@ -84,7 +83,7 @@ export default class ViewModel extends FormViewModelBase
 			},
 			description: computed(() => this.Resources._WAREHOUSE19861),
 		}).cloneFrom(values?.ValCodwareh))
-		this.stopWatchers.push(watch(() => this.ValCodwareh.value, (newValue, oldValue) => this.onUpdate('outpu.codwareh', this.ValCodwareh, newValue, oldValue)))
+		watch(() => this.ValCodwareh.value, (newValue, oldValue) => this.onUpdate('outpu.codwareh', this.ValCodwareh, newValue, oldValue))
 
 		this.ValCoditem = reactive(new modelFieldType.ForeignKey({
 			id: 'ValCoditem',
@@ -94,7 +93,7 @@ export default class ViewModel extends FormViewModelBase
 			relatedArea: 'ITEM',
 			description: computed(() => this.Resources._ARTICLE38266),
 		}).cloneFrom(values?.ValCoditem))
-		this.stopWatchers.push(watch(() => this.ValCoditem.value, (newValue, oldValue) => this.onUpdate('outpu.coditem', this.ValCoditem, newValue, oldValue)))
+		watch(() => this.ValCoditem.value, (newValue, oldValue) => this.onUpdate('outpu.coditem', this.ValCoditem, newValue, oldValue))
 
 		this.ValCoddocsd = reactive(new modelFieldType.ForeignKey({
 			id: 'ValCoddocsd',
@@ -104,7 +103,7 @@ export default class ViewModel extends FormViewModelBase
 			relatedArea: 'OUDOC',
 			description: computed(() => this.Resources._EXIT_DOCUMENT48701),
 		}).cloneFrom(values?.ValCoddocsd))
-		this.stopWatchers.push(watch(() => this.ValCoddocsd.value, (newValue, oldValue) => this.onUpdate('outpu.coddocsd', this.ValCoddocsd, newValue, oldValue)))
+		watch(() => this.ValCoddocsd.value, (newValue, oldValue) => this.onUpdate('outpu.coddocsd', this.ValCoddocsd, newValue, oldValue))
 
 		/** The remaining form fields. */
 		this.TableOutptDocumenr = reactive(new modelFieldType.Number({
@@ -116,9 +115,8 @@ export default class ViewModel extends FormViewModelBase
 			maxDigits: 10,
 			decimalDigits: 0,
 			description: computed(() => this.Resources.NO_14817),
-			ignoreFldSubmit: true,
 		}).cloneFrom(values?.TableOutptDocumenr))
-		this.stopWatchers.push(watch(() => this.TableOutptDocumenr.value, (newValue, oldValue) => this.onUpdate('outpt.documenr', this.TableOutptDocumenr, newValue, oldValue)))
+		watch(() => this.TableOutptDocumenr.value, (newValue, oldValue) => this.onUpdate('outpt.documenr', this.TableOutptDocumenr, newValue, oldValue))
 
 		this.OutptValCodwareh = reactive(new modelFieldType.ForeignKey({
 			id: 'OutptValCodwareh',
@@ -129,7 +127,7 @@ export default class ViewModel extends FormViewModelBase
 			isFixed: true,
 			description: computed(() => this.Resources.BY_OMISSION13050),
 		}).cloneFrom(values?.OutptValCodwareh))
-		this.stopWatchers.push(watch(() => this.OutptValCodwareh.value, (newValue, oldValue) => this.onUpdate('outpt.codwareh', this.OutptValCodwareh, newValue, oldValue)))
+		watch(() => this.OutptValCodwareh.value, (newValue, oldValue) => this.onUpdate('outpt.codwareh', this.OutptValCodwareh, newValue, oldValue))
 
 		this.ValLine = reactive(new modelFieldType.Number({
 			id: 'ValLine',
@@ -140,7 +138,7 @@ export default class ViewModel extends FormViewModelBase
 			decimalDigits: 1,
 			description: computed(() => this.Resources.LINE27983),
 		}).cloneFrom(values?.ValLine))
-		this.stopWatchers.push(watch(() => this.ValLine.value, (newValue, oldValue) => this.onUpdate('outpu.line', this.ValLine, newValue, oldValue)))
+		watch(() => this.ValLine.value, (newValue, oldValue) => this.onUpdate('outpu.line', this.ValLine, newValue, oldValue))
 
 		this.TableWarehWarehdes = reactive(new modelFieldType.String({
 			type: 'Lookup',
@@ -150,9 +148,8 @@ export default class ViewModel extends FormViewModelBase
 			field: 'WAREHDES',
 			maxLength: 85,
 			description: computed(() => this.Resources.WAREHOUSE51864),
-			ignoreFldSubmit: true,
 		}).cloneFrom(values?.TableWarehWarehdes))
-		this.stopWatchers.push(watch(() => this.TableWarehWarehdes.value, (newValue, oldValue) => this.onUpdate('wareh.warehdes', this.TableWarehWarehdes, newValue, oldValue)))
+		watch(() => this.TableWarehWarehdes.value, (newValue, oldValue) => this.onUpdate('wareh.warehdes', this.TableWarehWarehdes, newValue, oldValue))
 
 		this.TableItemItemdes = reactive(new modelFieldType.String({
 			type: 'Lookup',
@@ -162,9 +159,8 @@ export default class ViewModel extends FormViewModelBase
 			field: 'ITEMDES',
 			maxLength: 85,
 			description: computed(() => this.Resources.ARTICLE60065),
-			ignoreFldSubmit: true,
 		}).cloneFrom(values?.TableItemItemdes))
-		this.stopWatchers.push(watch(() => this.TableItemItemdes.value, (newValue, oldValue) => this.onUpdate('item.itemdes', this.TableItemItemdes, newValue, oldValue)))
+		watch(() => this.TableItemItemdes.value, (newValue, oldValue) => this.onUpdate('item.itemdes', this.TableItemItemdes, newValue, oldValue))
 
 		this.ValExitqnty = reactive(new modelFieldType.Number({
 			id: 'ValExitqnty',
@@ -175,7 +171,7 @@ export default class ViewModel extends FormViewModelBase
 			decimalDigits: 0,
 			description: computed(() => this.Resources.QTD_OUTPUT12876),
 		}).cloneFrom(values?.ValExitqnty))
-		this.stopWatchers.push(watch(() => this.ValExitqnty.value, (newValue, oldValue) => this.onUpdate('outpu.exitqnty', this.ValExitqnty, newValue, oldValue)))
+		watch(() => this.ValExitqnty.value, (newValue, oldValue) => this.onUpdate('outpu.exitqnty', this.ValExitqnty, newValue, oldValue))
 
 		this.TableOudocNrdocsda = reactive(new modelFieldType.Number({
 			type: 'Lookup',
@@ -186,9 +182,8 @@ export default class ViewModel extends FormViewModelBase
 			maxDigits: 10,
 			decimalDigits: 0,
 			description: computed(() => this.Resources.NO_14817),
-			ignoreFldSubmit: true,
 		}).cloneFrom(values?.TableOudocNrdocsda))
-		this.stopWatchers.push(watch(() => this.TableOudocNrdocsda.value, (newValue, oldValue) => this.onUpdate('oudoc.nrdocsda', this.TableOudocNrdocsda, newValue, oldValue)))
+		watch(() => this.TableOudocNrdocsda.value, (newValue, oldValue) => this.onUpdate('oudoc.nrdocsda', this.TableOudocNrdocsda, newValue, oldValue))
 	}
 
 	/**

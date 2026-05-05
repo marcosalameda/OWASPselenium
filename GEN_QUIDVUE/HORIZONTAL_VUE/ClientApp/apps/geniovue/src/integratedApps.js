@@ -14,7 +14,7 @@ export function setExternalAppsPlugin(appContext, router)
 	{
 		if (app.hasInternalRouter)
 		{
-			const params = app.parameters
+			let params = app.parameters
 			params['router'] = router
 			params['parent'] = allParentRoutes
 			appContext.use(app.appPackage, params)

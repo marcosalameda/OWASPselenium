@@ -1,4 +1,4 @@
-<template>
+﻿<template>
 	<div class="container profile-form">
 		<q-validation-summary :messages="validationErrors" />
 
@@ -14,13 +14,11 @@
 					</div>
 
 					<div class="row mb-4">
-						<div 
-							v-if="totpProvider" 
-							class="col">
+						<div class="col">
 							<b>{{ texts.byApp }}</b>
 
 							<div class="float-right">
-								<q-switch
+								<q-toggle-input
 									v-bind="controls.HasTotp.props"
 									v-on="controls.HasTotp.handlers" />
 							</div>
@@ -101,25 +99,16 @@
 												</base-input-structure>
 											</q-control-wrapper>
 										</q-row-container>
-
-										<q-button 
-											:label="texts.setup"
-											:title="texts.setup"
-											@click="createRegisterTotp">
-											<q-icon icon="reset-password" />
-										</q-button>
 									</div>
 								</div>
 							</template>
 						</div>
 
-						<div 
-							v-if="webauthProvider" 
-							class="col">
+						<div class="col">
 							<b>{{ texts.securityKey }}</b>
 
 							<div class="float-right">
-								<q-switch
+								<q-toggle-input
 									v-bind="controls.HasWebAuthN.props"
 									v-on="controls.HasWebAuthN.handlers" />
 							</div>
@@ -158,14 +147,20 @@
 						</div>
 					</div>
 
-					<hr />
-
 					<div id="footer-action-btns">
 						<q-button
-							:label="texts.goBack"
-							:title="texts.goBack"
+							variant="bold"
+							:label="texts.save"
+							:title="texts.save"
+							@click="save">
+							<q-icon icon="save" />
+						</q-button>
+
+						<q-button
+							:label="texts.cancel"
+							:title="texts.cancel"
 							@click="cancel">
-							<q-icon icon="back" />
+							<q-icon icon="cancel" />
 						</q-button>
 					</div>
 				</div>
@@ -192,6 +187,8 @@
 	import fieldControlClass from '@/mixins/fieldControl.js'
 	import FormViewModelBase from '@/mixins/formViewModelBase.js'
 	import hardcodedTexts from '@/hardcodedTexts.js'
+
+	import { createRegisterWebAuth } from '@/plugins/quidgest.webauth.js'
 
 	class ViewModel extends FormViewModelBase
 	{
@@ -278,12 +275,6 @@
 
 				model: new ViewModel(this),
 
-				totpProvider: null,
-
-				webauthProvider: null,
-
-				providerOptions: "",
-
 				controls: {
 					HasTotp: new fieldControlClass.ArrayBooleanControl({
 						id: 'HasTotp',
@@ -326,7 +317,8 @@
 					securityKeyInfo: computed(() => this.Resources[hardcodedTexts.securityKeyInfo]),
 					securityKeyOrder: computed(() => this.Resources[hardcodedTexts.securityKeyOrder]),
 					setup: computed(() => this.Resources[hardcodedTexts.setup]),
-					goBack: computed(() => this.Resources[hardcodedTexts.goBack]),
+					save: computed(() => this.Resources[hardcodedTexts.save]),
+					cancel: computed(() => this.Resources[hardcodedTexts.cancel]),
 					create: computed(() => this.Resources[hardcodedTexts.create]),
 					change: computed(() => this.Resources[hardcodedTexts.change])
 				}
@@ -386,7 +378,26 @@
 
 			cancel()
 			{
-				this.$router.go(-1);
+				this.$router.push({ name: 'main' })
+			},
+
+			save()
+			{
+				return this.netAPI.postData(
+					'Home',
+					'Change2FA',
+					this.model.serverObjModel,
+					async (data, response) => {
+						this.showResponseUserMsg(response.data.Errors, (data ?? {}).Warnings, response.data.Message, response.data.Success)
+
+						if (response.data.Success)
+						{
+							this.clearHistory()
+							this.navigateToRouteName('main')
+						}
+						else
+							this.setData(data)
+					})
 			},
 
 			showResponseUserMsg(errors, warnings, message, success, keepAlert)
@@ -417,7 +428,7 @@
 
 			setData(modelValue)
 			{
-				for (const fld in this.model)
+				for (let fld in this.model)
 				{
 					if (this.model[fld] instanceof modelFieldType.Base)
 						this.model[fld].updateValue(modelValue[fld])
@@ -434,93 +445,23 @@
 					null,
 					async (data, response) => {
 						this.showResponseUserMsg(response.data.Errors, (data ?? {}).Warnings, response.data.Message)
-						this.totpProvider = data.Providers.find(x => x.CredentialType === 'UserPassCredential')
-						this.webauthProvider = data.Providers.find(x => x.CredentialType === 'WebAuthCredential')
-						this.setData({
-							HasTotp: data.User2FATp === "TOTP" ? 1 : 0,
-							HasWebAuthN: data.User2FATp === "Webauth" ? 1 : 0,
-							ShowWebAuthN: false,
-							ShowTotp: false
-						})
+						this.setData(data)
 					})
 			},
 
 			createTOTP()
 			{
-				const self = this;
-				return this.netAPI.fetchData(
-					'Account',
-					'NewCredentialRequest',
-					{
-						providerId: self.totpProvider.Id
-					},
-					(data) => {
-						self.providerOptions = data.options
-						const totpParams = new URL(data.options).searchParams
-						const secret = totpParams.get('secret')
-
-						self.setData({
-							HasTotp: 1,
-							HasWebAuthN: 0,
-							ShowWebAuthN: false,
-							ShowTotp: true,
-							TotpUrl: data.options,
-							TotpDisplayCode: secret
-						})
-					})
-			},
-
-			createRegisterTotp() {
-
-				return this.netAPI.postData(
-					'Account',
-					'StoreCredential',
-					{
-						providerId: this.totpProvider.Id,
-						credential: this.model.Totp6Code.value
-					},
-					(data, response) => {
-						this.showResponseUserMsg(response.data.Errors, (data ?? {}).Warnings, response.data.Message)
-					})
+				this.fetchData('CreateTOTP')
 			},
 
 			createWebAuthN()
 			{
-				const self = this;
-
-				return this.netAPI.fetchData(
-					'Account',
-					'NewCredentialRequest',
-					{
-						providerId: self.webauthProvider.Id
-					},
-					(data) => {
-						self.providerOptions = data.options
-						self.setData({
-							HasTotp: 0,
-							HasWebAuthN: 1,
-							ShowWebAuthN: true,
-							ShowTotp: false
-						})
-					})
+				this.fetchData('CreateWebAuthN')
 			},
 
 			async createRegisterWebAuth()
 			{
-				const publicKeyOptionsJson = JSON.parse(this.providerOptions)
-				const publicKeyOptions = PublicKeyCredential.parseCreationOptionsFromJSON(publicKeyOptionsJson)
-				const publicKeyCredential = await navigator.credentials.create({ publicKey: publicKeyOptions })
-
-				return this.netAPI.postData(
-					'Account',
-					'StoreCredential',
-					{
-						providerId: this.webauthProvider.Id,
-						credential: JSON.stringify(publicKeyCredential.toJSON())
-					},
-					(data, response) => {
-						this.showResponseUserMsg(response.data.Errors, (data ?? {}).Warnings, response.data.Message)
-					})
+				createRegisterWebAuth()
 			}
 		}
 	}

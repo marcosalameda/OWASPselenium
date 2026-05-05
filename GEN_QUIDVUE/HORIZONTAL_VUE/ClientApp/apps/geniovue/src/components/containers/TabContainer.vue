@@ -1,5 +1,7 @@
 ﻿<template>
-	<div :class="[$attrs.class, 'tab-group-container']">
+	<div
+		v-show="isVisible"
+		:class="[$attrs.class, 'tab-group-container']">
 		<div
 			v-show="tabsList.length > 0"
 			role="tablist"
@@ -14,7 +16,7 @@
 					ref="tabButtons"
 					borderless
 					:id="getTabComponentId(tab)"
-					:data-testid="`tab-container-${tab.id}`"
+					:data-testid="getTabComponentId(tab)"
 					:disabled="tab.isBlocked"
 					:class="[{ active: selectedTab === tab.id }, 'nav-item']"
 					:style="{ cursor: selectedTab === tab.id ? 'text' : 'pointer' }"
@@ -29,7 +31,8 @@
 					@keydown.stop.prevent.home="selectTabIndex(0)"
 					@keydown.stop.prevent.end="selectTabIndex(selectableTabs.length - 1)">
 					<span
-						:id="`${controlId}-tab-content-${tab.id}`"
+						:id="`tab_link_${tab.id}`"
+						:data-testid="`tab_link_${tab.id}`"
 						:data-val-required="tab.isRequired"
 						:class="[
 							{
@@ -61,7 +64,7 @@
 				<q-subtitle-help
 					v-if="activeTab.helpControl"
 					:help-control="activeTab.helpControl" />
-				<slot />
+				<slot name="tab-panel"></slot>
 			</div>
 		</div>
 	</div>
@@ -125,6 +128,14 @@
 			},
 
 			/**
+			 * Visible property to hide and show tabs.
+			 */
+			isVisible: {
+				type: Boolean,
+				default: true
+			},
+
+			/**
 			 * Localization and customization of textual content.
 			 */
 			texts: {
@@ -139,7 +150,7 @@
 		data()
 		{
 			return {
-				controlId: this.id || `tabs-container-${this._.uid}`
+				controlId: this.id || `tab-container-${this._.uid}`
 			}
 		},
 
@@ -207,7 +218,7 @@
 			 */
 			getTabComponentId(tab)
 			{
-				return `${this.controlId}-tab-${tab.id}`
+				return `tab-container-${tab.id}`
 			},
 
 			/**
@@ -231,7 +242,7 @@
 					this.$emit('tab-changed', tab.id)
 
 				// Get reference to the tab's button component and focus on it
-				const buttonRef = this.getTabComponentRef(tab)
+				let buttonRef = this.getTabComponentRef(tab)
 				if (typeof buttonRef?.$el.focus !== 'function')
 					return
 				buttonRef.$el.focus()
@@ -271,7 +282,7 @@
 			 */
 			selectTabIndex(idx)
 			{
-				const tab = this.selectableTabs[idx]
+				let tab = this.selectableTabs[idx]
 				this.changeActiveTab(tab)
 			}
 		}

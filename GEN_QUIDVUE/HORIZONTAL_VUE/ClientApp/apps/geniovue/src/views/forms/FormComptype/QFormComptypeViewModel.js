@@ -1,4 +1,4 @@
-﻿/* eslint-disable @typescript-eslint/no-unused-vars */
+﻿/* eslint-disable no-unused-vars */
 import { computed, reactive, watch } from 'vue'
 import _merge from 'lodash-es/merge'
 
@@ -11,7 +11,7 @@ import netAPI from '@quidgest/clientapp/network'
 import qApi from '@/api/genio/quidgestFunctions.js'
 import qFunctions from '@/api/genio/projectFunctions.js'
 import qProjArrays from '@/api/genio/projectArrays.js'
-/* eslint-enable @typescript-eslint/no-unused-vars */
+/* eslint-enable no-unused-vars */
 
 /**
  * Represents a ViewModel class.
@@ -25,11 +25,11 @@ export default class ViewModel extends FormViewModelBase
 	 * @param {object} options - The options for the ViewModel
 	 * @param {object} values - A ViewModel instance to copy values from
 	 */
-	// eslint-disable-next-line @typescript-eslint/no-unused-vars
+	// eslint-disable-next-line no-unused-vars
 	constructor(vueContext, options, values)
 	{
 		super(vueContext, options)
-		// eslint-disable-next-line @typescript-eslint/no-unused-vars
+		// eslint-disable-next-line no-unused-vars
 		const vm = this.vueContext
 
 		// The view model metadata
@@ -37,9 +37,8 @@ export default class ViewModel extends FormViewModelBase
 			name: 'COMPTYPE',
 			area: 'COMPO',
 			actions: {
-				recalculateFormulas: 'RecalculateFormulas_Comptype',
-				updateFilesTickets: 'UpdateFilesTicketsComptype',
-				setFile: 'SetFileComptype'
+				recalculateFormulas: 'RecalculateFormulas_COMPTYPE',
+				updateFilesTickets: 'UpdateFilesTicketsCOMPTYPE'
 			}
 		})
 
@@ -51,7 +50,7 @@ export default class ViewModel extends FormViewModelBase
 			field: 'CODCOMPO',
 			description: '',
 		}).cloneFrom(values?.ValCodcompo))
-		this.stopWatchers.push(watch(() => this.ValCodcompo.value, (newValue, oldValue) => this.onUpdate('compo.codcompo', this.ValCodcompo, newValue, oldValue)))
+		watch(() => this.ValCodcompo.value, (newValue, oldValue) => this.onUpdate('compo.codcompo', this.ValCodcompo, newValue, oldValue))
 
 		/** The used foreign keys. */
 		this.ValCodcompc = reactive(new modelFieldType.ForeignKey({
@@ -62,7 +61,7 @@ export default class ViewModel extends FormViewModelBase
 			relatedArea: 'COMPC',
 			description: computed(() => this.Resources.COMPONENTS_CLASS59339),
 		}).cloneFrom(values?.ValCodcompc))
-		this.stopWatchers.push(watch(() => this.ValCodcompc.value, (newValue, oldValue) => this.onUpdate('compo.codcompc', this.ValCodcompc, newValue, oldValue)))
+		watch(() => this.ValCodcompc.value, (newValue, oldValue) => this.onUpdate('compo.codcompc', this.ValCodcompc, newValue, oldValue))
 
 		/** The remaining form fields. */
 		this.ValComptype = reactive(new modelFieldType.String({
@@ -73,7 +72,7 @@ export default class ViewModel extends FormViewModelBase
 			maxLength: 50,
 			description: computed(() => this.Resources.COMPONENT_TYPE41163),
 		}).cloneFrom(values?.ValComptype))
-		this.stopWatchers.push(watch(() => this.ValComptype.value, (newValue, oldValue) => this.onUpdate('compo.comptype', this.ValComptype, newValue, oldValue)))
+		watch(() => this.ValComptype.value, (newValue, oldValue) => this.onUpdate('compo.comptype', this.ValComptype, newValue, oldValue))
 
 		this.ValCompicon = reactive(new modelFieldType.Number({
 			id: 'ValCompicon',
@@ -85,7 +84,7 @@ export default class ViewModel extends FormViewModelBase
 			isFixed: true,
 			valueFormula: {
 				stopRecalcCondition() { return false },
-				// eslint-disable-next-line @typescript-eslint/no-unused-vars
+				// eslint-disable-next-line no-unused-vars
 				fnFormula(params)
 				{
 					// Formula: iif ([COMPC->COMPCLAS] == "Media", 1, iif ([COMPC->COMPCLAS] == "Data Input", 2, iif ([COMPC->COMPCLAS] == "Data Grid", 3, iif ([COMPC->COMPCLAS] == "Action", 4, iif ([COMPC->COMPCLAS] == "Container", 5, iif ([COMPC->COMPCLAS] == "Data Display", 6, iif ([COMPC->COMPCLAS] == "Interactive", 7, 8)))))))
@@ -95,10 +94,10 @@ export default class ViewModel extends FormViewModelBase
 				isServerRecalc: false,
 				isEmpty: qApi.emptyN,
 			},
-			arrayOptions: computed(() => new qProjArrays.QArrayComponenticons(vm.$getResource).elements),
+			arrayOptions: computed(() => qProjArrays.QArrayComponenticons.setResources(vm.$getResource).elements),
 			description: computed(() => this.Resources.COMPONENT_CLASS57908),
 		}).cloneFrom(values?.ValCompicon))
-		this.stopWatchers.push(watch(() => this.ValCompicon.value, (newValue, oldValue) => this.onUpdate('compo.compicon', this.ValCompicon, newValue, oldValue)))
+		watch(() => this.ValCompicon.value, (newValue, oldValue) => this.onUpdate('compo.compicon', this.ValCompicon, newValue, oldValue))
 
 		this.ValCompdesc = reactive(new modelFieldType.MultiLineString({
 			id: 'ValCompdesc',
@@ -107,7 +106,7 @@ export default class ViewModel extends FormViewModelBase
 			field: 'COMPDESC',
 			description: computed(() => this.Resources.COMPONENT_DESCRIPTIO08871),
 		}).cloneFrom(values?.ValCompdesc))
-		this.stopWatchers.push(watch(() => this.ValCompdesc.value, (newValue, oldValue) => this.onUpdate('compo.compdesc', this.ValCompdesc, newValue, oldValue)))
+		watch(() => this.ValCompdesc.value, (newValue, oldValue) => this.onUpdate('compo.compdesc', this.ValCompdesc, newValue, oldValue))
 
 		this.TableCompcCompclas = reactive(new modelFieldType.String({
 			type: 'Lookup',
@@ -118,7 +117,7 @@ export default class ViewModel extends FormViewModelBase
 			maxLength: 50,
 			description: computed(() => this.Resources.COMPONENTS_CLASS59339),
 		}).cloneFrom(values?.TableCompcCompclas))
-		this.stopWatchers.push(watch(() => this.TableCompcCompclas.value, (newValue, oldValue) => this.onUpdate('compc.compclas', this.TableCompcCompclas, newValue, oldValue)))
+		watch(() => this.TableCompcCompclas.value, (newValue, oldValue) => this.onUpdate('compc.compclas', this.TableCompcCompclas, newValue, oldValue))
 
 		this.ValCdatatyp = reactive(new modelFieldType.String({
 			id: 'ValCdatatyp',
@@ -128,20 +127,17 @@ export default class ViewModel extends FormViewModelBase
 			maxLength: 50,
 			description: computed(() => this.Resources.DATA_TYPE47159),
 		}).cloneFrom(values?.ValCdatatyp))
-		this.stopWatchers.push(watch(() => this.ValCdatatyp.value, (newValue, oldValue) => this.onUpdate('compo.cdatatyp', this.ValCdatatyp, newValue, oldValue)))
+		watch(() => this.ValCdatatyp.value, (newValue, oldValue) => this.onUpdate('compo.cdatatyp', this.ValCdatatyp, newValue, oldValue))
 
 		this.ValRelease = reactive(new modelFieldType.String({
 			id: 'ValRelease',
 			originId: 'ValRelease',
 			area: 'COMPO',
 			field: 'RELEASE',
-			maxLength: 6,
-			maskType: 'MP',
-			maskFormat: '000.00',
-			maskRequired: '000.00',
-			description: computed(() => this.Resources.RELEASE_VERSION03981),
+			maxLength: 50,
+			description: computed(() => this.Resources.GENIO_VERSION20738),
 		}).cloneFrom(values?.ValRelease))
-		this.stopWatchers.push(watch(() => this.ValRelease.value, (newValue, oldValue) => this.onUpdate('compo.release', this.ValRelease, newValue, oldValue)))
+		watch(() => this.ValRelease.value, (newValue, oldValue) => this.onUpdate('compo.release', this.ValRelease, newValue, oldValue))
 
 		this.ValMvc = reactive(new modelFieldType.Boolean({
 			id: 'ValMvc',
@@ -150,7 +146,7 @@ export default class ViewModel extends FormViewModelBase
 			field: 'MVC',
 			description: computed(() => this.Resources.MVC48022),
 		}).cloneFrom(values?.ValMvc))
-		this.stopWatchers.push(watch(() => this.ValMvc.value, (newValue, oldValue) => this.onUpdate('compo.mvc', this.ValMvc, newValue, oldValue)))
+		watch(() => this.ValMvc.value, (newValue, oldValue) => this.onUpdate('compo.mvc', this.ValMvc, newValue, oldValue))
 
 		this.ValVuemvc = reactive(new modelFieldType.Boolean({
 			id: 'ValVuemvc',
@@ -159,7 +155,7 @@ export default class ViewModel extends FormViewModelBase
 			field: 'VUEMVC',
 			description: computed(() => this.Resources.VUE05393),
 		}).cloneFrom(values?.ValVuemvc))
-		this.stopWatchers.push(watch(() => this.ValVuemvc.value, (newValue, oldValue) => this.onUpdate('compo.vuemvc', this.ValVuemvc, newValue, oldValue)))
+		watch(() => this.ValVuemvc.value, (newValue, oldValue) => this.onUpdate('compo.vuemvc', this.ValVuemvc, newValue, oldValue))
 
 		this.ValPreview = reactive(new modelFieldType.Image({
 			id: 'ValPreview',
@@ -168,7 +164,7 @@ export default class ViewModel extends FormViewModelBase
 			field: 'PREVIEW',
 			description: computed(() => this.Resources.PREVIEW45357),
 		}).cloneFrom(values?.ValPreview))
-		this.stopWatchers.push(watch(() => this.ValPreview.value, (newValue, oldValue) => this.onUpdate('compo.preview', this.ValPreview, newValue, oldValue)))
+		watch(() => this.ValPreview.value, (newValue, oldValue) => this.onUpdate('compo.preview', this.ValPreview, newValue, oldValue))
 
 		this.ValWuse = reactive(new modelFieldType.MultiLineString({
 			id: 'ValWuse',
@@ -177,7 +173,7 @@ export default class ViewModel extends FormViewModelBase
 			field: 'WUSE',
 			description: computed(() => this.Resources.WHEN_TO_USE63699),
 		}).cloneFrom(values?.ValWuse))
-		this.stopWatchers.push(watch(() => this.ValWuse.value, (newValue, oldValue) => this.onUpdate('compo.wuse', this.ValWuse, newValue, oldValue)))
+		watch(() => this.ValWuse.value, (newValue, oldValue) => this.onUpdate('compo.wuse', this.ValWuse, newValue, oldValue))
 
 		this.ValWnuse = reactive(new modelFieldType.MultiLineString({
 			id: 'ValWnuse',
@@ -186,7 +182,7 @@ export default class ViewModel extends FormViewModelBase
 			field: 'WNUSE',
 			description: computed(() => this.Resources.WHEN_NOT_TO_USE63828),
 		}).cloneFrom(values?.ValWnuse))
-		this.stopWatchers.push(watch(() => this.ValWnuse.value, (newValue, oldValue) => this.onUpdate('compo.wnuse', this.ValWnuse, newValue, oldValue)))
+		watch(() => this.ValWnuse.value, (newValue, oldValue) => this.onUpdate('compo.wnuse', this.ValWnuse, newValue, oldValue))
 
 		this.ValAccessib = reactive(new modelFieldType.MultiLineString({
 			id: 'ValAccessib',
@@ -195,7 +191,26 @@ export default class ViewModel extends FormViewModelBase
 			field: 'ACCESSIB',
 			description: computed(() => this.Resources.ACCESIBILTY_COMPLIAN11604),
 		}).cloneFrom(values?.ValAccessib))
-		this.stopWatchers.push(watch(() => this.ValAccessib.value, (newValue, oldValue) => this.onUpdate('compo.accessib', this.ValAccessib, newValue, oldValue)))
+		watch(() => this.ValAccessib.value, (newValue, oldValue) => this.onUpdate('compo.accessib', this.ValAccessib, newValue, oldValue))
+
+		this.ValReleaselogic = reactive(new modelFieldType.Boolean({
+			id: 'ValReleaselogic',
+			originId: 'ValReleaselogic',
+			area: 'COMPO',
+			field: 'RELEASELOGIC',
+			description: computed(() => this.Resources.RELEASE_VERSION03981),
+		}).cloneFrom(values?.ValReleaselogic))
+		watch(() => this.ValReleaselogic.value, (newValue, oldValue) => this.onUpdate('compo.releaselogic', this.ValReleaselogic, newValue, oldValue))
+
+		this.ValWeblink = reactive(new modelFieldType.String({
+			id: 'ValWeblink',
+			originId: 'ValWeblink',
+			area: 'COMPO',
+			field: 'WEBLINK',
+			maxLength: 100,
+			description: computed(() => this.Resources.LINK27521),
+		}).cloneFrom(values?.ValWeblink))
+		watch(() => this.ValWeblink.value, (newValue, oldValue) => this.onUpdate('compo.weblink', this.ValWeblink, newValue, oldValue))
 	}
 
 	/**

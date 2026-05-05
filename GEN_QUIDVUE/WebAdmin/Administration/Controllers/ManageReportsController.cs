@@ -349,20 +349,8 @@ namespace Administration.Controllers
 
             if (isDynamic)
             {
-                bool hasReadOnlyIntent = root.GetElementsByTagName("ReportParameter")
-                    .Cast<XmlNode>()
-                    .Any(p => p.Attributes["Name"]?.Value == "ReadOnlyIntent");
-
-                string conn = "=\"" + getConn(server, port).Replace("\"","\"\"") + "\"";
+				string conn = "=\"" + getConn(server, port).Replace("\"","\"\"") + "\"";
                 conn = conn.Replace("<toReplace>", "\"+Parameters!Database.Value+\"");
-                if (hasReadOnlyIntent)
-                {
-                    conn = conn.Replace(
-                        "ApplicationIntent=ReadOnly\"",
-                        "ApplicationIntent=\" & IIF(Parameters!ReadOnlyIntent.Value, \"ReadOnly\", \"ReadWrite\")"
-                    );
-                }
-
                 //Replace only if "Parameters!Database.Value" are the last value
                 conn = conn.Replace("+\"\"", "");
                 conn = conn.Replace("+\";\"", "");

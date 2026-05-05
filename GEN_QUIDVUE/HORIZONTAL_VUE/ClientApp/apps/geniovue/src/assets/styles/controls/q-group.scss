@@ -17,11 +17,11 @@
 	}
 
 	&__title {
-		font-size: 1rem;
+		font-size: 1.2rem;
 		line-height: 1rem;
 		letter-spacing: 0.02rem;
 		color: $primary;
-		text-transform: $headings-text-transform;
+		text-transform: uppercase;
 		margin: 0;
 		margin-top: 0.25rem;
 		display: flex;
@@ -77,7 +77,7 @@
 
 	&--minor,
 	&--minor-border-top {
-		> .c-groupbox__title {
+		.c-groupbox__title {
 			font-size: 0.9rem;
 			line-height: 1;
 			letter-spacing: initial;
@@ -103,7 +103,7 @@
 			border-radius: $border-radius $border-radius 0 0;
 		}
 
-		> .c-groupbox__title {
+		.c-groupbox__title {
 			padding: 0.5rem 1rem 0.5rem 1rem;
 			margin: 0;
 			font-size: 0.9rem;
@@ -126,7 +126,7 @@
 		margin-left: 0.625rem;
 		margin-bottom: 0.625rem;
 
-		> .c-groupbox__title {
+		.c-groupbox__title {
 			font-size: 0.9rem;
 			line-height: 1;
 			letter-spacing: initial;
@@ -249,7 +249,7 @@
 			padding-left: 0.7rem;
 			text-decoration: none;
 			line-height: 1.5rem;
-			text-transform: $headings-text-transform;
+			text-transform: uppercase;
 			white-space: nowrap;
 			color: $primary;
 

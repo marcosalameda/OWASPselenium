@@ -1,4 +1,4 @@
-﻿/* eslint-disable @typescript-eslint/no-unused-vars */
+﻿/* eslint-disable no-unused-vars */
 import _has from 'lodash-es/has'
 import { computed } from 'vue'
 
@@ -9,7 +9,7 @@ import netAPI from '@quidgest/clientapp/network'
 import qApi from '@/api/genio/quidgestFunctions.js'
 import qFunctions from '@/api/genio/projectFunctions.js'
 import qProjArrays from '@/api/genio/projectArrays.js'
-/* eslint-enable @typescript-eslint/no-unused-vars */
+/* eslint-enable no-unused-vars */
 
 /**
  * Represents a ViewModel class.
@@ -21,6 +21,7 @@ export default class ViewModel
 	 */
 	constructor()
 	{
+
 		this.ValCodglob = new modelFieldType.PrimaryKey({
 			id: 'ValCodglob',
 			originId: 'ValCodglob',
@@ -700,7 +701,7 @@ export default class ViewModel
 	 * @param {object} rawData The data to be hydrated
 	 */
 	hydrate(rawData) {
-		for (const modelField in this) {
+		for (let modelField in this) {
 			if (this[modelField] instanceof modelFieldType.Base && _has(rawData, modelField)) {
 				const rawDataFieldValue = rawData[modelField]
 				this.hydrateField(modelField, rawDataFieldValue)

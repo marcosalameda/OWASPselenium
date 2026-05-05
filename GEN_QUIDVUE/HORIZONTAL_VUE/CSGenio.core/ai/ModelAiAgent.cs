@@ -25,8 +25,7 @@ namespace CSGenio.core.ai
         /// <param name="area">The database area that the agent operates on.</param>
         /// <param name="sp">Persistent support object for data transactions.</param>
         /// <param name="user">User executing the operation.</param>
-        /// <param name="context">Context about where the agent is executed. Try to provide as much as possilbe</param>
-        public abstract void Execute(DbArea area, PersistentSupport sp, User user, AgentContextData context = null);
+        public abstract void Execute(DbArea area, PersistentSupport sp, User user);
 
         /// <summary>
         /// Persists the changes in the base area record
@@ -41,24 +40,5 @@ namespace CSGenio.core.ai
         /// <param name="sp">Persistent support for handling database interactions.</param>
         /// <param name="user">User requesting the data.</param>
         public abstract void LoadRecords(DbArea area, PersistentSupport sp, User user);
-
-
-        /// <summary>
-        /// Builds the context data for the agent based on the user and primary key of the record.
-        /// </summary>
-        /// <param name="user">User calling the agent</param>
-        /// <param name="primaryKey">Record primary key</param>
-        /// <returns></returns>
-        protected AgentContextData BuildAgentContext(User user, string primaryKey)
-        {
-            return new AgentContextData()
-            {
-                Username = user.Name,
-                AgentId = this.AGENT_ID,
-                Module = user.CurrentModule,
-                Subsystem = user.Year,
-                CurrentRecordId = primaryKey
-            };
-        }
     }
 }

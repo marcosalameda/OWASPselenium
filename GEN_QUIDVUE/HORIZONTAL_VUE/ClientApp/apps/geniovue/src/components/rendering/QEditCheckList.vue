@@ -122,7 +122,7 @@
 					this.options.arrayType === 'N' ||
 					this.options.arrayType === 'L'
 
-				for (const key in optionsObj)
+				for (let key in optionsObj)
 				{
 					if (key.length < 1)
 						continue

@@ -1,4 +1,4 @@
-﻿/* eslint-disable @typescript-eslint/no-unused-vars */
+﻿/* eslint-disable no-unused-vars */
 import { computed, reactive, watch } from 'vue'
 
 import MenuViewModelBase from '@/mixins/menuViewModelBase.js'
@@ -11,7 +11,7 @@ import qApi from '@/api/genio/quidgestFunctions.js'
 import qFunctions from '@/api/genio/projectFunctions.js'
 import qProjArrays from '@/api/genio/projectArrays.js'
 
-/* eslint-enable @typescript-eslint/no-unused-vars */
+/* eslint-enable no-unused-vars */
 
 /**
  * Represents a ViewModel class.
@@ -25,11 +25,11 @@ export default class ViewModel extends MenuViewModelBase
 	 * @param {object} options - The options for the ViewModel
 	 * @param {object} values - A ViewModel instance to copy values from
 	 */
-	// eslint-disable-next-line @typescript-eslint/no-unused-vars
+	// eslint-disable-next-line no-unused-vars
 	constructor(vueContext, options, values)
 	{
 		super(vueContext, options)
-		// eslint-disable-next-line @typescript-eslint/no-unused-vars
+		// eslint-disable-next-line no-unused-vars
 		const vm = this.vueContext
 
 		this.CompcValCompclas = reactive(new modelFieldType.String({
@@ -40,7 +40,7 @@ export default class ViewModel extends MenuViewModelBase
 			maxLength: 50,
 			description: computed(() => this.Resources.COMPONENTS_CLASS59339),
 		}).cloneFrom(values?.CompcValCompclas))
-		this.stopWatchers.push(watch(() => this.CompcValCompclas.value, (newValue, oldValue) => this.onUpdate('compc.compclas', this.CompcValCompclas, newValue, oldValue)))
+		watch(() => this.CompcValCompclas.value, (newValue, oldValue) => this.onUpdate('compc.compclas', this.CompcValCompclas, newValue, oldValue))
 	}
 
 	/**

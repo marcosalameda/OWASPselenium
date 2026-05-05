@@ -126,12 +126,15 @@ namespace CSGenio.core.di
                     log4net.ThreadContext.Properties["other"] = context.ToString();
                     log4net.LogicalThreadContext.Properties["other"] = context.ToString();
                 }
-                else if (context is Dictionary<string, object> tCtx)
+                else if (context is Dictionary<string, object>)
                 {
-                    foreach(var kvp in tCtx)
+                    var tCtx = (Dictionary<string, object>)context;
+                    foreach (var keyValue in tCtx)
                     {
-                        log4net.ThreadContext.Properties[kvp.Key] = kvp.Value;
-                        log4net.LogicalThreadContext.Properties[kvp.Key] = kvp.Value;
+                        tCtx.TryGetValue(keyValue.Key, out object val);
+
+                        log4net.ThreadContext.Properties[keyValue.Key] = val;
+                        log4net.LogicalThreadContext.Properties[keyValue.Key] = val;
                     }
                 }
                 else
@@ -165,9 +168,9 @@ namespace CSGenio.core.di
         /// Em ASP.Net tem de se ter cuidado com thread agility:
         /// http://blog.marekstoj.com/2011/12/log4net-contextual-properties-and.html
         /// </remarks>	
-        public IDisposable SetContext(string context, object value)
+        public IDisposable SetContext(string value, object context)
         {
-            return SetContext(new Dictionary<string, object> { { context, value } });
+            return SetContext(new Dictionary<string, object> { { value, context } });
         }
 
         /// <summary>

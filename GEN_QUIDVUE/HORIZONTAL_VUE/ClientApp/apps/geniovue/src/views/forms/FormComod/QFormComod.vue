@@ -9,13 +9,12 @@
 			<div
 				v-if="showFormHeader"
 				class="c-action-bar">
-				<component
+				<h1
 					v-if="formControl.uiComponents.header && formInfo.designation"
-					:is="topHeadingTag"
 					:id="formTitleId"
 					class="form-header">
 					{{ formInfo.designation }}
-				</component>
+				</h1>
 
 				<div class="c-action-bar__menu">
 					<template
@@ -39,13 +38,9 @@
 									:label="btn.label"
 									:disabled="btn.disabled"
 									@click="btn.action">
-									<template v-if="btn.icon">
-										<q-badge-indicator
-											:enabled="btn.badge?.isVisible ?? false"
-											:color="btn.badge?.color">
-											<q-icon v-bind="btn.icon" />
-										</q-badge-indicator>
-									</template>
+									<q-icon
+										v-if="btn.icon"
+										v-bind="btn.icon" />
 								</q-toggle-group-item>
 							</template>
 						</q-toggle-group>
@@ -57,7 +52,7 @@
 				v-if="$app.layout.FormAnchorsPosition === 'form-header' && visibleGroups.length > 0"
 				:anchors="anchorGroups"
 				:controls="visibleControls"
-				@focus-control="focusControl" />
+				@focus-control="(...args) => focusControl(...args)" />
 		</div>
 	</teleport>
 
@@ -78,7 +73,6 @@
 						v-if="btn.isActive && btn.isVisible && btn.showInHeading"
 						:id="`heading-${btn.id}`"
 						:label="btn.text"
-						:color="btn.color"
 						:variant="btn.variant"
 						:disabled="btn.disabled"
 						:icon-pos="btn.iconPos"
@@ -92,21 +86,18 @@
 			</q-button-group>
 		</div>
 
-		<q-container
-			fluid
+		<div
+			class="form-flow"
 			data-key="COMOD"
-			:data-identifier="primaryKeyValue"
-			:data-loading="!formInitialDataLoaded || !isActiveForm">
+			:data-loading="!formInitialDataLoaded">
 			<template v-if="formControl.initialized && showFormBody">
-				<q-row v-if="controls.COMOD___PESS1NAME____.isVisible">
-					<q-col
-						v-if="controls.COMOD___PESS1NAME____.isVisible"
-						cols="auto">
+				<q-row-container v-show="controls.COMOD___PESS1NAME____.isVisible">
+					<q-control-wrapper
+						v-show="controls.COMOD___PESS1NAME____.isVisible"
+						class="${Vue.GetControlWrapperClass($controlsColumn)}">
 						<base-input-structure
-							v-if="controls.COMOD___PESS1NAME____.isVisible"
 							class="i-text"
-							v-bind="controls.COMOD___PESS1NAME____.wrapperProps"
-							:id="getControlId(controls.COMOD___PESS1NAME____)"
+							v-bind="controls.COMOD___PESS1NAME____"
 							v-on="controls.COMOD___PESS1NAME____.handlers"
 							:loading="controls.COMOD___PESS1NAME____.props.loading"
 							:reporting-mode-on="reportingModeCAV"
@@ -114,24 +105,21 @@
 							<q-lookup
 								v-if="controls.COMOD___PESS1NAME____.isVisible"
 								v-bind="controls.COMOD___PESS1NAME____.props"
-								:id="getControlId(controls.COMOD___PESS1NAME____)"
 								v-on="controls.COMOD___PESS1NAME____.handlers" />
 							<q-see-more-comod-pess1name
 								v-if="controls.COMOD___PESS1NAME____.seeMoreIsVisible"
 								v-bind="controls.COMOD___PESS1NAME____.seeMoreParams"
 								v-on="controls.COMOD___PESS1NAME____.handlers" />
 						</base-input-structure>
-					</q-col>
-				</q-row>
-				<q-row v-if="controls.COMOD___PESS2NAME____.isVisible || controls.COMOD___EQUIPREGISTNR.isVisible">
-					<q-col
-						v-if="controls.COMOD___PESS2NAME____.isVisible"
-						cols="auto">
+					</q-control-wrapper>
+				</q-row-container>
+				<q-row-container v-show="controls.COMOD___PESS2NAME____.isVisible || controls.COMOD___EQUIPREGISTNR.isVisible">
+					<q-control-wrapper
+						v-show="controls.COMOD___PESS2NAME____.isVisible"
+						class="${Vue.GetControlWrapperClass($controlsColumn)}">
 						<base-input-structure
-							v-if="controls.COMOD___PESS2NAME____.isVisible"
 							class="i-text"
-							v-bind="controls.COMOD___PESS2NAME____.wrapperProps"
-							:id="getControlId(controls.COMOD___PESS2NAME____)"
+							v-bind="controls.COMOD___PESS2NAME____"
 							v-on="controls.COMOD___PESS2NAME____.handlers"
 							:loading="controls.COMOD___PESS2NAME____.props.loading"
 							:reporting-mode-on="reportingModeCAV"
@@ -139,22 +127,19 @@
 							<q-lookup
 								v-if="controls.COMOD___PESS2NAME____.isVisible"
 								v-bind="controls.COMOD___PESS2NAME____.props"
-								:id="getControlId(controls.COMOD___PESS2NAME____)"
 								v-on="controls.COMOD___PESS2NAME____.handlers" />
 							<q-see-more-comod-pess2name
 								v-if="controls.COMOD___PESS2NAME____.seeMoreIsVisible"
 								v-bind="controls.COMOD___PESS2NAME____.seeMoreParams"
 								v-on="controls.COMOD___PESS2NAME____.handlers" />
 						</base-input-structure>
-					</q-col>
-					<q-col
-						v-if="controls.COMOD___EQUIPREGISTNR.isVisible"
-						cols="auto">
+					</q-control-wrapper>
+					<q-control-wrapper
+						v-show="controls.COMOD___EQUIPREGISTNR.isVisible"
+						class="${Vue.GetControlWrapperClass($controlsColumn)}">
 						<base-input-structure
-							v-if="controls.COMOD___EQUIPREGISTNR.isVisible"
 							class="i-text"
-							v-bind="controls.COMOD___EQUIPREGISTNR.wrapperProps"
-							:id="getControlId(controls.COMOD___EQUIPREGISTNR)"
+							v-bind="controls.COMOD___EQUIPREGISTNR"
 							v-on="controls.COMOD___EQUIPREGISTNR.handlers"
 							:loading="controls.COMOD___EQUIPREGISTNR.props.loading"
 							:reporting-mode-on="reportingModeCAV"
@@ -162,63 +147,54 @@
 							<q-lookup
 								v-if="controls.COMOD___EQUIPREGISTNR.isVisible"
 								v-bind="controls.COMOD___EQUIPREGISTNR.props"
-								:id="getControlId(controls.COMOD___EQUIPREGISTNR)"
 								v-on="controls.COMOD___EQUIPREGISTNR.handlers" />
 							<q-see-more-comod-equipregistnr
 								v-if="controls.COMOD___EQUIPREGISTNR.seeMoreIsVisible"
 								v-bind="controls.COMOD___EQUIPREGISTNR.seeMoreParams"
 								v-on="controls.COMOD___EQUIPREGISTNR.handlers" />
 						</base-input-structure>
-					</q-col>
-				</q-row>
-				<q-row v-if="controls.COMOD___EQUIPDESIGNAT.isVisible || controls.COMOD___EQUIPFREQUENC.isVisible">
-					<q-col
-						v-if="controls.COMOD___EQUIPDESIGNAT.isVisible"
-						cols="auto">
+					</q-control-wrapper>
+				</q-row-container>
+				<q-row-container v-show="controls.COMOD___EQUIPDESIGNAT.isVisible || controls.COMOD___EQUIPFREQUENC.isVisible">
+					<q-control-wrapper
+						v-show="controls.COMOD___EQUIPDESIGNAT.isVisible"
+						class="${Vue.GetControlWrapperClass($controlsColumn)}">
 						<base-input-structure
-							v-if="controls.COMOD___EQUIPDESIGNAT.isVisible"
 							class="i-text"
-							v-bind="controls.COMOD___EQUIPDESIGNAT.wrapperProps"
-							:id="getControlId(controls.COMOD___EQUIPDESIGNAT)"
+							v-bind="controls.COMOD___EQUIPDESIGNAT"
 							v-on="controls.COMOD___EQUIPDESIGNAT.handlers"
 							:loading="controls.COMOD___EQUIPDESIGNAT.props.loading"
 							:reporting-mode-on="reportingModeCAV"
 							:suggestion-mode-on="suggestionModeOn">
 							<q-text-field
 								v-bind="controls.COMOD___EQUIPDESIGNAT.props"
-								:id="getControlId(controls.COMOD___EQUIPDESIGNAT)"
 								@blur="onBlur(controls.COMOD___EQUIPDESIGNAT, model.EquipValDesignat.value)"
 								@change="model.EquipValDesignat.fnUpdateValueOnChange" />
 						</base-input-structure>
-					</q-col>
-					<q-col
-						v-if="controls.COMOD___EQUIPFREQUENC.isVisible"
-						cols="auto">
+					</q-control-wrapper>
+					<q-control-wrapper
+						v-show="controls.COMOD___EQUIPFREQUENC.isVisible"
+						class="${Vue.GetControlWrapperClass($controlsColumn)}">
 						<base-input-structure
-							v-if="controls.COMOD___EQUIPFREQUENC.isVisible"
 							class="i-text"
-							v-bind="controls.COMOD___EQUIPFREQUENC.wrapperProps"
-							:id="getControlId(controls.COMOD___EQUIPFREQUENC)"
+							v-bind="controls.COMOD___EQUIPFREQUENC"
 							v-on="controls.COMOD___EQUIPFREQUENC.handlers"
 							:loading="controls.COMOD___EQUIPFREQUENC.props.loading"
 							:reporting-mode-on="reportingModeCAV"
 							:suggestion-mode-on="suggestionModeOn">
 							<q-select
 								v-if="controls.COMOD___EQUIPFREQUENC.isVisible"
-								v-bind="controls.COMOD___EQUIPFREQUENC.props"
-								:id="getControlId(controls.COMOD___EQUIPFREQUENC)" />
+								v-bind="controls.COMOD___EQUIPFREQUENC.props" />
 						</base-input-structure>
-					</q-col>
-				</q-row>
-				<q-row v-if="controls.COMOD___LENDILENDINNR.isVisible || controls.COMOD___LENDISTART___.isVisible || controls.COMOD___LENDIWARNDT__.isVisible || controls.COMOD___LENDIEND_____.isVisible">
-					<q-col
-						v-if="controls.COMOD___LENDILENDINNR.isVisible"
-						cols="auto">
+					</q-control-wrapper>
+				</q-row-container>
+				<q-row-container v-show="controls.COMOD___LENDILENDINNR.isVisible || controls.COMOD___LENDISTART___.isVisible || controls.COMOD___LENDIWARNDT__.isVisible || controls.COMOD___LENDIEND_____.isVisible">
+					<q-control-wrapper
+						v-show="controls.COMOD___LENDILENDINNR.isVisible"
+						class="${Vue.GetControlWrapperClass($controlsColumn)}">
 						<base-input-structure
-							v-if="controls.COMOD___LENDILENDINNR.isVisible"
 							class="i-text"
-							v-bind="controls.COMOD___LENDILENDINNR.wrapperProps"
-							:id="getControlId(controls.COMOD___LENDILENDINNR)"
+							v-bind="controls.COMOD___LENDILENDINNR"
 							v-on="controls.COMOD___LENDILENDINNR.handlers"
 							:loading="controls.COMOD___LENDILENDINNR.props.loading"
 							:reporting-mode-on="reportingModeCAV"
@@ -226,18 +202,15 @@
 							<q-numeric-input
 								v-if="controls.COMOD___LENDILENDINNR.isVisible"
 								v-bind="controls.COMOD___LENDILENDINNR.props"
-								:id="getControlId(controls.COMOD___LENDILENDINNR)"
 								@update:model-value="model.ValLendinnr.fnUpdateValue" />
 						</base-input-structure>
-					</q-col>
-					<q-col
-						v-if="controls.COMOD___LENDISTART___.isVisible"
-						cols="auto">
+					</q-control-wrapper>
+					<q-control-wrapper
+						v-show="controls.COMOD___LENDISTART___.isVisible"
+						class="${Vue.GetControlWrapperClass($controlsColumn)}">
 						<base-input-structure
-							v-if="controls.COMOD___LENDISTART___.isVisible"
 							class="i-text"
-							v-bind="controls.COMOD___LENDISTART___.wrapperProps"
-							:id="getControlId(controls.COMOD___LENDISTART___)"
+							v-bind="controls.COMOD___LENDISTART___"
 							v-on="controls.COMOD___LENDISTART___.handlers"
 							:loading="controls.COMOD___LENDISTART___.props.loading"
 							:reporting-mode-on="reportingModeCAV"
@@ -245,20 +218,17 @@
 							<q-date-time-picker
 								v-if="controls.COMOD___LENDISTART___.isVisible"
 								v-bind="controls.COMOD___LENDISTART___.props"
-								:id="getControlId(controls.COMOD___LENDISTART___)"
 								:model-value="model.ValStart.value"
 								@reset-icon-click="model.ValStart.fnUpdateValue(model.ValStart.originalValue ?? new Date())"
 								@update:model-value="model.ValStart.fnUpdateValue($event ?? '')" />
 						</base-input-structure>
-					</q-col>
-					<q-col
-						v-if="controls.COMOD___LENDIWARNDT__.isVisible"
-						cols="auto">
+					</q-control-wrapper>
+					<q-control-wrapper
+						v-show="controls.COMOD___LENDIWARNDT__.isVisible"
+						class="${Vue.GetControlWrapperClass($controlsColumn)}">
 						<base-input-structure
-							v-if="controls.COMOD___LENDIWARNDT__.isVisible"
 							class="i-text"
-							v-bind="controls.COMOD___LENDIWARNDT__.wrapperProps"
-							:id="getControlId(controls.COMOD___LENDIWARNDT__)"
+							v-bind="controls.COMOD___LENDIWARNDT__"
 							v-on="controls.COMOD___LENDIWARNDT__.handlers"
 							:loading="controls.COMOD___LENDIWARNDT__.props.loading"
 							:reporting-mode-on="reportingModeCAV"
@@ -266,20 +236,17 @@
 							<q-date-time-picker
 								v-if="controls.COMOD___LENDIWARNDT__.isVisible"
 								v-bind="controls.COMOD___LENDIWARNDT__.props"
-								:id="getControlId(controls.COMOD___LENDIWARNDT__)"
 								:model-value="model.ValWarndt.value"
 								@reset-icon-click="model.ValWarndt.fnUpdateValue(model.ValWarndt.originalValue ?? new Date())"
 								@update:model-value="model.ValWarndt.fnUpdateValue($event ?? '')" />
 						</base-input-structure>
-					</q-col>
-					<q-col
-						v-if="controls.COMOD___LENDIEND_____.isVisible"
-						cols="auto">
+					</q-control-wrapper>
+					<q-control-wrapper
+						v-show="controls.COMOD___LENDIEND_____.isVisible"
+						class="${Vue.GetControlWrapperClass($controlsColumn)}">
 						<base-input-structure
-							v-if="controls.COMOD___LENDIEND_____.isVisible"
 							class="i-text"
-							v-bind="controls.COMOD___LENDIEND_____.wrapperProps"
-							:id="getControlId(controls.COMOD___LENDIEND_____)"
+							v-bind="controls.COMOD___LENDIEND_____"
 							v-on="controls.COMOD___LENDIEND_____.handlers"
 							:loading="controls.COMOD___LENDIEND_____.props.loading"
 							:reporting-mode-on="reportingModeCAV"
@@ -287,22 +254,19 @@
 							<q-date-time-picker
 								v-if="controls.COMOD___LENDIEND_____.isVisible"
 								v-bind="controls.COMOD___LENDIEND_____.props"
-								:id="getControlId(controls.COMOD___LENDIEND_____)"
 								:model-value="model.ValEnd.value"
 								@reset-icon-click="model.ValEnd.fnUpdateValue(model.ValEnd.originalValue ?? new Date())"
 								@update:model-value="model.ValEnd.fnUpdateValue($event ?? '')" />
 						</base-input-structure>
-					</q-col>
-				</q-row>
-				<q-row v-if="controls.COMOD___LENDIOBSERVAT.isVisible">
-					<q-col
-						v-if="controls.COMOD___LENDIOBSERVAT.isVisible"
-						cols="auto">
+					</q-control-wrapper>
+				</q-row-container>
+				<q-row-container v-show="controls.COMOD___LENDIOBSERVAT.isVisible">
+					<q-control-wrapper
+						v-show="controls.COMOD___LENDIOBSERVAT.isVisible"
+						class="${Vue.GetControlWrapperClass($controlsColumn)}">
 						<base-input-structure
-							v-if="controls.COMOD___LENDIOBSERVAT.isVisible"
 							class="i-textarea"
-							v-bind="controls.COMOD___LENDIOBSERVAT.wrapperProps"
-							:id="getControlId(controls.COMOD___LENDIOBSERVAT)"
+							v-bind="controls.COMOD___LENDIOBSERVAT"
 							v-on="controls.COMOD___LENDIOBSERVAT.handlers"
 							:loading="controls.COMOD___LENDIOBSERVAT.props.loading"
 							:reporting-mode-on="reportingModeCAV"
@@ -310,22 +274,21 @@
 							<q-text-area
 								v-if="controls.COMOD___LENDIOBSERVAT.isVisible"
 								v-bind="controls.COMOD___LENDIOBSERVAT.props"
-								:id="getControlId(controls.COMOD___LENDIOBSERVAT)"
 								v-on="controls.COMOD___LENDIOBSERVAT.handlers" />
 						</base-input-structure>
-					</q-col>
-				</q-row>
+					</q-control-wrapper>
+				</q-row-container>
 			</template>
-		</q-container>
+		</div>
 	</teleport>
 
-	<q-divider v-if="!isPopup && showFormFooter" />
+	<hr v-if="!isPopup && showFormFooter" />
 
 	<teleport
 		v-if="formModalIsReady && showFormFooter"
 		:to="`#${uiContainersId.footer}`"
 		:disabled="!isPopup || isNested">
-		<q-row v-if="showFormFooter">
+		<q-row-container v-if="showFormFooter">
 			<div id="footer-action-btns">
 				<template
 					v-for="btn in formButtons"
@@ -334,7 +297,6 @@
 						v-if="btn.isActive && btn.isVisible && btn.showInFooter"
 						:id="`bottom-${btn.id}`"
 						:label="btn.text"
-						:color="btn.color"
 						:variant="btn.variant"
 						:disabled="btn.disabled"
 						:icon-pos="btn.iconPos"
@@ -346,12 +308,12 @@
 					</q-button>
 				</template>
 			</div>
-		</q-row>
+		</q-row-container>
 	</teleport>
 </template>
 
 <script>
-	/* eslint-disable @typescript-eslint/no-unused-vars */
+	/* eslint-disable no-unused-vars */
 	import { computed, defineAsyncComponent, readonly } from 'vue'
 	import { useRoute } from 'vue-router'
 
@@ -371,7 +333,7 @@
 	import qApi from '@/api/genio/quidgestFunctions.js'
 	import qFunctions from '@/api/genio/projectFunctions.js'
 	import qProjArrays from '@/api/genio/projectArrays.js'
-	/* eslint-enable @typescript-eslint/no-unused-vars */
+	/* eslint-enable no-unused-vars */
 
 	import FormViewModel from './QFormComodViewModel.js'
 
@@ -451,8 +413,7 @@
 					primaryKey: 'ValCodlendi',
 					designation: '',
 					identifier: '', // Unique identifier received by route (when it's nested).
-					mode: '',
-					availableAgents: [],
+					mode: ''
 				},
 
 				formButtons: {
@@ -560,11 +521,7 @@
 						showInFooter: true,
 						isActive: true,
 						isVisible: computed(() => vm.authData.isAllowed && vm.isEditable),
-						action: vm.saveForm,
-						badge: {
-							isVisible: computed(() => vm.model?.isDirty === true),
-							color: 'highlight'
-						}
+						action: vm.saveForm
 					},
 					confirmBtn: {
 						id: 'confirm-btn',
@@ -672,7 +629,7 @@
 						size: 'xxlarge',
 						helpControl: {
 							shortHelp: {
-								type: 'subtext',
+								type: 'Tooltip',
 								text: computed(() => this.Resources._114828953),
 							},
 							detailedHelp: {
@@ -710,7 +667,7 @@
 						size: 'xxlarge',
 						helpControl: {
 							shortHelp: {
-								type: 'subtext',
+								type: 'Tooltip',
 								text: computed(() => this.Resources.____210674),
 							},
 						},
@@ -744,7 +701,7 @@
 						size: 'medium',
 						helpControl: {
 							shortHelp: {
-								type: 'subtext',
+								type: 'Tooltip',
 								text: computed(() => this.Resources.____409508),
 							},
 						},
@@ -773,12 +730,6 @@
 						supportForm: 'EQUIP',
 						mustBeFilled: true,
 						controlLimits: [
-							{
-								identifier: ['pess1', 'lendi.codpess1'],
-								dependencyEvents: ['fieldChange:lendi.codpess1'],
-								dependencyField: 'LENDI.CODPESS1',
-								fnValueSelector: (model) => model.ValCodpess1.value
-							},
 						],
 					}, this),
 					COMOD___EQUIPDESIGNAT: new fieldControlClass.StringControl({
@@ -793,6 +744,7 @@
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						maxLength: 85,
+						labelId: 'label_COMOD___EQUIPDESIGNAT',
 						controlLimits: [
 						],
 					}, this),
@@ -806,7 +758,7 @@
 						size: 'medium',
 						helpControl: {
 							shortHelp: {
-								type: 'subtext',
+								type: 'Tooltip',
 								text: computed(() => this.Resources.___1438719),
 							},
 						},
@@ -846,7 +798,7 @@
 						label: computed(() => this.Resources.START_59353),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						dateTimeType: 'dateTime',
+						format: 'dateTime',
 						mustBeFilled: true,
 						controlLimits: [
 						],
@@ -861,7 +813,7 @@
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						isFormulaBlocked: true,
-						dateTimeType: 'dateTime',
+						format: 'dateTime',
 						controlLimits: [
 						],
 					}, this),
@@ -875,7 +827,7 @@
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						isFormulaBlocked: true,
-						dateTimeType: 'dateTime',
+						format: 'dateTime',
 						controlLimits: [
 						],
 					}, this),
@@ -1006,23 +958,17 @@
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 		},
 
-		beforeUnmount()
-		{
-/* eslint-disable indent, vue/html-indent, vue/script-indent */
-// USE /[MANUAL GQT COMPONENT_BEFORE_UNMOUNT COMOD]/
-// eslint-disable-next-line
-/* eslint-enable indent, vue/html-indent, vue/script-indent */
-		},
-
 		methods: {
 			/**
 			 * Called before form init.
 			 */
 			async beforeLoad()
 			{
+				let loadForm = true
+
 				// Execute the "Before init" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.beforeInit)
-				for (const trigger of triggers)
+				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
 				this.emitEvent('before-load-form')
@@ -1032,7 +978,7 @@
 // eslint-disable-next-line
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 
-				return true
+				return loadForm
 			},
 
 			/**
@@ -1042,7 +988,7 @@
 			{
 				// Execute the "After init" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.afterInit)
-				for (const trigger of triggers)
+				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
 				this.emitEvent('after-load-form')
@@ -1062,33 +1008,19 @@
 
 				// Execute the "Before apply" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.beforeApply)
-				for (const trigger of triggers)
+				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
-				const ticketsPromise = this.model.updateFilesTickets(true)
-				this.addBusy(ticketsPromise, this.Resources[hardcodedTexts.processing])
-				const canSetDocums = await ticketsPromise
+				const canSetDocums = await this.model.updateFilesTickets(true)
 
 				if (canSetDocums)
 				{
-					let results
-					const changesPromise = this.model.setDocumentChanges()
-					this.addBusy(changesPromise, this.Resources[hardcodedTexts.processing])
-					applyForm = await changesPromise
+					applyForm = await this.model.setDocumentChanges()
 
 					if (applyForm)
 					{
-						const insertsPromise = this.model.saveDocuments()
-						this.addBusy(insertsPromise, this.Resources[hardcodedTexts.processing])
-						results = await insertsPromise
+						const results = await this.model.saveDocuments()
 						applyForm = results.every((e) => e === true)
-					}
-
-					if (!changesPromise || (results && !results.every((e) => e === true)))
-					{
-						this.validationErrors = {
-							Erro: this.Resources.OCORREU_UM_ERRO_AO_T51884
-						}
 					}
 				}
 
@@ -1109,7 +1041,7 @@
 			{
 				// Execute the "After apply" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.afterApply)
-				for (const trigger of triggers)
+				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
 				this.emitEvent('after-apply-form')
@@ -1129,33 +1061,19 @@
 
 				// Execute the "Before save" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.beforeSave)
-				for (const trigger of triggers)
+				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
-				const ticketsPromise = this.model.updateFilesTickets()
-				this.addBusy(ticketsPromise, this.Resources[hardcodedTexts.processing])
-				const canSetDocums = await ticketsPromise
+				const canSetDocums = await this.model.updateFilesTickets()
 
 				if (canSetDocums)
 				{
-					let results
-					const changesPromise = this.model.setDocumentChanges()
-					this.addBusy(changesPromise, this.Resources[hardcodedTexts.processing])
-					saveForm = await changesPromise
+					saveForm = await this.model.setDocumentChanges()
 
 					if (saveForm)
 					{
-						const insertsPromise = this.model.saveDocuments()
-						this.addBusy(insertsPromise, this.Resources[hardcodedTexts.processing])
-						results = await insertsPromise
+						const results = await this.model.saveDocuments()
 						saveForm = results.every((e) => e === true)
-					}
-
-					if (!changesPromise || (results && !results.every((e) => e === true)))
-					{
-						this.validationErrors = {
-							Erro: this.Resources.OCORREU_UM_ERRO_AO_T51884
-						}
 					}
 				}
 
@@ -1174,9 +1092,11 @@
 			 */
 			async afterSave()
 			{
+				let redirectPage = true // Set to 'false' to cancel page redirect.
+
 				// Execute the "After save" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.afterSave)
-				for (const trigger of triggers)
+				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
 				this.emitEvent('after-save-form')
@@ -1186,7 +1106,7 @@
 // eslint-disable-next-line
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 
-				return true
+				return redirectPage
 			},
 
 			/**
@@ -1194,6 +1114,8 @@
 			 */
 			async beforeDel()
 			{
+				let deleteForm = true // Set to 'false' to cancel form delete.
+
 				this.emitEvent('before-delete-form')
 
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
@@ -1201,7 +1123,7 @@
 // eslint-disable-next-line
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 
-				return true
+				return deleteForm
 			},
 
 			/**
@@ -1209,6 +1131,8 @@
 			 */
 			async afterDel()
 			{
+				let redirectPage = true // Set to 'false' to cancel page redirect.
+
 				this.emitEvent('after-delete-form')
 
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
@@ -1216,7 +1140,7 @@
 // eslint-disable-next-line
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 
-				return true
+				return redirectPage
 			},
 
 			/**
@@ -1224,9 +1148,11 @@
 			 */
 			async beforeExit()
 			{
+				let leaveForm = true // Set to 'false' to cancel page redirect.
+
 				// Execute the "Before exit" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.beforeExit)
-				for (const trigger of triggers)
+				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
 				this.emitEvent('before-exit-form')
@@ -1236,7 +1162,7 @@
 // eslint-disable-next-line
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 
-				return true
+				return leaveForm
 			},
 
 			/**
@@ -1246,7 +1172,7 @@
 			{
 				// Execute the "After exit" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.afterExit)
-				for (const trigger of triggers)
+				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
 				this.emitEvent('after-exit-form')

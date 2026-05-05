@@ -1,15 +1,14 @@
 ﻿<template>
 	<div
-		:id="`${controlId}-container`"
+		:id="controlId"
 		:class="{ 'q-document--readonly': readonly }">
 		<div class="q-document__container">
 			<q-input-group :size="size">
 				<q-text-field
-					:id="controlId"
 					:model-value="modelValue"
 					data-testid="document-input"
-					readonly
-					:placeholder="texts.fileChoose"
+					:readonly="!!modelValue"
+					:placeholder="!modelValue ? texts.fileChoose : ''"
 					:class="['q-document__field', { 'q-document__field-empty': !modelValue && (readonly || disabled) }]"
 					:aria-labelledby="labelId"
 					@click="handleFieldClick" />
@@ -19,7 +18,7 @@
 						ref="optionsButton"
 						data-testid="options-button"
 						aria-haspopup="true"
-						:title="modelValue ? texts.documentManagement : texts.attachLabel"
+						:title="modelValue? texts.documentManagement : texts.attachLabel"
 						:disabled="isOptionsButtonDisabled"
 						@click="onOptionsButtonClick">
 						<q-icon :icon="optionsIcon" />
@@ -368,7 +367,7 @@
 			{
 				const versions = []
 
-				for (const i in this.versions)
+				for (let i in this.versions)
 				{
 					const value = this.versions[i]
 					const dirty = value?.length === 0
@@ -403,8 +402,7 @@
 			/**
 			 * Determine which icon to display for the options button.
 			 */
-			optionsIcon()
-			{
+			optionsIcon() {
 				return this.modelValue ? 'more-items' : 'upload-img'
 			}
 		},
@@ -694,12 +692,13 @@
 			 * If no document is currently selected, opens the file attachment dialog.
 			 * Otherwise, toggles the visibility of the options dropdown.
 			 */
-			onOptionsButtonClick()
-			{
-				if (!this.modelValue)
+			onOptionsButtonClick() {
+				if (!this.modelValue) {
 					this.triggerFileAttach()
-				else
+				}
+				else {
 					this.toggleDropdown()
+				}
 			}
 		},
 

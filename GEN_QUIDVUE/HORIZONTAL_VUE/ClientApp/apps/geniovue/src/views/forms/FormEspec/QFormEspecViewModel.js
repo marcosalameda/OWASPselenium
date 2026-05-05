@@ -1,4 +1,4 @@
-﻿/* eslint-disable @typescript-eslint/no-unused-vars */
+﻿/* eslint-disable no-unused-vars */
 import { computed, reactive, watch } from 'vue'
 import _merge from 'lodash-es/merge'
 
@@ -11,7 +11,7 @@ import netAPI from '@quidgest/clientapp/network'
 import qApi from '@/api/genio/quidgestFunctions.js'
 import qFunctions from '@/api/genio/projectFunctions.js'
 import qProjArrays from '@/api/genio/projectArrays.js'
-/* eslint-enable @typescript-eslint/no-unused-vars */
+/* eslint-enable no-unused-vars */
 
 /**
  * Represents a ViewModel class.
@@ -25,11 +25,11 @@ export default class ViewModel extends FormViewModelBase
 	 * @param {object} options - The options for the ViewModel
 	 * @param {object} values - A ViewModel instance to copy values from
 	 */
-	// eslint-disable-next-line @typescript-eslint/no-unused-vars
+	// eslint-disable-next-line no-unused-vars
 	constructor(vueContext, options, values)
 	{
 		super(vueContext, options)
-		// eslint-disable-next-line @typescript-eslint/no-unused-vars
+		// eslint-disable-next-line no-unused-vars
 		const vm = this.vueContext
 
 		// The view model metadata
@@ -37,9 +37,8 @@ export default class ViewModel extends FormViewModelBase
 			name: 'ESPEC',
 			area: 'SPECI',
 			actions: {
-				recalculateFormulas: 'RecalculateFormulas_Espec',
-				updateFilesTickets: 'UpdateFilesTicketsEspec',
-				setFile: 'SetFileEspec'
+				recalculateFormulas: 'RecalculateFormulas_ESPEC',
+				updateFilesTickets: 'UpdateFilesTicketsESPEC'
 			}
 		})
 
@@ -51,7 +50,7 @@ export default class ViewModel extends FormViewModelBase
 			field: 'CODESPEC',
 			description: '',
 		}).cloneFrom(values?.ValCodespec))
-		this.stopWatchers.push(watch(() => this.ValCodespec.value, (newValue, oldValue) => this.onUpdate('speci.codespec', this.ValCodespec, newValue, oldValue)))
+		watch(() => this.ValCodespec.value, (newValue, oldValue) => this.onUpdate('speci.codespec', this.ValCodespec, newValue, oldValue))
 
 		/** The remaining form fields. */
 		this.ValEspecial = reactive(new modelFieldType.String({
@@ -62,7 +61,7 @@ export default class ViewModel extends FormViewModelBase
 			maxLength: 50,
 			description: computed(() => this.Resources.SPECIALTY09304),
 		}).cloneFrom(values?.ValEspecial))
-		this.stopWatchers.push(watch(() => this.ValEspecial.value, (newValue, oldValue) => this.onUpdate('speci.especial', this.ValEspecial, newValue, oldValue)))
+		watch(() => this.ValEspecial.value, (newValue, oldValue) => this.onUpdate('speci.especial', this.ValEspecial, newValue, oldValue))
 
 		this.ValAreatecn = reactive(new modelFieldType.String({
 			id: 'ValAreatecn',
@@ -70,10 +69,10 @@ export default class ViewModel extends FormViewModelBase
 			area: 'SPECI',
 			field: 'AREATECN',
 			maxLength: 1,
-			arrayOptions: computed(() => new qProjArrays.QArrayAreatecn(vm.$getResource).elements),
+			arrayOptions: computed(() => qProjArrays.QArrayAreatecn.setResources(vm.$getResource).elements),
 			description: computed(() => this.Resources.TECHNICAL_AREA50773),
 		}).cloneFrom(values?.ValAreatecn))
-		this.stopWatchers.push(watch(() => this.ValAreatecn.value, (newValue, oldValue) => this.onUpdate('speci.areatecn', this.ValAreatecn, newValue, oldValue)))
+		watch(() => this.ValAreatecn.value, (newValue, oldValue) => this.onUpdate('speci.areatecn', this.ValAreatecn, newValue, oldValue))
 	}
 
 	/**

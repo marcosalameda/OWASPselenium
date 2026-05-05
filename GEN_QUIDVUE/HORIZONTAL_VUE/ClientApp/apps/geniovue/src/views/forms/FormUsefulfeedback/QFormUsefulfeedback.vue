@@ -600,7 +600,7 @@
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						icon: {
-							icon: computed(() => `${this.$app.resourcesPath}thumbs-up-svgrepo-com (1).svg?v=3638`),
+							icon: computed(() => `${this.$app.resourcesPath}thumbs-up-svgrepo-com (1).svg?v=3639`),
 							type: 'img',
 							role: 'presentation',
 						},
@@ -623,7 +623,7 @@
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						icon: {
-							icon: computed(() => `${this.$app.resourcesPath}thumbs-down.png?v=3638`),
+							icon: computed(() => `${this.$app.resourcesPath}thumbs-down.png?v=3639`),
 							type: 'img',
 							role: 'presentation',
 						},

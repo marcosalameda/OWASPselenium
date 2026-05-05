@@ -639,7 +639,7 @@
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						icon: {
-							icon: computed(() => `${this.$app.resourcesPath}ok.ico?v=3638`),
+							icon: computed(() => `${this.$app.resourcesPath}ok.ico?v=3639`),
 							type: 'img',
 							role: 'presentation',
 						},

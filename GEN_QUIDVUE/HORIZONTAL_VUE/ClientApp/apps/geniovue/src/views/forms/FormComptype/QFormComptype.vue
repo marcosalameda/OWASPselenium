@@ -1141,7 +1141,7 @@
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						tab: 'COMPTYPEPSEUDCOMPTAB_',
 						icon: {
-							icon: computed(() => `${this.$app.resourcesPath}Storybook-icon.png?v=3638`),
+							icon: computed(() => `${this.$app.resourcesPath}Storybook-icon.png?v=3639`),
 							type: 'img',
 							role: 'presentation',
 						},

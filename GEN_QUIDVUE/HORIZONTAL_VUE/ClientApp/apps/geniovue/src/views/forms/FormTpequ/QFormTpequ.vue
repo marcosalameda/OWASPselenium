@@ -1461,7 +1461,7 @@
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						icon: {
-							icon: computed(() => `${this.$app.resourcesPath}ok.ico?v=3637`),
+							icon: computed(() => `${this.$app.resourcesPath}ok.ico?v=3638`),
 							type: 'img',
 							role: 'presentation',
 						},

@@ -1143,7 +1143,7 @@
 						container: 'HEROTEXTPSEUDNEWGRP02',
 						tab: 'HEROCSECPSEUDHEROTEXT',
 						icon: {
-							icon: computed(() => `${this.$app.resourcesPath}Dt_input_tag.png?v=3637`),
+							icon: computed(() => `${this.$app.resourcesPath}Dt_input_tag.png?v=3638`),
 							type: 'img',
 						},
 						height: 0,
@@ -1231,7 +1231,7 @@
 						container: 'HEROIMG_PSEUDNEWGRP02',
 						tab: 'HEROCSECPSEUDHEROIMG_',
 						icon: {
-							icon: computed(() => `${this.$app.resourcesPath}Screenshot 2026-03-02 144033.png?v=3637`),
+							icon: computed(() => `${this.$app.resourcesPath}Screenshot 2026-03-02 144033.png?v=3638`),
 							type: 'img',
 						},
 						height: 0,
@@ -1321,7 +1321,7 @@
 						container: 'HEROIMG_PSEUDNEWGRP03',
 						tab: 'HEROCSECPSEUDHEROIMG_',
 						icon: {
-							icon: computed(() => `${this.$app.resourcesPath}Screenshot 2026-03-02 145357.png?v=3637`),
+							icon: computed(() => `${this.$app.resourcesPath}Screenshot 2026-03-02 145357.png?v=3638`),
 							type: 'img',
 						},
 						height: 0,
@@ -1381,7 +1381,7 @@
 						container: 'HEROIMG_PSEUDNEWGRP01',
 						tab: 'HEROCSECPSEUDHEROIMG_',
 						icon: {
-							icon: computed(() => `${this.$app.resourcesPath}office-man.png?v=3637`),
+							icon: computed(() => `${this.$app.resourcesPath}office-man.png?v=3638`),
 							type: 'img',
 						},
 						height: 0,

@@ -3074,7 +3074,7 @@ export const QArrayIconrating = {
 				resourceId: 'GOOD01908',
 				get value() { return computed(() => vm.fnResources ? vm.fnResources(this.resourceId) : this.resourceId) },
 				icon: {
-					icon: computed(() => `${this.$app.resourcesPath}Quidgest_no_signature_blue.png?v=3637`),
+					icon: computed(() => `${this.$app.resourcesPath}Quidgest_no_signature_blue.png?v=3638`),
 					type: 'img',
 				},
 			},

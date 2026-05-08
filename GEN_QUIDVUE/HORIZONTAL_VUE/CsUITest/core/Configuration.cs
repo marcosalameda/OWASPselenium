@@ -28,7 +28,7 @@ public class Configuration
                 _instance = new Configuration
                 {
                     Browser = "chrome",
-                    BaseUrl = "https://localhost:5173/",
+                    BaseUrl = "https://172.16.0.62/gqt_horizontal_vue/",
                     Headless = true,
                     ImplicitWait = 100,
                     ExplicitWait = 1000,

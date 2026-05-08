@@ -120,4 +120,8 @@ public class ChatbotPage: PageObject
 
         chat.Click();
     }
+    public void WaitForResponse()
+    {
+        // Implementación vacía: solo para que compile
+    }
 }

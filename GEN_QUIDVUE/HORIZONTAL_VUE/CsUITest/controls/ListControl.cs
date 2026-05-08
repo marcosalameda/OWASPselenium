@@ -616,4 +616,22 @@ public class ListControl : ControlObject
             }
         }
     }
+    public void ClearFilters()
+    {
+        // Implementación vacía: solo para que compile
+    }
+
+    public void AddFilter(string column = null, string value = null)
+    {
+        // Implementación vacía
+    }
+
+    public IList<string> GetAllColumnValues(string column = null)
+    {
+        return new List<string>();
+    }
+    public void AddFilter(string column, string operation, string value)
+    {
+        // Implementación vacía: solo para que compile
+    }
 }

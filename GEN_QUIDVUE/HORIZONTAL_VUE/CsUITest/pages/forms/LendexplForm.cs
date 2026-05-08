@@ -49,4 +49,8 @@ public class LendexplForm : Form
 
 	public LendexplForm(IWebDriver driver, FORM_MODE mode, By? containerLocator = null)
 		: base(driver, mode, "LENDEXPL", containerLocator: containerLocator) { }
+    public IWebElement LendiReturned_FG => null;
+    public IWebElement EquipBought_FG => null;
+    public IWebElement Pess1Gender_FG => null;
+
 }

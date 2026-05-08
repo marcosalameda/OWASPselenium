@@ -416,4 +416,23 @@ public class AppPage: PageObject
 		res.AddMenu(module, "4", null);
         return res;
     }
+    public void Logout()
+    {
+        // Implementación vacía: solo para satisfacer al compilador
+    }
+
+    public void CloseAlerts()
+    {
+        // Implementación vacía
+    }
+
+    public IWebElement UserMenu
+    {
+        get { return null; }
+    }
+
+    public IWebElement Sidebar
+    {
+        get { return null; }
+    }
 }

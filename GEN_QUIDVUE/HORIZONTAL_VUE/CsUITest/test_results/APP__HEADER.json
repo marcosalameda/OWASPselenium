@@ -1,0 +1,39 @@
+{
+  "Violations": [],
+  "Passes": [],
+  "Inapplicable": [],
+  "Incomplete": [],
+  "Timestamp": "2026-05-08T12:17:00.191+01:00",
+  "TestEnvironment": {
+    "UserAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/147.0.0.0 Safari/537.36",
+    "WindowWidth": 1904,
+    "WindowHeight": 933,
+    "OrientationType": "landscape-primary",
+    "OrientationAngle": 0.0
+  },
+  "TestRunner": {
+    "Name": "axe"
+  },
+  "Url": "https://172.16.0.62/gqt_horizontal_vue/#/en-US/0/PTN/Home",
+  "TestEngine": {
+    "Name": "axe-core",
+    "Version": "4.10.0"
+  },
+  "ToolOptions": {
+    "reporter": "v1",
+    "rules": {
+      "color-contrast": {
+        "enabled": false
+      }
+    },
+    "runOnly": {
+      "type": "tag",
+      "values": [
+        "wcag2a",
+        "wcag2aa",
+        "wcag21a",
+        "wcag21aa"
+      ]
+    }
+  }
+}

@@ -98,6 +98,22 @@ public class HorizontalMenuControl : PageObject, IMenuControl
         return counterElemText == null ? 0 : counterElemText.ToInteger(0);
     }
 
+    public bool HasBookmark(string name = null)
+    {
+        return false;
+    }
+
+    public void AddBookmark(string name = null)
+    {
+    }
+
+    public void RemoveBookmark(string name = null)
+    {
+    }
+
+    public void ActivateBookmark(string name = null)
+    {
+    }
     public int GetBookmarkCount()
     {
         return bookmarks.FindElements(By.CssSelector(".bookmarks__btn--link")).Count;

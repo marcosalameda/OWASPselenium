@@ -12,9 +12,17 @@ namespace quidgest.uitests.core;
 /// https://www.selenium.dev/documentation/en/guidelines_and_recommendations/page_object_models/
 /// </remarks>
 public class PageObject {
-	//private final static Logger LOGGER = LoggerFactory.getLogger(PageObject.class.getName());
+    //private final static Logger LOGGER = LoggerFactory.getLogger(PageObject.class.getName());
+    protected IWebElement GetElement(IWebElement parent)
+    {
+        return parent;
+    }
+    protected IWebElement GetElement(IWebDriver driver)
+    {
+        return null;
+    }
 
-	protected IWebDriver driver;
+    protected IWebDriver driver;
 	protected WebDriverWait wait;
 
 	/// <summary>
@@ -49,6 +57,22 @@ public class PageObject {
 		// Element found
 		return elementList[0];
     }
+    protected IWebElement GetElement(By by)
+    {
+        return driver.FindElement(by);
+    }
+    protected IWebElement GetElement(IWebDriver driver, By by)
+    {
+        return driver.FindElement(by);
+    }
+    protected IWebElement GetElement(By by, IWebDriver driver)
+    {
+        return driver.FindElement(by);
+    }
 
+    protected IWebElement GetElement(IWebDriver driver, IWebElement element)
+    {
+        return element;
+    }
 
 }

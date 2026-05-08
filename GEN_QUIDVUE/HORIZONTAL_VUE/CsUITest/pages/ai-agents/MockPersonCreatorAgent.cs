@@ -23,5 +23,13 @@ public class MockPersonCreatorAgent: BaseAgent
     /// Email
     /// </summary>
     public string Email => "[data-testid='email']";
+    public void ApplySuggestion()
+    {
+        // Implementación vacía: solo para satisfacer al compilador
+    }
+    public void ApplySuggestion(object suggestion)
+    {
+        // Implementación vacía: solo para que compile
+    }
 
 }

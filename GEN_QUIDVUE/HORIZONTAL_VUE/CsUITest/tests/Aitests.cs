@@ -87,7 +87,7 @@ public class AiTests : BaseSeleniumTest
     {
         var app = Authenticate();
     
-        app.Sidebar.ChatbotButton.Click();
+        app.Sidebar.ChatbotButton().Click();
     
         var chatbot = new ChatbotPage(Driver);
     

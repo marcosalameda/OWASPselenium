@@ -8,7 +8,6 @@ pipeline {
 
     options {
         timestamps()
-        ansiColor('xterm')
     }
 
     stages {
@@ -36,12 +35,13 @@ pipeline {
         always {
             echo "🧹 Cleaning Docker resources"
             sh 'docker compose down || true'
+            archiveArtifacts artifacts: 'zap-reports/*.html', fingerprint: true
         }
         success {
-            echo "✅ Selenium tests executed successfully"
+            echo '✅ Selenium + ZAP executed successfully'
         }
         failure {
-            echo "❌ Selenium tests failed"
+            echo '❌ Selenium tests failed'
         }
     }
 }

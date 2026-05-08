@@ -20,11 +20,10 @@ pipeline {
 
         stage('Run Selenium + ZAP') {
             steps {
-                sh '''
-                    set -e
-                    echo "▶️ Starting Selenium + ZAP stack"
+                bat '''
+                    echo Starting Selenium + ZAP stack
 
-                    docker compose down || true
+                    docker compose down || exit 0
                     docker compose up --build --abort-on-container-exit
                 '''
             }
@@ -33,15 +32,15 @@ pipeline {
 
     post {
         always {
-            echo "🧹 Cleaning Docker resources"
-            sh 'docker compose down || true'
+            echo "Cleaning Docker resources"
+            bat 'docker compose down || exit 0'
             archiveArtifacts artifacts: 'zap-reports/*.html', fingerprint: true
         }
         success {
-            echo '✅ Selenium + ZAP executed successfully'
+            echo 'Selenium + ZAP executed successfully'
         }
         failure {
-            echo '❌ Selenium tests failed'
+            echo 'Selenium tests failed'
         }
     }
 }

@@ -7,8 +7,12 @@ services:
       -host 0.0.0.0
       -port 8080
       -config api.disablekey=true
+      -config api.addrs.addr.name=.* 
+      -config api.addrs.addr.regex=true
     ports:
       - "8080:8080"
+    volumes:
+      - ./zap-reports:/zap/reports
     networks:
       - zap-net
 
@@ -19,7 +23,7 @@ services:
     container_name: selenium
     working_dir: /tests
     volumes:
-      - /home/marcos.alameda@quidgest.pt/OWASPselenium/GEN_QUIDVUE/HORIZONTAL_VUE/CsUITest:/tests
+      - ./GEN_QUIDVUE/HORIZONTAL_VUE/CsUITest:/tests
     depends_on:
       - zap
     environment:
@@ -28,8 +32,15 @@ services:
       - zap-net
     command: >
       bash -c "
+        echo '▶️ Running Selenium tests' &&
         dotnet restore SeleniumWebTest.csproj &&
-        dotnet test SeleniumWebTest.csproj --filter LoginTest
+        dotnet test SeleniumWebTest.csproj --filter LoginTest || true &&
+        echo '🛡 Generating ZAP HTML report' &&
+        curl 'http://zap:8080/JSON/core/action/generateReport/' \
+          --data 'title=ZAP Security Report' \
+          --data 'template=traditional-html' \
+          --data 'reportFileName=zap-report.html' \
+          --data 'reportDir=/zap/reports'
       "
 
 networks:

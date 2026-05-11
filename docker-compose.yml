@@ -1,4 +1,7 @@
+version: "3.9"
+
 services:
+
   zap:
     image: zaproxy/zap-stable
     container_name: zap
@@ -7,7 +10,7 @@ services:
       -host 0.0.0.0
       -port 8080
       -config api.disablekey=true
-      -config api.addrs.addr.name=.* 
+      -config api.addrs.addr.name=.*
       -config api.addrs.addr.regex=true
     ports:
       - "8080:8080"
@@ -16,25 +19,36 @@ services:
     networks:
       - zap-net
 
+  selenium-hub:
+    image: selenium/standalone-chrome:latest
+    container_name: selenium-hub
+    shm_size: 2gb
+    depends_on:
+      - zap
+    networks:
+      - zap-net
+
   selenium:
     build:
       context: .
       dockerfile: Dockerfile.selenium
-    container_name: selenium
+    container_name: selenium-tests
     working_dir: /tests
     volumes:
       - ./GEN_QUIDVUE/HORIZONTAL_VUE/CsUITest:/tests
     depends_on:
+      - selenium-hub
       - zap
     environment:
       - ZAP_PROXY=http://zap:8080
+      - SELENIUM_REMOTE_URL=http://selenium-hub:4444/wd/hub
     networks:
       - zap-net
     command: >
       bash -c "
         echo '▶️ Running Selenium tests' &&
         dotnet restore SeleniumWebTest.csproj &&
-        dotnet test SeleniumWebTest.csproj --filter LoginTest || true &&
+        dotnet test SeleniumWebTest.csproj --filter LoginTest &&
         echo '🛡 Generating ZAP HTML report' &&
         curl 'http://zap:8080/JSON/core/action/generateReport/' \
           --data 'title=ZAP Security Report' \

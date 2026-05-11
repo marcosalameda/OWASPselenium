@@ -1,13 +1,16 @@
+# Imagen base oficial de .NET 8 SDK
 FROM mcr.microsoft.com/dotnet/sdk:8.0
 
-# ===============================
-# Dependencias del sistema
-# ===============================
+# Evita prompts interactivos durante apt-get
+ENV DEBIAN_FRONTEND=noninteractive
+
+# Instalar dependencias necesarias para Chrome / Selenium
 RUN apt-get update && apt-get install -y \
     wget \
     gnupg \
     unzip \
     curl \
+    ca-certificates \
     chromium \
     chromium-driver \
     libnss3 \
@@ -24,21 +27,16 @@ RUN apt-get update && apt-get install -y \
     libasound2 \
     libxshmfence1 \
     fonts-liberation \
-    ca-certificates \
     && rm -rf /var/lib/apt/lists/*
 
-# ===============================
-# Variables de entorno CRÍTICAS
-# ===============================
-# Necesarias para que Chromium no se mate al arrancar en dotnet/sdk
-ENV HOME=/tmp
-ENV XDG_RUNTIME_DIR=/tmp
-
-# Binarios explícitos (útil para debug y CI)
+# Variables de entorno estándar para Selenium / Chrome
 ENV CHROME_BIN=/usr/bin/chromium
 ENV CHROMEDRIVER_BIN=/usr/bin/chromedriver
+ENV DOTNET_CLI_TELEMETRY_OPTOUT=1
+ENV DOTNET_NOLOGO=1
 
-# ===============================
-# Directorio de trabajo
-# ===============================
-WORKDIR /workspace
+# Directorio de trabajo donde se montan los tests
+WORKDIR /tests
+
+# No copiamos código aquí porque lo montas como volume desde docker-compose
+# El comando real (dotnet test --filter LoginTest) se ejecuta desde compose

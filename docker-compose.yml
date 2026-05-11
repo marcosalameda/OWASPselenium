@@ -1,7 +1,6 @@
 version: "3.9"
 
 services:
-
   zap:
     image: zaproxy/zap-stable
     container_name: zap
@@ -15,9 +14,14 @@ services:
     ports:
       - "8080:8080"
     volumes:
-      - ./zap-reports:/zap/reports
+      - ./zap-reports:/reports
     networks:
       - zap-net
+    healthcheck:
+      test: ["CMD", "curl", "-sf", "http://localhost:8080/JSON/core/view/version/"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
 
   selenium-hub:
     image: selenium/standalone-chrome:latest
@@ -26,41 +30,53 @@ services:
     networks:
       - zap-net
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:4444/wd/hub/status"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
+      test: ["CMD", "curl", "-sf", "http://localhost:4444/status"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
 
   selenium:
     build:
       context: .
       dockerfile: Dockerfile.selenium
-    container_name: selenium-tests
+    container_name: selenium
     working_dir: /tests
     volumes:
-      - ./GEN_QUIDVUE/HORIZONTAL_VUE/CsUITest:/tests
+      - /home/marcos.alameda@quidgest.pt/OWASPselenium/GEN_QUIDVUE/HORIZONTAL_VUE/CsUITest:/tests
+      - ./zap-reports:/reports
     depends_on:
+      zap:
+        condition: service_healthy
       selenium-hub:
         condition: service_healthy
-      zap:
-        condition: service_started
     environment:
-      - ZAP_PROXY=http://zap:8080
       - SELENIUM_REMOTE_URL=http://selenium-hub:4444/wd/hub
+      - ZAP_PROXY=http://zap:8080
+      - selenium.baseurl=https://jenkinsvm.quidgest.pt/gqt_horizontal_vue/
     networks:
       - zap-net
-    command: >
-      bash -c "
-        echo '▶️ Running Selenium tests' &&
-        dotnet restore SeleniumWebTest.csproj &&
-        dotnet test SeleniumWebTest.csproj --filter LoginTest || true &&
-        echo '🛡 Generating ZAP HTML report' &&
-        curl 'http://zap:8080/JSON/core/action/generateReport/' \
-          --data 'title=ZAP Security Report' \
-          --data 'template=traditional-html' \
-          --data 'reportFileName=zap-report.html' \
-          --data 'reportDir=/zap/reports'
-      "
+    command: |
+      bash -c '
+        set -e
+
+        echo "Waiting for ZAP..."
+        until curl -sf http://zap:8080/JSON/core/view/version/ >/dev/null; do sleep 2; done
+        echo "ZAP ready"
+
+        echo "Waiting for Selenium Grid..."
+        until curl -sf http://selenium-hub:4444/status >/dev/null; do sleep 2; done
+        echo "Selenium Grid ready"
+
+        echo "Running ALL tests (failures allowed)..."
+        dotnet restore SeleniumWebTest.csproj
+        dotnet test SeleniumWebTest.csproj || true
+
+        echo "Generating OWASP ZAP HTML report (classic)..."
+        curl --silent http://zap:8080/OTHER/core/other/htmlreport/ \
+          --output /reports/zap-report.html
+
+        echo "ZAP report generated"
+      '
 
 networks:
   zap-net:

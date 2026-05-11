@@ -1,66 +1,27 @@
+using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
-using OpenQA.Selenium.Edge;
-using OpenQA.Selenium.Firefox;
-//using OpenQA.Selenium.Opera;
-using WebDriverManager;
-using WebDriverManager.DriverConfigs.Impl;
-using WebDriverManager.Helpers;
+using OpenQA.Selenium.Remote;
 
 namespace quidgest.uitests.core;
 
-public class DriverFactory {
+public static class DriverFactory
+{
+    public static IWebDriver getWebDriver()
+    {
+        var remoteUrl = Environment.GetEnvironmentVariable("SELENIUM_REMOTE_URL");
+        if (string.IsNullOrWhiteSpace(remoteUrl))
+            throw new InvalidOperationException("SELENIUM_REMOTE_URL not set");
 
-	public static IWebDriver getWebDriver() {
-		var c = Configuration.Instance;
-		return getWebDriver(c.Browser, c.Headless.Value, c.ImplicitWait.Value, c.WindowWidth.Value, c.WindowHeight.Value);
-	}
+        var options = new ChromeOptions();
+        options.AddArgument("--headless=new");
+        options.AddArgument("--no-sandbox");
+        options.AddArgument("--disable-dev-shm-usage");
+        options.AddArgument("--window-size=1920,1080");
 
-	public static IWebDriver getWebDriver(string browser, bool headless, int ImplicitWaitMilliseconds, int windowwidth, int windowheight) {
-		IWebDriver driver;
+        var zapProxy = Environment.GetEnvironmentVariable("ZAP_PROXY");
+        if (!string.IsNullOrWhiteSpace(zapProxy))
+            options.AddArgument($"--proxy-server={zapProxy}");
 
-		switch(browser)
-		{
-			case "firefox":
-				new DriverManager().SetUpDriver(new FirefoxConfig(), VersionResolveStrategy.MatchingBrowser);
-				FirefoxOptions firefoxOptions = new FirefoxOptions();
-				if(headless)
-					firefoxOptions.AddArguments("--headless");
-				driver = new FirefoxDriver(firefoxOptions);
-				break;
-			case "edge":
-				new DriverManager().SetUpDriver(new EdgeConfig(), VersionResolveStrategy.MatchingBrowser);
-				driver = new EdgeDriver();
-				break;
-			//case "opera":
-			//	new DriverManager().SetUpDriver(new OperaConfig());
-			//	driver = new OperaDriver();
-			//	break;
-			default: //chrome
-				new DriverManager().SetUpDriver(new ChromeConfig(), VersionResolveStrategy.MatchingBrowser);
-				ChromeOptions chromeOptions = new ChromeOptions();
-				if(headless)
-					chromeOptions.AddArgument("--headless");
-
-				chromeOptions.AddArgument("--window-size=" + windowwidth + "," + windowheight);
-
-				chromeOptions.AddArgument("--allow-insecure-localhost");
-				
-				// Disable Chrome's built-in password manager and credential service
-				// to prevent prompts during automated tests.
-				chromeOptions.AddUserProfilePreference("credentials_enable_service", false);
-				chromeOptions.AddUserProfilePreference("profile.password_manager_enabled", false);
-				chromeOptions.AddUserProfilePreference("profile.password_manager_leak_detection", false);
-
-				// Setting the logging level allows to obtain much more information than by default level. 
-				// This becomes very useful in debugging the applications and e2e tests.
-				// TODO: It should be possible to configure it via JSON.
-				// chromeOptions.SetLoggingPreference(LogType.Browser, LogLevel.All);
-
-				driver = new ChromeDriver(chromeOptions);
-				break;
-		}
-
-		driver.Manage().Timeouts().ImplicitWait = System.TimeSpan.FromMilliseconds(ImplicitWaitMilliseconds);
-		return driver;
-	}
+        return new RemoteWebDriver(new Uri(remoteUrl), options);
+    }
 }

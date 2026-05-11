@@ -70,5 +70,12 @@
     <ProjectReference Include="..\CSGenio.framework\CSGenio.framework.csproj" />
     <ProjectReference Include="..\Quidgest.Persistence\Quidgest.Persistence.csproj" />
   </ItemGroup>
+<ItemGroup>
+  <Compile Remove="config\ConfigXMLMigration.cs" />
+</ItemGroup>
+<ItemGroup>
+  <Compile Remove="config\ConfigXMLMigration.cs" />
+  <Compile Remove="security\KeycloakRoleProvider.cs" />
+</ItemGroup>
 
 </Project>

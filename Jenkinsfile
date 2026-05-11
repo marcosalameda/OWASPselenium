@@ -13,31 +13,32 @@ pipeline {
             }
         }
 
-        stage('Run Selenium + ZAP') {
+        stage('Run Selenium + ZAP on Linux') {
             steps {
-                bat '''
-                    echo Starting Selenium + ZAP stack
+                sshagent(credentials: ['linux-docker-ssh']) {
+                    bat '''
+                        echo Running Docker Compose on Linux
 
-                    docker-compose down || exit 0
-                    docker-compose up --build --abort-on-container-exit
-                '''
+                        ssh -o StrictHostKeyChecking=no marcos.alameda@rankin.quidgest.pt ^
+                          "cd /home/marcos.alameda/OWASPselenium && \
+                           docker-compose down || true && \
+                           docker-compose up --build --abort-on-container-exit"
+                    '''
+                }
             }
         }
     }
 
     post {
         always {
-            echo 'Cleaning Docker resources'
-            bat 'docker-compose down || exit 0'
-
-            echo 'Archiving ZAP report if present'
-            archiveArtifacts artifacts: 'zap-reports/*.html', allowEmptyArchive: true, fingerprint: true
-        }
-        success {
-            echo 'Selenium + ZAP executed successfully'
-        }
-        failure {
-            echo 'Selenium tests failed'
+            echo 'Fetching ZAP report'
+            sshagent(credentials: ['linux-docker-ssh']) {
+                bat '''
+                    if not exist zap-reports mkdir zap-reports
+                    scp -o StrictHostKeyChecking=no marcos.alameda@rankin.quidgest.pt:/home/marcos.alameda/OWASPselenium/zap-reports/*.html zap-reports/ || exit 0
+                '''
+            }
+            archiveArtifacts artifacts: 'zap-reports/*.html', allowEmptyArchive: true
         }
     }
 }

@@ -15,30 +15,29 @@ pipeline {
 
         stage('Run Selenium + ZAP on Linux') {
             steps {
-                sshagent(credentials: ['linux-docker-ssh']) {
-                    bat '''
-                        echo Running Docker Compose on Linux
-
-                        ssh -o StrictHostKeyChecking=no marcos.alameda@rankin.quidgest.pt ^
-                          "cd /home/marcos.alameda/OWASPselenium && \
-                           docker-compose down || true && \
-                           docker-compose up --build --abort-on-container-exit"
+                sshCommand(
+                    credentialsId: 'linux-docker-ssh',
+                    host: 'rankin.quidgest.pt',
+                    user: 'marcos.alameda@quidgest.pt',
+                    command: '''
+                        cd /home/marcos.alameda@quidgest.pt/OWASPselenium
+                        docker-compose down || true
+                        docker-compose up --build --abort-on-container-exit
                     '''
-                }
+                )
             }
         }
     }
 
     post {
         always {
-            echo 'Fetching ZAP report'
-            sshagent(credentials: ['linux-docker-ssh']) {
-                bat '''
-                    if not exist zap-reports mkdir zap-reports
-                    scp -o StrictHostKeyChecking=no marcos.alameda@rankin.quidgest.pt:/home/marcos.alameda/OWASPselenium/zap-reports/*.html zap-reports/ || exit 0
-                '''
-            }
-            archiveArtifacts artifacts: 'zap-reports/*.html', allowEmptyArchive: true
-        }
-    }
-}
+            echo 'Fetching ZAP report from Linux'
+            sshGet(
+                credentialsId: 'linux-docker-ssh',
+                remote: '/home/marcos.alameda@quidgest.pt/OWASPselenium/zap-reports/*.html',
+                local: 'zap-reports/',
+                failOnError: false
+            )
+
+            archiveArtifacts artifacts: 'zap-reports/*.html',
+                             allowEmptyArchive: true,

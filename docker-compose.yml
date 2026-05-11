@@ -3,7 +3,6 @@ version: "3.9"
 services:
   zap:
     image: zaproxy/zap-stable
-    container_name: zap
     command: >
       zap.sh -daemon
       -host 0.0.0.0
@@ -25,7 +24,6 @@ services:
 
   selenium-hub:
     image: selenium/standalone-chrome:latest
-    container_name: selenium-hub
     shm_size: 2gb
     networks:
       - zap-net
@@ -39,7 +37,6 @@ services:
     build:
       context: .
       dockerfile: Dockerfile.selenium
-    container_name: selenium
     working_dir: /tests
     volumes:
       - /home/marcos.alameda@quidgest.pt/OWASPselenium/GEN_QUIDVUE/HORIZONTAL_VUE/CsUITest:/tests
@@ -50,9 +47,9 @@ services:
       selenium-hub:
         condition: service_healthy
     environment:
-      - SELENIUM_REMOTE_URL=http://selenium-hub:4444/wd/hub
-      - ZAP_PROXY=http://zap:8080
-      - selenium.baseurl=https://jenkinsvm.quidgest.pt/gqt_horizontal_vue/
+      SELENIUM_REMOTE_URL: http://selenium-hub:4444/wd/hub
+      ZAP_PROXY: http://zap:8080
+      selenium.baseurl: https://jenkinsvm.quidgest.pt/gqt_horizontal_vue/
     networks:
       - zap-net
     command: |
@@ -71,7 +68,7 @@ services:
         dotnet restore SeleniumWebTest.csproj
         dotnet test SeleniumWebTest.csproj || true
 
-        echo "Generating OWASP ZAP HTML report (classic)..."
+        echo "Generating OWASP ZAP HTML report..."
         curl --silent http://zap:8080/OTHER/core/other/htmlreport/ \
           --output /reports/zap-report.html
 

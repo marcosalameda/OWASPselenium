@@ -53,7 +53,6 @@ public class DriverFactory
             //     break;
 
             default: // ✅ CHROME
-                new DriverManager().SetUpDriver(new ChromeConfig(), VersionResolveStrategy.MatchingBrowser);
 
                 ChromeOptions chromeOptions = new ChromeOptions();
 

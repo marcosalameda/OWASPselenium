@@ -51,6 +51,9 @@ public class DriverFactory
 
                 // ✅ MUY IMPORTANTE: indicar explícitamente Chromium
                 chromeOptions.BinaryLocation = "/usr/bin/chromium";
+                chromeOptions.AddArgument("--user-data-dir=/tmp/chrome-user-data");
+                chromeOptions.AddArgument("--data-path=/tmp/chrome-data");
+                chromeOptions.AddArgument("--disk-cache-dir=/tmp/chrome-cache");
 
                 // ✅ Headless moderno (Chrome/Chromium >= 109)
                 if (headless)

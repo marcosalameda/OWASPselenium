@@ -1,8 +1,14 @@
 pipeline {
-    agent { label 'linux-docker' }
+    agent { label 'docker' }
 
     stages {
-        stage('Run Selenium + ZAP') {
+        stage('Checkout') {
+            steps {
+                checkout scm
+            }
+        }
+
+        stage('Run Selenium + OWASP ZAP') {
             steps {
                 sh '''
                   docker compose down -v || true
@@ -14,7 +20,8 @@ pipeline {
 
     post {
         always {
-            archiveArtifacts 'zap-reports/zap-report.html'
+            echo 'Archiving OWASP ZAP security report'
+            archiveArtifacts artifacts: 'zap-reports/zap-report.html', allowEmptyArchive: true
             sh 'docker compose down -v || true'
         }
     }

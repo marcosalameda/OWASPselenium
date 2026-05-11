@@ -78,6 +78,10 @@ public class DriverFactory
                 // 🧪 Flags habituales en automatización / CI
                 chromeOptions.AddArgument("--disable-web-security");
                 chromeOptions.AddArgument("--no-sandbox");
+                // ✅ IMPRESCINDIBLES en Docker
+                chromeOptions.AddArgument("--no-sandbox");
+                chromeOptions.AddArgument("--disable-dev-shm-usage");
+                chromeOptions.AddArgument("--disable-gpu");
 
                 // 🚫 Desactivar gestor de contraseñas de Chrome
                 chromeOptions.AddUserProfilePreference("credentials_enable_service", false);

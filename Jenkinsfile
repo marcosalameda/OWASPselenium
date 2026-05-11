@@ -1,11 +1,6 @@
 pipeline {
     agent any
 
-    environment {
-        DOCKER_BUILDKIT = '1'
-        COMPOSE_DOCKER_CLI_BUILD = '1'
-    }
-
     options {
         timestamps()
     }
@@ -21,10 +16,10 @@ pipeline {
         stage('Run Selenium + ZAP') {
             steps {
                 bat '''
-                    echo Starting Selenium + ZAP stack
+                    echo ▶ Starting Selenium + ZAP stack
 
-                    docker compose down || exit 0
-                    docker compose up --build --abort-on-container-exit
+                    docker-compose down || exit 0
+                    docker-compose up --build --abort-on-container-exit
                 '''
             }
         }
@@ -32,15 +27,17 @@ pipeline {
 
     post {
         always {
-            echo "Cleaning Docker resources"
-            bat 'docker compose down || exit 0'
-            archiveArtifacts artifacts: 'zap-reports/*.html', fingerprint: true
+            echo 🧹 Cleaning Docker resources
+            bat 'docker-compose down || exit 0'
+
+            echo 📦 Archiving ZAP report (if present)
+            archiveArtifacts artifacts: 'zap-reports/*.html', allowEmptyArchive: true, fingerprint: true
         }
         success {
-            echo 'Selenium + ZAP executed successfully'
+            echo ✅ Selenium + ZAP executed successfully
         }
         failure {
-            echo 'Selenium tests failed'
+            echo ❌ Selenium tests failed
         }
     }
 }

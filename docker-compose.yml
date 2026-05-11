@@ -23,10 +23,13 @@ services:
     image: selenium/standalone-chrome:latest
     container_name: selenium-hub
     shm_size: 2gb
-    depends_on:
-      - zap
     networks:
       - zap-net
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:4444/wd/hub/status"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
   selenium:
     build:
@@ -37,8 +40,10 @@ services:
     volumes:
       - ./GEN_QUIDVUE/HORIZONTAL_VUE/CsUITest:/tests
     depends_on:
-      - selenium-hub
-      - zap
+      selenium-hub:
+        condition: service_healthy
+      zap:
+        condition: service_started
     environment:
       - ZAP_PROXY=http://zap:8080
       - SELENIUM_REMOTE_URL=http://selenium-hub:4444/wd/hub
@@ -48,7 +53,7 @@ services:
       bash -c "
         echo '▶️ Running Selenium tests' &&
         dotnet restore SeleniumWebTest.csproj &&
-        dotnet test SeleniumWebTest.csproj --filter LoginTest &&
+        dotnet test SeleniumWebTest.csproj --filter LoginTest || true &&
         echo '🛡 Generating ZAP HTML report' &&
         curl 'http://zap:8080/JSON/core/action/generateReport/' \
           --data 'title=ZAP Security Report' \

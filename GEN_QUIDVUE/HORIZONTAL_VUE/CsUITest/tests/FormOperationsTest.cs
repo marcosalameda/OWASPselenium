@@ -5,6 +5,15 @@ namespace SeleniumWebTest.tests;
 
 public class FormOperationsTest : BaseSeleniumTest
 {
+    
+    [SetUp]
+    public void SetUp()
+    {
+        Driver.Navigate().GoToUrl(
+            Environment.GetEnvironmentVariable("selenium.baseurl")
+        );
+    }
+
     private AppPage Authenticate()
     {
         var a = new AppPage(Driver);

@@ -1,18 +1,16 @@
+def REMOTE = [
+    name: 'rankin',
+    host: 'rankin.quidgest.pt',
+    user: 'marcos.alameda@quidgest.pt',
+    credentialsId: 'linux-docker-ssh',
+    allowAnyHosts: true
+]
+
 pipeline {
     agent any
 
     options {
         timestamps()
-    }
-
-    environment {
-        REMOTE = [
-            name: 'rankin',
-            host: 'rankin.quidgest.pt',
-            user: 'marcos.alameda@quidgest.pt',
-            credentialsId: 'linux-docker-ssh',
-            allowAnyHosts: true
-        ]
     }
 
     stages {

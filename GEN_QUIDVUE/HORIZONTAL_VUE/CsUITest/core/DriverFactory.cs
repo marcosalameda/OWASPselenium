@@ -58,7 +58,10 @@ public class DriverFactory
                 ChromeOptions chromeOptions = new ChromeOptions();
 
                 if (headless)
-                    chromeOptions.AddArgument("--headless");
+{
+    chromeOptions.AddArgument("--headless=new");
+}
+
 
                 chromeOptions.AddArgument($"--window-size={windowwidth},{windowheight}");
 

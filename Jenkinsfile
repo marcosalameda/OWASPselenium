@@ -11,8 +11,8 @@ pipeline {
         stage('Build containers') {
             steps {
                 bat '''
-                  docker-compose down -v || exit 0
-                  docker-compose build
+                  docker compose down -v || exit 0
+                  docker compose build
                 '''
             }
         }
@@ -20,7 +20,7 @@ pipeline {
         stage('Run Selenium + OWASP ZAP') {
             steps {
                 bat '''
-                  docker-compose up --abort-on-container-exit
+                  docker compose up --abort-on-container-exit
                 '''
             }
         }
@@ -30,8 +30,7 @@ pipeline {
         always {
             echo 'Archiving OWASP ZAP security report'
             archiveArtifacts artifacts: 'zap-reports/zap-report.html', allowEmptyArchive: true
-
-            bat 'docker-compose down -v || exit 0'
+            bat 'docker compose down -v || exit 0'
         }
     }
 }

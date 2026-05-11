@@ -1,33 +1,73 @@
-post {
-    always {
-        echo 'Fetching ZAP report from Linux via SSH'
+def REMOTE = [
+    name: 'rankin',
+    host: 'rankin.quidgest.pt',
+    user: 'marcos.alameda@quidgest.pt',
+    credentialsId: 'linux-docker-ssh',
+    allowAnyHosts: true
+]
 
-        sshCommand(
-            remote: REMOTE,
-            command: '''
-                if [ -f /home/marcos.alameda@quidgest.pt/OWASPselenium/zap-reports/zap-report.html ]; then
-                    base64 /home/marcos.alameda@quidgest.pt/OWASPselenium/zap-reports/zap-report.html
-                fi
-            '''
-        ).with { output ->
-            if (output?.trim()) {
-                writeFile(
-                    file: 'zap-reports/zap-report.html',
-                    text: new String(output.trim().decodeBase64())
-                )
+pipeline {
+    agent any
+
+    options {
+        timestamps()
+    }
+
+    stages {
+
+        stage('Checkout') {
+            steps {
+                checkout scm
             }
         }
 
-        archiveArtifacts artifacts: 'zap-reports/*.html',
-                         allowEmptyArchive: true,
-                         fingerprint: true
+        stage('Run Selenium + ZAP on Linux') {
+            steps {
+                sshCommand(
+                    remote: REMOTE,
+                    command: '''
+                        cd /home/marcos.alameda@quidgest.pt/OWASPselenium
+                        docker-compose down || true
+                        docker-compose up --build --abort-on-container-exit
+                    '''
+                )
+            }
+        }
     }
 
-    success {
-        echo 'Pipeline executed successfully'
-    }
+    post {
+        always {
+            echo 'Fetching ZAP report from Linux via SSH'
 
-    failure {
-        echo 'Pipeline failed'
+            script {
+                def encoded = sshCommand(
+                    remote: REMOTE,
+                    command: '''
+                        if [ -f /home/marcos.alameda@quidgest.pt/OWASPselenium/zap-reports/zap-report.html ]; then
+                            base64 /home/marcos.alameda@quidgest.pt/OWASPselenium/zap-reports/zap-report.html
+                        fi
+                    '''
+                )
+
+                if (encoded?.trim()) {
+                    writeFile(
+                        file: 'zap-reports/zap-report.html',
+                        text: new String(encoded.trim().decodeBase64())
+                    )
+                }
+            }
+
+            archiveArtifacts artifacts: 'zap-reports/*.html',
+                             allowEmptyArchive: true,
+                             fingerprint: true
+        }
+
+        success {
+            echo 'Pipeline executed successfully'
+        }
+
+        failure {
+            echo 'Pipeline failed'
+        }
     }
 }

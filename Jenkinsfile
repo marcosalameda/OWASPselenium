@@ -1,6 +1,10 @@
 pipeline {
     agent { label 'docker' }
 
+    environment {
+        COMPOSE_PROJECT_NAME = 'owasp-selenium'
+    }
+
     stages {
         stage('Checkout') {
             steps {
@@ -20,8 +24,7 @@ pipeline {
 
     post {
         always {
-            echo 'Archiving OWASP ZAP security report'
-            archiveArtifacts artifacts: 'zap-reports/zap-report.html', allowEmptyArchive: true
+            archiveArtifacts artifacts: 'zap-reports/**/*', allowEmptyArchive: true
             sh 'docker compose down -v || true'
         }
     }

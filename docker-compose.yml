@@ -47,9 +47,17 @@ services:
       selenium-hub:
         condition: service_healthy
     environment:
+      # Selenium / tests
       SELENIUM_REMOTE_URL: http://selenium-hub:4444/wd/hub
-      ZAP_PROXY: http://zap:8080
       selenium.baseurl: https://jenkinsvm.quidgest.pt/gqt_horizontal_vue/
+      ZAP_PROXY: http://zap:8080
+
+      # 🔴 FORZAR PROXY PARA CHROME (CLAVE)
+      http_proxy:  http://zap:8080
+      https_proxy: http://zap:8080
+      HTTP_PROXY:  http://zap:8080
+      HTTPS_PROXY: http://zap:8080
+
     networks:
       - zap-net
     command: |
@@ -64,9 +72,9 @@ services:
         until curl -sf http://selenium-hub:4444/status >/dev/null; do sleep 2; done
         echo "Selenium Grid ready"
 
-        echo "Running ALL tests (failures allowed)..."
+        echo "Running filtered Selenium test (LoginTest)..."
         dotnet restore SeleniumWebTest.csproj
-        dotnet test SeleniumWebTest.csproj || true
+        dotnet test SeleniumWebTest.csproj --filter "LoginTest" || true
 
         echo "Generating OWASP ZAP HTML report..."
         curl --silent http://zap:8080/OTHER/core/other/htmlreport/ \

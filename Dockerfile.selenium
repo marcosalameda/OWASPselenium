@@ -1,11 +1,44 @@
 FROM mcr.microsoft.com/dotnet/sdk:8.0
 
+# ===============================
+# Dependencias del sistema
+# ===============================
 RUN apt-get update && apt-get install -y \
-    wget gnupg unzip curl \
-    chromium chromium-driver \
+    wget \
+    gnupg \
+    unzip \
+    curl \
+    chromium \
+    chromium-driver \
+    libnss3 \
+    libgconf-2-4 \
+    libx11-xcb1 \
+    libxcomposite1 \
+    libxdamage1 \
+    libxrandr2 \
+    libgbm1 \
+    libatk1.0-0 \
+    libatk-bridge2.0-0 \
+    libcups2 \
+    libdrm2 \
+    libasound2 \
+    libxshmfence1 \
+    fonts-liberation \
+    ca-certificates \
     && rm -rf /var/lib/apt/lists/*
 
+# ===============================
+# Variables de entorno CRÍTICAS
+# ===============================
+# Necesarias para que Chromium no se mate al arrancar en dotnet/sdk
+ENV HOME=/tmp
+ENV XDG_RUNTIME_DIR=/tmp
+
+# Binarios explícitos (útil para debug y CI)
 ENV CHROME_BIN=/usr/bin/chromium
 ENV CHROMEDRIVER_BIN=/usr/bin/chromedriver
 
+# ===============================
+# Directorio de trabajo
+# ===============================
 WORKDIR /workspace

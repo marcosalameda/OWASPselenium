@@ -5,6 +5,16 @@ pipeline {
         timestamps()
     }
 
+    environment {
+        REMOTE = [
+            name: 'rankin',
+            host: 'rankin.quidgest.pt',
+            user: 'marcos.alameda@quidgest.pt',
+            credentialsId: 'linux-docker-ssh',
+            allowAnyHosts: true
+        ]
+    }
+
     stages {
 
         stage('Checkout') {
@@ -16,9 +26,7 @@ pipeline {
         stage('Run Selenium + ZAP on Linux') {
             steps {
                 sshCommand(
-                    credentialsId: 'linux-docker-ssh',
-                    host: 'rankin.quidgest.pt',
-                    user: 'marcos.alameda@quidgest.pt',
+                    remote: REMOTE,
                     command: '''
                         cd /home/marcos.alameda@quidgest.pt/OWASPselenium
                         docker-compose down || true
@@ -32,20 +40,23 @@ pipeline {
     post {
         always {
             echo 'Fetching ZAP report from Linux'
+
             sshGet(
-                credentialsId: 'linux-docker-ssh',
-                remote: '/home/marcos.alameda@quidgest.pt/OWASPselenium/zap-reports/*.html',
-                local: 'zap-reports/',
-                failOnError: false
+                remote: REMOTE,
+                from: '/home/marcos.alameda@quidgest.pt/OWASPselenium/zap-reports/*.html',
+                into: 'zap-reports/',
+                override: true
             )
 
             archiveArtifacts artifacts: 'zap-reports/*.html',
                              allowEmptyArchive: true,
                              fingerprint: true
         }
+
         success {
             echo 'Pipeline executed successfully'
         }
+
         failure {
             echo 'Pipeline failed'
         }

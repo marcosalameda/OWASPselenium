@@ -31,7 +31,8 @@ public class DriverFactory
         switch (browser.ToLowerInvariant())
         {
             case "firefox":
-                FirefoxOptions firefoxOptions = new FirefoxOptions();
+            {
+                var firefoxOptions = new FirefoxOptions();
 
                 if (headless)
                 {
@@ -40,43 +41,45 @@ public class DriverFactory
 
                 driver = new FirefoxDriver(firefoxOptions);
                 break;
+            }
 
             case "edge":
                 driver = new EdgeDriver();
                 break;
 
-            default: // ✅ CHROME / CHROMIUM (Docker)
+            default: // ✅ CHROME / CHROMIUM EN DOCKER
+            {
+                var chromeOptions = new ChromeOptions();
 
-                ChromeOptions chromeOptions = new ChromeOptions();
-
-                // ✅ MUY IMPORTANTE: indicar explícitamente Chromium
+                // ✅ Forzar Chromium (no google-chrome)
                 chromeOptions.BinaryLocation = "/usr/bin/chromium";
+
+                // ✅ Directorios escribibles (CRÍTICO en Docker)
                 chromeOptions.AddArgument("--user-data-dir=/tmp/chrome-user-data");
                 chromeOptions.AddArgument("--data-path=/tmp/chrome-data");
                 chromeOptions.AddArgument("--disk-cache-dir=/tmp/chrome-cache");
 
-                // ✅ Headless moderno (Chrome/Chromium >= 109)
+                // ✅ Headless moderno
                 if (headless)
                 {
                     chromeOptions.AddArgument("--headless=new");
                 }
 
-                // ✅ Tamaño de ventana
+                // ✅ Ventana
                 chromeOptions.AddArgument($"--window-size={windowwidth},{windowheight}");
 
-                // ✅ FLAGS OBLIGATORIOS EN DOCKER
+                // ✅ Flags obligatorios en contenedores
                 chromeOptions.AddArgument("--no-sandbox");
                 chromeOptions.AddArgument("--disable-dev-shm-usage");
                 chromeOptions.AddArgument("--disable-gpu");
 
-                // ✅ Seguridad / certificados (útil para test y ZAP)
+                // ✅ Certificados e inseguridad controlada (tests / ZAP)
                 chromeOptions.AddArgument("--ignore-certificate-errors");
                 chromeOptions.AddArgument("--allow-insecure-localhost");
                 chromeOptions.AddArgument("--allow-running-insecure-content");
-
                 chromeOptions.AcceptInsecureCertificates = true;
 
-                // ✅ Desactivar funcionalidades problemáticas en CI
+                // ✅ Evitar cosas problemáticas en CI
                 chromeOptions.AddArgument("--disable-web-security");
                 chromeOptions.AddArgument("--disable-features=SafeBrowsing");
 
@@ -93,12 +96,12 @@ public class DriverFactory
                     chromeOptions.AddArgument($"--proxy-server={zapProxy}");
                 }
 
-                // ✅ Crear el driver (Chromedriver del sistema)
+                // ✅ ChromeDriver del sistema (/usr/bin/chromedriver)
                 driver = new ChromeDriver(chromeOptions);
                 break;
+            }
         }
 
-        // ✅ Timeouts
         driver.Manage().Timeouts().ImplicitWait =
             TimeSpan.FromMilliseconds(implicitWaitMilliseconds);
 

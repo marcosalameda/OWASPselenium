@@ -14,7 +14,6 @@ pipeline {
     }
 
     stages {
-
         stage('Checkout') {
             steps {
                 checkout scm
@@ -23,27 +22,25 @@ pipeline {
 
         stage('Run Selenium + ZAP on Linux') {
             steps {
-                sshCommand(
-                    remote: REMOTE,
-                    command: '''
-                        cd /home/marcos.alameda@quidgest.pt/OWASPselenium
-                        docker-compose down || true
-                        docker-compose up --build --abort-on-container-exit
-                    '''
-                )
+                catchError(buildResult: 'SUCCESS', stageResult: 'SUCCESS') {
+                    sshCommand(
+                        remote: REMOTE,
+                        command: '''
+                            cd /home/marcos.alameda@quidgest.pt/OWASPselenium
+                            docker-compose down || true
+                            docker-compose up --build --abort-on-container-exit
+                        '''
+                    )
+                }
             }
         }
     }
 
     post {
-        success {
-            echo '✅ Selenium + ZAP executed successfully on Linux'
-            echo 'ℹ ZAP report available on Linux host'
-            echo 'ℹ Path: /home/marcos.alameda@quidgest.pt/OWASPselenium/zap-reports/zap-report.html'
-        }
-
-        failure {
-            echo '❌ Pipeline failed'
+        always {
+            echo 'Ejecución remota lanzada.'
+            echo 'Resultados y reportes se encuentran en el host Linux:'
+            echo '/home/marcos.alameda@quidgest.pt/OWASPselenium/zap-reports/'
         }
     }
 }

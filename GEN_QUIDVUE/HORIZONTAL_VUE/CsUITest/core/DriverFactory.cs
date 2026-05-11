@@ -1,11 +1,7 @@
-﻿using OpenQA.Selenium;
+using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
 using OpenQA.Selenium.Edge;
 using OpenQA.Selenium.Firefox;
-// using OpenQA.Selenium.Opera;
-using WebDriverManager;
-using WebDriverManager.DriverConfigs.Impl;
-using WebDriverManager.Helpers;
 
 namespace quidgest.uitests.core;
 
@@ -32,74 +28,74 @@ public class DriverFactory
     {
         IWebDriver driver;
 
-        switch (browser)
+        switch (browser.ToLowerInvariant())
         {
             case "firefox":
-                new DriverManager().SetUpDriver(new FirefoxConfig(), VersionResolveStrategy.MatchingBrowser);
                 FirefoxOptions firefoxOptions = new FirefoxOptions();
+
                 if (headless)
-                    firefoxOptions.AddArguments("--headless");
+                {
+                    firefoxOptions.AddArgument("--headless");
+                }
+
                 driver = new FirefoxDriver(firefoxOptions);
                 break;
 
             case "edge":
-                new DriverManager().SetUpDriver(new EdgeConfig(), VersionResolveStrategy.MatchingBrowser);
                 driver = new EdgeDriver();
                 break;
 
-            // case "opera":
-            //     new DriverManager().SetUpDriver(new OperaConfig());
-            //     driver = new OperaDriver();
-            //     break;
-
-            default: // ✅ CHROME
+            default: // ✅ CHROME / CHROMIUM (Docker)
 
                 ChromeOptions chromeOptions = new ChromeOptions();
 
+                // ✅ MUY IMPORTANTE: indicar explícitamente Chromium
+                chromeOptions.BinaryLocation = "/usr/bin/chromium";
+
+                // ✅ Headless moderno (Chrome/Chromium >= 109)
                 if (headless)
-{
-    chromeOptions.AddArgument("--headless=new");
-}
+                {
+                    chromeOptions.AddArgument("--headless=new");
+                }
 
-
+                // ✅ Tamaño de ventana
                 chromeOptions.AddArgument($"--window-size={windowwidth},{windowheight}");
 
-                // 🔐 Desactivar Safe Browsing y avisos de seguridad
-                chromeOptions.AddArgument("--disable-features=SafeBrowsing");
-                chromeOptions.AddUserProfilePreference("safebrowsing.enabled", false);
-                chromeOptions.AddUserProfilePreference("safebrowsing.disable_download_protection", true);
-
-                // 🌐 Permitir HTTP, IPs internas, certificados no válidos
-                chromeOptions.AddArgument("--ignore-certificate-errors");
-                chromeOptions.AddArgument("--allow-insecure-localhost");
-                chromeOptions.AddArgument("--allow-running-insecure-content");
-
-                // 🧪 Flags habituales en automatización / CI
-                chromeOptions.AddArgument("--disable-web-security");
-                chromeOptions.AddArgument("--no-sandbox");
-                // ✅ IMPRESCINDIBLES en Docker
+                // ✅ FLAGS OBLIGATORIOS EN DOCKER
                 chromeOptions.AddArgument("--no-sandbox");
                 chromeOptions.AddArgument("--disable-dev-shm-usage");
                 chromeOptions.AddArgument("--disable-gpu");
 
-                // 🚫 Desactivar gestor de contraseñas de Chrome
+                // ✅ Seguridad / certificados (útil para test y ZAP)
+                chromeOptions.AddArgument("--ignore-certificate-errors");
+                chromeOptions.AddArgument("--allow-insecure-localhost");
+                chromeOptions.AddArgument("--allow-running-insecure-content");
+
+                chromeOptions.AcceptInsecureCertificates = true;
+
+                // ✅ Desactivar funcionalidades problemáticas en CI
+                chromeOptions.AddArgument("--disable-web-security");
+                chromeOptions.AddArgument("--disable-features=SafeBrowsing");
+
+                chromeOptions.AddUserProfilePreference("safebrowsing.enabled", false);
+                chromeOptions.AddUserProfilePreference("safebrowsing.disable_download_protection", true);
                 chromeOptions.AddUserProfilePreference("credentials_enable_service", false);
                 chromeOptions.AddUserProfilePreference("profile.password_manager_enabled", false);
                 chromeOptions.AddUserProfilePreference("profile.password_manager_leak_detection", false);
 
-                // Proxy ZAP (Windows)
+                // ✅ Proxy ZAP (si existe)
                 var zapProxy = Environment.GetEnvironmentVariable("ZAP_PROXY");
-
-                if (!string.IsNullOrEmpty(zapProxy))
+                if (!string.IsNullOrWhiteSpace(zapProxy))
                 {
                     chromeOptions.AddArgument($"--proxy-server={zapProxy}");
-                    chromeOptions.AcceptInsecureCertificates = true;
                 }
 
+                // ✅ Crear el driver (Chromedriver del sistema)
                 driver = new ChromeDriver(chromeOptions);
                 break;
         }
 
+        // ✅ Timeouts
         driver.Manage().Timeouts().ImplicitWait =
             TimeSpan.FromMilliseconds(implicitWaitMilliseconds);
 

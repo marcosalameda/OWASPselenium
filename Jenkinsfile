@@ -41,3 +41,13 @@ pipeline {
 
             archiveArtifacts artifacts: 'zap-reports/*.html',
                              allowEmptyArchive: true,
+                             fingerprint: true
+        }
+        success {
+            echo 'Pipeline executed successfully'
+        }
+        failure {
+            echo 'Pipeline failed'
+        }
+    }
+}

@@ -8,19 +8,26 @@ pipeline {
             }
         }
 
-        stage('Build containers') {
+        stage('Build & Run Selenium + OWASP ZAP (via Docker Compose container)') {
             steps {
                 bat '''
-                  docker compose down -v || exit 0
-                  docker compose build
-                '''
-            }
-        }
+                  REM Stop anything left from previous runs
+                  docker run --rm ^
+                    -v "%CD%":/work ^
+                    -w /work ^
+                    docker/compose:1.29.2 down -v || exit 0
 
-        stage('Run Selenium + OWASP ZAP') {
-            steps {
-                bat '''
-                  docker compose up --abort-on-container-exit
+                  REM Build images
+                  docker run --rm ^
+                    -v "%CD%":/work ^
+                    -w /work ^
+                    docker/compose:1.29.2 build
+
+                  REM Run stack (Selenium exits → whole stack exits)
+                  docker run --rm ^
+                    -v "%CD%":/work ^
+                    -w /work ^
+                    docker/compose:1.29.2 up --abort-on-container-exit
                 '''
             }
         }
@@ -29,8 +36,15 @@ pipeline {
     post {
         always {
             echo 'Archiving OWASP ZAP security report'
+
             archiveArtifacts artifacts: 'zap-reports/zap-report.html', allowEmptyArchive: true
-            bat 'docker compose down -v || exit 0'
+
+            bat '''
+              docker run --rm ^
+                -v "%CD%":/work ^
+                -w /work ^
+                docker/compose:1.29.2 down -v || exit 0
+            '''
         }
     }
 }

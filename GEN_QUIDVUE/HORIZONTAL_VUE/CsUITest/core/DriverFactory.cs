@@ -2,6 +2,7 @@ using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
 using OpenQA.Selenium.Edge;
 using OpenQA.Selenium.Firefox;
+using OpenQA.Selenium.Remote;
 
 namespace quidgest.uitests.core;
 
@@ -28,76 +29,61 @@ public class DriverFactory
     {
         IWebDriver driver;
 
+        var remoteUrl = Environment.GetEnvironmentVariable("SELENIUM_REMOTE_URL");
+        if (string.IsNullOrWhiteSpace(remoteUrl))
+        {
+            throw new InvalidOperationException(
+                "SELENIUM_REMOTE_URL environment variable is not set"
+            );
+        }
+
         switch (browser.ToLowerInvariant())
         {
             case "firefox":
             {
-                var firefoxOptions = new FirefoxOptions();
+                var options = new FirefoxOptions();
 
                 if (headless)
                 {
-                    firefoxOptions.AddArgument("--headless");
+                    options.AddArgument("--headless");
                 }
 
-                driver = new FirefoxDriver(firefoxOptions);
+                ConfigureZapProxy(options);
+
+                driver = new RemoteWebDriver(new Uri(remoteUrl), options);
                 break;
             }
 
             case "edge":
-                driver = new EdgeDriver();
-                break;
-
-            default: // ✅ CHROME / CHROMIUM EN DOCKER
             {
-                var chromeOptions = new ChromeOptions();
+                var options = new EdgeOptions();
+                ConfigureZapProxy(options);
 
-                // ✅ Forzar Chromium (no google-chrome)
-                chromeOptions.BinaryLocation = "/usr/bin/chromium";
+                driver = new RemoteWebDriver(new Uri(remoteUrl), options);
+                break;
+            }
 
-                // ✅ Directorios escribibles (CRÍTICO en Docker)
-                chromeOptions.AddArgument("--user-data-dir=/tmp/chrome-user-data");
-                chromeOptions.AddArgument("--data-path=/tmp/chrome-data");
-                chromeOptions.AddArgument("--disk-cache-dir=/tmp/chrome-cache");
+            default: // ✅ CHROME (REMOTE)
+            {
+                var options = new ChromeOptions();
 
-                // ✅ Headless moderno
                 if (headless)
                 {
-                    chromeOptions.AddArgument("--headless=new");
+                    options.AddArgument("--headless=new");
                 }
 
-                // ✅ Ventana
-                chromeOptions.AddArgument($"--window-size={windowwidth},{windowheight}");
+                options.AddArgument($"--window-size={windowwidth},{windowheight}");
+                options.AddArgument("--no-sandbox");
+                options.AddArgument("--disable-dev-shm-usage");
+                options.AddArgument("--disable-gpu");
 
-                // ✅ Flags obligatorios en contenedores
-                chromeOptions.AddArgument("--no-sandbox");
-                chromeOptions.AddArgument("--disable-dev-shm-usage");
-                chromeOptions.AddArgument("--disable-gpu");
+                options.AddArgument("--ignore-certificate-errors");
+                options.AddArgument("--allow-insecure-localhost");
+                options.AcceptInsecureCertificates = true;
 
-                // ✅ Certificados e inseguridad controlada (tests / ZAP)
-                chromeOptions.AddArgument("--ignore-certificate-errors");
-                chromeOptions.AddArgument("--allow-insecure-localhost");
-                chromeOptions.AddArgument("--allow-running-insecure-content");
-                chromeOptions.AcceptInsecureCertificates = true;
+                ConfigureZapProxy(options);
 
-                // ✅ Evitar cosas problemáticas en CI
-                chromeOptions.AddArgument("--disable-web-security");
-                chromeOptions.AddArgument("--disable-features=SafeBrowsing");
-
-                chromeOptions.AddUserProfilePreference("safebrowsing.enabled", false);
-                chromeOptions.AddUserProfilePreference("safebrowsing.disable_download_protection", true);
-                chromeOptions.AddUserProfilePreference("credentials_enable_service", false);
-                chromeOptions.AddUserProfilePreference("profile.password_manager_enabled", false);
-                chromeOptions.AddUserProfilePreference("profile.password_manager_leak_detection", false);
-
-                // ✅ Proxy ZAP (si existe)
-                var zapProxy = Environment.GetEnvironmentVariable("ZAP_PROXY");
-                if (!string.IsNullOrWhiteSpace(zapProxy))
-                {
-                    chromeOptions.AddArgument($"--proxy-server={zapProxy}");
-                }
-
-                // ✅ ChromeDriver del sistema (/usr/bin/chromedriver)
-                driver = new ChromeDriver(chromeOptions);
+                driver = new RemoteWebDriver(new Uri(remoteUrl), options);
                 break;
             }
         }
@@ -106,5 +92,14 @@ public class DriverFactory
             TimeSpan.FromMilliseconds(implicitWaitMilliseconds);
 
         return driver;
+    }
+
+    private static void ConfigureZapProxy(DriverOptions options)
+    {
+        var zapProxy = Environment.GetEnvironmentVariable("ZAP_PROXY");
+        if (!string.IsNullOrWhiteSpace(zapProxy))
+        {
+            options.AddArgument($"--proxy-server={zapProxy}");
+        }
     }
 }

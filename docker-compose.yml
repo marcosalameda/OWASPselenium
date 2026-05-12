@@ -57,36 +57,34 @@ services:
       ZAP_PROXY: http://zap:8080
       NO_PROXY: "localhost,127.0.0.1,selenium-hub,nuget.org,api.nuget.org"
       no_proxy: "localhost,127.0.0.1,selenium-hub,nuget.org,api.nuget.org"
-    command: |
-      bash -c '
-        set -e
-        echo "Waiting for ZAP..."
-        until curl -sf http://zap:8080/JSON/core/view/version/ >/dev/null; do sleep 2; done
-        echo "ZAP ready"
-
-        echo "Waiting for Selenium Grid..."
-        until curl -sf http://selenium-hub:4444/status >/dev/null; do sleep 2; done
-        echo "Selenium Grid ready"
-
-        echo "Configuring ZAP context..."
-        curl -sf "http://zap:8080/JSON/context/action/newContext/?contextName=mi-app" > /dev/null
-        curl -sf "http://zap:8080/JSON/context/action/includeInContext/?contextName=mi-app&regex=https://jenkinsvm.quidgest.pt/gqt_horizontal_vue.*" > /dev/null
-        echo "ZAP context configured"
-
-        echo "Running Selenium test (LoginTest)..."
-        dotnet restore SeleniumWebTest.csproj
-        dotnet test SeleniumWebTest.csproj --filter "LoginTest" || true
-
-        echo "Generating OWASP ZAP HTML report..."
-        curl -sf "http://zap:8080/JSON/reports/action/generate/" \
-          --get \
-          --data-urlencode "title=OWASP ZAP Report" \
-          --data-urlencode "template=traditional-html" \
-          --data-urlencode "contexts=mi-app" \
-          --data-urlencode "reportFileName=zap-report" \
-          --data-urlencode "reportDir=/reports" \
-          > /dev/null
-        echo "ZAP report generated"
+    command:
+      - bash
+      - -c
+      - |
+          set -e
+          echo "Waiting for ZAP..."
+          until curl -sf http://zap:8080/JSON/core/view/version/ >/dev/null; do sleep 2; done
+          echo "ZAP ready"
+          echo "Waiting for Selenium Grid..."
+          until curl -sf http://selenium-hub:4444/status >/dev/null; do sleep 2; done
+          echo "Selenium Grid ready"
+          echo "Configuring ZAP context..."
+          curl -sf "http://zap:8080/JSON/context/action/newContext/?contextName=mi-app" > /dev/null
+          curl -sf "http://zap:8080/JSON/context/action/includeInContext/?contextName=mi-app&regex=https://jenkinsvm.quidgest.pt/gqt_horizontal_vue.*" > /dev/null
+          echo "ZAP context configured"
+          echo "Running Selenium test (LoginTest)..."
+          dotnet restore SeleniumWebTest.csproj
+          dotnet test SeleniumWebTest.csproj --filter "LoginTest" || true
+          echo "Generating OWASP ZAP HTML report..."
+          curl -sf "http://zap:8080/JSON/reports/action/generate/" \
+            --get \
+            --data-urlencode "title=OWASP ZAP Report" \
+            --data-urlencode "template=traditional-html" \
+            --data-urlencode "contexts=mi-app" \
+            --data-urlencode "reportFileName=zap-report" \
+            --data-urlencode "reportDir=/reports" \
+            > /dev/null
+          echo "ZAP report generated"
 
 networks:
   zap-net:

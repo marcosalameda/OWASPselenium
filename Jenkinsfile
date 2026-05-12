@@ -31,10 +31,13 @@ pipeline {
         }
     }
     post {
-        always {
-            archiveArtifacts artifacts: 'zap-reports/**/*', allowEmptyArchive: true
-            sh 'docker compose down -v --remove-orphans || true'
-        }
+    always {
+        archiveArtifacts artifacts: 'zap-reports/**/*', allowEmptyArchive: true
+        sh '''
+          export ZAP_PROXY=http://zap:8080
+          export SELENIUM_REMOTE_URL=http://selenium-hub:4444/wd/hub
+          docker compose down -v --remove-orphans || true
+        '''
         failure {
             echo '⚠️ Pipeline fallido. Revisa el Console Log y el informe ZAP.'
         }

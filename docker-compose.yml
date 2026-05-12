@@ -1,7 +1,7 @@
 services:
   zap:
     image: zaproxy/zap-stable
-    user: root                          # ← ZAP corre como root, tiene permisos sobre el volumen
+    user: root
     command: >
       zap.sh -daemon
       -host 0.0.0.0
@@ -27,10 +27,7 @@ services:
     networks:
       - zap-net
     environment:
-      SE_NODE_CHROME_ARGS: >
-        --ignore-certificate-errors
-        --ignore-ssl-errors=yes
-        --allow-insecure-localhost
+      - SE_NODE_CHROME_ARGS=--ignore-certificate-errors --ignore-ssl-errors=yes --allow-insecure-localhost
     healthcheck:
       test: ["CMD", "curl", "-sf", "http://localhost:4444/status"]
       interval: 5s
@@ -53,43 +50,47 @@ services:
     networks:
       - zap-net
     environment:
-      SELENIUM_REMOTE_URL: http://selenium-hub:4444/wd/hub
-      selenium.baseurl: https://jenkinsvm.quidgest.pt/gqt_horizontal_vue/
-      ZAP_PROXY: http://zap:8080
-      selenium.explicitwait: "30000"   # ← 30 segundos en ms
-      selenium.implicitwait: "10000"   # ← 10 segundos en ms
-      NO_PROXY: "localhost,127.0.0.1,selenium-hub,nuget.org,api.nuget.org"
-      no_proxy: "localhost,127.0.0.1,selenium-hub,nuget.org,api.nuget.org"
-      
+      - SELENIUM_REMOTE_URL=http://selenium-hub:4444/wd/hub
+      - ZAP_PROXY=http://zap:8080
+      - selenium.baseurl=https://jenkinsvm.quidgest.pt/gqt_horizontal_vue/
+      - selenium_baseurl=https://jenkinsvm.quidgest.pt/gqt_horizontal_vue/
+      - selenium.explicitwait=30000
+      - selenium_explicitwait=30000
+      - selenium.implicitwait=10000
+      - selenium_implicitwait=10000
+      - NO_PROXY=localhost,127.0.0.1,selenium-hub,nuget.org,api.nuget.org
+      - no_proxy=localhost,127.0.0.1,selenium-hub,nuget.org,api.nuget.org
     command:
       - bash
       - -c
       - |
           set -e
+
           echo "=== DIAGNÓSTICO DE VARIABLES ==="
-          echo "selenium.baseurl = $(printenv 'selenium.baseurl' || echo 'NO ENCONTRADA')"
-          echo "selenium_baseurl = $(printenv 'selenium_baseurl' || echo 'NO ENCONTRADA')"
-          echo "selenium.explicitwait = $(printenv 'selenium.explicitwait' || echo 'NO ENCONTRADA')"
-          echo "ZAP_PROXY = $ZAP_PROXY"
-          echo "SELENIUM_REMOTE_URL = $SELENIUM_REMOTE_URL"
+          echo "ZAP_PROXY = $$ZAP_PROXY"
+          echo "SELENIUM_REMOTE_URL = $$SELENIUM_REMOTE_URL"
+          echo "selenium.baseurl = $$selenium_baseurl"
           echo "================================"
 
-          echo "Waiting for ZAP..."
+          echo "Waiting for services..."
           until curl -sf http://zap:8080/JSON/core/view/version/ >/dev/null; do sleep 2; done
-          echo "ZAP ready"
-          echo "Waiting for ZAP..."
-          until curl -sf http://zap:8080/JSON/core/view/version/ >/dev/null; do sleep 2; done
-          echo "ZAP ready"
-          echo "Waiting for Selenium Grid..."
           until curl -sf http://selenium-hub:4444/status >/dev/null; do sleep 2; done
-          echo "Selenium Grid ready"
-          echo "Configuring ZAP context..."
+          echo "Services ready"
+
+          echo "Configuring ZAP context & exclusions..."
           curl -sf "http://zap:8080/JSON/context/action/newContext/?contextName=mi-app" > /dev/null
           curl -sf "http://zap:8080/JSON/context/action/includeInContext/?contextName=mi-app&regex=https://jenkinsvm.quidgest.pt/gqt_horizontal_vue.*" > /dev/null
-          echo "ZAP context configured"
+          
+          # Excluir dominios de ruido para evitar saturación (Google, Telemetría, etc)
+          for regex in ".*google.*" ".*gstatic.*" ".*googleapis.*" ".*digicert.*" ".*mozilla.*"; do
+            curl -sf "http://zap:8080/JSON/core/action/excludeFromProxy/?regex=$$regex" > /dev/null
+            echo "Excluded: $$regex"
+          done
+
           echo "Running Selenium test (LoginTest)..."
           dotnet restore SeleniumWebTest.csproj
           dotnet test SeleniumWebTest.csproj --filter "LoginTest" || true
+
           echo "Generating OWASP ZAP HTML report..."
           curl -sf "http://zap:8080/JSON/reports/action/generate/" \
             --get \

@@ -20,15 +20,13 @@ public static class DriverFactory
         options.AddArgument("--disable-dev-shm-usage");
         options.AddArgument("--window-size=1920,1080");
 
-        // ✅ HTTPS MITM (OWASP ZAP)
+        // ✅ CLAVE PARA OWASP ZAP (MITM HTTPS)
         options.AddArgument("--ignore-certificate-errors");
         options.AddArgument("--ignore-ssl-errors=yes");
+        options.AddArgument("--ignore-certificate-errors-spki-list");
         options.AddArgument("--allow-insecure-localhost");
 
-        // 🔴 ESTA ES LA LÍNEA CLAVE (Grid 4)
-        options.AddAdditionalChromeOption("acceptInsecureCerts", true);
-
-        // Proxy ZAP
+        // ✅ Proxy ZAP
         var zapProxy = Environment.GetEnvironmentVariable("ZAP_PROXY");
         if (!string.IsNullOrWhiteSpace(zapProxy))
         {

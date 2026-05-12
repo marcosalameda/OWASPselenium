@@ -68,33 +68,26 @@ services:
           echo "=== 1. DESPERTANDO LA WEB (WARM UP) ==="
           curl -sL https://jenkinsvm.quidgest.pt/gqt_horizontal_vue/ > /dev/null
 
-          echo "=== 2. CONFIGURANDO ZAP (CONTEXTO Y EXCLUSIONES) ==="
-          # Espera extra por seguridad
+          echo "=== 2. CONFIGURANDO ZAP ==="
+          # Esperamos a que la API de ZAP responda realmente
           until curl -sf http://zap:8080/JSON/core/view/version/ >/dev/null; do sleep 2; done
           
           curl -sf "http://zap:8080/JSON/context/action/newContext/?contextName=mi-app" > /dev/null
           curl -sf "http://zap:8080/JSON/context/action/includeInContext/?contextName=mi-app&regex=https://jenkinsvm.quidgest.pt/gqt_horizontal_vue.*" > /dev/null
           
-          for regex in ".*google.*" ".*gstatic.*" ".*googleapis.*" ".*digicert.*" ".*mozilla.*"; do
-            curl -sf "http://zap:8080/JSON/core/action/excludeFromProxy/?regex=$regex" > /dev/null
-            echo "Excluded: $regex"
+          # IMPORTANTE: Usamos $$regex para Bash
+          for r in ".*google.*" ".*gstatic.*" ".*googleapis.*" ".*digicert.*" ".*mozilla.*"; do
+            curl -sf "http://zap:8080/JSON/core/action/excludeFromProxy/?regex=$$r" > /dev/null
+            echo "Excluded: $$r"
           done
 
-          echo "=== 3. PREPARANDO Y EJECUTANDO TESTS ==="
+          echo "=== 3. EJECUTANDO TESTS ==="
           dotnet restore SeleniumWebTest.csproj
-          # Ejecutamos los tests. El || true asegura que el reporte se genere aunque fallen los tests.
           dotnet test SeleniumWebTest.csproj --nologo --logger:\"console;verbosity=normal\" || true
 
-          echo "=== 4. GENERANDO INFORME OWASP ZAP ==="
-          curl -sf "http://zap:8080/JSON/reports/action/generate/" \
-            --get \
-            --data-urlencode "title=OWASP ZAP Report" \
-            --data-urlencode "template=traditional-html" \
-            --data-urlencode "contexts=mi-app" \
-            --data-urlencode "reportFileName=zap-report" \
-            --data-urlencode "reportDir=/zap/wrk" \
-            > /dev/null
-          echo "✅ ZAP report generado en /zap/wrk/zap-report.html"
+          echo "=== 4. GENERANDO REPORTE ==="
+          curl -sf "http://zap:8080/JSON/reports/action/generate/?title=OWASP+ZAP+Report&template=traditional-html&contexts=mi-app&reportFileName=zap-report&reportDir=/zap/wrk" > /dev/null
+          echo "✅ Proceso completado."
 
 networks:
   zap-net:

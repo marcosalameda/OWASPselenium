@@ -14,19 +14,21 @@ public static class DriverFactory
 
         var options = new ChromeOptions();
 
-        // ✅ Ejecución CI
+        // ✅ CI / Docker
         options.AddArgument("--headless=new");
         options.AddArgument("--no-sandbox");
         options.AddArgument("--disable-dev-shm-usage");
         options.AddArgument("--window-size=1920,1080");
 
-        // ✅ CLAVE PARA OWASP ZAP (MITM HTTPS)
-        options.AcceptInsecureCertificates = true;
+        // ✅ OBLIGATORIO con ZAP (HTTPS MITM)
         options.AddArgument("--ignore-certificate-errors");
         options.AddArgument("--ignore-ssl-errors=yes");
         options.AddArgument("--allow-insecure-localhost");
 
-        // ✅ Proxy OWASP ZAP (si existe)
+        // 🔴 CLAVE ABSOLUTA: enviar la capability W3C explícitamente
+        options.SetCapability("acceptInsecureCerts", true);
+
+        // ✅ Proxy ZAP
         var zapProxy = Environment.GetEnvironmentVariable("ZAP_PROXY");
         if (!string.IsNullOrWhiteSpace(zapProxy))
         {
@@ -36,7 +38,7 @@ public static class DriverFactory
         return new RemoteWebDriver(
             new Uri(remoteUrl),
             options,
-            TimeSpan.FromSeconds(120) // timeout más seguro en CI
+            TimeSpan.FromSeconds(120)
         );
     }
 }

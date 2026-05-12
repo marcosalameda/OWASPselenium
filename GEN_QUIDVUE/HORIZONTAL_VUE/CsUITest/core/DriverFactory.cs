@@ -14,21 +14,21 @@ public static class DriverFactory
 
         var options = new ChromeOptions();
 
-        // ✅ CI / Docker
+        // CI / Docker
         options.AddArgument("--headless=new");
         options.AddArgument("--no-sandbox");
         options.AddArgument("--disable-dev-shm-usage");
         options.AddArgument("--window-size=1920,1080");
 
-        // ✅ OBLIGATORIO con ZAP (HTTPS MITM)
+        // ✅ HTTPS MITM (OWASP ZAP)
         options.AddArgument("--ignore-certificate-errors");
         options.AddArgument("--ignore-ssl-errors=yes");
         options.AddArgument("--allow-insecure-localhost");
 
-        // 🔴 CLAVE ABSOLUTA: enviar la capability W3C explícitamente
-        options.SetCapability("acceptInsecureCerts", true);
+        // 🔴 ESTA ES LA LÍNEA CLAVE (Grid 4)
+        options.AddAdditionalChromeOption("acceptInsecureCerts", true);
 
-        // ✅ Proxy ZAP
+        // Proxy ZAP
         var zapProxy = Environment.GetEnvironmentVariable("ZAP_PROXY");
         if (!string.IsNullOrWhiteSpace(zapProxy))
         {

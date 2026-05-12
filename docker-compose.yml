@@ -11,7 +11,7 @@ services:
     ports:
       - "8080:8080"
     volumes:
-      - ./zap-reports:/reports
+      - ./zap-reports:/zap/wrk
     networks:
       - zap-net
     healthcheck:
@@ -82,7 +82,7 @@ services:
             --data-urlencode "template=traditional-html" \
             --data-urlencode "contexts=mi-app" \
             --data-urlencode "reportFileName=zap-report" \
-            --data-urlencode "reportDir=/reports" \
+            --data-urlencode "reportDir=/zap/wrk" \
             > /dev/null
           echo "ZAP report generated"
 

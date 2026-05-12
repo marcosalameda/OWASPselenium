@@ -32,8 +32,10 @@ public class DriverFactory
         int windowheight)
     {
         IWebDriver driver;
-        // Detectamos si Jenkins nos está pidiendo un navegador remoto
+        
+        // Variables de entorno inyectadas por Docker Compose
         var remoteUrl = Environment.GetEnvironmentVariable("SELENIUM_REMOTE_URL");
+        var zapProxyUrl = Environment.GetEnvironmentVariable("ZAP_PROXY");
 
         switch (browser.ToLower())
         {
@@ -52,16 +54,29 @@ public class DriverFactory
             default: // ✅ CHROME
                 ChromeOptions chromeOptions = new ChromeOptions();
 
-                // Lógica de Headless: Si hay remoteUrl (Jenkins), forzamos headless
+                // --- CONFIGURACIÓN DEL PROXY (CRÍTICO PARA ZAP) ---
+                if (!string.IsNullOrEmpty(zapProxyUrl))
+                {
+                    var proxy = new Proxy
+                    {
+                        HttpProxy = zapProxyUrl,
+                        SslProxy = zapProxyUrl,
+                        Kind = ProxyKind.Manual
+                    };
+                    chromeOptions.Proxy = proxy;
+                }
+
+                // Lógica de Headless
                 if (!string.IsNullOrEmpty(remoteUrl) || headless)
                 {
                     chromeOptions.AddArgument("--headless=new");
                 }
 
+                // Argumentos de estabilidad y seguridad
                 chromeOptions.AddArgument($"--window-size={windowwidth},{windowheight}");
                 chromeOptions.AddArgument("--no-sandbox");
                 chromeOptions.AddArgument("--disable-dev-shm-usage");
-                chromeOptions.AddArgument("--ignore-certificate-errors");
+                chromeOptions.AddArgument("--ignore-certificate-errors"); // Ignora el cert de ZAP
                 chromeOptions.AddArgument("--allow-insecure-localhost");
                 chromeOptions.AddArgument("--allow-running-insecure-content");
                 chromeOptions.AddArgument("--disable-web-security");
@@ -69,12 +84,12 @@ public class DriverFactory
                 // --- DECISIÓN FINAL: ¿Remoto o Local? ---
                 if (!string.IsNullOrEmpty(remoteUrl))
                 {
-                    // Estamos en Jenkins/Docker
+                    // Estamos en Jenkins/Docker: Conectamos al Hub
                     driver = new RemoteWebDriver(new Uri(remoteUrl), chromeOptions.ToCapabilities(), TimeSpan.FromSeconds(180));
                 }
                 else
                 {
-                    // Estamos en tu PC: Usamos el WebDriverManager de tu copia buena
+                    // Estamos en Local: Usamos ChromeDriver
                     new DriverManager().SetUpDriver(new ChromeConfig(), VersionResolveStrategy.MatchingBrowser);
                     driver = new ChromeDriver(chromeOptions);
                 }

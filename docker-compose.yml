@@ -1,6 +1,7 @@
 services:
   zap:
     image: zaproxy/zap-stable
+    user: root                          # ← ZAP corre como root, tiene permisos sobre el volumen
     command: >
       zap.sh -daemon
       -host 0.0.0.0

@@ -1,3 +1,4 @@
+using System;
 using System.IO;
 using System.Text.Json;
 
@@ -24,15 +25,13 @@ public class Configuration
         {
             if (_instance == null)
             {
-                // --- ARREGLO ERROR 2: Tiempos por defecto realistas ---
                 _instance = new Configuration
                 {
                     Browser = "chrome",
-                    // --- ARREGLO ERROR 1: BaseUrl asegurada ---
                     BaseUrl = "https://jenkinsvm.quidgest.pt/gqt_horizontal_vue/",
-                    Headless = false, // En local preferimos ver el navegador
-                    ImplicitWait = 10000, // 10 segundos (antes 0.1s)
-                    ExplicitWait = 30000, // 30 segundos (antes 1s)
+                    Headless = false,
+                    ImplicitWait = 10000,
+                    ExplicitWait = 15000, // <--- Ajustado a 15 segundos
                     WindowWidth = 1920,
                     WindowHeight = 1080
                 };
@@ -77,7 +76,6 @@ public class Configuration
         }
     }
 
-    // Método auxiliar para leer variables con dos posibles nombres
     private static string GetEnv(string key1, string key2)
     {
         return Environment.GetEnvironmentVariable(key1) ?? Environment.GetEnvironmentVariable(key2);

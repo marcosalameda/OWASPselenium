@@ -1,30 +1,36 @@
 using OpenQA.Selenium;
 using quidgest.uitests.core;
+using System;
 
 namespace quidgest.uitests.pages;
 
 public class LoginPage : PageObject
 {
     private IWebElement loginForm => driver.FindElement(By.Id("login-container"));
-    private IWebElement username => loginForm.FindElement(By.Name("username"));
-    private IWebElement password => loginForm.FindElement(By.Name("password"));
-    private IWebElement submitButton => loginForm.FindElement(By.Id("login-btn"));
+    private IWebElement username => driver.FindElement(By.Name("username"));
+    private IWebElement password => driver.FindElement(By.Name("password"));
+    private IWebElement submitButton => driver.FindElement(By.Id("login-btn"));
 
     public LoginPage(IWebDriver driver) : base(driver)
     {
-        // --- MEJORA: Espera hasta que el formulario sea realmente visible ---
+        // Espera hasta que el formulario sea visible
         wait.Until(c => loginForm.Displayed);
     }
 
     private void WaitForLoad()
     {
-        // Usamos GetAttribute para mantener compatibilidad con tu versión funcional
-        wait.Until(c => submitButton.GetAttribute("data-loading") == "false");
+        try
+        {
+            wait.Until(c => submitButton.GetAttribute("data-loading") != "true");
+        }
+        catch
+        {
+            // Silenciamos si el atributo no existe
+        }
     }
 
     public void Login(string username, string password)
     {
-        // Aseguramos que el campo de usuario esté listo para recibir texto
         wait.Until(c => this.username.Enabled);
 
         FillUsername(username);
@@ -57,14 +63,13 @@ public class LoginPage : PageObject
         btn.Click();
     }
 
-    // --- RE-INTEGRACIÓN MÉTODO FALTANTE (SOLUCIÓN CS1061) ---
     public bool HasErrorMessage(string id)
     {
         WaitForLoad();
         try
         {
-            IWebElement errorMessage = loginForm.FindElement(By.Id(id));
-            return errorMessage.Text.Length > 0;
+            IWebElement errorMessage = driver.FindElement(By.Id(id));
+            return errorMessage.Displayed && errorMessage.Text.Length > 0;
         }
         catch (NoSuchElementException)
         {

@@ -1,17 +1,20 @@
+using System;
 using System.Threading;
 using System.Linq;
+using NUnit.Framework;
+using quidgest.uitests.core;
+using quidgest.uitests.pages;
 
 namespace SeleniumWebTest.tests;
 
 public class FormOperationsTest : BaseSeleniumTest
 {
-    
     [SetUp]
     public void SetUp()
     {
-        Driver.Navigate().GoToUrl(
-            Environment.GetEnvironmentVariable("selenium.baseurl")
-        );
+        var url = Configuration.Instance.BaseUrl ?? "https://jenkinsvm.quidgest.pt/gqt_horizontal_vue/";
+
+        Driver.Navigate().GoToUrl(url);
     }
 
     private AppPage Authenticate()
@@ -22,11 +25,8 @@ public class FormOperationsTest : BaseSeleniumTest
         var p = new LoginPage(Driver);
         p.Login("quidgest", "ZPH2LAB");
 
-        // Verificación relajada: el flujo de login se ejecutó
         return a;
     }
-
-
     [Test]
     public void LoginTest()
     {

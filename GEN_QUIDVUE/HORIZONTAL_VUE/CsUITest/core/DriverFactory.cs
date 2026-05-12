@@ -32,8 +32,8 @@ public class DriverFactory
         int windowheight)
     {
         IWebDriver driver;
-        
-        // Variables de entorno inyectadas por Docker Compose
+
+        // Variables de entorno inyectadas por Docker Compose o Jenkins
         var remoteUrl = Environment.GetEnvironmentVariable("SELENIUM_REMOTE_URL");
         var zapProxyUrl = Environment.GetEnvironmentVariable("ZAP_PROXY");
 
@@ -55,6 +55,7 @@ public class DriverFactory
                 ChromeOptions chromeOptions = new ChromeOptions();
 
                 // --- CONFIGURACIÓN DEL PROXY (CRÍTICO PARA ZAP) ---
+                // Le indica al navegador que enrute el tráfico a través del proxy ZAP
                 if (!string.IsNullOrEmpty(zapProxyUrl))
                 {
                     var proxy = new Proxy
@@ -66,17 +67,17 @@ public class DriverFactory
                     chromeOptions.Proxy = proxy;
                 }
 
-                // Lógica de Headless
+                // Lógica de Headless: forzado si es remoto o configurado manualmente
                 if (!string.IsNullOrEmpty(remoteUrl) || headless)
                 {
                     chromeOptions.AddArgument("--headless=new");
                 }
 
-                // Argumentos de estabilidad y seguridad
+                // Argumentos de estabilidad y seguridad necesarios para entornos Docker/Linux
                 chromeOptions.AddArgument($"--window-size={windowwidth},{windowheight}");
                 chromeOptions.AddArgument("--no-sandbox");
                 chromeOptions.AddArgument("--disable-dev-shm-usage");
-                chromeOptions.AddArgument("--ignore-certificate-errors"); // Ignora el cert de ZAP
+                chromeOptions.AddArgument("--ignore-certificate-errors"); // Permite confiar en el certificado de ZAP
                 chromeOptions.AddArgument("--allow-insecure-localhost");
                 chromeOptions.AddArgument("--allow-running-insecure-content");
                 chromeOptions.AddArgument("--disable-web-security");
@@ -84,18 +85,19 @@ public class DriverFactory
                 // --- DECISIÓN FINAL: ¿Remoto o Local? ---
                 if (!string.IsNullOrEmpty(remoteUrl))
                 {
-                    // Estamos en Jenkins/Docker: Conectamos al Hub
+                    // Entorno de red Docker/Jenkins: Conectamos al Selenium Hub remoto
                     driver = new RemoteWebDriver(new Uri(remoteUrl), chromeOptions.ToCapabilities(), TimeSpan.FromSeconds(180));
                 }
                 else
                 {
-                    // Estamos en Local: Usamos ChromeDriver
+                    // Entorno Local: Descarga el driver adecuado y arranca Chrome local
                     new DriverManager().SetUpDriver(new ChromeConfig(), VersionResolveStrategy.MatchingBrowser);
                     driver = new ChromeDriver(chromeOptions);
                 }
                 break;
         }
 
+        // Aplicar el ImplicitWait definido globalmente
         driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromMilliseconds(implicitWaitMilliseconds);
 
         return driver;

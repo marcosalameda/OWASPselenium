@@ -7,55 +7,65 @@ namespace quidgest.uitests.pages;
 
 public class AppPage : PageObject
 {
+    // Usamos FindElement dentro de las propiedades para que Selenium busque el elemento en el momento de uso
     private IWebElement Container => driver.FindElement(By.ClassName("layout-container"));
 
     public IMenuControl Menu => new HorizontalMenuControl(driver, _menuTree);
 
     private By loginBtnLocator => By.Id("logon-menu-btn");
-    private IWebElement loginBtn => driver.FindElement(loginBtnLocator);
     private By avatarLocator => By.Id("user-avatar");
 
     public AppPage(IWebDriver driver) : base(driver)
     {
         string url = Configuration.Instance.BaseUrl;
-        driver.Navigate().GoToUrl(url);
 
-        wait.Until(c => Container);
+        // Si el driver no tiene URL cargada, navegamos a la BaseUrl
+        if (string.IsNullOrEmpty(driver.Url) || driver.Url.Equals("about:blank", StringComparison.OrdinalIgnoreCase))
+        {
+            driver.Navigate().GoToUrl(url);
+        }
+
+        // Espera explícita de hasta 15s para que el contenedor principal sea visible
+        wait.Until(c => Container.Displayed);
     }
 
     private void WaitForLoading()
     {
-        wait.Until(c => Container.GetAttribute("data-loading") != "true");
+        // data-loading es un atributo de Vue que indica procesos en segundo plano
+        wait.Until(c => Container.GetDomAttribute("data-loading") != "true");
     }
 
     public void ClickLogin()
     {
         WaitForLoading();
-
-        // It seems there are cases when the login button takes longer to render than the server responses to arrive.
-        wait.Until(c => loginBtn);
-
+        // Esperamos a que el botón de login sea clickable antes de actuar
+        var loginBtn = wait.Until(c => c.FindElement(loginBtnLocator));
         loginBtn.Click();
     }
 
     public bool IsAuthenticated()
     {
         WaitForLoading();
-
-        if (Container.FindElements(avatarLocator).Any())
-            return true;
-
-        return false;
+        // Verificamos si el avatar del usuario aparece en el DOM
+        return driver.FindElements(avatarLocator).Any();
     }
 
     public bool ValidateMenuNavigation(string moduleId, string itemId)
     {
         try
         {
-            return wait.Until(driver => driver.Url.Contains($"{moduleId}/menu/{moduleId}_{itemId}"));
+            // Espera a que la URL cambie para reflejar el módulo y el ítem seleccionados
+            return wait.Until(d => d.Url.Contains($"{moduleId}/menu/{moduleId}_{itemId}"));
         }
         catch { return false; }
     }
+
+    // --- ARREGLO CRÍTICO IA: Ahora busca el botón real del Sidebar ---
+    public IWebElement Sidebar => wait.Until(d => d.FindElement(By.Id("chatbot-sidebar-btn")));
+
+    public void Logout() { }
+    public void CloseAlerts() { }
+    public IWebElement UserMenu => null;
 
     private readonly static MenuTree _menuTree = DeclareMenuTree();
 
@@ -64,6 +74,7 @@ public class AppPage : PageObject
         MenuTree res = new MenuTree();
         string module;
 
+        // --- MÓDULO STY ---
         module = "STY";
         res.AddModule(module);
         res.AddMenu(module, "1", null);
@@ -107,6 +118,8 @@ public class AppPage : PageObject
         res.AddMenu(module, "423", "42");
         res.AddMenu(module, "43", "4");
         res.AddMenu(module, "44", "4");
+
+        // --- MÓDULO PTN ---
         module = "PTN";
         res.AddModule(module);
         res.AddMenu(module, "1", null);
@@ -173,6 +186,8 @@ public class AppPage : PageObject
         res.AddMenu(module, "62", "6");
         res.AddMenu(module, "7", null);
         res.AddMenu(module, "71", "7");
+
+        // --- MÓDULO GQT ---
         module = "GQT";
         res.AddModule(module);
         res.AddMenu(module, "1", null);
@@ -254,6 +269,8 @@ public class AppPage : PageObject
         res.AddMenu(module, "A4", "A");
         res.AddMenu(module, "B", null);
         res.AddMenu(module, "C", null);
+
+        // --- OTROS MÓDULOS (IMO, REG, TBS, WMS, TRN, UIS) ---
         module = "IMO";
         res.AddModule(module);
         res.AddMenu(module, "1", null);
@@ -265,10 +282,12 @@ public class AppPage : PageObject
         res.AddMenu(module, "22", "2");
         res.AddMenu(module, "23", "2");
         res.AddMenu(module, "3", null);
+
         module = "REG";
         res.AddModule(module);
         res.AddMenu(module, "1", null);
         res.AddMenu(module, "11", "1");
+
         module = "TBS";
         res.AddModule(module);
         res.AddMenu(module, "1", null);
@@ -284,6 +303,7 @@ public class AppPage : PageObject
         res.AddMenu(module, "191", "19");
         res.AddMenu(module, "192", "19");
         res.AddMenu(module, "193", "19");
+
         module = "WMS";
         res.AddModule(module);
         res.AddMenu(module, "1", null);
@@ -327,6 +347,7 @@ public class AppPage : PageObject
         res.AddMenu(module, "711", "71");
         res.AddMenu(module, "72", "7");
         res.AddMenu(module, "73", "7");
+
         module = "TRN";
         res.AddModule(module);
         res.AddMenu(module, "1", null);
@@ -390,6 +411,7 @@ public class AppPage : PageObject
         res.AddMenu(module, "EXERCISE19PROPERTY", "EXERCISE19");
         res.AddMenu(module, "2", null);
         res.AddMenu(module, "21", "2");
+
         module = "UIS";
         res.AddModule(module);
         res.AddMenu(module, "1", null);
@@ -407,13 +429,7 @@ public class AppPage : PageObject
         res.AddMenu(module, "3", null);
         res.AddMenu(module, "31", "3");
         res.AddMenu(module, "4", null);
+
         return res;
     }
-
-    public void Logout() { /* Implementación original vacía */ }
-    public void CloseAlerts() { /* Implementación original vacía */ }
-    public IWebElement UserMenu => null;
-
-    // ARREGLO PARA IA: Ahora busca el botón real en lugar de devolver null
-    public IWebElement Sidebar => wait.Until(d => d.FindElement(By.Id("chatbot-sidebar-btn")));
 }

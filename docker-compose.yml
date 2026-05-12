@@ -1,5 +1,4 @@
 version: "3.9"
-
 services:
   zap:
     image: zaproxy/zap-stable
@@ -23,21 +22,20 @@ services:
       retries: 20
 
   selenium-hub:
-  image: selenium/standalone-chrome:latest
-  shm_size: 2gb
-  networks:
-    - zap-net
-  environment:
-    # ✅ FLAGS CORRECTOS PARA CHROME (NO PARA SELENIUM)
-    SE_NODE_CHROME_ARGS: >
-      --ignore-certificate-errors
-      --ignore-ssl-errors=yes
-      --allow-insecure-localhost
-  healthcheck:
-    test: ["CMD", "curl", "-sf", "http://localhost:4444/status"]
-    interval: 5s
-    timeout: 3s
-    retries: 20
+    image: selenium/standalone-chrome:latest
+    shm_size: 2gb
+    networks:
+      - zap-net
+    environment:
+      SE_NODE_CHROME_ARGS: >
+        --ignore-certificate-errors
+        --ignore-ssl-errors=yes
+        --allow-insecure-localhost
+    healthcheck:
+      test: ["CMD", "curl", "-sf", "http://localhost:4444/status"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
 
   selenium:
     build:
@@ -55,44 +53,9 @@ services:
     networks:
       - zap-net
     environment:
-      # Selenium
       SELENIUM_REMOTE_URL: http://selenium-hub:4444/wd/hub
       selenium.baseurl: https://jenkinsvm.quidgest.pt/gqt_horizontal_vue/
       ZAP_PROXY: http://zap:8080
-
-      # ✅ Proxy SOLO para el test (NO para Chrome del Grid)
-      http_proxy:  http://zap:8080
-      https_proxy: http://zap:8080
-      HTTP_PROXY:  http://zap:8080
-      HTTPS_PROXY: http://zap:8080
-
-      # ✅ Exclusiones críticas (NuGet / loopback)
-      NO_PROXY: "localhost,127.0.0.1,selenium-hub,nuget.org,api.nuget.org"
-      no_proxy: "localhost,127.0.0.1,selenium-hub,nuget.org,api.nuget.org"
-
-    command: |
-      bash -c '
-        set -e
-
-        echo "Waiting for ZAP..."
-        until curl -sf http://zap:8080/JSON/core/view/version/ >/dev/null; do sleep 2; done
-        echo "ZAP ready"
-
-        echo "Waiting for Selenium Grid..."
-        until curl -sf http://selenium-hub:4444/status >/dev/null; do sleep 2; done
-        echo "Selenium Grid ready"
-
-        echo "Running Selenium test (LoginTest)..."
-        dotnet restore SeleniumWebTest.csproj
-        dotnet test SeleniumWebTest.csproj --filter "LoginTest" || true
-
-        echo "Generating OWASP ZAP HTML report..."
-        curl --silent http://zap:8080/OTHER/core/other/htmlreport/ \
-          --output /reports/zap-report.html
-
-        echo "ZAP report generated"
-      '
-
-networks:
-  zap-net:
-    driver: bridge
+      # ❌ ELIMINADAS: http_proxy, https_proxy, HTTP_PROXY, HTTPS_PROXY
+      # Estas variables mandaban TODO el tráfico del contenedor por ZAP,
+      #

@@ -64,37 +64,28 @@ services:
       - bash
       - -c
       - |
-          echo "Despertando la web..."
+          set -e
+          echo "=== 1. DESPERTANDO LA WEB (WARM UP) ==="
           curl -sL https://jenkinsvm.quidgest.pt/gqt_horizontal_vue/ > /dev/null
 
-          echo "Ejecutando tests..."
-          dotnet test --nologo --logger:"console;verbosity=normal"
-      
-          set -e
-          echo "=== DIAGNÓSTICO DE VARIABLES ==="
-          echo "ZAP_PROXY = $$ZAP_PROXY"
-          echo "SELENIUM_REMOTE_URL = $$SELENIUM_REMOTE_URL"
-          echo "================================"
-
-          echo "Waiting for services..."
+          echo "=== 2. CONFIGURANDO ZAP (CONTEXTO Y EXCLUSIONES) ==="
+          # Espera extra por seguridad
           until curl -sf http://zap:8080/JSON/core/view/version/ >/dev/null; do sleep 2; done
-          until curl -sf http://selenium-hub:4444/status >/dev/null; do sleep 2; done
-          echo "Services ready"
-
-          echo "Configuring ZAP context & exclusions..."
+          
           curl -sf "http://zap:8080/JSON/context/action/newContext/?contextName=mi-app" > /dev/null
           curl -sf "http://zap:8080/JSON/context/action/includeInContext/?contextName=mi-app&regex=https://jenkinsvm.quidgest.pt/gqt_horizontal_vue.*" > /dev/null
           
           for regex in ".*google.*" ".*gstatic.*" ".*googleapis.*" ".*digicert.*" ".*mozilla.*"; do
-            curl -sf "http://zap:8080/JSON/core/action/excludeFromProxy/?regex=$$regex" > /dev/null
-            echo "Excluded: $$regex"
+            curl -sf "http://zap:8080/JSON/core/action/excludeFromProxy/?regex=$regex" > /dev/null
+            echo "Excluded: $regex"
           done
 
-          echo "Running ALL Selenium tests..."
+          echo "=== 3. PREPARANDO Y EJECUTANDO TESTS ==="
           dotnet restore SeleniumWebTest.csproj
-          dotnet test SeleniumWebTest.csproj --logger:"console;verbosity=normal" || true
+          # Ejecutamos los tests. El || true asegura que el reporte se genere aunque fallen los tests.
+          dotnet test SeleniumWebTest.csproj --nologo --logger:\"console;verbosity=normal\" || true
 
-          echo "Generating OWASP ZAP HTML report..."
+          echo "=== 4. GENERANDO INFORME OWASP ZAP ==="
           curl -sf "http://zap:8080/JSON/reports/action/generate/" \
             --get \
             --data-urlencode "title=OWASP ZAP Report" \
@@ -103,7 +94,7 @@ services:
             --data-urlencode "reportFileName=zap-report" \
             --data-urlencode "reportDir=/zap/wrk" \
             > /dev/null
-          echo "ZAP report generated"
+          echo "✅ ZAP report generado en /zap/wrk/zap-report.html"
 
 networks:
   zap-net:

@@ -79,10 +79,15 @@ services:
         dotnet test SeleniumWebTest.csproj --filter "LoginTest" || true
 
         echo "Generating OWASP ZAP HTML report..."
-        curl --silent "http://zap:8080/OTHER/core/other/htmlreport/" \
-          --output /reports/zap-report.html
+        curl -sf "http://zap:8080/JSON/reports/action/generate/" \
+          --get \
+          --data-urlencode "title=OWASP ZAP Report" \
+          --data-urlencode "template=traditional-html" \
+          --data-urlencode "contexts=mi-app" \
+          --data-urlencode "reportFileName=zap-report" \
+          --data-urlencode "reportDir=/reports" \
+          > /dev/null
         echo "ZAP report generated"
-      '
 
 networks:
   zap-net:

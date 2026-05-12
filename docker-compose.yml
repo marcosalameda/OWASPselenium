@@ -64,6 +64,12 @@ services:
       - bash
       - -c
       - |
+          echo "Despertando la web..."
+          curl -sL https://jenkinsvm.quidgest.pt/gqt_horizontal_vue/ > /dev/null
+
+          echo "Ejecutando tests..."
+          dotnet test --nologo --logger:"console;verbosity=normal"
+      
           set -e
           echo "=== DIAGNÓSTICO DE VARIABLES ==="
           echo "ZAP_PROXY = $$ZAP_PROXY"

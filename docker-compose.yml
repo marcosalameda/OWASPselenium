@@ -66,6 +66,17 @@ services:
       - -c
       - |
           set -e
+          echo "=== DIAGNÓSTICO DE VARIABLES ==="
+          echo "selenium.baseurl = $(printenv 'selenium.baseurl' || echo 'NO ENCONTRADA')"
+          echo "selenium_baseurl = $(printenv 'selenium_baseurl' || echo 'NO ENCONTRADA')"
+          echo "selenium.explicitwait = $(printenv 'selenium.explicitwait' || echo 'NO ENCONTRADA')"
+          echo "ZAP_PROXY = $ZAP_PROXY"
+          echo "SELENIUM_REMOTE_URL = $SELENIUM_REMOTE_URL"
+          echo "================================"
+
+          echo "Waiting for ZAP..."
+          until curl -sf http://zap:8080/JSON/core/view/version/ >/dev/null; do sleep 2; done
+          echo "ZAP ready"
           echo "Waiting for ZAP..."
           until curl -sf http://zap:8080/JSON/core/view/version/ >/dev/null; do sleep 2; done
           echo "ZAP ready"

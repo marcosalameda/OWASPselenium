@@ -35,7 +35,7 @@ public static class DriverFactory
 
         return new RemoteWebDriver(
             new Uri(remoteUrl),
-            options,
+            options.ToCapabilities(),   // conversión explícita
             TimeSpan.FromSeconds(120)
         );
     }

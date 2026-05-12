@@ -64,30 +64,38 @@ services:
       - bash
       - -c
       - |
-          # 1. Warm up con tolerancia a fallos
-          echo "=== 1. DESPERTANDO LA WEB (WARM UP) ==="
-          # -k permite SSL inseguro, || true evita que el contenedor muera si falla la red
-          curl -skL https://jenkinsvm.quidgest.pt/gqt_horizontal_vue/ > /dev/null || echo "⚠️ Warm up fallido, continuando..."
+          # 1. LIMPIEZA RADICAL DE CACHÉ
+          echo "=== 0. LIMPIANDO BINARIOS FANTASMA ==="
+          dotnet clean SeleniumWebTest.csproj [cite: 318]
+          rm -rf bin/ obj/
 
+          # 2. CALENTAMIENTO DE LA WEB
+          echo "=== 1. DESPERTANDO LA WEB (WARM UP) ==="
+          [cite_start]curl -skL https://jenkinsvm.quidgest.pt/gqt_horizontal_vue/ > /dev/null || echo "⚠️ Warm up fallido, continuando..." [cite: 313, 314]
+
+          # 3. ESPERA Y CONFIGURACIÓN DE ZAP
           echo "=== 2. CONFIGURANDO ZAP ==="
-          until curl -sf http://zap:8080/JSON/core/view/version/ >/dev/null; do sleep 2; done
+          [cite_start]until curl -sf http://zap:8080/JSON/core/view/version/ >/dev/null; do sleep 2; done [cite: 312]
           
           curl -sf "http://zap:8080/JSON/context/action/newContext/?contextName=mi-app" > /dev/null
           curl -sf "http://zap:8080/JSON/context/action/includeInContext/?contextName=mi-app&regex=https://jenkinsvm.quidgest.pt/gqt_horizontal_vue.*" > /dev/null
           
           for r in ".*google.*" ".*gstatic.*" ".*googleapis.*" ".*digicert.*" ".*mozilla.*"; do
             curl -sf "http://zap:8080/JSON/core/action/excludeFromProxy/?regex=$$r" > /dev/null
-            echo "Excluded: $$r"
+            [cite_start]echo "Excluded: $$r" [cite: 315, 316, 317]
           done
 
-          echo "=== 3. EJECUTANDO TESTS ==="
-          # Nos aseguramos de estar en la carpeta correcta
-          dotnet restore SeleniumWebTest.csproj
-          dotnet test SeleniumWebTest.csproj --nologo --logger:\"console;verbosity=normal\" || true
+          # 4. RECOMPILACIÓN Y EJECUCIÓN
+          echo "=== 3. RECOMPILANDO Y EJECUTANDO TESTS ==="
+          [cite_start]dotnet restore SeleniumWebTest.csproj [cite: 319, 321]
+          [cite_start]dotnet build SeleniumWebTest.csproj --no-restore [cite: 322]
+          # El || true permite que el reporte de ZAP se genere aunque fallen los tests
+          [cite_start]dotnet test SeleniumWebTest.csproj --no-build --nologo --logger:\"console;verbosity=normal\" || true [cite: 318, 322, 331]
 
-          echo "=== 4. GENERANDO REPORTE ==="
+          # 5. GENERACIÓN DEL REPORTE DE SEGURIDAD
+          echo "=== 4. GENERANDO REPORTE OWASP ZAP ==="
           curl -sf "http://zap:8080/JSON/reports/action/generate/?title=OWASP+ZAP+Report&template=traditional-html&contexts=mi-app&reportFileName=zap-report&reportDir=/zap/wrk" > /dev/null
-          echo "✅ Proceso completado."
+          echo "✅ Proceso completado. Revisa la carpeta zap-reports."
 
 networks:
   zap-net:

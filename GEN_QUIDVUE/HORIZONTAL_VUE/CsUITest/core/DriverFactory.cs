@@ -25,6 +25,8 @@ public static class DriverFactory
         options.AddArgument("--ignore-ssl-errors=yes");
         options.AddArgument("--ignore-certificate-errors-spki-list");
         options.AddArgument("--allow-insecure-localhost");
+        options.AddArgument("--disable-web-security");
+        options.AddArgument("--allow-running-insecure-content");
 
         // ✅ Proxy ZAP
         var zapProxy = Environment.GetEnvironmentVariable("ZAP_PROXY");
@@ -35,7 +37,7 @@ public static class DriverFactory
 
         return new RemoteWebDriver(
             new Uri(remoteUrl),
-            options.ToCapabilities(),   // conversión explícita
+            options.ToCapabilities(),
             TimeSpan.FromSeconds(120)
         );
     }

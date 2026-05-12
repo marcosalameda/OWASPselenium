@@ -27,6 +27,12 @@ services:
     shm_size: 2gb
     networks:
       - zap-net
+    environment:
+      # ✅ CLAVE ABSOLUTA: flags de Chrome a nivel CONTENEDOR
+      SE_OPTS: >
+        --ignore-certificate-errors
+        --ignore-ssl-errors=yes
+        --allow-insecure-localhost
     healthcheck:
       test: ["CMD", "curl", "-sf", "http://localhost:4444/status"]
       interval: 5s
@@ -39,31 +45,31 @@ services:
       dockerfile: Dockerfile.selenium
     working_dir: /tests
     volumes:
-      - /home/marcos.alameda@quidgest.pt/OWASPselenium/GEN_QUIDVUE/HORIZONTAL_VUE/CsUITest:/tests
+      - ./GEN_QUIDVUE/HORIZONTAL_VUE/CsUITest:/tests
       - ./zap-reports:/reports
     depends_on:
       zap:
         condition: service_healthy
       selenium-hub:
         condition: service_healthy
+    networks:
+      - zap-net
     environment:
-      # Selenium / tests
+      # Selenium
       SELENIUM_REMOTE_URL: http://selenium-hub:4444/wd/hub
       selenium.baseurl: https://jenkinsvm.quidgest.pt/gqt_horizontal_vue/
       ZAP_PROXY: http://zap:8080
 
-      # 🔴 PROXY FORZADO PARA CHROME (ZAP)
+      # ✅ Proxy SOLO para el test (NO para Chrome del Grid)
       http_proxy:  http://zap:8080
       https_proxy: http://zap:8080
       HTTP_PROXY:  http://zap:8080
       HTTPS_PROXY: http://zap:8080
 
-      # ✅ EXCLUSIONES DE PROXY (CRÍTICO PARA NUGET / LOCAL)
-      NO_PROXY: "localhost,127.0.0.1,nuget.org,api.nuget.org"
-      no_proxy: "localhost,127.0.0.1,nuget.org,api.nuget.org"
+      # ✅ Exclusiones críticas (NuGet / loopback)
+      NO_PROXY: "localhost,127.0.0.1,selenium-hub,nuget.org,api.nuget.org"
+      no_proxy: "localhost,127.0.0.1,selenium-hub,nuget.org,api.nuget.org"
 
-    networks:
-      - zap-net
     command: |
       bash -c '
         set -e
@@ -76,7 +82,7 @@ services:
         until curl -sf http://selenium-hub:4444/status >/dev/null; do sleep 2; done
         echo "Selenium Grid ready"
 
-        echo "Running filtered Selenium test (LoginTest)..."
+        echo "Running Selenium test (LoginTest)..."
         dotnet restore SeleniumWebTest.csproj
         dotnet test SeleniumWebTest.csproj --filter "LoginTest" || true
 

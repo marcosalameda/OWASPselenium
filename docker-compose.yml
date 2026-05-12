@@ -1,40 +1,4 @@
-services:
-  zap:
-    image: zaproxy/zap-stable
-    user: root
-    command: >
-      zap.sh -daemon
-      -host 0.0.0.0
-      -port 8080
-      -config api.disablekey=true
-      -config api.addrs.addr.name=.*
-      -config api.addrs.addr.regex=true
-    ports:
-      - "8080:8080"
-    volumes:
-      - ./zap-reports:/zap/wrk
-    networks:
-      - zap-net
-    healthcheck:
-      test: ["CMD", "curl", "-sf", "http://localhost:8080/JSON/core/view/version/"]
-      interval: 5s
-      timeout: 3s
-      retries: 20
-
-  selenium-hub:
-    image: selenium/standalone-chrome:latest
-    shm_size: 2gb
-    networks:
-      - zap-net
-    environment:
-      - SE_NODE_CHROME_ARGS=--ignore-certificate-errors --ignore-ssl-errors=yes --allow-insecure-localhost
-    healthcheck:
-      test: ["CMD", "curl", "-sf", "http://localhost:4444/status"]
-      interval: 5s
-      timeout: 3s
-      retries: 20
-
-  selenium:
+selenium:
     build:
       context: .
       dockerfile: Dockerfile.selenium
@@ -69,7 +33,6 @@ services:
           echo "=== DIAGNÓSTICO DE VARIABLES ==="
           echo "ZAP_PROXY = $$ZAP_PROXY"
           echo "SELENIUM_REMOTE_URL = $$SELENIUM_REMOTE_URL"
-          echo "selenium.baseurl = $$selenium_baseurl"
           echo "================================"
 
           echo "Waiting for services..."
@@ -81,15 +44,14 @@ services:
           curl -sf "http://zap:8080/JSON/context/action/newContext/?contextName=mi-app" > /dev/null
           curl -sf "http://zap:8080/JSON/context/action/includeInContext/?contextName=mi-app&regex=https://jenkinsvm.quidgest.pt/gqt_horizontal_vue.*" > /dev/null
           
-          # Excluir dominios de ruido para evitar saturación (Google, Telemetría, etc)
           for regex in ".*google.*" ".*gstatic.*" ".*googleapis.*" ".*digicert.*" ".*mozilla.*"; do
             curl -sf "http://zap:8080/JSON/core/action/excludeFromProxy/?regex=$$regex" > /dev/null
             echo "Excluded: $$regex"
           done
 
-          echo "Running Selenium test (LoginTest)..."
+          echo "Running ALL Selenium tests..."
           dotnet restore SeleniumWebTest.csproj
-          dotnet test SeleniumWebTest.csproj --filter "LoginTest" || true
+          dotnet test SeleniumWebTest.csproj --logger:"console;verbosity=normal" || true
 
           echo "Generating OWASP ZAP HTML report..."
           curl -sf "http://zap:8080/JSON/reports/action/generate/" \
@@ -101,7 +63,3 @@ services:
             --data-urlencode "reportDir=/zap/wrk" \
             > /dev/null
           echo "ZAP report generated"
-
-networks:
-  zap-net:
-    driver: bridge

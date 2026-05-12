@@ -1,3 +1,4 @@
+using OpenQA.Selenium.Support.UI
 using System;
 using System.Threading;
 using System.Linq;

@@ -2,77 +2,56 @@ using OpenQA.Selenium;
 using OpenQA.Selenium.Support.UI;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System;
 
 namespace quidgest.uitests.core;
 
 /// <summary>
 /// Base class for every Page Object Model (POM).
 /// </summary>
-/// <remarks>
-/// https://www.selenium.dev/documentation/en/guidelines_and_recommendations/page_object_models/
-/// </remarks>
-public class PageObject {
-    //private final static Logger LOGGER = LoggerFactory.getLogger(PageObject.class.getName());
-    protected IWebElement GetElement(IWebElement parent)
-    {
-        return parent;
-    }
-    protected IWebElement GetElement(IWebDriver driver)
-    {
-        return null;
-    }
-
+public class PageObject
+{
     protected IWebDriver driver;
-	protected WebDriverWait wait;
+    protected WebDriverWait wait;
 
-	/// <summary>
-	/// Initialize a Page Object Model (POM)
-	/// </summary>
-	/// <param name="driver">WebDriver</param>
-	public PageObject(IWebDriver driver) {
-		this.driver = driver;
-		this.wait = new WebDriverWait(driver, TimeSpan.FromMilliseconds(Configuration.Instance.ExplicitWait.Value));
-		this.wait.IgnoreExceptionTypes(typeof(StaleElementReferenceException), typeof(NoSuchElementException));
-	}
+    public PageObject(IWebDriver driver)
+    {
+        this.driver = driver;
 
-    /// <summary>
-    /// Get a DOM element if it exists. Otherwise return null.
-    /// </summary>
-	/// <param name="element">The DOM element to search within.</param>
-    /// <param name="by">The locating mechanism to use.</param>
+        // --- MEJORA DE ROBUSTEZ ---
+        // Extraemos el valor de ExplicitWait (que ahora es de 30s) de la configuración
+        int timeoutMs = Configuration.Instance.ExplicitWait ?? 30000;
+
+        this.wait = new WebDriverWait(driver, TimeSpan.FromMilliseconds(timeoutMs));
+
+        // Mantenemos tu lógica original de ignorar excepciones durante las esperas
+        this.wait.IgnoreExceptionTypes(
+            typeof(StaleElementReferenceException),
+            typeof(NoSuchElementException)
+        );
+    }
+
+    // Mantenemos todos tus métodos GetElement originales exactamente como están
+    protected IWebElement GetElement(IWebElement parent) => parent;
+
+    protected IWebElement GetElement(IWebDriver driver) => null;
+
     public IWebElement GetElement(IWebElement element, By by)
     {
-		if (element == null)
-			return null;
+        if (element == null) return null;
 
-		// Get matching elements as list (although there should only be one)
-		// This way, if the element doesn't exist, the list is empty
-		// but there is no exception
-		ReadOnlyCollection<IWebElement> elementList = element.FindElements(by);
+        ReadOnlyCollection<IWebElement> elementList = element.FindElements(by);
 
-		// Element not found
-		if (!elementList.Any())
-			return null;
+        if (!elementList.Any()) return null;
 
-		// Element found
-		return elementList[0];
-    }
-    protected IWebElement GetElement(By by)
-    {
-        return driver.FindElement(by);
-    }
-    protected IWebElement GetElement(IWebDriver driver, By by)
-    {
-        return driver.FindElement(by);
-    }
-    protected IWebElement GetElement(By by, IWebDriver driver)
-    {
-        return driver.FindElement(by);
+        return elementList[0];
     }
 
-    protected IWebElement GetElement(IWebDriver driver, IWebElement element)
-    {
-        return element;
-    }
+    protected IWebElement GetElement(By by) => driver.FindElement(by);
 
+    protected IWebElement GetElement(IWebDriver driver, By by) => driver.FindElement(by);
+
+    protected IWebElement GetElement(By by, IWebDriver driver) => driver.FindElement(by);
+
+    protected IWebElement GetElement(IWebDriver driver, IWebElement element) => element;
 }

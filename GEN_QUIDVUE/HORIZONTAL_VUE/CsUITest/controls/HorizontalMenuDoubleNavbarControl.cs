@@ -1,51 +1,68 @@
-﻿using quidgest.uitests.core;
+﻿using OpenQA.Selenium;
+using OpenQA.Selenium.Support.UI;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace quidgest.uitests.controls
+namespace quidgest.uitests.controls;
+
+public class HorizontalMenuDoubleNavbarControl : HorizontalMenuControl
 {
-    public class HorizontalMenuDoubleNavbarControl : HorizontalMenuControl
+    // Usamos localizadores By para que las esperas sean efectivas
+    private By secondNavMenusLocator => By.ClassName("n-menu__navbar--double-l2");
+    private By primaryMenusLocator => By.Id("menu-navbar");
+
+    public HorizontalMenuDoubleNavbarControl(IWebDriver driver, MenuTree menuTree) : base(driver, menuTree)
     {
-        private IWebElement SecondNavMenus => driver.FindElement(By.ClassName("n-menu__navbar--double-l2"));
-        public HorizontalMenuDoubleNavbarControl(IWebDriver driver, MenuTree menuTree) : base(driver, menuTree)
+        // Esperamos a que la segunda barra de navegación esté presente
+        wait.Until(d => d.FindElement(secondNavMenusLocator).Displayed);
+    }
+
+    protected override void WaitForLoading()
+    {
+        base.WaitForLoading();
+        // Aseguramos que ambas barras estén listas
+        wait.Until(d => d.FindElement(primaryMenusLocator).Displayed);
+        wait.Until(d => d.FindElement(secondNavMenusLocator).Displayed);
+    }
+
+    protected override void ClickParentRecursive(string moduleId, MenuTreeNode node)
+    {
+        var parent = node.Parent;
+        if (parent != null)
+            ClickParentRecursive(moduleId, parent);
+
+        if (parent == null)
         {
-            wait.Until(c => SecondNavMenus);            
+            // --- CORRECCIÓN: El menú pertenece a la primera Navbar ---
+            // Reemplazamos la variable 'menus' por una búsqueda segura
+            var primaryMenus = wait.Until(d => d.FindElement(primaryMenusLocator));
+            var liTarget = primaryMenus.FindElement(By.Id(moduleId + node.Id));
+
+            wait.Until(d => liTarget.Displayed && liTarget.Enabled);
+            liTarget.Click();
         }
-
-        protected override void WaitForLoading()
+        else
         {
-            base.WaitForLoading();
-            wait.Until(c => SecondNavMenus);
-        }
+            // --- CORRECCIÓN: El menú pertenece a la segunda Navbar ---
+            var secondNav = wait.Until(d => d.FindElement(secondNavMenusLocator));
+            var liTarget = secondNav.FindElement(By.Id(moduleId + node.Id));
 
-        protected override void ClickParentRecursive(string moduleId, MenuTreeNode node)
-        {
-            var parent = node.Parent;
-            if (parent != null)
-                ClickParentRecursive(moduleId, parent);
+            wait.Until(d => liTarget.Displayed && liTarget.Enabled);
 
-            //the menu belongs to the first Navbar
-            if (parent == null)
+            try
             {
-                var liTarget = menus.FindElement(By.Id(moduleId + node.Id));
+                // Intentamos hacer clic en el desplegable si existe
+                var btn = liTarget.FindElement(By.ClassName("dropdown-toggle"));
+                btn.Click();
+            }
+            catch (NoSuchElementException)
+            {
+                // Si no es un desplegable, es un enlace directo
                 liTarget.Click();
             }
-            else
+            catch (ElementNotInteractableException)
             {
-                //the menu belongs to the second Navbar
-                var liTarget = SecondNavMenus.FindElement(By.Id(moduleId + node.Id));
-                try
-                {
-                    var btn = liTarget.FindElement(By.ClassName("dropdown-toggle"));
-                    btn.Click();
-                }
-                catch (Exception)
-                {
-                    liTarget.Click();
-                }
+                // Si el elemento está tapado, forzamos el clic por JS
+                ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].click();", liTarget);
             }
         }
     }

@@ -16,71 +16,70 @@ public class Configuration
 
     private static Configuration _instance;
 
-    //should be private but this is just a quick way to allow the configuration to be deserialized
-    public Configuration() {}
+    public Configuration() { }
 
     public static Configuration Instance
     {
         get
         {
-            if(_instance == null)
+            if (_instance == null)
             {
+                // --- ARREGLO ERROR 2: Tiempos por defecto realistas ---
                 _instance = new Configuration
                 {
                     Browser = "chrome",
+                    // --- ARREGLO ERROR 1: BaseUrl asegurada ---
                     BaseUrl = "https://jenkinsvm.quidgest.pt/gqt_horizontal_vue/",
-                    Headless = true,
-                    ImplicitWait = 100,
-                    ExplicitWait = 1000,
+                    Headless = false, // En local preferimos ver el navegador
+                    ImplicitWait = 10000, // 10 segundos (antes 0.1s)
+                    ExplicitWait = 30000, // 30 segundos (antes 1s)
                     WindowWidth = 1920,
                     WindowHeight = 1080
                 };
 
-                //config file overrides defaults
-                if(File.Exists("SeleniumWebTest.json"))
+                // Sobrescribir con JSON si existe
+                if (File.Exists("SeleniumWebTest.json"))
                 {
                     var settings = File.ReadAllText("SeleniumWebTest.json");
                     var f = JsonSerializer.Deserialize<Configuration>(settings);
-                    if(f.Browser != null)
-                        _instance.Browser = f.Browser;
-                    if(f.BaseUrl != null)
-                        _instance.BaseUrl = f.BaseUrl;
-                    if(f.Headless != null)
-                        _instance.Headless = f.Headless;
-                    if(f.ImplicitWait != null)
-                        _instance.ImplicitWait = f.ImplicitWait;
-                    if(f.ExplicitWait != null)
-                        _instance.ExplicitWait = f.ExplicitWait;
-                    if (f.WindowWidth != null)
-                        _instance.WindowWidth = f.WindowWidth;
-                    if (f.WindowHeight != null)
-                        _instance.WindowHeight = f.WindowHeight;
+                    if (f != null)
+                    {
+                        if (f.Browser != null) _instance.Browser = f.Browser;
+                        if (f.BaseUrl != null) _instance.BaseUrl = f.BaseUrl;
+                        if (f.Headless != null) _instance.Headless = f.Headless;
+                        if (f.ImplicitWait != null) _instance.ImplicitWait = f.ImplicitWait;
+                        if (f.ExplicitWait != null) _instance.ExplicitWait = f.ExplicitWait;
+                        if (f.WindowWidth != null) _instance.WindowWidth = f.WindowWidth;
+                        if (f.WindowHeight != null) _instance.WindowHeight = f.WindowHeight;
+                    }
                 }
 
-                //environment variables override file
-                var b = Environment.GetEnvironmentVariable("selenium.browser");
-                if(b != null)
-                    _instance.Browser = b;
-                var u = Environment.GetEnvironmentVariable("selenium.baseurl");
-                if(u != null)
-                    _instance.BaseUrl = u;
-                var h = Environment.GetEnvironmentVariable("selenium.headless");
-                if(h != null)
-                    _instance.Headless = Boolean.Parse(h);
-                var w = Environment.GetEnvironmentVariable("selenium.implicitwait");
-                if(w != null)
-                    _instance.ImplicitWait = Int32.Parse(w);
-                var ew = Environment.GetEnvironmentVariable("selenium.explicitwait");
-                if(ew != null)
-                    _instance.ExplicitWait = Int32.Parse(ew);
-                var ww = Environment.GetEnvironmentVariable("selenium.windowwidth");
-                if (ww != null)
-                    _instance.WindowWidth = Int32.Parse(ww);
-                var wh = Environment.GetEnvironmentVariable("selenium.windowheight");
-                if (wh != null)
-                    _instance.WindowHeight = Int32.Parse(wh);
+                // --- COMPATIBILIDAD MEJORADA: Soporte para variables de Jenkins/Docker ---
+                _instance.Browser = GetEnv("selenium.browser", "selenium_browser") ?? _instance.Browser;
+                _instance.BaseUrl = GetEnv("selenium.baseurl", "selenium_baseurl") ?? _instance.BaseUrl;
+
+                var h = GetEnv("selenium.headless", "selenium_headless");
+                if (h != null) _instance.Headless = bool.Parse(h);
+
+                var iw = GetEnv("selenium.implicitwait", "selenium_implicitwait");
+                if (iw != null) _instance.ImplicitWait = int.Parse(iw);
+
+                var ew = GetEnv("selenium.explicitwait", "selenium_explicitwait");
+                if (ew != null) _instance.ExplicitWait = int.Parse(ew);
+
+                var ww = GetEnv("selenium.windowwidth", "selenium_windowwidth");
+                if (ww != null) _instance.WindowWidth = int.Parse(ww);
+
+                var wh = GetEnv("selenium.windowheight", "selenium_windowheight");
+                if (wh != null) _instance.WindowHeight = int.Parse(wh);
             }
             return _instance;
         }
+    }
+
+    // Método auxiliar para leer variables con dos posibles nombres
+    private static string GetEnv(string key1, string key2)
+    {
+        return Environment.GetEnvironmentVariable(key1) ?? Environment.GetEnvironmentVariable(key2);
     }
 }

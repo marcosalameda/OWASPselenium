@@ -1,58 +1,88 @@
+using System;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
+using OpenQA.Selenium.Edge;
+using OpenQA.Selenium.Firefox;
 using OpenQA.Selenium.Remote;
+using WebDriverManager;
+using WebDriverManager.DriverConfigs.Impl;
+using WebDriverManager.Helpers;
 
 namespace quidgest.uitests.core;
 
-public static class DriverFactory
+public class DriverFactory
 {
     public static IWebDriver getWebDriver()
     {
+        var c = Configuration.Instance;
+        return getWebDriver(
+            c.Browser,
+            c.Headless.Value,
+            c.ImplicitWait.Value,
+            c.WindowWidth.Value,
+            c.WindowHeight.Value
+        );
+    }
+
+    public static IWebDriver getWebDriver(
+        string browser,
+        bool headless,
+        int implicitWaitMilliseconds,
+        int windowwidth,
+        int windowheight)
+    {
+        IWebDriver driver;
+        // Detectamos si Jenkins nos está pidiendo un navegador remoto
         var remoteUrl = Environment.GetEnvironmentVariable("SELENIUM_REMOTE_URL");
-        if (string.IsNullOrWhiteSpace(remoteUrl))
-            throw new InvalidOperationException("SELENIUM_REMOTE_URL not set");
 
-        var options = new ChromeOptions();
-
-        // --- Configuración básica CI / Docker ---
-        options.AddArgument("--headless=new");
-        options.AddArgument("--no-sandbox");
-        options.AddArgument("--disable-dev-shm-usage");
-        options.AddArgument("--window-size=1920,1080");
-
-        // --- BLOQUEO DE RUIDO Y TRÁFICO DE FONDO (Clave para evitar los 32MB de Google) ---
-        // Deshabilita el servicio de predicción de red y guías de optimización
-        options.AddArgument("--disable-features=OptimizationHints,OptimizationGuideModelDownloading,OptimizationTargetPrediction,OptimizationHintsFetching");
-        // Deshabilita actualizaciones automáticas de componentes y extensiones
-        options.AddArgument("--disable-component-update");
-        options.AddArgument("--disable-extensions");
-        options.AddArgument("--disable-default-apps");
-        // Deshabilita servicios de Google (Safe Browsing, Translate, etc.) que generan tráfico extra
-        options.AddArgument("--disable-background-networking");
-        options.AddArgument("--disable-sync");
-        options.AddArgument("--disable-translate");
-
-        // --- CLAVE PARA OWASP ZAP (MITM HTTPS) ---
-        options.AddArgument("--ignore-certificate-errors");
-        options.AddArgument("--ignore-ssl-errors=yes");
-        options.AddArgument("--ignore-certificate-errors-spki-list");
-        options.AddArgument("--allow-insecure-localhost");
-        options.AddArgument("--disable-web-security");
-        options.AddArgument("--allow-running-insecure-content");
-
-        // --- Configuración de Proxy ZAP ---
-        var zapProxy = Environment.GetEnvironmentVariable("ZAP_PROXY");
-        if (!string.IsNullOrWhiteSpace(zapProxy))
+        switch (browser.ToLower())
         {
-            // Forzamos a que todo pase por el proxy excepto lo definido en NO_PROXY si fuera necesario
-            options.AddArgument($"--proxy-server={zapProxy}");
+            case "firefox":
+                new DriverManager().SetUpDriver(new FirefoxConfig(), VersionResolveStrategy.MatchingBrowser);
+                FirefoxOptions firefoxOptions = new FirefoxOptions();
+                if (headless) firefoxOptions.AddArguments("--headless");
+                driver = new FirefoxDriver(firefoxOptions);
+                break;
+
+            case "edge":
+                new DriverManager().SetUpDriver(new EdgeConfig(), VersionResolveStrategy.MatchingBrowser);
+                driver = new EdgeDriver();
+                break;
+
+            default: // ✅ CHROME
+                ChromeOptions chromeOptions = new ChromeOptions();
+
+                // Lógica de Headless: Si hay remoteUrl (Jenkins), forzamos headless
+                if (!string.IsNullOrEmpty(remoteUrl) || headless)
+                {
+                    chromeOptions.AddArgument("--headless=new");
+                }
+
+                chromeOptions.AddArgument($"--window-size={windowwidth},{windowheight}");
+                chromeOptions.AddArgument("--no-sandbox");
+                chromeOptions.AddArgument("--disable-dev-shm-usage");
+                chromeOptions.AddArgument("--ignore-certificate-errors");
+                chromeOptions.AddArgument("--allow-insecure-localhost");
+                chromeOptions.AddArgument("--allow-running-insecure-content");
+                chromeOptions.AddArgument("--disable-web-security");
+
+                // --- DECISIÓN FINAL: ¿Remoto o Local? ---
+                if (!string.IsNullOrEmpty(remoteUrl))
+                {
+                    // Estamos en Jenkins/Docker
+                    driver = new RemoteWebDriver(new Uri(remoteUrl), chromeOptions.ToCapabilities(), TimeSpan.FromSeconds(180));
+                }
+                else
+                {
+                    // Estamos en tu PC: Usamos el WebDriverManager de tu copia buena
+                    new DriverManager().SetUpDriver(new ChromeConfig(), VersionResolveStrategy.MatchingBrowser);
+                    driver = new ChromeDriver(chromeOptions);
+                }
+                break;
         }
 
-        // Aumentamos el timeout de la sesión remota para dar margen a ZAP de procesar las peticiones
-        return new RemoteWebDriver(
-            new Uri(remoteUrl),
-            options.ToCapabilities(),
-            TimeSpan.FromSeconds(180) 
-        );
+        driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromMilliseconds(implicitWaitMilliseconds);
+
+        return driver;
     }
 }

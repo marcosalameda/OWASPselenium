@@ -1,48 +1,38 @@
 using AngleSharp.Text;
-using OpenQA.Selenium.Support.Extensions;
+using OpenQA.Selenium;
+using OpenQA.Selenium.Support.UI;
+using System;
 
 namespace quidgest.uitests.controls;
 
 public class HorizontalMenuControl : PageObject, IMenuControl
 {
-
-    private IWebElement navbar => driver.FindElement(By.Id("main-header-navbar"));
-
-    private IWebElement modules => navbar.FindElement(By.ClassName("modules__container"));
-    private IWebElement currentModule => modules.FindElement(By.CssSelector(".modules__header"));
-
-    private IWebElement bookmarks => navbar.FindElement(By.ClassName("bookmarks__container"));
-
-    protected IWebElement menus => navbar.FindElement(By.Id("menu-navbar"));
+    // Cambiamos a localizadores para que el Wait pueda buscarlos en el momento justo
+    private By navbarLocator => By.Id("main-header-navbar");
+    private By modulesLocator => By.ClassName("modules__container");
+    private By menusLocator => By.Id("menu-navbar");
 
     protected MenuTree _menuTree;
 
     public HorizontalMenuControl(IWebDriver driver, MenuTree menuTree) : base(driver)
     {
         _menuTree = menuTree;
-
-        wait.Until(c => navbar);
-        wait.Until(c => menus);
+        // Esperamos a que la estructura básica del menú esté presente
+        wait.Until(d => d.FindElement(navbarLocator).Displayed);
+        wait.Until(d => d.FindElement(menusLocator).Displayed);
     }
 
     protected virtual void WaitForLoading()
     {
-        wait.Until(c => menus);
-        wait.Until(c => modules);
+        // Aseguramos que los contenedores no solo existan, sino que sean visibles
+        wait.Until(d => d.FindElement(menusLocator).Displayed);
+        wait.Until(d => d.FindElement(modulesLocator).Displayed);
     }
 
     public void ActivateMenu(string moduleId, string itemId)
     {
         WaitForLoading();
-
-        //Horizontal menus do not visualize the subelements until the parent element is clicked
-        //To solve this we need to generate the declaration of the menu tree to a class
-        // then request the forward path to the destination element to it.
-        //Another solution would be to make the test programmer to explicitly activate the
-        // menus in the correct sequence, but that would be needlessly verbose for tests.
-
         var menuNode = _menuTree.FindMenu(moduleId, itemId);
-        //recursively click on the parent menus until we can click on the one we want
         ClickParentRecursive(moduleId, menuNode);
     }
 
@@ -52,70 +42,79 @@ public class HorizontalMenuControl : PageObject, IMenuControl
         if (parent != null)
             ClickParentRecursive(moduleId, parent);
 
-        // Get the clickable element within the list item element that has the menu ID
-        var liTarget = menus.FindElement(By.CssSelector("#" + moduleId + node.Id + " a"));
+        // ARREGLO ERROR 4: Esperamos a que el enlace sea clicable antes de interactuar
+        var selector = $"#{moduleId}{node.Id} a";
+        var liTarget = wait.Until(d => {
+            var el = d.FindElement(By.CssSelector(selector));
+            return (el.Displayed && el.Enabled) ? el : null;
+        });
+
         liTarget.Click();
     }
-
 
     public void ActivateModule(string moduleId)
     {
         WaitForLoading();
+        var modulesContainer = driver.FindElement(modulesLocator);
+        var currentModule = modulesContainer.FindElement(By.CssSelector(".modules__header"));
 
         var cm = currentModule.GetAttribute("data-key");
         if (cm == moduleId) return;
-        modules.Click();
-        var item = modules.FindElement(ByData.Key(moduleId));
-        wait.Until(c => item.Displayed);
+
+        modulesContainer.Click();
+
+        // Esperamos a que la opción del módulo aparezca tras el clic anterior
+        var item = wait.Until(d => {
+            var el = d.FindElement(ByData.Key(moduleId));
+            return (el.Displayed && el.Enabled) ? el : null;
+        });
+
         item.Click();
     }
 
     public void ActivateFavorite(string itemId)
     {
-        bookmarks.Click();
-        var item = bookmarks.FindElement(ByData.Key(itemId));
-        wait.Until(c => item.Displayed);
+        var bookmarksContainer = driver.FindElement(By.ClassName("bookmarks__container"));
+        bookmarksContainer.Click();
+
+        var item = wait.Until(d => {
+            var el = d.FindElement(ByData.Key(itemId));
+            return (el.Displayed && el.Enabled) ? el : null;
+        });
+
         item.Click();
     }
 
     public int GetMenuCount(string moduleId, string itemId)
     {
         WaitForLoading();
+        var menuNode = wait.Until(d => d.FindElement(By.Id(moduleId + itemId)));
 
-        // Get menu item element
-        var menuNode = menus.FindElement(By.Id(moduleId + itemId));
+        try
+        {
+            IWebElement counterElem = menuNode
+                .FindElement(By.CssSelector("a"))
+                .FindElement(By.CssSelector("span"))
+                .FindElement(By.CssSelector("span"));
 
-        // Get record counter element
-        IWebElement counterElem = menuNode
-            ?.FindElement(By.CssSelector("a"))
-            ?.FindElement(By.CssSelector("span"))
-            ?.FindElement(By.CssSelector("span"));
-
-        // Get record counter element text
-        string counterElemText = counterElem?.GetDomProperty("innerText");
-
-        // Convert to integer
-        return counterElemText == null ? 0 : counterElemText.ToInteger(0);
+            string counterElemText = counterElem?.GetDomProperty("innerText");
+            return counterElemText == null ? 0 : counterElemText.ToInteger(0);
+        }
+        catch (NoSuchElementException)
+        {
+            return 0;
+        }
     }
 
-    public bool HasBookmark(string name = null)
-    {
-        return false;
-    }
-
-    public void AddBookmark(string name = null)
-    {
-    }
-
-    public void RemoveBookmark(string name = null)
-    {
-    }
-
-    public void ActivateBookmark(string name = null)
-    {
-    }
     public int GetBookmarkCount()
     {
-        return bookmarks.FindElements(By.CssSelector(".bookmarks__btn--link")).Count;
+        var bookmarksContainer = driver.FindElement(By.ClassName("bookmarks__container"));
+        return bookmarksContainer.FindElements(By.CssSelector(".bookmarks__btn--link")).Count;
     }
+
+    // Métodos vacíos mantenidos por interfaz
+    public bool HasBookmark(string name = null) => false;
+    public void AddBookmark(string name = null) { }
+    public void RemoveBookmark(string name = null) { }
+    public void ActivateBookmark(string name = null) { }
 }

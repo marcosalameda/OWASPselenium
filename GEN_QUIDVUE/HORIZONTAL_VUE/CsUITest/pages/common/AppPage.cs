@@ -13,12 +13,11 @@ public class AppPage: PageObject
 	private By avatarLocator => By.Id("user-avatar");
 
 	public AppPage(IWebDriver driver) : base(driver)
-	{
-		string url = Configuration.Instance.BaseUrl;
-		driver.Navigate().GoToUrl(url);
-
-		wait.Until(c => Container);
-	}
+{
+    // ❌ Eliminado: driver.Navigate().GoToUrl(url);
+    // El SetUp ya ha navegado a la URL correcta vía variable de entorno
+    wait.Until(c => Container);
+}
 
 	private void WaitForLoading()
 	{

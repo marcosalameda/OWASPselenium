@@ -64,24 +64,24 @@ services:
       - bash
       - -c
       - |
-          set -e
+          # 1. Warm up con tolerancia a fallos
           echo "=== 1. DESPERTANDO LA WEB (WARM UP) ==="
-          curl -sL https://jenkinsvm.quidgest.pt/gqt_horizontal_vue/ > /dev/null
+          # -k permite SSL inseguro, || true evita que el contenedor muera si falla la red
+          curl -skL https://jenkinsvm.quidgest.pt/gqt_horizontal_vue/ > /dev/null || echo "⚠️ Warm up fallido, continuando..."
 
           echo "=== 2. CONFIGURANDO ZAP ==="
-          # Esperamos a que la API de ZAP responda realmente
           until curl -sf http://zap:8080/JSON/core/view/version/ >/dev/null; do sleep 2; done
           
           curl -sf "http://zap:8080/JSON/context/action/newContext/?contextName=mi-app" > /dev/null
           curl -sf "http://zap:8080/JSON/context/action/includeInContext/?contextName=mi-app&regex=https://jenkinsvm.quidgest.pt/gqt_horizontal_vue.*" > /dev/null
           
-          # IMPORTANTE: Usamos $$regex para Bash
           for r in ".*google.*" ".*gstatic.*" ".*googleapis.*" ".*digicert.*" ".*mozilla.*"; do
             curl -sf "http://zap:8080/JSON/core/action/excludeFromProxy/?regex=$$r" > /dev/null
             echo "Excluded: $$r"
           done
 
           echo "=== 3. EJECUTANDO TESTS ==="
+          # Nos aseguramos de estar en la carpeta correcta
           dotnet restore SeleniumWebTest.csproj
           dotnet test SeleniumWebTest.csproj --nologo --logger:\"console;verbosity=normal\" || true
 

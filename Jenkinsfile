@@ -19,35 +19,24 @@ pipeline {
         }
         stage('Procesar informe ZAP') {
             steps {
-                // ✅ Inyectar CSS personalizado en el HTML de ZAP para mejor legibilidad
-                sh '''
-                  python3 ci/enhance-zap-report.py \
-                    zap-reports/zap-report.html \
-                    zap-reports/zap-report-enhanced.html || true
-                '''
+                script {
+                    if (fileExists('zap-reports/zap-report.html')) {
+                        echo "✅ Informe ZAP generado correctamente."
+                        echo "📥 Descargable en: ${env.BUILD_URL}artifact/zap-reports/zap-report.html"
+                    } else {
+                        echo "⚠️ No se encontró el informe ZAP."
+                    }
+                }
             }
         }
     }
     post {
         always {
-            // ✅ Publicar como HTML interactivo navegable en la UI de Jenkins
-            publishHTML(target: [
-                allowMissing         : true,
-                alwaysLinkToLastBuild: true,
-                keepAll              : true,
-                reportDir            : 'zap-reports',
-                reportFiles          : 'zap-report-enhanced.html',
-                reportName           : 'OWASP ZAP Security Report',
-                reportTitles         : 'ZAP Report'
-            ])
-
-            // ✅ Archivar también el HTML original como respaldo
             archiveArtifacts artifacts: 'zap-reports/**/*', allowEmptyArchive: true
-
             sh 'docker compose down -v --remove-orphans || true'
         }
         failure {
-            echo '⚠️ El pipeline ha fallado. Revisa el Console Log y el informe ZAP.'
+            echo '⚠️ Pipeline fallido. Revisa el Console Log y el informe ZAP.'
         }
         success {
             echo '✅ Tests y análisis de seguridad completados correctamente.'

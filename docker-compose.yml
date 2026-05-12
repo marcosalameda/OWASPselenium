@@ -23,21 +23,21 @@ services:
       retries: 20
 
   selenium-hub:
-    image: selenium/standalone-chrome:latest
-    shm_size: 2gb
-    networks:
-      - zap-net
-    environment:
-      # ✅ CLAVE ABSOLUTA: flags de Chrome a nivel CONTENEDOR
-      SE_OPTS: >
-        --ignore-certificate-errors
-        --ignore-ssl-errors=yes
-        --allow-insecure-localhost
-    healthcheck:
-      test: ["CMD", "curl", "-sf", "http://localhost:4444/status"]
-      interval: 5s
-      timeout: 3s
-      retries: 20
+  image: selenium/standalone-chrome:latest
+  shm_size: 2gb
+  networks:
+    - zap-net
+  environment:
+    # ✅ FLAGS CORRECTOS PARA CHROME (NO PARA SELENIUM)
+    SE_NODE_CHROME_ARGS: >
+      --ignore-certificate-errors
+      --ignore-ssl-errors=yes
+      --allow-insecure-localhost
+  healthcheck:
+    test: ["CMD", "curl", "-sf", "http://localhost:4444/status"]
+    interval: 5s
+    timeout: 3s
+    retries: 20
 
   selenium:
     build:

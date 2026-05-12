@@ -1,4 +1,40 @@
-selenium:
+services:
+  zap:
+    image: zaproxy/zap-stable
+    user: root
+    command: >
+      zap.sh -daemon
+      -host 0.0.0.0
+      -port 8080
+      -config api.disablekey=true
+      -config api.addrs.addr.name=.*
+      -config api.addrs.addr.regex=true
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./zap-reports:/zap/wrk
+    networks:
+      - zap-net
+    healthcheck:
+      test: ["CMD", "curl", "-sf", "http://localhost:8080/JSON/core/view/version/"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+
+  selenium-hub:
+    image: selenium/standalone-chrome:latest
+    shm_size: 2gb
+    networks:
+      - zap-net
+    environment:
+      - SE_NODE_CHROME_ARGS=--ignore-certificate-errors --ignore-ssl-errors=yes --allow-insecure-localhost
+    healthcheck:
+      test: ["CMD", "curl", "-sf", "http://localhost:4444/status"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+
+  selenium:
     build:
       context: .
       dockerfile: Dockerfile.selenium
@@ -29,7 +65,6 @@ selenium:
       - -c
       - |
           set -e
-
           echo "=== DIAGNÓSTICO DE VARIABLES ==="
           echo "ZAP_PROXY = $$ZAP_PROXY"
           echo "SELENIUM_REMOTE_URL = $$SELENIUM_REMOTE_URL"
@@ -63,3 +98,7 @@ selenium:
             --data-urlencode "reportDir=/zap/wrk" \
             > /dev/null
           echo "ZAP report generated"
+
+networks:
+  zap-net:
+    driver: bridge

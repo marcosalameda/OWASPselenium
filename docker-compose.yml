@@ -56,8 +56,11 @@ services:
       SELENIUM_REMOTE_URL: http://selenium-hub:4444/wd/hub
       selenium.baseurl: https://jenkinsvm.quidgest.pt/gqt_horizontal_vue/
       ZAP_PROXY: http://zap:8080
+      selenium.explicitwait: "30000"   # ← 30 segundos en ms
+      selenium.implicitwait: "10000"   # ← 10 segundos en ms
       NO_PROXY: "localhost,127.0.0.1,selenium-hub,nuget.org,api.nuget.org"
       no_proxy: "localhost,127.0.0.1,selenium-hub,nuget.org,api.nuget.org"
+      
     command:
       - bash
       - -c

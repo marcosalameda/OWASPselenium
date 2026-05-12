@@ -18,15 +18,25 @@ public class FormOperationsTest : BaseSeleniumTest
     }
 
     private AppPage Authenticate()
-    {
-        var a = new AppPage(Driver);
-        a.ClickLogin();
+{
+    // 1. En lugar de instanciar AppPage de golpe, 
+    // esperamos a que el botón de login esté presente en la pantalla inicial.
+    var wait = new WebDriverWait(Driver, TimeSpan.FromSeconds(15));
+    
+    // Ajusta este selector al ID o clase real de tu botón "Login" de la página de inicio
+    var loginBtn = wait.Until(d => d.FindElement(By.CssSelector(".q-login-btn, #login-button, [data-test='login']")));
+    loginBtn.Click();
 
-        var p = new LoginPage(Driver);
-        p.Login("quidgest", "ZPH2LAB");
+    // 2. Ahora sí, usamos LoginPage para meter credenciales
+    var p = new LoginPage(Driver);
+    p.Login("quidgest", "ZPH2LAB");
 
-        return a;
-    }
+    // 3. IMPORTANTE: No retornes AppPage hasta que sepas que el login tuvo éxito.
+    // Esto evita que el constructor de AppPage falle por no encontrar el contenedor.
+    wait.Until(d => d.Url.Contains("Home") || d.FindElements(By.CssSelector(".layout-container")).Count > 0);
+
+    return new AppPage(Driver);
+}
     [Test]
     public void LoginTest()
     {

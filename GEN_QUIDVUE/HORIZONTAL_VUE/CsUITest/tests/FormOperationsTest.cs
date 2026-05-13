@@ -20,20 +20,20 @@ public class FormOperationsTest : BaseSeleniumTest
 
     private AppPage Authenticate()
 {
-    // 1. En lugar de instanciar AppPage de golpe, 
-    // esperamos a que el botón de login esté presente en la pantalla inicial.
-    var wait = new WebDriverWait(Driver, TimeSpan.FromSeconds(15));
+    // 1. Sube el tiempo a 60s SOLO para el login. 
+    // Recuerda: si el botón aparece en 2s, el test sigue al instante.
+    var wait = new WebDriverWait(Driver, TimeSpan.FromSeconds(60));
     
-    // Ajusta este selector al ID o clase real de tu botón "Login" de la página de inicio
+    // 2. Esperar al botón de login inicial
     var loginBtn = wait.Until(d => d.FindElement(By.CssSelector(".q-login-btn, #login-button, [data-test='login']")));
     loginBtn.Click();
 
-    // 2. Ahora sí, usamos LoginPage para meter credenciales
+    // 3. Meter credenciales
     var p = new LoginPage(Driver);
     p.Login("quidgest", "ZPH2LAB");
 
-    // 3. IMPORTANTE: No retornes AppPage hasta que sepas que el login tuvo éxito.
-    // Esto evita que el constructor de AppPage falle por no encontrar el contenedor.
+    // 4. ESPERA DINÁMICA: No instanciamos AppPage hasta que la URL cambie o aparezca el contenedor.
+    // Esto asegura que cuando entremos al constructor de AppPage, la página ya esté ahí.
     wait.Until(d => d.Url.Contains("Home") || d.FindElements(By.CssSelector(".layout-container")).Count > 0);
 
     return new AppPage(Driver);

@@ -16,6 +16,11 @@ services:
       - ./zap-reports:/zap/wrk
     networks:
       - zap-net
+    healthcheck:
+      test: ["CMD", "curl", "-sf", "http://localhost:8080/JSON/core/view/version/"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
 
   selenium-hub:
     image: selenium/standalone-chrome:latest
@@ -54,22 +59,30 @@ services:
       - bash
       - -c
       - |
-          echo "=== 0. LIMPIEZA TOTAL ==="
-          dotnet clean
+          echo "=== 0. LIMPIEZA RADICAL DE BINARIOS ==="
+          # El || true evita que el pipeline se detenga si el clean falla por falta de paquetes
+          dotnet clean || true
           rm -rf bin/ obj/
-          dotnet restore --force
 
-          echo "=== 1. CONFIG ZAP ==="
+          echo "=== 1. REGENERACIÓN DE ACTIVOS Y COMPILACIÓN ==="
+          # Obligatorio restaurar tras borrar la carpeta obj/
+          dotnet restore --force
+          dotnet build --no-restore
+
+          echo "=== 2. CONFIGURACIÓN DE CONTEXTO ZAP ==="
           until curl -sf http://zap:8080/JSON/core/view/version/ >/dev/null; do sleep 2; done
           curl -sf "http://zap:8080/JSON/context/action/newContext/?contextName=mi-app" || true
+          curl -sf "http://zap:8080/JSON/context/action/includeInContext/?contextName=mi-app&regex=https://jenkinsvm.quidgest.pt/gqt_horizontal_vue.*" || true
 
-          echo "=== 2. TESTS ==="
-          dotnet build --no-restore
+          echo "=== 3. EJECUCIÓN DE LOS 65 TESTS ==="
+          # Ejecutamos con el binario recién compilado
           dotnet test --no-build --nologo --logger:"console;verbosity=normal" || true
 
-          echo "=== 3. REPORTE ==="
+          echo "=== 4. GENERACIÓN DEL INFORME FINAL ZAP ==="
           curl -sf "http://zap:8080/JSON/reports/action/generate/?title=OWASP+ZAP+Report&template=traditional-html&reportFileName=zap-report&reportDir=/zap/wrk" || true
+          echo "✅ Proceso completado. Revisa los artefactos."
 
+# SECCIÓN CRÍTICA: Definición global de la red para evitar el error de la #59
 networks:
   zap-net:
     driver: bridge

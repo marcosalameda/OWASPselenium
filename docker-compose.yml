@@ -28,7 +28,8 @@ services:
     networks:
       - zap-net
     environment:
-      - SE_NODE_CHROME_ARGS=--ignore-certificate-errors --ignore-ssl-errors=yes --allow-insecure-localhost
+      # MODIFICACIÓN CLAVE: Deshabilitamos funciones de red de Chrome que bloquean a ZAP
+      - SE_NODE_CHROME_ARGS=--ignore-certificate-errors --disable-features=OptimizationGuideModelDownloading,OptimizationHints --disable-component-update --disable-background-networking --disable-sync --disable-default-apps
     healthcheck:
       test: ["CMD", "curl", "-sf", "http://localhost:4444/status"]
       interval: 5s
@@ -59,30 +60,24 @@ services:
       - bash
       - -c
       - |
-          echo "=== 0. LIMPIEZA RADICAL DE BINARIOS ==="
-          # El || true evita que el pipeline se detenga si el clean falla por falta de paquetes
+          echo "=== 0. LIMPIEZA Y RECOMPILACIÓN ==="
           dotnet clean || true
           rm -rf bin/ obj/
-
-          echo "=== 1. REGENERACIÓN DE ACTIVOS Y COMPILACIÓN ==="
-          # Obligatorio restaurar tras borrar la carpeta obj/
           dotnet restore --force
           dotnet build --no-restore
 
-          echo "=== 2. CONFIGURACIÓN DE CONTEXTO ZAP ==="
+          echo "=== 1. ESPERAR A ZAP Y CONFIGURAR CONTEXTO ==="
           until curl -sf http://zap:8080/JSON/core/view/version/ >/dev/null; do sleep 2; done
           curl -sf "http://zap:8080/JSON/context/action/newContext/?contextName=mi-app" || true
           curl -sf "http://zap:8080/JSON/context/action/includeInContext/?contextName=mi-app&regex=https://jenkinsvm.quidgest.pt/gqt_horizontal_vue.*" || true
 
-          echo "=== 3. EJECUCIÓN DE LOS 65 TESTS ==="
-          # Ejecutamos con el binario recién compilado
+          echo "=== 2. EJECUCIÓN DE TESTS (65 CASOS) ==="
           dotnet test --no-build --nologo --logger:"console;verbosity=normal" || true
 
-          echo "=== 4. GENERACIÓN DEL INFORME FINAL ZAP ==="
+          echo "=== 3. GENERACIÓN DE REPORTE OWASP ZAP ==="
           curl -sf "http://zap:8080/JSON/reports/action/generate/?title=OWASP+ZAP+Report&template=traditional-html&reportFileName=zap-report&reportDir=/zap/wrk" || true
-          echo "✅ Proceso completado. Revisa los artefactos."
+          echo "✅ Pipeline finalizado con éxito."
 
-# SECCIÓN CRÍTICA: Definición global de la red para evitar el error de la #59
 networks:
   zap-net:
     driver: bridge

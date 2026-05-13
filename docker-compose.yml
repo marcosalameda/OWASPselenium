@@ -58,34 +58,31 @@ services:
       - bash
       - -c
       - |
-          echo "=== 0. REPARANDO DEPENDENCIAS Y LIMPIANDO CACHÉ ==="
-          # El --force soluciona el error NETSDK1064 de la ejecución anterior
-          dotnet restore --force
+          echo "=== 0. LIMPIEZA Y REGENERACIÓN DE ACTIVOS ==="
+          # Borramos binarios y temporales para eliminar la linea 29 vieja
           dotnet clean
           rm -rf bin/ obj/
+          
+          # CRUCIAL: Regeneramos el archivo project.assets.json tras borrar obj/
+          dotnet restore --force
 
-          echo "=== 1. CONFIGURANDO ZAP (LIMPIEZA DE BAD_ACTION) ==="
-          # Esperamos a que ZAP esté listo
+          echo "=== 1. CONFIGURANDO ZAP ==="
           until curl -sf http://zap:8080/JSON/core/view/version/ >/dev/null; do sleep 2; done
-          # COMANDO CORREGIDO: 'setOptionMaxResponseSize' en lugar de 'setOptionMaximumResponseSize'
+          # Ignoramos el error BAD_ACTION para que no detenga el flujo
           curl -sf "http://zap:8080/JSON/core/action/setOptionMaxResponseSize/?size=104857600" || true
           
           curl -sf "http://zap:8080/JSON/context/action/newContext/?contextName=mi-app" || true
           curl -sf "http://zap:8080/JSON/context/action/includeInContext/?contextName=mi-app&regex=https://jenkinsvm.quidgest.pt/gqt_horizontal_vue.*" || true
 
-          echo "=== 2. DESPERTANDO LA WEB (WARM UP) ==="
-          which curl || (apt-get update && apt-get install -y curl)
-          curl -skL https://jenkinsvm.quidgest.pt/gqt_horizontal_vue/ > /dev/null || echo "⚠️ Web fría, continuando..."
-
-          echo "=== 3. COMPILANDO Y TESTEANDO ==="
-          # Recompilamos de cero para asegurar que la línea 29 no existe
+          echo "=== 2. COMPILACIÓN Y EJECUCIÓN DE TESTS ==="
+          # Ahora el build sí encontrará los archivos regenerados
           dotnet build --no-restore
-          # Usamos --no-build para garantizar que ejecutamos el binario limpio
-          dotnet test --no-build --nologo --logger:"console;verbosity=normal" || true
+          # Ejecutamos los tests. He quitado el || true para ver el fallo real si ocurre.
+          dotnet test --no-build --nologo --logger:"console;verbosity=normal"
 
-          echo "=== 4. GENERANDO REPORTE DE SEGURIDAD ==="
+          echo "=== 3. GENERACIÓN DEL INFORME ZAP ==="
           curl -sf "http://zap:8080/JSON/reports/action/generate/?title=OWASP+ZAP+Report&template=traditional-html&reportFileName=zap-report&reportDir=/zap/wrk" || true
-          echo "✅ Pipeline finalizado."
+          echo "✅ Proceso completado correctamente."
 
 networks:
   zap-net:

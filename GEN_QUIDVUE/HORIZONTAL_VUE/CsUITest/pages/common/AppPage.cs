@@ -1,5 +1,6 @@
-﻿using System.Linq;
+using System.Linq;
 using OpenQA.Selenium;
+using OpenQA.Selenium.Support.UI;
 using quidgest.uitests.core;
 using System;
 
@@ -7,31 +8,49 @@ namespace quidgest.uitests.pages;
 
 public class AppPage : PageObject
 {
-    // Usamos FindElement dentro de las propiedades para que Selenium busque el elemento en el momento de uso
+    // --- ELEMENTOS Y SELECTORES ---
+    // Usamos FindElement dentro de las propiedades para que Selenium busque en el momento de uso
     private IWebElement Container => driver.FindElement(By.ClassName("layout-container"));
-
+    
     public IMenuControl Menu => new HorizontalMenuControl(driver, _menuTree);
 
     private By loginBtnLocator => By.Id("logon-menu-btn");
     private By avatarLocator => By.Id("user-avatar");
+    public IWebElement Sidebar => wait.Until(d => d.FindElement(By.Id("chatbot-sidebar-btn")));
 
+    // --- CONSTRUCTOR CORREGIDO ---
     public AppPage(IWebDriver driver) : base(driver)
-{
-    // ... tu código de navegación ...
-    
-    // Cambia la espera: No busques el contenedor todavía, 
-    // solo asegúrate de que la página haya cargado el DOM base.
-    wait.Until(d => ((IJavaScriptExecutor)d).ExecuteScript("return document.readyState").Equals("complete"));
-}
+    {
+        string url = Configuration.Instance.BaseUrl;
 
-private void WaitForLoading()
-{
-    // Intenta buscar el contenedor solo si es necesario, con una comprobación segura
-    try {
-        wait.Until(c => driver.FindElements(By.ClassName("layout-container")).Count > 0);
-        wait.Until(c => Container.GetDomAttribute("data-loading") != "true");
-    } catch { /* Ignorar si no estamos en una página con contenedor aún */ }
-}
+        // Si el driver no tiene URL cargada, navegamos a la BaseUrl
+        if (string.IsNullOrEmpty(driver.Url) || driver.Url.Equals("about:blank", StringComparison.OrdinalIgnoreCase))
+        {
+            driver.Navigate().GoToUrl(url);
+        }
+
+        // ARREGLO IA: En lugar de buscar el contenedor (que requiere login), 
+        // esperamos a que el DOM básico de la página esté listo.
+        wait.Until(d => ((IJavaScriptExecutor)d).ExecuteScript("return document.readyState").Equals("complete"));
+    }
+
+    // --- MÉTODOS DE SOPORTE ---
+    private void WaitForLoading()
+    {
+        try 
+        {
+            // Espera a que el contenedor aparezca (si estamos logueados)
+            var containerWait = new WebDriverWait(driver, TimeSpan.FromSeconds(10));
+            var container = containerWait.Until(c => c.FindElement(By.ClassName("layout-container")));
+            
+            // data-loading es un atributo de Vue que indica procesos en segundo plano
+            wait.Until(c => container.GetDomAttribute("data-loading") != "true");
+        } 
+        catch 
+        { 
+            // Si no estamos en una página con contenedor aún, ignoramos para no bloquear el login
+        }
+    }
 
     public void ClickLogin()
     {
@@ -55,16 +74,17 @@ private void WaitForLoading()
             // Espera a que la URL cambie para reflejar el módulo y el ítem seleccionados
             return wait.Until(d => d.Url.Contains($"{moduleId}/menu/{moduleId}_{itemId}"));
         }
-        catch { return false; }
+        catch 
+        { 
+            return false; 
+        }
     }
 
-    // --- ARREGLO CRÍTICO IA: Ahora busca el botón real del Sidebar ---
-    public IWebElement Sidebar => wait.Until(d => d.FindElement(By.Id("chatbot-sidebar-btn")));
-
-    public void Logout() { }
-    public void CloseAlerts() { }
+    public void Logout() { /* Implementación pendiente según UI */ }
+    public void CloseAlerts() { /* Implementación pendiente según UI */ }
     public IWebElement UserMenu => null;
 
+    // --- DECLARACIÓN DEL ÁRBOL DE MENÚS (MenuTree) ---
     private readonly static MenuTree _menuTree = DeclareMenuTree();
 
     private static MenuTree DeclareMenuTree()
@@ -268,7 +288,7 @@ private void WaitForLoading()
         res.AddMenu(module, "B", null);
         res.AddMenu(module, "C", null);
 
-        // --- OTROS MÓDULOS (IMO, REG, TBS, WMS, TRN, UIS) ---
+        // --- OTROS MÓDULOS ---
         module = "IMO";
         res.AddModule(module);
         res.AddMenu(module, "1", null);

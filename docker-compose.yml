@@ -59,30 +59,28 @@ services:
       - -c
       - |
           echo "=== 0. REPARANDO DEPENDENCIAS Y LIMPIANDO CACHÉ ==="
-          # El --force es CLAVE para arreglar el error NETSDK1064 del log previo
+          # El --force soluciona el error NETSDK1064 de la ejecución anterior
           dotnet restore --force
           dotnet clean
           rm -rf bin/ obj/
 
-          echo "=== 1. CONFIGURANDO ZAP (MÁXIMO RENDIMIENTO) ==="
-          # Esperamos a que ZAP responda antes de configurar
+          echo "=== 1. CONFIGURANDO ZAP (LIMPIEZA DE BAD_ACTION) ==="
+          # Esperamos a que ZAP esté listo
           until curl -sf http://zap:8080/JSON/core/view/version/ >/dev/null; do sleep 2; done
-          # Aumentamos el límite de respuesta a 100MB para evitar el error de SQLException
-          curl -sf "http://zap:8080/JSON/core/action/setOptionMaximumResponseSize/?size=104857600"
+          # COMANDO CORREGIDO: 'setOptionMaxResponseSize' en lugar de 'setOptionMaximumResponseSize'
+          curl -sf "http://zap:8080/JSON/core/action/setOptionMaxResponseSize/?size=104857600" || true
           
-          # Configuramos contexto de ZAP
           curl -sf "http://zap:8080/JSON/context/action/newContext/?contextName=mi-app" || true
           curl -sf "http://zap:8080/JSON/context/action/includeInContext/?contextName=mi-app&regex=https://jenkinsvm.quidgest.pt/gqt_horizontal_vue.*" || true
 
           echo "=== 2. DESPERTANDO LA WEB (WARM UP) ==="
-          # Nos aseguramos de tener curl para el warm up
           which curl || (apt-get update && apt-get install -y curl)
           curl -skL https://jenkinsvm.quidgest.pt/gqt_horizontal_vue/ > /dev/null || echo "⚠️ Web fría, continuando..."
 
           echo "=== 3. COMPILANDO Y TESTEANDO ==="
-          # Build fresco para que no use la DLL vieja de la línea 29
+          # Recompilamos de cero para asegurar que la línea 29 no existe
           dotnet build --no-restore
-          # Usamos --no-build para forzar el uso del binario recién creado
+          # Usamos --no-build para garantizar que ejecutamos el binario limpio
           dotnet test --no-build --nologo --logger:"console;verbosity=normal" || true
 
           echo "=== 4. GENERANDO REPORTE DE SEGURIDAD ==="

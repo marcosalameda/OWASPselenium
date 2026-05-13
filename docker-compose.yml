@@ -52,42 +52,36 @@ services:
     environment:
       - SELENIUM_REMOTE_URL=http://selenium-hub:4444/wd/hub
       - ZAP_PROXY=http://zap:8080
-      - selenium.baseurl=https://jenkinsvm.quidgest.pt/gqt_horizontal_vue/
       - selenium_baseurl=https://jenkinsvm.quidgest.pt/gqt_horizontal_vue/
-      - selenium.explicitwait=60000
-      - selenium_explicitwait=60000
-      - NO_PROXY=localhost,127.0.0.1,selenium-hub,nuget.org,api.nuget.org
+      - selenium_explicitwait=60000  # Subimos a 60s como red de seguridad
     command:
       - bash
       - -c
       - |
-          echo "=== 0. REPARANDO Y LIMPIANDO CACHÉ ==="
-          # Forzamos restore para evitar el error NETSDK1064 de la ejecución #54
-          dotnet restore --force
+          echo "=== 0. LIMPIEZA DE BINARIOS VIEJOS ==="
+          # Esto mata el fantasma de la linea 29
           dotnet clean
-          rm -rf bin/ obj/
+          rm -rf bin/ obj/ 
 
-          echo "=== 1. CONFIGURANDO ZAP (TAMAÑO DE RESPUESTA) ==="
-          # Esperamos a ZAP y subimos el límite de respuesta a 50MB para evitar errores con Google
-          until curl -sf http://zap:8080/JSON/core/view/version/ >/dev/null; do sleep 2; done
-          curl -sf "http://zap:8080/JSON/core/action/setOptionMaximumResponseSize/?size=52428800"
-          
-          curl -sf "http://zap:8080/JSON/context/action/newContext/?contextName=mi-app" || true
-          curl -sf "http://zap:8080/JSON/context/action/includeInContext/?contextName=mi-app&regex=https://jenkinsvm.quidgest.pt/gqt_horizontal_vue.*" || true
-
-          echo "=== 2. WARM UP ==="
-          # Instalamos curl si falta y despertamos la web
+          echo "=== 1. WARM UP (DESPERTAR WEB) ==="
+          # Instalamos curl por si la imagen no lo tiene
           which curl || (apt-get update && apt-get install -y curl)
-          curl -skL https://jenkinsvm.quidgest.pt/gqt_horizontal_vue/ > /dev/null || echo "Warm up fallido, continuando..."
+          curl -skL https://jenkinsvm.quidgest.pt/gqt_horizontal_vue/ > /dev/null || echo "Web fría, pero seguimos..."
 
-          echo "=== 3. EJECUTANDO TESTS ==="
-          # Compilamos de cero para asegurar que la línea 29 no exista
-          dotnet build --no-restore
+          echo "=== 2. CONFIGURAR ZAP ==="
+          until curl -sf http://zap:8080/JSON/core/view/version/ >/dev/null; do sleep 2; done
+          # Subimos el límite de tamaño de ZAP para que no de errores de 33MB [cite: 80, 169]
+          curl -sf "http://zap:8080/JSON/core/action/setOptionMaximumResponseSize/?size=52428800"
+
+          echo "=== 3. RECOMPILAR Y EJECUTAR ==="
+          dotnet restore --force
+          dotnet build --no-incremental
+          # El || true es para que Jenkins no se detenga si fallan los tests y genere el reporte
           dotnet test --no-build --nologo --logger:"console;verbosity=normal" || true
 
-          echo "=== 4. GENERANDO REPORTE FINAL ==="
-          curl -sf "http://zap:8080/JSON/reports/action/generate/?title=OWASP+ZAP+Report&template=traditional-html&contexts=mi-app&reportFileName=zap-report&reportDir=/zap/wrk" || true
-          echo "✅ Proceso completado."
+          echo "=== 4. GENERAR REPORTE ZAP ==="
+          curl -sf "http://zap:8080/JSON/reports/action/generate/?title=OWASP+ZAP+Report&template=traditional-html&reportFileName=zap-report&reportDir=/zap/wrk"
+          echo "✅ Proceso terminado."
 
 networks:
   zap-net:

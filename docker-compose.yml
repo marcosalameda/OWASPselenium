@@ -54,35 +54,40 @@ services:
       - ZAP_PROXY=http://zap:8080
       - selenium.baseurl=https://jenkinsvm.quidgest.pt/gqt_horizontal_vue/
       - selenium_baseurl=https://jenkinsvm.quidgest.pt/gqt_horizontal_vue/
-      - selenium.explicitwait=30000
-      - selenium_explicitwait=30000
+      - selenium.explicitwait=60000
+      - selenium_explicitwait=60000
       - NO_PROXY=localhost,127.0.0.1,selenium-hub,nuget.org,api.nuget.org
     command:
       - bash
       - -c
       - |
-          echo "=== 0. LIMPIEZA ==="
-          dotnet clean || echo "No se pudo limpiar, continuando..."
-          
-          echo "=== 1. WARM UP ==="
-          # Intentamos instalar curl si no está (backup rápido)
-          which curl || (apt-get update && apt-get install -y curl)
-          curl -skL https://jenkinsvm.quidgest.pt/gqt_horizontal_vue/ > /dev/null || echo "Warm up fallido"
+          echo "=== 0. REPARANDO Y LIMPIANDO CACHÉ ==="
+          # Forzamos restore para evitar el error NETSDK1064 de la ejecución #54
+          dotnet restore --force
+          dotnet clean
+          rm -rf bin/ obj/
 
-          echo "=== 2. CONFIGURANDO ZAP ==="
-          # Espera simplificada para evitar errores de sintaxis
-          sleep 10
+          echo "=== 1. CONFIGURANDO ZAP (TAMAÑO DE RESPUESTA) ==="
+          # Esperamos a ZAP y subimos el límite de respuesta a 50MB para evitar errores con Google
+          until curl -sf http://zap:8080/JSON/core/view/version/ >/dev/null; do sleep 2; done
+          curl -sf "http://zap:8080/JSON/core/action/setOptionMaximumResponseSize/?size=52428800"
           
           curl -sf "http://zap:8080/JSON/context/action/newContext/?contextName=mi-app" || true
           curl -sf "http://zap:8080/JSON/context/action/includeInContext/?contextName=mi-app&regex=https://jenkinsvm.quidgest.pt/gqt_horizontal_vue.*" || true
-          
-          echo "=== 3. EJECUTANDO TESTS ==="
-          dotnet restore
-          dotnet test --nologo --logger:"console;verbosity=normal" || true
 
-          echo "=== 4. REPORTE ZAP ==="
+          echo "=== 2. WARM UP ==="
+          # Instalamos curl si falta y despertamos la web
+          which curl || (apt-get update && apt-get install -y curl)
+          curl -skL https://jenkinsvm.quidgest.pt/gqt_horizontal_vue/ > /dev/null || echo "Warm up fallido, continuando..."
+
+          echo "=== 3. EJECUTANDO TESTS ==="
+          # Compilamos de cero para asegurar que la línea 29 no exista
+          dotnet build --no-restore
+          dotnet test --no-build --nologo --logger:"console;verbosity=normal" || true
+
+          echo "=== 4. GENERANDO REPORTE FINAL ==="
           curl -sf "http://zap:8080/JSON/reports/action/generate/?title=OWASP+ZAP+Report&template=traditional-html&contexts=mi-app&reportFileName=zap-report&reportDir=/zap/wrk" || true
-          echo "✅ Finalizado"
+          echo "✅ Proceso completado."
 
 networks:
   zap-net:

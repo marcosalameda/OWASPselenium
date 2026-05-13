@@ -9,6 +9,7 @@ services:
       -config api.disablekey=true
       -config api.addrs.addr.name=.*
       -config api.addrs.addr.regex=true
+      -config network.connection.maxResponseSize=104857600
     ports:
       - "8080:8080"
     volumes:

@@ -28,8 +28,8 @@ services:
     networks:
       - zap-net
     environment:
-      # CONFIGURACIÓN CRÍTICA: Esto hace que Jenkins se comporte como tu local
-      # Desactivamos todo el ruido de fondo de Chrome que satura a ZAP
+      # BLINDAJE CRÍTICO: Desactivamos la telemetría de Google que pesa 33MB 
+      # y bloquea la base de datos de ZAP (límite 16MB).
       - SE_NODE_CHROME_ARGS=--ignore-certificate-errors --disable-features=OptimizationGuideModelDownloading,OptimizationHints --disable-component-update --disable-background-networking --disable-sync --disable-default-apps --no-first-run
     healthcheck:
       test: ["CMD", "curl", "-sf", "http://localhost:4444/status"]
@@ -61,23 +61,29 @@ services:
       - bash
       - -c
       - |
-          echo "=== LIMPIEZA Y RESTORE ==="
+          echo "=== 0. LIMPIEZA Y RESTORE INTEGRAL ==="
+          # Limpiamos binarios para evitar conflictos de versiones.
           dotnet clean || true
           rm -rf bin/ obj/
           dotnet restore --force
           dotnet build --no-restore
 
-          echo "=== CONFIGURACIÓN ZAP ==="
+          echo "=== 1. WARM UP (Sugerencia Administrador SVN) ==="
+          # Despertamos la web antes de los tests para evitar Timeouts iniciales.
+          curl -sf https://jenkinsvm.quidgest.pt/GQT_Horizontal_Vue/ || true
+
+          echo "=== 2. CONFIGURACIÓN DE CONTEXTO ZAP ==="
           until curl -sf http://zap:8080/JSON/core/view/version/ >/dev/null; do sleep 2; done
           curl -sf "http://zap:8080/JSON/context/action/newContext/?contextName=mi-app" || true
           curl -sf "http://zap:8080/JSON/context/action/includeInContext/?contextName=mi-app&regex=https://jenkinsvm.quidgest.pt/gqt_horizontal_vue.*" || true
 
-          echo "=== EJECUCIÓN DE TESTS ==="
-          # Ejecutamos con el binario limpio
+          echo "=== 3. EJECUCIÓN DE LOS 65 TESTS ==="
+          # Usamos --nologo como se indica en los archivos del SVN.
           dotnet test --no-build --nologo --logger:"console;verbosity=normal" || true
 
-          echo "=== REPORTE ==="
+          echo "=== 4. GENERACIÓN DE REPORTE OWASP ZAP ==="
           curl -sf "http://zap:8080/JSON/reports/action/generate/?title=OWASP+ZAP+Report&template=traditional-html&reportFileName=zap-report&reportDir=/zap/wrk" || true
+          echo "✅ Proceso completado. Revisa el informe en la carpeta zap-reports."
 
 networks:
   zap-net:

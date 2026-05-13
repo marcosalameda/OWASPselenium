@@ -16,18 +16,15 @@ public class AppPage : PageObject
     private By avatarLocator => By.Id("user-avatar");
 
     public AppPage(IWebDriver driver) : base(driver)
+{
+    string url = Configuration.Instance.BaseUrl;
+
+    if (string.IsNullOrEmpty(driver.Url) || driver.Url.Equals("about:blank", StringComparison.OrdinalIgnoreCase))
     {
-        string url = Configuration.Instance.BaseUrl;
-
-        // Si el driver no tiene URL cargada, navegamos a la BaseUrl
-        if (string.IsNullOrEmpty(driver.Url) || driver.Url.Equals("about:blank", StringComparison.OrdinalIgnoreCase))
-        {
-            driver.Navigate().GoToUrl(url);
-        }
-
-        // Espera explícita de hasta 15s para que el contenedor principal sea visible
-        wait.Until(c => Container.Displayed);
+        driver.Navigate().GoToUrl(url);
     }
+    wait.Until(d => ((IJavaScriptExecutor)d).ExecuteScript("return document.readyState").Equals("complete"));
+}
 
     private void WaitForLoading()
     {

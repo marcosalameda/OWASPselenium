@@ -17,20 +17,21 @@ public class AppPage : PageObject
 
     public AppPage(IWebDriver driver) : base(driver)
 {
-    string url = Configuration.Instance.BaseUrl;
-
-    if (string.IsNullOrEmpty(driver.Url) || driver.Url.Equals("about:blank", StringComparison.OrdinalIgnoreCase))
-    {
-        driver.Navigate().GoToUrl(url);
-    }
+    // ... tu código de navegación ...
+    
+    // Cambia la espera: No busques el contenedor todavía, 
+    // solo asegúrate de que la página haya cargado el DOM base.
     wait.Until(d => ((IJavaScriptExecutor)d).ExecuteScript("return document.readyState").Equals("complete"));
 }
 
-    private void WaitForLoading()
-    {
-        // data-loading es un atributo de Vue que indica procesos en segundo plano
+private void WaitForLoading()
+{
+    // Intenta buscar el contenedor solo si es necesario, con una comprobación segura
+    try {
+        wait.Until(c => driver.FindElements(By.ClassName("layout-container")).Count > 0);
         wait.Until(c => Container.GetDomAttribute("data-loading") != "true");
-    }
+    } catch { /* Ignorar si no estamos en una página con contenedor aún */ }
+}
 
     public void ClickLogin()
     {

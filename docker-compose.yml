@@ -28,8 +28,9 @@ services:
     networks:
       - zap-net
     environment:
-      # MODIFICACIÓN CLAVE: Deshabilitamos funciones de red de Chrome que bloquean a ZAP
-      - SE_NODE_CHROME_ARGS=--ignore-certificate-errors --disable-features=OptimizationGuideModelDownloading,OptimizationHints --disable-component-update --disable-background-networking --disable-sync --disable-default-apps
+      # CONFIGURACIÓN CRÍTICA: Esto hace que Jenkins se comporte como tu local
+      # Desactivamos todo el ruido de fondo de Chrome que satura a ZAP
+      - SE_NODE_CHROME_ARGS=--ignore-certificate-errors --disable-features=OptimizationGuideModelDownloading,OptimizationHints --disable-component-update --disable-background-networking --disable-sync --disable-default-apps --no-first-run
     healthcheck:
       test: ["CMD", "curl", "-sf", "http://localhost:4444/status"]
       interval: 5s
@@ -60,23 +61,23 @@ services:
       - bash
       - -c
       - |
-          echo "=== 0. LIMPIEZA Y RECOMPILACIÓN ==="
+          echo "=== LIMPIEZA Y RESTORE ==="
           dotnet clean || true
           rm -rf bin/ obj/
           dotnet restore --force
           dotnet build --no-restore
 
-          echo "=== 1. ESPERAR A ZAP Y CONFIGURAR CONTEXTO ==="
+          echo "=== CONFIGURACIÓN ZAP ==="
           until curl -sf http://zap:8080/JSON/core/view/version/ >/dev/null; do sleep 2; done
           curl -sf "http://zap:8080/JSON/context/action/newContext/?contextName=mi-app" || true
           curl -sf "http://zap:8080/JSON/context/action/includeInContext/?contextName=mi-app&regex=https://jenkinsvm.quidgest.pt/gqt_horizontal_vue.*" || true
 
-          echo "=== 2. EJECUCIÓN DE TESTS (65 CASOS) ==="
+          echo "=== EJECUCIÓN DE TESTS ==="
+          # Ejecutamos con el binario limpio
           dotnet test --no-build --nologo --logger:"console;verbosity=normal" || true
 
-          echo "=== 3. GENERACIÓN DE REPORTE OWASP ZAP ==="
+          echo "=== REPORTE ==="
           curl -sf "http://zap:8080/JSON/reports/action/generate/?title=OWASP+ZAP+Report&template=traditional-html&reportFileName=zap-report&reportDir=/zap/wrk" || true
-          echo "✅ Pipeline finalizado con éxito."
 
 networks:
   zap-net:

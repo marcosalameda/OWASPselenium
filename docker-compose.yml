@@ -59,7 +59,7 @@ services:
       - bash
       - -c
       - |
-          echo "=== 0. LIMPIEZA Y RESTORE ==="
+          echo "=== 0. LIMPIEZA Y RESTORE INTEGRAL ==="
           dotnet clean
           rm -rf bin/ obj/
           dotnet restore --force
@@ -75,3 +75,8 @@ services:
 
           echo "=== 3. REPORTE FINAL ==="
           curl -sf "http://zap:8080/JSON/reports/action/generate/?title=OWASP+ZAP+Report&template=traditional-html&reportFileName=zap-report&reportDir=/zap/wrk" || true
+          echo "✅ Proceso completado."
+
+networks:
+  zap-net:
+    driver: bridge

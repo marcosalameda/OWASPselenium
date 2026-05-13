@@ -16,11 +16,6 @@ services:
       - ./zap-reports:/zap/wrk
     networks:
       - zap-net
-    healthcheck:
-      test: ["CMD", "curl", "-sf", "http://localhost:8080/JSON/core/view/version/"]
-      interval: 5s
-      timeout: 3s
-      retries: 20
 
   selenium-hub:
     image: selenium/standalone-chrome:latest
@@ -59,23 +54,21 @@ services:
       - bash
       - -c
       - |
-          echo "=== 0. LIMPIEZA Y RESTORE INTEGRAL ==="
+          echo "=== 0. LIMPIEZA TOTAL ==="
           dotnet clean
           rm -rf bin/ obj/
           dotnet restore --force
 
-          echo "=== 1. CONFIGURANDO ZAP (VIA API) ==="
+          echo "=== 1. CONFIG ZAP ==="
           until curl -sf http://zap:8080/JSON/core/view/version/ >/dev/null; do sleep 2; done
           curl -sf "http://zap:8080/JSON/context/action/newContext/?contextName=mi-app" || true
-          curl -sf "http://zap:8080/JSON/context/action/includeInContext/?contextName=mi-app&regex=https://jenkinsvm.quidgest.pt/gqt_horizontal_vue.*" || true
 
-          echo "=== 2. COMPILACIÓN Y TESTS ==="
+          echo "=== 2. TESTS ==="
           dotnet build --no-restore
           dotnet test --no-build --nologo --logger:"console;verbosity=normal" || true
 
-          echo "=== 3. REPORTE FINAL ==="
+          echo "=== 3. REPORTE ==="
           curl -sf "http://zap:8080/JSON/reports/action/generate/?title=OWASP+ZAP+Report&template=traditional-html&reportFileName=zap-report&reportDir=/zap/wrk" || true
-          echo "✅ Proceso completado."
 
 networks:
   zap-net:
